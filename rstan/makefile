@@ -25,6 +25,9 @@ else
   RSCRIPT = Rscript
 endif
 
+R_MAKEVARS_USER =
+export R_MAKEVARS_USER
+
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
   LINKCMD2 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stansrc"  "..^\..^\..^\..^\stan^\src"
