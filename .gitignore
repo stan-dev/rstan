@@ -1,0 +1,29 @@
+# /
+
+# other binary
+*.o
+*.exe
+*.out
+*.rds
+*.so
+
+# temporary files
+*~
+*.idx
+*.ilg
+*.ind
+
+# depedencies files
+*.d
+*.hpp.d.*
+.Rproj.user
+stan.Rproj
+.kdev4/
+stan.kdev4
+.Rapp.history
+
+# For the Mac
+*.DS_Store
+
+# 
+*.swp
