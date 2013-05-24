@@ -47,12 +47,36 @@
 namespace rstan {
 
   namespace {
+    /**
+     *@tparam T The type by which we use for dimensions. T could be say size_t
+     * or unsigned int. This whole business (not using size_t) is due to that
+     * Rcpp::wrap/as does not support size_t on some platforms and R could not
+     * deal with 64bits integers. 
+     *
+     */ 
     template <class T> 
-    T product(std::vector<T> dims) {
-      T y = 1U;
+    size_t calc_num_params(const std::vector<T>& dim) {
+      T num_params = 1;
+      for (size_t i = 0;  i < dim.size(); ++i)
+        num_params *= dim[i];
+      return num_params;
+    }
+
+    template <class T> 
+    void calc_starts(const std::vector<std::vector<T> >& dims,
+                     std::vector<T>& starts) { 
+      starts.resize(0); 
+      starts.push_back(0); 
+      for (size_t i = 1; i < dims.size(); ++i)
+        starts.push_back(starts[i - 1] + calc_num_params(dims[i - 1]));
+    }
+
+    template <class T> 
+    T calc_total_num_params(const std::vector<std::vector<T> >& dims) {
+      T num_params = 0;
       for (size_t i = 0; i < dims.size(); ++i)
-        y *= dims[i];
-      return y;
+        num_params += calc_num_params(dims[i]);
+      return num_params;
     }
 
     /**
@@ -71,7 +95,7 @@ namespace rstan {
      *  @param idx[out] for keeping all the indexes
      *
      *  <p> when idx is empty (size = 0), idx 
-     *  would be inserted an empty vector. 
+     *  would contains an empty vector. 
      * 
      *
      */
@@ -82,7 +106,7 @@ namespace rstan {
                         bool col_major = false) {
       size_t len = dim.size();
       idx.resize(0);
-      size_t total = product(dim);
+      size_t total = calc_num_params(dim);
       std::vector<size_t> loopj;
       for (size_t i = 1; i <= len; ++i)
         loopj.push_back(len - i);
@@ -186,40 +210,69 @@ namespace rstan {
         fnames.insert(fnames.end(), i_names.begin(), i_names.end());
       } 
     } 
-  }
 
-  namespace { 
-    /**
-     *@tparam T The type by which we use for dimensions. T could be say size_t
-     * or unsigned int. This whole business (not using size_t) is due to that
-     * Rcpp::wrap/as does not support size_t on some platforms and R could not
-     * deal with 64bits integers. 
+    /* To facilitate transform an array variable ordered by col-major index
+     * to row-major index order by providing the transforming indices.
+     * For example, we have "x[2,3]", then if ordered by col-major, we have
+     * 
+     * x[1,1], x[2,1], x[1,2], x[2,2], x[1,3], x[3,1]
+     * 
+     * Then the indices for transforming to row-major order are 
+     * [0, 2, 4, 1, 3, 5] + start. 
+     *
+     * @param dim[in] the dimension of the array variable, empty means a scalar
+     * @param midx[out] store the indices for mapping col-major to row-major
+     * @param start shifts the indices with a starting point
      *
      */ 
-    template <class T> 
-    size_t calc_num_params(const std::vector<T>& dim) {
-      T num_params = 1;
-      for (size_t i = 0;  i < dim.size(); ++i)
-        num_params *= dim[i];
-      return num_params;
-    }
-
-    template <class T> 
-    void calc_starts(const std::vector<std::vector<T> >& dims,
-                     std::vector<T>& starts) { 
-      starts.resize(0); 
-      starts.push_back(0); 
-      for (size_t i = 1; i < dims.size(); ++i)
-        starts.push_back(starts[i - 1] + calc_num_params(dims[i - 1]));
-    }
-
-    template <class T> 
-    T calc_total_num_params(const std::vector<std::vector<T> >& dims) {
-      T num_params = 0;
-      for (size_t i = 0; i < dims.size(); ++i)
-        num_params += calc_num_params(dims[i]);
-      return num_params;
-    }
+    template <typename T, typename T2>
+    void get_indices_col2row(const std::vector<T>& dim, std::vector<T2>& midx,
+                             T start = 0) {
+      size_t len = dim.size();
+      if (len < 1) { 
+        midx.push_back(start); 
+        return; 
+      }
+    
+      std::vector<T> z(len, 1);
+      for (size_t i = 1; i < len; i++) {
+        z[i] *= z[i - 1] * dim[i - 1];
+      } 
+    
+      T total = calc_num_params(dim);
+      midx.resize(total);
+      std::fill_n(midx.begin(), total, start);
+      std::vector<T> v(len, 0);
+      for (T i = 1; i < total; i++) {
+        for (size_t j = 0; j < len; ++j) {
+          size_t k = len - j - 1;
+          if (v[k] < dim[k] - 1) {
+            v[k] += 1;
+            break; 
+          }
+          v[k] = 0; 
+        } 
+        // v is the index of the ith element by row-major, for example v=[0,1,2]. 
+        // obtain the position for v if it is col-major indexed. 
+        T pos = 0;
+        for (size_t j = 0; j < len; j++) 
+          pos += z[j] * v[j];
+        midx[i] += pos;
+      } 
+    } 
+   
+    template <class T>
+    void get_all_indices_col2row(const std::vector<std::vector<T> >& dims,
+                                 std::vector<size_t>& midx) {
+      midx.clear();
+      std::vector<T> starts; 
+      calc_starts(dims, starts);
+      for (size_t i = 0; i < dims.size(); ++i) {
+        std::vector<size_t> midxi;
+        get_indices_col2row(dims[i], midxi, starts[i]);
+        midx.insert(midx.end(), midxi.begin(), midxi.end());
+      } 
+    } 
 
     bool do_print(int n, int refresh) {
       if (refresh < 1) return false;
@@ -269,11 +322,13 @@ namespace rstan {
     }
 
     template <class T>
-    void print_vector(const std::vector<T>& v, std::ostream& o, const std::string& sep = ",") {
+    void print_vector(const std::vector<T>& v, std::ostream& o, 
+                      const std::vector<size_t>& midx, 
+                      const std::string& sep = ",") {
       if (v.size() > 0)
         o << v[0];
       for (size_t i = 1; i < v.size(); i++)
-        o << sep << v[i];
+        o << sep << v[midx.at(i)];
       o << std::endl;
     }
 
@@ -291,6 +346,7 @@ namespace rstan {
                           std::vector<Rcpp::NumericVector>& chains, 
                           int& iter_save_i,
                           const std::vector<size_t>& qoi_idx,
+                          const std::vector<size_t>& midx, 
                           std::vector<double>& sum_pars,
                           double& sum_lp,
                           std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -332,7 +388,7 @@ namespace rstan {
             (*p_sample_file_stream) << lp__ << ",";
             for (size_t z = 0; z < ii_sampler_params.size(); z++)
               (*p_sample_file_stream) << ii_sampler_params[z] << ",";
-            print_vector(params_inr_etc, *p_sample_file_stream);
+            print_vector(params_inr_etc, *p_sample_file_stream, midx);
           } 
           iter_save_i++;
         }
@@ -353,6 +409,7 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& chains, 
                       int& iter_save_i,
                       const std::vector<size_t>& qoi_idx,
+                      const std::vector<size_t>& midx, 
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -363,7 +420,7 @@ namespace rstan {
                                             refresh, save, true,
                                             p_sample_file_stream,
                                             p_diagnostic_file_stream,
-                                            init_s, model, chains, iter_save_i, qoi_idx,
+                                            init_s, model, chains, iter_save_i, qoi_idx, midx,
                                             sum_pars, sum_lp, sampler_params,
                                             adaptation_info, base_rng);
     }
@@ -382,6 +439,7 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& chains, 
                       int& iter_save_i,
                       const std::vector<size_t>& qoi_idx,
+                      const std::vector<size_t>& midx, 
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -391,7 +449,7 @@ namespace rstan {
                                             refresh, save, false,
                                             p_sample_file_stream,
                                             p_diagnostic_file_stream,
-                                            init_s, model, chains, iter_save_i, qoi_idx,
+                                            init_s, model, chains, iter_save_i, qoi_idx, midx,
                                             sum_pars, sum_lp, sampler_params,
                                             adaptation_info,
                                             base_rng);
@@ -438,12 +496,14 @@ namespace rstan {
      * @param model: the model instance.
      * @param holder[out]: the object to hold all the information returned to R. 
      * @param qoi_idx: the indexes for all parameters of interest.  
+     * @param midx: the indexes for mapping col-major to row-major
      * @param fnames_oi: the parameter names of interest.  
      * @param base_rng: the boost RNG instance. 
      */
     template <class Model, class RNG> 
     int sampler_command(stan_args& args, Model& model, Rcpp::List& holder,
                         const std::vector<size_t>& qoi_idx, 
+                        const std::vector<size_t>& midx, 
                         const std::vector<std::string>& fnames_oi, RNG& base_rng) {
       bool sample_file_flag = args.get_sample_file_flag(); 
       bool diagnostic_file_flag = args.get_dianositic_file_flag();
@@ -610,7 +670,7 @@ namespace rstan {
 
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream);
+          print_vector(params_inr_etc, sample_stream, midx);
           sample_stream.close();
         }
         return 0;
@@ -664,7 +724,7 @@ namespace rstan {
         holder["value"] = lp;
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream);
+          print_vector(params_inr_etc, sample_stream, midx);
           sample_stream.close();
         }
         return 0;
@@ -723,7 +783,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             p_sample_file_stream, p_diagnostic_file_stream,
                                             s, model, chains, iter_save_i,
-                                            qoi_idx, mean_pars, mean_lp,
+                                            qoi_idx, midx, mean_pars, mean_lp,
                                             sampler_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
@@ -743,7 +803,7 @@ namespace rstan {
                                             p_sample_file_stream,
                                             p_diagnostic_file_stream,
                                             s, model, chains, iter_save_i,
-                                            qoi_idx, mean_pars, mean_lp, 
+                                            qoi_idx, midx, mean_pars, mean_lp, 
                                             sampler_params, adaptation_info,  
                                             base_rng); 
         end = clock();
@@ -777,7 +837,7 @@ namespace rstan {
                                             p_sample_file_stream, 
                                             p_diagnostic_file_stream,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, mean_pars, mean_lp, 
+                                            qoi_idx, midx, mean_pars, mean_lp, 
                                             sampler_params, adaptation_info,  
                                             base_rng); 
         clock_t end = clock();
@@ -798,7 +858,7 @@ namespace rstan {
                                             p_sample_file_stream, 
                                             p_diagnostic_file_stream,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, mean_pars, mean_lp, 
+                                            qoi_idx, midx, mean_pars, mean_lp, 
                                             sampler_params, adaptation_info,
                                             base_rng); 
         end = clock();
@@ -831,7 +891,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             p_sample_file_stream, p_diagnostic_file_stream,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, mean_pars, mean_lp, 
+                                            qoi_idx, midx, mean_pars, mean_lp, 
                                             sampler_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
@@ -850,7 +910,7 @@ namespace rstan {
                                             refresh, true, 
                                             p_sample_file_stream, p_diagnostic_file_stream,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, mean_pars, mean_lp, 
+                                            qoi_idx, midx, mean_pars, mean_lp, 
                                             sampler_params, adaptation_info,
                                             base_rng); 
         end = clock();
@@ -883,7 +943,7 @@ namespace rstan {
                                            refresh, save_warmup, 
                                            p_sample_file_stream, p_diagnostic_file_stream,
                                            s, model, chains, iter_save_i, 
-                                           qoi_idx, mean_pars, mean_lp, 
+                                           qoi_idx, midx, mean_pars, mean_lp, 
                                            sampler_params, adaptation_info,
                                            base_rng); 
         clock_t end = clock();
@@ -902,7 +962,7 @@ namespace rstan {
                                            refresh, true, 
                                            p_sample_file_stream, p_diagnostic_file_stream,
                                            s, model, chains, iter_save_i, 
-                                           qoi_idx, mean_pars, mean_lp, 
+                                           qoi_idx, midx, mean_pars, mean_lp, 
                                            sampler_params, adaptation_info,
                                            base_rng); 
         end = clock();
@@ -966,6 +1026,7 @@ namespace rstan {
     std::vector<std::string> names_oi_; // parameters of interest 
     std::vector<std::vector<unsigned int> > dims_oi_; 
     std::vector<size_t> names_oi_tidx_;  // the total indexes of names2.
+    std::vector<size_t> midx_for_col2row; // indices for mapping col-major to row-major
     std::vector<unsigned int> starts_oi_;  
     unsigned int num_params2_;  // total number of POI's.   
     std::vector<std::string> fnames_oi_; 
@@ -1043,6 +1104,7 @@ namespace rstan {
       names_oi_tidx_.push_back(-1); // lp__
       calc_starts(dims_oi_, starts_oi_);
       get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true); 
+      get_all_indices_col2row(dims_, midx_for_col2row);
     }             
 
     /**
@@ -1159,7 +1221,8 @@ namespace rstan {
       Rcpp::List holder;
 
       int ret;
-      ret = sampler_command(args, model_, holder, names_oi_tidx_, fnames_oi_, base_rng);
+      ret = sampler_command(args, model_, holder, names_oi_tidx_, 
+                            midx_for_col2row, fnames_oi_, base_rng);
       if (ret != 0) {
         return R_NilValue;  // indicating error happened 
       } 
