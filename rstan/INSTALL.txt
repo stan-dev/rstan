@@ -6,4 +6,4 @@ or use some other integer besides 4 to control the number of cores to utilize.
 
 Installation: 
 
-1. run `make install' when present working directory is STAN_HOME/rstan. 
+1. run `make install' when present working directory is where this file locates. 
