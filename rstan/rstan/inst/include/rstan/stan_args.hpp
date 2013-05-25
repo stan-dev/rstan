@@ -114,8 +114,7 @@ namespace rstan {
     std::string chain_id_src; // "user" or "default" 
     bool append_samples; 
     bool test_grad; 
-    bool point_estimate;
-    bool point_estimate_newton;
+    int point_estimate; // -1: no-point-estimate; 0: newton; 1: nesterov; 2: bfgs
     std::string init; 
     SEXP init_list;  
     std::string sampler; // HMC, NUTS1, NUTS2 (not set directy from R now) 
@@ -223,17 +222,14 @@ namespace rstan {
       if (idx == args_names.size()) test_grad = false; 
       else test_grad = Rcpp::as<bool>(in[idx]);
 
-      idx = find_index(args_names, std::string("point_estimate"));
-      if (idx == args_names.size()) point_estimate = false;
-      else point_estimate = Rcpp::as<bool>(in[idx]);
-
-      idx = find_index(args_names, std::string("point_estimate_newton"));
-      if (idx == args_names.size()) point_estimate_newton = false;
-      else point_estimate_newton = Rcpp::as<bool>(in[idx]);
-
       idx = find_index(args_names, std::string("nondiag_mass"));
       if (idx == args_names.size()) nondiag_mass = false;
       else nondiag_mass = Rcpp::as<bool>(in[idx]);
+
+      idx = find_index(args_names, std::string("point_estimate"));
+      if (idx == args_names.size()) point_estimate = -1;
+      else point_estimate = Rcpp::as<int>(in[idx]);
+
     } 
 
     /**
@@ -271,8 +267,7 @@ namespace rstan {
       lst["sampler"] = sampler; 
       lst["test_grad"] = test_grad;
       lst["point_estimate"] = point_estimate;
-      lst["point_estimate_newton"] = point_estimate_newton;
-      lst["nondiag_mass"] = nondiag_mass; 
+      lst["nondiag_mass"] = nondiag_mass;
       return lst; 
     } 
 
@@ -352,12 +347,9 @@ namespace rstan {
     bool get_test_grad() const {
       return test_grad; 
     } 
-    inline bool get_point_estimate() const {
+    inline int get_point_estimate() const {
       return point_estimate;
     }
-    inline bool get_point_estimate_newton() const {
-      return point_estimate_newton;
-    } 
     unsigned int get_random_seed() const {
       return random_seed; 
     } 

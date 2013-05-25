@@ -53,9 +53,9 @@ prep_call_sampler <- function(object) {
 
 setMethod("optimizing", "stanmodel", 
           function(object, data = list(), 
-                   seed = sample.int(.Machine$integer.max, 1), 
+                   seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   method = c("newton", "nesterov"),
+                   method = c("newton", "nesterov", 'bfgs'),
                    verbose = FALSE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
@@ -95,11 +95,9 @@ setMethod("optimizing", "stanmodel",
             seed <- check_seed(seed, warn = 1)    
             if (is.null(seed))
               return(invisible(list(stanmodel = object)))
-            method <- match.arg(method)
-            method_flag <- "point_estimate"
-            if (method == 'newton') method_flag <- 'point_estimate_newton'
             args <- list(init = init, seed = seed) 
-            args[method_flag] <- TRUE
+            # 1: newton; 2: nesterov; 3: bfgs
+            args["point_estimate"] <- match(match.arg(method), c('newton', 'nesterov', 'bfgs'))
          
             if (!missing(sample_file) && is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 

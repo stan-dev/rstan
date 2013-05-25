@@ -364,8 +364,7 @@ config_argss <- function(chains, iter, warmup, thin,
   seed <- if (missing(seed)) sample.int(.Machine$integer.max, 1) else check_seed(seed)
 
   dotlist <- list(...)
-  dotlist$point_estimate <- FALSE # not to do point estimation
-  dotlist$point_estimate_newton <- FALSE
+  dotlist$point_estimate <- -1 # not to do point estimation
 
   # use chain_id argument if specified
   if (is.null(dotlist$chain_id)) { 

@@ -22,6 +22,13 @@ dat <- list(N = N, y = y)
 dump(c("N", "y"), file = 'optim.data.R')
 sm <- stan_model(model_code = stdnorm)
 
-optim <- rstan:::optimizing(sm, data = dat)
-print(optim)
+optim1 <- rstan:::optimizing(sm, data = dat)
+print(optim1)
+
+optim2 <- rstan:::optimizing(sm, data = dat, method = 'bfgs')
+print(optim2)
+
+optim3 <- rstan:::optimizing(sm, data = dat, method = 'nesterov')
+print(optim3)
+
 
