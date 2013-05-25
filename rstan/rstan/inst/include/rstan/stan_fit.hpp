@@ -553,7 +553,7 @@ namespace rstan {
                                               init_grad, 
                                               &rstan::io::rcout);
         } catch (const std::domain_error& e) {
-          std::string msg("Error during initialization with 0:\n"); 
+          std::string msg("Domain error during initialization with 0:\n"); 
           msg += e.what();
           throw std::runtime_error(msg);
         }
@@ -595,7 +595,9 @@ namespace rstan {
           try {
             init_log_prob = model.grad_log_prob(cont_params,disc_params,init_grad,&rstan::io::rcout);
           } catch (const std::domain_error& e) {
-            write_error_msg(&rstan::io::rcout, e);
+            // write_error_msg(&rstan::io::rcout, e);
+            rstan::io::rcout << e.what(); 
+            rstan::io::rcout << "Rejecting proposed initial value with zero density." << std::endl;
             continue;
           } 
           if (!boost::math::isfinite(init_log_prob))
