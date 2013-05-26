@@ -877,7 +877,7 @@ namespace rstan {
         ainfo_ss << "# (" << sampler.name() << ")" << std::endl;
         ainfo_ss << "# Adaptation terminated" << std::endl;
         ainfo_ss << "# Step size = " << sampler.get_nominal_stepsize() << std::endl;
-        sampler.z().write_metric(ainfo_ss);
+        sampler.z().write_metric(&ainfo_ss);
         adaptation_info = ainfo_ss.str();
         if (sample_file_flag) sample_stream <<  adaptation_info; 
         // Sampling
@@ -931,7 +931,7 @@ namespace rstan {
         ainfo_ss << "# (" << sampler.name() << ")" << std::endl;
         ainfo_ss << "# Adaptation terminated" << std::endl;
         ainfo_ss << "# Step size = " << sampler.get_nominal_stepsize() << std::endl;
-        sampler.z().write_metric(ainfo_ss);
+        sampler.z().write_metric(&ainfo_ss);
         adaptation_info = ainfo_ss.str();
         if (sample_file_flag) sample_stream <<  adaptation_info; 
         
@@ -985,7 +985,7 @@ namespace rstan {
         ainfo_ss << "# (" << sampler.name() << ")" << std::endl;
         ainfo_ss << "# Adaptation terminated" << std::endl;
         ainfo_ss << "# Step size = " << sampler.get_nominal_stepsize() << std::endl;
-        sampler.z().write_metric(ainfo_ss);
+        sampler.z().write_metric(&ainfo_ss);
         adaptation_info = ainfo_ss.str();
         if (sample_file_flag) sample_stream <<  adaptation_info; 
         // Sampling
@@ -1037,7 +1037,7 @@ namespace rstan {
         ainfo_ss << "# (" << sampler.name() << ")" << std::endl;
         ainfo_ss << "# Adaptation terminated" << std::endl;
         ainfo_ss << "# Step size = " << sampler.get_nominal_stepsize() << std::endl;
-        sampler.z().write_metric(ainfo_ss);
+        sampler.z().write_metric(&ainfo_ss);
         adaptation_info = ainfo_ss.str();
         if (sample_file_flag) sample_stream <<  adaptation_info; 
         // Sampling
