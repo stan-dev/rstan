@@ -31,10 +31,12 @@ export R_MAKEVARS_USER
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
   LINKCMD2 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stansrc"  "..^\..^\..^\..^\stan^\src"
+  WH = where
 else
   LINKCMD1 = ln -s ../../../../stan/lib ./rstan/inst/include/stanlib
   LINKCMD1b = ln -s ../../../$(TMP_STANLIB)/ ./rstan/inst/include/stanlib
   LINKCMD2 = ln -s ../../../../stan/src ./rstan/inst/include/stansrc
+  WH = which
 endif
   
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
@@ -47,7 +49,8 @@ BOOST_FOR_RSTAN := $(TMP_STANLIB)/$(subst ../stan/lib/,,$(BOOSTPATH))
 EIGEN_FOR_RSTAN := $(TMP_STANLIB)/$(subst ../stan/lib/,,$(EIGENPATH))
 
 # a tool in boost 
-BCP = $(strip $(shell which bcp))
+BCP = $(strip $(shell $(WH) bcp))
+GIT = $(strip $(shell $(WH) git))
 
 build $(STANPKG): ./rstan/DESCRIPTION 
 	@rm -rf "./rstan/inst/include/stanlib"
@@ -59,15 +62,25 @@ else
 endif
 	$(LINKCMD2)
 	@rm -f $(STANPKG) 
-	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_head.R
+ifeq ($(GIT),)
+	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
+	@echo "git_stan_head <- function() \"unknown\"" > rstan/R/git_stan_head.R
+else
+	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
+	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
+endif
 	$(R) CMD build rstan --md5  # --no-vignettes --no-manual
 
 check: $(STANPKG) 
 	$(R) CMD check --as-cran $(STANPKG) 
 
 install: $(STANPKG) 
-	# $(R) CMD INSTALL --no-multiarch $(STANPKG) 
+ifeq ($(OS), win)
 	$(R) CMD INSTALL --merge-multiarch $(STANPKG) 
+else
+	# $(R) CMD INSTALL --no-multiarch $(STANPKG) 
+	$(R) CMD INSTALL $(STANPKG)
+endif
 
 uninstall: $(STANPKG) 
 	$(R) CMD REMOVE rstan
@@ -90,6 +103,7 @@ rmtmpstanlib:
 
 clean: 
 	rm -f $(STANPKG) 
+	rm -f rstan/R/git_*head.R
 
 clean-all: 
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 

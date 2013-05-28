@@ -543,18 +543,36 @@ namespace rstan {
       int num_init_tries = 0;
       // parameter initialization
       if (init_val == "0") {
-          disc_params = std::vector<int>(model.num_params_i(),0);
-          cont_params = std::vector<double>(model.num_params_r(),0.0);
+        disc_params = std::vector<int>(model.num_params_i(),0);
+        cont_params = std::vector<double>(model.num_params_r(),0.0);
+        double init_log_prob;
+        std::vector<double> init_grad;
+        try {
+          init_log_prob = model.grad_log_prob(cont_params, 
+                                              disc_params, 
+                                              init_grad, 
+                                              &rstan::io::rcout);
+        } catch (const std::domain_error& e) {
+          std::string msg("Domain error during initialization with 0:\n"); 
+          msg += e.what();
+          throw std::runtime_error(msg);
+        }
+        if (!boost::math::isfinite(init_log_prob))  
+          throw std::runtime_error("Error during initialization with 0: vanishing density.");
+        for (size_t i = 0; i < init_grad.size(); i++) {
+          if (!boost::math::isfinite(init_grad[i])) 
+            throw std::runtime_error("Error during initialization with 0: divergent gradient.");
+        }
       } else if (init_val == "user") {
-          try { 
-            Rcpp::List init_lst(args.get_init_list()); 
-            rstan::io::rlist_ref_var_context init_var_context(init_lst); 
-            model.transform_inits(init_var_context,disc_params,cont_params);
-          } catch (const std::exception& e) {
-            std::string msg("Error during user-specified initialization:\n"); 
-            msg += e.what(); 
-            throw std::runtime_error(msg);
-          } 
+        try { 
+          Rcpp::List init_lst(args.get_init_list()); 
+          rstan::io::rlist_ref_var_context init_var_context(init_lst); 
+          model.transform_inits(init_var_context,disc_params,cont_params);
+        } catch (const std::exception& e) {
+          std::string msg("Error during user-specified initialization:\n"); 
+          msg += e.what(); 
+          throw std::runtime_error(msg);
+        } 
       } else {
         init_val = "random"; 
         // init_rng generates uniformly from -2 to 2
@@ -576,7 +594,9 @@ namespace rstan {
           try {
             init_log_prob = model.grad_log_prob(cont_params,disc_params,init_grad,&rstan::io::rcout);
           } catch (const std::domain_error& e) {
-            write_error_msg(&rstan::io::rcout, e);
+            // write_error_msg(&rstan::io::rcout, e);
+            rstan::io::rcout << e.what(); 
+            rstan::io::rcout << "Rejecting proposed initial value with zero density." << std::endl;
             continue;
           } 
           if (!boost::math::isfinite(init_log_prob))
