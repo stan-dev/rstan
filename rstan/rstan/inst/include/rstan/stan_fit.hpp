@@ -695,7 +695,7 @@ namespace rstan {
             rstan::io::rcout << " # evals ";
             rstan::io::rcout << " Notes " << std::endl;
           }
-          if (do_print(i, refresh)) {
+          if (do_print(i, refresh) || ret != 0 || !ng.note().empty()) {
             rstan::io::rcout << " " << std::setw(7) << (m + 1) << " ";
             rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << lp << " ";
             rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << ng.prev_step_size() << " ";
@@ -716,6 +716,9 @@ namespace rstan {
         }
         if (ret != 0)
           rstan::io::rcout << "Optimization terminated with code " << ret << std::endl;
+        else 
+          rstan::io::rcout << "Maximum number of iterations hit, optimization terminated." 
+                           << std::endl;
         
         std::vector<double> params_inr_etc; // cont, disc, and others
         model.write_array(base_rng,cont_params,disc_params,params_inr_etc);
