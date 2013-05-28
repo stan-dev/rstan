@@ -4,7 +4,7 @@
 *.so
 *.rds
 *.out
-rstan/R/git_head.R
+rstan/R/git_*head.R
 rstan/inst/include/stanlib
 rstan/inst/include/stansrc
 rstan*.tar.gz
