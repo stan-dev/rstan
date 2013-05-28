@@ -222,7 +222,7 @@ get_model_strcode <- function(file, model_code = '') {
   #   the model code with attribute model_name2,
   #   a name implied from file or object name,
   #   which can be used later when model_name is not 
-  #   specified for say for function stan. 
+  #   specified for function stan. 
 
   if (!missing(file)) {
     if (is.character(file)) {
@@ -250,9 +250,8 @@ get_model_strcode <- function(file, model_code = '') {
     if (!grepl("\\{", model_code)) {
       # model_code points an object that includes the model 
       model_name2 <- model_code
-      if (!exists(model_code, mode = 'character', envir = parent.frame())) 
-        stop(paste("cannot find ", model_code, sep = '')) 
-      model_code <- get(model_code, mode = 'character', envir = parent.frame()) 
+      if (exists(model_code, mode = 'character', envir = parent.frame())) 
+        model_code <- get(model_code, mode = 'character', envir = parent.frame()) 
     } else {
       # model_code includes the code itself, two cases of passing:
       #  1. using another object such as stan(mode_code = scode)`
