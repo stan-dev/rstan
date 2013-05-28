@@ -68,6 +68,7 @@
       \item \code{iter} (\code{integer})
       \item \code{epsilon} (\code{double})
       \item \code{save_warmup} (logical)
+      \item \code{refresh} (\code{integer})
     }
   }
 }
