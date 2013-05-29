@@ -336,7 +336,7 @@ are defined to work with the samples and model inference. For example,
 the following shows a summary of the parameters for the eight school
 example using function \code{print}.
 <<echo=TRUE>>=
-print(fit)
+print(fit, pars=c("theta", "mu", "tau", "lp__"))
 @
 
 It is simple to just use function \code{stan} to conduct all of the above
