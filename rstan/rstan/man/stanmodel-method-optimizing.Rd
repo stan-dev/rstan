@@ -16,7 +16,7 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    method = c("newton", "nesterov"),
+    method = c("newton", "nesterov", "bfgs"),
     verbose = FALSE, \dots)   
 } 
 
@@ -24,7 +24,7 @@
   \describe{
     \item{optimizing}{\code{signature(object = "stanmodel")}}{
       %%  ~~describe this method here~~
-      Call Stan's optimization method to obtain a point estimate 
+      Call Stan's optimization methods to obtain a point estimate 
       for the model defined by S4 class \code{stanmodel} 
       given the data, initial values, etc. 
     }
@@ -59,11 +59,18 @@
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
-  \item{method}{One of "newton" or "nesterov" indicating which optimization 
-    method is used.} 
+  \item{method}{One of "newton", "nesterov", and "bfgs" indicating which
+    optimization method is used. The default is Newton's method.} 
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
-  \item{\dots}{Other optional parameters (none currently).}
+  \item{\dots}{Other optional parameters.
+    \enumerate{
+      \item \code{iter} (\code{integer})
+      \item \code{epsilon} (\code{double})
+      \item \code{save_warmup} (logical)
+      \item \code{refresh} (\code{integer})
+    }
+  }
 }
 \value{
    A list with components if the optimization is done successfully:
