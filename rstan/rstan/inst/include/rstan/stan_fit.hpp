@@ -360,7 +360,7 @@ namespace rstan {
         start = num_warmup;
         end = num_iterations;
       } 
-      for (size_t m = start; m < end; ++m) {
+      for (int m = start; m < end; ++m) {
         print_progress(m, num_iterations, refresh, warmup);
         R_CheckUserInterrupt();
         init_s = sampler.transition(init_s);
@@ -717,7 +717,7 @@ namespace rstan {
         double lastlp = lp - 1;
         rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
         int m = 0;
-        for (size_t i = 0; i < num_iterations; i++) {
+        for (int i = 0; i < num_iterations; i++) {
           R_CheckUserInterrupt(); 
           lastlp = lp;
           lp = ng.step();
