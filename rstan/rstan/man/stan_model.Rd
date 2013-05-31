@@ -32,7 +32,7 @@
 
   \item{model_code}{A character string either containing the model 
     specification or the name of a character string object in the workspace;
-    an alterantive is to specify the model with parameters \code{file}
+    an alternative is to specify the model with parameters \code{file}
     or \code{stanc_ret}. 
   }
   \item{stanc_ret}{A named list returned from a previous call to 

@@ -304,10 +304,10 @@ namespace rstan {
     bool get_sample_file_flag() const { 
       return sample_file_flag; 
     }
-    bool get_dianositic_file_flag() const {
+    bool get_diagnostic_file_flag() const {
       return diagnostic_file_flag;
     } 
-    const std::string& get_dianositic_file() const {
+    const std::string& get_diagnostic_file() const {
       return diagnostic_file;
     } 
     int get_warmup() const {
