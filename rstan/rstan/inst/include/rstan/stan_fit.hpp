@@ -506,9 +506,9 @@ namespace rstan {
                         const std::vector<size_t>& midx, 
                         const std::vector<std::string>& fnames_oi, RNG& base_rng) {
       bool sample_file_flag = args.get_sample_file_flag(); 
-      bool diagnostic_file_flag = args.get_dianositic_file_flag();
+      bool diagnostic_file_flag = args.get_diagnostic_file_flag();
       std::string sample_file = args.get_sample_file(); 
-      std::string diagnostic_file = args.get_dianositic_file();
+      std::string diagnostic_file = args.get_diagnostic_file();
       int num_iterations = args.get_iter(); 
       int num_warmup = args.get_warmup(); 
       int num_thin = args.get_thin(); 

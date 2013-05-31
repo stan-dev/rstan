@@ -33,7 +33,7 @@ Translate Stan model specification to C++ code
       are given the same, the generated C++ code will have the same class
       name defining the model, and the same Rcpp module name, which is used 
       for R to execute the C++ code regardless if the stan models are the 
-      same of not. Generally, it is recommented not to specify this parameter 
+      same of not. Generally, it is recommended not to specify this parameter
       or set it to \code{TRUE}. 
     }
   }
