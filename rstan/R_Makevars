@@ -1,0 +1,5 @@
+## To make it easier to control how to install rstan 
+## 
+
+# CXX = clang++
+# CXXFLAGS = -O3 $(LTO)

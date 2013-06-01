@@ -25,7 +25,7 @@ else
   RSCRIPT = Rscript
 endif
 
-R_MAKEVARS_USER =
+R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
 ifeq ($(OS), win)
