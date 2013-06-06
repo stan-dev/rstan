@@ -16,7 +16,7 @@ OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
 # EIGEN_PATH := $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e "cat(system.file('include', package = 'RcppEigen'))")
 EIGEN_PATH = ../inst/include/stanlib/eigen_3.1.3
 
-PKG_LIBS = $(shell $(R_HOME)/bin${R_ARCH_BIN}/Rscript -e "Rcpp:::LdFlags()") 
+PKG_LIBS = $(shell $(R_HOME)/bin${R_ARCH_BIN}/Rscript --vanilla -e "Rcpp:::LdFlags()") 
 
 PKG_CPPFLAGS += -I"../inst/include/stansrc"  
 PKG_CPPFLAGS += -I"$(EIGEN_PATH)" 

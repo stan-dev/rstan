@@ -9,10 +9,10 @@ OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
 
 LIBSTANOBJECTS = agrad__rev__var_stack.o agrad__matrix.o math__matrix.o
 
-# EIGEN_PATH := $(shell $(R_HOME)/bin/Rscript -e "cat(system.file('include', package = 'RcppEigen'))")
+# EIGEN_PATH := $(shell $(R_HOME)/bin/Rscript --vanilla -e "cat(system.file('include', package = 'RcppEigen'))")
 EIGEN_PATH = ../inst/include/stanlib/eigen_3.1.3
 
-PKG_LIBS = $(shell  $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()") 
+PKG_LIBS = $(shell  $(R_HOME)/bin/Rscript --vanilla -e "Rcpp:::LdFlags()") 
 PKG_CPPFLAGS += -I"../inst/include/stansrc"  
 PKG_CPPFLAGS += -I"$(EIGEN_PATH)" 
 PKG_CPPFLAGS += -I"$(EIGEN_PATH)/unsupported" 

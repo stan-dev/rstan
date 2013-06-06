@@ -17,12 +17,12 @@ ifeq ($(uname_S), Linux)
 endif
 
 ifdef R_HOME
-  R = $(R_HOME)/bin/R
-  RSCRIPT = $(R_HOME)/bin/Rscript
+  R = $(R_HOME)/bin/R --vanilla
+  RSCRIPT = $(R_HOME)/bin/Rscript --vanilla
 else
   # R = R --arch x86_64
-  R = R
-  RSCRIPT = Rscript
+  R = R --vanilla
+  RSCRIPT = Rscript --vanilla
 endif
 
 R_MAKEVARS_USER = $(CURDIR)/R_Makevars
@@ -82,7 +82,7 @@ else
 	$(R) CMD INSTALL $(STANPKG)
 endif
 
-uninstall: $(STANPKG) 
+uninstall:
 	$(R) CMD REMOVE rstan
 
 $(TMP_STANLIB): 
