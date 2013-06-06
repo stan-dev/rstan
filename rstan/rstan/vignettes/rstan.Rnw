@@ -449,12 +449,16 @@ will be in test gradient mode and will not contain any sample.
 
 \subsection{Data preprocessing and passing}
 
+\Stan has its own specification of data. \pkg{rstan} pre-processes 
+the data expressed in \R for input of \Stan. Here we talk
+about a few important steps in the data preprocessing (see the
+help of function{stan} for a full reference).
 \Stan modeling language differentiates integer and double input of data
 and variables. But typically as a user, we are always using type of \code{double}
 in \R since that is the default in \R. So an important data preprocessing step inside function 
 \code{stan} is to convert some data to type of \code{double} if possible. 
 
-Another feature in \Stan is we have type scalar and other types that are a set
+In \Stan is we have type scalar and other types that are a set
 of scalars (for example, type vector and a matrix). 
 But in \R, we do not have type scalar.  The behavior in \pkg{rstan} is to treat vector
 length 1 to be a scalar. However, we might have a model with data block 
@@ -462,6 +466,7 @@ defined in figure~\ref{fig0datablock}, in which $N$ can be $1$ in some cases.
 So we know that $N$ is always larger than $1$, we can a vector of length $N$ in \R
 as the data input for $y$. If we want to make our input of $y$ is still good when $N=1$,
 we need to explicitly make it an array as the following \R code shows.
+
 
 \begin{verbbox}
 
@@ -484,6 +489,11 @@ we need to explicitly make it an array as the following \R code shows.
 <<echo=TRUE>>=
 y <- array(y, dim = length(y))
 @
+
+As Stan cannot handle missing values in data automatically, all elements of
+data cannot contain \code{NA} in \R. An important step in \pkg{rstan}'s data
+preprocessing is to check missing values and issue an error if found. 
+
 
 \subsection{Methods of class \code{stanfit}} 
 
@@ -690,16 +700,19 @@ merge multiple \code{stanfit} object into one \code{stanfit} object. As a
 result, if we can run multiple chains in parallel using a vareity of approaches provided by 
 other packages on one computer (or a cluster), then we can essentially 
 run multiple chains in parallel. For example, we can easily achieve this goal
-on one computer using function \code{mclapply} in package \pkg{parallel}
+on one computer using function \code{mclapply} in package
+\pkg{parallel}\footnote{\pkg{parallel} works only for non-Windows, so we set
+\code{mc.cores} to $1$ for Windows.}%
 as follows.  
 <<parallel, echo=TRUE, results=hide, cache=TRUE>>=
 library(rstan)
 library(parallel)
 f1 <- stan(model_code = schools_code, data = dat, 
            chains = 1, iter = 1)
+WINDOWS <- .Platform$OS.type == "windows"
 seed <- 12345 
 sflist1 <-
-  mclapply(1:4, mc.cores = 4,
+  mclapply(1:4, mc.cores = ifelse(WINDOWS, 1, 4),
            function(i) stan(fit = f1, seed = seed, 
                             data = dat, 
                             chains = 1, chain_id = i, 
