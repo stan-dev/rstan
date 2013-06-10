@@ -28,6 +28,7 @@ test_output_csv <- function() {
   fit <- stan(model_code = model_code, 
               iter = 100, chains = 1, thin = 3, 
               sample_file = csv_fname)
+
   checkTrue(file.exists(csv_fname))
   d <- read.csv(file = csv_fname, comment.char = '#',
                 header = TRUE)
@@ -35,6 +36,15 @@ test_output_csv <- function() {
   cat2 <- function(a, b) paste0(a, ".", b)
   y2_names <- paste0("y2.", t(outer(1:2, 1:2, cat2)))
   y3_names <- paste0("y3.", t(outer(as.vector(t(outer(1:3, 1:2, cat2))), 1:3, cat2)))
+
+  dfit <- as.data.frame(fit)
+  iter1 <- unlist(d[1,])
+  names(iter1) <-  rstan:::sqrfnames_to_dotfnames(names(iter1))
+  checkEquals(iter1["y.1"], iter1["y2.1.1"], checkNames = FALSE)
+  checkEquals(iter1["y.1"], -iter1["y2.1.2"], checkNames = FALSE)
+  checkEquals(iter1["y.2"], iter1["y2.2.2"], checkNames = FALSE)
+  checkEquals(iter1["y.2"], -iter1["y2.2.1"], checkNames = FALSE)
+  checkEquals(iter1[y3_names], 1:18, checkNames = FALSE)
 
   # FIXME, uncomment the follwing line
   # checkEquals(colnames(d), c("lp__", "treedepth__", "stepsize__", y_names, y2_names, y3_names))
