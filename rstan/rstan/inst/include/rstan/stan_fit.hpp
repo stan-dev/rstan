@@ -492,7 +492,7 @@ namespace rstan {
      * @tparam Model 
      * @tparam RNG 
      *
-     * @param args: the instance that wraps up the arguments passed for sampling.
+     * @param args: the instance that wraps the arguments passed for sampling.
      * @param model: the model instance.
      * @param holder[out]: the object to hold all the information returned to R. 
      * @param qoi_idx: the indexes for all parameters of interest.  
@@ -681,7 +681,7 @@ namespace rstan {
         rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
         int m = 0;
         int ret = 0;
-        for (size_t i = 0; i < num_iterations && ret == 0; i++) {
+        for (int i = 0; i < num_iterations && ret == 0; i++) {
           ret = ng.step();
           lp = ng.logp();
           ng.params_r(cont_params);

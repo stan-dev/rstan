@@ -13,7 +13,7 @@ ess_rfun <- function(sims) {
   # Note: 
   #   The implementation in R uses acf in R to compute the autocovariance
   #   and the results might be a little bit different from that in stan. 
-  #   The R function wrapping up the C++ implementation is defined in 
+  #   The R function wrapping the C++ implementation is defined in 
   #   chains.R with name rstan_ess2_cpp 
   if (is.vector(sims)) dim(sims) <- c(length(sims), 1)
   chains <- ncol(sims)
@@ -52,7 +52,7 @@ split_rhat_rfun <- function(sims) {
   #   sims: a 2-d array _without_ warmup samples (# iter * # chains) 
   # 
   # Note: 
-  #   The R function wrapping up the C++ implementation is defined 
+  #   The R function wrapping the C++ implementation is defined 
   #   in chains.R with name rstan_splitrhat2_cpp 
   if (is.vector(sims)) dim(sims) <- c(length(sims), 1)
   chains <- ncol(sims)

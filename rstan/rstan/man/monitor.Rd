@@ -5,7 +5,8 @@
   the number of parameters) of MCMC simulation samples, this function computes 
   the summaries such as mean, standard deviation, standard error of the mean,
   and quantiles.  And for monitoring the convergence, split Rhat and the
-  effective sample size are also computed.}
+  effective sample size are also computed.  By default, half of the iterations
+  are considered to be warmup samples and thus excluded.}
 
 \usage{
 monitor(sims, warmup = floor(dim(sims)[1]/2), 
