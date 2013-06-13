@@ -76,8 +76,8 @@
     \item{\code{mode}:}{The mode of the fitted model, object of type 
        \code{integer}. \code{0} indicates sampling mode; \code{1}
        indicates test gradient mode for which no sampling is done;
-       \code{2}; error occurred before sampling. Most of methods for 
-       \code{stanfit} are useful only for \code{mode=1}}
+       \code{2}; error occurred before sampling. Most methods for 
+       \code{stanfit} are useful only for \code{mode=0}}
     \item{\code{sim}:}{Simulation results including samples for the model,
        object of type \code{list}} 
     \item{\code{inits}:}{The initial values either specified or generated
