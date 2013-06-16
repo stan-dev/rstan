@@ -314,7 +314,7 @@ setMethod("get_posterior_mean",
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
-            fnames <- flatnames(object@model_pars, object@par_dims)
+            fnames <- flatnames(object@model_pars, object@par_dims, col_major = TRUE)
             if (!exists("posterior_mean_4all", envir = object@.MISC, inherits = FALSE)) {
               mean_pars <- lapply(object@sim$samples, function(x) attr(x, "mean_pars"))
               mean_lp__ <- lapply(object@sim$samples, function(x) attr(x, "mean_lp__"))

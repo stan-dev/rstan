@@ -164,7 +164,7 @@ namespace rstan {
       (*pdiagnostic_stream_) << std::endl;
     }
       
-    void output_timing(double warmDeltaT, 
+    void print_timing(double warmDeltaT, 
                       double sampleDeltaT, 
                       std::ostream* stream, 
                       std::string comment_prefix = "") {
@@ -180,6 +180,10 @@ namespace rstan {
               << " seconds (Total)"  << std::endl
               << std::endl;
     }
+    void output_timing(double warmDeltaT, double sampleDeltaT) {
+      print_timing(warmDeltaT, sampleDeltaT, psample_stream_, std::string("# "));
+      print_timing(warmDeltaT, sampleDeltaT, pdiagnostic_stream_, std::string("# "));
+    } 
       
   };
 

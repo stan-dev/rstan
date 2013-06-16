@@ -1032,16 +1032,10 @@ namespace rstan {
           (*it) /= iter_save_wo_warmup;
       } 
       if (refresh > 0) { 
-        rstan::io::rcout << std::endl
-                         << "Elapsed Time: " << warmDeltaT 
-                         << " seconds (Warm Up)"  << std::endl
-                         << "              " << sampleDeltaT 
-                         << " seconds (Sampling)"  << std::endl
-                         << "              " << warmDeltaT + sampleDeltaT 
-                         << " seconds (Total)"  << std::endl
-                         << std::endl;
+        outputer.print_timing(warmDeltaT, sampleDeltaT, &rstan::io::rcout);
       }
       
+      outputer.output_timing(warmDeltaT, sampleDeltaT);
       if (sample_file_flag) {
         rstan::io::rcout << "Sample of chain " 
                          << chain_id 
@@ -1051,6 +1045,7 @@ namespace rstan {
       }
       if (diagnostic_file_flag) 
         diagnostic_stream.close();
+     
       
       holder = Rcpp::List(chains.begin(), chains.end());
       holder.attr("test_grad") = Rcpp::wrap(false); 
