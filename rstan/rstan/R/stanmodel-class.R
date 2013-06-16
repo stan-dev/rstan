@@ -104,7 +104,7 @@ setMethod("optimizing", "stanmodel",
             dotlist <- list(...)
             dotlist$test_grad <- FALSE # not to test gradient
             optim <- sampler$call_sampler(c(args, dotlist))
-            names(optim$par) <- flatnames(m_pars, p_dims)
+            names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             optim["stanmodel"] <- object
             invisible(optim)
           }) 
