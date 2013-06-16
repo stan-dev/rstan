@@ -131,10 +131,15 @@ namespace rstan {
         sample_file = Rcpp::as<std::string>(in[idx]); 
         sample_file_flag = true; 
       }
+ 
+      idx = find_index(args_names, std::string("diagnostic_file"));
+      if (idx == args_names.size()) diagnostic_file_flag = false;
+      else {
+        diagnostic_file = Rcpp::as<std::string>(in[idx]);
+        diagnostic_file_flag = true;
+      } 
 
       save_warmup = true;
-      diagnostic_file_flag = false; // TODO: add this option 
-
       idx = find_index(args_names, std::string("iter")); 
       if (idx == args_names.size()) iter = 2000;  
       else iter = Rcpp::as<int>(in[idx]); 
@@ -383,6 +388,10 @@ namespace rstan {
       write_comment_property(ostream,"delta",delta);
       write_comment_property(ostream,"gamma",gamma);
       write_comment_property(ostream,"nondiag_mass",nondiag_mass);
+      if (sample_file_flag) 
+        write_comment_property(ostream,"sample_file",sample_file);
+      if (diagnostic_file_flag)
+        write_comment_property(ostream,"diagnostic_file",diagnostic_file);
       write_comment(ostream);
     }
   }; 

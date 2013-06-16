@@ -307,7 +307,7 @@ is_named_list <- function(x) {
 } 
 
 config_argss <- function(chains, iter, warmup, thin, 
-                         init, seed, sample_file, ...) {
+                         init, seed, sample_file, diagnostic_file, ...) {
 
   iter <- as.integer(iter) 
   if (iter < 1) 
@@ -393,6 +393,16 @@ config_argss <- function(chains, iter, warmup, thin,
     if (chains > 1) {
       for (i in 1:chains) 
         argss[[i]]$sample_file <- append_id(sample_file, i) 
+    }
+  }
+
+  if (!missing(diagnostic_file) && !is.na(diagnostic_file)) {
+    diagnostic_file <- writable_sample_file(diagnostic_file) 
+    if (chains == 1) 
+        argss[[1]]$diagnostic_file <- diagnostic_file
+    if (chains > 1) {
+      for (i in 1:chains) 
+        argss[[i]]$diagnostic_file <- append_id(diagnostic_file, i) 
     }
   }
   

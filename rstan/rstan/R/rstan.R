@@ -104,6 +104,7 @@ stan <- function(file, model_name = "anon_model",
                  init = "random", 
                  seed = sample.int(.Machine$integer.max, 1), 
                  sample_file, # the file to which the samples are written
+                 diagnostic_file, # the file to which diagnostics are written 
                  save_dso = TRUE,
                  verbose = FALSE, ..., 
                  boost_lib = NULL, 
@@ -126,7 +127,9 @@ stan <- function(file, model_name = "anon_model",
   }
 
   if (missing(sample_file))  sample_file <- NA 
+  if (missing(diagnostic_file))  diagnostic_file <- NA 
 
   sampling(sm, data, pars, chains, iter, warmup, thin, seed, init, 
-           sample_file = sample_file, verbose = verbose, check_data = TRUE, ...) 
+           sample_file = sample_file, diagnostic_file = diagnostic_file,
+           verbose = verbose, check_data = TRUE, ...) 
 } 

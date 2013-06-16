@@ -10,7 +10,7 @@ stan(file, model_name = "anon_model", model_code = "",
   fit = NA, data = list(), pars = NA, chains = 4,
   iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
-  sample_file, save_dso = TRUE, 
+  sample_file, diagnostic_file, save_dso = TRUE, 
   verbose = FALSE, ..., 
   boost_lib = NULL,
   eigen_lib = NULL)
@@ -77,6 +77,13 @@ stan(file, model_name = "anon_model", model_code = "",
   }
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
+    If not provided, files are not created. When the folder specified 
+    is not writable, \code{tempdir()} is used. 
+    When there are multiple chains, an underscore and chain number are appended
+    to the file name.}
+
+  \item{diagnostic_file}{A character string of file name for specifying where to 
+    write diagnostics data  for \emph{all} parameters. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used. 
     When there are multiple chains, an underscore and chain number are appended

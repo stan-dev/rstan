@@ -29,6 +29,10 @@ test_output_csv <- function() {
               iter = 100, chains = 1, thin = 3, 
               sample_file = csv_fname)
 
+  pmean <- get_posterior_mean(fit)[,1]
+  pmean2 <- summary(fit)$c_summary[,'mean',1]
+  checkEquals(pmean, pmean2, tolerance = 0.00001)
+
   checkTrue(file.exists(csv_fname))
   d <- read.csv(file = csv_fname, comment.char = '#',
                 header = TRUE)
