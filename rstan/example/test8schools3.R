@@ -1,7 +1,7 @@
 library(rstan)
 
 model_name <- "_8chools3";
-sfile <- "../../src/models/misc/eight_schools/eight_schools.stan"
+sfile <- "../../stan/src/models/misc/eight_schools/eight_schools.stan"
 
 sc1 <- stanc(sfile, obfuscate_model_name = FALSE) 
 yam <- stan_model(file = sfile, 
