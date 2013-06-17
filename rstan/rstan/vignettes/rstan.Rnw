@@ -150,7 +150,7 @@ compiling the \Cpp code for \Stan model and making it possible to run the compil
 To minimize problems we might encounter, it might be better to install packages \cpkg{Rcpp}
 and \cpkg{inline} before installing \pkg{rstan}. 
 
-\subsection{Typical workflow of using \pkg{rstan}}
+\subsection[Typical workflow of using RStan]{Typical workflow of using RStan}
 \label{subsec0workflow}
 
 First, we review the typical workflow of using \Stan as it
@@ -186,14 +186,14 @@ dynamic shared object (DSO) or called dynamic link library (DLL) to be loaded by
 rather than an executable program.  We will give more details later.
 
 
-\section{An example of using \pkg{rstan}}
+\section[An example of using rstan]{An example of using \pkg{rstan}}
 \label{sec0example} 
 
 In this section, we use an example to demonstrate using \pkg{rstan}.
 In section 5.5 of \cite{GelmanCarlinSternRubin:2003}, a hierarchical model is used to model 
 coaching effects from eight schools. For short, we call this example ``eight schools.'' 
 For these eight schools, data are the estimated treatment effects and their standard errors, 
-given in table \ref{tab08schoolsdata}.  The statistical model is specified as 
+given in Table~\ref{tab08schoolsdata}.  The statistical model is specified as 
 \begin{align}
 y_j &\sim \text{normal}(\theta_j, \sigma_j), \quad j=1,\ldots,8, \label{eq08schoolmodeleq1} \\ 
 \theta_1, \ldots, \theta_8 &\overset{IID}{\sim} \text{normal}(\mu, \tau^2), 
@@ -416,7 +416,7 @@ of S4 class \code{stanfit} as discussed in section \ref{subsec0stansampling}.
 Also the arguments to control the sampling procedure
 are the same as those for function \code{stan}. 
 
-\section{More details and other functions of \pkg{rstan}}
+\section[More details and other functions of rstan]{More details and other functions of \pkg{rstan}}
 \label{sec0moredetails}
 
 In this section, we begin with talking about the arguments of function
@@ -426,10 +426,10 @@ in more details, in particular other methods that can be used to diagnose
 the convergence of Markov chains, to extract samples, and to obtain 
 information about the sampler.  
 
-\subsection{Arguments of function \code{stan}} 
+\subsection[Arguments of function stan]{Arguments of function \code{stan}} 
 
 The arguments for sampling (in function \code{stan} and 
-\code{sampling}) mainly include data, inital values, and the settings 
+\code{sampling}) mainly include data, initial values, and the settings 
 to control the sampler 
 such as \code{chains}, \code{iter}, and \code{warmup}. 
 In particular, \code{warmup} specifies the number of iterations 
@@ -519,7 +519,7 @@ data cannot contain \code{NA} in \R. An important step in \pkg{rstan}'s data
 preprocessing is to check missing values and issue an error if any.
 
 
-\subsection{Methods of class \code{stanfit}} 
+\subsection[Methods of class stanfit]{Methods of class \code{stanfit}} 
 
 For the fitted object, S4 class \code{stanfit}, we have defined methods such as
 \code{print}, \code{summary}, \code{plot}, and \code{traceplot}.  Using these
@@ -609,8 +609,8 @@ These methods (%
 \code{get\_inits}\rstanfunidx{get\_inits}, 
 \code{get\_adaptation\_info}\rstanfunidx{get\_adaptation\_info}, and
 \code{get\_sampler\_params}\rstanfunidx{get\_sampler\_params})
-for obtaining this information are listed in table
-\ref{tab0stanfitfuns} along with other methods defined for class
+for obtaining this information are listed in Table~\ref{tab0stanfitfuns} 
+along with other methods defined for class
 \code{stanfit}. 
 
 Last, a common feature for some functions of class \code{stanfit} is that 
@@ -657,7 +657,7 @@ such as stochastic MAP estimation for Bayesian models using \pkg{rstan}.
 
 
 \begin{table}
-\caption{Methods of S4 class \code{stanfit}} 
+\caption[Methods of S4 class stanfit]{Methods of S4 class \code{stanfit}} 
 \label{tab0stanfitfuns} 
 \begin{tabular}{lp{0.6\linewidth}} 
 \toprule 
@@ -689,7 +689,7 @@ Name  &    Function    \\
 \end{table}
 
 
-\subsection{Model compiling in \pkg{rstan}}
+\subsection[Model compiling in rstan]{Model compiling in \pkg{rstan}}
 
 In \RStan, for every model, we use function \code{stanc} to translate the 
 model from Stan modeling language code to \Cpp code 
@@ -753,7 +753,7 @@ Note in the above code, we specify the same seed for all the chains but use
 different chain ID (argument \code{chain\_id}). This is to make sure 
 that the random numbers generated in \Stan for all chains are independent. 
 
-\section{Work with \Stan} 
+\section[Work with Stan]{Work with \Stan} 
 \label{sec0workwstan}
 
 \pkg{rstan} provides some function to make it more convenient 
@@ -775,7 +775,7 @@ the command line.
 \section{Summary} 
 \label{sec0summary}
 
-In this vignetter, we talks about the main functionality of \pkg{rstan} 
+In this vignetter, we talk about the main functionality of \pkg{rstan} 
 from a user perspective. The online document shoud provide more details
 for all the \pkg{rstan} functions. When it comes to \Stan, refer 
 to its manual (\citealt{StanManual:2013}), which provides a lot of 
@@ -787,8 +787,8 @@ manual and some of the models originated from the examples of BUGS
 
 
 As \Stan is still being developed, there would be more features of \Stan. 
-In general, \pkg{rstan} would always implement the interfaces for all the 
-functionality of \Stan and its document would provide all the details. 
+In general, \pkg{rstan} would always implement the interfaces to all the 
+features of \Stan and its document would provide all the details. 
 For more help, check out the information at Stan's website (http://mc-stan.org). 
 
 \nocite{*} 
