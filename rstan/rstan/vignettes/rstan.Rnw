@@ -143,7 +143,7 @@ To install a \Cpp compiler and make sure that is accessible
 in \R,  refer to ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
 and the manual of \Stan. 
 
-Package \pkg{rstan} depends on other two \R packages: \cpkg{Rcpp},
+Package \pkg{rstan} depends on other two \R packages: \cpkg{Rcpp} (\citealt{rcpp}),
 \cpkg{inline}.  As \Stan is written using \Cpp, \cpkg{Rcpp} makes it much 
 easier for bridging the \R code and \Stan's \Cpp code. Package \cpkg{inline} facilitates
 compiling the \Cpp code for \Stan model and making it possible to run the compiled model.
@@ -452,7 +452,7 @@ multiple chains for calling function \code{stan}, we only need to specify one
 seed, which is randomly generated in \R if not specified. 
 
 Through changing some of augments for calling function \code{stan}, we
-can use other samplers implemented by \Stan such as HMC. All the details
+can use other samplers implemented by \Stan such as HMC (\citealt{Neal:2011}). All the details
 can be found in the help documentation of function \code{stan}. As \Stan
 and \pkg{rstan} is being actively developed, other samplers might be 
 added.  The help documentation in package \pkg{rstan} should always have the
@@ -483,7 +483,7 @@ of \code{integer} if possible.
 
 In \Stan, we have scalars and others that are a set
 of scalars (for example, vectors and matrices). 
-But \R does not have scalars.  The behavior in \pkg{rstan} is to treat vector
+But \R does not have scalars.  The behavior of \pkg{rstan} is to treat vector
 length 1 to be a scalar. However, we might have a model with data block 
 defined as in Figure~\ref{fig0datablock}, in which $N$ can be $1$ as a special case.
 So if we know that $N$ is always larger than $1$, we can a vector of length $N$ in \R
