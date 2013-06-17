@@ -623,6 +623,17 @@ in the ``eight schools'' example, we have parameter $\theta$ defined as
 \code{pars="theta"} or \code{pars="theta[1]"}.
 However, specifying part of $\theta$ (i.e., \code{pars="theta[1:2]"}) as in \R
 is not allowed---a workaround for this is to specify \code{pars=c("theta[1]","theta[2]")}. 
+Even function \code{stan} allows to specify \code{pars} so that only part of 
+the samples are returned, which might be problematic from the perspective of
+diagnosing MCMC convergence since we would apply our diagnostic criterion to
+part of our parameters. However, this might be helpful for reducing computer memory 
+usage. To mitigate the loss of diagnostics information, we can use function 
+\code{get\_posterior\_mean}\rstanfunidx{get\_posterior\_mean}, which would
+return the posterior mean of all parameters computed from individual 
+chains and all chains merged excluding warmup samples. A better way for 
+this case is to write samples to external files using argument 
+\code{sample\_file} of function \code{stan}. 
+
 
 
 \subsection{The log posterior function and its gradient} 
@@ -672,7 +683,8 @@ Name  &    Function    \\
 \code{get\_stanmodel}     & extract the \code{stanmodel} object \\ 
 \code{get\_seed}      & get the seed used for sampling  \\
 \code{get\_inits}     & get the initial values used for sampling  \\
-\code{get\_logposterior}     & get the log posterior  \\
+\code{get\_posterior\_mean}     & get the posterior mean for all parameters\\
+\code{get\_logposterior}     & get the log posterior (that is, \code{lp\_\_})  \\
 \code{get\_sampler\_params}    & get parameters used by the sampler such as \code{treedepth} of NUTS  \\
 \code{get\_adaptation\_info}    & get adaptation information, if any, of the sampler \\ 
 \code{get\_num\_upars}    & get the number of parameters on unconstrained space \\ 
