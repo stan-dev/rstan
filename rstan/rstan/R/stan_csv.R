@@ -18,8 +18,8 @@ paridx_fun <- function(names) {
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
-  metaidx <- match(c('lp__', 'treedepth__', 'stepsize__'), names)
-  names(metaidx) <- c('lp__', 'treedepth__', 'stepsize__')
+  metaidx <- match(c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__'), names)
+  names(metaidx) <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__')
   paridx <- setdiff(seq_along(names), metaidx)
   attr(paridx, "meta") <- metaidx[!sapply(metaidx, is.na)]
   paridx
@@ -79,6 +79,7 @@ read_stan_csv <- function(csvfiles) {
   g_max_comm <- 50 # maximum number of lines of comments 
   ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
+  # use the first CSV file name as model name
   m_name <- sub("(_\\d+)*$", '', filename_rm_ext(csvfiles[1]))
 
   sdate <- do.call(max, lapply(csvfiles, function(csv) file.info(csv)$mtime))

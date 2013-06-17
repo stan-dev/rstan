@@ -275,14 +275,14 @@ namespace rstan {
       } 
     } 
 
-    bool do_print(int n, int refresh) {
+    bool do_print(int n, int refresh, int last = 0) {
       if (refresh < 1) return false;
-      return (n == 0) || ((n + 1) % refresh == 0);
+      return (n == 0) || ((n + 1) % refresh == 0) || (n == last);
     }
 
     void print_progress(int m, int finish, int refresh, bool warmup) {
       int it_print_width = std::ceil(std::log10(finish));
-      if (do_print(m, refresh)) {
+      if (do_print(m, refresh, finish - 1)) {
         rstan::io::rcout << "\rIteration: ";
         rstan::io::rcout << std::setw(it_print_width) << (m + 1)
                          << " / " << finish;
@@ -290,30 +290,9 @@ namespace rstan {
                          << static_cast<int>((100.0 * (m + 1)) / finish)
                          << "%] ";
         rstan::io::rcout << (warmup ? " (Warmup)" : " (Sampling)");
-        // rstan::io::rcout << std::endl;
       }
     }
 
-    // FIXME: why this function is called when it is not about metropolis? 
-    void write_error_msg(std::ostream* error_stream,
-                         const std::domain_error& e) {
-      
-      if (!error_stream) return;
-      
-      *error_stream << std::endl
-                    << "Informational Message: The parameter state is about to be Metropolis"
-                    << " rejected due to the following underlying, non-fatal (really)"
-                    << " issue (and please ignore that what comes next might say 'error'): "
-                    << e.what()
-                    << std::endl
-                    << "If the problem persists across multiple draws, you might have"
-                    << " a problem with an initial state or a gradient somewhere."
-                    << std::endl
-                    << " If the problem does not persist, the resulting samples will still"
-                    << " be drawn from the posterior."
-                    << std::endl;
-    }
-  
     template <class Model>
     std::vector<std::string> get_param_names(Model& m) { 
       std::vector<std::string> names;
@@ -350,6 +329,7 @@ namespace rstan {
                           std::vector<double>& sum_pars,
                           double& sum_lp,
                           std::vector<Rcpp::NumericVector>& sampler_params, 
+                          std::vector<Rcpp::NumericVector>& iter_params, 
                           std::string& adaptation_info, 
                           RNG& base_rng) {
       int start = 0;
@@ -364,7 +344,8 @@ namespace rstan {
         init_s = sampler.transition(init_s);
         if (save && (((m - start) % num_thin) == 0)) {
           outputer.output_sample_params(init_s, sampler, model, chains, warmup,
-                                        sum_pars, sampler_params, sum_lp, qoi_idx, midx,
+                                        sampler_params, iter_params,
+                                        sum_pars, sum_lp, qoi_idx, midx,
                                         iter_save_i, &rstan::io::rcout);
           iter_save_i++;
           outputer.output_diagnostic_params(init_s, sampler);
@@ -389,6 +370,7 @@ namespace rstan {
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
+                      std::vector<Rcpp::NumericVector>& iter_params, 
                       std::string& adaptation_info, 
                       RNG& base_rng) {
       run_markov_chain<Sampler, Model, RNG>(sampler, num_warmup, num_iterations, 
@@ -396,7 +378,7 @@ namespace rstan {
                                             refresh, save, true,
                                             outputer,
                                             init_s, model, chains, iter_save_i, qoi_idx, midx,
-                                            sum_pars, sum_lp, sampler_params,
+                                            sum_pars, sum_lp, sampler_params, iter_params,
                                             adaptation_info, base_rng);
     }
 
@@ -417,13 +399,14 @@ namespace rstan {
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
+                      std::vector<Rcpp::NumericVector>& iter_params, 
                       std::string& adaptation_info, 
                       RNG& base_rng) {
       run_markov_chain<Sampler, Model, RNG>(sampler, num_warmup, num_iterations, num_thin,
                                             refresh, save, false,
                                             outputer,
                                             init_s, model, chains, iter_save_i, qoi_idx, midx,
-                                            sum_pars, sum_lp, sampler_params,
+                                            sum_pars, sum_lp, sampler_params, iter_params,
                                             adaptation_info,
                                             base_rng);
     }
@@ -870,7 +853,7 @@ namespace rstan {
                                             outputer, 
                                             s, model, chains, iter_save_i,
                                             qoi_idx, midx, mean_pars, mean_lp,
-                                            sampler_params, adaptation_info,
+                                            sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
         warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -883,7 +866,7 @@ namespace rstan {
                                             outputer,
                                             s, model, chains, iter_save_i,
                                             qoi_idx, midx, mean_pars, mean_lp, 
-                                            sampler_params, adaptation_info,  
+                                            sampler_params, iter_params, adaptation_info,  
                                             base_rng); 
         end = clock();
         sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -915,7 +898,7 @@ namespace rstan {
                                             outputer,
                                             s, model, chains, iter_save_i, 
                                             qoi_idx, midx, mean_pars, mean_lp, 
-                                            sampler_params, adaptation_info,  
+                                            sampler_params, iter_params, adaptation_info,  
                                             base_rng); 
         clock_t end = clock();
         warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -929,7 +912,7 @@ namespace rstan {
                                             outputer,
                                             s, model, chains, iter_save_i, 
                                             qoi_idx, midx, mean_pars, mean_lp, 
-                                            sampler_params, adaptation_info,
+                                            sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         end = clock();
         sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -961,7 +944,7 @@ namespace rstan {
                                             outputer,
                                             s, model, chains, iter_save_i, 
                                             qoi_idx, midx, mean_pars, mean_lp, 
-                                            sampler_params, adaptation_info,
+                                            sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
         warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -974,7 +957,7 @@ namespace rstan {
                                             outputer,
                                             s, model, chains, iter_save_i, 
                                             qoi_idx, midx, mean_pars, mean_lp, 
-                                            sampler_params, adaptation_info,
+                                            sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         end = clock();
         sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -1006,7 +989,7 @@ namespace rstan {
                                            outputer,
                                            s, model, chains, iter_save_i, 
                                            qoi_idx, midx, mean_pars, mean_lp, 
-                                           sampler_params, adaptation_info,
+                                           sampler_params, iter_params, adaptation_info,
                                            base_rng); 
         clock_t end = clock();
         warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -1019,11 +1002,12 @@ namespace rstan {
                                            outputer,
                                            s, model, chains, iter_save_i, 
                                            qoi_idx, midx, mean_pars, mean_lp, 
-                                           sampler_params, adaptation_info,
+                                           sampler_params, iter_params, adaptation_info,
                                            base_rng); 
         end = clock();
         sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
       } 
+      rstan::io::rcout << std::endl;
       if (iter_save_wo_warmup > 0) {
         mean_lp /= iter_save_wo_warmup;
         for (std::vector<double>::iterator it = mean_pars.begin();
@@ -1046,7 +1030,6 @@ namespace rstan {
       if (diagnostic_file_flag) 
         diagnostic_stream.close();
      
-      
       holder = Rcpp::List(chains.begin(), chains.end());
       holder.attr("test_grad") = Rcpp::wrap(false); 
       holder.attr("args") = args.stan_args_to_rlist(); 
@@ -1054,9 +1037,14 @@ namespace rstan {
       holder.attr("mean_pars") = mean_pars; 
       holder.attr("mean_lp__") = mean_lp; 
       holder.attr("adaptation_info") = adaptation_info;
-      // sampler parameters such as treedepth
-      Rcpp::List slst(sampler_params.begin(), sampler_params.end());
-      slst.names() = sampler_param_names;
+      // put sampler parameters such as treedepth together with iter_params 
+      iter_params.insert(iter_params.end(), sampler_params.begin(), sampler_params.end());
+      iter_param_names.insert(iter_param_names.end(),
+                              sampler_param_names.begin(),
+                              sampler_param_names.end());
+      Rcpp::List slst(iter_params.begin(), iter_params.end());
+      slst.names() = iter_param_names;
+      slst.erase(outputer.get_index_for_lp());
       holder.attr("sampler_params") = slst;
       holder.names() = fnames_oi;
       return 0;

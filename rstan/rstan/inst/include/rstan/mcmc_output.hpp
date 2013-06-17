@@ -31,6 +31,9 @@ namespace rstan {
       pdiagnostic_stream_(pdiagnostic_stream) {
     }
 
+    size_t get_index_for_lp() const {
+      return index_for_lp_;
+    } 
     void set_output_names(stan::mcmc::sample& s, 
                           stan::mcmc::base_mcmc& sampler,
                           M& model,
@@ -70,13 +73,22 @@ namespace rstan {
       (*psample_stream_) << std::endl;
     }
     
+    /*
+     * @param chains the samples of parameters in the model as long as lp__
+     * being the last element.
+     * @param sampler_params the parameters for sampler such as treedepth__ and
+     * stepsize__. 
+     * @param iter_params the quantities used in each iteration such as lp__
+     * and accept_stat__.
+     */
     void output_sample_params(stan::mcmc::sample& s,
                               stan::mcmc::base_mcmc& sampler, 
                               M& model, 
                               std::vector<Rcpp::NumericVector>& chains, 
                               bool warmup,
-                              std::vector<double>& sum_pars,
                               std::vector<Rcpp::NumericVector>& sampler_params, 
+                              std::vector<Rcpp::NumericVector>& iter_params, 
+                              std::vector<double>& sum_pars,
                               double& sum_lp,
                               const std::vector<size_t>& qoi_idx,
                               const std::vector<size_t>& midx,
@@ -99,7 +111,10 @@ namespace rstan {
           sum_pars[z] += param_values[z];
         sum_lp += values.at(index_for_lp_);
       } 
-      
+     
+      for (z = 0; z < sample_names_.size(); z++) {
+        iter_params[z][iter_save_i] = values[z];
+      } 
       for (z = 0; z < qoi_idx.size() - 1; ++z) {
         chains[z][iter_save_i] = param_values[qoi_idx[z]];
       } 
@@ -170,13 +185,13 @@ namespace rstan {
                       std::string comment_prefix = "") {
       if (!stream) return;
 
-      std::string prefix = comment_prefix + "Elapsed Time: ";
-      *stream << std::endl
-              << prefix << warmDeltaT
+      std::string et("Elapsed Time: ");
+      std::string prefix = comment_prefix + et;
+      *stream << prefix << warmDeltaT
               << " seconds (Warm-up)"  << std::endl
-              << comment_prefix << std::string(prefix.size() - 1, ' ') << sampleDeltaT
+              << comment_prefix << std::string(et.size(), ' ') << sampleDeltaT
               << " seconds (Sampling)"  << std::endl
-              << comment_prefix << std::string(prefix.size() - 1, ' ') << warmDeltaT + sampleDeltaT
+              << comment_prefix << std::string(et.size(), ' ') << warmDeltaT + sampleDeltaT
               << " seconds (Total)"  << std::endl
               << std::endl;
     }
