@@ -2,7 +2,7 @@
 <img src="https://github.com/stan-dev/stan/blob/master/logos/stanlogo-main.png?raw=true" alt="Stan Logo"/>
 </a>
 
-**RStan** is the R interface for [Stan](http://mc-stan.org). 
+**RStan** is the R interface to [Stan](http://mc-stan.org). 
 
 Home Page
 ---------
