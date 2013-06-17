@@ -13,7 +13,7 @@ export(
   stan_rdump,
   read_rdump,
   makeconf_path,
-  set_cppo, get_cppo, 
+  set_cppo, get_cppo, reset_cppo,
   stan_demo, 
   sflist2stanfit,
   read_stan_csv,
