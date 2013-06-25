@@ -417,7 +417,7 @@ of S4 class \code{stanfit} as discussed in section \ref{subsec0stansampling}.
 Also the arguments to control the sampling procedure
 are the same as those for function \code{stan}. 
 
-\section[More details and other functions of rstan]{More details and other functions of \pkg{rstan}}
+\section[Advanced features]{Advanced features}
 \label{sec0moredetails}
 
 In this section, we begin with talking about the arguments of function
