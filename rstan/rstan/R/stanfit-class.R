@@ -19,6 +19,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
   } 
 
   s <- summary(x, pars, probs, ...)  
+  if (is.null(s)) return(invisible(NULL))
   n_kept <- x@sim$n_save - x@sim$warmup2
   cat("Inference for Stan model: ", x@model_name, '.\n', sep = '')
   cat(x@sim$chains, " chains, each with iter=", x@sim$iter, 
@@ -50,6 +51,12 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
               cat("Stan model '", x@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
+
+            if (isTRUE(all.equal(x@sim$n_save, x@sim$warmup2,
+                check.attributes = FALSE, check.names = FALSE))) {
+              cat("Stan model '", x@model_name, "' does not contain samples after warmup.\n", sep = '')
+              return(invisible(NULL))
+            }
 
             pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
             if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
@@ -374,6 +381,7 @@ setMethod("extract", signature = "stanfit",
             n_kept <- object@sim$n_save - object@sim$warmup2
             fun1 <- function(par) {
               sss <- sapply(tidx[[par]], get_kept_samples2, object@sim) 
+              if (is.list(sss))  sss <- do.call(c, sss)
               dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par]]) 
               dimnames(sss) <- list(iterations = NULL)
               sss 
@@ -428,6 +436,12 @@ setMethod("summary", signature = "stanfit",
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
+
+            if (isTRUE(all.equal(object@sim$n_save, object@sim$warmup2,
+                check.attributes = FALSE, check.names = FALSE))) {
+              cat("Stan model '", object@model_name, "' does not contain samples after warmup.\n", sep = '')
+              return(invisible(NULL))
+            }
 
             if (!exists("summary", envir = object@.MISC, inherits = FALSE) && use_cache) 
               assign("summary", summary_sim(object@sim), envir = object@.MISC)

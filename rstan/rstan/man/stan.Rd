@@ -49,8 +49,8 @@ stan(file, model_name = "anon_model", model_code = "",
     chain (including warmup). The default is 2000.}
   \item{warmup}{A positive integer specifying number of warmup (aka burnin)
      iterations.  This also specifies the number of iterations used for step-size
-     adaptation, so warmup samples should not be used for inference.
-     The default is \code{iter/2}.}
+     adaptation, so warmup samples should not be used for inference. The number
+     of warmup should not be larger than \code{iter} and the default is \code{iter/2}.}
   \item{thin}{A positive integer specifying the period for saving sample; defaults to 1.} 
   \item{seed}{The seed, a positive integer, for random number generation. The
     default is generated from 1 to the maximum integer supported by \R on the
