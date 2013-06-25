@@ -46,10 +46,11 @@
   \item{iter}{A positive integer specifying how many iterations for each chain
     (including warmup). The default is 2000.}
 
-  \item{warmup}{A positive integer specifying the number of warmup (aks burnin)
+  \item{warmup}{A positive integer specifying the number of warmup (aka burnin)
     iterations.  If step-size adaptation is on (which it is by default), this 
     also controls the number of iterations for which adaptation is run (and
-    hence the samples should not be used for inference). The default is \code{iter/2}.}
+    hence the samples should not be used for inference). The number of warmup
+    should not be larger than \code{iter} and the default is \code{iter/2}.}
 
   \item{thin}{A positive integer specifying the period for saving samples; defaults to 1.} 
 
