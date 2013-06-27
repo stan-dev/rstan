@@ -798,7 +798,7 @@ namespace rstan {
       std::vector<Rcpp::NumericVector> chains; 
       std::vector<double> mean_pars;
       mean_pars.resize(initv.size(), 0);
-      double mean_lp;
+      double mean_lp(0);
       std::vector<Rcpp::NumericVector> sampler_params;
       std::vector<Rcpp::NumericVector> iter_params;
       std::vector<std::string> sampler_param_names;
