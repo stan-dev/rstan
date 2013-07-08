@@ -82,7 +82,6 @@ options(width=60)
 \author{The Stan Development Team \\ stan@mc-stan.org}
 \makeindex
 
-
 \begin{document}
 
 \maketitle
@@ -91,205 +90,202 @@ options(width=60)
 
 \section{Introduction}
 
-\Stan is a package for Bayesian sampling mainly using the No-U-Turn sampler (NUTS)
-(\citealt{hoffman-gelman:2012}), providing a new and scalable tool for Bayesian 
-model estimation. As a \R package, \RStan\footnote{The name of 
-this package is \pkg{rstan}, so we should use
-\code{library(rstan)} to load it in \R.} % 
-allows to use \Stan conveniently in \R (\citealt{rprj}). In general, the website
-for \Stan and \RStan, \url{http://mc-stan.org}, provides the
-up-to-date information about how to get started with \Stan and \RStan. For
-example, ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
-provides information on how to install package \pkg{rstan} in \R and uses a couple 
-of examples as demonstration.
-In this vignette, we give a complete introduction to 
-the functionality of package \pkg{rstan}.  
+\Stan is a \Cpp program for Bayesian modeling and inference
+that uses the No-U-Turn sampler (NUTS) (\citealt{hoffman-gelman:2012})
+to obtain posterior simulation given user-specified model and data. 
+The \R package, \pkg{rstan} allows one to conveniently run \Stan
+within \R (\citealt{rprj}) and to access \Stan output, which includes
+posterior inferences and also intermediate quantities such as evaluation
+of the log posterior density and its gradients, which can be useful
+in diagnostics. The website for \Stan and \RStan, \url{http://mc-stan.org},
+provides up-to-date information about how to operate \Stan and \RStan.
+For example, ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
+provides information on how to install package \pkg{rstan} in \R, demonstrating
+with two examples.  The present article provides 
+a complete introduction to the functionality of package \pkg{rstan}. 
 As a complement to the documentation about functions and classes in package
-\pkg{rstan}, this vignette provides pointers to many functions in package 
-\pkg{rstan}, an introduction from the perspective of users. 
- 
+\pkg{rstan}, this vignette provides pointers to many functions in 
+\pkg{rstan} from the user's perspective.
 
-We start with the prerequisites for using package \pkg{rstan} 
+
+We start with the prerequisites for using \pkg{rstan} 
 (section \ref{subsec0pre}) and a typical workflow of using \Stan
 and \RStan (section \ref{subsec0workflow}). 
 In section \ref{sec0example} and \ref{sec0examplesteps}, we use an example
 to illustrate the process of using \pkg{rstan} to conduct Bayesian model
-estimation in both one step and multiple steps. 
-Section \ref{sec0moredetails} presents more details about using \pkg{rstan}. 
+estimation.
+Section \ref{sec0moredetails} presents further details on \pkg{rstan}. 
 Section \ref{sec0parallel} describes how to run multiple chains in parallel. 
-In section \ref{sec0workwstan}, we talk about some functions that \pkg{rstan}
+In section \ref{sec0workwstan}, we discuss some functions that \pkg{rstan}
 provides to help use \Stan from the command line. 
 
 
 \subsection{Prerequisites} 
 \label{subsec0pre}
 
-Undoubtedly, we assume that users have known Bayesian statistics. There
-are many good textbooks on this subject, for example, 
-\cite{GelmanCarlinSternRubin:2003}. Second, users need to know how to specify
-a model using \Stan modeling language, which is detailed 
+Users need to know how to specify statistical models 
+using the \Stan modeling language, which is detailed 
 in the manual of \Stan (\citealt{StanManual:2013}).
+We give an example below. 
 
+The package \pkg{rstan} cannot currently be installed using CRAN. Instead,
+they can be installed following the instructions, ``Running
+Stan from \R,'' accessible from \url{http://mc-stan.org}. 
+As part of this, a \Cpp compiler is required (or can be installed
+following the instruction on that page). 
 
-To use \pkg{rstan}, we do not need to install \Stan.  Currently, \Stan runs
-from the command line, which seems hard for some users. Package \pkg{rstan} makes it easier 
-by including all the key parts of \Stan. So though we refer to \RStan as an \R
-interface to \Stan, installing \Stan is not needed for using \pkg{rstan}. In addition,
-RStan provides some functions to help use \Stan from the command line. 
-
-\RStan needs a \Cpp compiler to compile models the same as in \Stan. 
+The package \pkg{rstan} needs a \Cpp compiler to compile models the same as in \Stan. 
 To install a \Cpp compiler and make sure that it is accessible
 in \R,  refer to ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
 and the manual of \Stan. 
 
-Package \pkg{rstan} depends on other two \R packages: \cpkg{Rcpp} (\citealt{rcpp}) and
-\cpkg{inline}.  As \Stan is written using \Cpp, \cpkg{Rcpp} makes it much 
-easier for bridging the \R code and \Stan's \Cpp code. Package \cpkg{inline} facilitates
-compiling the \Cpp code for \Stan model and make it possible to run the compiled model in \R.
-To minimize problems we might encounter, it might be better to install packages \cpkg{Rcpp}
-and \cpkg{inline} before installing \pkg{rstan}. 
+Package \pkg{rstan} depends on other two \R packages: \cpkg{Rcpp}
+(\citealt{rcpp}) and \cpkg{inline}.  \cpkg{Rcpp} helps bridge the \R code and
+\Stan's \Cpp code.  The package \cpkg{inline} facilitates compiling the \Cpp
+code for \Stan model and make it possible to run the compiled model in \R.
 
 \subsection[Typical workflow of using RStan]{Typical workflow of using RStan}
 \label{subsec0workflow}
 
-First, we review the typical workflow of using \Stan as using \RStan
-is similar. \Stan has a
-modeling language, which is similar to BUGS (\citealt{WinBUGS}) but different
-from many respects. In \Stan, we use \stanc\footnote{Using \Stan from the
+\Stan has a modeling language, which is similar to 
+but not identical to that of the Bayesian graphical modeling package 
+BUGS (\citealt{WinBUGS}). \Stan uses the program 
+\stanc\footnote{Using \Stan from the
 command line, \code{stanc} is an executable program.} %
 to translate a model expressed in \Stan modeling language to \Cpp code. The \Cpp code
 is then compiled to an executable program by using a \Cpp compiler such as
-\gpp\footnote{\url{http://gcc.gnu.org}} and \clangpp\footnote{\url{http://clang.llvm.org}}.
-Then this program can be executed to draw samples given data and other input. 
+\gpp\footnote{\url{http://gcc.gnu.org}} or \clangpp\footnote{\url{http://clang.llvm.org}}.
+The resulting program can be executed to draw samples given data and other input. 
 In summary, the following are typical steps of using \Stan. 
 \begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
-\item Represent a statistical model in \Stan modeling language 
+\item Represent a statistical model by writing its log posterior
+      density (up to an arbitrary normalizing constant that does not 
+      depends on the unknown parameters in the model); this can be done 
+      using \Stan modeling language. 
 \item Translate the model coded in \Stan modeling language to \Cpp code using \stanc 
 \item Compile the \Cpp code for the model using a \Cpp compiler to
-      create an executable program 
-\item Prepare Data  
-\item Run the executable to sample from the posterior distribution
+      create a dynamic shared object (DSO), also called a dynamic link library (DLL), 
+      that can be loaded by \R.
+\item Run the DSO to sample from the posterior distribution
 \item Diagnose convergence of the MCMC chains of samples
 \item Conduct model inference based on the samples 
 \end{enumerate}
 
-Knowing the above steps is helpful sometimes 
-when, for example, we encounter a problem and want to identify the problematic step. 
-In \pkg{rstan}, we have almost the same steps as above but packaged 
-in different \R functions. 
-However, there are some differences for \pkg{rstan} compared with \Stan.
-First, to simplify the interface, function \code{stan}\rstanfunidx{stan} in
-package \pkg{rstan} wraps some of the above steps.
-Second, in \pkg{rstan}, we compile the \Cpp code generated for a model into a 
-dynamic shared object (DSO), which is also called dynamic link library (DLL),
-to be loaded by \R rather than an executable program.  We will give more
-details later in section~\ref{subsecmodelcompiling}.
-
+Steps c, d, and e above are all performed implicitly by
+a single \pkg{rstan} call. 
 
 \section[An example of using rstan]{An example of using \pkg{rstan}}
 \label{sec0example} 
 
-In this section, we use an example to demonstrate using \pkg{rstan}.
-In section 5.5 of \cite{GelmanCarlinSternRubin:2003}, a hierarchical model is used to model 
-coaching effects from eight schools. For short, we call this example ``eight schools.'' 
-For these eight schools, data are the estimated treatment effects and their standard errors, 
-given in Table~\ref{tab08schoolsdata}.  The statistical model is specified as 
+In section 5.5 of \cite{GelmanCarlinSternRubin:2003}, a hierarchical model is
+used to model the effect of coaching programs on for college admissions 
+tests.  The data, shown in Table~\ref{tab08schoolsdata}, summarize the results
+of experiments conducted in eight high schools, with an estimated standard 
+error for each, and these data and model are of historical interest as an example
+of full Bayesian inference (\citealt{rubin1981}). 
+We use this example here for its simplicity and because it represents a nontrivial
+Markov chain simulation problem in that there is dependence between the parameters 
+of original interest in the study---the effects of coaching in each of the eight 
+schools--and the hyperparameter representing the variation of these effects in the 
+modeled population.  Certain implementations of the Gibbs sampler or Hamiltonian 
+Monte Carlo can be slow to converge in this example. 
+For short, we call this example ``eight schools.'' 
+The statistical model is specified as 
 \begin{align}
-y_j &\sim \text{normal}(\theta_j, \sigma_j), \quad j=1,\ldots,8, \label{eq08schoolmodeleq1} \\ 
-\theta_1, \ldots, \theta_8 &\overset{IID}{\sim} \text{normal}(\mu, \tau^2), 
+y_j &\sim \text{normal}(\theta_j, \sigma_j^2), \quad j=1,\ldots,8 \\ 
+\theta_1, \ldots, \theta_8 &\sim \text{normal}(\mu, \tau^2), 
 \end{align} 
-where in \eqref{eq08schoolmodeleq1}, $\sigma_j$ is known. 
-Further we have prior for $(\mu, \tau)$ as specified in \cite{GelmanCarlinSternRubin:2003}. 
+which the $\sigma_j$'s assumed known and a uniform prior 
+density, $p(\mu, \tau) \propto 1$. 
 
-\begin{table}[ht]
-\centering 
-\caption{Data of Eight schools example}
-\label{tab08schoolsdata}
-\begin{tabular}{ccc} 
-\toprule 
-School  & 
-\begin{minipage}[t]{0.16\columnwidth}%
-Estimated treatment effect, $y_j$ 
-\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}%
-s.e.\ of effect estimate, $\sigma_j$  
-\end{minipage}  \\
-\midrule
-A     &  28   & 15  \\
-B     &   8   & 10  \\
-C     &  -3   & 16  \\
-D     &   7   & 11  \\
-E     &  -1   &  9  \\
-F     &   1   & 11  \\
-G     &  18   & 10  \\
-H     &  12   & 18  \\
-\bottomrule
+\begin{table}
+\begin{center}\begin{tabular}{ccc}
+&\multicolumn{1}{c}{Estimated}&\multicolumn{1}{c}{Standard error}\\
+&\multicolumn{1}{c}{treatment}&\multicolumn{1}{c}{of effect}\\
+School&\multicolumn{1}{c}{effect, $y_j$}&
+\multicolumn{1}{c}{estimate, $\sigma_j$}\\\hline
+A& \ 28 & 15 \\
+B& \ \,\, 8 & 10 \\
+C& $\,-3$ & 16 \\
+D& \ \,\, 7 & 11 \\
+E& $\,-1$ & \ 9 \\
+F& \ \,\, 1 & 11 \\
+G& \ 18 & 10 \\
+H& \ 12 & 18
 \end{tabular}
+\end{center}
+\caption{Observed effects of coaching on college admissions test scores in
+eight schools.  We fit these data using a hierarchical model allowing variation
+between schools.}
+\label{tab08schoolsdata}
 \end{table}
+
 
 \subsection{Express the model in Stan}
 
-In both \Stan and \RStan, we first need to express this model in 
+We first need to express this model in 
 \Stan modeling language. \pkg{rstan} allows a model to be coded 
 in a text file (typically with suffix \code{.stan}) or a character string in \R. 
-Here we use a character string. 
-<<echo=TRUE>>=
-library(rstan) 
-schools_code0 <- '
-  data {
-    int<lower=0> J; // number of schools 
-    real y[J];      // estimated treatment effects
-    real<lower=0> sigma[J]; // s.e. of effect estimates 
-  }
-  parameters {
-    real mu; 
-    real<lower=0> tau;
-    real theta[J];
-  }
-  model {
-    theta ~ normal(mu, tau);
-    y ~ normal(theta, sigma);
-  }
-'
-@
+We put the following plain text in file schools.stan: 
+\begin{Schunk}
+\begin{Sinput}
+data {
+  int<lower=0> J; // number of schools 
+  real y[J];      // estimated treatment effects
+  real<lower=0> sigma[J]; // s.e. of effect estimates 
+}
+parameters {
+  real mu; 
+  real<lower=0> tau;
+  real eta[J];
+}
+transformed parameters {
+  real theta[J];
+  theta <- mu + tau*eta;
+}
+model {
+  eta ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+}
+\end{Sinput}
+\end{Schunk} 
 
-For better performance of sampling, we would use the following
-equivalent code for this model. See the manual of Stan for more
-details. 
+The first paragraph of the above code specifies the data:  the number of
+schools, $J$; the vector of estimates, $y_1,\dots,y_J$; and the standard
+errors, $\sigma_{1},\dots\sigma_{J}$.  Data are labeled as integer or real and
+can be vectors (or, more generally, arrays) if dimensions are specified.  Data
+can also be constrained; for example, in the above model $J$ has been
+restricted to be nonnegative and the components of $\sigma_y$ must all be
+positive.
 
-<<echo=TRUE>>=
-library(rstan) 
-schools_code <- '
-  data {
-    int<lower=0> J; // number of schools 
-    real y[J];      // estimated treatment effects
-    real<lower=0> sigma[J]; // s.e. of effect estimates 
-  }
-  parameters {
-    real mu; 
-    real<lower=0> tau;
-    real eta[J];
-  }
-  transformed parameters {
-    real theta[J];
-    for (j in 1:J)
-      theta[j] <- mu + tau * eta[j];
-  }
-  model {
-    eta ~ normal(0, 1);
-    y ~ normal(theta, sigma);
-  }
-'
-@
+The code next introduces the parameters:  the unknowns to be estimated in the
+model fit.  These are the school effects, $\theta_j$; the mean, $\mu$, and
+standard deviation, $\tau$, of the population of school effects, the
+school-level errors $\eta$, and the effects, $\theta$.  In this model, we let
+$\theta$ be a transformed parameters of $\mu$, $\tau$, and $\eta$ instead of
+directly declaring $\theta$ as a parameter. By parameterizing this way, the
+sampler runs more efficiently; the resulting multivariate geometry is better
+behaved for Hamiltonian Monte Carlo (Neal, 2011).
+
+Finally comes the model, which looks similar to standard statistical notation.
+(Just be careful:  the second argument to Stan's normal$(\cdot,\cdot)$
+distribution is the standard deviation, not the variance as is usual in
+statistical notation.)  We have written the model in vector notation, which
+allows Stan to make use of more efficient algorithmic differentiation (AD).  It
+would also be possible to write the model more explicitly, for example
+replacing \verb+y ~ normal(theta,sigma);+ with a loop over the $J$ schools,
+\verb+for (j in 1:J) y[j] ~ normal(theta[j],sigma[j]);+\,.
+
 
 \subsection{Prepare data}
 
 \pkg{rstan} accepts data as a \code{list} or an \code{environment}. 
-So to prepare the data in \R, we create a \code{list} as follows. 
+To prepare the data in \R, we create a \code{list} as follows. 
 <<echo=TRUE>>=
-dat <- list(J = 8, 
-            y = c(28,  8, -3,  7, -1,  1, 18, 12),
-            sigma = c(15, 10, 16, 11,  9, 11, 10, 18))
+schools_data <- 
+  list(J=8, 
+  y=c(28,  8, -3,  7, -1,  1, 18, 12),
+  sigma=c(15, 10, 16, 11,  9, 11, 10, 18))
 @
 
 Often we would already have the elements of the data for a model
@@ -300,29 +296,35 @@ provide just the names instead of creating a new list. The following
 J <- 8
 y <- c(28,  8, -3,  7, -1,  1, 18, 12)
 sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
-dat <- c("J", "y", "sigma") 
+schools_data <- c("J", "y", "sigma") 
 @
 
-\subsection{Draw sample for the model} 
+It would also be possible (indeed, encouraged) to read in the data
+from a file rather than to directly enter 
+the numbers in the \R script. 
+
+\subsection{Sample from the posterior distribution}
 \label{subsec0stansampling}
 
-Next, we can call function \code{stan} to sample for the model. 
+Next, we can call function \code{stan} to draw posterior samples:
 <<callstan, echo=TRUE, results=hide, cache=TRUE>>=
-fit <- stan(model_code = schools_code, data = dat, 
-            iter = 100, chains = 4)
+library(rstan)
+fit1 <- stan(file="schools.stan", data=schools_data, 
+             iter=100, chains=4)
 @
 
-Function \code{stan} wraps the following three steps, which are similar to some
-steps mentioned above in \Stan. But the deep integration of \Stan in \pkg{rstan} 
-makes it much easier to start from a model and finish with samples drawn from the 
-posterior distribution. In particular, the difficulty of compiling the \Cpp code
-generated from a model is almost taken away from users. Later, we refer to
-these three steps by `translating', `comppiling and loading', and `sampling.' 
+Function \code{stan} wraps the following three steps: 
 \begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
 \item Translate a model in \Stan code to \Cpp code 
 \item Compile the \Cpp code to a dynamic shared object (DSO) and load the DSO
 \item Sample given some user-specified data and other settings
 \end{enumerate}
+
+A single call to \code{stan} performs all three steps, but they can also be  
+executed one by one, which can be useful for debugging.   In addition, \Stan
+saves the DSO so that when the same model is fit again (possibly with new
+data), function \code{stan} can be called so that only the third step is performed, thus
+saving compile time.
 
 Function \code{stan} returns an object of S4\footnote{For those who are not familiar 
 with the concept of class and S4 class in \R, refer to \cite{chambers2010software}. 
@@ -343,24 +345,26 @@ example, problems with input such as data and initial values),
 we can reuse the previous compiled model. 
 For class \code{stanfit}, many methods such as \code{print} and \code{plot} 
 are defined to work with the samples and conduct model inference. For example, 
-the following shows a summary of the parameters for the eight school
+the following shows a summary of the parameters for our
 example using function \code{print}.
 <<echo=TRUE>>=
-print(fit, pars=c("theta", "mu", "tau", "lp__"), 
+print(fit1, pars=c("theta", "mu", "tau", "lp__"), 
       probs=c(.1,.5,.9))
 @
 
-It is simple to just use function \code{stan} to execute the three steps of
-translating, compiling and loading, and sampling. 
-As these steps are implemented separately in \pkg{rstan} (detailed
-in the next section), we can execute the three steps one by one.  
-This might serve us better sometimes (for
-example, to debug our \Stan model code or \R code). 
+The last line of this output, {\tt lp\_\_}, is the logarithm of the
+(unnormalized) posterior density as calculated by Stan while performing the
+Hamiltonian Monte Carlo algorithm.  This log density can be used in various
+ways for model evaluation and comparison (see, e.g., Vehtari and Ojanen, 2012).
+%Vehtari, A., and Ojanen, J. (2012). A survey of Bayesian predictive methods
+%for model assessment, selection and comparison. 
+%Statistics Surveys 6, 142-228. 
+
 
 \section{Eight schools example step by step}
 \label{sec0examplesteps} 
 
-In this section, we dive into functions in \pkg{rstan} that implement
+In this section, we dive into the functions in \pkg{rstan} that implement
 the three steps of translating, compiling and loading, and sampling. 
 Using these functions individually, we an fit a model in \pkg{rstan}
 in multiple steps as in \Stan.
@@ -372,7 +376,7 @@ which might be helpful for advanced users.  When we have syntax errors in the
 model's \Stan code, the error information from \code{stanc} would 
 be reported to help debug.  For the eight schools example, we use 
 <<echo=TRUE, results=hide>>=
-rt <- stanc(model_code = schools_code, 
+rt <- stanc(file = "schools.stan",
             model_name = '8schools') 
 @
 
@@ -391,12 +395,12 @@ Also we can construct a model from the model's \Stan code
 using function \code{stan\_model}. If the input 
 for \code{stan\_model} is given by argument \code{file} or \code{model\_code}
 that provides the \Stan code for a model, function \code{stanc} will
-be called insdie \code{stan\_model} to translate the model from \Stan code to
+be called inside \code{stan\_model} to translate the model from \Stan code to
 \Cpp code.
 <<callstanmodel2, echo=TRUE, results=hide, cache=TRUE>>=
-sm <- stan_model(model_code = schools_code, 
-                 model_name = '8schools', 
-                 verbose = FALSE)
+sm <- stan_model(file="schools.stan",
+                 model_name='schools', 
+                 verbose=FALSE)
 @
 
 Function \code{stan\_model} returns an object of S4 class \code{stanmodel}
@@ -407,7 +411,7 @@ input of data, initial values, and other specification of sampling
 parameters such as \code{chains} (number of chains) and \code{iter} (number of
 iterations). 
 <<callcampling, echo=TRUE, results=hide, cache=TRUE>>= 
-fit <- sampling(sm, data = dat, chains = 4)
+fit <- sampling(sm, data=schools_data, chains=4)
 @
 
 In fact, the final step in function \code{stan} is to call 
@@ -695,8 +699,6 @@ such as stochastic MAP estimation for Bayesian models.
 
 
 \begin{table}
-\caption[Methods of S4 class stanfit]{Methods of S4 class \code{stanfit}} 
-\label{tab0stanfitfuns} 
 \begin{tabular}{lp{0.6\linewidth}} 
 \toprule 
 Name  &    Function    \\ 
@@ -725,6 +727,8 @@ Name  &    Function    \\
 \code{pairs} & make a matrix of scatter plots for the samples of parameters  \\
 \bottomrule 
 \end{tabular}
+\caption[Methods of S4 class stanfit]{Methods of S4 class \code{stanfit}} 
+\label{tab0stanfitfuns} 
 \end{table}
 
 
@@ -778,14 +782,14 @@ as follows.
 <<parallel, echo=TRUE, results=hide, cache=TRUE>>=
 library(rstan)
 library(parallel)
-f1 <- stan(model_code = schools_code, data = dat, 
-           chains = 1, iter = 1)
+f1 <- stan(file="schools.stan",data=schols_data, 
+           chains =1, iter=1)
 WINDOWS <- .Platform$OS.type == "windows"
 seed <- 12345 
 sflist1 <-
   mclapply(1:4, mc.cores = ifelse(WINDOWS, 1, 4),
            function(i) stan(fit = f1, seed = seed, 
-                            data = dat, 
+                            data = schools_data, 
                             chains = 1, chain_id = i, 
                             refresh = -1))
 fit <- sflist2stanfit(sflist1)
