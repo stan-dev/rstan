@@ -10,7 +10,7 @@ parameters {
 }
 transformed parameters {
   vector[J] theta;
-  theta <- mu + tau*eta;
+  theta <- mu + tau * eta;
 }
 model {
   eta ~ normal(0, 1);

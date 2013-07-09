@@ -238,11 +238,11 @@ data {
 parameters {
   real mu; 
   real<lower=0> tau;
-  real eta[J];
+  vector[J] eta;
 }
 transformed parameters {
-  real theta[J];
-  theta <- mu + tau*eta;
+  vector[J] theta;
+  theta <- mu + tau * eta;
 }
 model {
   eta ~ normal(0, 1);
