@@ -91,7 +91,6 @@ namespace rstan {
                               std::vector<double>& sum_pars,
                               double& sum_lp,
                               const std::vector<size_t>& qoi_idx,
-                              const std::vector<size_t>& midx,
                               int iter_save_i,
                               std::ostream* pstream) {
       std::vector<double> values;
@@ -104,6 +103,7 @@ namespace rstan {
       model.write_array_params_all(const_cast<std::vector<double>&>(s.cont_params()),
                                    const_cast<std::vector<int>&>(s.disc_params()),
                                    param_values, pstream);
+      // values in param_values are column-major.
 
       size_t z = 0;
       if (!warmup) {
@@ -130,7 +130,7 @@ namespace rstan {
       for (size_t i = 0; i < sampler_values.size(); ++i)
         (*psample_stream_) << "," << sampler_values[i];
       for (size_t i = 0; i < param_values.size(); ++i)
-        (*psample_stream_) << "," << param_values[midx[i]];
+        (*psample_stream_) << "," << param_values[i];
       (*psample_stream_) << std::endl;
     }
 

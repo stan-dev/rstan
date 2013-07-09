@@ -312,6 +312,16 @@ namespace rstan {
       o << std::endl;
     }
 
+    template <class T>
+    void print_vector(const std::vector<T>& v, std::ostream& o, 
+                      const std::string& sep = ",") {
+      if (v.size() > 0)
+        o << v[0];
+      for (size_t i = 1; i < v.size(); i++)
+        o << sep << v[i];
+      o << std::endl;
+    }
+
     template <class Sampler, class Model, class RNG>
     void run_markov_chain(Sampler& sampler,
                           int num_warmup, int num_iterations,
@@ -325,7 +335,6 @@ namespace rstan {
                           std::vector<Rcpp::NumericVector>& chains, 
                           int& iter_save_i,
                           const std::vector<size_t>& qoi_idx,
-                          const std::vector<size_t>& midx, 
                           std::vector<double>& sum_pars,
                           double& sum_lp,
                           std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -345,7 +354,7 @@ namespace rstan {
         if (save && (((m - start) % num_thin) == 0)) {
           outputer.output_sample_params(init_s, sampler, model, chains, warmup,
                                         sampler_params, iter_params,
-                                        sum_pars, sum_lp, qoi_idx, midx,
+                                        sum_pars, sum_lp, qoi_idx,
                                         iter_save_i, &rstan::io::rcout);
           iter_save_i++;
           outputer.output_diagnostic_params(init_s, sampler);
@@ -366,7 +375,6 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& chains, 
                       int& iter_save_i,
                       const std::vector<size_t>& qoi_idx,
-                      const std::vector<size_t>& midx, 
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -377,7 +385,7 @@ namespace rstan {
                                             num_thin,
                                             refresh, save, true,
                                             outputer,
-                                            init_s, model, chains, iter_save_i, qoi_idx, midx,
+                                            init_s, model, chains, iter_save_i, qoi_idx,
                                             sum_pars, sum_lp, sampler_params, iter_params,
                                             adaptation_info, base_rng);
     }
@@ -395,7 +403,6 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& chains, 
                       int& iter_save_i,
                       const std::vector<size_t>& qoi_idx,
-                      const std::vector<size_t>& midx, 
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -405,7 +412,7 @@ namespace rstan {
       run_markov_chain<Sampler, Model, RNG>(sampler, num_warmup, num_iterations, num_thin,
                                             refresh, save, false,
                                             outputer,
-                                            init_s, model, chains, iter_save_i, qoi_idx, midx,
+                                            init_s, model, chains, iter_save_i, qoi_idx,
                                             sum_pars, sum_lp, sampler_params, iter_params,
                                             adaptation_info,
                                             base_rng);
@@ -452,14 +459,12 @@ namespace rstan {
      * @param model: the model instance.
      * @param holder[out]: the object to hold all the information returned to R. 
      * @param qoi_idx: the indexes for all parameters of interest.  
-     * @param midx: the indexes for mapping col-major to row-major
      * @param fnames_oi: the parameter names of interest.  
      * @param base_rng: the boost RNG instance. 
      */
     template <class Model, class RNG> 
     int sampler_command(stan_args& args, Model& model, Rcpp::List& holder,
                         const std::vector<size_t>& qoi_idx, 
-                        const std::vector<size_t>& midx, 
                         const std::vector<std::string>& fnames_oi, RNG& base_rng) {
       bool sample_file_flag = args.get_sample_file_flag(); 
       bool diagnostic_file_flag = args.get_diagnostic_file_flag();
@@ -679,7 +684,7 @@ namespace rstan {
         holder["value"] = lp; 
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream, midx);
+          print_vector(params_inr_etc, sample_stream);
           sample_stream.close();
         }
         return 0;
@@ -730,7 +735,7 @@ namespace rstan {
 
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream, midx);
+          print_vector(params_inr_etc, sample_stream);
           sample_stream.close();
         }
         return 0;
@@ -784,7 +789,7 @@ namespace rstan {
         holder["value"] = lp;
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream, midx);
+          print_vector(params_inr_etc, sample_stream);
           sample_stream.close();
         }
         return 0;
@@ -852,7 +857,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             outputer, 
                                             s, model, chains, iter_save_i,
-                                            qoi_idx, midx, mean_pars, mean_lp,
+                                            qoi_idx, mean_pars, mean_lp,
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
@@ -865,7 +870,7 @@ namespace rstan {
                                             refresh, true, 
                                             outputer,
                                             s, model, chains, iter_save_i,
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,  
                                             base_rng); 
         end = clock();
@@ -897,7 +902,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,  
                                             base_rng); 
         clock_t end = clock();
@@ -911,7 +916,7 @@ namespace rstan {
                                             num_thin, refresh, true, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         end = clock();
@@ -943,7 +948,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
@@ -956,7 +961,7 @@ namespace rstan {
                                             refresh, true, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         end = clock();
@@ -988,7 +993,7 @@ namespace rstan {
                                            refresh, save_warmup, 
                                            outputer,
                                            s, model, chains, iter_save_i, 
-                                           qoi_idx, midx, mean_pars, mean_lp, 
+                                           qoi_idx, mean_pars, mean_lp, 
                                            sampler_params, iter_params, adaptation_info,
                                            base_rng); 
         clock_t end = clock();
@@ -1001,7 +1006,7 @@ namespace rstan {
                                            refresh, true, 
                                            outputer,
                                            s, model, chains, iter_save_i, 
-                                           qoi_idx, midx, mean_pars, mean_lp, 
+                                           qoi_idx, mean_pars, mean_lp, 
                                            sampler_params, iter_params, adaptation_info,
                                            base_rng); 
         end = clock();
@@ -1065,7 +1070,7 @@ namespace rstan {
     std::vector<std::string> names_oi_; // parameters of interest 
     std::vector<std::vector<unsigned int> > dims_oi_; 
     std::vector<size_t> names_oi_tidx_;  // the total indexes of names2.
-    std::vector<size_t> midx_for_col2row; // indices for mapping col-major to row-major
+    // std::vector<size_t> midx_for_col2row; // indices for mapping col-major to row-major
     std::vector<unsigned int> starts_oi_;  
     unsigned int num_params2_;  // total number of POI's.   
     std::vector<std::string> fnames_oi_; 
@@ -1143,7 +1148,7 @@ namespace rstan {
       names_oi_tidx_.push_back(-1); // lp__
       calc_starts(dims_oi_, starts_oi_);
       get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true); 
-      get_all_indices_col2row(dims_, midx_for_col2row);
+      // get_all_indices_col2row(dims_, midx_for_col2row);
     }             
 
     /**
@@ -1261,7 +1266,7 @@ namespace rstan {
 
       int ret;
       ret = sampler_command(args, model_, holder, names_oi_tidx_, 
-                            midx_for_col2row, fnames_oi_, base_rng);
+                            fnames_oi_, base_rng);
       if (ret != 0) {
         return R_NilValue;  // indicating error happened 
       } 
