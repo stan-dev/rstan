@@ -88,6 +88,7 @@ options(width=60)
 
 \tableofcontents
 
+
 \section{Introduction}
 
 \Stan is a \Cpp program for Bayesian modeling and inference
@@ -182,7 +183,7 @@ used to model the effect of coaching programs on for college admissions
 tests.  The data, shown in Table~\ref{tab08schoolsdata}, summarize the results
 of experiments conducted in eight high schools, with an estimated standard 
 error for each, and these data and model are of historical interest as an example
-of full Bayesian inference (\citealt{rubin1981}). 
+of full Bayesian inference (\citealt{Rubin1981}). 
 We use this example here for its simplicity and because it represents a nontrivial
 Markov chain simulation problem in that there is dependence between the parameters 
 of original interest in the study---the effects of coaching in each of the eight 
@@ -265,7 +266,7 @@ school-level errors $\eta$, and the effects, $\theta$.  In this model, we let
 $\theta$ be a transformed parameters of $\mu$, $\tau$, and $\eta$ instead of
 directly declaring $\theta$ as a parameter. By parameterizing this way, the
 sampler runs more efficiently; the resulting multivariate geometry is better
-behaved for Hamiltonian Monte Carlo (Neal, 2011).
+behaved for Hamiltonian Monte Carlo (\citealt{Neal:2011}).
 
 Finally comes the model, which looks similar to standard statistical notation.
 (Just be careful:  the second argument to Stan's normal$(\cdot,\cdot)$
@@ -355,7 +356,7 @@ print(fit1, pars=c("theta", "mu", "tau", "lp__"),
 The last line of this output, {\tt lp\_\_}, is the logarithm of the
 (unnormalized) posterior density as calculated by Stan while performing the
 Hamiltonian Monte Carlo algorithm.  This log density can be used in various
-ways for model evaluation and comparison (see, e.g., Vehtari and Ojanen, 2012).
+ways for model evaluation and comparison (see, e.g., \citealt{Vehtari2012}).
 %Vehtari, A., and Ojanen, J. (2012). A survey of Bayesian predictive methods
 %for model assessment, selection and comparison. 
 %Statistics Surveys 6, 142-228. 
@@ -782,7 +783,7 @@ as follows.
 <<parallel, echo=TRUE, results=hide, cache=TRUE>>=
 library(rstan)
 library(parallel)
-f1 <- stan(file="schools.stan",data=schols_data, 
+f1 <- stan(file="schools.stan",data=schools_data, 
            chains =1, iter=1)
 WINDOWS <- .Platform$OS.type == "windows"
 seed <- 12345 
