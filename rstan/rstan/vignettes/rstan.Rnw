@@ -759,7 +759,8 @@ y_1,\ldots,y_n\sim \text{normal}(\mu,1).
 By specifying prior of $\mu$ with $p(\mu) \propto 1$, the MAP estimator 
 for $\mu$ would be just the sample mean. The following \R code shows 
 how to use \Stan's optimizers in \pkg{rstan}; we first create a \code{stanmodel}
-object of \pkg{rstan} can call its \code{optimizing} method with data.    
+object of \pkg{rstan} and then use its \code{optimizing} method, to which data 
+and other arguments can be fed.
 
 <<optimizer, echo=TRUE>>= 
 ocode <- "
@@ -808,10 +809,17 @@ is \code{TRUE} by default, for function \code{stan}.
 Last, there are some options that configures compiling the \Cpp code
 by a compiler such as \gpp. In particular, we can specify the optimization level
 that is used for a \Cpp compiler. \pkg{rstan} provides function 
-\code{set\_cppo}\rstanfunidx{set\_cppo} to configure some of the flags, details of which
-can be found in the online document. We strongly suggest using \code{set\_cppo('fast')} 
-for better speed of sampling. In addition, we can use \code{get\_cppo}\rstanfunidx{get\_cppo}
-to take a look of current settings.
+\code{set\_cppo}\rstanfunidx{set\_cppo} to configure some of the flags, details
+of which can be found in the online document. We strongly suggest using
+\code{set\_cppo('fast')} for better speed of sampling. In addition, we can use
+\code{get\_cppo}\rstanfunidx{get\_cppo} to take a look of current settings
+and \code{reset\_cppo}\rstanfunidx{reset\_cppo} to remove the changes 
+by \code{set\_cppo}. Currently, \pkg{rstan} implements these functions
+through modifying \verb+Makevars+ file that is typically under folder \verb+.R+
+in the home directory, so the changes could have side effects to, for example,
+installing other packages that includes \Cpp code from source. 
+
+
 
 
 \section{Run multiple chains in parallel}
