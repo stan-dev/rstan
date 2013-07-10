@@ -129,7 +129,8 @@ using the \Stan modeling language, which is detailed
 in the manual of \Stan (\citealt{StanManual:2013}).
 We give an example below. 
 
-The package \pkg{rstan} cannot currently be installed using CRAN. Instead,
+The package \pkg{rstan} cannot currently be installed via CRAN, the 
+``Comprehensive \R Archive Network.'' Instead,
 they can be installed following the instructions, ``Running
 Stan from \R,'' accessible from \url{http://mc-stan.org}. 
 As part of this, a \Cpp compiler is required (or can be installed
