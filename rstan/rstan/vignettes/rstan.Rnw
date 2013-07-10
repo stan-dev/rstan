@@ -88,6 +88,13 @@ options(width=60)
 
 \tableofcontents
 
+\begin{abstract}
+In this vignette we present the \RStan package \pkg{rstan} for using Stan in \R. 
+\Stan is a package for obtaining Bayesian inference using the No-U-Turn sampler, a 
+variant of Hamiltonian Monte Carlo. We illustrate the features of \RStan through
+an example in \cite{GelmanCarlinSternRubin:2003}.
+\end{abstract}
+
 
 \section{Introduction}
 
@@ -426,12 +433,15 @@ are the same as those for function \code{stan}.
 \section[Advanced features]{Advanced features}
 \label{sec0moredetails}
 
-In this section, we begin with talking about the arguments of function
-\code{stan}.  Then we talk about data preprocessing for the data passed 
-to \Stan.  Last, we describe S4 class \code{stanfit} 
-in more details, in particular other methods that can be used to diagnose 
-the convergence of Markov chains, to extract samples, and to obtain 
-information about the sampler.  
+In this section, we discuss more details and other advanced 
+features of \pkg{rstan}. The details regard to 
+the arguments of function \code{stan}, data preprocessing for the data passed 
+to \Stan, and S4 class \code{stanfit}.  
+Advanced features include using the log posterior function in \R defined by 
+a model (with specific data) and the function for computing the gradients. 
+In addition, we discuss optimizer's in \Stan, which can be used 
+to obtain a point estimate. 
+
 
 \subsection[Arguments of function stan]{Arguments of function \code{stan}} 
 
@@ -465,7 +475,7 @@ seed, which is randomly generated in \R if not specified.
 Through changing some of augments for calling function \code{stan}, we
 can use other samplers implemented by \Stan such as HMC (\citealt{Neal:2011}). All the details
 can be found in the help documentation of function \code{stan}. As \Stan
-and RStan is being actively developed, other samplers might be 
+and \RStan is being actively developed, other samplers might be 
 added.  The help documentation in package \pkg{rstan} should always have the
 up-to-date details.
 
@@ -732,6 +742,46 @@ Name  &    Function    \\
 \caption[Methods of S4 class stanfit]{Methods of S4 class \code{stanfit}} 
 \label{tab0stanfitfuns} 
 \end{table}
+
+\subsection[Optimization in Stan]{Optimization in \Stan} 
+\label{subsecoptimization}
+
+\RStan also builds the interface to \Stan's optimizers, optimization methods 
+built in \Stan to obtain a point estimate by maximizing the posterior 
+function defined for a model. We illustrate the feature using a very simple
+example, estimating the mean from samples assumed to be drawn from normal 
+distribution with known standard deviation. That is, we assume 
+
+\begin{align*}
+y_1,\ldots,y_n\sim \text{normal}(\mu,1).
+\end{align*}
+
+By specifying prior of $\mu$ with $p(\mu) \propto 1$, the MAP estimator 
+for $\mu$ would be just the sample mean. The following \R code shows 
+how to use \Stan's optimizers in \pkg{rstan}; we first create a \code{stanmodel}
+object of \pkg{rstan} can call its \code{optimizing} method with data.    
+
+<<optimizer, echo=TRUE>>= 
+ocode <- "
+  data {
+    int<lower=1> N;
+    real y[N];
+  } 
+  parameters {
+    real mu;
+  } 
+  model {
+    y ~ normal(mu, 1);
+  } 
+"
+
+sm <- stan_model(model_code = ocode)
+y2 <- rnorm(20)
+mean(y2)
+op <- optimizing(sm, data = list(y = y2, N = length(y2)))
+print(op)
+@
+ 
 
 
 \subsection[Model compiling in rstan]{Model compiling in \pkg{rstan}}
