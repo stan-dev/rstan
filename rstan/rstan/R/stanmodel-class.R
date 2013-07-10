@@ -55,7 +55,7 @@ setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   method = c("newton", "nesterov", 'bfgs'),
+                   method = c("BFGS", "Nesterov", "Newton"),
                    verbose = FALSE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
@@ -66,7 +66,7 @@ setMethod("optimizing", "stanmodel",
                 data <- try(mklist(data))
                 if (is(data, "try-error")) {
                   message("failed to create the data; optimization not done") 
-                  return(invisible(list(stanmodel = object)))
+                  return(invisible(NULL))
                 }
               }
               if (!missing(data) && length(data) > 0) {
@@ -97,15 +97,14 @@ setMethod("optimizing", "stanmodel",
               return(invisible(list(stanmodel = object)))
             args <- list(init = init, seed = seed) 
             # 1: newton; 2: nesterov; 3: bfgs
-            args["point_estimate"] <- match(match.arg(method), c('newton', 'nesterov', 'bfgs'))
+            args["point_estimate"] <- match(match.arg(method), c('Newton', 'Nesterov', 'BFGS'))
          
             if (!missing(sample_file) && is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
-            dotlist$test_grad <- FALSE # not to test gradient
+            dotlist$test_grad <- FALSE # set test gradient flag to false explicitly
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
-            optim["stanmodel"] <- object
             invisible(optim)
           }) 
 

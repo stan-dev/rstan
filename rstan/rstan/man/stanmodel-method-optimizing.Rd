@@ -16,7 +16,7 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    method = c("newton", "nesterov", "bfgs"),
+    method = c("BFGS", "Nesterov", "Newton"),
     verbose = FALSE, \dots)   
 } 
 
@@ -77,12 +77,9 @@
    \item{par}{The point estimate found.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
    the \code{"lp__"} in Stan) corresponding to \code{par}.}
-   \item{stanmodel}{The object of \code{stanmodel} that represents the Stan
-     model and includes the compiled dynamic shared object for the model.}
 
   If the optimization is not finished for reasons such as feeding wrong data,
-  a list with a component of the compiled model (an object of \code{stanmodel})
-  is returned for future reusing. 
+  it returns \code{NULL}. 
 } 
 
 \seealso{
