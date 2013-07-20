@@ -60,6 +60,11 @@ test_output_csv <- function() {
   checkEquals(iter1["y.2"], -iter1["y2.2.1"], checkNames = FALSE)
   checkEquals(iter1[y3_names], 1:18, checkNames = FALSE)
 
+  fit2 <- read_stan_csv(csv_fname)
+  fit2_m <- as.vector(get_posterior_mean(fit2))
+  fit2_m2 <- summary(fit2)$summary[,"mean"]
+  checkEquals(fit2_m, fit2_m2, checkNames = FALSE)
+
   unlink(csv_fname)
 } 
 
