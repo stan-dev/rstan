@@ -81,7 +81,9 @@ namespace rstan {
      * @param iter_params the quantities used in each iteration such as lp__
      * and accept_stat__.
      */
-    void output_sample_params(stan::mcmc::sample& s,
+    template <class RNG>
+    void output_sample_params(RNG& rng, 
+                              stan::mcmc::sample& s,
                               stan::mcmc::base_mcmc& sampler, 
                               M& model, 
                               std::vector<Rcpp::NumericVector>& chains, 
@@ -100,9 +102,10 @@ namespace rstan {
       sampler.get_sampler_params(sampler_values);
         
       std::vector<double> param_values;
-      model.write_array_params_all(const_cast<std::vector<double>&>(s.cont_params()),
-                                   const_cast<std::vector<int>&>(s.disc_params()),
-                                   param_values, pstream);
+      model.write_array(rng, 
+                        const_cast<std::vector<double>&>(s.cont_params()),
+                        const_cast<std::vector<int>&>(s.disc_params()),
+                        param_values, true, true, pstream);
       // values in param_values are column-major.
 
       size_t z = 0;
