@@ -516,7 +516,7 @@ If we want to prevent \pkg{rstan} from treating the input data for $y$ as a scal
 we need to explicitly make it an array as the following \R code shows.
 
 <<echo=TRUE>>=
-y <- array(y, dim = length(y))
+y <- as.array(y)
 @
 
 

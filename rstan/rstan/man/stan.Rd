@@ -190,6 +190,8 @@ stan(file, model_name = "anon_model", model_code = "",
   The data passed to \code{stan} are preprocessed before
   passing to Stan. In general, each element of data should be either a numeric
   vector (including special case 'scalar') or a numeric array (matrix). 
+  The first exception is that an element can be a logical vector: \code{TRUE}'s 
+  are converted to 1 and \code{FALSE}'s to 0.
   An element can also be a data frame or a specially structured list (see
   details below), both of which will be converted into arrays in the
   preprocessing.  Using a specially structured list is not
