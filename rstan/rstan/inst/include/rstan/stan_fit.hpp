@@ -18,6 +18,8 @@
 
 #include <stan/agrad/agrad.hpp>
 
+#include <stan/model/util.hpp>
+
 #include <stan/optimization/newton.hpp>
 #include <stan/optimization/nesterov_gradient.hpp>
 #include <stan/optimization/bfgs.hpp>
@@ -352,7 +354,8 @@ namespace rstan {
         R_CheckUserInterrupt();
         init_s = sampler.transition(init_s);
         if (save && (((m - start) % num_thin) == 0)) {
-          outputer.output_sample_params(init_s, sampler, model, chains, warmup,
+          outputer.output_sample_params(base_rng, init_s, sampler, model,
+                                        chains, warmup,
                                         sampler_params, iter_params,
                                         sum_pars, sum_lp, qoi_idx,
                                         iter_save_i, &rstan::io::rcout);
@@ -509,10 +512,12 @@ namespace rstan {
         double init_log_prob;
         std::vector<double> init_grad;
         try {
-          init_log_prob = model.grad_log_prob(cont_params, 
-                                              disc_params, 
-                                              init_grad, 
-                                              &rstan::io::rcout);
+          init_log_prob
+            = stan::model::log_prob_grad<true,true>(model,
+                                                    cont_params, 
+                                                    disc_params, 
+                                                    init_grad, 
+                                                    &rstan::io::rcout);
         } catch (const std::domain_error& e) {
           std::string msg("Domain error during initialization with 0:\n"); 
           msg += e.what();
@@ -553,7 +558,8 @@ namespace rstan {
             cont_params[i] = init_rng();
           double init_log_prob;
           try {
-            init_log_prob = model.grad_log_prob(cont_params,disc_params,init_grad,&rstan::io::rcout);
+            init_log_prob 
+              = stan::model::log_prob_grad<true,true>(model,cont_params,disc_params,init_grad,&rstan::io::rcout);
           } catch (const std::domain_error& e) {
             // write_error_msg(&rstan::io::rcout, e);
             rstan::io::rcout << e.what(); 
@@ -584,7 +590,7 @@ namespace rstan {
       if (test_grad) {
         rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
         std::stringstream ss; 
-        int num_failed = model.test_gradients(cont_params,disc_params,1e-6,1e-6,ss);
+        int num_failed = stan::model::test_gradients<true,true>(model,cont_params,disc_params,1e-6,1e-6,ss);
         rstan::io::rcout << ss.str() << std::endl; 
         holder["num_failed"] = num_failed; 
         holder.attr("test_grad") = Rcpp::wrap(true);
@@ -629,8 +635,8 @@ namespace rstan {
           model.write_csv_header(sample_stream);
         } 
         
-        stan::optimization::BFGSLineSearch ng(model, cont_params, disc_params,
-                                              &rstan::io::rcout);
+        stan::optimization::BFGSLineSearch<Model> ng(model, cont_params, disc_params,
+                                                     &rstan::io::rcout);
         if (epsilon > 0)
           ng._opts.alpha0 = epsilon;
         
@@ -706,7 +712,7 @@ namespace rstan {
           model.write_csv_header(sample_stream);
         }
         std::vector<double> gradient;
-        double lp = model.grad_log_prob(cont_params, disc_params, gradient);
+        double lp = stan::model::log_prob_grad<true,true>(model, cont_params, disc_params, gradient);
         
         double lastlp = lp - 1;
         rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
@@ -756,8 +762,8 @@ namespace rstan {
           model.write_csv_header(sample_stream);
         }
 
-        stan::optimization::NesterovGradient ng(model, cont_params, disc_params,
-                                                -1.0,&rstan::io::rcout);
+        stan::optimization::NesterovGradient<Model> ng(model, cont_params, disc_params,
+                                                       -1.0,&rstan::io::rcout);
         double lp = ng.logp();
         double lastlp = lp - 1;
         rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
@@ -1198,7 +1204,7 @@ namespace rstan {
      * @param upar The real parameters on the unconstrained 
      *  space. 
      */
-    SEXP log_prob(SEXP upar) {
+    SEXP log_prob(SEXP upar, SEXP jacobian_adjust_transform, SEXP gradient) {
       BEGIN_RCPP;
       using std::vector;
       vector<double> par_r = Rcpp::as<vector<double> >(upar);
@@ -1211,12 +1217,24 @@ namespace rstan {
             << ").";
         throw std::domain_error(msg.str()); 
       } 
-      vector<stan::agrad::var> par_r2; 
-      for (size_t i = 0; i < par_r.size(); i++) 
-        par_r2.push_back(stan::agrad::var(par_r[i]));
       vector<int> par_i(model_.num_params_i(), 0);
-      SEXP lp = Rcpp::wrap(model_.log_prob(par_r2, par_i, &rstan::io::rcout).val());
-      return lp;
+      if (!Rcpp::as<bool>(gradient)) { 
+        if (Rcpp::as<bool>(jacobian_adjust_transform)) {
+          return Rcpp::wrap(stan::model::log_prob_propto<true>(model_, par_r, par_i, &rstan::io::rcout));
+        } else {
+          return Rcpp::wrap(stan::model::log_prob_propto<false>(model_, par_r, par_i, &rstan::io::rcout));
+        } 
+      } 
+
+      std::vector<double> gradient; 
+      double lp;
+      if (Rcpp::as<bool>(jacobian_adjust_transform)) 
+        lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      else 
+        lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
+      lp2.attr("gradient") = gradient;
+      return lp2;
       END_RCPP;
     } 
 
@@ -1226,8 +1244,11 @@ namespace rstan {
      * 
      * @param upar The real parameters on the unconstrained 
      *  space. 
+     * @param jacobian_adjust_transform TRUE/FALSE, whether
+     *  we add the term due to the transform from constrained
+     *  space to unconstrained space implicitly done in Stan.
      */
-    SEXP grad_log_prob(SEXP upar) {
+    SEXP grad_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
       BEGIN_RCPP;
       std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
@@ -1241,7 +1262,11 @@ namespace rstan {
       } 
       std::vector<int> par_i(model_.num_params_i(), 0);
       std::vector<double> gradient; 
-      double lp = model_.grad_log_prob(par_r, par_i, gradient, &rstan::io::rcout);
+      double lp;
+      if (Rcpp::as<bool>(jacobian_adjust_transform)) 
+        lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      else 
+        lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
       Rcpp::NumericVector grad = Rcpp::wrap(gradient); 
       grad.attr("log_prob") = lp;
       return grad;

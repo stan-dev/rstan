@@ -128,5 +128,49 @@ test_init_zero_exception_inf_grad <- function() {
   checkTrue(grepl('.*divergent gradient.*', geterrmessage()))
 }
 
+test_grad_log <- function() {
+  y <- c(0.70,  -0.16,  0.77, -1.37, -1.99,  1.35, 0.08, 
+         0.02,  -1.48, -0.08,  0.34,  0.03, -0.42, 0.87, 
+         -1.36,  1.43,  0.80, -0.48, -1.61, -1.27)
+
+  code <- '
+  data {
+    real y[20];
+  } 
+  parameters {
+    real mu;
+    real<lower=0> sigma;
+  } 
+  model {
+    y ~ normal(mu, sigma);
+  } 
+  '
+  log_prob_fun <- function(mu, log_sigma, adjust = TRUE) {
+    sigma <- exp(log_sigma)
+    lp <- -sum((y - mu)^2) / (2 * (sigma^2)) - length(y) * log(sigma) 
+    if (adjust) lp <- lp + log(sigma)
+    lp
+  } 
+  log_prob_grad_fun <- function(mu, log_sigma, adjust = TRUE) {
+    sigma <- exp(log_sigma)
+    g_lsigma <- sum((y - mu)^2) * sigma^(-2) - length(y) 
+    if (adjust) g_lsigma <- g_lsigma + 1
+    g_mu <- sum(y - mu) * sigma^(-2)
+    c(g_mu, g_lsigma)
+  } 
+  sf <- stan(model_code = code, data = list(y = y), iter = 200)
+  mu <- 0.1; sigma <- 2;
+  checkEquals(log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma))), 
+              log_prob_fun(mu, log(sigma)), checkNames = FALSE)
+  checkEquals(log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma)), FALSE), 
+              log_prob_fun(mu, log(sigma), adjust = FALSE), checkNames = FALSE)
+  lp1 <- log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma)), FALSE, TRUE)
+  checkEquals(attr(lp1, 'gradient'), log_prob_grad_fun(mu, log(sigma), FALSE))
+  g1 <- grad_log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma)), FALSE)
+  checkEquals(attr(g1, 'log_prob'), log_prob_fun(mu, log(sigma), adjust = FALSE))
+  attributes(g1) <- NULL
+  checkEquals(g1, log_prob_grad_fun(mu, log(sigma), adjust = FALSE))
+}
+
 .tearDown <- function() { }
 

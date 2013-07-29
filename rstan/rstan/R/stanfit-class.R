@@ -551,10 +551,10 @@ setMethod("constrain_pars", signature = "stanfit",
 
 
 setMethod("log_prob", signature = "stanfit", 
-          function(object, upars) {
+          function(object, upars, adjust_transform = TRUE, gradient = FALSE) {
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
-            object@.MISC$stan_fit_instance$log_prob(upars) 
+            return(object@.MISC$stan_fit_instance$log_prob(upars, adjust_transform, gradient))
           }) 
 
 if (!isGeneric("get_num_upars")) {
@@ -575,10 +575,10 @@ if (!isGeneric("grad_log_prob")) {
 } 
 
 setMethod("grad_log_prob", signature = "stanfit", 
-          function(object, upars) {
+          function(object, upars, adjust_transform = TRUE) {
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
-            object@.MISC$stan_fit_instance$grad_log_prob(upars) 
+            object@.MISC$stan_fit_instance$grad_log_prob(upars, adjust_transform) 
           }) 
 
 setMethod("traceplot", signature = "stanfit", 
