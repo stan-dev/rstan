@@ -6,11 +6,12 @@
 } 
 
 \usage{
-read_stan_csv(csvfiles)
+read_stan_csv(csvfiles, col_major = TRUE)
 }
 
 \arguments{
   \item{csvfiles}{A character vector providing CSV file names}
+  \item{col_major}{The order for array parameters; default to \code{TRUE}}
 }
 
 \details{
@@ -18,7 +19,12 @@ read_stan_csv(csvfiles)
   reads the samples and using the comments (beginning with \code{"#"})
   to create a \code{stanfit} object. The model name is derived from 
   the first CSV file. 
+
+  \code{col_major} specifies how array parameters are ordered in each row of
+  the CSV files.  For example, parameter \code{"a[2,2]"} would be ordered as
+  \code{"a[1,1], a[2,1], a[1,2], a[2,2]"} if col_major is \code{TRUE}. 
 } 
+
 \value{
   A \code{stanfit} object (with invalid \code{stanmodel} slot). This \code{stanfit}
   object cannot be used to re-run the sampler. 

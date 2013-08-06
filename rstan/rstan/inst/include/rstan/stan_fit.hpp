@@ -18,6 +18,8 @@
 
 #include <stan/agrad/agrad.hpp>
 
+#include <stan/model/util.hpp>
+
 #include <stan/optimization/newton.hpp>
 #include <stan/optimization/nesterov_gradient.hpp>
 #include <stan/optimization/bfgs.hpp>
@@ -312,6 +314,16 @@ namespace rstan {
       o << std::endl;
     }
 
+    template <class T>
+    void print_vector(const std::vector<T>& v, std::ostream& o, 
+                      const std::string& sep = ",") {
+      if (v.size() > 0)
+        o << v[0];
+      for (size_t i = 1; i < v.size(); i++)
+        o << sep << v[i];
+      o << std::endl;
+    }
+
     template <class Sampler, class Model, class RNG>
     void run_markov_chain(Sampler& sampler,
                           int num_warmup, int num_iterations,
@@ -325,7 +337,6 @@ namespace rstan {
                           std::vector<Rcpp::NumericVector>& chains, 
                           int& iter_save_i,
                           const std::vector<size_t>& qoi_idx,
-                          const std::vector<size_t>& midx, 
                           std::vector<double>& sum_pars,
                           double& sum_lp,
                           std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -343,9 +354,10 @@ namespace rstan {
         R_CheckUserInterrupt();
         init_s = sampler.transition(init_s);
         if (save && (((m - start) % num_thin) == 0)) {
-          outputer.output_sample_params(init_s, sampler, model, chains, warmup,
+          outputer.output_sample_params(base_rng, init_s, sampler, model,
+                                        chains, warmup,
                                         sampler_params, iter_params,
-                                        sum_pars, sum_lp, qoi_idx, midx,
+                                        sum_pars, sum_lp, qoi_idx,
                                         iter_save_i, &rstan::io::rcout);
           iter_save_i++;
           outputer.output_diagnostic_params(init_s, sampler);
@@ -366,7 +378,6 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& chains, 
                       int& iter_save_i,
                       const std::vector<size_t>& qoi_idx,
-                      const std::vector<size_t>& midx, 
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -377,7 +388,7 @@ namespace rstan {
                                             num_thin,
                                             refresh, save, true,
                                             outputer,
-                                            init_s, model, chains, iter_save_i, qoi_idx, midx,
+                                            init_s, model, chains, iter_save_i, qoi_idx,
                                             sum_pars, sum_lp, sampler_params, iter_params,
                                             adaptation_info, base_rng);
     }
@@ -395,7 +406,6 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& chains, 
                       int& iter_save_i,
                       const std::vector<size_t>& qoi_idx,
-                      const std::vector<size_t>& midx, 
                       std::vector<double>& sum_pars,
                       double& sum_lp,
                       std::vector<Rcpp::NumericVector>& sampler_params, 
@@ -405,7 +415,7 @@ namespace rstan {
       run_markov_chain<Sampler, Model, RNG>(sampler, num_warmup, num_iterations, num_thin,
                                             refresh, save, false,
                                             outputer,
-                                            init_s, model, chains, iter_save_i, qoi_idx, midx,
+                                            init_s, model, chains, iter_save_i, qoi_idx,
                                             sum_pars, sum_lp, sampler_params, iter_params,
                                             adaptation_info,
                                             base_rng);
@@ -452,14 +462,12 @@ namespace rstan {
      * @param model: the model instance.
      * @param holder[out]: the object to hold all the information returned to R. 
      * @param qoi_idx: the indexes for all parameters of interest.  
-     * @param midx: the indexes for mapping col-major to row-major
      * @param fnames_oi: the parameter names of interest.  
      * @param base_rng: the boost RNG instance. 
      */
     template <class Model, class RNG> 
     int sampler_command(stan_args& args, Model& model, Rcpp::List& holder,
                         const std::vector<size_t>& qoi_idx, 
-                        const std::vector<size_t>& midx, 
                         const std::vector<std::string>& fnames_oi, RNG& base_rng) {
       bool sample_file_flag = args.get_sample_file_flag(); 
       bool diagnostic_file_flag = args.get_diagnostic_file_flag();
@@ -504,10 +512,12 @@ namespace rstan {
         double init_log_prob;
         std::vector<double> init_grad;
         try {
-          init_log_prob = model.grad_log_prob(cont_params, 
-                                              disc_params, 
-                                              init_grad, 
-                                              &rstan::io::rcout);
+          init_log_prob
+            = stan::model::log_prob_grad<true,true>(model,
+                                                    cont_params, 
+                                                    disc_params, 
+                                                    init_grad, 
+                                                    &rstan::io::rcout);
         } catch (const std::domain_error& e) {
           std::string msg("Domain error during initialization with 0:\n"); 
           msg += e.what();
@@ -548,7 +558,8 @@ namespace rstan {
             cont_params[i] = init_rng();
           double init_log_prob;
           try {
-            init_log_prob = model.grad_log_prob(cont_params,disc_params,init_grad,&rstan::io::rcout);
+            init_log_prob 
+              = stan::model::log_prob_grad<true,true>(model,cont_params,disc_params,init_grad,&rstan::io::rcout);
           } catch (const std::domain_error& e) {
             // write_error_msg(&rstan::io::rcout, e);
             rstan::io::rcout << e.what(); 
@@ -579,7 +590,7 @@ namespace rstan {
       if (test_grad) {
         rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
         std::stringstream ss; 
-        int num_failed = model.test_gradients(cont_params,disc_params,1e-6,1e-6,ss);
+        int num_failed = stan::model::test_gradients<true,true>(model,cont_params,disc_params,1e-6,1e-6,ss);
         rstan::io::rcout << ss.str() << std::endl; 
         holder["num_failed"] = num_failed; 
         holder.attr("test_grad") = Rcpp::wrap(true);
@@ -624,8 +635,8 @@ namespace rstan {
           model.write_csv_header(sample_stream);
         } 
         
-        stan::optimization::BFGSLineSearch ng(model, cont_params, disc_params,
-                                              &rstan::io::rcout);
+        stan::optimization::BFGSLineSearch<Model> ng(model, cont_params, disc_params,
+                                                     &rstan::io::rcout);
         if (epsilon > 0)
           ng._opts.alpha0 = epsilon;
         
@@ -679,7 +690,7 @@ namespace rstan {
         holder["value"] = lp; 
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream, midx);
+          print_vector(params_inr_etc, sample_stream);
           sample_stream.close();
         }
         return 0;
@@ -701,7 +712,7 @@ namespace rstan {
           model.write_csv_header(sample_stream);
         }
         std::vector<double> gradient;
-        double lp = model.grad_log_prob(cont_params, disc_params, gradient);
+        double lp = stan::model::log_prob_grad<true,true>(model, cont_params, disc_params, gradient);
         
         double lastlp = lp - 1;
         rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
@@ -730,7 +741,7 @@ namespace rstan {
 
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream, midx);
+          print_vector(params_inr_etc, sample_stream);
           sample_stream.close();
         }
         return 0;
@@ -751,8 +762,8 @@ namespace rstan {
           model.write_csv_header(sample_stream);
         }
 
-        stan::optimization::NesterovGradient ng(model, cont_params, disc_params,
-                                                -1.0,&rstan::io::rcout);
+        stan::optimization::NesterovGradient<Model> ng(model, cont_params, disc_params,
+                                                       -1.0,&rstan::io::rcout);
         double lp = ng.logp();
         double lastlp = lp - 1;
         rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
@@ -784,7 +795,7 @@ namespace rstan {
         holder["value"] = lp;
         if (sample_file_flag) { 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream, midx);
+          print_vector(params_inr_etc, sample_stream);
           sample_stream.close();
         }
         return 0;
@@ -852,7 +863,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             outputer, 
                                             s, model, chains, iter_save_i,
-                                            qoi_idx, midx, mean_pars, mean_lp,
+                                            qoi_idx, mean_pars, mean_lp,
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
@@ -865,7 +876,7 @@ namespace rstan {
                                             refresh, true, 
                                             outputer,
                                             s, model, chains, iter_save_i,
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,  
                                             base_rng); 
         end = clock();
@@ -897,7 +908,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,  
                                             base_rng); 
         clock_t end = clock();
@@ -911,7 +922,7 @@ namespace rstan {
                                             num_thin, refresh, true, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         end = clock();
@@ -943,7 +954,7 @@ namespace rstan {
                                             refresh, save_warmup, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         clock_t end = clock();
@@ -956,7 +967,7 @@ namespace rstan {
                                             refresh, true, 
                                             outputer,
                                             s, model, chains, iter_save_i, 
-                                            qoi_idx, midx, mean_pars, mean_lp, 
+                                            qoi_idx, mean_pars, mean_lp, 
                                             sampler_params, iter_params, adaptation_info,
                                             base_rng); 
         end = clock();
@@ -988,7 +999,7 @@ namespace rstan {
                                            refresh, save_warmup, 
                                            outputer,
                                            s, model, chains, iter_save_i, 
-                                           qoi_idx, midx, mean_pars, mean_lp, 
+                                           qoi_idx, mean_pars, mean_lp, 
                                            sampler_params, iter_params, adaptation_info,
                                            base_rng); 
         clock_t end = clock();
@@ -1001,7 +1012,7 @@ namespace rstan {
                                            refresh, true, 
                                            outputer,
                                            s, model, chains, iter_save_i, 
-                                           qoi_idx, midx, mean_pars, mean_lp, 
+                                           qoi_idx, mean_pars, mean_lp, 
                                            sampler_params, iter_params, adaptation_info,
                                            base_rng); 
         end = clock();
@@ -1065,7 +1076,7 @@ namespace rstan {
     std::vector<std::string> names_oi_; // parameters of interest 
     std::vector<std::vector<unsigned int> > dims_oi_; 
     std::vector<size_t> names_oi_tidx_;  // the total indexes of names2.
-    std::vector<size_t> midx_for_col2row; // indices for mapping col-major to row-major
+    // std::vector<size_t> midx_for_col2row; // indices for mapping col-major to row-major
     std::vector<unsigned int> starts_oi_;  
     unsigned int num_params2_;  // total number of POI's.   
     std::vector<std::string> fnames_oi_; 
@@ -1143,7 +1154,7 @@ namespace rstan {
       names_oi_tidx_.push_back(-1); // lp__
       calc_starts(dims_oi_, starts_oi_);
       get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true); 
-      get_all_indices_col2row(dims_, midx_for_col2row);
+      // get_all_indices_col2row(dims_, midx_for_col2row);
     }             
 
     /**
@@ -1193,7 +1204,7 @@ namespace rstan {
      * @param upar The real parameters on the unconstrained 
      *  space. 
      */
-    SEXP log_prob(SEXP upar) {
+    SEXP log_prob(SEXP upar, SEXP jacobian_adjust_transform, SEXP gradient) {
       BEGIN_RCPP;
       using std::vector;
       vector<double> par_r = Rcpp::as<vector<double> >(upar);
@@ -1206,12 +1217,24 @@ namespace rstan {
             << ").";
         throw std::domain_error(msg.str()); 
       } 
-      vector<stan::agrad::var> par_r2; 
-      for (size_t i = 0; i < par_r.size(); i++) 
-        par_r2.push_back(stan::agrad::var(par_r[i]));
       vector<int> par_i(model_.num_params_i(), 0);
-      SEXP lp = Rcpp::wrap(model_.log_prob(par_r2, par_i, &rstan::io::rcout).val());
-      return lp;
+      if (!Rcpp::as<bool>(gradient)) { 
+        if (Rcpp::as<bool>(jacobian_adjust_transform)) {
+          return Rcpp::wrap(stan::model::log_prob_propto<true>(model_, par_r, par_i, &rstan::io::rcout));
+        } else {
+          return Rcpp::wrap(stan::model::log_prob_propto<false>(model_, par_r, par_i, &rstan::io::rcout));
+        } 
+      } 
+
+      std::vector<double> gradient; 
+      double lp;
+      if (Rcpp::as<bool>(jacobian_adjust_transform)) 
+        lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      else 
+        lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
+      lp2.attr("gradient") = gradient;
+      return lp2;
       END_RCPP;
     } 
 
@@ -1221,8 +1244,11 @@ namespace rstan {
      * 
      * @param upar The real parameters on the unconstrained 
      *  space. 
+     * @param jacobian_adjust_transform TRUE/FALSE, whether
+     *  we add the term due to the transform from constrained
+     *  space to unconstrained space implicitly done in Stan.
      */
-    SEXP grad_log_prob(SEXP upar) {
+    SEXP grad_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
       BEGIN_RCPP;
       std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
@@ -1236,7 +1262,11 @@ namespace rstan {
       } 
       std::vector<int> par_i(model_.num_params_i(), 0);
       std::vector<double> gradient; 
-      double lp = model_.grad_log_prob(par_r, par_i, gradient, &rstan::io::rcout);
+      double lp;
+      if (Rcpp::as<bool>(jacobian_adjust_transform)) 
+        lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      else 
+        lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
       Rcpp::NumericVector grad = Rcpp::wrap(gradient); 
       grad.attr("log_prob") = lp;
       return grad;
@@ -1261,7 +1291,7 @@ namespace rstan {
 
       int ret;
       ret = sampler_command(args, model_, holder, names_oi_tidx_, 
-                            midx_for_col2row, fnames_oi_, base_rng);
+                            fnames_oi_, base_rng);
       if (ret != 0) {
         return R_NilValue;  // indicating error happened 
       } 

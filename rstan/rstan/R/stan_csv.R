@@ -63,13 +63,12 @@ parse_stancsv_comments <- function(comments) {
 }
 
 
-read_stan_csv <- function(csvfiles) {
+read_stan_csv <- function(csvfiles, col_major = TRUE) {
   # Read the csv files saved from Stan (or RStan) to a stanfit object
   # Args:
   #   csvfiles: csv files fitted for the same model; each file contains 
-  #   the sample of one chain 
-  # Assumptions:
-  #   parameters in the CSV files are in order by row-major
+  #     the sample of one chain 
+  #   col_major: the order for array parameters. 
   # 
 
   if (length(csvfiles) < 1) 
@@ -99,7 +98,7 @@ read_stan_csv <- function(csvfiles) {
                       get_dims_from_fnames(i_fnames, i) 
                     })
   names(dims_oi) <- pars_oi
-  idx_2colm <- multi_idx_row2colm(dims_oi)
+  midx <- if (!col_major) multi_idx_row2colm(dims_oi) else 1:length(par_fnames)
   if (chains > 1) {
     if (!all(sapply(ss_lst[-1], function(i) identical(names(i), fnames))))
       stop('the CSV files do not have same parameters')
@@ -111,11 +110,11 @@ read_stan_csv <- function(csvfiles) {
 
   samples <- lapply(ss_lst, 
                     function(df) {
-                      ss <- df[c(paridx, lp__idx)[idx_2colm]]
+                      ss <- df[c(paridx, lp__idx)[midx]]
                       attr(ss, "sampler_params") <- df[setdiff(attr(paridx, 'meta'), lp__idx)] 
                       ss
                     })
-  par_fnames <- par_fnames[idx_2colm]
+  par_fnames <- par_fnames[midx]
   for (i in seq_along(samples)) {
     attr(samples[[i]], "adaptation_info") <- cs_lst2[[i]]$adaptation_info 
     attr(samples[[i]], "args") <- 
@@ -141,6 +140,13 @@ read_stan_csv <- function(csvfiles) {
   if (n_kept0[1] != n_kept) 
     stop("the number of iterations after warmup found (", n_kept, 
          ") does not match iter/warmup/thin from CSV comments (", n_kept0, ")")
+
+  idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
+  for (i in seq_along(samples)) {
+    m <- apply(samples[[i]][idx_kept,], 2, mean)
+    attr(samples[[i]], "mean_pars") <- m[-length(m)]
+    attr(samples[[i]], "mean_lp__") <- m["lp__"]
+  }
 
   perm_lst <- lapply(1:chains, function(id) sample.int(n_kept))
 

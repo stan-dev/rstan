@@ -177,6 +177,8 @@ data_preprocess <- function(data) { # , varnames) {
                      x <- data.matrix(x) # change data.frame to array 
                    } else if (is.list(x)) {
                      x <- data_list2array(x) # list to array
+                   } else if (is.logical(x)) {
+                     x <- as.integer(x)
                    } 
  
                    ## Now we stop whenever we have NA in the data
@@ -825,7 +827,11 @@ default_summary_probs <- function() c(0.025, 0.05, 0.10, 0.25, 0.50, 0.75, 0.90,
 
 ## summarize the chains merged and individually 
 get_par_summary <- function(sim, n, probs = default_summary_probs()) {
-  ss <- lapply(1:sim$chains, function(i) sim$samples[[i]][[n]][-(1:sim$warmup2[i])]) 
+  ss <- lapply(1:sim$chains, 
+               function(i) {
+                 if (sim$warmup2[i] == 0) sim$samples[[i]][[n]] 
+                 else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
+               }) 
   msdfun <- function(chain) c(mean(chain), sd(chain))
   qfun <- function(chain) quantile(chain, probs = probs)
   c_msd <- unlist(lapply(ss, msdfun), use.names = FALSE) 
@@ -838,7 +844,11 @@ get_par_summary <- function(sim, n, probs = default_summary_probs()) {
 
 # mean and sd 
 get_par_summary_msd <- function(sim, n) { 
-  ss <- lapply(1:sim$chains, function(i) sim$samples[[i]][[n]][-(1:sim$warmup2[i])]) 
+  ss <- lapply(1:sim$chains, 
+               function(i) {
+                 if (sim$warmup2[i] == 0) sim$samples[[i]][[n]] 
+                 else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
+               }) 
   sumfun <- function(chain) c(mean(chain), sd(chain)) 
   cs <- lapply(ss, sumfun)
   as <- sumfun(do.call(c, ss)) 
@@ -847,7 +857,11 @@ get_par_summary_msd <- function(sim, n) {
 
 # quantiles 
 get_par_summary_quantile <- function(sim, n, probs = default_summary_probs()) {
-  ss <- lapply(1:sim$chains, function(i) sim$samples[[i]][[n]][-(1:sim$warmup2[i])]) 
+  ss <- lapply(1:sim$chains, 
+               function(i) {
+                 if (sim$warmup2[i] == 0) sim$samples[[i]][[n]] 
+                 else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
+               }) 
   sumfun <- function(chain) quantile(chain, probs = probs)
   cs <- lapply(ss, sumfun)
   as <- sumfun(do.call(c, ss)) 
