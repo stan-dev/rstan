@@ -72,18 +72,18 @@
 } 
 
 \details{
-  In Stan, the parameters need be defined with correct support.  
-  For example, for a variance parameter, we must defined it 
-  on the positive real line.  But inside Stan, all parameters
+  In Stan, the parameters need be defined with their supports.
+  For example, for a variance parameter, we must define it 
+  on the positive real line.  But inside Stan's sampler, all parameters
   defined on the constrained space are transformed to unconstrained
   space, so the log density function need be adjusted (i.e., adding
   the log of the absolute value of the Jacobian determinant).
   With the transformation, Stan's samplers work on the unconstrained space and 
   once a new iteration is drawn, Stan transforms the parameters
-  back to unconstrained space. All the transformation
-  are done inside a black-box. However, when it comes to use 
-  the log density function in rstan, we need to be careful about.
-  For example, if we are interested in find the mode of parameters 
+  back to their supports. All the transformation are done inside Stan without
+  interference from the users.  However, when using the log density function
+  for a model exposed to R, we need to be careful.
+  For example, if we are interested in finding the mode of parameters 
   on the constrained space, we then do not need the adjustment. 
   For this reason, there is an argument named \code{adjust_transform} 
   for functions \code{log_prob} and \code{grad_log_prob}.
