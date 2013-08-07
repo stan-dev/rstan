@@ -613,8 +613,10 @@ setMethod("traceplot", signature = "stanfit",
             if (num_plots > nrow) par(mfrow = c(nrow, ncol)) 
             par_traceplot(object@sim, tidx[1], object@sim$fnames_oi[tidx[1]], 
                           inc_warmup = inc_warmup, ...)
-            if (num_plots > nrow * ncol && ask) ask_old <- devAskNewPage(ask = TRUE)
-            on.exit({if (ask) devAskNewPage(ask = ask_old); par(mfrow = mfrow_old)})
+            if (num_plots > nrow * ncol && ask) {
+              ask_old <- devAskNewPage(ask = TRUE)
+              on.exit(devAskNewPage(ask = ask_old), add = TRUE)
+            }
             if (num_plots > 1) { 
               for (n in 2:num_plots)
                 par_traceplot(object@sim, tidx[n], object@sim$fnames_oi[tidx[n]], 
