@@ -11,7 +11,7 @@
 \usage{
   %% traceplot(object, \dots)  
   \S4method{traceplot}{stanfit}(object, pars, inc_warmup = TRUE, ask = FALSE,
-    nrow = 4, ncol = 2, ...) 
+    nrow = 4, ncol = 2, window = NULL, ...) 
 } 
 
 \section{Methods}{
@@ -36,6 +36,13 @@
     \code{ncol}.} 
   \item{ncol}{To specify the layout for the traceplots for multiple quantities: 
     number of columns on every page.} 
+  \item{window}{To specify a window of all the iterations for plotting. 
+    Default of NULL means plotting all iterations. \code{window} needs 
+    to be an integer vector of at least length 1; smaller one specifies 
+    the starting iteration and the bigger one the last iteration. When there
+    is only one integer, it just indicates the starting iteration. Examples
+    of specifying window: \code{window=100} and \code{window=c(100,1500)}.
+  } 
   \item{\dots}{Additional parameters passed to the underlying function
     \code{plot}.} 
 }

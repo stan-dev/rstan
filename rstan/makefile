@@ -84,7 +84,7 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
-	$(R) CMD build rstan --md5    --no-vignettes --no-manual
+	$(R) CMD build rstan --md5  # --no-vignettes --no-manual
 
 example_csv : 
 ifneq ($(OS), win)

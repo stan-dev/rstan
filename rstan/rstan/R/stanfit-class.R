@@ -200,41 +200,44 @@ get_samples2 <- function(n, sim, inc_warmup = TRUE) {
   lst
 } 
 
-par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, ...) {
+par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, window = NULL, ...) {
   # same thin, n_save, warmup2 for all the chains
   thin <- sim$thin
   warmup2 <- sim$warmup2[1] 
   n_save <- sim$n_save[1] 
-  n_kept <- n_save - warmup2 
-  yrange <- NULL 
   main <- paste("Trace of ", par_name) 
   chain_cols <- rstan_options("rstan_chain_cols")
   warmup_col <- rstan_options("rstan_warmup_bg_col") 
-  if (inc_warmup) {
-    id <- seq(1, by = thin, length.out = n_save) 
-    for (i in 1:sim$chains) {
-      yrange <- range(yrange, sim$samples[[i]][[n]]) 
-    }
-    plot(c(1, id[length(id)]), yrange, type = 'n', bty = 'l',
-         xlab = 'Iterations', ylab = "", main = main, ...)
-    rect(par("usr")[1], par("usr")[3], warmup2 * thin, par("usr")[4], 
-         col = warmup_col, border = NA)
-    for (i in 1:sim$chains) {
-      lines(id, sim$samples[[i]][[n]], xlab = '', ylab = '', 
-            lwd = 1, col = chain_cols[(i-1) %% 6 + 1], ...) 
-    }
-  } else {  
-    idx <- warmup2 + 1:n_kept
-    id <- seq((warmup2 + 1)* thin, by = thin, length.out = n_kept) 
-    for (i in 1:sim$chains) {
-      yrange <- range(yrange, sim$samples[[i]][[n]][idx]) 
-    }
-    plot(c((warmup2 + 1), id[length(id)]), yrange, type = 'n', bty = 'l',
-         xlab = 'Iterations (without warmup)', ylab = "", main = main, ...)
-    for (i in 1:sim$chains)  
-      lines(id, sim$samples[[i]][[n]][idx], lwd = 1, 
-            xlab = '', ylab = '', col = chain_cols[(i-1) %% 6 + 1], ...) 
+
+  start_i <- 1
+  window_size <- n_save
+  if (!is.null(window)) {
+    start_i <- window[1]
+    window_size <- (window[2] - window[1]) %/% thin
+    if (start_i > sim$warmup) inc_warmup <- FALSE
   } 
+  id <- seq.int(start_i, by = thin, length.out = window_size)
+  start_idx <- start_i %/% thin
+  if (start_idx < 1)  start_idx <- 0
+  idx <- seq.int(start_idx, by = 1, length.out = window_size)
+
+  yrange <- NULL 
+  for (i in 1:sim$chains)
+    yrange <- range(yrange, sim$samples[[i]][[n]][idx]) 
+
+  if (inc_warmup) {
+    plot(range(id), yrange, type = 'n', bty = 'l',
+         xlab = 'Iterations', ylab = "", main = main, ...)
+    rect(par("usr")[1], par("usr")[3], sim$warmup, par("usr")[4], 
+         col = warmup_col, border = NA)
+  } else {  
+    plot(range(id), yrange, type = 'n', bty = 'l',
+         xlab = 'Iterations (without warmup)', ylab = "", main = main, ...)
+  } 
+
+  for (i in 1:sim$chains)  
+    lines(id, sim$samples[[i]][[n]][idx], lwd = 1, 
+          xlab = '', ylab = '', col = chain_cols[(i-1) %% 6 + 1], ...) 
 } 
 
 ######
@@ -582,12 +585,15 @@ setMethod("grad_log_prob", signature = "stanfit",
           }) 
 
 setMethod("traceplot", signature = "stanfit", 
-          function(object, pars, inc_warmup = TRUE, ask = FALSE, nrow = 4, ncol = 2, ...) { 
+          function(object, pars, inc_warmup = TRUE, ask = FALSE, 
+                   nrow = 4, ncol = 2, window = NULL, ...) { 
             # Args:
             #  nrow, defaults to 4
             #  ncol, defaults to 2 
             #  nrow and ncol are used to define mfrow for the whole plot area
             #  when there are many parameters. 
+            #  window, for plotting only a window of the whole iterations
+            #  default to NULL for all iterations
 
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
@@ -611,8 +617,18 @@ setMethod("traceplot", signature = "stanfit",
             num_plots <- length(tidx) 
             if (num_plots %in% 2:nrow) par(mfrow = c(num_plots, 1)) 
             if (num_plots > nrow) par(mfrow = c(nrow, ncol)) 
+    
+            if (!is.null(window)) { 
+              window <- sort(window)
+              if (window[1] < 1) window[1] <- 1
+              if (window[1] > object@sim$iter[1])
+                stop("wrong specification of argument window", call. = FALSE)
+              if (is.na(window[2]) || window[2] > object@sim$iter[1])
+                window[2] <- object@sim$iter[1]
+            } 
+
             par_traceplot(object@sim, tidx[1], object@sim$fnames_oi[tidx[1]], 
-                          inc_warmup = inc_warmup, ...)
+                          inc_warmup = inc_warmup, window = window, ...)
             if (num_plots > nrow * ncol && ask) {
               ask_old <- devAskNewPage(ask = TRUE)
               on.exit(devAskNewPage(ask = ask_old), add = TRUE)
@@ -620,7 +636,7 @@ setMethod("traceplot", signature = "stanfit",
             if (num_plots > 1) { 
               for (n in 2:num_plots)
                 par_traceplot(object@sim, tidx[n], object@sim$fnames_oi[tidx[n]], 
-                              inc_warmup = inc_warmup, ...)
+                              inc_warmup = inc_warmup, window = window, ...)
             }
             invisible(NULL) 
           })  
