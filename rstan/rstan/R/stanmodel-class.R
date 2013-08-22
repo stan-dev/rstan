@@ -113,7 +113,8 @@ setMethod("sampling", "stanmodel",
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
-                   sample_file, diagnostic_file, verbose = FALSE, ...) {
+                   sample_file, diagnostic_file, verbose = FALSE, 
+                   algorithm = c("NUTS", "HMC", "RWM"), ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -165,7 +166,8 @@ setMethod("sampling", "stanmodel",
 
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
-                                          init = init, seed = seed, sample_file, diagnostic_file, ...))
+                                          init = init, seed = seed, sample_file, diagnostic_file, 
+                                          algorithm = match.arg(algorithm), ...))
    
             if (is(args_list, "try-error")) {
               message('error in specifying arguments; sampling not done') 
@@ -184,6 +186,8 @@ setMethod("sampling", "stanmodel",
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 
                 cat(mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", i, ").\n", sep = '')
+cat("i=", i, "\n")
+print(args_list[[i]])
               samples_i <- try(sampler$call_sampler(args_list[[i]])) 
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 message("error occurred during calling the sampler; sampling not done") 

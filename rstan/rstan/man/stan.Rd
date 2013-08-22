@@ -11,7 +11,8 @@ stan(file, model_name = "anon_model", model_code = "",
   iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   sample_file, diagnostic_file, save_dso = TRUE, 
-  verbose = FALSE, ..., 
+  verbose = FALSE, 
+  algorithm = c("NUTS", "std_HMC", "RWM"), ...
   boost_lib = NULL,
   eigen_lib = NULL)
 }
@@ -106,6 +107,8 @@ stan(file, model_name = "anon_model", model_code = "",
      to print intermediate output from Stan on the console, which might
      be helpful for model debugging.}
 
+  \item{algorithm}{TODO}
+  
   \item{\dots}{Other optional parameters for the sampler: 
     \enumerate{
       \item \code{chain_id} (\code{integer})

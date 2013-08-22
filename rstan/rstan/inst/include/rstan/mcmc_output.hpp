@@ -34,8 +34,12 @@ namespace rstan {
     size_t get_index_for_lp() const {
       return index_for_lp_;
     } 
+    /*
+     * @param iter_param_names
+     * @param sampler_param_names
+     */
     void set_output_names(stan::mcmc::sample& s, 
-                          stan::mcmc::base_mcmc& sampler,
+                          stan::mcmc::base_mcmc* sampler_ptr,
                           M& model,
                           std::vector<std::string>& iter_param_names,
                           std::vector<std::string>& sampler_param_names) { 
@@ -43,7 +47,7 @@ namespace rstan {
       s.get_sample_param_names(sample_names_);
       index_for_lp_ = find_index(sample_names_, std::string("lp__")); 
       sampler_names_.clear();
-      sampler.get_sampler_param_names(sampler_names_);
+      sampler_ptr -> get_sampler_param_names(sampler_names_);
       param_names_.clear();
       model.constrained_param_names(param_names_, true, true);
       iter_param_names = sample_names_;
@@ -84,10 +88,10 @@ namespace rstan {
     template <class RNG>
     void output_sample_params(RNG& rng, 
                               stan::mcmc::sample& s,
-                              stan::mcmc::base_mcmc& sampler, 
+                              stan::mcmc::base_mcmc* sampler_ptr, 
                               M& model, 
                               std::vector<Rcpp::NumericVector>& chains, 
-                              bool warmup,
+                              bool is_warmup,
                               std::vector<Rcpp::NumericVector>& sampler_params, 
                               std::vector<Rcpp::NumericVector>& iter_params, 
                               std::vector<double>& sum_pars,
@@ -99,7 +103,7 @@ namespace rstan {
       s.get_sample_params(values);
 
       std::vector<double> sampler_values;
-      sampler.get_sampler_params(sampler_values);
+      sampler_ptr -> get_sampler_params(sampler_values);
         
       std::vector<double> param_values;
       model.write_array(rng, 
@@ -109,7 +113,7 @@ namespace rstan {
       // values in param_values are column-major.
 
       size_t z = 0;
-      if (!warmup) {
+      if (!is_warmup) {
         for (z = 0; z < param_values.size(); z++)
           sum_pars[z] += param_values[z];
         sum_lp += values.at(index_for_lp_);
@@ -138,27 +142,27 @@ namespace rstan {
     }
 
       
-    void output_adapt_finish(stan::mcmc::base_mcmc& sampler,
+    void output_adapt_finish(stan::mcmc::base_mcmc* sampler_ptr,
                              std::string& ainfo) {
       std::stringstream ss;
       ss << "# Adaptation terminated" << std::endl;
-      sampler.write_sampler_state(&ss);
+      sampler_ptr -> write_sampler_state(&ss);
       ainfo = ss.str();
       if (psample_stream_) *psample_stream_ << ainfo;
       if (pdiagnostic_stream_) *pdiagnostic_stream_ << ainfo;
     }
       
     void output_diagnostic_names(stan::mcmc::sample& s,
-                                 stan::mcmc::base_mcmc& sampler, 
+                                 stan::mcmc::base_mcmc* sampler_ptr, 
                                  M& model) {
       if (!pdiagnostic_stream_) return;
 
       std::vector<std::string> names;
       s.get_sample_param_names(names);
-      sampler.get_sampler_param_names(names);
+      sampler_ptr -> get_sampler_param_names(names);
       std::vector<std::string> model_names;
       model.unconstrained_param_names(model_names, false, false);
-      sampler.get_sampler_diagnostic_names(model_names, names);
+      sampler_ptr -> get_sampler_diagnostic_names(model_names, names);
         
       (*pdiagnostic_stream_) << names.at(0);
       for (size_t i = 1; i < names.size(); ++i) {
@@ -168,13 +172,13 @@ namespace rstan {
     }
       
     void output_diagnostic_params(stan::mcmc::sample& s, 
-                                  stan::mcmc::base_mcmc& sampler) { 
+                                  stan::mcmc::base_mcmc* sampler_ptr) { 
       if (!pdiagnostic_stream_) return;
 
       std::vector<double> values;
       s.get_sample_params(values);
-      sampler.get_sampler_params(values);
-      sampler.get_sampler_diagnostics(values); // FIXME,col/row-major order??
+      sampler_ptr -> get_sampler_params(values);
+      sampler_ptr -> get_sampler_diagnostics(values); // FIXME,col/row-major order??
       (*pdiagnostic_stream_) << values.at(0);
       for (size_t i = 1; i < values.size(); ++i) {
         (*pdiagnostic_stream_) << "," << values.at(i);

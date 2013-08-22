@@ -15,7 +15,9 @@
   \S4method{sampling}{stanmodel}(object, data = list(), pars = NA, 
     chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1,
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
-    check_data = TRUE, sample_file, diagnostic_file, verbose = FALSE, \dots)   
+    check_data = TRUE, sample_file, diagnostic_file, verbose = FALSE, 
+    algorithm = c("NUTS", "std_HMC", "RWM"),
+    \dots)   
 } 
 
 \section{Methods}{
@@ -96,6 +98,8 @@
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console, which might
      be helpful for model debugging.}
+
+  \item{algorithm}{TODO}
 
   \item{\dots}{Other optional parameters for the sampler: 
     \enumerate{
