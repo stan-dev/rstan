@@ -77,13 +77,13 @@ namespace rstan {
     union {
       struct {
         int iter;   // number of iterations
+        int refresh;  // 
+        sampling_algo_t algorithm;
         int warmup; // number of warmup
         int thin; 
         bool save_warmup; // weather to save warmup samples (always true now)
-        int refresh;  // 
         int iter_save; // number of iterations saved 
         int iter_save_wo_warmup; // number of iterations saved wo warmup
-        sampling_algo_t algorithm;
         bool adapt_engaged; 
         double adapt_gamma;
         double adapt_delta;
@@ -112,10 +112,15 @@ namespace rstan {
       std::vector<std::string> args_names 
         = Rcpp::as<std::vector<std::string> >(in.names()); 
 
-      // 1: optimization (point_estimate), 2: test_grad, 3: sampling 
       size_t idx = find_index(args_names, std::string("method")); 
-      if (idx == args_names.size()) method = SAMPLING; // defaults to sampling;
-      else method = static_cast<stan_args_method_t>(Rcpp::as<int>(in[idx]));
+      if (idx == args_names.size()) method = SAMPLING;
+      else {
+        std::string t = Rcpp::as<std::string>(in[idx]);
+        if ("sampling" == t)  method = SAMPLING;
+        else if ("optim" == t)  method = OPTIM;
+        else if ("test_grad" == t)  method = TEST_GRADIENT;
+        else method = SAMPLING;
+      } 
 
       if (method == SAMPLING) {
         size_t idx = find_index(args_names, std::string("sample_file")); 
@@ -190,7 +195,7 @@ namespace rstan {
           ctrl.sampling.stepsize_jitter = 0;
           ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
         } else { 
-          Rcpp::List ctrl_lst = Rcpp::List(in[idx]);
+          Rcpp::List ctrl_lst(static_cast<SEXP>(in[idx]));
           std::vector<std::string> ctrl_names 
             = Rcpp::as<std::vector<std::string> >(ctrl_lst.names());
           size_t idx2 = find_index(ctrl_names, std::string("adapt_engaged"));
@@ -212,33 +217,55 @@ namespace rstan {
           if (idx2 == ctrl_names.size()) ctrl.sampling.adapt_t0 = 10;
           else ctrl.sampling.adapt_t0 = Rcpp::as<double>(ctrl_lst[idx2]);
   
-          if (ctrl.sampling.algorithm == NUTS) { //NUTS
-            idx2 = find_index(ctrl_names, "max_treedepth");
-            if (idx2 == ctrl_names.size()) ctrl.sampling.max_treedepth = 10;
-            else ctrl.sampling.max_treedepth = Rcpp::as<int>(ctrl_lst[idx2]);
-            idx2 = find_index(ctrl_names, "metric");
-            if (idx2 != ctrl_names.size()) {
-              std::string s1 = Rcpp::as<std::string>(ctrl_lst[idx2]);
-              if ("unit_e" == s1) ctrl.sampling.metric = UNIT_E;
-              else if ("diag_e" == s1) ctrl.sampling.metric = DIAG_E;
-              else if ("dense_e" == s1) ctrl.sampling.metric = DENSE_E;
-            } else ctrl.sampling.metric = DIAG_E;
-            idx2 = find_index(ctrl_names, "stepsize");
-            if (idx2 == ctrl_names.size()) ctrl.sampling.stepsize = 1; 
-            else ctrl.sampling.stepsize = Rcpp::as<double>(ctrl_lst[idx2]);
-            idx2 = find_index(ctrl_names, "stepsize_jitter");
-            if (idx2 == ctrl_names.size()) ctrl.sampling.stepsize_jitter = 0; 
-            else ctrl.sampling.stepsize_jitter = Rcpp::as<double>(ctrl_lst[idx2]);
-          } else if (ctrl.sampling.algorithm == HMC) { // HMC 
-            idx2 = find_index(ctrl_names, "int_time");
-            if (idx2 == ctrl_names.size()) 
-              ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
-            else ctrl.sampling.int_time = Rcpp::as<double>(ctrl_lst[idx2]);
-          } else if (ctrl.sampling.algorithm == Metropolis) { 
-          } 
+          switch (ctrl.sampling.algorithm) { 
+            case NUTS: 
+              idx2 = find_index(ctrl_names, "max_treedepth");
+              if (idx2 == ctrl_names.size()) ctrl.sampling.max_treedepth = 10;
+              else ctrl.sampling.max_treedepth = Rcpp::as<int>(ctrl_lst[idx2]);
+              idx2 = find_index(ctrl_names, "metric");
+              if (idx2 != ctrl_names.size()) {
+                std::string s1 = Rcpp::as<std::string>(ctrl_lst[idx2]);
+                if ("unit_e" == s1) ctrl.sampling.metric = UNIT_E;
+                else if ("diag_e" == s1) ctrl.sampling.metric = DIAG_E;
+                else if ("dense_e" == s1) ctrl.sampling.metric = DENSE_E;
+              } else ctrl.sampling.metric = DIAG_E;
+              idx2 = find_index(ctrl_names, "stepsize");
+              if (idx2 == ctrl_names.size()) ctrl.sampling.stepsize = 1; 
+              else ctrl.sampling.stepsize = Rcpp::as<double>(ctrl_lst[idx2]);
+              idx2 = find_index(ctrl_names, "stepsize_jitter");
+              if (idx2 == ctrl_names.size()) ctrl.sampling.stepsize_jitter = 0; 
+              else ctrl.sampling.stepsize_jitter = Rcpp::as<double>(ctrl_lst[idx2]);
+              break;
+            case HMC: 
+              idx2 = find_index(ctrl_names, "int_time");
+              if (idx2 == ctrl_names.size()) 
+                ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
+              else ctrl.sampling.int_time = Rcpp::as<double>(ctrl_lst[idx2]);
+              break;
+            case Metropolis: break;
+          }
         } 
       } else if (method == OPTIM) {
-
+        idx = find_index(args_names, "algorithm");
+        if (idx == args_names.size()) {
+          ctrl.optim.algorithm = BFGS;
+        } else {
+          std::string t = Rcpp::as<std::string>(in[idx]);
+          if ("BFGS" == t)  ctrl.optim.algorithm = BFGS;
+          else if ("Newton" == t)  ctrl.optim.algorithm = Newton;
+          else if ("Nesterov" == t)  ctrl.optim.algorithm = Nesterov;
+        } 
+        idx = find_index(args_names, "refresh");
+        if (idx == args_names.size())
+          ctrl.optim.refresh = ctrl.optim.iter / 100; 
+        else 
+          ctrl.optim.refresh = Rcpp::as<int>(in[idx]);
+        idx = find_index(args_names, "stepsize");
+        if (idx == args_names.size()) ctrl.optim.stepsize = 1;
+        else ctrl.optim.stepsize = Rcpp::as<double>(in[idx]);
+        idx = find_index(args_names, "save_iterations");
+        if (idx == args_names.size()) ctrl.optim.save_iterations = true;
+        else ctrl.optim.save_iterations = Rcpp::as<bool>(in[idx]);
       } else if (method == TEST_GRADIENT) {
       } 
 
