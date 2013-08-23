@@ -328,7 +328,7 @@ namespace rstan {
     void run_markov_chain(stan::mcmc::base_mcmc* sampler_ptr,
                           const stan_args& args, 
                           bool is_warmup,
-                          mcmc_output<Model>& outputer, 
+                          mcmc_output<Model>& outputter, 
                           stan::mcmc::sample& init_s,
                           Model& model,
                           std::vector<Rcpp::NumericVector>& chains, 
@@ -351,13 +351,13 @@ namespace rstan {
         R_CheckUserInterrupt();
         init_s = sampler_ptr -> transition(init_s);
         if (args.get_ctrl_sampling_save_warmup() && (((m - start) % args.get_ctrl_sampling_thin()) == 0)) {
-          outputer.output_sample_params(base_rng, init_s, sampler_ptr, model,
+          outputter.output_sample_params(base_rng, init_s, sampler_ptr, model,
                                         chains, is_warmup,
                                         sampler_params, iter_params,
                                         sum_pars, sum_lp, qoi_idx,
                                         iter_save_i, &rstan::io::rcout);
           iter_save_i++;
-          outputer.output_diagnostic_params(init_s, sampler_ptr);
+          outputter.output_diagnostic_params(init_s, sampler_ptr);
         }
       }
     }
@@ -365,7 +365,7 @@ namespace rstan {
     template <class Model, class RNG_t>
     void warmup_phase(stan::mcmc::base_mcmc* sampler_ptr,
                       stan_args& args, 
-                      mcmc_output<Model>& outputer,
+                      mcmc_output<Model>& outputter,
                       stan::mcmc::sample& init_s,
                       Model& model,
                       std::vector<Rcpp::NumericVector>& chains, 
@@ -377,7 +377,7 @@ namespace rstan {
                       std::vector<Rcpp::NumericVector>& iter_params, 
                       std::string& adaptation_info, 
                       RNG_t& base_rng) {
-      run_markov_chain<Model, RNG_t>(sampler_ptr, args, true, outputer,
+      run_markov_chain<Model, RNG_t>(sampler_ptr, args, true, outputter,
                                    init_s, model, chains, iter_save_i, qoi_idx,
                                    sum_pars, sum_lp, sampler_params, iter_params,
                                    adaptation_info, base_rng);
@@ -386,7 +386,7 @@ namespace rstan {
     template <class Model, class RNG_t>
     void sampling_phase(stan::mcmc::base_mcmc* sampler_ptr,
                         const stan_args& args,
-                        mcmc_output<Model>& outputer,
+                        mcmc_output<Model>& outputter,
                         stan::mcmc::sample& init_s,
                         Model& model,
                         std::vector<Rcpp::NumericVector>& chains, 
@@ -398,8 +398,7 @@ namespace rstan {
                         std::vector<Rcpp::NumericVector>& iter_params, 
                         std::string& adaptation_info, 
                         RNG_t& base_rng) {
-rstan::io::rcout << "sampling phase" << std::endl;
-      run_markov_chain<Model, RNG_t>(sampler_ptr, args, false, outputer,
+      run_markov_chain<Model, RNG_t>(sampler_ptr, args, false, outputter,
                                    init_s, model, chains, iter_save_i, qoi_idx,
                                    sum_pars, sum_lp, sampler_params, iter_params,
                                    adaptation_info,
@@ -503,18 +502,18 @@ rstan::io::rcout << "sampling phase" << std::endl;
       std::vector<std::string> sampler_param_names;
       std::vector<std::string> iter_param_names;
 
-      mcmc_output<Model> outputer(&sample_stream, &diagnostic_stream);
-      outputer.set_output_names(s, sampler_ptr, model, iter_param_names, sampler_param_names);
-      outputer.init_sampler_params(sampler_params, args.get_ctrl_sampling_iter_save());
-      outputer.init_iter_params(iter_params, args.get_ctrl_sampling_iter_save());
+      mcmc_output<Model> outputter(&sample_stream, &diagnostic_stream);
+      outputter.set_output_names(s, sampler_ptr, model, iter_param_names, sampler_param_names);
+      outputter.init_sampler_params(sampler_params, args.get_ctrl_sampling_iter_save());
+      outputter.init_iter_params(iter_params, args.get_ctrl_sampling_iter_save());
 
       if (!args.get_append_samples()) {
-        outputer.print_sample_names();
-        outputer.output_diagnostic_names(s, sampler_ptr, model);
+        outputter.print_sample_names();
+        outputter.output_diagnostic_names(s, sampler_ptr, model);
       } 
       // Warm-Up
       clock_t start = clock();
-      warmup_phase<Model, RNG_t>(sampler_ptr, args, outputer,
+      warmup_phase<Model, RNG_t>(sampler_ptr, args, outputter,
                                  s, model, chains, iter_save_i,
                                  qoi_idx, mean_pars, mean_lp,
                                  sampler_params, iter_params, adaptation_info,
@@ -523,11 +522,11 @@ rstan::io::rcout << "sampling phase" << std::endl;
       double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
       if (args.get_ctrl_sampling_adapt_engaged()) { 
         dynamic_cast<stan::mcmc::base_adapter*>(sampler_ptr)->disengage_adaptation();
-        outputer.output_adapt_finish(sampler_ptr, adaptation_info);
+        outputter.output_adapt_finish(sampler_ptr, adaptation_info);
       }
       // Sampling
       start = clock();
-      sampling_phase<Model, RNG_t>(sampler_ptr, args, outputer,
+      sampling_phase<Model, RNG_t>(sampler_ptr, args, outputter,
                                    s, model, chains, iter_save_i,
                                    qoi_idx, mean_pars, mean_lp, 
                                    sampler_params, iter_params, adaptation_info,  
@@ -544,10 +543,10 @@ rstan::io::rcout << "sampling phase" << std::endl;
           (*it) /= args.get_ctrl_sampling_iter_save_wo_warmup();
       } 
       if (args.get_ctrl_sampling_refresh() > 0) { 
-        outputer.print_timing(warmDeltaT, sampleDeltaT, &rstan::io::rcout);
+        outputter.print_timing(warmDeltaT, sampleDeltaT, &rstan::io::rcout);
       }
       
-      outputer.output_timing(warmDeltaT, sampleDeltaT);
+      outputter.output_timing(warmDeltaT, sampleDeltaT);
       if (args.get_sample_file_flag()) {
         rstan::io::rcout << "Sample of chain " 
                          << args.get_chain_id() 
@@ -573,7 +572,7 @@ rstan::io::rcout << "sampling phase" << std::endl;
                               sampler_param_names.end());
       Rcpp::List slst(iter_params.begin(), iter_params.end());
       slst.names() = iter_param_names;
-      slst.erase(outputer.get_index_for_lp());
+      slst.erase(outputter.get_index_for_lp());
       holder.attr("sampler_params") = slst;
       holder.names() = fnames_oi;
     } 
@@ -642,9 +641,9 @@ rstan::io::rcout << "sampling phase" << std::endl;
         } 
       } else {
         init_val = "random"; 
-        // init_rng generates uniformly from -2 to 2
+        double r = args.get_init_radius();
         boost::random::uniform_real_distribution<double> 
-          init_range_distribution(-2.0,2.0);
+          init_range_distribution(-r, r);
         boost::variate_generator<RNG_t&, boost::random::uniform_real_distribution<double> >
           init_rng(base_rng,init_range_distribution);
 
@@ -717,8 +716,8 @@ rstan::io::rcout << "sampling phase" << std::endl;
             rstan::io::rcout << "init tries = " << num_init_tries << std::endl;
           if (args.get_sample_file_flag()) 
             rstan::io::rcout << "output = " << args.get_sample_file() << std::endl;
-          rstan::io::rcout << "save_warmup = " << args.get_ctrl_optim_save_iterations() << std::endl;
-          rstan::io::rcout << "epsilon = " << args.get_ctrl_optim_stepsize() << std::endl;
+          rstan::io::rcout << "save_iterations = " << args.get_ctrl_optim_save_iterations() << std::endl;
+          rstan::io::rcout << "stepsize = " << args.get_ctrl_optim_stepsize() << std::endl;
           rstan::io::rcout << "seed = " << args.get_random_seed() << std::endl;
           
           if (args.get_sample_file_flag()) { 
