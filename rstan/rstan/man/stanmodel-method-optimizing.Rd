@@ -16,7 +16,7 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    method = c("BFGS", "Nesterov", "Newton"),
+    algorithm = c("BFGS", "Nesterov", "Newton"),
     verbose = FALSE, \dots)   
 } 
 
@@ -59,8 +59,8 @@
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
-  \item{method}{One of "newton", "nesterov", and "bfgs" indicating which
-    optimization method is used. The default is Newton's method.} 
+  \item{algorithm}{One of "Newton", "Nesterov", and "BFGS" indicating which
+    optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
   \item{\dots}{Other optional parameters.

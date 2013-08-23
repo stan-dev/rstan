@@ -55,7 +55,7 @@ setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   method = c("BFGS", "Nesterov", "Newton"),
+                   algorithm = c("BFGS", "Nesterov", "Newton"),
                    verbose = FALSE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
@@ -95,14 +95,15 @@ setMethod("optimizing", "stanmodel",
             seed <- check_seed(seed, warn = 1)    
             if (is.null(seed))
               return(invisible(list(stanmodel = object)))
-            args <- list(init = init, seed = seed) 
-            # 1: newton; 2: nesterov; 3: bfgs
-            args["point_estimate"] <- match(match.arg(method), c('Newton', 'Nesterov', 'BFGS'))
+            args <- list(init = init, 
+                         seed = seed, 
+                         method = "optim", 
+                         algorithm = match.arg(algorithm)) 
          
             if (!missing(sample_file) && is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
-            dotlist$test_grad <- FALSE # set test gradient flag to false explicitly
+            if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             invisible(optim)
@@ -114,7 +115,7 @@ setMethod("sampling", "stanmodel",
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
                    sample_file, diagnostic_file, verbose = FALSE, 
-                   algorithm = c("NUTS", "HMC", "RWM"), ...) {
+                   algorithm = c("NUTS", "HMC", "Metropolis"), ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -186,8 +187,6 @@ setMethod("sampling", "stanmodel",
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 
                 cat(mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", i, ").\n", sep = '')
-cat("i=", i, "\n")
-print(args_list[[i]])
               samples_i <- try(sampler$call_sampler(args_list[[i]])) 
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 message("error occurred during calling the sampler; sampling not done") 

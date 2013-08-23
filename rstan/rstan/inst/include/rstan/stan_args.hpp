@@ -26,7 +26,7 @@ namespace rstan {
     template <class T>
     bool get_rlist_element(const Rcpp::List& lst, const char* n, T& t, const T& v0) {
       bool b = lst.containsElementNamed(n);
-      if (b)  t = Rcpp::as<T>(lst[n]);
+      if (b)  t = Rcpp::as<T>(const_cast<Rcpp::List&>(lst)[n]);
       else  t = T(v0);
       return b;
     }
@@ -34,14 +34,14 @@ namespace rstan {
     template <class T>
     bool get_rlist_element(const Rcpp::List& lst, const char* n, T& t) {
       bool b = lst.containsElementNamed(n);
-      if (b) t = Rcpp::as<T>(lst[n]);
+      if (b) t = Rcpp::as<T>(const_cast<Rcpp::List&>(lst)[n]);
       return b;
     }
 
     template <>
     bool get_rlist_element(const Rcpp::List& lst, const char* n, SEXP& t) {
       bool b = lst.containsElementNamed(n);
-      if (b) t = lst[n];
+      if (b) t = const_cast<Rcpp::List&>(lst)[n];
       return b;
     }
 
@@ -135,49 +135,59 @@ namespace rstan {
       switch (method) {
         case SAMPLING: 
           if (ctrl.sampling.adapt_gamma < 0) {
-            std::stringstream msg("Invalid adaptation parameter (found gamma=");
-            msg << ctrl.sampling.adapt_gamma << "; require >0).";
+            std::stringstream msg; 
+            msg << "Invalid adaptation parameter (found gamma="
+                << ctrl.sampling.adapt_gamma << "; require >0).";
             throw std::invalid_argument(msg.str());
           }
           if (ctrl.sampling.adapt_delta <= 0 || ctrl.sampling.adapt_delta >= 1) {
-            std::stringstream msg("Invalid adaptation parameter (found detal=");
-            msg << ctrl.sampling.adapt_delta << "; require 0<delta<1).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found detal="
+                << ctrl.sampling.adapt_delta << "; require 0<delta<1).";
+            throw std::invalid_argument(msg.str());
           } 
           if (ctrl.sampling.adapt_kappa < 0) {
-            std::stringstream msg("Invalid adaptation parameter (found kappa=");
-            msg << ctrl.sampling.adapt_kappa << "; require >0).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found kappa="
+                << ctrl.sampling.adapt_kappa << "; require >0).";
             throw std::invalid_argument(msg.str());
           }
           if (ctrl.sampling.adapt_t0 < 0) {
-            std::stringstream msg("Invalid adaptation parameter (found t0=");
-            msg << ctrl.sampling.adapt_t0 << "; require >0).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found t0="
+                << ctrl.sampling.adapt_t0 << "; require >0).";
             throw std::invalid_argument(msg.str());
           }
           if (ctrl.sampling.stepsize < 0) {  
-            std::stringstream msg("Invalid adaptation parameter (found stepsize=");
-            msg << ctrl.sampling.stepsize << "; require stepsize > 0).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found stepsize="
+                << ctrl.sampling.stepsize << "; require stepsize > 0).";
             throw std::invalid_argument(msg.str());
           } 
           if (ctrl.sampling.stepsize_jitter < 0 || ctrl.sampling.stepsize_jitter > 1) {
-            std::stringstream msg("Invalid adaptation parameter (found stepsize_jitter=");
-            msg << ctrl.sampling.stepsize_jitter << "; require 0<=stepsize_jitter<=1).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found stepsize_jitter="
+                << ctrl.sampling.stepsize_jitter << "; require 0<=stepsize_jitter<=1).";
             throw std::invalid_argument(msg.str());
           } 
           if (ctrl.sampling.max_treedepth < 0) {
-            std::stringstream msg("Invalid adaptation parameter (found max_treedepth=");
-            msg << ctrl.sampling.max_treedepth << "; require max_treedepth>0).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found max_treedepth="
+                << ctrl.sampling.max_treedepth << "; require max_treedepth>0).";
             throw std::invalid_argument(msg.str());
           } 
           if (ctrl.sampling.int_time < 0) {
-            std::stringstream msg("Invalid adaptation parameter (found int_time=");
-            msg << ctrl.sampling.int_time << "; require int_time>0).";
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found int_time="
+                << ctrl.sampling.int_time << "; require int_time>0).";
             throw std::invalid_argument(msg.str());
           } 
           break;
         case OPTIM:
           if (ctrl.optim.stepsize < 0) {  
-            std::stringstream msg("Invalid adaptation parameter (found stepsize=");
-            msg << ctrl.optim.stepsize << "; require stepsize > 0).";
+            std::stringstream msg; 
+            msg << "Invalid adaptation parameter (found stepsize="
+                << ctrl.optim.stepsize << "; require stepsize > 0).";
             throw std::invalid_argument(msg.str());
           } 
           break;
@@ -202,97 +212,102 @@ namespace rstan {
         else method = SAMPLING;
       } 
 
-      if (method == SAMPLING) {
-        sample_file_flag = 
-          get_rlist_element(in, "sample_file", sample_file);
-        diagnostic_file_flag = 
-          get_rlist_element(in, "diagnostic_file", diagnostic_file);
-        get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
-        get_rlist_element(in, "warmup", ctrl.sampling.warmup, ctrl.sampling.iter / 2);
- 
-        int calculated_thin = (ctrl.sampling.iter - ctrl.sampling.warmup) / 1000;
-        if (calculated_thin < 1) calculated_thin = 1;
-        get_rlist_element(in, "thin", ctrl.sampling.thin, calculated_thin);
-
-        ctrl.sampling.iter_save_wo_warmup 
-          = 1 + (ctrl.sampling.iter - ctrl.sampling.warmup - 1) / ctrl.sampling.thin; 
-        ctrl.sampling.iter_save 
-          = ctrl.sampling.iter_save_wo_warmup
-            + 1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
-
-        ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ? 
-                                ctrl.sampling.iter / 10 : 1; 
-        get_rlist_element(in, "refresh", ctrl.sampling.refresh);
-       
-        b = get_rlist_element(in, "seed", t_sexp);
-        if (b) random_seed = sexp2seed(t_sexp);
-        else random_seed = std::time(0);
-
-        if (get_rlist_element(in, "algorithm", t_str)) {
-          if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
-          else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
-          else if (t_str == "Metropolis") ctrl.sampling.algorithm = Metropolis;
-        } else {
-          ctrl.sampling.algorithm = NUTS;
-        }
-
-        if (get_rlist_element(in, "control", t_sexp)) {
-          Rcpp::List ctrl_lst(t_sexp);
-          get_rlist_element(ctrl_lst, "adapt_engaged", ctrl.sampling.adapt_engaged, true);
-          get_rlist_element(ctrl_lst, "adapt_gamma", ctrl.sampling.adapt_gamma, 0.05);
-          get_rlist_element(ctrl_lst, "adapt_delta", ctrl.sampling.adapt_delta, 0.65);
-          get_rlist_element(ctrl_lst, "adapt_kappa", ctrl.sampling.adapt_kappa, 0.75);
-          get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
+      int calculated_thin;
+      switch (method) { 
+        case SAMPLING: 
+          sample_file_flag = 
+            get_rlist_element(in, "sample_file", sample_file);
+          diagnostic_file_flag = 
+            get_rlist_element(in, "diagnostic_file", diagnostic_file);
+          get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
+          get_rlist_element(in, "warmup", ctrl.sampling.warmup, ctrl.sampling.iter / 2);
+   
+          calculated_thin = (ctrl.sampling.iter - ctrl.sampling.warmup) / 1000;
+          if (calculated_thin < 1) calculated_thin = 1;
+          get_rlist_element(in, "thin", ctrl.sampling.thin, calculated_thin);
   
-          switch (ctrl.sampling.algorithm) { 
-            case NUTS: 
-              get_rlist_element(ctrl_lst, "max_treedepth", ctrl.sampling.max_treedepth, 10);
-              if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
-                if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
-                else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
-                else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
-              } else ctrl.sampling.metric = DIAG_E;
-              get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
-              get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
-              break;
-            case HMC: 
-              get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
-                                6.283185307179586476925286766559005768e+00);
-              break;
-            case Metropolis: break;
+          ctrl.sampling.iter_save_wo_warmup 
+            = 1 + (ctrl.sampling.iter - ctrl.sampling.warmup - 1) / ctrl.sampling.thin; 
+          ctrl.sampling.iter_save 
+            = ctrl.sampling.iter_save_wo_warmup
+              + 1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
+  
+          ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ? 
+                                  ctrl.sampling.iter / 10 : 1; 
+          get_rlist_element(in, "refresh", ctrl.sampling.refresh);
+         
+          b = get_rlist_element(in, "seed", t_sexp);
+          if (b) random_seed = sexp2seed(t_sexp);
+          else random_seed = std::time(0);
+  
+          if (get_rlist_element(in, "algorithm", t_str)) {
+            if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
+            else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
+            else if (t_str == "Metropolis") ctrl.sampling.algorithm = Metropolis;
+          } else {
+            ctrl.sampling.algorithm = NUTS;
           }
-        } else { 
-          ctrl.sampling.adapt_engaged = true;
-          ctrl.sampling.adapt_gamma = 0.05;
-          ctrl.sampling.adapt_delta = 0.65;
-          ctrl.sampling.adapt_kappa = 0.75;
-          ctrl.sampling.adapt_t0  = 10;
-          ctrl.sampling.max_treedepth = 10;
-          ctrl.sampling.metric = DIAG_E;
-          ctrl.sampling.stepsize = 1;
-          ctrl.sampling.stepsize_jitter = 0;
-          ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
-        }
-      } else if (method == OPTIM) {
-        get_rlist_element(in, "iter", ctrl.optim.iter, 2000);
-        if (get_rlist_element(in, "algorithm", t_str)) {
-          if ("BFGS" == t_str)  ctrl.optim.algorithm = BFGS;
-          else if ("Newton" == t_str)  ctrl.optim.algorithm = Newton;
-          else if ("Nesterov" == t_str)  ctrl.optim.algorithm = Nesterov;
-        } else {
-          ctrl.optim.algorithm = BFGS;
-        } 
-        
-        if (!get_rlist_element(in, "refresh", ctrl.optim.refresh)) {
-          ctrl.optim.refresh = ctrl.optim.iter / 100; 
-          if (ctrl.optim.refresh < 1) ctrl.optim.refresh = 1;
-        } 
+  
+          if (get_rlist_element(in, "control", t_sexp)) {
+            Rcpp::List ctrl_lst(t_sexp);
+            get_rlist_element(ctrl_lst, "adapt_engaged", ctrl.sampling.adapt_engaged, true);
+            get_rlist_element(ctrl_lst, "adapt_gamma", ctrl.sampling.adapt_gamma, 0.05);
+            get_rlist_element(ctrl_lst, "adapt_delta", ctrl.sampling.adapt_delta, 0.65);
+            get_rlist_element(ctrl_lst, "adapt_kappa", ctrl.sampling.adapt_kappa, 0.75);
+            get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
+    
+            switch (ctrl.sampling.algorithm) { 
+              case NUTS: 
+                get_rlist_element(ctrl_lst, "max_treedepth", ctrl.sampling.max_treedepth, 10);
+                if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
+                  if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
+                  else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
+                  else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
+                } else ctrl.sampling.metric = DIAG_E;
+                get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
+                get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
+                break;
+              case HMC: 
+                get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
+                                  6.283185307179586476925286766559005768e+00);
+                break;
+              case Metropolis: break;
+            }
+          } else { 
+            ctrl.sampling.adapt_engaged = true;
+            ctrl.sampling.adapt_gamma = 0.05;
+            ctrl.sampling.adapt_delta = 0.65;
+            ctrl.sampling.adapt_kappa = 0.75;
+            ctrl.sampling.adapt_t0  = 10;
+            ctrl.sampling.max_treedepth = 10;
+            ctrl.sampling.metric = DIAG_E;
+            ctrl.sampling.stepsize = 1;
+            ctrl.sampling.stepsize_jitter = 0;
+            ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
+          }
+          break;
 
-        get_rlist_element(in, "stepsize", ctrl.optim.stepsize, 1.0);
-        get_rlist_element(in, "save_iterations", ctrl.optim.save_iterations, true);
-      } else if (method == TEST_GRADIENT) {
+        case OPTIM: 
+          get_rlist_element(in, "iter", ctrl.optim.iter, 2000);
+          if (get_rlist_element(in, "algorithm", t_str)) {
+            if ("BFGS" == t_str)  ctrl.optim.algorithm = BFGS;
+            else if ("Newton" == t_str)  ctrl.optim.algorithm = Newton;
+            else if ("Nesterov" == t_str)  ctrl.optim.algorithm = Nesterov;
+          } else {
+            ctrl.optim.algorithm = BFGS;
+          } 
+          
+          if (!get_rlist_element(in, "refresh", ctrl.optim.refresh)) {
+            ctrl.optim.refresh = ctrl.optim.iter / 100; 
+            if (ctrl.optim.refresh < 1) ctrl.optim.refresh = 1;
+          } 
+  
+          get_rlist_element(in, "stepsize", ctrl.optim.stepsize, 1.0);
+          get_rlist_element(in, "save_iterations", ctrl.optim.save_iterations, true);
+          break;
+
+        case TEST_GRADIENT: break;
       } 
-
 
       if (get_rlist_element(in, "init", t_sexp)) {
         switch (TYPEOF(t_sexp)) {
@@ -336,10 +351,10 @@ namespace rstan {
         case SAMPLING: 
           lst["method"] = "SAMPLING";
           lst["iter"] = ctrl.sampling.iter;
-          ctrl_list["iter"] = ctrl.sampling.iter;
-          ctrl_list["warmup"] = ctrl.sampling.warmup;
-          ctrl_list["thin"] = ctrl.sampling.thin;
-          ctrl_list["refresh"] = ctrl.sampling.refresh;
+          lst["warmup"] = ctrl.sampling.warmup;
+          lst["thin"] = ctrl.sampling.thin;
+          lst["refresh"] = ctrl.sampling.refresh;
+          lst["test_grad"] = false;
           ctrl_list["adapt_engaged"] = ctrl.sampling.adapt_engaged;
           ctrl_list["adapt_gamma"] = ctrl.sampling.adapt_gamma;
           ctrl_list["adapt_delta"] = ctrl.sampling.adapt_delta;
@@ -376,7 +391,7 @@ namespace rstan {
           lst["control"] = ctrl_list;
           break;
         case OPTIM: 
-          lst["method"] = "OPTIM";
+          lst["method"] = "optim";
           lst["iter"] = ctrl.optim.iter;
           lst["refresh"] = ctrl.optim.refresh;
           lst["save_iterations"] = ctrl.optim.save_iterations;
@@ -388,7 +403,8 @@ namespace rstan {
           } 
           break;
         case TEST_GRADIENT:
-          lst["method"] = "TEST_GRADIENT";
+          lst["method"] = "test_grad";
+          lst["test_grad"] = true;
       } 
       return lst;
     } 

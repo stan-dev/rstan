@@ -389,8 +389,7 @@ config_argss <- function(chains, iter, warmup, thin,
     dotlist$chain_id <- NULL
   }
 
-  # method: 1, sampling; 2, optim; 3, test gradient
-  dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) 3 else 1
+  dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) "test_grad" else "sampling"
   
   all_metrics <- c("unit_e", "diag_e", "dense_e")
   if (!is.null(dotlist$control)) {

@@ -16,7 +16,7 @@
     chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1,
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, diagnostic_file, verbose = FALSE, 
-    algorithm = c("NUTS", "std_HMC", "RWM"),
+    algorithm = c("NUTS", "HMC", "Metropolis"),
     \dots)   
 } 
 

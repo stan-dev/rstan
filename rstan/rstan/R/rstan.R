@@ -103,11 +103,11 @@ stan <- function(file, model_name = "anon_model",
                  thin = 1, 
                  init = "random", 
                  seed = sample.int(.Machine$integer.max, 1), 
+                 algorithm = c("NUTS", "HMC", "Metropolis"),
                  sample_file, # the file to which the samples are written
                  diagnostic_file, # the file to which diagnostics are written 
                  save_dso = TRUE,
-                 verbose = FALSE, 
-                 algorithm = c("NUTS", "HMC", "Metropolis"), ...,
+                 verbose = FALSE, ...,
                  boost_lib = NULL, 
                  eigen_lib = NULL) {
   # Return a fitted model (stanfit object)  from a stan model, data, etc.  

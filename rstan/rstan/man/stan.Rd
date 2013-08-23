@@ -10,9 +10,10 @@ stan(file, model_name = "anon_model", model_code = "",
   fit = NA, data = list(), pars = NA, chains = 4,
   iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
-  sample_file, diagnostic_file, save_dso = TRUE, 
-  verbose = FALSE, 
-  algorithm = c("NUTS", "std_HMC", "RWM"), ...
+  algorithm = c("NUTS", "HMC", "Metropolis"),
+  sample_file, diagnostic_file, 
+  save_dso = TRUE, 
+  verbose = FALSE, ...,
   boost_lib = NULL,
   eigen_lib = NULL)
 }
@@ -53,15 +54,6 @@ stan(file, model_name = "anon_model", model_code = "",
      adaptation, so warmup samples should not be used for inference. The number
      of warmup should not be larger than \code{iter} and the default is \code{iter/2}.}
   \item{thin}{A positive integer specifying the period for saving sample; defaults to 1.} 
-  \item{seed}{The seed, a positive integer, for random number generation. The
-    default is generated from 1 to the maximum integer supported by \R on the
-    machine. When multiple chains are used, only one seed is needed, with other
-    chains' seeds being generated from the first chain's seed to prevent
-    dependency among the random number streams for the chains. When a seed is 
-    specified by a number, \code{as.integer} will be applied to it. 
-    If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
-    We can also specify a seed using a character string of digits, such as
-    \code{"12345"}, which is converted to integer.}
   \item{init}{One of digit \code{0}, string \code{"0"} or \code{"random"}, 
     a function that returns a list, or a list of initial parameter values with
     which to indicate how the initial values of parameters are specified. 
@@ -76,6 +68,17 @@ stan(file, model_name = "anon_model", model_code = "",
      See below notes on that RStan treats a vector of lenght 1 as
      a scalar. 
   }
+  \item{seed}{The seed, a positive integer, for random number generation. The
+    default is generated from 1 to the maximum integer supported by \R on the
+    machine. When multiple chains are used, only one seed is needed, with other
+    chains' seeds being generated from the first chain's seed to prevent
+    dependency among the random number streams for the chains. When a seed is 
+    specified by a number, \code{as.integer} will be applied to it. 
+    If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
+    We can also specify a seed using a character string of digits, such as
+    \code{"12345"}, which is converted to integer.}
+  \item{algorithm}{TODO}
+
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
@@ -101,13 +104,11 @@ stan(file, model_name = "anon_model", model_code = "",
     what is saved previously and used for sampling, if the compiling is
     done on the same platform, that is, same operating system and same 
     architecture (32bits or 64bits). 
-}
+  }
 
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console, which might
      be helpful for model debugging.}
-
-  \item{algorithm}{TODO}
   
   \item{\dots}{Other optional parameters for the sampler: 
     \enumerate{

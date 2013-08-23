@@ -32,7 +32,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 
   print(round(s$summary, digits_summary), ...) 
 
-  sampler <- attr(x@sim$samples[[1]], "args")$sampler 
+  sampler <- attr(x@sim$samples[[1]], "args")$sampler_t
 
   cat("\nSamples were drawn using ", sampler, " at ", x@date, ".\n",
       "For each parameter, n_eff is a crude measure of effective sample size,\n", 
