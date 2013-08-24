@@ -1,13 +1,3 @@
-get_sampler_name <- function(leapfrog_steps, equal_step_sizes, nondiag_mass) {
-  if (!is.null(nondiag_mass) && nondiag_mass > 0) 
-    return("NUTS(nondiag)")
-  if (leapfrog_steps < 0) {
-    if (equal_step_sizes == 0) return("NUTS2")
-    return("NUTS1")
-  } 
-  return("HMC")
-} 
-
 paridx_fun <- function(names) {
   # Args:
   #   names: names (character vector) such as lp__, treedepth__, stepsize__,
@@ -30,36 +20,70 @@ parse_stancsv_comments <- function(comments) {
   # iter, thin, seed, etc. This is specific to the CSV files
   # generated from Stan
 
-  nuts_diag_lineno <- which(grepl('(mcmc::nuts_diag)', comments))
-  nuts_nondiag_lineno <- which(grepl('(mcmc::nuts_nondiag)', comments))
-  adaptation_info <- character(0)  
+  adapt_term_lineno <- which(grepl("Adaptation terminated", comments))
+  if (length(adapt_term_lineno) < 1) 
+    stop("line with \"Adaptation terminated\" not found")
+  time_lineno <- which(grepl("Elapsed Time", comments))
   len <- length(comments)
-  nondiag_mass <- 0
-  if (length(nuts_diag_lineno) > 0) {  
-    adaptation_info <- paste(comments[nuts_diag_lineno:len], collapse = '\n')
-    comments <- comments[1:(nuts_diag_lineno - 1)]
-  } else if (length(nuts_nondiag_lineno) > 0) {  
-    adaptation_info <- paste(comments[nuts_nondiag_lineno:len], collapse = '\n')
-    comments <- comments[1:(nuts_nondiag_lineno - 1)]
-    nondiag_mass <- 1
+  if (length(time_lineno) < 1) {
+    stop("line with \"Elapsed Time\" not found")
   }
+
+  adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
+  time_info <- comments[time_lineno:len]
+  comments <- comments[1:(adapt_term_lineno - 1)]
 
   has_eq <- sapply(comments, function(i) grepl('=', i))
   comments <- comments[has_eq] 
-  comments <- gsub('^#+\\s*|\\s*$', '', comments)
+  comments <- gsub('^#+\\s*|\\s*|\\(Default\\)', '', comments)
   eq_pos <- regexpr("=", comments, fixed = TRUE)
-  names <- substr(comments, 0, eq_pos - 1)
+  names0 <- substr(comments, 0, eq_pos - 1)
   values <- as.list(substring(comments, eq_pos + 1))
-  names(values) <- names
-  values[['adaptation_info']] <- adaptation_info 
-  names1 <- intersect(c("thin", "iter", "warmup", "equal_step_sizes", "chain_id",
-                        "leapfrog_steps", "nondiag_mass",
-                        "max_treedepth", "save_warmup"), names)
-  names2 <- intersect(c("epsilon", "epsilon_pm", "gamma", "delta"), names) 
+  
+  id_idx <- which("id" == names0)
+  if (length(id_idx) > 0) 
+  names0[id_idx] <- "chain_id"
+  
+  compute_iter <- FALSE
+  id_warmup <- which("num_warmup" == names0)
+  if (length(id_warmup) > 0) {
+    names0[id_warmup] <- "warmup"
+    compute_iter <- TRUE
+  }   
+  
+  id_numsamples <- which("num_samples" == names0)
+  if (length(id_numsamples) > 0) {
+    names0[id_numsamples] <- "iter"
+  }
+  names(values) <- names0;
+
+  add_lst <- list(adaptation_info = adaptation_info,
+                  time_info = time_info)
+
+  sampler_t <- NULL
+  if (!is.null(values$algorithm) && is.null(values$sampler_t)) {
+    if (values$algorithm == 'rwm' || values$algorithm == 'Metropolis')  
+      sampler_t <- "Metropolis"
+    else if (values$algorithm == 'hmc') {
+       if (values$engine == 'static')  sampler_t <- "HMC"
+       else {
+         if (values$metric == 'unit_e') sampler_t <- "NUTS(unit_e)"
+         else if (values$metric == 'diag_e') sampler_t <- "NUTS(diag_e)"
+         else if (values$metric == 'dense_e') sampler_t <- "NUTS(dense_e)"
+       } 
+    } 
+    add_lst <- c(add_lst, sampler_t = sampler_t)
+  } 
+  names1 <- intersect(c("thin", "iter", "warmup", "chain_id", "max_depth", 
+                        "num_samples", "num_warmup", "id",
+                        "max_treedepth", "save_warmup"), names0)
+  names2 <- intersect(c("stepsize", "stepsize_jitter", "adapt_gamma", "adapt_kappa", 
+                        "adapt_delta", "gamma", "kappa", "delta", "t0",
+                        "adapt_t0"), names0) 
   for (z in names1) values[[z]] <- as.integer(values[[z]])
   for (z in names2) values[[z]] <- as.numeric(values[[z]])
-  if (!"nondiag_mass" %in% names) values[["nondiag_mass"]] <- nondiag_mass
-  values
+  if (compute_iter) values[["iter"]] <- values[["iter"]] + values[["warmup"]]
+  c(values, add_lst)  
 }
 
 
@@ -118,7 +142,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
   for (i in seq_along(samples)) {
     attr(samples[[i]], "adaptation_info") <- cs_lst2[[i]]$adaptation_info 
     attr(samples[[i]], "args") <- 
-      list(sampler = get_sampler_name(cs_lst2[[i]]$leapfrog_steps, cs_lst2[[i]]$equal_step_sizes, cs_lst2[[i]]$nondiag_mass),
+      list(sampler_t = cs_lst2[[i]]$sampler_t,
            chain_id = cs_lst2[[i]]$chain_id)
   } 
 

@@ -9,10 +9,6 @@ if(!require("RUnit", quietly = TRUE)) {
 pkg <- "rstan" 
 
 path <- system.file(package = pkg, "unitTests")
-
-
-
-
 source(file.path(path, "runRunitTests.R"), echo = TRUE)
  
 

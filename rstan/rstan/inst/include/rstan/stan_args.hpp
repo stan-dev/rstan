@@ -349,7 +349,7 @@ namespace rstan {
 
       switch (method) { 
         case SAMPLING: 
-          lst["method"] = "SAMPLING";
+          lst["method"] = "sampling";
           lst["iter"] = ctrl.sampling.iter;
           lst["warmup"] = ctrl.sampling.warmup;
           lst["thin"] = ctrl.sampling.thin;
@@ -539,7 +539,19 @@ namespace rstan {
           write_comment_property(ostream,"adapt_delta",ctrl.sampling.adapt_delta);
           write_comment_property(ostream,"adapt_kappa",ctrl.sampling.adapt_kappa);
           write_comment_property(ostream,"adapt_t0",ctrl.sampling.adapt_t0);
+          switch (ctrl.sampling.algorithm) {
+            case NUTS: 
+              switch (ctrl.sampling.metric) {
+                case UNIT_E: write_comment_property(ostream,"sampler_t","NUTS(unit_e)"); break;
+                case DIAG_E: write_comment_property(ostream,"sampler_t","NUTS(diag_e)"); break;
+                case DENSE_E: write_comment_property(ostream,"sampler_t","NUTS(dense_e)"); break;
+              } 
+              break;
+            case HMC: write_comment_property(ostream,"sampler_t", "HMC"); break;
+            case Metropolis: write_comment_property(ostream,"sampler_t", "Metropolis"); break;
+          } 
           break;
+
         case OPTIM: 
           write_comment_property(ostream,"refresh",ctrl.optim.refresh);
           write_comment_property(ostream,"stepsize",ctrl.optim.stepsize);

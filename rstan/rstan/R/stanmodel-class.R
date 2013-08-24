@@ -44,7 +44,7 @@ prep_call_sampler <- function(object) {
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
                "  - compiled with save_dso=FALSE;\n", 
                "  - compiled on a different platform;\n", 
-               "  - not existed for reading csv files.", sep = '')) 
+               "  - not existed (created from reading csv files).", sep = '')) 
   if (!is_dso_loaded(object@dso)) {
     # load the dso if available 
     grab_cxxfun(object@dso) 

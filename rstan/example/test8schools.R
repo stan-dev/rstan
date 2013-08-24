@@ -19,7 +19,7 @@ dat <- list(J = 8L,
 
 iter <- 5020
 # HMC
-ss1 <- sampling(m, data = dat, iter = iter, chains = 4, leapfrog_steps = 5, refresh = 100)  
+ss1 <- sampling(m, data = dat, iter = iter, chains = 4, algorithm = 'HMC', refresh = 100)  
 ainfo1 <- get_adaptation_info(ss1)
 lp1 <- get_logposterior(ss1)
 yalp1 <- get_logposterior(ss1, inc_warmup = FALSE)
@@ -30,7 +30,8 @@ print(gm1)
 
 
 # NUTS 1 
-ss2 <- sampling(m, data = dat, iter = iter, chains = 4, equal_step_sizes = TRUE, refresh = 100) 
+ss2 <- sampling(m, data = dat, iter = iter, chains = 4, refresh = 100, 
+                control = list(metric = "unit_e")) 
 ainfo2 <- get_adaptation_info(ss2)
 lp2 <- get_logposterior(ss2)
 yalp2 <- get_logposterior(ss2, inc_warmup = FALSE)
@@ -40,7 +41,7 @@ gm2 <- get_posterior_mean(ss2)
 print(gm2)
 
 # NUTS 2 
-ss3 <- sampling(m, data = dat, iter = iter, chains = 4, equal_step_sizes = FALSE, refresh = 100) 
+ss3 <- sampling(m, data = dat, iter = iter, chains = 4, refresh = 100) 
 ainfo3 <- get_adaptation_info(ss3)
 lp3 <- get_logposterior(ss3)
 yalp3 <- get_logposterior(ss3, inc_warmup = FALSE)
@@ -51,7 +52,8 @@ gm3 <- get_posterior_mean(ss3)
 print(gm3)
 
 # Non-diag 
-ss4 <- sampling(m, data = dat, iter = iter, chains = 4, nondiag_mass = TRUE, refresh = 100) 
+ss4 <- sampling(m, data = dat, iter = iter, chains = 4, 
+                control = list(metric = 'dense_e'), refresh = 100)
 ainfo4 <- get_adaptation_info(ss4)
 lp4 <- get_logposterior(ss4)
 yalp4 <- get_logposterior(ss4, inc_warmup = FALSE)
