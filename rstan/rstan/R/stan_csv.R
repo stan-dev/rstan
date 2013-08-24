@@ -103,7 +103,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
   ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
   # use the first CSV file name as model name
-  m_name <- sub("(_\\d+)*$", '', filename_rm_ext(csvfiles[1]))
+  m_name <- sub("(_\\d+)*$", '', filename_rm_ext(basename(csvfiles[1])))
 
   sdate <- do.call(max, lapply(csvfiles, function(csv) file.info(csv)$mtime))
   sdate <- format(sdate, "%a %b %d %X %Y") # same format as date() 
