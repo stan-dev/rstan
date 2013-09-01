@@ -319,7 +319,7 @@ is_named_list <- function(x) {
 
 config_argss <- function(chains, iter, warmup, thin, 
                          init, seed, sample_file, diagnostic_file, algorithm,
-                         ...) {
+                         control, ...) {
 
   iter <- as.integer(iter) 
   if (iter < 1) 
@@ -392,12 +392,13 @@ config_argss <- function(chains, iter, warmup, thin,
   dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) "test_grad" else "sampling"
   
   all_metrics <- c("unit_e", "diag_e", "dense_e")
-  if (!is.null(dotlist$control)) {
-    if (!is.list(dotlist$control)) 
+  if (!is.null(control)) {
+    if (!is.list(control)) 
       stop("control should be a named list")
-    metric <- dotlist$control$metric
+    metric <- control$metric
     if (!is.null(metric))
-      dotlist$control$metric <- match.arg(metric, all_metrics)
+      control$metric <- match.arg(metric, all_metrics)
+    dotlist$control <- control
   } 
 
   argss <- vector("list", chains)  

@@ -20,6 +20,8 @@ dat <- list(J = 8L,
 iter <- 5020
 # HMC
 ss1 <- sampling(m, data = dat, iter = iter, chains = 4, algorithm = 'HMC', refresh = 100)  
+ss1son <- stan(fit = ss1, data = dat, init_r = 0.0001)
+ss1son <- stan(fit = ss1, data = dat, init_r = 0)
 ainfo1 <- get_adaptation_info(ss1)
 lp1 <- get_logposterior(ss1)
 yalp1 <- get_logposterior(ss1, inc_warmup = FALSE)

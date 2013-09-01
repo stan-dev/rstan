@@ -16,7 +16,7 @@
     chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1,
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, diagnostic_file, verbose = FALSE, 
-    algorithm = c("NUTS", "HMC", "Metropolis"),
+    algorithm = c("NUTS", "HMC", "Metropolis"), control = NULL,
     \dots)   
 } 
 
@@ -100,6 +100,7 @@
      be helpful for model debugging.}
 
   \item{algorithm}{TODO}
+  \item{control}{TODO}
 
   \item{\dots}{Other optional parameters for the sampler: 
     \enumerate{

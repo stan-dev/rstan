@@ -11,6 +11,7 @@ stan(file, model_name = "anon_model", model_code = "",
   iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   algorithm = c("NUTS", "HMC", "Metropolis"),
+  control = NULL,
   sample_file, diagnostic_file, 
   save_dso = TRUE, 
   verbose = FALSE, ...,
@@ -65,8 +66,8 @@ stan(file, model_name = "anon_model", model_code = "",
     \code{function}: a function that returns a list for specifying 
       the initial values of parameters for a chain. The function
       can take an optional parameter \code{chain_id}.
-     See below notes on that RStan treats a vector of lenght 1 as
-     a scalar. 
+      See below notes on that RStan treats a vector of length 1 as
+      a scalar. 
   }
   \item{seed}{The seed, a positive integer, for random number generation. The
     default is generated from 1 to the maximum integer supported by \R on the
@@ -77,7 +78,9 @@ stan(file, model_name = "anon_model", model_code = "",
     If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
     We can also specify a seed using a character string of digits, such as
     \code{"12345"}, which is converted to integer.}
-  \item{algorithm}{TODO}
+  \item{algorithm}{One of algorithms that are implemented in Stan such 
+    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC, 
+    and Metropolis based on random walk.}
 
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
@@ -107,44 +110,31 @@ stan(file, model_name = "anon_model", model_code = "",
   }
 
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
-     to print intermediate output from Stan on the console, which might
-     be helpful for model debugging.}
+    to print intermediate output from Stan on the console, which might
+    be helpful for model debugging.}
+ 
+  \item{control}{a named \code{list} of parameters to control the sampler's
+    behavior. Depending on which algorithm is specified, different 
+    parameters can be set.}
   
-  \item{\dots}{Other optional parameters for the sampler: 
+  \item{\dots}{Other optional parameters: 
     \enumerate{
       \item \code{chain_id} (\code{integer})
-      \item \code{leapfrog_steps} (\code{integer})
-      \item \code{epsilon} (\code{double})
-      \item \code{gamma} (\code{double}) 
-      \item \code{delta} (\code{double})
-      \item \code{equal_step_sizes} (\code{TRUE} or \code{FALSE})
-      \item \code{max_treedepth} (\code{integer})
-      \item \code{nondiag_mass} (\code{TRUE} or \code{FALSE})
+      \item \code{init_r} (\code{double}, positive)
+      \item \code{test_grad} (\code{logical})
+      \item \code{refresh}(\code{integer})
     }
-
-    More details can be found in Stan's manual. The default   
-    sampler is NUTS2, where \code{leapfrog_steps} is \code{-1} and 
-    \code{equal_step_sizes} is \code{FALSE}. To use NUTS with full
-    mass matrix, set \code{nondiag_mass} to \code{TRUE}. The following 
-    table provides a summary of how to specify arguments to choose 
-    different sampler. 
-
-    \tabular{ll}{
-    HMC \tab epsilon=e leapfrog_steps=L \cr 
-    HMC + tuned step size \tab leapfrog_steps=L \cr 
-    NUTS \tab epsilon=e \cr 
-    NUTS + tuned step size (NUTS1) \tab equal_step_sizes = TRUE \cr 
-    NUTS + tuned varying step sizes (NUTS2) \tab (default) \cr 
-    NUTS + full mass matrix \tab nondiag_mass = TRUE \cr 
-    }
-    
 
     \code{chain_id} can be a vector to specify the chain_id for all 
     chains or an integer. For the former case, they should be unique. 
     For the latter, the sequence of integers starting from the given
     \code{chain_id} are used for all chains. 
 
-    In addition, \code{refresh} (\code{integer}) can be used to
+    \code{init_r} is only valid for \code{init="random"}. If 
+    specified, the initial values are simulated from [-init_r, init_r]
+    rather than using the default interval.
+
+    Argument \code{refresh} (\code{integer}) can be used to
     control how to indicate the progress during sampling (i.e. 
     show the progress every \code{refresh} iterations). 
     By default, \code{refresh = max(iter/10, 1)}. 

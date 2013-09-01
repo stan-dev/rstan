@@ -115,7 +115,7 @@ setMethod("sampling", "stanmodel",
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
                    sample_file, diagnostic_file, verbose = FALSE, 
-                   algorithm = c("NUTS", "HMC", "Metropolis"), ...) {
+                   algorithm = c("NUTS", "HMC", "Metropolis"), control = NULL, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -168,7 +168,7 @@ setMethod("sampling", "stanmodel",
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
                                           init = init, seed = seed, sample_file, diagnostic_file, 
-                                          algorithm = match.arg(algorithm), ...))
+                                          algorithm = match.arg(algorithm), control = control, ...))
    
             if (is(args_list, "try-error")) {
               message('error in specifying arguments; sampling not done') 

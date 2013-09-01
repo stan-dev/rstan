@@ -132,6 +132,12 @@ namespace rstan {
 
   private:
     void validate_args() {
+      if (init_radius < 0) {
+        std::stringstream msg;
+        msg << "Invalid value for parameter init_r (found "
+            << init_radius << "; require >= 0).";
+        throw std::invalid_argument(msg.str());
+      } 
       switch (method) {
         case SAMPLING: 
           if (ctrl.sampling.adapt_gamma < 0) {
@@ -196,7 +202,7 @@ namespace rstan {
     }
 
   public:
-    stan_args(const Rcpp::List& in) : init_list(R_NilValue), init_radius(0.5) {
+    stan_args(const Rcpp::List& in) : init_list(R_NilValue) {
 
       std::string t_str;
       SEXP t_sexp;
@@ -313,16 +319,13 @@ namespace rstan {
         switch (TYPEOF(t_sexp)) {
           case STRSXP: init = Rcpp::as<std::string>(t_sexp); break; 
           case VECSXP: init = "user"; init_list = t_sexp; break; 
-          case INTSXP: 
-          case REALSXP: 
-            init = "random"; 
-            init_radius = Rcpp::as<double>(t_sexp);
-            break;
           default: init = "random"; 
         } 
       } else { 
         init = "random"; 
       }
+      get_rlist_element(in, "init_r", init_radius, 2.0);
+      if (0 >= init_radius)  init = "0";
       validate_args();
     } 
 
@@ -510,7 +513,7 @@ namespace rstan {
     inline unsigned int get_chain_id() const {
       return chain_id;
     } 
-    double get_init_radius() const {
+    inline double get_init_radius() const {
       return init_radius;
     } 
     const std::string& get_init() const {

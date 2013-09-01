@@ -66,8 +66,8 @@
   \item{\dots}{Other optional parameters.
     \enumerate{
       \item \code{iter} (\code{integer})
-      \item \code{epsilon} (\code{double})
-      \item \code{save_warmup} (logical)
+      \item \code{stepsize} (\code{double})
+      \item \code{save_iterations} (logical)
       \item \code{refresh} (\code{integer})
     }
   }

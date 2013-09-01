@@ -104,6 +104,7 @@ stan <- function(file, model_name = "anon_model",
                  init = "random", 
                  seed = sample.int(.Machine$integer.max, 1), 
                  algorithm = c("NUTS", "HMC", "Metropolis"),
+                 control = NULL,
                  sample_file, # the file to which the samples are written
                  diagnostic_file, # the file to which diagnostics are written 
                  save_dso = TRUE,
@@ -134,5 +135,6 @@ stan <- function(file, model_name = "anon_model",
   sampling(sm, data, pars, chains, iter, warmup, thin, seed, init, 
            check_data = TRUE, sample_file = sample_file, 
            diagnostic_file = diagnostic_file,
-           verbose = verbose, algorithm = match.arg(algorithm), ...) 
+           verbose = verbose, algorithm = match.arg(algorithm), 
+           control = control, ...) 
 } 
