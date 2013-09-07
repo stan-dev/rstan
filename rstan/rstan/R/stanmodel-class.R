@@ -100,7 +100,7 @@ setMethod("optimizing", "stanmodel",
                          method = "optim", 
                          algorithm = match.arg(algorithm)) 
          
-            if (!missing(sample_file) && is.na(sample_file)) 
+            if (!missing(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
