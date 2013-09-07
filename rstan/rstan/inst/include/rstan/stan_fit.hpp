@@ -378,9 +378,9 @@ namespace rstan {
                       std::string& adaptation_info, 
                       RNG_t& base_rng) {
       run_markov_chain<Model, RNG_t>(sampler_ptr, args, true, outputter,
-                                   init_s, model, chains, iter_save_i, qoi_idx,
-                                   sum_pars, sum_lp, sampler_params, iter_params,
-                                   adaptation_info, base_rng);
+                                     init_s, model, chains, iter_save_i, qoi_idx,
+                                     sum_pars, sum_lp, sampler_params, iter_params,
+                                     adaptation_info, base_rng);
     }
 
     template <class Model, class RNG_t>
@@ -399,10 +399,10 @@ namespace rstan {
                         std::string& adaptation_info, 
                         RNG_t& base_rng) {
       run_markov_chain<Model, RNG_t>(sampler_ptr, args, false, outputter,
-                                   init_s, model, chains, iter_save_i, qoi_idx,
-                                   sum_pars, sum_lp, sampler_params, iter_params,
-                                   adaptation_info,
-                                   base_rng);
+                                     init_s, model, chains, iter_save_i, qoi_idx,
+                                     sum_pars, sum_lp, sampler_params, iter_params,
+                                     adaptation_info,
+                                     base_rng);
     }
     
 

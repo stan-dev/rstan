@@ -114,14 +114,40 @@ stan(file, model_name = "anon_model", model_code = "",
     be helpful for model debugging.}
  
   \item{control}{a named \code{list} of parameters to control the sampler's
-    behavior. Depending on which algorithm is specified, different 
-    parameters can be set.}
+    behavior. It defaults to \code{NULL} so all the default values are used. 
+    First, the following are adaptation parameters for sampling algorithms.
+    These are parameters used in Stan with similar names here.
+    \enumerate{
+      \item \code{adapt_engaged} (\code{logical})
+      \item \code{adapt_gamma} (\code{double}, positive, defaults to 0.05)
+      \item \code{adapt_delta} (\code{double}, between 0 and 1, defaults to 0.65)
+      \item \code{adapt_kappa} (\code{double}, positive, defaults to 0.75)
+      \item \code{adapt_t0} (\code{double}, positive, defaults to 10)
+    }
+
+    In addition, Depending on which algorithm is specified, different 
+    parameters can be set as in Stan for sampling.  For algorithm HMC (called 
+    'static HMC' in Stan), we can set 
+    \enumerate{
+      \item \code{int_time} (code{double}, positive)
+      \item \code{stepsize} (code{double}, positive)
+      \item \code{stepsize_jitter} (code{double}, [0,1])
+    }
+    For algorithm NUTS, we can set 
+    \enumerate{
+      \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
+      \item \code{max_treedepth} (code{integer}, positive)
+      \item \code{stepsize} (code{double}, positive)
+      \item \code{stepsize_jitter} (code{double}, [0,1])
+    }
+  }
   
   \item{\dots}{Other optional parameters: 
     \enumerate{
       \item \code{chain_id} (\code{integer})
       \item \code{init_r} (\code{double}, positive)
       \item \code{test_grad} (\code{logical})
+      \item \code{append_samples} (\code{logical})
       \item \code{refresh}(\code{integer})
     }
 
