@@ -99,7 +99,7 @@ setMethod("optimizing", "stanmodel",
             # 1: newton; 2: nesterov; 3: bfgs
             args["point_estimate"] <- match(match.arg(method), c('Newton', 'Nesterov', 'BFGS'))
          
-            if (!missing(sample_file) && is.na(sample_file)) 
+            if (!missing(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
             dotlist$test_grad <- FALSE # set test gradient flag to false explicitly

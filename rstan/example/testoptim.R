@@ -25,10 +25,10 @@ sm <- stan_model(model_code = stdnorm)
 optim1 <- rstan:::optimizing(sm, data = dat)
 print(optim1)
 
-optim2 <- rstan:::optimizing(sm, data = dat, method = 'bfgs')
+optim2 <- rstan:::optimizing(sm, data = dat, method = 'BFGS', sample_file = 'opt.csv')
 print(optim2)
 
-optim3 <- rstan:::optimizing(sm, data = dat, method = 'nesterov')
+optim3 <- rstan:::optimizing(sm, data = dat, method = 'Nesterov')
 print(optim3)
 
 
