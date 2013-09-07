@@ -25,7 +25,7 @@ sm <- stan_model(model_code = stdnorm)
 optim1 <- rstan:::optimizing(sm, data = dat, algorithm = "Newton")
 print(optim1)
 
-optim2 <- rstan:::optimizing(sm, data = dat, algorithm = 'BFGS')
+optim2 <- rstan:::optimizing(sm, data = dat, algorithm = 'BFGS', sample_file = 'opt.csv')
 print(optim2)
 
 optim3 <- rstan:::optimizing(sm, data = dat, algorithm = 'Nesterov')

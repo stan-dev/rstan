@@ -218,13 +218,12 @@ namespace rstan {
         else method = SAMPLING;
       } 
 
+      sample_file_flag = get_rlist_element(in, "sample_file", sample_file);
+      diagnostic_file_flag = get_rlist_element(in, "diagnostic_file", diagnostic_file);
+
       int calculated_thin;
       switch (method) { 
         case SAMPLING: 
-          sample_file_flag = 
-            get_rlist_element(in, "sample_file", sample_file);
-          diagnostic_file_flag = 
-            get_rlist_element(in, "diagnostic_file", diagnostic_file);
           get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
           get_rlist_element(in, "warmup", ctrl.sampling.warmup, ctrl.sampling.iter / 2);
    
@@ -248,8 +247,14 @@ namespace rstan {
   
           if (get_rlist_element(in, "algorithm", t_str)) {
             if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
-            else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
             else if (t_str == "Metropolis") ctrl.sampling.algorithm = Metropolis;
+            else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
+            else {
+              std::stringstream msg;
+              msg << "Invalid value for parameter algorithm (found "
+                  << t_str << "; require HMC, Metropolis, or NUTS).";
+              throw std::invalid_argument(msg.str());
+            } 
           } else {
             ctrl.sampling.algorithm = NUTS;
           }
@@ -299,6 +304,12 @@ namespace rstan {
             if ("BFGS" == t_str)  ctrl.optim.algorithm = BFGS;
             else if ("Newton" == t_str)  ctrl.optim.algorithm = Newton;
             else if ("Nesterov" == t_str)  ctrl.optim.algorithm = Nesterov;
+            else {
+              std::stringstream msg;
+              msg << "Invalid value for parameter algorithm (found "
+                  << t_str << "; require BFGS, Newton, or Nesterov).";
+              throw std::invalid_argument(msg.str());
+            }
           } else {
             ctrl.optim.algorithm = BFGS;
           } 
