@@ -445,7 +445,6 @@ namespace rstan {
 
       dynamic_cast<Sampler*>(sampler_ptr)->set_nominal_stepsize_and_T(epsilon, int_time);
       dynamic_cast<Sampler*>(sampler_ptr)->set_stepsize_jitter(epsilon_jitter);
-      dynamic_cast<Sampler*>(sampler_ptr)->init_stepsize();
     } 
 
     template<class Sampler>
@@ -457,7 +456,6 @@ namespace rstan {
       dynamic_cast<Sampler*>(sampler_ptr)->set_nominal_stepsize(epsilon);
       dynamic_cast<Sampler*>(sampler_ptr)->set_stepsize_jitter(epsilon_jitter);
       dynamic_cast<Sampler*>(sampler_ptr)->set_max_depth(max_depth);
-      dynamic_cast<Sampler*>(sampler_ptr)->init_stepsize();
     }
     
     template<class Sampler>
@@ -477,6 +475,7 @@ namespace rstan {
       dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_kappa(kappa);
       dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_t0(t0);
       dynamic_cast<Sampler*>(sampler_ptr)->engage_adaptation();
+      dynamic_cast<Sampler*>(sampler_ptr)->init_stepsize();
     }
     
     template <class Model, class RNG_t> 
