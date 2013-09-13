@@ -103,10 +103,12 @@ stan <- function(file, model_name = "anon_model",
                  thin = 1, 
                  init = "random", 
                  seed = sample.int(.Machine$integer.max, 1), 
+                 algorithm = c("NUTS", "HMC", "Metropolis"),
+                 control = NULL,
                  sample_file, # the file to which the samples are written
                  diagnostic_file, # the file to which diagnostics are written 
                  save_dso = TRUE,
-                 verbose = FALSE, ..., 
+                 verbose = FALSE, ...,
                  boost_lib = NULL, 
                  eigen_lib = NULL) {
   # Return a fitted model (stanfit object)  from a stan model, data, etc.  
@@ -123,13 +125,16 @@ stan <- function(file, model_name = "anon_model",
     if (missing(model_name)) model_name <- NULL 
     sm <- stan_model(file, model_name = model_name, model_code = model_code,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
-                     save_dso = save_dso, verbose = verbose, ...)
+                     save_dso = save_dso, verbose = verbose, 
+                     ...)
   }
 
   if (missing(sample_file))  sample_file <- NA 
   if (missing(diagnostic_file))  diagnostic_file <- NA 
 
   sampling(sm, data, pars, chains, iter, warmup, thin, seed, init, 
-           sample_file = sample_file, diagnostic_file = diagnostic_file,
-           verbose = verbose, check_data = TRUE, ...) 
+           check_data = TRUE, sample_file = sample_file, 
+           diagnostic_file = diagnostic_file,
+           verbose = verbose, algorithm = match.arg(algorithm), 
+           control = control, ...) 
 } 

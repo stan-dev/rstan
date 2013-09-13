@@ -44,7 +44,7 @@ prep_call_sampler <- function(object) {
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
                "  - compiled with save_dso=FALSE;\n", 
                "  - compiled on a different platform;\n", 
-               "  - not existed for reading csv files.", sep = '')) 
+               "  - not existed (created from reading csv files).", sep = '')) 
   if (!is_dso_loaded(object@dso)) {
     # load the dso if available 
     grab_cxxfun(object@dso) 
@@ -55,7 +55,7 @@ setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   method = c("BFGS", "Nesterov", "Newton"),
+                   algorithm = c("BFGS", "Nesterov", "Newton"),
                    verbose = FALSE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
@@ -95,14 +95,15 @@ setMethod("optimizing", "stanmodel",
             seed <- check_seed(seed, warn = 1)    
             if (is.null(seed))
               return(invisible(list(stanmodel = object)))
-            args <- list(init = init, seed = seed) 
-            # 1: newton; 2: nesterov; 3: bfgs
-            args["point_estimate"] <- match(match.arg(method), c('Newton', 'Nesterov', 'BFGS'))
+            args <- list(init = init, 
+                         seed = seed, 
+                         method = "optim", 
+                         algorithm = match.arg(algorithm)) 
          
             if (!missing(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
-            dotlist$test_grad <- FALSE # set test gradient flag to false explicitly
+            if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             invisible(optim)
@@ -113,7 +114,8 @@ setMethod("sampling", "stanmodel",
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
-                   sample_file, diagnostic_file, verbose = FALSE, ...) {
+                   sample_file, diagnostic_file, verbose = FALSE, 
+                   algorithm = c("NUTS", "HMC", "Metropolis"), control = NULL, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -165,7 +167,8 @@ setMethod("sampling", "stanmodel",
 
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
-                                          init = init, seed = seed, sample_file, diagnostic_file, ...))
+                                          init = init, seed = seed, sample_file, diagnostic_file, 
+                                          algorithm = match.arg(algorithm), control = control, ...))
    
             if (is(args_list, "try-error")) {
               message('error in specifying arguments; sampling not done') 

@@ -88,7 +88,7 @@ endif
 
 example_csv : 
 ifneq ($(OS), win)
-	if test -f "example/rstan_doc_ex_1.csv"; then cp example/rstan_doc_ex_*.csv ./rstan/inst/misc && echo "Copy done.";  \
+	@if test -f "example/rstan_doc_ex_1.csv"; then cp example/rstan_doc_ex_*.csv ./rstan/inst/misc && echo "Copy done.";  \
 	else echo "Not found example/rstan_doc_ex_1.csv, run example/examplemodel.R first."; fi
 endif
 

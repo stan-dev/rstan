@@ -32,7 +32,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 
   print(round(s$summary, digits_summary), ...) 
 
-  sampler <- attr(x@sim$samples[[1]], "args")$sampler 
+  sampler <- attr(x@sim$samples[[1]], "args")$sampler_t
 
   cat("\nSamples were drawn using ", sampler, " at ", x@date, ".\n",
       "For each parameter, n_eff is a crude measure of effective sample size,\n", 
@@ -204,21 +204,27 @@ par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, window = NULL, ..
   # same thin, n_save, warmup2 for all the chains
   thin <- sim$thin
   warmup2 <- sim$warmup2[1] 
+  warmup <- sim$warmup 
   n_save <- sim$n_save[1] 
   main <- paste("Trace of ", par_name) 
   chain_cols <- rstan_options("rstan_chain_cols")
   warmup_col <- rstan_options("rstan_warmup_bg_col") 
 
   start_i <- 1
+  if (warmup2 == 0) {
+    start_i <- warmup + 1
+    inc_warmup <- FALSE
+  }
   window_size <- n_save
   if (!is.null(window)) {
     start_i <- window[1]
-    window_size <- (window[2] - window[1]) %/% thin
+    if (0 == warmup2)  start_i <- max(start_i, warmup + 1)
+    window_size <- (window[2] - start_i) %/% thin
     if (start_i > sim$warmup) inc_warmup <- FALSE
   } 
   id <- seq.int(start_i, by = thin, length.out = window_size)
-  start_idx <- start_i %/% thin
-  if (start_idx < 1)  start_idx <- 0
+  start_idx <- (if (warmup2 == 0) (start_i - warmup) else start_i) %/% thin
+  if (start_idx < 1)  start_idx <- 1
   idx <- seq.int(start_idx, by = 1, length.out = window_size)
 
   yrange <- NULL 

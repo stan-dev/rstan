@@ -308,8 +308,18 @@ is_named_list <- function(x) {
   return(TRUE)
 } 
 
+
+## from stan_args.hpp
+# 
+# enum sampling_algo_t { NUTS = 1, HMC = 2, Metroplos = 3};
+# enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
+# enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
+# enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
+
+
 config_argss <- function(chains, iter, warmup, thin, 
-                         init, seed, sample_file, diagnostic_file, ...) {
+                         init, seed, sample_file, diagnostic_file, algorithm,
+                         control, ...) {
 
   iter <- as.integer(iter) 
   if (iter < 1) 
@@ -365,7 +375,6 @@ config_argss <- function(chains, iter, warmup, thin,
   seed <- if (missing(seed)) sample.int(.Machine$integer.max, 1) else check_seed(seed)
 
   dotlist <- list(...)
-  dotlist$point_estimate <- -1 # not to do point estimation
 
   # use chain_id argument if specified
   if (is.null(dotlist$chain_id)) { 
@@ -380,13 +389,26 @@ config_argss <- function(chains, iter, warmup, thin,
     dotlist$chain_id <- NULL
   }
 
+  dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) "test_grad" else "sampling"
+  
+  all_metrics <- c("unit_e", "diag_e", "dense_e")
+  if (!is.null(control)) {
+    if (!is.list(control)) 
+      stop("control should be a named list")
+    metric <- control$metric
+    if (!is.null(metric))
+      control$metric <- match.arg(metric, all_metrics)
+    dotlist$control <- control
+  } 
+
   argss <- vector("list", chains)  
   ## the name of arguments in the list need to 
   ## match those in include/rstan/stan_args.hpp 
   for (i in 1:chains)  
     argss[[i]] <- list(chain_id = chain_ids[i],
                        iter = iters[i], thin = thins[i], seed = seed, 
-                       warmup = warmups[i], init = inits[[i]]) 
+                       warmup = warmups[i], init = inits[[i]], 
+                       algorithm = algorithm) 
     
   if (!missing(sample_file) && !is.na(sample_file)) {
     sample_file <- writable_sample_file(sample_file) 

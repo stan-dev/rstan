@@ -47,8 +47,10 @@
   When \code{permuted = FALSE}, an array is returned; the first
   dimension is for the iterations; the second for the number of chains; the 
   third for the parameters. Vectors and arrays are expanded to one 
-  parameter per cell, with names indicating the third dimension.
-  See examples below and comments in the code. 
+  parameter (a scalar) per cell, with names indicating the third dimension.
+  See examples below and comments in the code. Function \code{monitor} can 
+  be applied to the returned array to obtain a summary of model inference 
+  (similar to method \code{print} for \code{\linkS4class{stanfit}}).
 }
 
 \examples{\dontrun{
@@ -144,7 +146,8 @@ print(dimnames(ee2))
 } 
 
 \seealso{
-  S4 class \code{\linkS4class{stanfit}} and \link{as.array.stanfit}
+  S4 class \code{\linkS4class{stanfit}}, \code{\link{as.array.stanfit}}, and
+  \code{\link{monitor}}
 } 
 
 \keyword{methods}

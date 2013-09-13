@@ -15,6 +15,36 @@
 namespace rstan {
 
   namespace {
+    /*
+     * Get an element of Rcpp::List by name. If not found, set it to a 
+     * default value.
+     * @param lst The list to look for elements 
+     * @param n The name of an element of interest
+     * @param t Where to save the element
+     * @param v0 The default value if not found in the list 
+     */
+    template <class T>
+    bool get_rlist_element(const Rcpp::List& lst, const char* n, T& t, const T& v0) {
+      bool b = lst.containsElementNamed(n);
+      if (b)  t = Rcpp::as<T>(const_cast<Rcpp::List&>(lst)[n]);
+      else  t = T(v0);
+      return b;
+    }
+
+    template <class T>
+    bool get_rlist_element(const Rcpp::List& lst, const char* n, T& t) {
+      bool b = lst.containsElementNamed(n);
+      if (b) t = Rcpp::as<T>(const_cast<Rcpp::List&>(lst)[n]);
+      return b;
+    }
+
+    template <>
+    bool get_rlist_element(const Rcpp::List& lst, const char* n, SEXP& t) {
+      bool b = lst.containsElementNamed(n);
+      if (b) t = const_cast<Rcpp::List&>(lst)[n];
+      return b;
+    }
+
     inline unsigned int sexp2seed(SEXP seed) { 
       if (TYPEOF(seed) == STRSXP)  
         return boost::lexical_cast<unsigned int>(Rcpp::as<std::string>(seed));
@@ -26,15 +56,12 @@ namespace rstan {
     }
   
     template <typename M>
-    void write_comment(std::ostream& o,
-                       const M& msg) {
+    void write_comment(std::ostream& o, const M& msg) {
       o << "# " << msg << std::endl;
     }
   
     template <typename K, typename V>
-    void write_comment_property(std::ostream& o,
-                                const K& key,
-                                const V& val) {
+    void write_comment_property(std::ostream& o, const K& key, const V& val) {
       o << "# " << key << "=" << val << std::endl;
     }
 
@@ -46,195 +73,271 @@ namespace rstan {
      *  otherwise, return the size. 
      */
    
-    template <class T>
-    size_t find_index(const std::vector<T>& v, const T& e) {
-      return std::distance(v.begin(), std::find(v.begin(), v.end(), e));  
+    template <class T, class T2>
+    size_t find_index(const std::vector<T>& v, const T2& e) {
+      return std::distance(v.begin(), std::find(v.begin(), v.end(), T(e)));  
     } 
-
   } 
+
+  enum sampling_algo_t { NUTS = 1, HMC = 2, Metropolis = 3};
+  enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
+  enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
+  enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
+
   /**
-   * Wrap up the available arguments for Stan's sampler, say NUTS, from
-   * Rcpp::List and set the defaults if not specified. 
-   *
-   *
-   * The following arguments could be in the named list
-   *
-   * <ul>
-   * <li> sample_file: to which samples are written 
-   * <li> iter: total number of iterations, including warmup (default: 2000)  
-   * <li> warmup: 
-   * <li> thin 
-   * <li> chain_id: it should be from 1 to number of chains  
-   * <li> refresh 
-   * <li> leapfrog_steps
-   * <li> epsilon
-   * <li> max_treedepth 
-   * <li> epsilon_pm
-   * <li> equal_step_sizes (bool)
-   * <li> delta 
-   * <li> gamma 
-   * <li> random_seed 
-   * <li> append_samples 
-   * <li> test_grad 
-   * <li> init 
-   * <li> init_list 
-   * </ul>
-   *
-   * In addition, the following keep a record of how the arguments are set: by
-   * user or default. 
-   * <ul> 
-   * <li> random_seed_src 
-   * <li> chain_id_src 
-   * </ul> 
    *
    */ 
   class stan_args {
   private:
-    bool sample_file_flag; // true: write out to a file; false, do not 
-    bool diagnostic_file_flag; // 
-    std::string sample_file; // the file for outputting the samples    // 1
-    std::string diagnostic_file; 
-    int iter;   // number of iterations                       // 2 
-    int warmup; // number of warmup
-    int thin; 
-    int iter_save; // number of iterations saved 
-    int iter_save_wo_warmup; // number of iterations saved wo warmup
-    bool save_warmup; // weather to save warmup samples (always true now)
-    int refresh;  // 
-    int leapfrog_steps; 
-    double epsilon; 
-    int max_treedepth; 
-    double epsilon_pm; 
-    bool equal_step_sizes;  // default: false 
-    double delta; 
-    double gamma; 
     unsigned int random_seed; 
-    std::string random_seed_src; // "user" or "default" 
     unsigned int chain_id; 
-    std::string chain_id_src; // "user" or "default" 
-    bool append_samples; 
-    bool test_grad; 
-    int point_estimate; // -1: no-point-estimate; 0: newton; 1: nesterov; 2: bfgs
     std::string init; 
     SEXP init_list;  
-    std::string sampler; // HMC, NUTS1, NUTS2 (not set directy from R now) 
-    bool nondiag_mass; 
+    double init_radius;
+    std::string sample_file; // the file for outputting the samples
+    bool append_samples; 
+    bool sample_file_flag; // true: write out to a file; false, do not 
+    stan_args_method_t method; 
+    std::string diagnostic_file; 
+    bool diagnostic_file_flag;
+    union {
+      struct {
+        int iter;   // number of iterations
+        int refresh;  // 
+        sampling_algo_t algorithm;
+        int warmup; // number of warmup
+        int thin; 
+        bool save_warmup; // weather to save warmup samples (always true now)
+        int iter_save; // number of iterations saved 
+        int iter_save_wo_warmup; // number of iterations saved wo warmup
+        bool adapt_engaged; 
+        double adapt_gamma;
+        double adapt_delta;
+        double adapt_kappa;
+        double adapt_t0;
+        sampling_metric_t metric; // UNIT_E, DIAG_E, DENSE_E;
+        double stepsize; // defaut to 1;
+        double stepsize_jitter; 
+        int max_treedepth; // for NUTS, default to 10.  
+        double int_time; // for HMC, default to 2 * pi
+      } sampling;
+      struct {
+        int iter; // default to 2000
+        int refresh; // default to 100
+        optim_algo_t algorithm; // Newton, Nesterov, BFGS
+        bool save_iterations; // default to false
+        double stepsize; // default to 1
+      } optim; 
+    } ctrl; 
+
+  private:
+    void validate_args() {
+      if (init_radius < 0) {
+        std::stringstream msg;
+        msg << "Invalid value for parameter init_r (found "
+            << init_radius << "; require >= 0).";
+        throw std::invalid_argument(msg.str());
+      } 
+      switch (method) {
+        case SAMPLING: 
+          if (ctrl.sampling.adapt_gamma < 0) {
+            std::stringstream msg; 
+            msg << "Invalid adaptation parameter (found gamma="
+                << ctrl.sampling.adapt_gamma << "; require >0).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.sampling.adapt_delta <= 0 || ctrl.sampling.adapt_delta >= 1) {
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found detal="
+                << ctrl.sampling.adapt_delta << "; require 0<delta<1).";
+            throw std::invalid_argument(msg.str());
+          } 
+          if (ctrl.sampling.adapt_kappa < 0) {
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found kappa="
+                << ctrl.sampling.adapt_kappa << "; require >0).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.sampling.adapt_t0 < 0) {
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found t0="
+                << ctrl.sampling.adapt_t0 << "; require >0).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.sampling.stepsize < 0) {  
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found stepsize="
+                << ctrl.sampling.stepsize << "; require stepsize > 0).";
+            throw std::invalid_argument(msg.str());
+          } 
+          if (ctrl.sampling.stepsize_jitter < 0 || ctrl.sampling.stepsize_jitter > 1) {
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found stepsize_jitter="
+                << ctrl.sampling.stepsize_jitter << "; require 0<=stepsize_jitter<=1).";
+            throw std::invalid_argument(msg.str());
+          } 
+          if (ctrl.sampling.max_treedepth < 0) {
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found max_treedepth="
+                << ctrl.sampling.max_treedepth << "; require max_treedepth>0).";
+            throw std::invalid_argument(msg.str());
+          } 
+          if (ctrl.sampling.int_time < 0) {
+            std::stringstream msg;
+            msg << "Invalid adaptation parameter (found int_time="
+                << ctrl.sampling.int_time << "; require int_time>0).";
+            throw std::invalid_argument(msg.str());
+          } 
+          break;
+        case OPTIM:
+          if (ctrl.optim.stepsize < 0) {  
+            std::stringstream msg; 
+            msg << "Invalid adaptation parameter (found stepsize="
+                << ctrl.optim.stepsize << "; require stepsize > 0).";
+            throw std::invalid_argument(msg.str());
+          } 
+          break;
+        case TEST_GRADIENT: break;
+      } 
+    }
 
   public:
     stan_args(const Rcpp::List& in) : init_list(R_NilValue) {
-      std::vector<std::string> args_names 
-        = Rcpp::as<std::vector<std::string> >(in.names()); 
-   
-      size_t idx = find_index(args_names, std::string("sample_file")); 
-      if (idx == args_names.size()) sample_file_flag = false; 
-      else {
-        sample_file = Rcpp::as<std::string>(in[idx]); 
-        sample_file_flag = true; 
-      }
- 
-      idx = find_index(args_names, std::string("diagnostic_file"));
-      if (idx == args_names.size()) diagnostic_file_flag = false;
-      else {
-        diagnostic_file = Rcpp::as<std::string>(in[idx]);
-        diagnostic_file_flag = true;
+
+      std::string t_str;
+      SEXP t_sexp;
+      bool b;
+      get_rlist_element(in, "chain_id", chain_id, static_cast<unsigned int>(1));
+      get_rlist_element(in, "append_samples", append_samples, false);
+      b = get_rlist_element(in, "method", t_str);
+      if (!b) method = SAMPLING;
+      else { 
+        if ("sampling" == t_str)  method = SAMPLING;
+        else if ("optim" == t_str)  method = OPTIM;
+        else if ("test_grad" == t_str)  method = TEST_GRADIENT;
+        else method = SAMPLING;
       } 
 
-      save_warmup = true;
-      idx = find_index(args_names, std::string("iter")); 
-      if (idx == args_names.size()) iter = 2000;  
-      else iter = Rcpp::as<int>(in[idx]); 
+      sample_file_flag = get_rlist_element(in, "sample_file", sample_file);
+      diagnostic_file_flag = get_rlist_element(in, "diagnostic_file", diagnostic_file);
 
-      idx = find_index(args_names, std::string("warmup")); 
-      if (idx == args_names.size()) warmup = iter / 2; 
-      else warmup = Rcpp::as<int>(in[idx]); 
+      int calculated_thin;
+      switch (method) { 
+        case SAMPLING: 
+          get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
+          get_rlist_element(in, "warmup", ctrl.sampling.warmup, ctrl.sampling.iter / 2);
+   
+          calculated_thin = (ctrl.sampling.iter - ctrl.sampling.warmup) / 1000;
+          if (calculated_thin < 1) calculated_thin = 1;
+          get_rlist_element(in, "thin", ctrl.sampling.thin, calculated_thin);
+  
+          ctrl.sampling.iter_save_wo_warmup 
+            = 1 + (ctrl.sampling.iter - ctrl.sampling.warmup - 1) / ctrl.sampling.thin; 
+          ctrl.sampling.iter_save 
+            = ctrl.sampling.iter_save_wo_warmup
+              + 1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
+  
+          ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ? 
+                                  ctrl.sampling.iter / 10 : 1; 
+          get_rlist_element(in, "refresh", ctrl.sampling.refresh);
+         
+          b = get_rlist_element(in, "seed", t_sexp);
+          if (b) random_seed = sexp2seed(t_sexp);
+          else random_seed = std::time(0);
+  
+          if (get_rlist_element(in, "algorithm", t_str)) {
+            if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
+            else if (t_str == "Metropolis") ctrl.sampling.algorithm = Metropolis;
+            else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
+            else {
+              std::stringstream msg;
+              msg << "Invalid value for parameter algorithm (found "
+                  << t_str << "; require HMC, Metropolis, or NUTS).";
+              throw std::invalid_argument(msg.str());
+            } 
+          } else {
+            ctrl.sampling.algorithm = NUTS;
+          }
+  
+          if (get_rlist_element(in, "control", t_sexp)) {
+            Rcpp::List ctrl_lst(t_sexp);
+            get_rlist_element(ctrl_lst, "adapt_engaged", ctrl.sampling.adapt_engaged, true);
+            get_rlist_element(ctrl_lst, "adapt_gamma", ctrl.sampling.adapt_gamma, 0.05);
+            get_rlist_element(ctrl_lst, "adapt_delta", ctrl.sampling.adapt_delta, 0.65);
+            get_rlist_element(ctrl_lst, "adapt_kappa", ctrl.sampling.adapt_kappa, 0.75);
+            get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
+    
+            switch (ctrl.sampling.algorithm) { 
+              case NUTS: 
+                get_rlist_element(ctrl_lst, "max_treedepth", ctrl.sampling.max_treedepth, 10);
+                if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
+                  if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
+                  else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
+                  else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
+                } else ctrl.sampling.metric = DIAG_E;
+                get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
+                get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
+                break;
+              case HMC: 
+                get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
+                                  6.283185307179586476925286766559005768e+00);
+                break;
+              case Metropolis: break;
+            }
+          } else { 
+            ctrl.sampling.adapt_engaged = true;
+            ctrl.sampling.adapt_gamma = 0.05;
+            ctrl.sampling.adapt_delta = 0.65;
+            ctrl.sampling.adapt_kappa = 0.75;
+            ctrl.sampling.adapt_t0  = 10;
+            ctrl.sampling.max_treedepth = 10;
+            ctrl.sampling.metric = DIAG_E;
+            ctrl.sampling.stepsize = 1;
+            ctrl.sampling.stepsize_jitter = 0;
+            ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
+          }
+          break;
 
-      idx = find_index(args_names, std::string("thin")); 
-      int calculated_thin = (iter - warmup) / 1000;
-      if (idx == args_names.size()) thin = (calculated_thin > 1) ? calculated_thin : 1;
-      else thin = Rcpp::as<int>(in[idx]); 
+        case OPTIM: 
+          get_rlist_element(in, "iter", ctrl.optim.iter, 2000);
+          if (get_rlist_element(in, "algorithm", t_str)) {
+            if ("BFGS" == t_str)  ctrl.optim.algorithm = BFGS;
+            else if ("Newton" == t_str)  ctrl.optim.algorithm = Newton;
+            else if ("Nesterov" == t_str)  ctrl.optim.algorithm = Nesterov;
+            else {
+              std::stringstream msg;
+              msg << "Invalid value for parameter algorithm (found "
+                  << t_str << "; require BFGS, Newton, or Nesterov).";
+              throw std::invalid_argument(msg.str());
+            }
+          } else {
+            ctrl.optim.algorithm = BFGS;
+          } 
+          
+          if (!get_rlist_element(in, "refresh", ctrl.optim.refresh)) {
+            ctrl.optim.refresh = ctrl.optim.iter / 100; 
+            if (ctrl.optim.refresh < 1) ctrl.optim.refresh = 1;
+          } 
+  
+          get_rlist_element(in, "stepsize", ctrl.optim.stepsize, 1.0);
+          get_rlist_element(in, "save_iterations", ctrl.optim.save_iterations, true);
+          break;
 
-      iter_save_wo_warmup = 1 + (iter - warmup - 1) / thin; 
-      iter_save = iter_save_wo_warmup + 1 + (warmup - 1) / thin;
+        case TEST_GRADIENT: break;
+      } 
 
-      idx = find_index(args_names, std::string("leapfrog_steps"));
-      if (idx == args_names.size()) leapfrog_steps = -1; 
-      else leapfrog_steps = Rcpp::as<int>(in[idx]); 
-
-      idx = find_index(args_names, std::string("epsilon")); 
-      if (idx == args_names.size()) epsilon = -1.0; 
-      else epsilon = Rcpp::as<double>(in[idx]); 
-
-      idx = find_index(args_names, std::string("epsilon_pm")); 
-      if (idx == args_names.size()) epsilon_pm = 0.0; 
-      else epsilon_pm = Rcpp::as<double>(in[idx]); 
-
-      idx = find_index(args_names, std::string("max_treedepth")); 
-      if (idx == args_names.size())  max_treedepth = 10; 
-      else max_treedepth = Rcpp::as<int>(in[idx]); 
-
-      idx = find_index(args_names, std::string("equal_step_sizes")); 
-      if (idx == args_names.size()) equal_step_sizes = false; 
-      else equal_step_sizes = Rcpp::as<bool>(in[idx]); 
-     
-      idx = find_index(args_names, std::string("delta")); 
-      if (idx == args_names.size())  delta = 0.5;
-      else delta = Rcpp::as<double>(in[idx]); 
-
-      idx = find_index(args_names, std::string("gamma")); 
-      if (idx == args_names.size()) gamma = 0.05; 
-      else gamma = Rcpp::as<double>(in[idx]); 
-      
-      refresh = 1;
-      idx = find_index(args_names, std::string("refresh"));
-      if (idx == args_names.size()) {
-        if (iter >= 20) refresh = iter / 10; 
-      } else refresh = Rcpp::as<int>(in[idx]);
-
-      idx = find_index(args_names, std::string("seed")); 
-      if (idx == args_names.size()) {
-        random_seed = std::time(0); 
-        random_seed_src = "random"; 
-      } else {
-        random_seed = sexp2seed(in[idx]);
-        random_seed_src = "user or from R"; 
-      }
-
-      idx = find_index(args_names, std::string("chain_id")); 
-      if (idx == args_names.size()) { 
-        chain_id = 1; 
-        chain_id_src = "default"; 
-      } else {
-        chain_id = Rcpp::as<unsigned int>(in[idx]); 
-        chain_id_src = "user"; 
-      }
-      
-      idx = find_index(args_names, std::string("init")); 
-      if (idx == args_names.size()) {
-        init = "random"; 
-      } else {
-        switch (TYPEOF(in[idx])) {
-          case STRSXP: init = Rcpp::as<std::string>(in[idx]); break; 
-          case VECSXP: init = "user"; init_list = in[idx]; break; 
+      if (get_rlist_element(in, "init", t_sexp)) {
+        switch (TYPEOF(t_sexp)) {
+          case STRSXP: init = Rcpp::as<std::string>(t_sexp); break; 
+          case VECSXP: init = "user"; init_list = t_sexp; break; 
           default: init = "random"; 
         } 
+      } else { 
+        init = "random"; 
       }
-
-      idx = find_index(args_names, std::string("append_samples")); 
-      if (idx == args_names.size()) append_samples = false; 
-      else append_samples = Rcpp::as<bool>(in[idx]); 
-
-      idx = find_index(args_names, std::string("test_grad")); 
-      if (idx == args_names.size()) test_grad = false; 
-      else test_grad = Rcpp::as<bool>(in[idx]);
-
-      idx = find_index(args_names, std::string("nondiag_mass"));
-      if (idx == args_names.size()) nondiag_mass = false;
-      else nondiag_mass = Rcpp::as<bool>(in[idx]);
-
-      idx = find_index(args_names, std::string("point_estimate"));
-      if (idx == args_names.size()) point_estimate = -1;
-      else point_estimate = Rcpp::as<int>(in[idx]);
-
+      get_rlist_element(in, "init_r", init_radius, 2.0);
+      if (0 >= init_radius)  init = "0";
+      validate_args();
     } 
 
     /**
@@ -242,156 +345,243 @@ namespace rstan {
      * @return An R list containing all the arguments for a chain. 
      */ 
     SEXP stan_args_to_rlist() const {
-      Rcpp::List lst; 
-      if (sample_file_flag) 
-        lst["sample_file"] = sample_file;
-      else 
-        lst["sample_file"] = R_NilValue;
-      if (diagnostic_file_flag) 
-        lst["diagnostic_file"] = diagnostic_file;
-      else 
-        lst["diagnostic_file"] = R_NilValue;
-      lst["iter"] = iter;                     // 2 
-      lst["warmup"] = warmup;                 // 3 
-      lst["thin"] = thin;                     // 4 
-      lst["refresh"] = refresh; 
-      lst["iter_save"] = iter_save; 
-      lst["leapfrog_steps"] = leapfrog_steps;   // 5 
-      lst["epsilon"] = epsilon;                 // 6 
-      lst["epsilon_pm"] = epsilon_pm;
-      lst["max_treedepth"] = max_treedepth;     // 7 
-      lst["delta"] = delta;                     // 8 
-      lst["gamma"] = gamma;                     // 9 
+      Rcpp::List lst;
+      Rcpp::List ctrl_list;
+
       std::stringstream ss; 
       ss << random_seed; 
-      lst["random_seed"] = ss.str();            // 10
-      lst["chain_id"] = chain_id;               // 11
-      lst["equal_step_sizes"] = equal_step_sizes; // 12
-      lst["init"] = init;                        // 13
-      lst["init_list"] = init_list;                // 14 
-      lst["sampler"] = sampler; 
-      lst["test_grad"] = test_grad;
-      lst["point_estimate"] = point_estimate;
-      lst["nondiag_mass"] = nondiag_mass;
-      return lst; 
+      lst["random_seed"] = ss.str();
+      lst["chain_id"] = chain_id;
+      lst["init"] = init;
+      lst["init_list"] = init_list;
+      lst["init_radius"] = init_radius;
+      lst["append_samples"] = append_samples;
+      if (sample_file_flag) 
+        lst["sample_file"] = sample_file;
+      if (diagnostic_file_flag) 
+        lst["diagnostic_file_flag"] = diagnostic_file;
+
+      switch (method) { 
+        case SAMPLING: 
+          lst["method"] = "sampling";
+          lst["iter"] = ctrl.sampling.iter;
+          lst["warmup"] = ctrl.sampling.warmup;
+          lst["thin"] = ctrl.sampling.thin;
+          lst["refresh"] = ctrl.sampling.refresh;
+          lst["test_grad"] = false;
+          ctrl_list["adapt_engaged"] = ctrl.sampling.adapt_engaged;
+          ctrl_list["adapt_gamma"] = ctrl.sampling.adapt_gamma;
+          ctrl_list["adapt_delta"] = ctrl.sampling.adapt_delta;
+          ctrl_list["adapt_kappa"] = ctrl.sampling.adapt_kappa;
+          ctrl_list["adapt_t0"] = ctrl.sampling.adapt_t0;
+          switch (ctrl.sampling.algorithm) {  
+            case NUTS:
+              switch (ctrl.sampling.metric) { 
+                case UNIT_E: 
+                  ctrl_list["metric"] = Rcpp::wrap("unit_e"); 
+                  lst["sampler_t"] = "NUTS(unit_e)";
+                  break;
+                case DIAG_E: 
+                  ctrl_list["metric"] = Rcpp::wrap("diag_e");
+                  lst["sampler_t"] = "NUTS(diag_e)";
+                  break;
+                case DENSE_E: 
+                  ctrl_list["metric"] = Rcpp::wrap("dense_e");
+                  lst["sampler_t"] = "NUTS(dense_e)";
+                  break;
+              }
+              ctrl_list["stepsize"] = ctrl.sampling.stepsize;
+              ctrl_list["stepsize_jitter"] = ctrl.sampling.stepsize_jitter;
+              ctrl_list["max_treedepth"] = ctrl.sampling.max_treedepth;
+              break;
+            case HMC: 
+              ctrl_list["int_time"] = ctrl.sampling.int_time;
+              lst["sampler_t"] = "HMC";
+              break;
+            case Metropolis: 
+              lst["sampler_t"] = "Metropolis";
+              break;
+          } 
+          lst["control"] = ctrl_list;
+          break;
+        case OPTIM: 
+          lst["method"] = "optim";
+          lst["iter"] = ctrl.optim.iter;
+          lst["refresh"] = ctrl.optim.refresh;
+          lst["save_iterations"] = ctrl.optim.save_iterations;
+          lst["stepsize"] = ctrl.optim.stepsize;
+          switch (ctrl.optim.algorithm) {
+            case Newton: lst["algorithm"] = "Newton"; break;
+            case Nesterov: lst["algorithm"] = "Nesterov"; break;
+            case BFGS: lst["algorithm"] = "BFGS"; break;
+          } 
+          break;
+        case TEST_GRADIENT:
+          lst["method"] = "test_grad";
+          lst["test_grad"] = true;
+      } 
+      return lst;
+    } 
+
+    inline const std::string& get_sample_file() const {
+      return sample_file;
+    } 
+    inline bool get_sample_file_flag() const { 
+      return sample_file_flag; 
+    }
+    inline bool get_diagnostic_file_flag() const {
+      return diagnostic_file_flag;
+    } 
+    inline const std::string& get_diagnostic_file() const {
+      return diagnostic_file;
     } 
 
     void set_random_seed(unsigned int seed) {
       random_seed = seed;
     } 
-    void set_sampler(std::string s) {
-      sampler = s; 
-    } 
-    const std::string& get_random_seed_src() const {
-      return random_seed_src; 
-    } 
-    const std::string& get_chain_id_src() const {
-      return chain_id_src; 
-    } 
 
-    SEXP get_init_list() const {
-      return init_list; 
-    } 
-    int get_iter() const {
-      return iter; 
-    } 
-    const std::string& get_sample_file() const {
-      return sample_file;
-    } 
-    bool get_save_warmup() const {
-      return save_warmup;
-    }
-    bool get_sample_file_flag() const { 
-      return sample_file_flag; 
-    }
-    bool get_diagnostic_file_flag() const {
-      return diagnostic_file_flag;
-    } 
-    const std::string& get_diagnostic_file() const {
-      return diagnostic_file;
-    } 
-    int get_warmup() const {
-      return warmup; 
-    } 
-    int get_refresh() const { 
-      return refresh; 
-    } 
-    int get_thin() const {
-      return thin;
-    } 
-    
-    int get_iter_save() const { 
-      return iter_save; 
-    } 
-
-    inline int get_iter_save_wo_warmup() const { 
-      return iter_save_wo_warmup;
-    }
-
-    int get_leapfrog_steps() const {
-      return leapfrog_steps; 
-    } 
-    double get_epsilon() const {
-      return epsilon; 
-    } 
-    int get_max_treedepth() const {
-      return max_treedepth; 
-    } 
-    double get_epsilon_pm() const {
-      return epsilon_pm; 
-    } 
-    double get_delta() const {  
-      return delta;
-    } 
-    double get_gamma() const { 
-      return gamma;
-    } 
-    bool get_append_samples() const {
-      return append_samples; 
-    } 
-    bool get_test_grad() const {
-      return test_grad; 
-    } 
-    inline int get_point_estimate() const {
-      return point_estimate;
-    }
-    unsigned int get_random_seed() const {
+    inline unsigned int get_random_seed() const {
       return random_seed; 
+    } 
+
+    inline int get_ctrl_sampling_refresh() const { 
+      return ctrl.sampling.refresh; 
+    } 
+    const inline sampling_metric_t get_ctrl_sampling_metric() const { 
+      return ctrl.sampling.metric;
+    } 
+    const inline sampling_algo_t get_ctrl_sampling_algorithm() const {
+      return ctrl.sampling.algorithm;
+    }
+    inline int get_ctrl_sampling_warmup() const { 
+      return ctrl.sampling.warmup;
+    } 
+    inline int get_ctrl_sampling_thin() const { 
+      return ctrl.sampling.thin; 
+    } 
+    inline double get_ctrl_sampling_int_time() const {
+      return ctrl.sampling.int_time;
+    }
+    inline bool get_append_samples() const {
+      return append_samples;
+    } 
+    inline stan_args_method_t get_method() const {
+      return method;
+    } 
+    inline int get_iter() const {
+      switch (method) {
+        case SAMPLING: return ctrl.sampling.iter;
+        case OPTIM: return ctrl.optim.iter;
+        case TEST_GRADIENT: return 0;
+      } 
+      return 0;
+    } 
+    inline bool get_ctrl_sampling_adapt_engaged() const {
+       return ctrl.sampling.adapt_engaged;
+    }
+    inline double get_ctrl_sampling_adapt_gamma() const {
+       return ctrl.sampling.adapt_gamma;
+    }
+    inline double get_ctrl_sampling_adapt_delta() const {
+       return ctrl.sampling.adapt_delta;
+    }
+    inline double get_ctrl_sampling_adapt_kappa() const {
+       return ctrl.sampling.adapt_kappa;
+    }
+    inline double get_ctrl_sampling_adapt_t0() const {
+       return ctrl.sampling.adapt_t0;
+    }
+    inline double get_ctrl_sampling_stepsize() const {
+       return ctrl.sampling.stepsize;
+    } 
+    inline double get_ctrl_sampling_stepsize_jitter() const {
+       return ctrl.sampling.stepsize_jitter;
+    } 
+    inline int get_ctrl_sampling_max_treedepth() const {
+       return ctrl.sampling.max_treedepth;
+    } 
+    inline int get_ctrl_sampling_iter_save_wo_warmup() const {
+       return ctrl.sampling.iter_save_wo_warmup; 
+    } 
+    inline int get_ctrl_sampling_iter_save() const {
+       return ctrl.sampling.iter_save; 
+    } 
+    inline bool get_ctrl_sampling_save_warmup() const {
+       return true;
+    }
+    inline optim_algo_t get_ctrl_optim_algorithm() const {
+      return ctrl.optim.algorithm;
+    } 
+    inline int get_ctrl_optim_refresh() const {
+      return ctrl.optim.refresh;
+    } 
+    inline bool get_ctrl_optim_save_iterations() const {
+      return ctrl.optim.save_iterations;
+    }
+    inline bool get_ctrl_optim_stepsize() const { 
+      return ctrl.optim.stepsize;
+    }
+    inline unsigned int get_chain_id() const {
+      return chain_id;
+    } 
+    inline double get_init_radius() const {
+      return init_radius;
     } 
     const std::string& get_init() const {
       return init;
     } 
-    unsigned int get_chain_id() const {
-      return chain_id; 
+    SEXP get_init_list() const {
+      return init_list; 
     } 
-    bool get_equal_step_sizes() const {
-      return equal_step_sizes; 
-    } 
-    bool get_nondiag_mass() const {
-      return nondiag_mass;
-    } 
+    
     void write_args_as_comment(std::ostream& ostream) const { 
       write_comment_property(ostream,"init",init);
-      write_comment_property(ostream,"append_samples",append_samples);
       write_comment_property(ostream,"seed",random_seed);
       write_comment_property(ostream,"chain_id",chain_id);
-      write_comment_property(ostream,"chain_id_src",chain_id_src);
-      write_comment_property(ostream,"iter",iter); 
-      write_comment_property(ostream,"warmup",warmup);
-      write_comment_property(ostream,"save_warmup",1);
-      write_comment_property(ostream,"thin",thin);
-      write_comment_property(ostream,"leapfrog_steps",leapfrog_steps);
-      write_comment_property(ostream,"max_treedepth",max_treedepth);
-      write_comment_property(ostream,"epsilon",epsilon);
-      write_comment_property(ostream,"equal_step_sizes",equal_step_sizes); 
-      write_comment_property(ostream,"epsilon_pm",epsilon_pm);
-      write_comment_property(ostream,"delta",delta);
-      write_comment_property(ostream,"gamma",gamma);
-      write_comment_property(ostream,"nondiag_mass",nondiag_mass);
+      write_comment_property(ostream,"iter",get_iter()); 
+      switch (method) {
+        case SAMPLING: 
+          write_comment_property(ostream,"warmup",ctrl.sampling.warmup);
+          write_comment_property(ostream,"save_warmup",1);
+          write_comment_property(ostream,"thin",ctrl.sampling.thin);
+          write_comment_property(ostream,"refresh",ctrl.sampling.refresh);
+          write_comment_property(ostream,"max_treedepth",ctrl.sampling.max_treedepth);
+          write_comment_property(ostream,"stepsize",ctrl.sampling.stepsize);
+          write_comment_property(ostream,"stepsize_jitter",ctrl.sampling.stepsize_jitter);
+          write_comment_property(ostream,"adapt_engaged",ctrl.sampling.adapt_engaged);
+          write_comment_property(ostream,"adapt_gamma",ctrl.sampling.adapt_gamma);
+          write_comment_property(ostream,"adapt_delta",ctrl.sampling.adapt_delta);
+          write_comment_property(ostream,"adapt_kappa",ctrl.sampling.adapt_kappa);
+          write_comment_property(ostream,"adapt_t0",ctrl.sampling.adapt_t0);
+          switch (ctrl.sampling.algorithm) {
+            case NUTS: 
+              switch (ctrl.sampling.metric) {
+                case UNIT_E: write_comment_property(ostream,"sampler_t","NUTS(unit_e)"); break;
+                case DIAG_E: write_comment_property(ostream,"sampler_t","NUTS(diag_e)"); break;
+                case DENSE_E: write_comment_property(ostream,"sampler_t","NUTS(dense_e)"); break;
+              } 
+              break;
+            case HMC: write_comment_property(ostream,"sampler_t", "HMC"); break;
+            case Metropolis: write_comment_property(ostream,"sampler_t", "Metropolis"); break;
+          } 
+          break;
+
+        case OPTIM: 
+          write_comment_property(ostream,"refresh",ctrl.optim.refresh);
+          write_comment_property(ostream,"stepsize",ctrl.optim.stepsize);
+          write_comment_property(ostream,"save_iterations",ctrl.optim.save_iterations);
+          switch (ctrl.optim.algorithm) {
+            case Newton: write_comment_property(ostream,"algorithm", "Newton"); break;
+            case Nesterov: write_comment_property(ostream,"algorithm", "Nesterov"); break;
+            case BFGS: write_comment_property(ostream,"algorithm", "BFGS"); break;
+          } 
+        case TEST_GRADIENT: break;
+      } 
       if (sample_file_flag) 
         write_comment_property(ostream,"sample_file",sample_file);
       if (diagnostic_file_flag)
         write_comment_property(ostream,"diagnostic_file",diagnostic_file);
+      write_comment_property(ostream,"append_samples",append_samples);
       write_comment(ostream);
     }
   }; 
