@@ -266,6 +266,8 @@ namespace rstan {
             get_rlist_element(ctrl_lst, "adapt_delta", ctrl.sampling.adapt_delta, 0.65);
             get_rlist_element(ctrl_lst, "adapt_kappa", ctrl.sampling.adapt_kappa, 0.75);
             get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
+            get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
+            get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
     
             switch (ctrl.sampling.algorithm) { 
               case NUTS: 
@@ -275,8 +277,6 @@ namespace rstan {
                   else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
                   else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
                 } else ctrl.sampling.metric = DIAG_E;
-                get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
-                get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
                 break;
               case HMC: 
                 get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
