@@ -443,8 +443,9 @@ namespace rstan {
       double epsilon_jitter = args.get_ctrl_sampling_stepsize_jitter();
       double int_time = args.get_ctrl_sampling_int_time();
 
-      dynamic_cast<Sampler*>(sampler_ptr)->set_nominal_stepsize_and_T(epsilon, int_time);
-      dynamic_cast<Sampler*>(sampler_ptr)->set_stepsize_jitter(epsilon_jitter);
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->set_nominal_stepsize_and_T(epsilon, int_time);
+      sampler_ptr2->set_stepsize_jitter(epsilon_jitter);
     } 
 
     template<class Sampler>
@@ -452,10 +453,11 @@ namespace rstan {
       double epsilon = args.get_ctrl_sampling_stepsize();
       double epsilon_jitter = args.get_ctrl_sampling_stepsize_jitter();
       int max_depth = args.get_ctrl_sampling_max_treedepth();
-      
-      dynamic_cast<Sampler*>(sampler_ptr)->set_nominal_stepsize(epsilon);
-      dynamic_cast<Sampler*>(sampler_ptr)->set_stepsize_jitter(epsilon_jitter);
-      dynamic_cast<Sampler*>(sampler_ptr)->set_max_depth(max_depth);
+
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->set_nominal_stepsize(epsilon);
+      sampler_ptr2->set_stepsize_jitter(epsilon_jitter);
+      sampler_ptr2->set_max_depth(max_depth);
     }
     
     template<class Sampler>
@@ -468,14 +470,15 @@ namespace rstan {
       double kappa = args.get_ctrl_sampling_adapt_kappa();
       double t0 = args.get_ctrl_sampling_adapt_t0();
       double epsilon = args.get_ctrl_sampling_stepsize();
-      
-      dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_mu(log(10 * epsilon));
-      dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_delta(delta);
-      dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_gamma(gamma);
-      dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_kappa(kappa);
-      dynamic_cast<Sampler*>(sampler_ptr)->get_stepsize_adaptation().set_t0(t0);
-      dynamic_cast<Sampler*>(sampler_ptr)->engage_adaptation();
-      dynamic_cast<Sampler*>(sampler_ptr)->init_stepsize();
+
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->get_stepsize_adaptation().set_mu(log(10 * epsilon));
+      sampler_ptr2->get_stepsize_adaptation().set_delta(delta);
+      sampler_ptr2->get_stepsize_adaptation().set_gamma(gamma);
+      sampler_ptr2->get_stepsize_adaptation().set_kappa(kappa);
+      sampler_ptr2->get_stepsize_adaptation().set_t0(t0);
+      sampler_ptr2->engage_adaptation();
+      sampler_ptr2->init_stepsize();
     }
     
     template <class Model, class RNG_t> 
