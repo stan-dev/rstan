@@ -128,6 +128,10 @@ clean:
 
 clean-all: 
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
+	rm -rf "./rstan/inst/include/stanlib"
+	rm -rf "./rstan/inst/include/stansrc"
+	rm -rf rstan.Rcheck
+  
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
