@@ -92,6 +92,12 @@ excode <- '
 exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'), full.names = TRUE))
 
 print(exfit)
+## only print some parameters
+print(exfit, pars = c("sigma", "alpha"))
 traceplot(exfit)
+traceplot(exfit, pars = "sigma")
+
+## make traceplots of z[1,1], z[1,2], z[2,1], z[2,2]
+traceplot(exfit, pars = paste0("z[", c(1, 1, 2, 2), ",", c(1, 2, 1, 2), "]"))
 } 
 \keyword{methods}
