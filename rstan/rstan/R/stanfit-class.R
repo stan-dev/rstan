@@ -205,23 +205,12 @@ par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, window = NULL, ..
   thin <- sim$thin
   warmup2 <- sim$warmup2[1] 
   warmup <- sim$warmup 
-  n_save <- sim$n_save[1] 
   main <- paste("Trace of ", par_name) 
   chain_cols <- rstan_options("rstan_chain_cols")
   warmup_col <- rstan_options("rstan_warmup_bg_col") 
 
-  start_i <- 1
-  if (warmup2 == 0) {
-    start_i <- warmup + 1
-    inc_warmup <- FALSE
-  }
-  window_size <- n_save
-  if (!is.null(window)) {
-    start_i <- window[1]
-    if (0 == warmup2)  start_i <- max(start_i, warmup + 1)
-    window_size <- (window[2] - start_i) %/% thin
-    if (start_i > sim$warmup) inc_warmup <- FALSE
-  } 
+  start_i <- window[1] 
+  window_size <- (window[2] - start_i) %/% thin
   id <- seq.int(start_i, by = thin, length.out = window_size)
   start_idx <- (if (warmup2 == 0) (start_i - warmup) else start_i) %/% thin
   if (start_idx < 1)  start_idx <- 1
@@ -631,8 +620,17 @@ setMethod("traceplot", signature = "stanfit",
                 stop("wrong specification of argument window", call. = FALSE)
               if (is.na(window[2]) || window[2] > object@sim$iter[1])
                 window[2] <- object@sim$iter[1]
+            } else { 
+              window <- c(1, object@sim$iter[1]) 
+            }
+            if ((object@sim$warmup2 == 0 || !inc_warmup) && window[1] <= object@sim$warmup[1]) {
+              window[1] <- object@sim$warmup[1] + 1
+            }
+            if (window[1] > window[2]) {
+              stop("the given window does not include sample")
             } 
-
+            if (window[1] > object@sim$warmup[1]) inc_warmup <- FALSE
+            
             par_traceplot(object@sim, tidx[1], object@sim$fnames_oi[tidx[1]], 
                           inc_warmup = inc_warmup, window = window, ...)
             if (num_plots > nrow * ncol && ask) {
