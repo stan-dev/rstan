@@ -21,15 +21,16 @@ parse_stancsv_comments <- function(comments) {
   # generated from Stan
 
   adapt_term_lineno <- which(grepl("Adaptation terminated", comments))
-  if (length(adapt_term_lineno) < 1) 
-    stop("line with \"Adaptation terminated\" not found")
   time_lineno <- which(grepl("Elapsed Time", comments))
   len <- length(comments)
+  if (length(adapt_term_lineno) < 1) 
+    adapt_term_lineno <- len
   if (length(time_lineno) < 1) {
     stop("line with \"Elapsed Time\" not found")
   }
 
-  adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
+  if (adapt_term_lineno == len) adaptation_info <- ''
+  else adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
   time_info <- comments[time_lineno:len]
   comments <- comments[1:(adapt_term_lineno - 1)]
 

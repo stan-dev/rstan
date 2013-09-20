@@ -101,6 +101,9 @@ dogsrr <- stan_model(model_code = dogsstan, model_name = model_name,
 ss <- sampling(dogsrr, data = dogsdat, chains = 3, seed = 1340338046,
                iter = 2012, sample_file = 'dogs.csv')
 
+ss <- sampling(dogsrr, data = dogsdat, chains = 3, seed = 1340338046,
+               iter = 2012, sample_file = 'dogs.csv', diagnostic_file = 'd_dogs.csv')
+
 ss1 <- sampling(dogsrr, data = dogsdat, chains = 1, seed = 1340384924,
                 iter = 2012, sample_file = 'dogs.csv')
 
@@ -149,7 +152,10 @@ traceplot(sf, window = c(100, 1500))
 plot(sf)
 sf2 <- stan(fit = sf, data = dogsdat, thin = 3)
 traceplot(sf2, window = 100)
+traceplot(sf2, window = 100, inc_warmup = FALSE)
+traceplot(sf2, window = 100)
 traceplot(sf2, window = c(100, 1500))
+traceplot(sf2, window = c(100, 1500), inc_warmup = FALSE)
 traceplot(sf2, window = c(1001, 1500))
 plot(sf2)
 print(sf2)
