@@ -530,7 +530,7 @@ stan_rdump <- function(list, file = "", append = FALSE,
 
     if (is.vector(vv)) {
       if (length(vv) == 1) {
-        cat(v, " <- ", vv, "\n", file = file, sep = '')
+        cat(v, " <- ", as.character(vv), "\n", file = file, sep = '')
         next
       }
       str <- paste0(v, " <- \nc(", paste(vv, collapse = ', '), ")") 
