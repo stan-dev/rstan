@@ -99,44 +99,18 @@
      to print intermediate output from Stan on the console, which might
      be helpful for model debugging.}
 
-  \item{algorithm}{TODO}
-  \item{control}{TODO}
+  \item{algorithm}{One of algorithms that are implemented in Stan such 
+    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC, 
+    and Metropolis based on random walk.}
 
-  \item{\dots}{Other optional parameters for the sampler: 
-    \enumerate{
-      \item \code{chain_id} (\code{integer})
-      \item \code{leapfrog_steps} (\code{integer})
-      \item \code{epsilon} (\code{double})
-      \item \code{gamma} (\code{double}) 
-      \item \code{delta} (\code{double})
-      \item \code{equal_step_sizes} (\code{TRUE} or \code{FALSE})
-      \item \code{max_treedepth} (\code{integer})
-      \item \code{nondiag_mass} (\code{TRUE} or \code{FALSE})
-    }
+  \item{control}{See the argument \code{control} of function
+    \code{\link{stan}}.} 
 
-    More details can be found in Stan's manual and \code{\link{stan}}. The
-    default sampler is NUTS2, where \code{leapfrog_steps} is \code{-1} and 
-    \code{equal_step_sizes} is \code{FALSE}. To use NUTS with full
-    mass matrix, set \code{nondiag_mass} to \code{TRUE}. 
-
-    \code{chain_id} can be a vector to specify the chain_id for all 
-    chains or an integer. For the former case, they should be unique. 
-    For the latter, the sequence of integers starting from the given
-    \code{chain_id} are used for all chains. 
-
-    In addition, \code{refresh} (\code{integer}) can be used to
-    control how to indicate the progress during sampling 
-    (i.e. show the progress every \code{refresh} iterations).
-    By default, \code{refresh = max(iter/10, 1)}. 
-    The progress indicator is turned off if \code{refresh <= 0}.
-
-    Another parameter is \code{test_grad} (\code{TRUE} or \code{FALSE}).  
-    If \code{test_grad=TRUE}, Stan will not do any sampling. Instead,
-    the gradient calculation is tested and printed out and the fitted
-    \code{stanfit} object is in test gradient mode.  By default, it is
-    \code{FALSE}. 
-  }
+  \item{\dots}{Additional arguments can be \code{chain_id}, \code{init_r}, 
+    \code{test_grad}, \code{append_samples}, \code{refresh}. See 
+    the document in \code{\link{stan}}.} 
 }
+
 \value{
    An object of S4 class \code{stanfit} representing
    the fitted results. Slot \code{mode} for this object
@@ -144,7 +118,7 @@
 } 
 
 \seealso{
-  \code{\linkS4class{stanmodel}}, \code{\linkS4class{stanfit}} 
+  \code{\linkS4class{stanmodel}}, \code{\linkS4class{stanfit}}, \code{\link{stan}}
 }
 
 \examples{\dontrun{
