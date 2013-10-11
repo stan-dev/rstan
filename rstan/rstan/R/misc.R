@@ -1087,12 +1087,7 @@ stan_plot_inferences <- function(sim, summary, pars, model_info, display_paralle
   chain_cols <- rstan_options("rstan_chain_cols")
   chain_cols.len <- length(chain_cols) 
 
-  # FIXME: the following if - else for all platforms 
-  if (exists('windows'))  dev.fun <- windows 
-  if (exists('X11'))  dev.fun <- X11 
-  opt.dev <- options("device") 
-  if (.Device %in% c("windows", "X11cairo")  ||
-      (.Device=="null device" && identical(opt.dev, dev.fun))) {
+  if (.Device %in% c("windows", "X11cairo", 'quartz')) { 
     cex.points <- .7
     min.width <- .02
   } else {

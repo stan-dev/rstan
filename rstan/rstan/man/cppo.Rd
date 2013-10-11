@@ -15,7 +15,8 @@
 }
 
 \usage{
-  set_cppo(mode = c("fast", "presentation2", "presentation1", "debug", "small"), NDEBUG = FALSE)
+  set_cppo(mode = c("fast", "presentation2", "presentation1", "debug", "small"),
+           NDEBUG = FALSE)
   get_cppo() 
   reset_cppo()
 } 
