@@ -51,19 +51,18 @@ stan(file, model_name = "anon_model", model_code = "",
   \item{iter}{A positive integer specifying how many iterations for each 
     chain (including warmup). The default is 2000.}
   \item{warmup}{A positive integer specifying number of warmup (aka burnin)
-     iterations.  This also specifies the number of iterations used for step-size
+     iterations.  This also specifies the number of iterations used for stepsize
      adaptation, so warmup samples should not be used for inference. The number
      of warmup should not be larger than \code{iter} and the default is \code{iter/2}.}
   \item{thin}{A positive integer specifying the period for saving sample; defaults to 1.} 
   \item{init}{One of digit \code{0}, string \code{"0"} or \code{"random"}, 
-    a function that returns a list, or a list of initial parameter values with
-    which to indicate how the initial values of parameters are specified. 
-    \code{"0"}: initialize all to be zero on the unconstrained support; 
-    \code{"random"}: randomly generated;
-    \code{list}: a list of lists equal in length to the number of chains 
-     (parameter \code{chains}), where each list in the list of lists specifies the initial
-      values of parameters by name for the corresponding chain.
-    \code{function}: a function that returns a list for specifying 
+    a function that returns a named list, or a list of named list.
+    \code{"0"}: initialize all to be zero on the unconstrained support;
+    \code{"random"}: randomly generated, see optional parameter \code{init_r};
+    \code{list}: a list of lists equal in length to the number of chains
+     (parameter \code{chains}), where each named list (an element of the list
+     of lists) specifies the initial values for parameters by names for a chain.
+    \code{function}: a function that returns a list for specifying
       the initial values of parameters for a chain. The function
       can take an optional parameter \code{chain_id}.
       See below notes on that RStan treats a vector of length 1 as
@@ -129,16 +128,16 @@ stan(file, model_name = "anon_model", model_code = "",
     parameters can be set as in Stan for sampling.  For algorithm HMC (called 
     'static HMC' in Stan), we can set 
     \enumerate{
-      \item \code{int_time} (code{double}, positive)
-      \item \code{stepsize} (code{double}, positive)
-      \item \code{stepsize_jitter} (code{double}, [0,1])
+      \item \code{int_time} (\code{double}, positive)
+      \item \code{stepsize} (\code{double}, positive)
+      \item \code{stepsize_jitter} (\code{double}, [0,1])
     }
     For algorithm NUTS, we can set 
     \enumerate{
       \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
-      \item \code{max_treedepth} (code{integer}, positive)
-      \item \code{stepsize} (code{double}, positive)
-      \item \code{stepsize_jitter} (code{double}, [0,1])
+      \item \code{max_treedepth} (\code{integer}, positive)
+      \item \code{stepsize} (\code{double}, positive)
+      \item \code{stepsize_jitter} (\code{double}, [0,1])
     }
   }
   
@@ -158,7 +157,7 @@ stan(file, model_name = "anon_model", model_code = "",
 
     \code{init_r} is only valid for \code{init="random"}. If 
     specified, the initial values are simulated from [-init_r, init_r]
-    rather than using the default interval.
+    rather than using the default interval (see the manual of Stan).
 
     Argument \code{refresh} (\code{integer}) can be used to
     control how to indicate the progress during sampling (i.e. 
