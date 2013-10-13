@@ -683,8 +683,10 @@ sflist2stanfit <- function(sflist) {
       any(sapply(sflist, function(x) !is(x, "stanfit")))) {   
     stop("'sflist' must be a list of 'stanfit' objects")
   }
-  if (any(sapply(sflist, function(x) x@mode != 0))) {
-    stop("each 'stanfit' object in 'sflist' must contain samples") 
+
+  non_zero_modes_idx <- which(sapply(sflist, function(x) x@mode) > 0)
+  if (length(non_zero_modes_idx) > 0) { 
+    stop("The following elements of 'sflist' do not contain samples", non_zero_modes_idx) 
   }   
   for (i in 2:sf_len) { 
     if (!identical(sflist[[i]]@sim$pars_oi, sflist[[1]]@sim$pars_oi) || 
