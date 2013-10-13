@@ -63,12 +63,16 @@
     optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
-  \item{\dots}{Other optional parameters.
+  \item{\dots}{Other optional parameters. 
     \enumerate{
-      \item \code{iter} (\code{integer})
-      \item \code{stepsize} (\code{double})
-      \item \code{save_iterations} (logical)
+      \item \code{iter} (\code{integer}), the maximum number of iterations
+      \item \code{save_iterations} (logical), whether to save the iterations 
       \item \code{refresh} (\code{integer})
+      \item \code{stepsize} (\code{double}), for Nesterov, see the manual of Stan
+      \item \code{init_alpha} (\code{double}, default to 0.0001), for BFGS, see manual of Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
     }
   }
 }
