@@ -83,7 +83,7 @@ library(parallel)
 
 ## this may not work on Windows 
 sflist1 <- 
-  mclapply(1:4, mc.cores = 8, 
+  mclapply(1:4, mc.cores = 4, 
            function(i) stan(fit = f1, seed = seed, chains = 1, chain_id = i, refresh = -1))
 f3 <- sflist2stanfit(sflist1)
 }} 
