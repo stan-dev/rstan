@@ -19,6 +19,7 @@ PKG_CPPFLAGS += -I"$(EIGEN_PATH)/unsupported"
 PKG_CPPFLAGS += -I$(shell find ../inst/include/stanlib -path '*lib/boost_*' -regex '.*lib\/boost_[^/]*')
 PKG_CPPFLAGS += -I"../inst/include" 
 PKG_CPPFLAGS += -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
+PKG_CPPFLAGS += -ftemplate-depth-256
 
 # CXXFLAGS = -O2 -pipe -g $(LTO)
 # CXXFLAGS = -Os -pipe $(LTO)
