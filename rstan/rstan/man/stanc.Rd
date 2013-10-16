@@ -31,10 +31,9 @@ Translate Stan model specification to C++ code
       If \code{FALSE}, the model name in the generated C++ code would not 
       contain randomly generated character string so that if model names
       are given the same, the generated C++ code will have the same class
-      name defining the model, and the same Rcpp module name, which is used 
-      for R to execute the C++ code regardless if the stan models are the 
-      same of not. Generally, it is recommended not to specify this parameter
-      or set it to \code{TRUE}. 
+      names defining the model, and the same Rcpp module names, which is used 
+      for R to execute the C++ code for sampling. Generally, it is recommended
+      not to specify this parameter or set it to \code{TRUE}. 
     }
   }
 } 
@@ -85,8 +84,7 @@ model {
 } 
 "
 
-r <- stanc(model_code = "stanmodelcode", model_name = "normal1") 
-# r <- stanc(model_code = stanmodelcode, model_name = "normal1") 
+r <- stanc(model_code = stanmodelcode, model_name = "normal1") 
 names(r)
 cat(r$cppcode)
 }}
