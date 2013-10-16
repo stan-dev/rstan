@@ -1,8 +1,21 @@
+Sun Oct 2013
+1. Bug fixes
+2. New features
+   * add window option to traceplot
+   * add all optimizers in Stan 
+3. Changes
+   * arguments for function stan due to the changes in Stan 2.0
+
+May 23 2013
+1. Bug fixes
+   * the output csv files was using col-major order, which should be 
+     row-major order 
+
 Mar 13 2013
 1. Changes
    * showing progress of sampling at the same line (using \r instead of \n)
    * plot for stanfit allows multiple pages 
-2  New features 
+2. New features 
    * add rstan:::as.mcmc.list to convert stanfit object 
      to coda object 
 

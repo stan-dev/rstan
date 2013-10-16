@@ -3,26 +3,39 @@
 #define __RSTAN__STAN_FIT_HPP__
 
 #include <iomanip>
-#include <sstream>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <fstream>
+#include <sstream>
+#include <stdexcept>
+
+#include <stan/version.hpp>
+// #include <stan/io/cmd_line.hpp>
+// #include <stan/io/dump.hpp>
+
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/random/additive_combine.hpp> // L'Ecuyer RNG
 #include <boost/random/uniform_real_distribution.hpp>
-#include <stan/version.hpp>
-#include <stan/io/cmd_line.hpp>
-#include <stan/io/dump.hpp>
-#include <stan/mcmc/adaptive_hmc.hpp>
-#include <stan/mcmc/nuts.hpp>
-#include <stan/mcmc/nuts_diag.hpp>
-#include <stan/mcmc/nuts_nondiag.hpp>
-#include <stan/mcmc/nuts_massgiven.hpp>
-#include <stan/optimization/newton.hpp>
 
 #include <stan/agrad/agrad.hpp>
+
+#include <stan/model/util.hpp>
+
+#include <stan/optimization/newton.hpp>
+#include <stan/optimization/nesterov_gradient.hpp>
+#include <stan/optimization/bfgs.hpp>
+
+#include <stan/mcmc/hmc/static/adapt_unit_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/adapt_diag_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/adapt_dense_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/nuts/adapt_unit_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/adapt_diag_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
+
 
 #include <rstan/io/rlist_ref_var_context.hpp> 
 #include <rstan/io/r_ostream.hpp> 
 #include <rstan/stan_args.hpp> 
+#include <rstan/mcmc_output.hpp>
 // #include <stan/mcmc/chains.hpp>
 #include <Rcpp.h>
 // #include <Rinternals.h>
@@ -37,12 +50,36 @@
 namespace rstan {
 
   namespace {
+    /**
+     *@tparam T The type by which we use for dimensions. T could be say size_t
+     * or unsigned int. This whole business (not using size_t) is due to that
+     * Rcpp::wrap/as does not support size_t on some platforms and R could not
+     * deal with 64bits integers. 
+     *
+     */ 
     template <class T> 
-    T product(std::vector<T> dims) {
-      T y = 1U;
+    size_t calc_num_params(const std::vector<T>& dim) {
+      T num_params = 1;
+      for (size_t i = 0;  i < dim.size(); ++i)
+        num_params *= dim[i];
+      return num_params;
+    }
+
+    template <class T> 
+    void calc_starts(const std::vector<std::vector<T> >& dims,
+                     std::vector<T>& starts) { 
+      starts.resize(0); 
+      starts.push_back(0); 
+      for (size_t i = 1; i < dims.size(); ++i)
+        starts.push_back(starts[i - 1] + calc_num_params(dims[i - 1]));
+    }
+
+    template <class T> 
+    T calc_total_num_params(const std::vector<std::vector<T> >& dims) {
+      T num_params = 0;
       for (size_t i = 0; i < dims.size(); ++i)
-        y *= dims[i];
-      return y;
+        num_params += calc_num_params(dims[i]);
+      return num_params;
     }
 
     /**
@@ -61,7 +98,7 @@ namespace rstan {
      *  @param idx[out] for keeping all the indexes
      *
      *  <p> when idx is empty (size = 0), idx 
-     *  would be inserted an empty vector. 
+     *  would contains an empty vector. 
      * 
      *
      */
@@ -72,7 +109,7 @@ namespace rstan {
                         bool col_major = false) {
       size_t len = dim.size();
       idx.resize(0);
-      size_t total = product(dim);
+      size_t total = calc_num_params(dim);
       std::vector<size_t> loopj;
       for (size_t i = 1; i <= len; ++i)
         loopj.push_back(len - i);
@@ -176,46 +213,88 @@ namespace rstan {
         fnames.insert(fnames.end(), i_names.begin(), i_names.end());
       } 
     } 
-  }
 
-  namespace { 
-    /**
-     *@tparam T The type by which we use for dimensions. T could be say size_t
-     * or unsigned int. This whole business (not using size_t) is due to that
-     * Rcpp::wrap/as does not support size_t on some platforms and R could not
-     * deal with 64bits integers. 
+    /* To facilitate transform an array variable ordered by col-major index
+     * to row-major index order by providing the transforming indices.
+     * For example, we have "x[2,3]", then if ordered by col-major, we have
+     * 
+     * x[1,1], x[2,1], x[1,2], x[2,2], x[1,3], x[3,1]
+     * 
+     * Then the indices for transforming to row-major order are 
+     * [0, 2, 4, 1, 3, 5] + start. 
+     *
+     * @param dim[in] the dimension of the array variable, empty means a scalar
+     * @param midx[out] store the indices for mapping col-major to row-major
+     * @param start shifts the indices with a starting point
      *
      */ 
-    template <class T> 
-    size_t calc_num_params(const std::vector<T>& dim) {
-      T num_params = 1;
-      for (size_t i = 0;  i < dim.size(); ++i)
-        num_params *= dim[i];
-      return num_params;
+    template <typename T, typename T2>
+    void get_indices_col2row(const std::vector<T>& dim, std::vector<T2>& midx,
+                             T start = 0) {
+      size_t len = dim.size();
+      if (len < 1) { 
+        midx.push_back(start); 
+        return; 
+      }
+    
+      std::vector<T> z(len, 1);
+      for (size_t i = 1; i < len; i++) {
+        z[i] *= z[i - 1] * dim[i - 1];
+      } 
+    
+      T total = calc_num_params(dim);
+      midx.resize(total);
+      std::fill_n(midx.begin(), total, start);
+      std::vector<T> v(len, 0);
+      for (T i = 1; i < total; i++) {
+        for (size_t j = 0; j < len; ++j) {
+          size_t k = len - j - 1;
+          if (v[k] < dim[k] - 1) {
+            v[k] += 1;
+            break; 
+          }
+          v[k] = 0; 
+        } 
+        // v is the index of the ith element by row-major, for example v=[0,1,2]. 
+        // obtain the position for v if it is col-major indexed. 
+        T pos = 0;
+        for (size_t j = 0; j < len; j++) 
+          pos += z[j] * v[j];
+        midx[i] += pos;
+      } 
+    } 
+   
+    template <class T>
+    void get_all_indices_col2row(const std::vector<std::vector<T> >& dims,
+                                 std::vector<size_t>& midx) {
+      midx.clear();
+      std::vector<T> starts; 
+      calc_starts(dims, starts);
+      for (size_t i = 0; i < dims.size(); ++i) {
+        std::vector<size_t> midxi;
+        get_indices_col2row(dims[i], midxi, starts[i]);
+        midx.insert(midx.end(), midxi.begin(), midxi.end());
+      } 
+    } 
+
+    bool do_print(int n, int refresh, int last = 0) {
+      if (refresh < 1) return false;
+      return (n == 0) || ((n + 1) % refresh == 0) || (n == last);
     }
 
-    template <class T> 
-    void calc_starts(const std::vector<std::vector<T> >& dims,
-                     std::vector<T>& starts) { 
-      starts.resize(0); 
-      starts.push_back(0); 
-      for (size_t i = 1; i < dims.size(); ++i)
-        starts.push_back(starts[i - 1] + calc_num_params(dims[i - 1]));
+    void print_progress(int m, int finish, int refresh, bool warmup) {
+      int it_print_width = std::ceil(std::log10(finish));
+      if (do_print(m, refresh, finish - 1)) {
+        rstan::io::rcout << "\rIteration: ";
+        rstan::io::rcout << std::setw(it_print_width) << (m + 1)
+                         << " / " << finish;
+        rstan::io::rcout << " [" << std::setw(3) 
+                         << static_cast<int>((100.0 * (m + 1)) / finish)
+                         << "%] ";
+        rstan::io::rcout << (warmup ? " (Warmup)" : " (Sampling)");
+      }
     }
 
-    template <class T> 
-    T calc_total_num_params(const std::vector<std::vector<T> >& dims) {
-      T num_params = 0;
-      for (size_t i = 0; i < dims.size(); ++i)
-        num_params += calc_num_params(dims[i]);
-      return num_params;
-    }
-
-    bool do_print(int n, int refresh) {
-      return refresh < 1 ? false : 
-             (n == 0) || ((n + 1) % refresh == 0);
-    }
-  
     template <class Model>
     std::vector<std::string> get_param_names(Model& m) { 
       std::vector<std::string> names;
@@ -223,6 +302,109 @@ namespace rstan {
       names.push_back("lp__");
       return names; 
     }
+
+    template <class T>
+    void print_vector(const std::vector<T>& v, std::ostream& o, 
+                      const std::vector<size_t>& midx, 
+                      const std::string& sep = ",") {
+      if (v.size() > 0)
+        o << v[0];
+      for (size_t i = 1; i < v.size(); i++)
+        o << sep << v[midx.at(i)];
+      o << std::endl;
+    }
+
+    template <class T>
+    void print_vector(const std::vector<T>& v, std::ostream& o, 
+                      const std::string& sep = ",") {
+      if (v.size() > 0)
+        o << v[0];
+      for (size_t i = 1; i < v.size(); i++)
+        o << sep << v[i];
+      o << std::endl;
+    }
+
+    template <class Model, class RNG_t>
+    void run_markov_chain(stan::mcmc::base_mcmc* sampler_ptr,
+                          const stan_args& args, 
+                          bool is_warmup,
+                          mcmc_output<Model>& outputter, 
+                          stan::mcmc::sample& init_s,
+                          Model& model,
+                          std::vector<Rcpp::NumericVector>& chains, 
+                          int& iter_save_i,
+                          const std::vector<size_t>& qoi_idx,
+                          std::vector<double>& sum_pars,
+                          double& sum_lp,
+                          std::vector<Rcpp::NumericVector>& sampler_params, 
+                          std::vector<Rcpp::NumericVector>& iter_params, 
+                          std::string& adaptation_info, 
+                          RNG_t& base_rng) {
+      int start = 0;
+      int end = args.get_ctrl_sampling_warmup();
+      if (!is_warmup) { 
+        start = end;
+        end = args.get_iter();
+      } 
+      for (int m = start; m < end; ++m) {
+        print_progress(m, args.get_iter(), args.get_ctrl_sampling_refresh(), is_warmup);
+        R_CheckUserInterrupt();
+        init_s = sampler_ptr -> transition(init_s);
+        if (args.get_ctrl_sampling_save_warmup() && (((m - start) % args.get_ctrl_sampling_thin()) == 0)) {
+          outputter.output_sample_params(base_rng, init_s, sampler_ptr, model,
+                                        chains, is_warmup,
+                                        sampler_params, iter_params,
+                                        sum_pars, sum_lp, qoi_idx,
+                                        iter_save_i, &rstan::io::rcout);
+          iter_save_i++;
+          outputter.output_diagnostic_params(init_s, sampler_ptr);
+        }
+      }
+    }
+
+    template <class Model, class RNG_t>
+    void warmup_phase(stan::mcmc::base_mcmc* sampler_ptr,
+                      stan_args& args, 
+                      mcmc_output<Model>& outputter,
+                      stan::mcmc::sample& init_s,
+                      Model& model,
+                      std::vector<Rcpp::NumericVector>& chains, 
+                      int& iter_save_i,
+                      const std::vector<size_t>& qoi_idx,
+                      std::vector<double>& sum_pars,
+                      double& sum_lp,
+                      std::vector<Rcpp::NumericVector>& sampler_params, 
+                      std::vector<Rcpp::NumericVector>& iter_params, 
+                      std::string& adaptation_info, 
+                      RNG_t& base_rng) {
+      run_markov_chain<Model, RNG_t>(sampler_ptr, args, true, outputter,
+                                     init_s, model, chains, iter_save_i, qoi_idx,
+                                     sum_pars, sum_lp, sampler_params, iter_params,
+                                     adaptation_info, base_rng);
+    }
+
+    template <class Model, class RNG_t>
+    void sampling_phase(stan::mcmc::base_mcmc* sampler_ptr,
+                        const stan_args& args,
+                        mcmc_output<Model>& outputter,
+                        stan::mcmc::sample& init_s,
+                        Model& model,
+                        std::vector<Rcpp::NumericVector>& chains, 
+                        int& iter_save_i,
+                        const std::vector<size_t>& qoi_idx,
+                        std::vector<double>& sum_pars,
+                        double& sum_lp,
+                        std::vector<Rcpp::NumericVector>& sampler_params, 
+                        std::vector<Rcpp::NumericVector>& iter_params, 
+                        std::string& adaptation_info, 
+                        RNG_t& base_rng) {
+      run_markov_chain<Model, RNG_t>(sampler_ptr, args, false, outputter,
+                                     init_s, model, chains, iter_save_i, qoi_idx,
+                                     sum_pars, sum_lp, sampler_params, iter_params,
+                                     adaptation_info,
+                                     base_rng);
+    }
+    
 
     /**
      * Cast a size_t vector to an unsigned int vector. 
@@ -255,202 +437,237 @@ namespace rstan {
       return uintdims; 
     } 
 
-    template <class T>
-    void print_vector(const std::vector<T>& v, std::ostream& o, const std::string& sep = ",") {
-      if (v.size() > 0)
-        o << v[0];
-      for (size_t i = 1; i < v.size(); i++)
-        o << sep << v[i];
-      o << std::endl;
+    template<class Sampler>
+    void init_static_hmc(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args) {
+      double epsilon = args.get_ctrl_sampling_stepsize();
+      double epsilon_jitter = args.get_ctrl_sampling_stepsize_jitter();
+      double int_time = args.get_ctrl_sampling_int_time();
+
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->set_nominal_stepsize_and_T(epsilon, int_time);
+      sampler_ptr2->set_stepsize_jitter(epsilon_jitter);
+    } 
+
+    template<class Sampler>
+    void init_nuts(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args) {
+      double epsilon = args.get_ctrl_sampling_stepsize();
+      double epsilon_jitter = args.get_ctrl_sampling_stepsize_jitter();
+      int max_depth = args.get_ctrl_sampling_max_treedepth();
+
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->set_nominal_stepsize(epsilon);
+      sampler_ptr2->set_stepsize_jitter(epsilon_jitter);
+      sampler_ptr2->set_max_depth(max_depth);
     }
+    
+    template<class Sampler>
+    void init_adapt(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args) {
 
-    template <class Sampler, class Model, class RNG> 
-    void sample_from(Sampler& sampler,
-                     bool epsilon_adapt,
-                     int refresh,
-                     int num_iterations,
-                     int num_warmup,
-                     int num_thin,
-                     std::ostream& sample_file_stream,
-                     bool sample_file_flag, 
-                     std::vector<double>& params_r,
-                     std::vector<int>& params_i,
-                     Model& model,
-                     std::vector<Rcpp::NumericVector>& chains, 
-                     const std::vector<size_t>& qoi_idx,
-                     std::vector<double>& sum_pars,
-                     double& sum_lp,
-                     std::vector<Rcpp::NumericVector>& sampler_params, 
-                     std::string& adaptation_info, 
-                     RNG& base_rng) { 
-                         
-      adaptation_info.clear(); 
-      sampler.set_params(params_r,params_i);
-      int it_print_width = std::ceil(std::log10(num_iterations));
-  
-      if (epsilon_adapt)
-        sampler.adapt_on(); 
+      if (!args.get_ctrl_sampling_adapt_engaged()) return;
 
-      std::vector<double> params_inr_etc; 
-      if (refresh > num_iterations) refresh = -1; 
-     
-      int ii = 0; // index for iterations saved to chains
-      for (int m = 0; m < num_iterations; ++m) { 
-        bool is_warmup = m < num_warmup;
-        R_CheckUserInterrupt(); 
-        if (do_print(m,refresh)) {
-          rstan::io::rcout << "\rIteration: ";
-          rstan::io::rcout << std::setw(it_print_width) << (m + 1)
-                           << " / " << num_iterations;
-          rstan::io::rcout << " [" << std::setw(3)
-                           << static_cast<int>((100.0 * (m + 1))/num_iterations)
-                           << "%] ";
-          rstan::io::rcout << (is_warmup ? " (Adapting)" : " (Sampling)");
-          rstan::io::rcout.flush();
-        } 
+      double delta = args.get_ctrl_sampling_adapt_delta();
+      double gamma = args.get_ctrl_sampling_adapt_gamma();
+      double kappa = args.get_ctrl_sampling_adapt_kappa();
+      double t0 = args.get_ctrl_sampling_adapt_t0();
+      double epsilon = args.get_ctrl_sampling_stepsize();
 
-        if (m == num_warmup && epsilon_adapt) {
-          sampler.adapt_off();
-          std::stringstream ss; 
-          sampler.write_adaptation_params(ss); 
-          adaptation_info.append(ss.str()); 
-          if (sample_file_flag)  
-            sample_file_stream << adaptation_info; 
-        }
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->get_stepsize_adaptation().set_mu(log(10 * epsilon));
+      sampler_ptr2->get_stepsize_adaptation().set_delta(delta);
+      sampler_ptr2->get_stepsize_adaptation().set_gamma(gamma);
+      sampler_ptr2->get_stepsize_adaptation().set_kappa(kappa);
+      sampler_ptr2->get_stepsize_adaptation().set_t0(t0);
+      sampler_ptr2->engage_adaptation();
+      sampler_ptr2->init_stepsize();
+    }
+    
+    template <class Model, class RNG_t> 
+    void execute_sampling(stan_args& args, Model& model, Rcpp::List& holder,
+                          stan::mcmc::base_mcmc* sampler_ptr, 
+                          stan::mcmc::sample& s,
+                          const std::vector<size_t>& qoi_idx, 
+                          std::vector<double>& initv, 
+                          std::fstream& sample_stream,
+                          std::fstream& diagnostic_stream,
+                          const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {  
+      int iter_save_i = 0;
+      double mean_lp(0);
+      std::string adaptation_info;
+      
+      std::vector<Rcpp::NumericVector> chains; 
+      for (unsigned int i = 0; i < qoi_idx.size(); i++) 
+        chains.push_back(Rcpp::NumericVector(args.get_ctrl_sampling_iter_save())); 
+      std::vector<double> mean_pars;
+      mean_pars.resize(initv.size(), 0);
+      std::vector<Rcpp::NumericVector> sampler_params;
+      std::vector<Rcpp::NumericVector> iter_params;
+      std::vector<std::string> sampler_param_names;
+      std::vector<std::string> iter_param_names;
 
-        if ((m % num_thin) != 0) {
-          sampler.next();
-          continue;
-        }
+      mcmc_output<Model> outputter(&sample_stream, &diagnostic_stream);
+      outputter.set_output_names(s, sampler_ptr, model, iter_param_names, sampler_param_names);
+      outputter.init_sampler_params(sampler_params, args.get_ctrl_sampling_iter_save());
+      outputter.init_iter_params(iter_params, args.get_ctrl_sampling_iter_save());
 
-        stan::mcmc::sample sample = sampler.next();
-        sample.params_r(params_r);
-        sample.params_i(params_i);
-        model.write_array(base_rng, params_r,params_i,params_inr_etc,&rstan::io::rcout);
-
-        double lp__ = sample.log_prob();
-        if (sample_file_flag)
-          sample_file_stream << lp__ << ","; 
-
-        std::vector<double> ii_sampler_params; 
-        sampler.get_sampler_params(ii_sampler_params); 
-        for (size_t z = 0; z < ii_sampler_params.size(); z++) {
-          sampler_params[z][ii] = ii_sampler_params[z];
-          if (sample_file_flag)
-            sample_file_stream << ii_sampler_params[z] << ",";
-        } 
-        if (!is_warmup) {
-          for (size_t z = 0; z < params_inr_etc.size(); z++)
-            sum_pars[z] += params_inr_etc[z];
-          sum_lp += lp__;
-        } 
-        
-        // check range of ii, the error should not happen by construction. 
-        // just to avoid programming error, other approach such as using DDEBUG?
-        if (ii >= chains[0].size()) {
-          throw std::out_of_range("index ii of the iteration is out of range"); 
-        } 
-        size_t z = 0;
-        for (; z < qoi_idx.size() - 1; ++z)  
-          chains[z][ii] = params_inr_etc[qoi_idx[z]]; 
-        chains[z][ii] = lp__; // or use qoi_idx = -1 for lp__
-
-        ii++; 
-          
-        // FIXME: use csv_writer arg to make comma optional?
-        if (sample_file_flag) { 
-          print_vector(params_inr_etc, sample_file_stream);
-        }
+      if (!args.get_append_samples()) {
+        outputter.print_sample_names();
+        outputter.output_diagnostic_names(s, sampler_ptr, model);
+      } 
+      // Warm-Up
+      clock_t start = clock();
+      warmup_phase<Model, RNG_t>(sampler_ptr, args, outputter,
+                                 s, model, chains, iter_save_i,
+                                 qoi_idx, mean_pars, mean_lp,
+                                 sampler_params, iter_params, adaptation_info,
+                                 base_rng); 
+      clock_t end = clock();
+      double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
+      if (args.get_ctrl_sampling_adapt_engaged()) { 
+        dynamic_cast<stan::mcmc::base_adapter*>(sampler_ptr)->disengage_adaptation();
+        outputter.output_adapt_finish(sampler_ptr, adaptation_info);
       }
+      // Sampling
+      start = clock();
+      sampling_phase<Model, RNG_t>(sampler_ptr, args, outputter,
+                                   s, model, chains, iter_save_i,
+                                   qoi_idx, mean_pars, mean_lp, 
+                                   sampler_params, iter_params, adaptation_info,  
+                                   base_rng); 
+      end = clock();
+      double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
+
       rstan::io::rcout << std::endl;
-    }
+      if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
+        mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
+        for (std::vector<double>::iterator it = mean_pars.begin();
+             it != mean_pars.end(); 
+             ++it) 
+          (*it) /= args.get_ctrl_sampling_iter_save_wo_warmup();
+      } 
+      if (args.get_ctrl_sampling_refresh() > 0) { 
+        outputter.print_timing(warmDeltaT, sampleDeltaT, &rstan::io::rcout);
+      }
+      
+      outputter.output_timing(warmDeltaT, sampleDeltaT);
+      if (args.get_sample_file_flag()) {
+        rstan::io::rcout << "Sample of chain " 
+                         << args.get_chain_id() 
+                         << " is written to file " << args.get_sample_file() << "."
+                         << std::endl;
+        sample_stream.close();
+      }
+      if (args.get_diagnostic_file_flag()) 
+        diagnostic_stream.close();
+     
+      holder = Rcpp::List(chains.begin(), chains.end());
+      holder.attr("test_grad") = Rcpp::wrap(false); 
+      holder.attr("args") = args.stan_args_to_rlist(); 
+      holder.attr("inits") = initv; 
+      holder.attr("mean_pars") = mean_pars; 
+      holder.attr("mean_lp__") = mean_lp; 
+      holder.attr("adaptation_info") = adaptation_info;
+      // put sampler parameters such as treedepth together with iter_params 
+      iter_params.insert(iter_params.end(), sampler_params.begin(), sampler_params.end());
+      // put iter_param_names and sampler_param_name tegether for returning to R
+      iter_param_names.insert(iter_param_names.end(),
+                              sampler_param_names.begin(),
+                              sampler_param_names.end());
+      Rcpp::List slst(iter_params.begin(), iter_params.end());
+      slst.names() = iter_param_names;
+      slst.erase(outputter.get_index_for_lp());
+      holder.attr("sampler_params") = slst;
+      holder.names() = fnames_oi;
+    } 
+
 
     /**
      * @tparam Model 
+     * @tparam RNG 
+     *
+     * @param args: the instance that wraps the arguments passed for sampling.
+     * @param model: the model instance.
      * @param holder[out]: the object to hold all the information returned to R. 
-     * @iter_save: the number of iterations that would be save after 
-     *   taking account of the thinning. 
-     * @qoi_idx: the indexes for all parameters of interest.  
-     * @fnames_oi: the parameter names of interest.  
+     * @param qoi_idx: the indexes for all parameters of interest.  
+     * @param fnames_oi: the parameter names of interest.  
+     * @param base_rng: the boost RNG instance. 
      */
-    
-    template <class Model, class RNG> 
+    template <class Model, class RNG_t> 
     int sampler_command(stan_args& args, Model& model, Rcpp::List& holder,
                         const std::vector<size_t>& qoi_idx, 
-                        const std::vector<std::string>& fnames_oi, RNG& base_rng) {
-      bool sample_file_flag = args.get_sample_file_flag(); 
-      std::string sample_file = args.get_sample_file(); 
-      int num_iterations = args.get_iter(); 
-      int num_warmup = args.get_warmup(); 
-      int num_thin = args.get_thin(); 
-      int iter_save = args.get_iter_save();
-      int iter_save_wo_warmup = args.get_iter_save_wo_warmup();
-      int leapfrog_steps = args.get_leapfrog_steps(); 
-      unsigned int random_seed = args.get_random_seed();
-      double epsilon = args.get_epsilon(); 
-      bool epsilon_adapt = (epsilon <= 0.0); 
-      bool equal_step_sizes = args.get_equal_step_sizes();
-      int max_treedepth = args.get_max_treedepth(); 
-      double epsilon_pm = args.get_epsilon_pm(); 
-      double delta = args.get_delta(); 
-      double gamma = args.get_gamma(); 
-      int refresh = args.get_refresh(); 
-      unsigned int chain_id = args.get_chain_id(); 
-      bool test_grad = args.get_test_grad();
-      bool point_estimate = args.get_point_estimate();
-      bool nondiag_mass = args.get_nondiag_mass();
+                        const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
 
-      // FASTER, but no parallel guarantees:
-      // typedef boost::mt19937 rng_t;
-      // rng_t base_rng(static_cast<size_t>(seed_ + chain_id - 1);
-
-      // typedef boost::ecuyer1988 rng_t;
-      // rng_t base_rng(random_seed);
-      base_rng.seed(random_seed);
+      base_rng.seed(args.get_random_seed());
       // (2**50 = 1T samples, 1000 chains)
       static boost::uintmax_t DISCARD_STRIDE = 
         static_cast<boost::uintmax_t>(1) << 50;
       // rstan::io::rcout << "DISCARD_STRIDE=" << DISCARD_STRIDE << std::endl;
-
-      base_rng.discard(DISCARD_STRIDE * (chain_id - 1));
+      base_rng.discard(DISCARD_STRIDE * (args.get_chain_id() - 1));
       
-      std::vector<int> params_i;
-      std::vector<double> params_r;
-
+      std::vector<double> cont_params;
+      std::vector<int> disc_params;
       std::string init_val = args.get_init();
+      int num_init_tries = 0;
       // parameter initialization
       if (init_val == "0") {
-          params_i = std::vector<int>(model.num_params_i(),0);
-          params_r = std::vector<double>(model.num_params_r(),0.0);
+        disc_params = std::vector<int>(model.num_params_i(),0);
+        cont_params = std::vector<double>(model.num_params_r(),0.0);
+        double init_log_prob;
+        std::vector<double> init_grad;
+        try {
+          init_log_prob
+            = stan::model::log_prob_grad<true,true>(model,
+                                                    cont_params, 
+                                                    disc_params, 
+                                                    init_grad, 
+                                                    &rstan::io::rcout);
+        } catch (const std::domain_error& e) {
+          std::string msg("Domain error during initialization with 0:\n"); 
+          msg += e.what();
+          throw std::runtime_error(msg);
+        }
+        if (!boost::math::isfinite(init_log_prob))  
+          throw std::runtime_error("Error during initialization with 0: vanishing density.");
+        for (size_t i = 0; i < init_grad.size(); i++) {
+          if (!boost::math::isfinite(init_grad[i])) 
+            throw std::runtime_error("Error during initialization with 0: divergent gradient.");
+        }
       } else if (init_val == "user") {
-          try { 
-            Rcpp::List init_lst(args.get_init_list()); 
-            rstan::io::rlist_ref_var_context init_var_context(init_lst); 
-            model.transform_inits(init_var_context,params_i,params_r);
-          } catch (const std::exception& e) {
-            std::string msg("Error during user-specified initialization:\n"); 
-            msg += e.what(); 
-            throw std::runtime_error(msg);
-          } 
+        try { 
+          Rcpp::List init_lst(args.get_init_list()); 
+          rstan::io::rlist_ref_var_context init_var_context(init_lst); 
+          model.transform_inits(init_var_context,disc_params,cont_params);
+        } catch (const std::exception& e) {
+          std::string msg("Error during user-specified initialization:\n"); 
+          msg += e.what(); 
+          throw std::runtime_error(msg);
+        } 
       } else {
         init_val = "random"; 
-        // init_rng generates uniformly from -2 to 2
+        double r = args.get_init_radius();
         boost::random::uniform_real_distribution<double> 
-          init_range_distribution(-2.0,2.0);
-        boost::variate_generator<RNG&, boost::random::uniform_real_distribution<double> >
+          init_range_distribution(-r, r);
+        boost::variate_generator<RNG_t&, boost::random::uniform_real_distribution<double> >
           init_rng(base_rng,init_range_distribution);
 
-        params_i = std::vector<int>(model.num_params_i(),0);
-        params_r = std::vector<double>(model.num_params_r());
+        disc_params = std::vector<int>(model.num_params_i(),0);
+        cont_params = std::vector<double>(model.num_params_r());
 
         // retry inits until get a finite log prob value
         std::vector<double> init_grad;
         static int MAX_INIT_TRIES = 100;
-        int num_init_tries = 0;
         for (; num_init_tries < MAX_INIT_TRIES; ++num_init_tries) {
-          for (size_t i = 0; i < params_r.size(); ++i)
-            params_r[i] = init_rng();
-          double init_log_prob = model.grad_log_prob(params_r,params_i,init_grad,&rstan::io::rcout);
+          for (size_t i = 0; i < cont_params.size(); ++i)
+            cont_params[i] = init_rng();
+          double init_log_prob;
+          try {
+            init_log_prob 
+              = stan::model::log_prob_grad<true,true>(model,cont_params,disc_params,init_grad,&rstan::io::rcout);
+          } catch (const std::domain_error& e) {
+            // write_error_msg(&rstan::io::rcout, e);
+            rstan::io::rcout << e.what(); 
+            rstan::io::rcout << "Rejecting proposed initial value with zero density." << std::endl;
+            continue;
+          } 
           if (!boost::math::isfinite(init_log_prob))
             continue;
           for (size_t i = 0; i < init_grad.size(); ++i)
@@ -470,12 +687,12 @@ namespace rstan {
       }
       // keep a record of the initial values 
       std::vector<double> initv; 
-      model.write_array(base_rng, params_r,params_i,initv); 
+      model.write_array(base_rng, cont_params,disc_params,initv); 
 
-      if (test_grad) {
+      if (TEST_GRADIENT == args.get_method()) {
         rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
         std::stringstream ss; 
-        int num_failed = model.test_gradients(params_r,params_i,1e-6,1e-6,ss);
+        int num_failed = stan::model::test_gradients<true,true>(model,cont_params,disc_params,1e-6,1e-6,ss);
         rstan::io::rcout << ss.str() << std::endl; 
         holder["num_failed"] = num_failed; 
         holder.attr("test_grad") = Rcpp::wrap(true);
@@ -484,231 +701,383 @@ namespace rstan {
       } 
 
       std::fstream sample_stream; 
+      std::fstream diagnostic_stream;
       bool append_samples(args.get_append_samples());
-      if (sample_file_flag) {
+      if (args.get_sample_file_flag()) {
         std::ios_base::openmode samples_append_mode
           = append_samples ? (std::fstream::out | std::fstream::app)
                            : std::fstream::out;
-        sample_stream.open(sample_file.c_str(), samples_append_mode);
+        sample_stream.open(args.get_sample_file().c_str(), samples_append_mode);
       }
 
-      if (point_estimate) {
-        rstan::io::rcout << "STAN OPTIMIZATION COMMAND" << std::endl;
-        if (sample_file_flag) {
-          write_comment(sample_stream,"Point Estimate Generated by Stan");
-          write_comment(sample_stream);
-          write_comment_property(sample_stream,"stan_version_major",stan::MAJOR_VERSION);
-          write_comment_property(sample_stream,"stan_version_minor",stan::MINOR_VERSION);
-          write_comment_property(sample_stream,"stan_version_patch",stan::PATCH_VERSION);
-          write_comment_property(sample_stream,"init",init_val);
-          write_comment_property(sample_stream,"seed",random_seed);
-          write_comment(sample_stream);
+      if (OPTIM == args.get_method()) { // point estimation
+        if (BFGS == args.get_ctrl_optim_algorithm()) {
+          rstan::io::rcout << "STAN OPTIMIZATION COMMAND (BFGS)" << std::endl;
+          rstan::io::rcout << "init = " << init_val << std::endl;
+          if (num_init_tries > 0)
+            rstan::io::rcout << "init tries = " << num_init_tries << std::endl;
+          if (args.get_sample_file_flag()) 
+            rstan::io::rcout << "output = " << args.get_sample_file() << std::endl;
+          rstan::io::rcout << "save_iterations = " << args.get_ctrl_optim_save_iterations() << std::endl;
+          rstan::io::rcout << "init_alpha = " << args.get_ctrl_optim_init_alpha() << std::endl;
+          rstan::io::rcout << "tol_obj = " << args.get_ctrl_optim_tol_obj() << std::endl;
+          rstan::io::rcout << "tol_grad = " << args.get_ctrl_optim_tol_grad() << std::endl;
+          rstan::io::rcout << "tol_param = " << args.get_ctrl_optim_tol_param() << std::endl;
+          rstan::io::rcout << "seed = " << args.get_random_seed() << std::endl;
+          
+          if (args.get_sample_file_flag()) { 
+            write_comment(sample_stream,"Point Estimate Generated by Stan (BFGS)");
+            write_comment(sample_stream);
+            write_comment_property(sample_stream,"stan_version_major",stan::MAJOR_VERSION);
+            write_comment_property(sample_stream,"stan_version_minor",stan::MINOR_VERSION);
+            write_comment_property(sample_stream,"stan_version_patch",stan::PATCH_VERSION);
+            write_comment_property(sample_stream,"init",init_val);
+            write_comment_property(sample_stream,"save_iterations",args.get_ctrl_optim_save_iterations());
+            write_comment_property(sample_stream,"init_alpha",args.get_ctrl_optim_init_alpha());
+            write_comment_property(sample_stream,"tol_obj",args.get_ctrl_optim_tol_obj());
+            write_comment_property(sample_stream,"tol_grad",args.get_ctrl_optim_tol_grad());
+            write_comment_property(sample_stream,"tol_param",args.get_ctrl_optim_tol_param());
+            write_comment_property(sample_stream,"seed",args.get_random_seed());
+            write_comment(sample_stream);
+            
+            sample_stream << "lp__,"; // log probability first
+            model.write_csv_header(sample_stream);
+          } 
+          
+          stan::optimization::BFGSLineSearch<Model> bfgs(model, cont_params, disc_params,
+                                                         &rstan::io::rcout);
+          bfgs._opts.alpha0 = args.get_ctrl_optim_init_alpha();
+          bfgs._opts.tolF = args.get_ctrl_optim_tol_obj();
+          bfgs._opts.tolGrad = args.get_ctrl_optim_tol_grad();
+          bfgs._opts.tolX = args.get_ctrl_optim_tol_param();
+          bfgs._opts.maxIts = args.get_iter();
+          
+          double lp = bfgs.logp();
+          
+          rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
+          int ret = 0;
+          while (0 == ret) {
+            int i = bfgs.iter_num();
+            if (do_print(i, 50 * args.get_ctrl_optim_refresh())) {
+              rstan::io::rcout << "    Iter ";
+              rstan::io::rcout << "     log prob ";
+              rstan::io::rcout << "       ||dx|| ";
+              rstan::io::rcout << "     ||grad|| ";
+              rstan::io::rcout << "      alpha ";
+              rstan::io::rcout << " # evals ";
+              rstan::io::rcout << " Notes " << std::endl;
+            }
+            ret = bfgs.step();
+            lp = bfgs.logp();
+            bfgs.params_r(cont_params);
 
-          sample_stream << "lp__,"; // log probability first
-          model.write_csv_header(sample_stream);
-        }
-        std::vector<double> gradient;
-        double lp = model.grad_log_prob(params_r, params_i, gradient);
-        
-        double lastlp = lp - 1;
-        rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
-        int m = 0;
-        while ((lp - lastlp) / fabs(lp) > 1e-8) {
-          R_CheckUserInterrupt(); 
-          lastlp = lp;
-          lp = stan::optimization::newton_step(model, params_r, params_i);
-          rstan::io::rcout << "Iteration ";
-          rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
-          rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
-          rstan::io::rcout << ". Improved by " << (lp - lastlp) << ".";
-          rstan::io::rcout << std::endl;
-          rstan::io::rcout.flush();
-          m++;
-          if (sample_file_flag) { 
-            sample_stream << lp << ',';
-            model.write_csv(base_rng,params_r,params_i,sample_stream);
+            if (do_print(i, args.get_ctrl_optim_refresh()) || ret != 0 || !bfgs.note().empty()) {
+              rstan::io::rcout << " " << std::setw(7) << i << " ";
+              rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << lp << " ";
+              rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << bfgs.prev_step_size() << " ";
+              rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << bfgs.curr_g().norm() << " ";
+              rstan::io::rcout << " " << std::setw(10) << std::setprecision(4) << bfgs.alpha() << " ";
+              rstan::io::rcout << " " << std::setw(7) << bfgs.grad_evals() << " ";
+              rstan::io::rcout << " " << bfgs.note() << " ";
+              rstan::io::rcout << std::endl;
+              rstan::io::rcout.flush();
+            }
+
+            if (args.get_ctrl_optim_save_iterations()) {
+              sample_stream << lp << ',';
+              model.write_csv(base_rng,cont_params,disc_params,sample_stream);
+              sample_stream.flush();
+            }
           }
-        }
-        std::vector<double> params_inr_etc;
-        model.write_array(base_rng, params_r, params_i, params_inr_etc);
-        holder["par"] = params_inr_etc; 
-        holder["value"] = lp;
-        // holder.attr("point_estimate") = Rcpp::wrap(true); 
-
-        if (sample_file_flag) { 
+          if (ret >= 0) {
+            rstan::io::rcout << "Optimization terminated normally: ";
+          } else {
+            rstan::io::rcout << "Optimization terminated with error: ";
+          }
+          rstan::io::rcout << bfgs.get_code_string(ret) << std::endl;
+          
+          std::vector<double> params_inr_etc; // cont, disc, and others
+          model.write_array(base_rng,cont_params,disc_params,params_inr_etc);
+          holder["par"] = params_inr_etc; 
+          holder["value"] = lp; 
+          if (args.get_sample_file_flag()) { 
+            sample_stream << lp << ',';
+            print_vector(params_inr_etc, sample_stream);
+            sample_stream.close();
+          }
+        } else if (Newton == args.get_ctrl_optim_algorithm()) {
+          rstan::io::rcout << "STAN OPTIMIZATION COMMAND (Newton)" << std::endl;
+          if (args.get_sample_file_flag()) {
+            write_comment(sample_stream,"Point Estimate Generated by Stan (Newton)");
+            write_comment(sample_stream);
+            write_comment_property(sample_stream,"stan_version_major",stan::MAJOR_VERSION);
+            write_comment_property(sample_stream,"stan_version_minor",stan::MINOR_VERSION);
+            write_comment_property(sample_stream,"stan_version_patch",stan::PATCH_VERSION);
+            write_comment_property(sample_stream,"init",init_val);
+            write_comment_property(sample_stream,"seed",args.get_random_seed());
+            write_comment(sample_stream);
+  
+            sample_stream << "lp__,"; // log probability first
+            model.write_csv_header(sample_stream);
+          }
+          std::vector<double> gradient;
+          double lp = stan::model::log_prob_grad<true,true>(model, cont_params, disc_params, gradient);
+          
+          double lastlp = lp - 1;
+          rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
+          int m = 0;
+          while ((lp - lastlp) / fabs(lp) > 1e-8) {
+            R_CheckUserInterrupt(); 
+            lastlp = lp;
+            lp = stan::optimization::newton_step(model, cont_params, disc_params);
+            rstan::io::rcout << "Iteration ";
+            rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
+            rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
+            rstan::io::rcout << ". Improved by " << (lp - lastlp) << ".";
+            rstan::io::rcout << std::endl;
+            rstan::io::rcout.flush();
+            m++;
+            if (args.get_sample_file_flag()) { 
+              sample_stream << lp << ',';
+              model.write_csv(base_rng,cont_params,disc_params,sample_stream);
+            }
+          }
+          std::vector<double> params_inr_etc;
+          model.write_array(base_rng, cont_params, disc_params, params_inr_etc);
+          holder["par"] = params_inr_etc; 
+          holder["value"] = lp;
+          // holder.attr("point_estimate") = Rcpp::wrap(true); 
+  
+          if (args.get_sample_file_flag()) { 
+            sample_stream << lp << ',';
+            print_vector(params_inr_etc, sample_stream);
+            sample_stream.close();
+          }
+        } else if (Nesterov == args.get_ctrl_optim_algorithm()) {
+          rstan::io::rcout << "STAN OPTIMIZATION COMMAND (Nesterov)" << std::endl;
+          rstan::io::rcout << "stepsize = " << args.get_ctrl_optim_stepsize() << std::endl;
+          if (args.get_sample_file_flag()) {
+            write_comment(sample_stream,"Point Estimate Generated by Stan (Nesterov)");
+            write_comment(sample_stream);
+            write_comment_property(sample_stream,"stan_version_major",stan::MAJOR_VERSION);
+            write_comment_property(sample_stream,"stan_version_minor",stan::MINOR_VERSION);
+            write_comment_property(sample_stream,"stan_version_patch",stan::PATCH_VERSION);
+            write_comment_property(sample_stream,"init",init_val);
+            write_comment_property(sample_stream,"seed",args.get_random_seed());
+            write_comment_property(sample_stream,"stepsize",args.get_ctrl_optim_stepsize());
+            write_comment(sample_stream);
+  
+            sample_stream << "lp__,"; // log probability first
+            model.write_csv_header(sample_stream);
+          }
+  
+          stan::optimization::NesterovGradient<Model> ng(model, cont_params, disc_params,
+                                                         args.get_ctrl_optim_stepsize(),
+                                                         &rstan::io::rcout);
+          double lp = ng.logp();
+          double lastlp = lp - 1;
+          rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
+          int m = 0;
+          for (int i = 0; i < args.get_iter(); i++) {
+            R_CheckUserInterrupt(); 
+            lastlp = lp;
+            lp = ng.step();
+            ng.params_r(cont_params);
+            if (do_print(i, args.get_ctrl_optim_refresh())) {
+              rstan::io::rcout << "Iteration ";
+              rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
+              rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
+              rstan::io::rcout << ". Improved by " << (lp - lastlp) << ".";
+              rstan::io::rcout << std::endl;
+              rstan::io::rcout.flush();
+            }
+            m++;
+            if (args.get_sample_file_flag()) {
+              sample_stream << lp << ',';
+              model.write_csv(base_rng,cont_params,disc_params,sample_stream);
+            }
+          }
+  
+          std::vector<double> params_inr_etc; // continuous, discrete, and others 
           sample_stream << lp << ',';
-          print_vector(params_inr_etc, sample_stream);
-          sample_stream.close();
-        }
+          model.write_array(base_rng,cont_params,disc_params,params_inr_etc);
+          holder["par"] = params_inr_etc; 
+          holder["value"] = lp;
+          if (args.get_sample_file_flag()) { 
+            sample_stream << lp << ',';
+            print_vector(params_inr_etc, sample_stream);
+            sample_stream.close();
+          }
+        } 
         return 0;
       } 
-      
-      std::vector<Rcpp::NumericVector> chains; 
-      std::vector<double> mean_pars;
-      mean_pars.resize(initv.size(), 0);
-      double mean_lp;
-      std::vector<std::string> sampler_param_names;
-      std::vector<Rcpp::NumericVector> sampler_params;
-      std::string adaptation_info;
+      // method = 3 //sampling 
+      if (args.get_diagnostic_file_flag())
+        diagnostic_stream.open(args.get_diagnostic_file().c_str(), std::fstream::out);
 
-      for (unsigned int i = 0; i < qoi_idx.size(); i++) 
-        chains.push_back(Rcpp::NumericVector(iter_save)); 
-      if (sample_file_flag) {
+      if (args.get_sample_file_flag()) {
         write_comment(sample_stream,"Samples Generated by Stan");
         write_comment_property(sample_stream,"stan_version_major",stan::MAJOR_VERSION);
         write_comment_property(sample_stream,"stan_version_minor",stan::MINOR_VERSION);
         write_comment_property(sample_stream,"stan_version_patch",stan::PATCH_VERSION);
         args.write_args_as_comment(sample_stream); 
       } 
-
-      if (nondiag_mass) { 
-        stan::mcmc::nuts_nondiag<RNG> nuts_nondiag_sampler(model,params_r,params_i,
-                                                           max_treedepth, epsilon,
-                                                           epsilon_pm, epsilon_adapt,
-                                                           delta, gamma,
-                                                           base_rng);
-        args.set_sampler("NUTS(nondiag)");
-        nuts_nondiag_sampler.get_sampler_param_names(sampler_param_names);
-        for (size_t i = 0; i < sampler_param_names.size(); i++) 
-          sampler_params.push_back(Rcpp::NumericVector(iter_save));
-        if (sample_file_flag && !append_samples) {
-          sample_stream << "lp__,"; 
-          for (size_t i = 0; i < sampler_param_names.size(); i++) 
-            sample_stream << sampler_param_names[i] << ",";
-          model.write_csv_header(sample_stream);
-        } 
-        nuts_nondiag_sampler.set_error_stream(std::cout);  // cout intended
-        nuts_nondiag_sampler.set_output_stream(std::cout);
-            
-        sample_from(nuts_nondiag_sampler,epsilon_adapt,refresh,
-                    num_iterations,num_warmup,num_thin,
-                    sample_stream,sample_file_flag,params_r,params_i,
-                    model,chains,qoi_idx,mean_pars,mean_lp,sampler_params,
-                    adaptation_info,base_rng);
-      } else if (0 > leapfrog_steps && !equal_step_sizes) {
-        // NUTS II (with diagonal mass matrix estimation during warmup)
-        args.set_sampler("NUTS2"); 
-        stan::mcmc::nuts_diag<RNG> nuts2_sampler(model,params_r,params_i, 
-                                                 max_treedepth, epsilon, 
-                                                 epsilon_pm, epsilon_adapt,
-                                                 delta, gamma, 
-                                                 base_rng);
-
-
-        nuts2_sampler.get_sampler_param_names(sampler_param_names);
-        for (size_t i = 0; i < sampler_param_names.size(); i++) 
-          sampler_params.push_back(Rcpp::NumericVector(iter_save));
-            
-        // cut & paste (see below) to enable sample-specific params
-        if (sample_file_flag && !append_samples) {
-          sample_stream << "lp__,"; // log probability first
-          for (size_t i = 0; i < sampler_param_names.size(); i++)
-            sample_stream << sampler_param_names[i] << ","; 
-          model.write_csv_header(sample_stream);
-        }
-        nuts2_sampler.set_error_stream(rstan::io::rcout); // rcout intended as in Stan
-        nuts2_sampler.set_output_stream(rstan::io::rcout); 
-
-        sample_from(nuts2_sampler,epsilon_adapt,refresh,
-                    num_iterations,num_warmup,num_thin,
-                    sample_stream,sample_file_flag,params_r,params_i,
-                    model,chains,qoi_idx,mean_pars,mean_lp,sampler_params,
-                    adaptation_info,base_rng); 
-
-      } else if (0 > leapfrog_steps && equal_step_sizes) {
-        // NUTS I (unit mass matrix)
-        args.set_sampler("NUTS1"); 
-        stan::mcmc::nuts<RNG> nuts_sampler(model, params_r, params_i,
-                                           max_treedepth, epsilon, 
-                                           epsilon_pm, epsilon_adapt,
-                                           delta, gamma, 
-                                           base_rng);
-
-        nuts_sampler.get_sampler_param_names(sampler_param_names);
-        for (size_t i = 0; i < sampler_param_names.size(); i++) 
-          sampler_params.push_back(Rcpp::NumericVector(iter_save));
-        // cut & paste (see below) to enable sample-specific params
-        if (sample_file_flag && !append_samples) {
-          sample_stream << "lp__,"; // log probability first
-          nuts_sampler.write_sampler_param_names(sample_stream);
-          model.write_csv_header(sample_stream);
-        }
-        nuts_sampler.set_error_stream(rstan::io::rcout);  // rcout intended
-        nuts_sampler.set_output_stream(rstan::io::rcout); 
-        sample_from(nuts_sampler,epsilon_adapt,refresh,
-                    num_iterations,num_warmup,num_thin,
-                    sample_stream,sample_file_flag,params_r,params_i,
-                    model,chains,qoi_idx,mean_pars,mean_lp,sampler_params,
-                    adaptation_info,base_rng); 
-      } else {
-        // Stardard HMC
-        args.set_sampler("HMC"); 
-        stan::mcmc::adaptive_hmc<RNG> hmc_sampler(model,params_r,params_i,
-                                                  leapfrog_steps,
-                                                  epsilon, epsilon_pm, epsilon_adapt,
-                                                  delta, gamma,
-                                                  base_rng);
-
-        hmc_sampler.get_sampler_param_names(sampler_param_names);
-        for (size_t i = 0; i < sampler_param_names.size(); i++) 
-          sampler_params.push_back(Rcpp::NumericVector(iter_save));
-        // cut & paste (see above) to enable sample-specific params
-        if (sample_file_flag && !append_samples) {
-          sample_stream << "lp__,"; // log probability first
-          hmc_sampler.write_sampler_param_names(sample_stream);
-          model.write_csv_header(sample_stream);
-        }
-        hmc_sampler.set_error_stream(rstan::io::rcout); // rcout intended
-        hmc_sampler.set_output_stream(rstan::io::rcout); 
-        sample_from(hmc_sampler,epsilon_adapt,refresh,
-                    num_iterations,num_warmup,num_thin,
-                    sample_stream,sample_file_flag,params_r,params_i,
-                    model,chains,qoi_idx,mean_pars,mean_lp,sampler_params,
-                    adaptation_info,base_rng); 
-      }
-
-      if (iter_save_wo_warmup > 0) {
-        for (std::vector<double>::iterator it = mean_pars.begin(); 
-             it != mean_pars.end(); 
-             ++it) {
-          *it /= iter_save_wo_warmup;
-        }
-        mean_lp /= iter_save_wo_warmup;
+      if (args.get_diagnostic_file_flag()) {
+        write_comment(diagnostic_stream,"Samples Generated by Stan");
+        write_comment_property(diagnostic_stream,"stan_version_major",stan::MAJOR_VERSION);
+        write_comment_property(diagnostic_stream,"stan_version_minor",stan::MINOR_VERSION);
+        write_comment_property(diagnostic_stream,"stan_version_patch",stan::PATCH_VERSION);
+        args.write_args_as_comment(diagnostic_stream);
       } 
-      
-      if (sample_file_flag) {
-        rstan::io::rcout << "Sample of chain " 
-                         << chain_id 
-                         << " is written to file " << sample_file << "."
-                         << std::endl;
-        sample_stream.close();
-      }
-      if (refresh > 0) 
-        rstan::io::rcout << std::endl; 
-      
-      holder = Rcpp::List(chains.begin(), chains.end());
-      holder.attr("test_grad") = Rcpp::wrap(false); 
-      holder.attr("args") = args.stan_args_to_rlist(); 
-      holder.attr("inits") = initv; 
-      holder.attr("mean_pars") = mean_pars; 
-      holder.attr("mean_lp__") = mean_lp; 
-      holder.attr("adaptation_info") = adaptation_info;
-      // sampler parameters such as treedepth
-      Rcpp::List slst(sampler_params.begin(), sampler_params.end());
-      slst.names() = sampler_param_names;
-      holder.attr("sampler_params") = slst;
-      holder.names() = fnames_oi;
+     
+      int engine_index = 0;
+       
+      sampling_metric_t metric = args.get_ctrl_sampling_metric(); // unit_e, diag_e, dense_e;
+      int metric_index = 0;
+      if (UNIT_E == metric) metric_index = 0;
+      else if (DIAG_E == metric) metric_index = 1;
+      else if(DENSE_E == metric) metric_index = 2;
+      sampling_algo_t algorithm = args.get_ctrl_sampling_algorithm();
+      switch (algorithm) {
+         case Metropolis: engine_index = 3; break;
+         case HMC: engine_index = 0; break;
+         case NUTS: engine_index = 1; break;
+      } 
+
+      stan::mcmc::sample s(cont_params, disc_params, 0, 0);
+
+      int sampler_select = engine_index + 10 * metric_index;
+      if (args.get_ctrl_sampling_adapt_engaged())  sampler_select += 100;
+      switch (sampler_select) {
+        case 0: {
+          typedef stan::mcmc::unit_e_static_hmc<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_static_hmc<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 1: {
+          typedef stan::mcmc::unit_e_nuts<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_nuts<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 10: {
+          typedef stan::mcmc::diag_e_static_hmc<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_static_hmc<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 11: {
+          typedef stan::mcmc::diag_e_nuts<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_nuts<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 20: {
+          typedef stan::mcmc::dense_e_static_hmc<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_static_hmc<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 21: {
+          typedef stan::mcmc::dense_e_nuts<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_nuts<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 100: {
+          typedef stan::mcmc::adapt_unit_e_static_hmc<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_static_hmc<sampler_t>(&sampler, args);
+          init_adapt<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 101: {
+          typedef stan::mcmc::adapt_unit_e_nuts<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng);
+          init_nuts<sampler_t>(&sampler, args);
+          init_adapt<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 110: {
+          typedef stan::mcmc::adapt_diag_e_static_hmc<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          init_static_hmc<sampler_t>(&sampler, args);
+          init_adapt<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 111: {
+          typedef stan::mcmc::adapt_diag_e_nuts<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          init_nuts<sampler_t>(&sampler, args);
+          init_adapt<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 120: {
+          typedef stan::mcmc::adapt_dense_e_static_hmc<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          init_static_hmc<sampler_t>(&sampler, args);
+          init_adapt<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+          break;
+        }
+        case 121: {
+          typedef stan::mcmc::adapt_dense_e_nuts<Model, RNG_t> sampler_t;
+          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          init_nuts<sampler_t>(&sampler, args);
+          init_adapt<sampler_t>(&sampler, args);
+          execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                           sample_stream, diagnostic_stream, fnames_oi,
+                           base_rng);
+        }
+        default: 
+          throw std::invalid_argument("No sampler matching HMC specification!");
+      } 
       return 0;
     }
   }
 
-  template <class Model, class RNG> 
+
+
+  template <class Model, class RNG_t> 
   class stan_fit {
 
   private:
     io::rlist_ref_var_context data_;
     Model model_;
-    RNG base_rng; 
+    RNG_t base_rng; 
     const std::vector<std::string> names_;
     const std::vector<std::vector<unsigned int> > dims_; 
     const unsigned int num_params_; 
@@ -716,6 +1085,7 @@ namespace rstan {
     std::vector<std::string> names_oi_; // parameters of interest 
     std::vector<std::vector<unsigned int> > dims_oi_; 
     std::vector<size_t> names_oi_tidx_;  // the total indexes of names2.
+    // std::vector<size_t> midx_for_col2row; // indices for mapping col-major to row-major
     std::vector<unsigned int> starts_oi_;  
     unsigned int num_params2_;  // total number of POI's.   
     std::vector<std::string> fnames_oi_; 
@@ -779,13 +1149,13 @@ namespace rstan {
     stan_fit(SEXP data, SEXP cxxf) : 
       data_(Rcpp::as<Rcpp::List>(data)), 
       model_(data_, &rstan::io::rcout),  
+      base_rng(static_cast<boost::uint32_t>(std::time(0))),
       names_(get_param_names(model_)), 
       dims_(get_param_dims(model_)), 
       num_params_(calc_total_num_params(dims_)), 
       names_oi_(names_), 
       dims_oi_(dims_),
       num_params2_(num_params_),
-      base_rng(static_cast<boost::uint32_t>(std::time(0))),
       cxxfunction(cxxf)  
     {
       for (size_t j = 0; j < num_params2_ - 1; j++) 
@@ -793,6 +1163,7 @@ namespace rstan {
       names_oi_tidx_.push_back(-1); // lp__
       calc_starts(dims_oi_, starts_oi_);
       get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true); 
+      // get_all_indices_col2row(dims_, midx_for_col2row);
     }             
 
     /**
@@ -842,7 +1213,7 @@ namespace rstan {
      * @param upar The real parameters on the unconstrained 
      *  space. 
      */
-    SEXP log_prob(SEXP upar) {
+    SEXP log_prob(SEXP upar, SEXP jacobian_adjust_transform, SEXP gradient) {
       BEGIN_RCPP;
       using std::vector;
       vector<double> par_r = Rcpp::as<vector<double> >(upar);
@@ -855,12 +1226,24 @@ namespace rstan {
             << ").";
         throw std::domain_error(msg.str()); 
       } 
-      vector<stan::agrad::var> par_r2; 
-      for (size_t i = 0; i < par_r.size(); i++) 
-        par_r2.push_back(stan::agrad::var(par_r[i]));
       vector<int> par_i(model_.num_params_i(), 0);
-      SEXP lp = Rcpp::wrap(model_.log_prob(par_r2, par_i, &rstan::io::rcout).val());
-      return lp;
+      if (!Rcpp::as<bool>(gradient)) { 
+        if (Rcpp::as<bool>(jacobian_adjust_transform)) {
+          return Rcpp::wrap(stan::model::log_prob_propto<true>(model_, par_r, par_i, &rstan::io::rcout));
+        } else {
+          return Rcpp::wrap(stan::model::log_prob_propto<false>(model_, par_r, par_i, &rstan::io::rcout));
+        } 
+      } 
+
+      std::vector<double> gradient; 
+      double lp;
+      if (Rcpp::as<bool>(jacobian_adjust_transform)) 
+        lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      else 
+        lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
+      lp2.attr("gradient") = gradient;
+      return lp2;
       END_RCPP;
     } 
 
@@ -870,8 +1253,11 @@ namespace rstan {
      * 
      * @param upar The real parameters on the unconstrained 
      *  space. 
+     * @param jacobian_adjust_transform TRUE/FALSE, whether
+     *  we add the term due to the transform from constrained
+     *  space to unconstrained space implicitly done in Stan.
      */
-    SEXP grad_log_prob(SEXP upar) {
+    SEXP grad_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
       BEGIN_RCPP;
       std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
@@ -885,7 +1271,11 @@ namespace rstan {
       } 
       std::vector<int> par_i(model_.num_params_i(), 0);
       std::vector<double> gradient; 
-      double lp = model_.grad_log_prob(par_r, par_i, gradient, &rstan::io::rcout);
+      double lp;
+      if (Rcpp::as<bool>(jacobian_adjust_transform)) 
+        lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      else 
+        lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
       Rcpp::NumericVector grad = Rcpp::wrap(gradient); 
       grad.attr("log_prob") = lp;
       return grad;
@@ -909,7 +1299,8 @@ namespace rstan {
       Rcpp::List holder;
 
       int ret;
-      ret = sampler_command(args, model_, holder, names_oi_tidx_, fnames_oi_, base_rng);
+      ret = sampler_command(args, model_, holder, names_oi_tidx_, 
+                            fnames_oi_, base_rng);
       if (ret != 0) {
         return R_NilValue;  // indicating error happened 
       } 

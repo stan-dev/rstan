@@ -198,7 +198,10 @@ if_ndebug_defined <- function(str) {
 rm_rstan_makefile_flags <- function() {
   # remove flags in $HOME/.R/Makevars with #rstan 
   lmf <- last_makefile() 
-  if (!file.exists(lmf)) return(invisible(NULL))
+  if (!file.exists(lmf)) {
+    message("no user Makevars file found; nothing need be done.")
+    return(invisible(NULL))
+  }
   if (file.access(lmf, mode = 2) < 0) 
     stop(paste(lmf, " is not writable", sep = '')) 
   lmf_txt <- readLines(lmf, warn = FALSE) 
@@ -209,8 +212,12 @@ rm_rstan_makefile_flags <- function() {
   } 
   lmf_txt <- lmf_txt[!is.na(lmf_txt)] 
   cat(paste(lmf_txt, collapse = '\n'), file = lmf) 
-  message("compiler flags set by rstan are removed") 
+  message("compiler flags set by rstan are removed.") 
   invisible(NULL)
+} 
+
+reset_cppo <- function() {
+  rm_rstan_makefile_flags() 
 } 
 
 set_cppo <- function(mode = c("fast", "presentation2", "presentation1", "debug", "small"), NDEBUG = FALSE) { 
@@ -263,6 +270,8 @@ set_cppo <- function(mode = c("fast", "presentation2", "presentation1", "debug",
       new_r_xtra_cppflags <- sub("\\s*-DNDEBUG", " -DDEBUG", curr_r_xtra_cppflags, perl = TRUE) 
     else if (!curr_withdebug)
       new_r_xtra_cppflags <- paste(curr_r_xtra_cppflags, " -DDEBUG ")
+    else 
+      new_r_xtra_cppflags <- curr_r_xtra_cppflags
     msg <- paste('mode debug with DDEBUG for compiling C++ code is set')
   } else {
     new_cxxflags <- sub("-g", "", new_cxxflags, fixed = TRUE)
@@ -295,8 +304,7 @@ get_cppo <- function() {
   p <- match(o, c("3", "2", "1", "0", "s")) 
   with_ndebug <- grepl("DNDEBUG", curr_r_xtra_cppflags)
   with_debug <- grepl("DDEBUG", curr_r_xtra_cppflags)
-  l <- list(mode = c("fast", "presentation2", "presentation1", "debug", "small")[p],
-            NDEBUG = with_ndebug, 
-            DEBUG = with_debug) 
-  invisible(l)
+  list(mode = c("fast", "presentation2", "presentation1", "debug", "small")[p],
+       NDEBUG = with_ndebug, 
+       DEBUG = with_debug) 
 } 

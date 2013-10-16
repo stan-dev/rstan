@@ -12,6 +12,10 @@
 \usepackage{booktabs} 
 \usepackage{enumerate}
 \usepackage{alltt}
+\usepackage{multirow}
+\usepackage{makeidx}
+\usepackage{verbatimbox}
+
 
 \DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em,fontsize=\footnotesize} 
 \DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em,fontsize=\footnotesize} 
@@ -24,9 +28,12 @@
 \newcommand*{\Cpp}{C\raise.2ex\hbox{\footnotesize ++}\xspace} %\ensuremath{++}
 \newcommand{\clang}{{\ttfamily clang\raise.2ex\hbox{\footnotesize ++}}\xspace} 
 \newcommand{\gpp}{{\ttfamily g\raise.2ex\hbox{\footnotesize ++}}\xspace} 
+\newcommand{\clangpp}{{\ttfamily clang\raise.2ex\hbox{\footnotesize ++}}\xspace} 
 
 \providecommand{\T}{\rule{0pt}{2.6ex}}
 \providecommand{\B}{\rule[-1.2ex]{0pt}{0pt}}
+
+\providecommand{\rstanfunidx}[1]{\index{\pkg{rstan} functions!#1}}
 
 \newcommand{\acronym}[1]{{\sc #1}\xspace}
 
@@ -65,7 +72,7 @@
 %\VignetteIndexEntry{RStan} 
 
 % The next line is needed for inverse search...
-\SweaveOpts{concordance=TRUE, keep.source=TRUE}
+\SweaveOpts{concordance=TRUE, keep.source=TRUE, cache=TRUE}
 <<echo=false>>=
 options(width=60)
 @
@@ -73,7 +80,7 @@ options(width=60)
 \title{\RStan: the \R interface to \Stan} 
 
 \author{The Stan Development Team \\ stan@mc-stan.org}
-
+\makeindex
 
 \begin{document}
 
@@ -81,272 +88,494 @@ options(width=60)
 
 \tableofcontents
 
+\begin{abstract}
+In this vignette we present the \RStan package \pkg{rstan} for using Stan in \R. 
+\Stan is a package for obtaining Bayesian inference using the No-U-Turn sampler, a 
+variant of Hamiltonian Monte Carlo. We illustrate the features of \RStan through
+an example in \cite{GelmanCarlinSternRubin:2003}.
+\end{abstract}
+
+
 \section{Introduction}
 
-This is a short introduction to \RStan \footnote{The name of this package is
-\pkg{rstan}, so we should use \code{library(rstan)} to load it in \R.}, 
-the \R interface to \Stan. Users of \RStan need to be familiar with \Stan first,
-especially the \Stan modeling language.  Details about \Stan can be found in 
-\emph{Stan Modeling Language User's Guide and Reference
-Manual} (\citealt{StanManual:2013}), so we focus on how to use \RStan by an
-example in \cite{GelmanCarlinSternRubin:2003} here. 
+\Stan is a \Cpp program for Bayesian modeling and inference
+that uses the No-U-Turn sampler (NUTS) (\citealt{hoffman-gelman:2012})
+to obtain posterior simulation given user-specified model and data. 
+The \R package, \pkg{rstan} allows one to conveniently run \Stan
+within \R (\citealt{rprj}) and to access \Stan output, which includes
+posterior inferences and also intermediate quantities such as evaluation
+of the log posterior density and its gradients, which can be useful
+in diagnostics. The website for \Stan and \RStan, \url{http://mc-stan.org},
+provides up-to-date information about how to operate \Stan and \RStan.
+For example, ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
+provides information on how to install package \pkg{rstan} in \R, demonstrating
+with two examples.  The present article provides 
+a complete introduction to the functionality of package \pkg{rstan}. 
+As a complement to the documentation about functions and classes in package
+\pkg{rstan}, this vignette provides pointers to many functions in 
+\pkg{rstan} from the user's perspective.
+
+
+We start with the prerequisites for using \pkg{rstan} 
+(section \ref{subsec0pre}) and a typical workflow of using \Stan
+and \RStan (section \ref{subsec0workflow}). 
+In section \ref{sec0example} and \ref{sec0examplesteps}, we use an example
+to illustrate the process of using \pkg{rstan} to conduct Bayesian model
+estimation.
+Section \ref{sec0moredetails} presents further details on \pkg{rstan}. 
+Section \ref{sec0parallel} describes how to run multiple chains in parallel. 
+In section \ref{sec0workwstan}, we discuss some functions that \pkg{rstan}
+provides to help use \Stan from the command line. 
+
 
 \subsection{Prerequisites} 
+\label{subsec0pre}
 
-Although we refer to \RStan as an \R interface to \Stan, \RStan does not 
-need \Stan to be installed. However, we need a \Cpp compiler as needed by
-\Stan. Refer to \cite{StanManual:2013} for how to install a \Cpp compiler if there 
-not exists one. 
+Users need to know how to specify statistical models 
+using the \Stan modeling language, which is detailed 
+in the manual of \Stan (\citealt{StanManual:2013}).
+We give an example below. 
 
-In addition, package \pkg{rstan} depends on other \R packages: \cpkg{Rcpp}, \cpkg{inline},
-and \cpkg{RcppEigen}. Before installing \RStan, these packages 
-need to be installed first if not installed automatically. 
+The package \pkg{rstan} cannot currently be installed via CRAN, the 
+``Comprehensive \R Archive Network.'' Instead,
+they can be installed following the instructions, ``Running
+Stan from \R,'' accessible from \url{http://mc-stan.org}. 
+As part of this, a \Cpp compiler is required (or can be installed
+following the instruction on that page). 
 
-\subsection{Overview of using \RStan}
+The package \pkg{rstan} needs a \Cpp compiler to compile models the same as in \Stan. 
+To install a \Cpp compiler and make sure that it is accessible
+in \R,  refer to ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
+and the manual of \Stan. 
 
-First, we can summarize the steps of using \Stan to conduct 
-statistical inference simply as follows. 
-\begin{enumerate}[I]
-\item Represent the statistical model in \Stan modeling language 
-\item Translate model coded in \Stan modeling language to \Cpp code using \stanc 
-\item Compile the \Cpp code for the model using a \Cpp compiler such as \gpp to 
-      create an executable file 
-\item Prepare Data  
-\item Run the executable to generate sample 
-\item Conduct model inference based on the sample 
+Package \pkg{rstan} depends on other two \R packages: \cpkg{Rcpp}
+(\citealt{rcpp}) and \cpkg{inline}.  \cpkg{Rcpp} helps bridge the \R code and
+\Stan's \Cpp code.  The package \cpkg{inline} facilitates compiling the \Cpp
+code for \Stan model and make it possible to run the compiled model in \R.
+
+\subsection[Typical workflow of using RStan]{Typical workflow of using RStan}
+\label{subsec0workflow}
+
+\Stan has a modeling language, which is similar to 
+but not identical to that of the Bayesian graphical modeling package 
+BUGS (\citealt{WinBUGS}). \Stan uses the program 
+\stanc\footnote{Using \Stan from the
+command line, \code{stanc} is an executable program.} %
+to translate a model expressed in \Stan modeling language to \Cpp code. The \Cpp code
+is then compiled to an executable program by using a \Cpp compiler such as
+\gpp\footnote{\url{http://gcc.gnu.org}} or \clangpp\footnote{\url{http://clang.llvm.org}}.
+The resulting program can be executed to draw samples given data and other input. 
+In summary, the following are typical steps of using \Stan. 
+\begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
+\item Represent a statistical model by writing its log posterior
+      density (up to an arbitrary normalizing constant that does not 
+      depends on the unknown parameters in the model); this can be done 
+      using \Stan modeling language. 
+\item Translate the model coded in \Stan modeling language to \Cpp code using \stanc 
+\item Compile the \Cpp code for the model using a \Cpp compiler to
+      create a dynamic shared object (DSO), also called a dynamic link library (DLL), 
+      that can be loaded by \R.
+\item Run the DSO to sample from the posterior distribution
+\item Diagnose convergence of the MCMC chains of samples
+\item Conduct model inference based on the samples 
 \end{enumerate}
 
-In \RStan, we have the same steps as in \Stan but packaged 
-in different functions. Knowing these steps is helpful especially
-in the case we encounter problem with our coding. In \RStan, 
-we provide a function called \code{stan} to wrap up
-most of the above steps. 
+Steps c, d, and e above are all performed implicitly by
+a single \pkg{rstan} call. 
 
-
-\section{An example of using \RStan} 
+\section[An example of using rstan]{An example of using \pkg{rstan}}
 \label{sec0example} 
 
-In this section, we use an example to demonstrate using \RStan. 
-In section 5.5 of \cite{GelmanCarlinSternRubin:2003}, a hierarchical model is used to model 
-coaching effects from eight schools. For short, we call this example ``eight schools.'' 
-The data are given in table
-\ref{tab08schoolsdata}. 
+In section 5.5 of \cite{GelmanCarlinSternRubin:2003}, a hierarchical model is
+used to model the effect of coaching programs on for college admissions 
+tests.  The data, shown in Table~\ref{tab08schoolsdata}, summarize the results
+of experiments conducted in eight high schools, with an estimated standard 
+error for each, and these data and model are of historical interest as an example
+of full Bayesian inference (\citealt{Rubin1981}). 
+We use this example here for its simplicity and because it represents a nontrivial
+Markov chain simulation problem in that there is dependence between the parameters 
+of original interest in the study---the effects of coaching in each of the eight 
+schools--and the hyperparameter representing the variation of these effects in the 
+modeled population.  Certain implementations of the Gibbs sampler or Hamiltonian 
+Monte Carlo can be slow to converge in this example. 
+For short, we call this example ``eight schools.'' 
 The statistical model is specified as 
 \begin{align}
-y_j &\sim \text{normal}(\theta_j, \sigma_j), \quad j=1,\ldots,8, \label{eq08schoolmodeleq1} \\ 
-\theta_1, \ldots, \theta_8 &\overset{IID}{\sim} \text{normal}(\mu, \tau^2), 
+y_j &\sim \text{normal}(\theta_j, \sigma_j^2), \quad j=1,\ldots,8 \\ 
+\theta_1, \ldots, \theta_8 &\sim \text{normal}(\mu, \tau^2), 
 \end{align} 
-where in \eqref{eq08schoolmodeleq1}, $\sigma_j$ is known. 
-Further we have prior for $(\mu, \tau)$ as specified in \cite{GelmanCarlinSternRubin:2003}. 
+which the $\sigma_j$'s assumed known and a uniform prior 
+density, $p(\mu, \tau) \propto 1$. 
 
-\begin{table}[ht]
-\centering 
-\caption{Data of Eight schools example}
-\label{tab08schoolsdata}
-\begin{tabular}{ccc} 
-\toprule 
-School  & 
-\begin{minipage}[t]{0.16\columnwidth}%
-Estimated treatment effect, $y_j$ 
-\end{minipage} &
-\begin{minipage}[t]{0.16\columnwidth}%
-s.e.\ of effect estimate, $\sigma_j$  
-\end{minipage}  \\
-\midrule
-A     &  28   & 15  \\
-B     &   8   & 10  \\
-C     &  -3   & 16  \\
-D     &   7   & 11  \\
-E     &  -1   &  9  \\
-F     &   1   & 11  \\
-G     &  18   & 10  \\
-H     &  12   & 18  \\
-\bottomrule
+\begin{table}
+\begin{center}\begin{tabular}{ccc}
+&\multicolumn{1}{c}{Estimated}&\multicolumn{1}{c}{Standard error}\\
+&\multicolumn{1}{c}{treatment}&\multicolumn{1}{c}{of effect}\\
+School&\multicolumn{1}{c}{effect, $y_j$}&
+\multicolumn{1}{c}{estimate, $\sigma_j$}\\\hline
+A& \ 28 & 15 \\
+B& \ \,\, 8 & 10 \\
+C& $\,-3$ & 16 \\
+D& \ \,\, 7 & 11 \\
+E& $\,-1$ & \ 9 \\
+F& \ \,\, 1 & 11 \\
+G& \ 18 & 10 \\
+H& \ 12 & 18
 \end{tabular}
+\end{center}
+\caption{Observed effects of coaching on college admissions test scores in
+eight schools.  We fit these data using a hierarchical model allowing variation
+between schools.}
+\label{tab08schoolsdata}
 \end{table}
 
 
-In both \Stan and \RStan, we first represent this model in 
-\Stan modeling language. \RStan allows the model to be coded 
-in a text file or a character string in \R. 
-Here we use a character string. 
+\subsection{Express the model in Stan}
+
+We first need to express this model in 
+\Stan modeling language. \pkg{rstan} allows a model to be coded 
+in a text file (typically with suffix \code{.stan}) or a character string in \R. 
+We put the following plain text in file schools.stan: 
+\begin{Schunk}
+\begin{Sinput}
+data {
+  int<lower=0> J; // number of schools 
+  real y[J];      // estimated treatment effects
+  real<lower=0> sigma[J]; // s.e. of effect estimates 
+}
+parameters {
+  real mu; 
+  real<lower=0> tau;
+  vector[J] eta;
+}
+transformed parameters {
+  vector[J] theta;
+  theta <- mu + tau * eta;
+}
+model {
+  eta ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+}
+\end{Sinput}
+\end{Schunk} 
+
+The first paragraph of the above code specifies the data:  the number of
+schools, $J$; the vector of estimates, $y_1,\dots,y_J$; and the standard
+errors, $\sigma_{1},\dots\sigma_{J}$.  Data are labeled as integer or real and
+can be vectors (or, more generally, arrays) if dimensions are specified.  Data
+can also be constrained; for example, in the above model $J$ has been
+restricted to be nonnegative and the components of $\sigma_y$ must all be
+positive.
+
+The code next introduces the parameters:  the unknowns to be estimated in the
+model fit.  These are the school effects, $\theta_j$; the mean, $\mu$, and
+standard deviation, $\tau$, of the population of school effects, the
+school-level errors $\eta$, and the effects, $\theta$.  In this model, we let
+$\theta$ be a transformed parameters of $\mu$, $\tau$, and $\eta$ instead of
+directly declaring $\theta$ as a parameter. By parameterizing this way, the
+sampler runs more efficiently; the resulting multivariate geometry is better
+behaved for Hamiltonian Monte Carlo (\citealt{Neal:2011}).
+
+Finally comes the model, which looks similar to standard statistical notation.
+(Just be careful:  the second argument to Stan's normal$(\cdot,\cdot)$
+distribution is the standard deviation, not the variance as is usual in
+statistical notation.)  We have written the model in vector notation, which
+allows Stan to make use of more efficient algorithmic differentiation (AD).  It
+would also be possible to write the model more explicitly, for example
+replacing \verb+y ~ normal(theta,sigma);+ with a loop over the $J$ schools,
+\verb+for (j in 1:J) y[j] ~ normal(theta[j],sigma[j]);+\,.
+
+
+\subsection{Prepare data}
+
+\pkg{rstan} accepts data as a \code{list} or an \code{environment}. 
+To prepare the data in \R, we create a \code{list} as follows. 
 <<echo=TRUE>>=
-library(rstan) 
-schools_code <- '
-  data {
-    int<lower=0> J; // number of schools 
-    real y[J]; // estimated treatment effects
-    real<lower=0> sigma[J]; // s.e. of effect estimates 
-  }
-  parameters {
-    real mu; 
-    real<lower=0> tau;
-    real eta[J];
-  }
-  transformed parameters {
-    real theta[J];
-    for (j in 1:J)
-      theta[j] <- mu + tau * eta[j];
-  }
-  model {
-    eta ~ normal(0, 1);
-    y ~ normal(theta, sigma);
-  }
-'
+schools_data <- 
+  list(J=8, 
+  y=c(28,  8, -3,  7, -1,  1, 18, 12),
+  sigma=c(15, 10, 16, 11,  9, 11, 10, 18))
 @
 
-\RStan accepts data as a \code{list}, an \code{environment}, or a vector of characters
-containing object names in the working space. So to prepare the data
-in \R, we create a \code{list} as follows. 
+Often we would already have the elements of the data for a model
+defined in our workspace. In \pkg{rstan}, a convenient way is to 
+provide just the names instead of creating a new list. The following
+\R code demonstrates this feature. 
 <<echo=TRUE>>=
-dat <- list(J = 8, 
-            y = c(28,  8, -3,  7, -1,  1, 18, 12),
-            sigma = c(15, 10, 16, 11,  9, 11, 10, 18))
+J <- 8
+y <- c(28,  8, -3,  7, -1,  1, 18, 12)
+sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
+schools_data <- c("J", "y", "sigma") 
 @
 
-Next, we can call function \code{stan} to sample from the model. 
-<<echo=TRUE, results=hide>>=
-fit <- stan(model_code = schools_code, data = dat, 
-            iter = 1000, chains = 4)
+It would also be possible (indeed, encouraged) to read in the data
+from a file rather than to directly enter 
+the numbers in the \R script. 
+
+\subsection{Sample from the posterior distribution}
+\label{subsec0stansampling}
+
+Next, we can call function \code{stan} to draw posterior samples:
+<<callstan, echo=TRUE, results=hide, cache=TRUE>>=
+library(rstan)
+fit1 <- stan(file="schools.stan", data=schools_data, 
+             iter=100, chains=4)
 @
 
-
-Function \code{stan} wraps up the follow three steps. These steps are similar to some
-steps mentioned above for \Stan. But \RStan has a deep integration of \Stan, which 
-allows end-to-end use of \Stan inside \R. 
-\begin{enumerate}
-\item Translate the model in \Stan code to \Cpp code 
-\item Compile the \Cpp code to binary dynamic shared object (DSO)
-\item Load the DSO and sample 
+Function \code{stan} wraps the following three steps: 
+\begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
+\item Translate a model in \Stan code to \Cpp code 
+\item Compile the \Cpp code to a dynamic shared object (DSO) and load the DSO
+\item Sample given some user-specified data and other settings
 \end{enumerate}
 
-Notice it is easy to just use function \code{stan} to conduct all the above
-steps if everything goes well. \RStan also provides functionality to fit a
-model by several steps to make it easier to debug our \Stan model code and \R
-code. 
+A single call to \code{stan} performs all three steps, but they can also be  
+executed one by one, which can be useful for debugging.   In addition, \Stan
+saves the DSO so that when the same model is fit again (possibly with new
+data), function \code{stan} can be called so that only the third step is performed, thus
+saving compile time.
 
-Function \code{stan} returns an object of S4 class \code{stanfit}, for which
-a few generic methods such as \code{print} and \code{plot} are provided. 
+Function \code{stan} returns an object of S4\footnote{For those who are not familiar 
+with the concept of class and S4 class in \R, refer to \cite{chambers2010software}. 
+Simply speaking, a class consists of some attributes (data) to model an object and 
+some methods to model the behavior of the object. From a user's perspective,  
+once a \code{stanfit} object is created, we are mainly concerned about what methods 
+are defined for class \code{stanfit}.} class \code{stanfit}.
+If no error occurs, the returned \code{stanfit} 
+object includes the samples drawn from the posterior distribution for the 
+model parameters and other quantities defined in the model. 
+If there is an error (for example, when we have syntax error in our \Stan code),
+\code{stan} will either quit or return a \code{stanfit} object that contains no
+sample but the DSO. Including the DSO as part of a \code{stanfit} object
+allows it to be reused so that compiling the same model could be avoided when
+we want to sample again with the same or different input of data and other settings.
+Also if an error happens after the model is compiled but before sampling (for
+example, problems with input such as data and initial values),
+we can reuse the previous compiled model. 
+For class \code{stanfit}, many methods such as \code{print} and \code{plot} 
+are defined to work with the samples and conduct model inference. For example, 
+the following shows a summary of the parameters for our
+example using function \code{print}.
 <<echo=TRUE>>=
-print(fit)
+print(fit1, pars=c("theta", "mu", "tau", "lp__"), 
+      probs=c(.1,.5,.9))
 @
+
+The last line of this output, {\tt lp\_\_}, is the logarithm of the
+(unnormalized) posterior density as calculated by Stan while performing the
+Hamiltonian Monte Carlo algorithm.  This log density can be used in various
+ways for model evaluation and comparison (see, e.g., \citealt{Vehtari2012}).
+%Vehtari, A., and Ojanen, J. (2012). A survey of Bayesian predictive methods
+%for model assessment, selection and comparison. 
+%Statistics Surveys 6, 142-228. 
+
 
 \section{Eight schools example step by step}
 \label{sec0examplesteps} 
 
-In section \ref{sec0example}, the eight schools example is fitted in \RStan
-just using function \code{stan}. However, in our actual development of modeling
-and coding, we can use a few steps to have a working model. \RStan also 
-provides functionality to fit a model step by step as using \Stan. 
+In this section, we dive into the functions in \pkg{rstan} that implement
+the three steps of translating, compiling and loading, and sampling. 
+Using these functions individually, we an fit a model in \pkg{rstan}
+in multiple steps as in \Stan.
 
-First, we can use \code{stanc} function to translate the model in \Stan
-modeling language to \Cpp code. In the case that we have syntax errors in the 
+First, we can use \code{stanc}\rstanfunidx{stanc} function to translate the
+model in \Stan modeling language to \Cpp code.  A list is returned from
+\code{stanc} with one element being the generated \Cpp code for the model,
+which might be helpful for advanced users.  When we have syntax errors in the 
 model's \Stan code, the error information from \code{stanc} would 
-be reported to help debug. For the eight schools example, we use 
+be reported to help debug.  For the eight schools example, we use 
 <<echo=TRUE, results=hide>>=
-rt <- stanc(model_code = schools_code, model_name = '8schools') 
+rt <- stanc(file = "schools.stan",
+            model_name = '8schools') 
 @
 
-Second, after we have successfully translated out model to \Cpp code, we can
-use function \code{stan\_model} to compile the \Cpp code and load the 
-dynamic shared object of the model into \R, which is represented 
-by S4 class \code{stanmodel}. In this step (as in calling
-\code{stan}), a lot of intermediate message such as the \Cpp code and warning
-message from the \Cpp compiler during compiling the \Cpp
-code might be spewed out especially if \code{verbose = TRUE}. 
+Second, after translating a model from \Stan code to \Cpp code, we can
+use function \code{stan\_model}\rstanfunidx{stan\_model} to compile the \Cpp
+code to a DSO and load the DSO into \R. 
+In this step (as in calling \code{stan}), the
+\Cpp compiler might spew out a lot of intermediate message such as the \Cpp
+code and warning message especially if argument \code{verbose} is \code{TRUE}.
 In most cases, these messages can be ignored unless there is an error. 
-<<echo=TRUE, results=hide>>=
+<<callstanmodel, echo=TRUE, results=hide, cache = TRUE>>=
 sm <- stan_model(stanc_ret = rt, verbose = FALSE)
 @
 
 Also we can construct a model from the model's \Stan code
-using \code{stan\_model}, which in this case includes the step of translating 
-the model to \Cpp using \code{stanc}. 
-<<echo=TRUE, results=hide>>=
-sm <- stan_model(model_code = schools_code, model_name = '8schools', 
-                 verbose = FALSE)
+using function \code{stan\_model}. If the input 
+for \code{stan\_model} is given by argument \code{file} or \code{model\_code}
+that provides the \Stan code for a model, function \code{stanc} will
+be called inside \code{stan\_model} to translate the model from \Stan code to
+\Cpp code.
+<<callstanmodel2, echo=TRUE, results=hide, cache=TRUE>>=
+sm <- stan_model(file="schools.stan",
+                 model_name='schools', 
+                 verbose=FALSE)
 @
 
-Last, we can use method \code{sampling} associated with 
-S4 class \code{stanmodel} to simulate sample from the posterior
-distribution. 
-<<echo=TRUE, results=hide>>= 
-fit <- sampling(sm, data = dat, chains = 4)
+Function \code{stan\_model} returns an object of S4 class \code{stanmodel}
+that comprises of mainly the DSO for the model. The most important 
+method defined for S4 class \code{stanmodel} is \code{sampling}\rstanfunidx{sampling}, 
+which calls \Stan's sampler to sample from the posterior distribution with
+input of data, initial values, and other specification of sampling
+parameters such as \code{chains} (number of chains) and \code{iter} (number of
+iterations). 
+<<callcampling, echo=TRUE, results=hide, cache=TRUE>>= 
+fit <- sampling(sm, data=schools_data, chains=4)
 @
 
-The returned object from the above \code{sampling} is an object
-of S4 class \code{stanfit}, the same type of result returned 
-by function \code{stan}. Also we have a variety of 
-arguments to control the sampling procedure the same as in 
-function \code{stan}, since inside function \code{stan}, function
-\code{sampling} is called. 
+In fact, the final step in function \code{stan} is to call 
+\code{sampling} for a \code{stanmodel} object created during the process.  
+Method \code{sampling} returns an object
+of S4 class \code{stanfit} as discussed in section \ref{subsec0stansampling}. 
+Also the arguments to control the sampling procedure
+are the same as those for function \code{stan}. 
+
+\section[Advanced features]{Advanced features}
+\label{sec0moredetails}
+
+In this section, we discuss more details and other advanced 
+features of \pkg{rstan}. The details regard to 
+the arguments of function \code{stan}, data preprocessing for the data passed 
+to \Stan, and S4 class \code{stanfit}.  
+Advanced features include using the log posterior function in \R defined by 
+a model (with specific data) and the function for computing the gradients. 
+In addition, we discuss optimizer's in \Stan, which can be used 
+to obtain a point estimate. 
 
 
-For the fitted object, S4 class \code{stanfit}, currently,
-we have defined generic methods such as \code{print},
-\code{summary}, \code{plot}, \code{traceplot}, \code{get\_stancode}, etc. 
-Using these functions, we first can assess the convergence
-of the Markov chains by looking at the trace plots and calculating 
-the split Rhats.  The inference based on the sample after 
-warmup (known as `burnin' period) can be obtained by \code{summary}
-function and printed out by \code{print}. Also the sample saved 
-could be extracted in a couple of ways using function \code{extract}. 
-By default, in the summaries for the model, we also include 
-the log-posterior for each iteration with name \code{lp\_\_}. 
-
-In addition, in the \code{stanfit} object, we keep all 
-the information regarding the sampling procedure, for example, the initial
-values for all parameters, the seed for random number generating,
-and parameters used for the sampler. 
-
-\section{More details about using RStan}
-
-Details about \pkg{rstan} and the usage of its functions could be 
-found inside \pkg{rstan}'s documentation. We talk about a few important
-points here. 
-
-\subsection{Arguments of function \code{stan}} 
+\subsection[Arguments of function stan]{Arguments of function \code{stan}} 
 
 The arguments for sampling (in function \code{stan} and 
-\code{sampling}) mainly include data and defining the settings of 
-the sampler such as \code{chains}, \code{iter}, and \code{warmup}. 
+\code{sampling}) mainly include data, initial values, and the settings 
+to control the sampler 
+such as \code{chains}, \code{iter}, and \code{warmup}. 
 In particular, \code{warmup} specifies the number of iterations 
-in which the NUTS sampler is in status of adaptation (hence
-the sample should not be used for inference). 
-After the warmup period, the sampler turns off adaptation. 
-The summaries are calculated using the sample after warmup period. 
+that are used by NUTS sampler (or other samplers implemented in \Stan) in the
+phase of adaptation.  After the warmup, the sampler turns off adaptation. 
+For some sampler, as there is no theoretical guarantee that the samples 
+are drawn from the object distribution during warmup, the samples should not be
+used for inference.  So the summaries for the parameters printed out by methods 
+\code{print} are calculated using only the samples after warmup.
 
-When the user is trying to specify the initial values for the parameters (i.e., 
-specifying \code{init} as a list of lists), 
-currently, \pkg{rstan} does not allow partially 
-specifying initial values so that initial values for all parameters
-need to be given. 
+For function \code{stan}, argument \code{init} is used for specifying
+the initial values.  There are several options for \code{init} and the 
+details can be found in the documentation of function \code{stan}. Here
+we just point out that currently it does not allow partially specifying initial
+values. So if we want to specify the initial values for running a chain, the \R
+list needs to include values for all parameters. 
 
-\subsection{Fitted model in S4 class \code{stanfit}} 
 
-In \RStan, we wrap the fitted model in an S4 class \code{stanfit}. Generic
-functions defined for this class includes \code{print} (demonstrated in 
-Section \ref{sec0example}), \code{plot}, \code{summary},
-\code{traceplot}, etc. A common feature for most of these functions are that they allow us 
-to specify parameters of interest through \code{pars} so that only part of 
-the results for the fitted model are, for example, printed (plotted), which
-could be helpful when there are too many parameters in the model.  
 
-Function \code{plot} intends to give us an overview of the inference 
+\Stan uses a random number generator (RNG) that supports parallelism.
+The initialization of the RNG is determined by arguments \code{seed}
+and \code{chain\_id}.  So even we are sampling
+multiple chains use one function call of \code{stan}, we only need to specify one
+seed, which is randomly generated in \R if not specified. 
+
+Through changing some of augments for calling function \code{stan}, we
+can use other samplers implemented by \Stan such as HMC (\citealt{Neal:2011}). All the details
+can be found in the help documentation of function \code{stan}. As \Stan
+and \RStan is being actively developed, other samplers might be 
+added.  The help documentation in package \pkg{rstan} should always have the
+up-to-date details.
+
+The test gradient mode in \Stan can be used by setting argument 
+\code{test\_gard} to \code{TRUE}. As in \Stan, the test gradient mode
+will not sample from the posterior distribution, but only print out the
+gradients for the log probability density function at an initial point
+calculated by approaches of both the algorithmic differentiation (AD) in \Stan
+and finite difference.  The \code{stanfit} object returned from \code{stan} 
+will be in test gradient mode and will not contain any sample.
+
+\subsection{Data preprocessing and passing}
+
+The data passed to \code{stan} will go through a preprocessing procedure. 
+The details of this preprocessing is documented in the help 
+for function \code{stan}. Here we stress a few important steps.  
+First, \pkg{rstan} allows to specify more than what is really needed 
+in that \Stan only looks for the data elements from the input \R list with the
+names declared in the data block of the model specification. In general, an
+element in the input \R list should be numeric data and its dimension should
+match the declaration in the model specification.
+So for example, \code{factor} type in \R is not supported as data element for \RStan.
+\Stan modeling language differentiates data of types of integer and double
+(type \code{int} and \code{real} in Stan modeling language,
+respectively). But typically in \R, we are using type of \code{double}
+most of the time since that is the default in \R. So an important data 
+preprocessing step inside function \code{stan} is to convert some data to type
+of \code{integer} if possible. 
+
+In \Stan, we have scalars and other types that are a set
+of scalars (for example, vectors and matrices). 
+As \R does not have scalars, the behavior of \pkg{rstan} is to treat vector
+length 1 to be a scalar. However, we might have a model with data block 
+defined as in Figure~\ref{fig0datablock}, in which $N$ can be $1$ as a special case.
+So if we know that $N$ is always larger than $1$, we can use a vector of length $N$ in \R
+as the data input for $y$ (for example, a vector created by ``\code{y <- rnorm(N)}''). 
+If we want to prevent \pkg{rstan} from treating the input data for $y$ as a scalar when $N=1$,
+we need to explicitly make it an array as the following \R code shows.
+
+<<echo=TRUE>>=
+y <- as.array(y)
+@
+
+
+\begin{verbbox}
+
+ data {                
+   int<lower=0> N;      
+   real y[N];
+ } 
+
+\end{verbbox} 
+
+\begin{figure}[hb]
+\centering
+\frame{
+\theverbbox
+}
+\caption{Data block of an example model in \Stan code}
+\label{fig0datablock} 
+\end{figure}
+
+
+As Stan cannot handle missing values in data automatically, all elements of
+data cannot contain \code{NA} in \R. An important step in \pkg{rstan}'s data
+preprocessing is to check missing values and issue an error if any.
+
+
+\subsection[Methods of class stanfit]{Methods of class \code{stanfit}} 
+
+For the fitted object represented by S4 class \code{stanfit}, we have defined methods such as
+\code{print}, \code{summary}, \code{plot}, and \code{traceplot}.  Using these
+methods, we first can assess the convergence of the Markov chains by looking
+at the trace plots and calculating the split $\hat{R}$.\footnote{Split
+$\hat{R}$ is a revised version of $\hat{R}$ statistic proposed in
+\cite{GelmanRubin:1992}: the split $\hat{R}$ is based on splitting each chain
+into two halves. See \Stan manual for more details.} %
+The summaries including mean, standard deviation, quantiles of interest, split
+$\hat{R}$, and effective sample sizes based on the samples after warmup phase
+can be obtained by \code{summary}\rstanfunidx{summary} method.  Method
+\code{print}\rstanfunidx{print} prints some of the summaries for all chains
+combined (demonstrated in Section \ref{sec0example}) and
+method \code{plot}\rstanfunidx{plot} provides an overview plot.
+
+Method \code{plot} intends to give us an overview of the inference 
 for all the parameters (if possible) in the model. 
-Figure \ref{fig0stanfitplot} presents the plot of the eight schools example. 
-In this plot, an credible interval (typically 80\%) for all the sample
-as well as the log-posterior (\code{lp\_\_}), 
+Figure~\ref{fig0stanfitplot} presents the plot of the eight schools example. 
+In this plot, credible intervals (by default 80\%) for all the parameters
+as well as \code{lp\_\_} (the log of posterior density function up to an additive
+constant), 
 and the median of each chain are displayed. In addition, under the lines
-indicating intervals, a small colored area is used to indicate the 
-value of split Rhat, in which the color indicates the value of Rhat. 
-
-Function \code{traceplot} plot the traces of all chains for the parameters 
-specified. If we include the warmup sample by setting \code{inc\_warmup = TRUE} (the 
+representing intervals, small colored areas are used to indicate which range the 
+value of split $\hat{R}$ is in.
+Method \code{traceplot}\rstanfunidx{traceplot} plots the traces of
+all chains for the parameters 
+specified. If we include the warmup sample by setting \code{inc\_warmup=TRUE} (the 
 default), the background color of the warmup area is different from after warmup.   
-We can exclude the warmup area by specifying \code{inc\_warmup = FALSE}.
-The example for parameter $\theta$
-of the eight schools model is presented in Figure~\ref{fig0stanfitplot}. 
+An example for parameter $\tau$ in the eight schools example is presented in
+Figure~\ref{fig0stanfittraceplot}.
+
 \begin{figure}[ht]
 \centering
 <<echo=false, fig=TRUE, label=stanfit_plot>>=
@@ -362,17 +591,26 @@ plot(fit)
 traceplot(fit, pars = "tau")
 @
 \caption{Trace plots of $\tau$ in the eight schools model} 
-\label{fig0stanfittplot}
+\label{fig0stanfittraceplot}
 \end{figure}
 
-Another important function for \code{stanfit} is \code{extract}, 
-which provides different ways to access the sample. If \code{permuted = TRUE}
-for calling \code{extract}, the sample after warmup period 
-are returned in an permuted order as a list, each element of which is the 
-sample for a parameter.  When \code{permuted = FALSE}, we could extract sample for 
-parameters with or without warmup depending on parameter \code{inc\_warmup}.   
+
+Class \code{stanfit} defines a series of methods to work with the samples drawn 
+from the posterior distribution. First, method \code{extract}\rstanfunidx{extract} provides 
+different ways to access the samples. If argument \code{permuted} is \code{TRUE}
+for calling \code{extract}, the samples after warmup
+are returned in an permuted order as a list, each element of which are the 
+samples for a parameter. Here by ``one parameter'', we mean a scalar/vector/array
+parameter as a whole defined in our model. In our eight schools example, $\theta$ is 
+one parameter though it is an array of parameters. 
+
+
+When \code{permuted=FALSE}, we could extract sample for 
+parameters with or without warmup depending on argument \code{inc\_warmup}.
 In this case, the returned object is an array with the first dimension indicating
 iterations, the second indicating chains, and the third indicating parameters. 
+Here a vector/array parameter is expanded to their elements. For $\theta$ in our 
+eight schools example, they are \code{theta[1]}, \ldots, \code{theta[8]}.
 <<echo=TRUE>>=
 s <- extract(fit, pars = c("theta", "mu"), permuted = TRUE)
 names(s)
@@ -383,83 +621,289 @@ dim(s2)
 dimnames(s2)
 @
 
+In addition, methods \code{as.array}\rstanfunidx{as.array}, \code{as.matrix}\rstanfunidx{as.matrix}, and
+\code{as.data.frame}\rstanfunidx{as.data.frame} are defined for \code{stanfit} object. These
+method return the draws of samples in forms of a 3-dimension array or a matrix.  The
+three dimensions in order are iterations, chains, and parameters. 
+In the form of a matrix or a data frame, multiple chains are merged. 
+Additionally, method \code{pairs}\rstanfunidx{pairs}
+creates a matrix of scatter plots of samples, which
+can help diagnose convergence as well as providing a way to look
+at the pairwise relationship between parameters. 
+
+
+A \code{stanfit} object keeps all the information regarding the sampling
+procedure, for example, the model in \Stan code, the initial
+values for all parameters, the seed for the RNG,
+and parameters used for the sampler (for example, the step size for NUTS) 
+These methods (%
+\code{get\_seed}\rstanfunidx{get\_seed}, 
+\code{get\_inits}\rstanfunidx{get\_inits},  
+\code{get\_adaptation\_info}\rstanfunidx{get\_adaptation\_info}, and 
+\code{get\_sampler\_params}\rstanfunidx{get\_sampler\_params}) 
+for obtaining this information are listed in Table~\ref{tab0stanfitfuns}  
+along with other methods defined for class \code{stanfit}. 
+
+Last, a common feature for some functions of class \code{stanfit} is that 
+there is an argument of name \code{pars}.  This argument is used
+to specify parameters of interest so that a subset of the parameters for a model 
+is, for example, printed (plotted). This
+feature is helpful when there are too many parameters in the model. For instance,
+in the eight schools example, we have parameter $\theta$ defined as
+``\code{real theta[J]}''. So we can specify
+\code{pars="theta"} or \code{pars="theta[1]"}.
+However, specifying part of $\theta$ (i.e., \code{pars="theta[1:2]"}) as in \R
+is not allowed---a workaround for this is to specify \code{pars=c("theta[1]","theta[2]")}. 
+Even function \code{stan} allows to specify \code{pars} so that only part of 
+the samples are returned, which might be problematic from the perspective of
+diagnosing MCMC convergence since we would apply our diagnostic criterion to
+part of our parameters. However, this might be helpful for reducing computer memory 
+usage. To mitigate the loss of diagnostics information, we can use function 
+\code{get\_posterior\_mean}\rstanfunidx{get\_posterior\_mean}, which would
+return the posterior mean of all parameters computed from individual 
+chains and all chains merged excluding warmup samples. A better way for 
+this case is to write samples to external files using argument 
+\code{sample\_file} of function \code{stan}. 
+
+
+Function \code{stan} also allows to specify \code{pars} so that only part of 
+the samples are returned and saved in \R. This is problematic from the perspective of
+diagnosing MCMC convergence since we would apply our diagnostic criterion to
+part of our parameters. However, this might be helpful for reducing computer memory 
+usage. To mitigate the loss of diagnostics information, we can use function 
+\code{get\_posterior\_mean}\rstanfunidx{get\_posterior\_mean}, which would
+return the posterior mean of all parameters computed from individual 
+chains and all chains merged excluding warmup samples. A better way for 
+this case is to write samples to external files using argument 
+\code{sample\_file} of function \code{stan}. 
+
+
+
 \subsection{The log posterior function and its gradient} 
 
-As of RStan 1.1.2, the log posterior function (up to a 
-additive constant in general) can be evaluated through two
-methods of a stanfit object. These two functions are \code{log\_prob}
-and \code{grad\_log\_prob}. Both functions take parameters
+Essentially, we define the log of the probability
+density of a posterior distribution up to a unknown additive constant.
+In \Stan, we use \code{lp\_\_} to represent this log density evaluated at 
+each iteration.  Often \code{lp\_\_} becomes one quantity that we are interested in. 
+In \pkg{rstan}, \code{lp\_\_} is treated as if it is a parameter 
+in the summary and the calculation of split $\hat{R}$ and effective
+sample size. 
+
+A nice feature of \pkg{rstan} is that functions for calculating \code{lp\_\_}
+and its gradients for a \code{stanfit} object are exposed. They are defined
+on a \code{stanfit} object as we need data to create an instance of an 
+abstract model. These two functions are \code{log\_prob}\rstanfunidx{log\_prob}
+and \code{grad\_log\_prob}\rstanfunidx{grad\_log\_prob} respectively. Both functions take parameters
 on the \textit{unconstrained} space, when the support of a parameter 
 is not the whole real line. See \cite{StanManual:2013} for more details
 about transformation. Also the number of unconstrained parameters 
 might be less than the number of parameters. For example, when
 a parameter is a simplex of length $K$, the number of unconstrained 
-parameters are $K-1$. To get the number of unconstrained parameters, 
-function \code{get\_num\_upars} for a stanfit object can be used. 
+parameters are $K-1$. 
+Method \code{get\_num\_upars}\rstanfunidx{get\_num\_upars} is provided 
+to get the number of unconstrained parameters, 
 To transform parameters between the constrained space and 
-the unconstrained, we can use functions \code{unconstrained\_pars} 
-and \code{constrained\_pars}. The former takes a list of parameters 
+the unconstrained, we can use functions \code{unconstrained\_pars}\rstanfunidx{unconstrained\_pars} 
+and \code{constrained\_pars}\rstanfunidx{constrained\_pars}. The former takes a list of parameters 
 as input and transforms it to unconstrained space, and the latter 
-does the inversion. 
+does the inversion. Using these functions, we can implement other algorithms 
+such as stochastic MAP estimation for Bayesian models.
 
-\subsection{The dynamic shared objects for models} 
 
-In \Stan, for every model, we use \stanc to compile the 
+\begin{table}
+\begin{tabular}{lp{0.6\linewidth}} 
+\toprule 
+Name  &    Function    \\ 
+\midrule
+\code{print}         & print the summary for parameters obtained using all chains  \\
+\code{summary}       & summarize the sample from all chains and individual chains for parameters \\
+\code{plot}          & plot the inferences (intervals, medians, split $\hat{R}$) for parameters \\
+\code{traceplot}     & plot the traces of chains  \\
+\code{extract}       & extract samples of parameters  \\
+\code{get\_stancode}     & extract the model code in \Stan modeling language \\
+\code{get\_stanmodel}     & extract the \code{stanmodel} object \\ 
+\code{get\_seed}      & get the seed used for sampling  \\
+\code{get\_inits}     & get the initial values used for sampling  \\
+\code{get\_posterior\_mean}     & get the posterior mean for all parameters\\
+\code{get\_logposterior}     & get the log posterior (that is, \code{lp\_\_})  \\
+\code{get\_sampler\_params}    & get parameters used by the sampler such as \code{treedepth} of NUTS  \\
+\code{get\_adaptation\_info}    & get adaptation information of the sampler \\ 
+\code{get\_num\_upars}    & get the number of parameters on unconstrained space \\ 
+\code{unconstrain\_pars}    & transform parameter to unconstrained space \\ 
+\code{constrain\_pars}    & transform parameter from unconstrained space to its defined space \\
+\code{log\_prob}    & evaluate the log posterior for parameter on unconstrained space \\
+\code{grad\_log\_prob}    & evaluate the gradient of the log posterior for parameter on unconstrained space \\
+\code{as.array}        & \multirow{3}{\linewidth}{extract the samples excluding warmup to a three dimension array, matrix, data.frame}  \\
+\code{as.matrix}       & \\
+\code{as.data.frame}   & \\
+\code{pairs} & make a matrix of scatter plots for the samples of parameters  \\
+\bottomrule 
+\end{tabular}
+\caption[Methods of S4 class stanfit]{Methods of S4 class \code{stanfit}} 
+\label{tab0stanfitfuns} 
+\end{table}
+
+\subsection[Optimization in Stan]{Optimization in \Stan} 
+\label{subsecoptimization}
+
+\RStan also builds the interface to \Stan's optimizers, optimization methods 
+built in \Stan to obtain a point estimate by maximizing the posterior 
+function defined for a model. We illustrate the feature using a very simple
+example, estimating the mean from samples assumed to be drawn from normal 
+distribution with known standard deviation. That is, we assume 
+
+\begin{align*}
+y_1,\ldots,y_n\sim \text{normal}(\mu,1).
+\end{align*}
+
+By specifying prior of $\mu$ with $p(\mu) \propto 1$, the MAP estimator 
+for $\mu$ would be just the sample mean. The following \R code shows 
+how to use \Stan's optimizers in \pkg{rstan}; we first create a \code{stanmodel}
+object of \pkg{rstan} and then use its \code{optimizing} method, to which data 
+and other arguments can be fed.
+
+<<optimizer, echo=TRUE>>= 
+ocode <- "
+  data {
+    int<lower=1> N;
+    real y[N];
+  } 
+  parameters {
+    real mu;
+  } 
+  model {
+    y ~ normal(mu, 1);
+  } 
+"
+
+sm <- stan_model(model_code = ocode)
+y2 <- rnorm(20)
+mean(y2)
+op <- optimizing(sm, data = list(y = y2, N = length(y2)))
+print(op)
+@
+ 
+
+
+\subsection[Model compiling in rstan]{Model compiling in \pkg{rstan}}
+\label{subsecmodelcompiling}
+
+In \RStan, for every model, we use function \code{stanc} to translate the 
 model from Stan modeling language code to \Cpp code 
 and then compile the \Cpp code to dynamic shared object (DSO),
-which is loaded into \R and executed to draw sample. 
-The compiling from C++ code to DSO, sometimes, takes a while. 
+which is loaded by \R and executed to draw sample. 
+The process of compiling \Cpp code to DSO, sometimes, takes a while. 
 When the model is the same, we could reuse the DSO from previous run. 
 In function \code{stan}, if parameter \code{fit} is specified
 with a previous fitted object, the compiled model is reused. 
 When reusing a previous fitted model, we can specify different 
 data and other parameters for function \code{stan}. 
 
-In addition, if the fitted model is saved, for example, by function
-\code{save} and \code{save.image}, \RStan is able to save the 
+In addition, if fitted models (objects in our working space of \R)
+are saved, for example, by \R function
+\code{save} and \code{save.image}, \pkg{rstan} is able to save the 
 DSO for models, so that they can be used across \R sessions. 
 Saving the DSO is optional by specifying parameter \code{save\_dso}, which
-is \code{TRUE} by default, during calling function \code{stan}. 
+is \code{TRUE} by default, for function \code{stan}. 
 
-\section{Miscellaneous} 
+Last, there are some options that configures compiling the \Cpp code
+by a compiler such as \gpp. In particular, we can specify the optimization level
+that is used for a \Cpp compiler. \pkg{rstan} provides function 
+\code{set\_cppo}\rstanfunidx{set\_cppo} to configure some of the flags, details
+of which can be found in the online document. We strongly suggest using
+\code{set\_cppo('fast')} for better speed of sampling. In addition, we can use
+\code{get\_cppo}\rstanfunidx{get\_cppo} to take a look of current settings
+and \code{reset\_cppo}\rstanfunidx{reset\_cppo} to remove the changes 
+by \code{set\_cppo}. Currently, \pkg{rstan} implements these functions
+through modifying \verb+Makevars+ file that is typically under folder \verb+.R+
+in the home directory, so the changes could have side effects to, for example,
+installing other packages that includes \Cpp code from source. 
 
-In \RStan, we can retrieve the model's \Stan modeling
-language code from the fitted object by calling 
-\code{get\_stancode}. All the initial values and seeds are 
-also saved in this object, so they can be used to 
-reproduce previous sampling procedure. 
-To get the initial values we can use \code{get\_inits}. 
-See Table \ref{tab0stanfitfuns} for a summary of functions
-defined in class \code{stanfit}. 
 
-\begin{table}
-\caption{Generic functions for S4 class \code{stanfit}} 
-\label{tab0stanfitfuns} 
-\begin{tabular}{lp{4in}} 
-\toprule 
-Name  &    Functionality    \\ 
-\midrule
-\code{print}         & print the summary for sample from all chains  \\
-\code{summary}       & summarize for sample from all chains and individual chains \\
-\code{plot}          & plot the inferences (intervals and medians) for parameters \\
-\code{traceplot}     & plot the traces of chains  \\
-\code{extract}       & extract sample of parameters  \\
-\code{get\_stancode}     & extract the \Stan modeling language code of the model  \\
-\code{get\_stanmodel}     & extract the \code{stanmodel} object \\ 
-\code{get\_seed}      & get the seed used for sampling  \\
-\code{get\_inits}     & get the initial values used for sampling  \\
-\code{get\_logposterior}     & get the log posterior  \\
-\code{get\_sampler\_params}    & get parameters used by the sampler such as \code{treedepth} of NUTS  \\
-\code{get\_adaptation\_info}    & get adaptation information, if any, of the sampler \\ 
-\code{get\_num\_upars}    & get the number of parameters on unconstrained space \\ 
-\code{unconstrain\_pars}    & transform parameter to unconstrained space \\ 
-\code{constrain\_pars}    & transform parameter from unconstrained space to its defined space \\
-\code{log\_prob}    & evaluate the log posterior for parameter on unconstrained space \\
-\code{grad\_log\_prob}    & evaluate the gradient of the log posterior for parameter on unconstrained space \\
-\bottomrule 
-\end{tabular}
-\end{table}
+
+
+\section{Run multiple chains in parallel}
+\label{sec0parallel}
+
+For function \code{stan}, we can specify the number of chains using argument
+\code{chains}. \pkg{rstan} runs chains sequentially (i.e., one at a time) using one 
+\R process, which means that \pkg{rstan} does not support sampling in parallel
+directly. But \pkg{rstan} provides a function named
+\code{sflist2stanfit}\rstanfunidx{sflist2stanfit} to
+consolidate multiple \code{stanfit} objects sampled from one model with
+the same number of warmup and iteration into one \code{stanfit} object. As a 
+result, if we can run multiple chains in parallel using any approach provided by 
+other packages on one computer (or a cluster), then we can essentially 
+run multiple chains in parallel. For example, we can easily achieve this goal
+on one computer using function \code{mclapply} in package
+\pkg{parallel}\footnote{\pkg{parallel} works only for non-Windows, so we set
+\code{mc.cores} to $1$ for Windows.}%
+as follows.  
+<<parallel, echo=TRUE, results=hide, cache=TRUE>>=
+library(rstan)
+library(parallel)
+f1 <- stan(file="schools.stan",data=schools_data, 
+           chains =1, iter=1)
+WINDOWS <- .Platform$OS.type == "windows"
+seed <- 12345 
+sflist1 <-
+  mclapply(1:4, mc.cores = ifelse(WINDOWS, 1, 4),
+           function(i) stan(fit = f1, seed = seed, 
+                            data = schools_data, 
+                            chains = 1, chain_id = i, 
+                            refresh = -1))
+fit <- sflist2stanfit(sflist1)
+@
+
+Note in the above code, we specify the same seed for all the chains but use
+different chain ID (argument \code{chain\_id}). This is to make sure 
+that the random numbers generated in \Stan for all chains are independent. 
+
+\section[Work with Stan]{Work with \Stan} 
+\label{sec0workwstan}
+
+RStan provides some functions to help use \Stan from the command line.
+First, when \Stan reads data or initial
+values, it supports a subset of the syntax of \R dump data formats.  
+So if we use \code{dump} function in \R to prepare data, \Stan
+might not be able to read the data sometimes.
+Function \code{stan\_rdump} in \pkg{rstan} dumps the data in \R to the format that is 
+supported by \Stan. The usage of this function is very similar to
+the \code{dump} function in \R. 
+
+
+Second, function \code{read\_stan\_csv}\rstanfunidx{read\_stan\_csv}
+in \pkg{rstan} creates a \code{stanfit} object from reading the comma separated
+files (CSV) generated from using \Stan. As a result, we can use many methods
+defined for class \code{stanfit} to work with the samples. In other words, 
+we can easily use \R to analyze the samples generated by using \Stan from
+the command line.
+
+
+\section{Summary} 
+\label{sec0summary}
+
+In this vignetter, we describe the main functionality of RStan
+from a user perspective. The document within the package should provide more details
+for all the \pkg{rstan} functions. When it comes to \Stan, the 
+manual (\citealt{StanManual:2013}) provides a lot of 
+details and includes a variety of model examples. \pkg{rstan} provides
+function \code{stan\_demo}\rstanfunidx{stan\_demo} to choose and then run an
+example included in \Stan.  Some of these examples are detailed in \Stan's
+manual and some of the models originated from the examples of BUGS
+(\citealt{WinBUGS}). 
+
+
+As \Stan is still being developed, more features will be added.
+In general, RStan would always implement the interfaces to all the 
+features of \Stan and its document would provide all the details. 
+The website of Stan (http://mc-stan.org) provides information on how to
+get more help. 
+
 \nocite{*} 
 \bibliography{rstan} 
+
+\printindex
+
 \end{document} 
 

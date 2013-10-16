@@ -10,8 +10,11 @@ stan(file, model_name = "anon_model", model_code = "",
   fit = NA, data = list(), pars = NA, chains = 4,
   iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
-  sample_file, save_dso = TRUE, 
-  verbose = FALSE, ..., 
+  algorithm = c("NUTS", "HMC", "Metropolis"),
+  control = NULL,
+  sample_file, diagnostic_file, 
+  save_dso = TRUE, 
+  verbose = FALSE, ...,
   boost_lib = NULL,
   eigen_lib = NULL)
 }
@@ -48,10 +51,23 @@ stan(file, model_name = "anon_model", model_code = "",
   \item{iter}{A positive integer specifying how many iterations for each 
     chain (including warmup). The default is 2000.}
   \item{warmup}{A positive integer specifying number of warmup (aka burnin)
-     iterations.  This also specifies the number of iterations used for step-size
-     adaptation, so warmup samples should not be used for inference.
-     The default is \code{iter/2}.}
+     iterations.  This also specifies the number of iterations used for stepsize
+     adaptation, so warmup samples should not be used for inference. The number
+     of warmup should not be larger than \code{iter} and the default is \code{iter/2}.}
   \item{thin}{A positive integer specifying the period for saving sample; defaults to 1.} 
+  \item{init}{One of digit \code{0}, string \code{"0"} or \code{"random"}, 
+    a function that returns a named list, or a list of named list.
+    \code{"0"}: initialize all to be zero on the unconstrained support;
+    \code{"random"}: randomly generated, see optional parameter \code{init_r};
+    \code{list}: a list of lists equal in length to the number of chains
+     (parameter \code{chains}), where each named list (an element of the list
+     of lists) specifies the initial values for parameters by names for a chain.
+    \code{function}: a function that returns a list for specifying
+      the initial values of parameters for a chain. The function
+      can take an optional parameter \code{chain_id}.
+      See below notes on that RStan treats a vector of length 1 as
+      a scalar. 
+  }
   \item{seed}{The seed, a positive integer, for random number generation. The
     default is generated from 1 to the maximum integer supported by \R on the
     machine. When multiple chains are used, only one seed is needed, with other
@@ -61,22 +77,19 @@ stan(file, model_name = "anon_model", model_code = "",
     If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
     We can also specify a seed using a character string of digits, such as
     \code{"12345"}, which is converted to integer.}
-  \item{init}{One of digit \code{0}, string \code{"0"} or \code{"random"}, 
-    a function that returns a list, or a list of initial parameter values with
-    which to indicate how the initial values of parameters are specified. 
-    \code{"0"}: initialize all to be zero on the unconstrained support; 
-    \code{"random"}: randomly generated;
-    \code{list}: a list of lists equal in length to the number of chains 
-     (parameter \code{chains}), where each list in the list of lists specifies the initial
-      values of parameters by name for the corresponding chain.
-    \code{function}: a function that returns a list for specifying 
-      the initial values of parameters for a chain. The function
-      can take an optional parameter \code{chain_id}.
-     See below notes on that RStan treats a vector of lenght 1 as
-     a scalar. 
-  }
+  \item{algorithm}{One of algorithms that are implemented in Stan such 
+    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC, 
+    and Metropolis based on random walk.}
+
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
+    If not provided, files are not created. When the folder specified 
+    is not writable, \code{tempdir()} is used. 
+    When there are multiple chains, an underscore and chain number are appended
+    to the file name.}
+
+  \item{diagnostic_file}{A character string of file name for specifying where to 
+    write diagnostics data  for \emph{all} parameters. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used. 
     When there are multiple chains, an underscore and chain number are appended
@@ -93,47 +106,60 @@ stan(file, model_name = "anon_model", model_code = "",
     what is saved previously and used for sampling, if the compiling is
     done on the same platform, that is, same operating system and same 
     architecture (32bits or 64bits). 
-}
+  }
 
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
-     to print intermediate output from Stan on the console, which might
-     be helpful for model debugging.}
+    to print intermediate output from Stan on the console, which might
+    be helpful for model debugging.}
+ 
+  \item{control}{a named \code{list} of parameters to control the sampler's
+    behavior. It defaults to \code{NULL} so all the default values are used. 
+    First, the following are adaptation parameters for sampling algorithms.
+    These are parameters used in Stan with similar names here.
+    \enumerate{
+      \item \code{adapt_engaged} (\code{logical})
+      \item \code{adapt_gamma} (\code{double}, positive, defaults to 0.05)
+      \item \code{adapt_delta} (\code{double}, between 0 and 1, defaults to 0.65)
+      \item \code{adapt_kappa} (\code{double}, positive, defaults to 0.75)
+      \item \code{adapt_t0} (\code{double}, positive, defaults to 10)
+    }
 
-  \item{\dots}{Other optional parameters for the sampler: 
+    In addition, Depending on which algorithm is specified, different 
+    parameters can be set as in Stan for sampling.  For algorithm HMC (called 
+    'static HMC' in Stan), we can set 
+    \enumerate{
+      \item \code{int_time} (\code{double}, positive)
+      \item \code{stepsize} (\code{double}, positive)
+      \item \code{stepsize_jitter} (\code{double}, [0,1])
+    }
+    For algorithm NUTS, we can set 
+    \enumerate{
+      \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
+      \item \code{max_treedepth} (\code{integer}, positive)
+      \item \code{stepsize} (\code{double}, positive)
+      \item \code{stepsize_jitter} (\code{double}, [0,1])
+    }
+  }
+  
+  \item{\dots}{Other optional parameters: 
     \enumerate{
       \item \code{chain_id} (\code{integer})
-      \item \code{leapfrog_steps} (\code{integer})
-      \item \code{epsilon} (\code{double})
-      \item \code{gamma} (\code{double}) 
-      \item \code{delta} (\code{double})
-      \item \code{equal_step_sizes} (\code{TRUE} or \code{FALSE})
-      \item \code{max_treedepth} (\code{integer})
-      \item \code{nondiag_mass} (\code{TRUE} or \code{FALSE})
+      \item \code{init_r} (\code{double}, positive)
+      \item \code{test_grad} (\code{logical})
+      \item \code{append_samples} (\code{logical})
+      \item \code{refresh}(\code{integer})
     }
-
-    More details can be found in Stan's manual. The default   
-    sampler is NUTS2, where \code{leapfrog_steps} is \code{-1} and 
-    \code{equal_step_sizes} is \code{FALSE}. To use NUTS with full
-    mass matrix, set \code{nondiag_mass} to \code{TRUE}. The following 
-    table provides a summary of how to specify arguments to choose 
-    different sampler. 
-
-    \tabular{ll}{
-    HMC \tab epsilon=e leapfrog_steps=L \cr 
-    HMC + tuned step size \tab leapfrog_steps=L \cr 
-    NUTS \tab epsilon=e \cr 
-    NUTS + tuned step size (NUTS1) \tab equal_step_sizes = TRUE \cr 
-    NUTS + tuned varying step sizes (NUTS2) \tab (default) \cr 
-    NUTS + full mass matrix \tab nondiag_mass = TRUE \cr 
-    }
-    
 
     \code{chain_id} can be a vector to specify the chain_id for all 
     chains or an integer. For the former case, they should be unique. 
     For the latter, the sequence of integers starting from the given
     \code{chain_id} are used for all chains. 
 
-    In addition, \code{refresh} (\code{integer}) can be used to
+    \code{init_r} is only valid for \code{init="random"}. If 
+    specified, the initial values are simulated from [-init_r, init_r]
+    rather than using the default interval (see the manual of Stan).
+
+    Argument \code{refresh} (\code{integer}) can be used to
     control how to indicate the progress during sampling (i.e. 
     show the progress every \code{refresh} iterations). 
     By default, \code{refresh = max(iter/10, 1)}. 
@@ -183,6 +209,8 @@ stan(file, model_name = "anon_model", model_code = "",
   The data passed to \code{stan} are preprocessed before
   passing to Stan. In general, each element of data should be either a numeric
   vector (including special case 'scalar') or a numeric array (matrix). 
+  The first exception is that an element can be a logical vector: \code{TRUE}'s 
+  are converted to 1 and \code{FALSE}'s to 0.
   An element can also be a data frame or a specially structured list (see
   details below), both of which will be converted into arrays in the
   preprocessing.  Using a specially structured list is not

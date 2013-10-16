@@ -1,3 +1,13 @@
+You may want to first call (in a shell)
+
+export MAKEFLAGS=-j4
+
+or use some other integer besides 4 to control the number of cores to utilize.
+
 Installation: 
 
-1. run `make install' when present working directory is STAN_HOME/rstan. 
+1. Run `make install' when present working directory is where this file locates. 
+   If an older version had been installed by `make install', `make clean` can 
+   be used to remove the package built for installation, so that the most 
+   recent can be installed.
+

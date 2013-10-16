@@ -44,7 +44,7 @@ prep_call_sampler <- function(object) {
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
                "  - compiled with save_dso=FALSE;\n", 
                "  - compiled on a different platform;\n", 
-               "  - not existed for reading csv files.", sep = '')) 
+               "  - not existed (created from reading csv files).", sep = '')) 
   if (!is_dso_loaded(object@dso)) {
     # load the dso if available 
     grab_cxxfun(object@dso) 
@@ -53,8 +53,9 @@ prep_call_sampler <- function(object) {
 
 setMethod("optimizing", "stanmodel", 
           function(object, data = list(), 
-                   seed = sample.int(.Machine$integer.max, 1), 
-                   init = 'random', check_data = TRUE, sample_file,
+                   seed = sample.int(.Machine$integer.max, 1),
+                   init = 'random', check_data = TRUE, sample_file, 
+                   algorithm = c("BFGS", "Nesterov", "Newton"),
                    verbose = FALSE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
@@ -65,7 +66,7 @@ setMethod("optimizing", "stanmodel",
                 data <- try(mklist(data))
                 if (is(data, "try-error")) {
                   message("failed to create the data; optimization not done") 
-                  return(invisible(list(stanmodel = object)))
+                  return(invisible(NULL))
                 }
               }
               if (!missing(data) && length(data) > 0) {
@@ -94,14 +95,17 @@ setMethod("optimizing", "stanmodel",
             seed <- check_seed(seed, warn = 1)    
             if (is.null(seed))
               return(invisible(list(stanmodel = object)))
-            args <- list(init = init, seed = seed, point_estimate = TRUE)
-            if (!missing(sample_file) && is.na(sample_file)) 
+            args <- list(init = init, 
+                         seed = seed, 
+                         method = "optim", 
+                         algorithm = match.arg(algorithm)) 
+         
+            if (!missing(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
-            dotlist$test_grad <- FALSE # not to test gradient
+            if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
-            names(optim$par) <- flatnames(m_pars, p_dims)
-            optim["stanmodel"] <- object
+            names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             invisible(optim)
           }) 
 
@@ -110,7 +114,8 @@ setMethod("sampling", "stanmodel",
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
-                   sample_file, verbose = FALSE, ...) {
+                   sample_file, diagnostic_file, verbose = FALSE, 
+                   algorithm = c("NUTS", "HMC", "Metropolis"), control = NULL, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -162,17 +167,19 @@ setMethod("sampling", "stanmodel",
 
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
-                                          init = init, seed = seed, sample_file, ...))
+                                          init = init, seed = seed, sample_file, diagnostic_file, 
+                                          algorithm = match.arg(algorithm), control = control, ...))
    
             if (is(args_list, "try-error")) {
-              message('error specification of arguments; sampling not done') 
+              message('error in specifying arguments; sampling not done') 
               return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L))) 
             }
 
-            n_save <- 1 + (iter - 1) %/% thin 
             # number of samples saved after thinning
             warmup2 <- 1 + (warmup - 1) %/% thin 
-            n_kept <- n_save - warmup2 
+            n_kept <- 1 + (iter - warmup - 1) %/% thin
+            n_save <- n_kept + warmup2 
+
             samples <- vector("list", chains)
             dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"

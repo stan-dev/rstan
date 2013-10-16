@@ -15,14 +15,16 @@
   %% optimizing(object, \dots)  
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
-    check_data = TRUE, sample_file, verbose = FALSE, \dots)   
+    check_data = TRUE, sample_file, 
+    algorithm = c("BFGS", "Nesterov", "Newton"),
+    verbose = FALSE, \dots)   
 } 
 
 \section{Methods}{
   \describe{
     \item{optimizing}{\code{signature(object = "stanmodel")}}{
       %%  ~~describe this method here~~
-      Call Stan's optimization method to obtain a point estimate 
+      Call Stan's optimization methods to obtain a point estimate 
       for the model defined by S4 class \code{stanmodel} 
       given the data, initial values, etc. 
     }
@@ -57,21 +59,31 @@
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
+  \item{algorithm}{One of "Newton", "Nesterov", and "BFGS" indicating which
+    optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
-  \item{\dots}{Other optional parameters (none currently).}
+  \item{\dots}{Other optional parameters. 
+    \enumerate{
+      \item \code{iter} (\code{integer}), the maximum number of iterations
+      \item \code{save_iterations} (logical), whether to save the iterations 
+      \item \code{refresh} (\code{integer})
+      \item \code{stepsize} (\code{double}), for Nesterov, see the manual of Stan
+      \item \code{init_alpha} (\code{double}, default to 0.0001), for BFGS, see manual of Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+    }
+  }
 }
 \value{
    A list with components if the optimization is done successfully:
    \item{par}{The point estimate found.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
    the \code{"lp__"} in Stan) corresponding to \code{par}.}
-   \item{stanmodel}{The object of \code{stanmodel} that represents the Stan
-     model and includes the compiled dynamic shared object for the model.}
 
   If the optimization is not finished for reasons such as feeding wrong data,
-  a list with a component of the compiled model (an object of \code{stanmodel})
-  is returned for future reusing. 
+  it returns \code{NULL}. 
 } 
 
 \seealso{

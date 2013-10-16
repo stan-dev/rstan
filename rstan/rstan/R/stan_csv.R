@@ -1,13 +1,3 @@
-get_sampler_name <- function(leapfrog_steps, equal_step_sizes, nondiag_mass) {
-  if (!is.null(nondiag_mass) && nondiag_mass > 0) 
-    return("NUTS(nondiag)")
-  if (leapfrog_steps < 0) {
-    if (equal_step_sizes == 0) return("NUTS2")
-    return("NUTS1")
-  } 
-  return("HMC")
-} 
-
 paridx_fun <- function(names) {
   # Args:
   #   names: names (character vector) such as lp__, treedepth__, stepsize__,
@@ -18,8 +8,8 @@ paridx_fun <- function(names) {
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
-  metaidx <- match(c('lp__', 'treedepth__', 'stepsize__'), names)
-  names(metaidx) <- c('lp__', 'treedepth__', 'stepsize__')
+  metaidx <- match(c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__'), names)
+  names(metaidx) <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__')
   paridx <- setdiff(seq_along(names), metaidx)
   attr(paridx, "meta") <- metaidx[!sapply(metaidx, is.na)]
   paridx
@@ -30,46 +20,80 @@ parse_stancsv_comments <- function(comments) {
   # iter, thin, seed, etc. This is specific to the CSV files
   # generated from Stan
 
-  nuts_diag_lineno <- which(grepl('(mcmc::nuts_diag)', comments))
-  nuts_nondiag_lineno <- which(grepl('(mcmc::nuts_nondiag)', comments))
-  adaptation_info <- character(0)  
+  adapt_term_lineno <- which(grepl("Adaptation terminated", comments))
+  time_lineno <- which(grepl("Elapsed Time", comments))
   len <- length(comments)
-  nondiag_mass <- 0
-  if (length(nuts_diag_lineno) > 0) {  
-    adaptation_info <- paste(comments[nuts_diag_lineno:len], collapse = '\n')
-    comments <- comments[1:(nuts_diag_lineno - 1)]
-  } else if (length(nuts_nondiag_lineno) > 0) {  
-    adaptation_info <- paste(comments[nuts_nondiag_lineno:len], collapse = '\n')
-    comments <- comments[1:(nuts_nondiag_lineno - 1)]
-    nondiag_mass <- 1
+  if (length(adapt_term_lineno) < 1) 
+    adapt_term_lineno <- len
+  if (length(time_lineno) < 1) {
+    stop("line with \"Elapsed Time\" not found")
   }
+
+  if (adapt_term_lineno == len) adaptation_info <- ''
+  else adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
+  time_info <- comments[time_lineno:len]
+  comments <- comments[1:(adapt_term_lineno - 1)]
 
   has_eq <- sapply(comments, function(i) grepl('=', i))
   comments <- comments[has_eq] 
-  comments <- gsub('^#+\\s*|\\s*$', '', comments)
+  comments <- gsub('^#+\\s*|\\s*|\\(Default\\)', '', comments)
   eq_pos <- regexpr("=", comments, fixed = TRUE)
-  names <- substr(comments, 0, eq_pos - 1)
+  names0 <- substr(comments, 0, eq_pos - 1)
   values <- as.list(substring(comments, eq_pos + 1))
-  names(values) <- names
-  values[['adaptation_info']] <- adaptation_info 
-  names1 <- intersect(c("thin", "iter", "warmup", "equal_step_sizes", "chain_id",
-                        "leapfrog_steps", "nondiag_mass",
-                        "max_treedepth", "save_warmup"), names)
-  names2 <- intersect(c("epsilon", "epsilon_pm", "gamma", "delta"), names) 
+  
+  id_idx <- which("id" == names0)
+  if (length(id_idx) > 0) 
+  names0[id_idx] <- "chain_id"
+  
+  compute_iter <- FALSE
+  id_warmup <- which("num_warmup" == names0)
+  if (length(id_warmup) > 0) {
+    names0[id_warmup] <- "warmup"
+    compute_iter <- TRUE
+  }   
+  
+  id_numsamples <- which("num_samples" == names0)
+  if (length(id_numsamples) > 0) {
+    names0[id_numsamples] <- "iter"
+  }
+  names(values) <- names0;
+
+  add_lst <- list(adaptation_info = adaptation_info,
+                  time_info = time_info)
+
+  sampler_t <- NULL
+  if (!is.null(values$algorithm) && is.null(values$sampler_t)) {
+    if (values$algorithm == 'rwm' || values$algorithm == 'Metropolis')  
+      sampler_t <- "Metropolis"
+    else if (values$algorithm == 'hmc') {
+       if (values$engine == 'static')  sampler_t <- "HMC"
+       else {
+         if (values$metric == 'unit_e') sampler_t <- "NUTS(unit_e)"
+         else if (values$metric == 'diag_e') sampler_t <- "NUTS(diag_e)"
+         else if (values$metric == 'dense_e') sampler_t <- "NUTS(dense_e)"
+       } 
+    } 
+    add_lst <- c(add_lst, sampler_t = sampler_t)
+  } 
+  names1 <- intersect(c("thin", "iter", "warmup", "chain_id", "max_depth", 
+                        "num_samples", "num_warmup", "id",
+                        "max_treedepth", "save_warmup"), names0)
+  names2 <- intersect(c("stepsize", "stepsize_jitter", "adapt_gamma", "adapt_kappa", 
+                        "adapt_delta", "gamma", "kappa", "delta", "t0",
+                        "adapt_t0"), names0) 
   for (z in names1) values[[z]] <- as.integer(values[[z]])
   for (z in names2) values[[z]] <- as.numeric(values[[z]])
-  if (!"nondiag_mass" %in% names) values[["nondiag_mass"]] <- nondiag_mass
-  values
+  if (compute_iter) values[["iter"]] <- values[["iter"]] + values[["warmup"]]
+  c(values, add_lst)  
 }
 
 
-read_stan_csv <- function(csvfiles) {
+read_stan_csv <- function(csvfiles, col_major = TRUE) {
   # Read the csv files saved from Stan (or RStan) to a stanfit object
   # Args:
   #   csvfiles: csv files fitted for the same model; each file contains 
-  #   the sample of one chain 
-  # Assumptions:
-  #   parameters in the CSV files are in order by row-major
+  #     the sample of one chain 
+  #   col_major: the order for array parameters. 
   # 
 
   if (length(csvfiles) < 1) 
@@ -79,7 +103,8 @@ read_stan_csv <- function(csvfiles) {
   g_max_comm <- 50 # maximum number of lines of comments 
   ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
-  m_name <- sub("(_\\d+)*$", '', filename_rm_ext(csvfiles[1]))
+  # use the first CSV file name as model name
+  m_name <- sub("(_\\d+)*$", '', filename_rm_ext(basename(csvfiles[1])))
 
   sdate <- do.call(max, lapply(csvfiles, function(csv) file.info(csv)$mtime))
   sdate <- format(sdate, "%a %b %d %X %Y") # same format as date() 
@@ -98,7 +123,7 @@ read_stan_csv <- function(csvfiles) {
                       get_dims_from_fnames(i_fnames, i) 
                     })
   names(dims_oi) <- pars_oi
-  idx_2colm <- multi_idx_row2colm(dims_oi)
+  midx <- if (!col_major) multi_idx_row2colm(dims_oi) else 1:length(par_fnames)
   if (chains > 1) {
     if (!all(sapply(ss_lst[-1], function(i) identical(names(i), fnames))))
       stop('the CSV files do not have same parameters')
@@ -110,15 +135,15 @@ read_stan_csv <- function(csvfiles) {
 
   samples <- lapply(ss_lst, 
                     function(df) {
-                      ss <- df[c(paridx, lp__idx)[idx_2colm]]
+                      ss <- df[c(paridx, lp__idx)[midx]]
                       attr(ss, "sampler_params") <- df[setdiff(attr(paridx, 'meta'), lp__idx)] 
                       ss
                     })
-  par_fnames <- par_fnames[idx_2colm]
+  par_fnames <- par_fnames[midx]
   for (i in seq_along(samples)) {
     attr(samples[[i]], "adaptation_info") <- cs_lst2[[i]]$adaptation_info 
     attr(samples[[i]], "args") <- 
-      list(sampler = get_sampler_name(cs_lst2[[i]]$leapfrog_steps, cs_lst2[[i]]$equal_step_sizes, cs_lst2[[i]]$nondiag_mass),
+      list(sampler_t = cs_lst2[[i]]$sampler_t,
            chain_id = cs_lst2[[i]]$chain_id)
   } 
 
@@ -128,7 +153,7 @@ read_stan_csv <- function(csvfiles) {
   iter <- sapply(cs_lst2, function(i) i$iter)
   if (!all_int_eq(warmup) || !all_int_eq(thin) || !all_int_eq(iter)) 
     stop("not all iter/warmups/thin are the same in all CSV files")
-  n_kept0 <- (iter[1] - 1) %/% thin[1] - (warmup[1] - 1) %/% thin[1]
+  n_kept0 <- 1 + (iter - warmup - 1) %/% thin
   warmup2 <- 0
   if (max(save_warmup) == 0L) { # all equal to 0L
     n_kept <- n_save
@@ -137,9 +162,16 @@ read_stan_csv <- function(csvfiles) {
     n_kept <- n_save - warmup2 
   } 
   
-  if (n_kept0 != n_kept) 
+  if (n_kept0[1] != n_kept) 
     stop("the number of iterations after warmup found (", n_kept, 
          ") does not match iter/warmup/thin from CSV comments (", n_kept0, ")")
+
+  idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
+  for (i in seq_along(samples)) {
+    m <- apply(samples[[i]][idx_kept,], 2, mean)
+    attr(samples[[i]], "mean_pars") <- m[-length(m)]
+    attr(samples[[i]], "mean_lp__") <- m["lp__"]
+  }
 
   perm_lst <- lapply(1:chains, function(id) sample.int(n_kept))
 

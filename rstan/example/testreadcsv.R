@@ -34,7 +34,7 @@ traceplot(f1)
 
 # 
 model_name <- "_8chools";
-sfile <- "../../src/models/misc/eight_schools/eight_schools.stan"
+sfile <- "../../stan/src/models/misc/eight_schools/eight_schools.stan"
 
 dat <- list(J = 8L, 
             y = c(28,  8, -3,  7, -1,  1, 18, 12),

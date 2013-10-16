@@ -9,16 +9,17 @@ OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
 
 LIBSTANOBJECTS = agrad__rev__var_stack.o agrad__matrix.o math__matrix.o
 
-# EIGEN_PATH := $(shell $(R_HOME)/bin/Rscript -e "cat(system.file('include', package = 'RcppEigen'))")
-EIGEN_PATH = ../inst/include/stanlib/eigen_3.1.2
+# EIGEN_PATH := $(shell $(R_HOME)/bin/Rscript --vanilla -e "cat(system.file('include', package = 'RcppEigen'))")
+EIGEN_PATH = $(shell find ../inst/include/stanlib -path '*lib/eigen_*' -regex '.*lib\/eigen_[^/]*')
 
-PKG_LIBS = $(shell  $(R_HOME)/bin/Rscript -e "Rcpp:::LdFlags()") 
+PKG_LIBS = $(shell  $(R_HOME)/bin/Rscript --vanilla -e "Rcpp:::LdFlags()") 
 PKG_CPPFLAGS += -I"../inst/include/stansrc"  
 PKG_CPPFLAGS += -I"$(EIGEN_PATH)" 
 PKG_CPPFLAGS += -I"$(EIGEN_PATH)/unsupported" 
-PKG_CPPFLAGS += -I"../inst/include/stanlib/boost_1.53.0" 
+PKG_CPPFLAGS += -I$(shell find ../inst/include/stanlib -path '*lib/boost_*' -regex '.*lib\/boost_[^/]*')
 PKG_CPPFLAGS += -I"../inst/include" 
 PKG_CPPFLAGS += -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
+PKG_CPPFLAGS += -ftemplate-depth-256
 
 # CXXFLAGS = -O2 -pipe -g $(LTO)
 # CXXFLAGS = -Os -pipe $(LTO)
@@ -47,5 +48,5 @@ include $(R_SHARE_DIR)/make/shlib.mk
 clean: 
 	rm -f $(OBJECTS) $(SHLIB) $(USERLIB) $(LIBSTANOBJECTS) 
 
-# P.S. While Makefile is used, only one platform binary is installed 
-# for example on Mac and Windows. 
+# P.S. While Makefile is used, only the binary of one platform (32bits or
+# 64bits) is installed, for example on Mac and Windows. 

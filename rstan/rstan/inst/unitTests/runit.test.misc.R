@@ -72,6 +72,13 @@ test_is_valid_stan_name <- function() {
   checkTrue(rstan:::is_legal_stan_vname('y'))
 } 
 
+test_is_named_list <- function() {
+  checkTrue(!rstan:::is_named_list(c(2, 3)))
+  checkTrue(!rstan:::is_named_list(list(3, 4)))
+  checkTrue(!rstan:::is_named_list(list(a = 3, 4)))
+  checkTrue(rstan:::is_named_list(list(a = 3, b = 4)))
+} 
+
 test_data_preprocess <- function() {
   lst <- list(z = c(1L, 2L, 4L), 
               a = 1:100, 
@@ -263,24 +270,35 @@ test_makeconf_path <- function() {
 
 test_config_argss <- function() {
   # (chains, iter, warmup, thin, init, seed, sample_file, ...)
-  a <- rstan:::config_argss(3, 100, 10, 3, 0, 0, "a.csv", chain_id = 4)
+  a <- rstan:::config_argss(3, 100, 10, 3, 0, 0, "a.csv", algorithm = "NUTS",
+                            control = NULL,
+                            chain_id = 4)
   checkEquals(length(a), 3)
   checkEquals(a[[1]]$init, "0") 
   checkEquals(a[[1]]$chain_id, 4) 
   checkEquals(a[[3]]$chain_id, 6) 
-  b <- rstan:::config_argss(3, 100, 10, 3, "0", 10, "a.csv") 
+  b <- rstan:::config_argss(3, 100, 10, 3, "0", 10, "a.csv", algorithm = "NUTS",
+                            control = NULL)
   checkEquals(b[[3]]$chain_id, 3) 
   checkEquals(b[[1]]$init, "0") 
-  c <- rstan:::config_argss(3, 100, 10, 3, "random", 10, "a.csv") 
+  c <- rstan:::config_argss(3, 100, 10, 3, "random", 10, "a.csv", algorithm = "HMC", 
+                            control = list(adapt_engaged=FALSE)) 
   checkEquals(c[[1]]$init, "random") 
-  d <- rstan:::config_argss(4, 100, 10, 3, "random", 10, "a.csv", chain_id = c(3, 2, 1)) 
+  d <- rstan:::config_argss(4, 100, 10, 3, "random", 10, "a.csv", 
+                            chain_id = c(3, 2, 1), algorithm = "Metropolis", 
+                            control = list(adapt_engaged=FALSE)) 
   checkEquals(d[[3]]$chain_id, 1) 
   checkEquals(d[[4]]$chain_id, 4) 
-  checkException(rstan:::config_argss(3, 100, 10, 3, "random", 10, NA, chain_id = c(3, 3)))
-  b <- rstan:::config_argss(3, 100, 10, 3, 0, "12345", "a.csv", chain_id = 4)
+  checkException(rstan:::config_argss(3, 100, 10, 3, "random", 10, NA,
+                                      algorithm = "NUTS", control = NULL, chain_id = c(3, 3)))
+  b <- rstan:::config_argss(3, 100, 10, 3, 0, "12345", "a.csv", 
+                            algorithm = "NUTS", chain_id = 4, control = NULL)
   checkEquals(b[[1]]$seed, '12345')
-  checkException(rstan:::config_argss(3, 100, 10, 3, 0, "a12345", "a.csv", chain_id = 4))
-  checkException(rstan:::config_argss(3, 100, 10, 3, 0, "1a2345", "a.csv", chain_id = 4))
+  checkException(rstan:::config_argss(3, 100, 10, 3, 0, "a12345", "a.csv",
+                                      algorithm = "NUTS", control = NULL, chain_id = 4))
+  checkException(rstan:::config_argss(3, 100, 10, 3, 0, "1a2345", "a.csv", 
+                                      algorithm = "NUTS", control = NULL,
+                                      chain_id = 4))
 } 
 
 test_data_list2array <- function() {
