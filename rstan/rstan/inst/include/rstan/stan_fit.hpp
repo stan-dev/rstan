@@ -1061,6 +1061,7 @@ namespace rstan {
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
+          break;
         }
         default: 
           throw std::invalid_argument("No sampler matching HMC specification!");
