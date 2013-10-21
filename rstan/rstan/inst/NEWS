@@ -1,4 +1,10 @@
-Sun Oct 2013
+Sun Oct 20 2013
+1. Bug fixes
+   * specify sampler parameters such as using dense_e, unit_e
+2. Changes
+   * using fixed path for boost and eigen in Makefile.win
+   
+Sun Oct 15 2013
 1. Bug fixes
 2. New features
    * add window option to traceplot

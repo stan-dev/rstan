@@ -180,13 +180,13 @@ namespace rstan {
                 << ctrl.sampling.stepsize_jitter << "; require 0<=stepsize_jitter<=1).";
             throw std::invalid_argument(msg.str());
           } 
-          if (ctrl.sampling.max_treedepth < 0) {
+          if (ctrl.sampling.algorithm == NUTS && ctrl.sampling.max_treedepth < 0) {
             std::stringstream msg;
             msg << "Invalid adaptation parameter (found max_treedepth="
                 << ctrl.sampling.max_treedepth << "; require max_treedepth>0).";
             throw std::invalid_argument(msg.str());
           } 
-          if (ctrl.sampling.int_time < 0) {
+          if (ctrl.sampling.algorithm == HMC && ctrl.sampling.int_time < 0) {
             std::stringstream msg;
             msg << "Invalid adaptation parameter (found int_time="
                 << ctrl.sampling.int_time << "; require int_time>0).";
@@ -278,15 +278,16 @@ namespace rstan {
             get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
             get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
             get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
+
+            if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
+              if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
+              else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
+              else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
+            } else ctrl.sampling.metric = DIAG_E;
     
             switch (ctrl.sampling.algorithm) { 
               case NUTS: 
                 get_rlist_element(ctrl_lst, "max_treedepth", ctrl.sampling.max_treedepth, 10);
-                if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
-                  if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
-                  else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
-                  else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
-                } else ctrl.sampling.metric = DIAG_E;
                 break;
               case HMC: 
                 get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
@@ -375,6 +376,7 @@ namespace rstan {
       if (diagnostic_file_flag) 
         lst["diagnostic_file_flag"] = diagnostic_file;
 
+      std::string sampler_t;
       switch (method) { 
         case SAMPLING: 
           lst["method"] = "sampling";
@@ -388,34 +390,39 @@ namespace rstan {
           ctrl_list["adapt_delta"] = ctrl.sampling.adapt_delta;
           ctrl_list["adapt_kappa"] = ctrl.sampling.adapt_kappa;
           ctrl_list["adapt_t0"] = ctrl.sampling.adapt_t0;
-          switch (ctrl.sampling.algorithm) {  
-            case NUTS:
-              switch (ctrl.sampling.metric) { 
-                case UNIT_E: 
-                  ctrl_list["metric"] = Rcpp::wrap("unit_e"); 
-                  lst["sampler_t"] = "NUTS(unit_e)";
-                  break;
-                case DIAG_E: 
-                  ctrl_list["metric"] = Rcpp::wrap("diag_e");
-                  lst["sampler_t"] = "NUTS(diag_e)";
-                  break;
-                case DENSE_E: 
-                  ctrl_list["metric"] = Rcpp::wrap("dense_e");
-                  lst["sampler_t"] = "NUTS(dense_e)";
-                  break;
-              }
-              ctrl_list["stepsize"] = ctrl.sampling.stepsize;
-              ctrl_list["stepsize_jitter"] = ctrl.sampling.stepsize_jitter;
+          ctrl_list["stepsize"] = ctrl.sampling.stepsize;
+          ctrl_list["stepsize_jitter"] = ctrl.sampling.stepsize_jitter;
+          switch (ctrl.sampling.algorithm) { 
+            case NUTS: 
               ctrl_list["max_treedepth"] = ctrl.sampling.max_treedepth;
+              sampler_t.append("NUTS");
               break;
             case HMC: 
               ctrl_list["int_time"] = ctrl.sampling.int_time;
-              lst["sampler_t"] = "HMC";
+              sampler_t.append("HMC");
               break;
             case Metropolis: 
-              lst["sampler_t"] = "Metropolis";
+              sampler_t.append("Metropolis");
               break;
           } 
+          if (ctrl.sampling.algorithm != Metropolis) { 
+            switch (ctrl.sampling.metric) { 
+              case UNIT_E: 
+                ctrl_list["metric"] = Rcpp::wrap("unit_e"); 
+                sampler_t.append("(unit_e)");
+                break;
+              case DIAG_E: 
+                ctrl_list["metric"] = Rcpp::wrap("diag_e");
+                sampler_t.append("(diag_e)");
+                break;
+              case DENSE_E: 
+                ctrl_list["metric"] = Rcpp::wrap("dense_e");
+                sampler_t.append("(dense_e)");
+                break;
+            }
+          }
+
+          lst["sampler_t"] = sampler_t;
           lst["control"] = ctrl_list;
           break;
         case OPTIM: 
@@ -577,7 +584,6 @@ namespace rstan {
           write_comment_property(ostream,"save_warmup",1);
           write_comment_property(ostream,"thin",ctrl.sampling.thin);
           write_comment_property(ostream,"refresh",ctrl.sampling.refresh);
-          write_comment_property(ostream,"max_treedepth",ctrl.sampling.max_treedepth);
           write_comment_property(ostream,"stepsize",ctrl.sampling.stepsize);
           write_comment_property(ostream,"stepsize_jitter",ctrl.sampling.stepsize_jitter);
           write_comment_property(ostream,"adapt_engaged",ctrl.sampling.adapt_engaged);
@@ -587,13 +593,16 @@ namespace rstan {
           write_comment_property(ostream,"adapt_t0",ctrl.sampling.adapt_t0);
           switch (ctrl.sampling.algorithm) {
             case NUTS: 
+              write_comment_property(ostream,"max_treedepth",ctrl.sampling.max_treedepth);
               switch (ctrl.sampling.metric) {
                 case UNIT_E: write_comment_property(ostream,"sampler_t","NUTS(unit_e)"); break;
                 case DIAG_E: write_comment_property(ostream,"sampler_t","NUTS(diag_e)"); break;
                 case DENSE_E: write_comment_property(ostream,"sampler_t","NUTS(dense_e)"); break;
               } 
               break;
-            case HMC: write_comment_property(ostream,"sampler_t", "HMC"); break;
+            case HMC: write_comment_property(ostream,"sampler_t", "HMC");
+                      write_comment_property(ostream,"int_time", ctrl.sampling.int_time); 
+                      break;
             case Metropolis: write_comment_property(ostream,"sampler_t", "Metropolis"); break;
           } 
           break;

@@ -10,7 +10,7 @@ stan(file, model_name = "anon_model", model_code = "",
   fit = NA, data = list(), pars = NA, chains = 4,
   iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
-  algorithm = c("NUTS", "HMC", "Metropolis"),
+  algorithm = c("NUTS", "HMC"), %, "Metropolis"),
   control = NULL,
   sample_file, diagnostic_file, 
   save_dso = TRUE, 
@@ -78,8 +78,8 @@ stan(file, model_name = "anon_model", model_code = "",
     We can also specify a seed using a character string of digits, such as
     \code{"12345"}, which is converted to integer.}
   \item{algorithm}{One of algorithms that are implemented in Stan such 
-    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC, 
-    and Metropolis based on random walk.}
+    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011) and static HMC.}
+    % and Metropolis based on random walk.}
 
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
@@ -124,20 +124,22 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{adapt_t0} (\code{double}, positive, defaults to 10)
     }
 
-    In addition, Depending on which algorithm is specified, different 
-    parameters can be set as in Stan for sampling.  For algorithm HMC (called 
-    'static HMC' in Stan), we can set 
+    In addition, algorithm HMC (called 'static HMC' in Stan) and NUTS share the
+    following two parameters:
     \enumerate{
-      \item \code{int_time} (\code{double}, positive)
       \item \code{stepsize} (\code{double}, positive)
       \item \code{stepsize_jitter} (\code{double}, [0,1])
+      \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
+    }
+    In addition, depending on which algorithm is specified, different 
+    parameters can be set as in Stan for sampling.  For algorithm HMC
+    we can set 
+    \enumerate{
+      \item \code{int_time} (\code{double}, positive)
     }
     For algorithm NUTS, we can set 
     \enumerate{
-      \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
       \item \code{max_treedepth} (\code{integer}, positive)
-      \item \code{stepsize} (\code{double}, positive)
-      \item \code{stepsize_jitter} (\code{double}, [0,1])
     }
   }
   

@@ -16,7 +16,8 @@
     chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1,
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, diagnostic_file, verbose = FALSE, 
-    algorithm = c("NUTS", "HMC", "Metropolis"), control = NULL,
+    algorithm = c("NUTS", "HMC"),%, "Metropolis")
+    control = NULL,
     \dots)   
 } 
 
@@ -100,8 +101,7 @@
      be helpful for model debugging.}
 
   \item{algorithm}{One of algorithms that are implemented in Stan such 
-    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC, 
-    and Metropolis based on random walk.}
+    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011) and static HMC.} 
 
   \item{control}{See the argument \code{control} of function
     \code{\link{stan}}.} 
