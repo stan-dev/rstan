@@ -1,4 +1,3 @@
-
 #ifndef __RSTAN__STAN_ARGS_HPP__
 #define __RSTAN__STAN_ARGS_HPP__
 
@@ -247,9 +246,8 @@ namespace rstan {
             = ctrl.sampling.iter_save_wo_warmup
               + 1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
   
-          ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ? 
-                                  ctrl.sampling.iter / 10 : 1; 
-          get_rlist_element(in, "refresh", ctrl.sampling.refresh);
+          refresh = (ctrl.sampling.iter >= 20) ? ctrl.sampling.iter / 10 : 1; 
+          get_rlist_element(in, "refresh", ctrl.sampling.refresh, refresh);
          
           b = get_rlist_element(in, "seed", t_sexp);
           if (b) random_seed = sexp2seed(t_sexp);
