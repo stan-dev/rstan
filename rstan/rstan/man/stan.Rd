@@ -125,7 +125,7 @@ stan(file, model_name = "anon_model", model_code = "",
     }
 
     In addition, algorithm HMC (called 'static HMC' in Stan) and NUTS share the
-    following two parameters:
+    following parameters:
     \enumerate{
       \item \code{stepsize} (\code{double}, positive)
       \item \code{stepsize_jitter} (\code{double}, [0,1])

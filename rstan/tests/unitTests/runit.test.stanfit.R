@@ -199,5 +199,7 @@ test_specify_stepsize <- function() {
   checkEquals(attr(sf2@sim$samples[[1]],"sampler_params")$stepsize__[1], stepsize0)
 } 
 
-.tearDown <- function() { }
-
+.tearDown <- function() { 
+  csv_fname <- 'teststanfit*.csv'
+  system(paste('rm -rf ', csv_fname))
+} 
