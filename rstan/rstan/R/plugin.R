@@ -34,9 +34,9 @@ static_linking <- function() {
 
 PKG_CPPFLAGS_env_fun <- function() {
    paste(' -I"', file.path(rstan_inc_path_fun(), '/stansrc" '),
-         ' -I"', file.path(eigen_path_fun(), '" '),
-         ' -I"', file.path(eigen_path_fun(), '/unsupported" '),
-         ' -I"', rstan_options("boost_lib"), '"',
+         ' -isystem"', file.path(eigen_path_fun(), '" '),
+         ' -isystem"', file.path(eigen_path_fun(), '/unsupported" '),
+         ' -isystem"', rstan_options("boost_lib"), '"',
          ' -I"', rstan_inc_path_fun(), '"', 
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
 }
