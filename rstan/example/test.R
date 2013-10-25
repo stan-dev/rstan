@@ -137,7 +137,7 @@ if (!identical(fit4@sim$fnames_oi, fit4par_fnames_oi) ||
 if (!identical(fit4@sim$pars_oi, c('y2', 'lp__'))) 
   message('pars_oi for fit4@sim is not as expected')
 
-fit4dims_oi <- list(y2 = c(4L, 4L), lp__ = integer(0)) 
+fit4dims_oi <- list(y2 = c(4, 4), lp__ = numeric(0)) 
 if (!identical(fit4@sim$dims_oi, fit4dims_oi)) 
   message('dims_oi for fit4@sim is not as expected')
 
