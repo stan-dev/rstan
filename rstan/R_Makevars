@@ -1,5 +1,7 @@
 ## To make it easier to control how to install rstan 
 ## 
 
-# CXX = clang++
-# CXXFLAGS = -O3 $(LTO)
+## for clang++ on Mac OS X Mavericks with Xcode 5
+# CXX = ccache clang++ -stdlib=libstdc++ 
+
+# CXXFLAGS = -O3 $(LTO) 
