@@ -8,11 +8,12 @@ install:
   - sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu `lsb_release -cs`/" 
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
   - sudo apt-get update
-  - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra
+  - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra ccache
   - "[ ! -d ~/R ] && mkdir ~/personal_library"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
   - Rscript -e 'install.packages(c("Rcpp", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
+  - echo "ccache `R CMD config CXX`" >> ~/R/.Makevars
 
 # run tests
 script:
