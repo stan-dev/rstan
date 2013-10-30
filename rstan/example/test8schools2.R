@@ -32,7 +32,7 @@ sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
 
 iter <- 1000
 # specify data using names 
-ss1 <- sampling(m, data = c("J", "y", "sigma"), iter = iter, chains = 4, equal_step_sizes = FALSE, refresh = 100) 
+ss1 <- sampling(m, data = c("J", "y", "sigma"), iter = iter, chains = 4, refresh = 100) 
 
 print(ss1) 
 traceplot(ss1)

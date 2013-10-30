@@ -23,10 +23,10 @@
   \code{constrained_pars} and \code{unconstrain_pars} can be used then.
 } 
 \usage{
-  %% log_prob(object, upars) 
-  \S4method{log_prob}{stanfit}(object, upars)
-  %% grad_log_prob(object, upars) 
-  \S4method{grad_log_prob}{stanfit}(object, upars)
+  %% log_prob(object, upars, adjust_transform = TRUE, gradient = FALSE) 
+  \S4method{log_prob}{stanfit}(object, upars, adjust_transform = TRUE, gradient = FALSE)
+  %% grad_log_prob(object, upars, adjust_transform = TRUE) 
+  \S4method{grad_log_prob}{stanfit}(object, upars, adjust_transform = TRUE)
   %% get_num_upars(object)
   \S4method{get_num_upars}{stanfit}(object)
   %% constrain_pars(object, upars)
@@ -61,14 +61,40 @@
   \item{object}{An object of class \code{\linkS4class{stanfit}}.}
   \item{pars}{An list specifying the values for all parameters on the
     constrained space.} 
-  \item{upars}{An vector for specifying the values for all parameters 
+  \item{upars}{A numeric vector for specifying the values for all parameters 
     on the unconstrained space.}  
+  \item{adjust_transform}{Logical to indicate whether to adjust
+    the log density since Stan transforms parameters to unconstrained
+    space if it is in constrained space.} 
+  \item{gradient}{Logical to indicate whether gradients are also 
+    computed as well as the log density. 
+  } 
+} 
+
+\details{
+  In Stan, the parameters need be defined with their supports.
+  For example, for a variance parameter, we must define it 
+  on the positive real line.  But inside Stan's sampler, all parameters
+  defined on the constrained space are transformed to unconstrained
+  space, so the log density function need be adjusted (i.e., adding
+  the log of the absolute value of the Jacobian determinant).
+  With the transformation, Stan's samplers work on the unconstrained space and 
+  once a new iteration is drawn, Stan transforms the parameters
+  back to their supports. All the transformation are done inside Stan without
+  interference from the users.  However, when using the log density function
+  for a model exposed to R, we need to be careful.
+  For example, if we are interested in finding the mode of parameters 
+  on the constrained space, we then do not need the adjustment. 
+  For this reason, there is an argument named \code{adjust_transform} 
+  for functions \code{log_prob} and \code{grad_log_prob}.
 } 
 
 \value{
   \code{log_prob} returns a value (up to an additive constant) the log posterior. 
+  If \code{gradient} is \code{TRUE},  the gradients are also returned as an
+  attribute with name \code{gradient}.
 
-  \code{grad_log_prob} returns a vector of the gradients.  Additionaly, the vector
+  \code{grad_log_prob} returns a vector of the gradients.  Additionally, the vector
   has an attribute named \code{log_prob} being the value the same as \code{log_prob}
   is called for the input parameters. 
 

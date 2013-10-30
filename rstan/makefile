@@ -52,6 +52,22 @@ EIGEN_FOR_RSTAN := $(TMP_STANLIB)/$(subst ../stan/lib/,,$(EIGENPATH))
 BCP = $(strip $(shell $(WH) bcp))
 GIT = $(strip $(shell $(WH) git))
 
+# The default target of this makefile 
+help:
+
+.PHONY: help
+help: 
+	@echo '--------------------------------------------------------------------------------'
+	@echo 'main targets:'
+	@echo ' build: to build rstan source package in a gzip form using R CMD build'
+	@echo ' install: to install rstan using R CMD INSTALL' 
+	@echo ' uninstall: to install rstan using R CMD REMOVE rstan'
+	@echo ' clean: to remove the gzip package file'
+	@echo ' check: use R CMD check on rstan package'
+	@echo ' tmpstanlib: use Boost bcp to strip boost'
+	@echo ' example_csv: create CSV files included in the package for examples'
+	@echo '--------------------------------------------------------------------------------'
+
 build $(STANPKG): ./rstan/DESCRIPTION 
 	@rm -rf "./rstan/inst/include/stanlib"
 	@rm -rf "./rstan/inst/include/stansrc"
@@ -69,7 +85,13 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
-	$(R) CMD build rstan --md5  # --no-vignettes --no-manual
+	$(R) CMD build rstan --md5  # --no-build-vignettes --no-manual
+
+example_csv : 
+ifneq ($(OS), win)
+	@if test -f "example/rstan_doc_ex_1.csv"; then cp example/rstan_doc_ex_*.csv ./rstan/inst/misc && echo "Copy done.";  \
+	else echo "Not found example/rstan_doc_ex_1.csv, run example/examplemodel.R first."; fi
+endif
 
 check: $(STANPKG) 
 	$(R) CMD check --as-cran $(STANPKG) 
@@ -107,8 +129,12 @@ clean:
 
 clean-all: 
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
+	rm -rf "./rstan/inst/include/stanlib"
+	rm -rf "./rstan/inst/include/stansrc"
+	rm -rf rstan.Rcheck
+  
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all
+.PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib

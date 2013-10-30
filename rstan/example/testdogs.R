@@ -101,6 +101,9 @@ dogsrr <- stan_model(model_code = dogsstan, model_name = model_name,
 ss <- sampling(dogsrr, data = dogsdat, chains = 3, seed = 1340338046,
                iter = 2012, sample_file = 'dogs.csv')
 
+ss <- sampling(dogsrr, data = dogsdat, chains = 3, seed = 1340338046,
+               iter = 2012, sample_file = 'dogs.csv', diagnostic_file = 'd_dogs.csv')
+
 ss1 <- sampling(dogsrr, data = dogsdat, chains = 1, seed = 1340384924,
                 iter = 2012, sample_file = 'dogs.csv')
 
@@ -144,13 +147,23 @@ print(ss, pars = c('alpha', 'beta'))
 sf <- stan(model_code = dogsstan, data = dogsdat, verbose = TRUE, chains = 3,
            seed = 1340384924, sample_file = 'dogsb.csv')
 traceplot(sf)
+traceplot(sf, window = 100)
+traceplot(sf, window = c(100, 1500))
 plot(sf)
-print(sf)
+sf2 <- stan(fit = sf, data = dogsdat, thin = 3)
+traceplot(sf2, window = 100)
+traceplot(sf2, window = 100, inc_warmup = FALSE)
+traceplot(sf2, window = 100)
+traceplot(sf2, window = c(100, 1500))
+traceplot(sf2, window = c(100, 1500), inc_warmup = FALSE)
+traceplot(sf2, window = c(1001, 1500))
+plot(sf2)
+print(sf2)
 
 m <- get_posterior_mean(sf)
 print(m)
 
-require(coda) 
+stopifnot(require(coda)) 
 
 to.mcmc.list <- function(lst) {
   as.mcmc.list(lapply(lst, FUN = function(x) as.mcmc(do.call(cbind, x))))  

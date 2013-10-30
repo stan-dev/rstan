@@ -16,7 +16,7 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    method = c("newton", "nesterov", "bfgs"),
+    algorithm = c("BFGS", "Nesterov", "Newton"),
     verbose = FALSE, \dots)   
 } 
 
@@ -59,16 +59,20 @@
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
-  \item{method}{One of "newton", "nesterov", and "bfgs" indicating which
-    optimization method is used. The default is Newton's method.} 
+  \item{algorithm}{One of "Newton", "Nesterov", and "BFGS" indicating which
+    optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
-  \item{\dots}{Other optional parameters.
+  \item{\dots}{Other optional parameters. 
     \enumerate{
-      \item \code{iter} (\code{integer})
-      \item \code{epsilon} (\code{double})
-      \item \code{save_warmup} (logical)
+      \item \code{iter} (\code{integer}), the maximum number of iterations
+      \item \code{save_iterations} (logical), whether to save the iterations 
       \item \code{refresh} (\code{integer})
+      \item \code{stepsize} (\code{double}), for Nesterov, see the manual of Stan
+      \item \code{init_alpha} (\code{double}, default to 0.0001), for BFGS, see manual of Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
     }
   }
 }
@@ -77,12 +81,9 @@
    \item{par}{The point estimate found.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
    the \code{"lp__"} in Stan) corresponding to \code{par}.}
-   \item{stanmodel}{The object of \code{stanmodel} that represents the Stan
-     model and includes the compiled dynamic shared object for the model.}
 
   If the optimization is not finished for reasons such as feeding wrong data,
-  a list with a component of the compiled model (an object of \code{stanmodel})
-  is returned for future reusing. 
+  it returns \code{NULL}. 
 } 
 
 \seealso{

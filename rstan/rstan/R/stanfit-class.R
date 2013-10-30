@@ -19,6 +19,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
   } 
 
   s <- summary(x, pars, probs, ...)  
+  if (is.null(s)) return(invisible(NULL))
   n_kept <- x@sim$n_save - x@sim$warmup2
   cat("Inference for Stan model: ", x@model_name, '.\n', sep = '')
   cat(x@sim$chains, " chains, each with iter=", x@sim$iter, 
@@ -31,7 +32,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 
   print(round(s$summary, digits_summary), ...) 
 
-  sampler <- attr(x@sim$samples[[1]], "args")$sampler 
+  sampler <- attr(x@sim$samples[[1]], "args")$sampler_t
 
   cat("\nSamples were drawn using ", sampler, " at ", x@date, ".\n",
       "For each parameter, n_eff is a crude measure of effective sample size,\n", 
@@ -50,6 +51,12 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
               cat("Stan model '", x@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
+
+            if (isTRUE(all.equal(x@sim$n_save, x@sim$warmup2,
+                check.attributes = FALSE, check.names = FALSE))) {
+              cat("Stan model '", x@model_name, "' does not contain samples after warmup.\n", sep = '')
+              return(invisible(NULL))
+            }
 
             pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
             if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
@@ -193,41 +200,39 @@ get_samples2 <- function(n, sim, inc_warmup = TRUE) {
   lst
 } 
 
-par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, ...) {
+par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, window = NULL, ...) {
   # same thin, n_save, warmup2 for all the chains
   thin <- sim$thin
   warmup2 <- sim$warmup2[1] 
-  n_save <- sim$n_save[1] 
-  n_kept <- n_save - warmup2 
-  yrange <- NULL 
+  warmup <- sim$warmup 
   main <- paste("Trace of ", par_name) 
   chain_cols <- rstan_options("rstan_chain_cols")
   warmup_col <- rstan_options("rstan_warmup_bg_col") 
+
+  start_i <- window[1] 
+  window_size <- (window[2] - start_i) %/% thin
+  id <- seq.int(start_i, by = thin, length.out = window_size)
+  start_idx <- (if (warmup2 == 0) (start_i - warmup) else start_i) %/% thin
+  if (start_idx < 1)  start_idx <- 1
+  idx <- seq.int(start_idx, by = 1, length.out = window_size)
+
+  yrange <- NULL 
+  for (i in 1:sim$chains)
+    yrange <- range(yrange, sim$samples[[i]][[n]][idx]) 
+
   if (inc_warmup) {
-    id <- seq(1, by = thin, length.out = n_save) 
-    for (i in 1:sim$chains) {
-      yrange <- range(yrange, sim$samples[[i]][[n]]) 
-    }
-    plot(c(1, id[length(id)]), yrange, type = 'n', bty = 'l',
+    plot(range(id), yrange, type = 'n', bty = 'l',
          xlab = 'Iterations', ylab = "", main = main, ...)
-    rect(par("usr")[1], par("usr")[3], warmup2 * thin, par("usr")[4], 
+    rect(par("usr")[1], par("usr")[3], sim$warmup, par("usr")[4], 
          col = warmup_col, border = NA)
-    for (i in 1:sim$chains) {
-      lines(id, sim$samples[[i]][[n]], xlab = '', ylab = '', 
-            lwd = 1, col = chain_cols[(i-1) %% 6 + 1], ...) 
-    }
   } else {  
-    idx <- warmup2 + 1:n_kept
-    id <- seq((warmup2 + 1)* thin, by = thin, length.out = n_kept) 
-    for (i in 1:sim$chains) {
-      yrange <- range(yrange, sim$samples[[i]][[n]][idx]) 
-    }
-    plot(c((warmup2 + 1), id[length(id)]), yrange, type = 'n', bty = 'l',
+    plot(range(id), yrange, type = 'n', bty = 'l',
          xlab = 'Iterations (without warmup)', ylab = "", main = main, ...)
-    for (i in 1:sim$chains)  
-      lines(id, sim$samples[[i]][[n]][idx], lwd = 1, 
-            xlab = '', ylab = '', col = chain_cols[(i-1) %% 6 + 1], ...) 
   } 
+
+  for (i in 1:sim$chains)  
+    lines(id, sim$samples[[i]][[n]][idx], lwd = 1, 
+          xlab = '', ylab = '', col = chain_cols[(i-1) %% 6 + 1], ...) 
 } 
 
 ######
@@ -314,7 +319,7 @@ setMethod("get_posterior_mean",
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
-            fnames <- flatnames(object@model_pars, object@par_dims)
+            fnames <- flatnames(object@model_pars, object@par_dims, col_major = TRUE)
             if (!exists("posterior_mean_4all", envir = object@.MISC, inherits = FALSE)) {
               mean_pars <- lapply(object@sim$samples, function(x) attr(x, "mean_pars"))
               mean_lp__ <- lapply(object@sim$samples, function(x) attr(x, "mean_lp__"))
@@ -374,6 +379,7 @@ setMethod("extract", signature = "stanfit",
             n_kept <- object@sim$n_save - object@sim$warmup2
             fun1 <- function(par) {
               sss <- sapply(tidx[[par]], get_kept_samples2, object@sim) 
+              if (is.list(sss))  sss <- do.call(c, sss)
               dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par]]) 
               dimnames(sss) <- list(iterations = NULL)
               sss 
@@ -428,6 +434,12 @@ setMethod("summary", signature = "stanfit",
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
+
+            if (isTRUE(all.equal(object@sim$n_save, object@sim$warmup2,
+                check.attributes = FALSE, check.names = FALSE))) {
+              cat("Stan model '", object@model_name, "' does not contain samples after warmup.\n", sep = '')
+              return(invisible(NULL))
+            }
 
             if (!exists("summary", envir = object@.MISC, inherits = FALSE) && use_cache) 
               assign("summary", summary_sim(object@sim), envir = object@.MISC)
@@ -537,10 +549,10 @@ setMethod("constrain_pars", signature = "stanfit",
 
 
 setMethod("log_prob", signature = "stanfit", 
-          function(object, upars) {
+          function(object, upars, adjust_transform = TRUE, gradient = FALSE) {
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
-            object@.MISC$stan_fit_instance$log_prob(upars) 
+            return(object@.MISC$stan_fit_instance$log_prob(upars, adjust_transform, gradient))
           }) 
 
 if (!isGeneric("get_num_upars")) {
@@ -561,19 +573,22 @@ if (!isGeneric("grad_log_prob")) {
 } 
 
 setMethod("grad_log_prob", signature = "stanfit", 
-          function(object, upars) {
+          function(object, upars, adjust_transform = TRUE) {
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
-            object@.MISC$stan_fit_instance$grad_log_prob(upars) 
+            object@.MISC$stan_fit_instance$grad_log_prob(upars, adjust_transform) 
           }) 
 
 setMethod("traceplot", signature = "stanfit", 
-          function(object, pars, inc_warmup = TRUE, ask = FALSE, nrow = 4, ncol = 2, ...) { 
+          function(object, pars, inc_warmup = TRUE, ask = FALSE, 
+                   nrow = 4, ncol = 2, window = NULL, ...) { 
             # Args:
             #  nrow, defaults to 4
             #  ncol, defaults to 2 
             #  nrow and ncol are used to define mfrow for the whole plot area
             #  when there are many parameters. 
+            #  window, for plotting only a window of the whole iterations
+            #  default to NULL for all iterations
 
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
@@ -597,14 +612,35 @@ setMethod("traceplot", signature = "stanfit",
             num_plots <- length(tidx) 
             if (num_plots %in% 2:nrow) par(mfrow = c(num_plots, 1)) 
             if (num_plots > nrow) par(mfrow = c(nrow, ncol)) 
+    
+            if (!is.null(window)) { 
+              window <- sort(window)
+              if (window[1] < 1) window[1] <- 1
+              if (window[1] > object@sim$iter[1])
+                stop("wrong specification of argument window", call. = FALSE)
+              if (is.na(window[2]) || window[2] > object@sim$iter[1])
+                window[2] <- object@sim$iter[1]
+            } else { 
+              window <- c(1, object@sim$iter[1]) 
+            }
+            if ((object@sim$warmup2 == 0 || !inc_warmup) && window[1] <= object@sim$warmup[1]) {
+              window[1] <- object@sim$warmup[1] + 1
+            }
+            if (window[1] > window[2]) {
+              stop("the given window does not include sample")
+            } 
+            if (window[1] > object@sim$warmup[1]) inc_warmup <- FALSE
+            
             par_traceplot(object@sim, tidx[1], object@sim$fnames_oi[tidx[1]], 
-                          inc_warmup = inc_warmup, ...)
-            if (num_plots > nrow * ncol && ask) ask_old <- devAskNewPage(ask = TRUE)
-            on.exit({if (ask) devAskNewPage(ask = ask_old); par(mfrow = mfrow_old)})
+                          inc_warmup = inc_warmup, window = window, ...)
+            if (num_plots > nrow * ncol && ask) {
+              ask_old <- devAskNewPage(ask = TRUE)
+              on.exit(devAskNewPage(ask = ask_old), add = TRUE)
+            }
             if (num_plots > 1) { 
               for (n in 2:num_plots)
                 par_traceplot(object@sim, tidx[n], object@sim$fnames_oi[tidx[n]], 
-                              inc_warmup = inc_warmup, ...)
+                              inc_warmup = inc_warmup, window = window, ...)
             }
             invisible(NULL) 
           })  
@@ -647,8 +683,11 @@ sflist2stanfit <- function(sflist) {
       any(sapply(sflist, function(x) !is(x, "stanfit")))) {   
     stop("'sflist' must be a list of 'stanfit' objects")
   }
-  if (any(sapply(sflist, function(x) x@mode != 0))) {
-    stop("each 'stanfit' object in 'sflist' must contain samples") 
+
+  non_zero_modes_idx <- which(sapply(sflist, function(x) x@mode) > 0)
+  if (length(non_zero_modes_idx) > 0) { 
+    stop("The following elements of 'sflist' do not contain samples: ",
+         non_zero_modes_idx) 
   }   
   for (i in 2:sf_len) { 
     if (!identical(sflist[[i]]@sim$pars_oi, sflist[[1]]@sim$pars_oi) || 

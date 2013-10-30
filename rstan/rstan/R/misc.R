@@ -177,6 +177,8 @@ data_preprocess <- function(data) { # , varnames) {
                      x <- data.matrix(x) # change data.frame to array 
                    } else if (is.list(x)) {
                      x <- data_list2array(x) # list to array
+                   } else if (is.logical(x)) {
+                     x <- as.integer(x)
                    } 
  
                    ## Now we stop whenever we have NA in the data
@@ -306,8 +308,18 @@ is_named_list <- function(x) {
   return(TRUE)
 } 
 
+
+## from stan_args.hpp
+# 
+# enum sampling_algo_t { NUTS = 1, HMC = 2, Metroplos = 3};
+# enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
+# enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
+# enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
+
+
 config_argss <- function(chains, iter, warmup, thin, 
-                         init, seed, sample_file, ...) {
+                         init, seed, sample_file, diagnostic_file, algorithm,
+                         control, ...) {
 
   iter <- as.integer(iter) 
   if (iter < 1) 
@@ -363,7 +375,6 @@ config_argss <- function(chains, iter, warmup, thin,
   seed <- if (missing(seed)) sample.int(.Machine$integer.max, 1) else check_seed(seed)
 
   dotlist <- list(...)
-  dotlist$point_estimate <- -1 # not to do point estimation
 
   # use chain_id argument if specified
   if (is.null(dotlist$chain_id)) { 
@@ -378,13 +389,26 @@ config_argss <- function(chains, iter, warmup, thin,
     dotlist$chain_id <- NULL
   }
 
+  dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) "test_grad" else "sampling"
+  
+  all_metrics <- c("unit_e", "diag_e", "dense_e")
+  if (!is.null(control)) {
+    if (!is.list(control)) 
+      stop("control should be a named list")
+    metric <- control$metric
+    if (!is.null(metric))
+      control$metric <- match.arg(metric, all_metrics)
+    dotlist$control <- control
+  } 
+
   argss <- vector("list", chains)  
   ## the name of arguments in the list need to 
   ## match those in include/rstan/stan_args.hpp 
   for (i in 1:chains)  
     argss[[i]] <- list(chain_id = chain_ids[i],
                        iter = iters[i], thin = thins[i], seed = seed, 
-                       warmup = warmups[i], init = inits[[i]]) 
+                       warmup = warmups[i], init = inits[[i]], 
+                       algorithm = algorithm) 
     
   if (!missing(sample_file) && !is.na(sample_file)) {
     sample_file <- writable_sample_file(sample_file) 
@@ -393,6 +417,16 @@ config_argss <- function(chains, iter, warmup, thin,
     if (chains > 1) {
       for (i in 1:chains) 
         argss[[i]]$sample_file <- append_id(sample_file, i) 
+    }
+  }
+
+  if (!missing(diagnostic_file) && !is.na(diagnostic_file)) {
+    diagnostic_file <- writable_sample_file(diagnostic_file) 
+    if (chains == 1) 
+        argss[[1]]$diagnostic_file <- diagnostic_file
+    if (chains > 1) {
+      for (i in 1:chains) 
+        argss[[i]]$diagnostic_file <- append_id(diagnostic_file, i) 
     }
   }
   
@@ -496,7 +530,7 @@ stan_rdump <- function(list, file = "", append = FALSE,
 
     if (is.vector(vv)) {
       if (length(vv) == 1) {
-        cat(v, " <- ", vv, "\n", file = file, sep = '')
+        cat(v, " <- ", as.character(vv), "\n", file = file, sep = '')
         next
       }
       str <- paste0(v, " <- \nc(", paste(vv, collapse = ', '), ")") 
@@ -815,7 +849,11 @@ default_summary_probs <- function() c(0.025, 0.05, 0.10, 0.25, 0.50, 0.75, 0.90,
 
 ## summarize the chains merged and individually 
 get_par_summary <- function(sim, n, probs = default_summary_probs()) {
-  ss <- lapply(1:sim$chains, function(i) sim$samples[[i]][[n]][-(1:sim$warmup2[i])]) 
+  ss <- lapply(1:sim$chains, 
+               function(i) {
+                 if (sim$warmup2[i] == 0) sim$samples[[i]][[n]] 
+                 else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
+               }) 
   msdfun <- function(chain) c(mean(chain), sd(chain))
   qfun <- function(chain) quantile(chain, probs = probs)
   c_msd <- unlist(lapply(ss, msdfun), use.names = FALSE) 
@@ -828,7 +866,11 @@ get_par_summary <- function(sim, n, probs = default_summary_probs()) {
 
 # mean and sd 
 get_par_summary_msd <- function(sim, n) { 
-  ss <- lapply(1:sim$chains, function(i) sim$samples[[i]][[n]][-(1:sim$warmup2[i])]) 
+  ss <- lapply(1:sim$chains, 
+               function(i) {
+                 if (sim$warmup2[i] == 0) sim$samples[[i]][[n]] 
+                 else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
+               }) 
   sumfun <- function(chain) c(mean(chain), sd(chain)) 
   cs <- lapply(ss, sumfun)
   as <- sumfun(do.call(c, ss)) 
@@ -837,7 +879,11 @@ get_par_summary_msd <- function(sim, n) {
 
 # quantiles 
 get_par_summary_quantile <- function(sim, n, probs = default_summary_probs()) {
-  ss <- lapply(1:sim$chains, function(i) sim$samples[[i]][[n]][-(1:sim$warmup2[i])]) 
+  ss <- lapply(1:sim$chains, 
+               function(i) {
+                 if (sim$warmup2[i] == 0) sim$samples[[i]][[n]] 
+                 else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
+               }) 
   sumfun <- function(chain) quantile(chain, probs = probs)
   cs <- lapply(ss, sumfun)
   as <- sumfun(do.call(c, ss)) 
@@ -1041,12 +1087,7 @@ stan_plot_inferences <- function(sim, summary, pars, model_info, display_paralle
   chain_cols <- rstan_options("rstan_chain_cols")
   chain_cols.len <- length(chain_cols) 
 
-  # FIXME: the following if - else for all platforms 
-  if (exists('windows'))  dev.fun <- windows 
-  if (exists('X11'))  dev.fun <- X11 
-  opt.dev <- options("device") 
-  if (.Device %in% c("windows", "X11cairo")  ||
-      (.Device=="null device" && identical(opt.dev, dev.fun))) {
+  if (.Device %in% c("windows", "X11cairo", 'quartz')) { 
     cex.points <- .7
     min.width <- .02
   } else {

@@ -29,6 +29,10 @@ test_output_csv <- function() {
               iter = 100, chains = 1, thin = 3, 
               sample_file = csv_fname)
 
+  pmean <- get_posterior_mean(fit)[,1]
+  pmean2 <- summary(fit)$c_summary[,'mean',1]
+  checkEquals(pmean, pmean2, tolerance = 0.00001)
+
   checkTrue(file.exists(csv_fname))
   d <- read.csv(file = csv_fname, comment.char = '#',
                 header = TRUE)
@@ -55,6 +59,11 @@ test_output_csv <- function() {
   checkEquals(iter1["y.2"], iter1["y2.2.2"], checkNames = FALSE)
   checkEquals(iter1["y.2"], -iter1["y2.2.1"], checkNames = FALSE)
   checkEquals(iter1[y3_names], 1:18, checkNames = FALSE)
+
+  fit2 <- read_stan_csv(csv_fname)
+  fit2_m <- as.vector(get_posterior_mean(fit2))
+  fit2_m2 <- summary(fit2)$summary[,"mean"]
+  checkEquals(fit2_m, fit2_m2, checkNames = FALSE)
 
   unlink(csv_fname)
 } 
@@ -119,5 +128,78 @@ test_init_zero_exception_inf_grad <- function() {
   checkTrue(grepl('.*divergent gradient.*', geterrmessage()))
 }
 
-.tearDown <- function() { }
+test_grad_log <- function() {
+  y <- c(0.70,  -0.16,  0.77, -1.37, -1.99,  1.35, 0.08, 
+         0.02,  -1.48, -0.08,  0.34,  0.03, -0.42, 0.87, 
+         -1.36,  1.43,  0.80, -0.48, -1.61, -1.27)
 
+  code <- '
+  data {
+    real y[20];
+  } 
+  parameters {
+    real mu;
+    real<lower=0> sigma;
+  } 
+  model {
+    y ~ normal(mu, sigma);
+  } 
+  '
+  log_prob_fun <- function(mu, log_sigma, adjust = TRUE) {
+    sigma <- exp(log_sigma)
+    lp <- -sum((y - mu)^2) / (2 * (sigma^2)) - length(y) * log(sigma) 
+    if (adjust) lp <- lp + log(sigma)
+    lp
+  } 
+  log_prob_grad_fun <- function(mu, log_sigma, adjust = TRUE) {
+    sigma <- exp(log_sigma)
+    g_lsigma <- sum((y - mu)^2) * sigma^(-2) - length(y) 
+    if (adjust) g_lsigma <- g_lsigma + 1
+    g_mu <- sum(y - mu) * sigma^(-2)
+    c(g_mu, g_lsigma)
+  } 
+  sf <- stan(model_code = code, data = list(y = y), iter = 200)
+  mu <- 0.1; sigma <- 2;
+  checkEquals(log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma))), 
+              log_prob_fun(mu, log(sigma)), checkNames = FALSE)
+  checkEquals(log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma)), FALSE), 
+              log_prob_fun(mu, log(sigma), adjust = FALSE), checkNames = FALSE)
+  lp1 <- log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma)), FALSE, TRUE)
+  checkEquals(attr(lp1, 'gradient'), log_prob_grad_fun(mu, log(sigma), FALSE))
+  g1 <- grad_log_prob(sf, unconstrain_pars(sf, list(mu = mu, sigma = sigma)), FALSE)
+  checkEquals(attr(g1, 'log_prob'), log_prob_fun(mu, log(sigma), adjust = FALSE))
+  attributes(g1) <- NULL
+  checkEquals(g1, log_prob_grad_fun(mu, log(sigma), adjust = FALSE))
+}
+
+test_specify_stepsize <- function() {
+  y <- c(0.70,  -0.16,  0.77, -1.37, -1.99,  1.35, 0.08, 
+         0.02,  -1.48, -0.08,  0.34,  0.03, -0.42, 0.87, 
+         -1.36,  1.43,  0.80, -0.48, -1.61, -1.27)
+
+  code <- '
+  data {
+    real y[20];
+  } 
+  parameters {
+    real mu;
+    real<lower=0> sigma;
+  } 
+  model {
+    y ~ normal(mu, sigma);
+  } 
+  '
+  stepsize0 <- 0.15
+  sf <- stan(model_code = code, data = list(y = y), iter = 200, 
+             control = list(adapt_engaged = FALSE, stepsize = stepsize0))
+  checkEquals(attr(sf@sim$samples[[1]],"sampler_params")$stepsize__[1], stepsize0)
+
+  sf2 <- stan(fit = sf, iter = 20, algorithm = 'HMC', data = list(y = y),
+             control = list(adapt_engaged = FALSE, stepsize = stepsize0))
+  checkEquals(attr(sf2@sim$samples[[1]],"sampler_params")$stepsize__[1], stepsize0)
+} 
+
+.tearDown <- function() { 
+  csv_fname <- 'teststanfit*.csv'
+  system(paste('rm -rf ', csv_fname))
+} 

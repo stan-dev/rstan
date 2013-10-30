@@ -2,18 +2,23 @@
 \name{cppo}
 \alias{get_cppo}
 \alias{set_cppo}
+\alias{reset_cppo}
 
 \title{Set and get the optimization level and debug flag for compiling the C++ code} 
 
 \description{Set and get the optimization level, defined in 
- CXXFLAGS, for compiling the C++ code. Also flag \code{-DDEBUG} 
- or \code{-DNDEBUG} in \code{R_XTRA_CPPFLAGS} is set depending on the
- optimization mode and parameter \code{NDEBUG}.  
+  CXXFLAGS, for compiling the C++ code. Also flag \code{-DDEBUG} 
+  or \code{-DNDEBUG} in \code{R_XTRA_CPPFLAGS} is set depending on the
+  optimization mode and parameter \code{NDEBUG}. All flags set by
+  \code{set_cppo} can be removed by \code{reset_cppo} to restore the default
+  settings in R.
 }
 
 \usage{
-  set_cppo(mode = c("fast", "presentation2", "presentation1", "debug", "small"), NDEBUG = FALSE)
+  set_cppo(mode = c("fast", "presentation2", "presentation1", "debug", "small"),
+           NDEBUG = FALSE)
   get_cppo() 
+  reset_cppo()
 } 
  
 \arguments{
@@ -45,6 +50,9 @@
   optimization mode (that is,  one of \code{"fast"}, \code{"presentation2"},
   \code{"presentation1"}, \code{"debug"}). The second element indicates if
   "NDEBUG" is set. The third element indicates if "DEBUG" is set.
+
+  \code{reset_cppo} removes the compiler flags set by \code{set_cppo} and 
+  restores the default settings in R. 
 }
 
 
