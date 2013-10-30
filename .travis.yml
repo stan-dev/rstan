@@ -1,7 +1,7 @@
 language: python
 
 env:
-  - R_LIBS_USER=~/personal_library
+  - R_LIBS_USER=~/personal_library CXX=g++
 
 # install dependencies
 install:
@@ -13,7 +13,7 @@ install:
   - R --version
   - R -e '.libPaths(); sessionInfo()'
   - Rscript -e 'install.packages(c("Rcpp", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
-  - echo "ccache `R CMD config CXX`" >> ~/R/.Makevars
+  - mkir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars
 
 # run tests
 script:
