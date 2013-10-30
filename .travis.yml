@@ -1,8 +1,13 @@
 language: cpp
 
+compiler:
+  - gcc 
+  - clang
+  
+
 env:
-  - R_LIBS_USER=~/personal_library CXX=g++
-  - R_LIBS_USER=~/personal_library CXX=clang++
+  - R_LIBS_USER=~/personal_library
+  - R_LIBS_USER=~/personal_library
 
 # install dependencies
 install:
@@ -16,7 +21,7 @@ install:
   - Rscript -e 'install.packages(c("Rcpp", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
 
 before_script: 
-  - mkdir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars && sed -i "s/g++/$CXX" ~/.R/Makevars
+  - mkdir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars && sed -i "s/g++/$CXX/" ~/.R/Makevars
 
 notifications:
   recipients:
