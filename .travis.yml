@@ -1,7 +1,8 @@
-language: python
+language: cpp
 
 env:
   - R_LIBS_USER=~/personal_library CXX=g++
+  - R_LIBS_USER=~/personal_library CXX=clang++
 
 # install dependencies
 install:
@@ -9,12 +10,20 @@ install:
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
   - sudo apt-get update
   - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra ccache
-  - "[ ! -d ~/R ] && mkdir ~/personal_library"
+  - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
   - Rscript -e 'install.packages(c("Rcpp", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
-  - mkir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars
 
-# run tests
+before_script: 
+  - mkir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars && sed -i "s/g++/$CXX" ~/.R/Makevars
+
+notifications:
+  recipients:
+    - guojq28@gmail.com
+  email:
+    on_success: change
+    on_failure: always
+
 script:
   - cd rstan && make install
