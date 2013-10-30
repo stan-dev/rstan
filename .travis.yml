@@ -16,7 +16,7 @@ install:
   - Rscript -e 'install.packages(c("Rcpp", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
 
 before_script: 
-  - mkir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars && sed -i "s/g++/$CXX" ~/.R/Makevars
+  - mkdir -p ~/.R/ && echo "ccache `R CMD config CXX`" > ~/.R/Makevars && sed -i "s/g++/$CXX" ~/.R/Makevars
 
 notifications:
   recipients:
