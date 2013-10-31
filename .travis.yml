@@ -5,7 +5,8 @@ compiler:
   - clang
   
 env:
-  - R_LIBS_USER=~/personal_library
+  - R_LIBS_USER=~/personal_library CXX_OLEVEL=0
+  - R_LIBS_USER=~/personal_library CXX_OLEVEL=3
 
 # install dependencies
 install:
@@ -21,7 +22,9 @@ install:
 before_script: 
   - cd stan && git fetch && git checkout origin/develop && cd ..
   - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
   - sed -i "s/g++/$CXX/" ./rstan/R_Makevars
+  - sed -i "s/O[0-3]/$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
 
 notifications:
