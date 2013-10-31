@@ -9,7 +9,7 @@ env:
     - R_LIBS_USER=~/personal_library
   matrix: 
     - CXX_OLEVEL=0
-    - CXX_OLEVEL=1
+    - CXX_OLEVEL=3
 
 matrix:
   allow_failures:
