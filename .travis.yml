@@ -17,14 +17,14 @@ install:
   - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages(c("Rcpp", "coda", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
+  - Rscript -e 'install.packages(c("Rcpp", "coda", "inline", "RUnit"), dep = !TRUE, repos = "http://cran.rstudio.org")'
 
 before_script: 
   - cd stan && git fetch && git checkout origin/develop && cd ..
   - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
   - sed -i "s/g++/$CXX/" ./rstan/R_Makevars
-  - sed -i "s/O[0-3]/$CXX_OLEVEL/" ./rstan/R_Makevars
+  - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
 
 notifications:
