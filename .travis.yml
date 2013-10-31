@@ -11,7 +11,9 @@ env:
   matrix: 
     - CXX_OLEVEL=0
     - CXX_OLEVEL=1
-    allow_failures:
+
+matrix:
+  allow_failures:
     - CXX_OLEVEL=0
     
 # install dependencies
