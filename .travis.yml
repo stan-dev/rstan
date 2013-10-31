@@ -7,14 +7,13 @@ compiler:
 env:
   global:
     - R_LIBS_USER=~/personal_library
-    - R_LIBS_USER=~/personal_library
   matrix: 
     - CXX_OLEVEL=0
     - CXX_OLEVEL=1
 
 matrix:
   allow_failures:
-    - CXX_OLEVEL=0
+    - env: CXX_OLEVEL=0
     
 # install dependencies
 install:
