@@ -32,4 +32,4 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make install && make check && cd tests && R -q -f runRunitTests.R
+  - cd rstan && make build BUILD_OPTS=--no-build-vignettes && make install && make check && cd tests && R -q -f runRunitTests.R
