@@ -4,9 +4,7 @@ compiler:
   - gcc 
   - clang
   
-
 env:
-  - R_LIBS_USER=~/personal_library
   - R_LIBS_USER=~/personal_library
 
 # install dependencies
@@ -14,14 +12,15 @@ install:
   - sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu `lsb_release -cs`/" 
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
   - sudo apt-get update
-  - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra ccache
+  - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra r-cran-rcpp ccache
   - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages(c("Rcpp", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
+  - Rscript -e 'install.packages(c("inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
 
 before_script: 
-  - mkdir -p ~/.R/ && echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - cd stan && git fetch && git checkout origin/develop && cd ..
+  - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
   - sed -i "s/g++/$CXX/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
 
@@ -33,6 +32,4 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make install && make check 
-  - cd tests && R -q -f runRunitTests.R
-
+  - cd rstan && make install && make check && cd tests && R -q -f runRunitTests.R
