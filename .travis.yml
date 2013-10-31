@@ -5,9 +5,15 @@ compiler:
   - clang
   
 env:
-  - R_LIBS_USER=~/personal_library CXX_OLEVEL=0
-  - R_LIBS_USER=~/personal_library CXX_OLEVEL=3
-
+  global:
+    - R_LIBS_USER=~/personal_library
+    - R_LIBS_USER=~/personal_library
+  matrix: 
+    - CXX_OLEVEL=0
+    - CXX_OLEVEL=1
+    allow_failures:
+    - CXX_OLEVEL=0
+    
 # install dependencies
 install:
   - sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu `lsb_release -cs`/" 
