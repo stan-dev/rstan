@@ -28,6 +28,8 @@ endif
 R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
+BUILD_OPTS ?= 
+
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
   LINKCMD2 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stansrc"  "..^\..^\..^\..^\stan^\src"
@@ -68,7 +70,7 @@ help:
 	@echo ' example_csv: create CSV files included in the package for examples'
 	@echo '--------------------------------------------------------------------------------'
 
-build $(STANPKG): ./rstan/DESCRIPTION 
+build $(STANPKG): ./rstan/DESCRIPTION  ../stan/src/stan/version.hpp
 	@rm -rf "./rstan/inst/include/stanlib"
 	@rm -rf "./rstan/inst/include/stansrc"
 ifeq ($(OS), win)
@@ -85,7 +87,7 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
-	$(R) CMD build rstan --md5  # --no-build-vignettes --no-manual
+	$(R) CMD build rstan --md5 $(BUILD_OPTS) # --no-build-vignettes --no-manual
 
 example_csv : 
 ifneq ($(OS), win)
