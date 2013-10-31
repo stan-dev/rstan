@@ -16,7 +16,7 @@ install:
   - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages(c("inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
+  - Rscript -e 'install.packages(c("coda", "inline", "RUnit"), dep = TRUE, repos = "http://cran.rstudio.org")'
 
 before_script: 
   - cd stan && git fetch && git checkout origin/develop && cd ..
