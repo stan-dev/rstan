@@ -13,7 +13,7 @@ f1 <- function(sigma) {
 
 
 # op <- optim(1, f1, hessian = TRUE, lower = 0, method = 'L-BFGS-B', control = list(fnscale = -1))
-op <- optim(1, f1, hessian = TRUE, control = list(fnscale = -1))
+op <- optim(1, f1, hessian = TRUE, method = "BFGS", control = list(fnscale = -1))
 op
 
 mc <- '
