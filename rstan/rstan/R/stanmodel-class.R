@@ -107,19 +107,20 @@ setMethod("optimizing", "stanmodel",
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             if(hessian) {
-              fn <- function(theta) sampler$log_prob(theta, FALSE, FALSE)
-              gr <- NULL
-              theta <- list()
-              start <- 1L
-              for(i in seq_along(p_dims)) {
-                end <- start + prod(p_dims[[i]]) - 1
-                theta[[i]] <- optim$par[start:end]
-                if(end > start) dim(theta[[i]]) <- p_dims[[i]]
-                start <- end + 1
-              }
-              names(theta) <- names(p_dims)
-              theta <- sampler$unconstrain_pars(theta)
-              optim$hessian <- optimHess(theta, fn, gr, 
+              fn <- function(theta) {
+                theta2 <- list()
+                start <- 1L
+                for(i in seq_along(p_dims)) {
+                  end <- start + prod(p_dims[[i]]) - 1
+                  theta2[[i]] <- theta[start:end]
+                  if(end > start) dim(theta2[[i]]) <- p_dims[[i]]
+                  start <- end + 1
+                }
+                names(theta2) <- names(p_dims)
+                theta_un <- sampler$unconstrain_pars(theta2)
+                sampler$log_prob(theta_un, FALSE, FALSE)
+              } 
+              optim$hessian <- optimHess(optim$par, fn, gr = NULL, 
                                          control = list(fnscale = -1))
               colnames(optim$hessian) <- rownames(optim$hessian) <- 
                 names(optim$par)[1:ncol(optim$hessian)]
