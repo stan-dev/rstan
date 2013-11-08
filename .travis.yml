@@ -5,11 +5,12 @@ compiler:
   - clang
   
 notifications:
-  recipients:
-    # - stan-buildbot@googlegroups.com
   email:
+    recipients:
+      - stan-buildbot@googlegroups.com
     on_success: change
     on_failure: always
 
 script:
   - cd rstan && make build BUILD_OPTS=--no-build-vignettes && make install && make check && cd tests && R -q -f runRunitTests.R
+
