@@ -17,7 +17,7 @@
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
     algorithm = c("BFGS", "Nesterov", "Newton"),
-    verbose = FALSE, \dots)   
+    verbose = FALSE, hessian = FALSE, \dots)   
 } 
 
 \section{Methods}{
@@ -63,6 +63,9 @@
     optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
+  \item{hessian}{\code{TRUE} or \code{FALSE} (the default): flag indicating
+     whether to calculate the Hessian (via numeric differentiation of the
+     gradient function)}   
   \item{\dots}{Other optional parameters. 
     \enumerate{
       \item \code{iter} (\code{integer}), the maximum number of iterations
@@ -92,6 +95,6 @@
 
 \examples{\dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
-f <- optimizing(m)
+f <- optimizing(m, hessian = TRUE)
 }} 
 

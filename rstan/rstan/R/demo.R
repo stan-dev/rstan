@@ -1,4 +1,5 @@
-stan_demo <- function(model = character(0), ...) {
+stan_demo <- function(model = character(0), 
+                      method = c("sampling", "optimizing"), ...) {
   if(is.numeric(model)) {
     MODEL_NUM <- model
     model <- character(0)
@@ -28,5 +29,8 @@ stan_demo <- function(model = character(0), ...) {
   if(file.exists(fp <- file.path(MODEL_HOME, paste0(model, ".data.R")))) {
     source(fp, local = STAN_ENV, verbose = FALSE, echo = TRUE)
   }
-  return(stan(MODELS, model_name = model, data = STAN_ENV, ...))
+  method <- match.arg(method)
+  m <- stan_model(MODELS, model_name = model)
+  if(method == "sampling") return(sampling(m, data = STAN_ENV, ...))
+  else return(optimizing(m, data = STAN_ENV, ...))
 }
