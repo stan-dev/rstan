@@ -5,9 +5,9 @@ compiler:
   - clang
   
 notifications:
-  recipients:
-    # - stan-buildbot@googlegroups.com
   email:
+    recipients:
+      - stan-buildbot@googlegroups.com
     on_success: change
     on_failure: always
 
