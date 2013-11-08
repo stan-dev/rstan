@@ -13,3 +13,4 @@ notifications:
 
 script:
   - cd rstan && make build BUILD_OPTS=--no-build-vignettes && make install && make check && cd tests && R -q -f runRunitTests.R
+
