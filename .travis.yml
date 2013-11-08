@@ -3,7 +3,36 @@ language: cpp
 compiler:
   - gcc 
   - clang
-  
+
+env:
+  global:
+    - R_LIBS_USER=~/personal_library
+  matrix: 
+    - CXX_OLEVEL=0
+    - CXX_OLEVEL=3
+
+matrix:
+  allow_failures:
+    - env: CXX_OLEVEL=0
+    
+install:
+  - sudo add-apt-repository "deb http://cran.rstudio.com/bin/linux/ubuntu `lsb_release -cs`/" 
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+  - sudo apt-get update
+  - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra ccache
+  - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
+  - R --version
+  - R -e '.libPaths(); sessionInfo()'
+  - Rscript -e 'install.packages(c("Rcpp", "coda", "inline", "RUnit"), dep = !TRUE, repos = "http://cran.rstudio.org")'
+
+before_script: 
+  - cd stan && git fetch && git checkout origin/develop && cd ..
+  - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
+  - sed -i "s/g++/$CXX/" ./rstan/R_Makevars
+  - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
+  - more ./rstan/R_Makevars
+
 notifications:
   email:
     recipients:
