@@ -1,7 +1,15 @@
 inst/include/stanlib/gtest.*$
 _inst/include/stanlib/boost.*$
 _inst/include/stanlib/eigen.*$
-inst/include/stanlib/eigen.*/.*CMakeLists.txt$
+inst/include/stanlib/eigen.*/.*CMakeLists\.txt$
+inst/include/stanlib/eigen.*/unsupported/.*CMakeLists\.txt$
+inst/include/stanlib/eigen.*/unsupported/.*README\.txt$
+inst/include/stanlib/eigen.*/unsupported/bench.*$
+inst/include/stanlib/eigen.*/unsupported/doc.*$
+inst/include/stanlib/eigen.*/unsupported/Eigen/(?!FFT)$
+inst/include/stanlib/eigen.*/unsupported/Eigen/src/(?!FFT).*$
+inst/include/stanlib/eigen.*/unsupported/Eigen/src/FFT/.*CMakeLists\.txt$
+inst/include/stanlib/eigen.*/unsupported/test.*$
 inst/include/stansrc/test.*$
 _inst/include/stansrc/models.*$
 inst/include/stansrc/models/.*README$/i
