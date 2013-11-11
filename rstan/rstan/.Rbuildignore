@@ -24,6 +24,13 @@ inst/include/stansrc/.*\..pp\.gch$
 inst/include/stansrc/docs.*$
 inst/include/stansrc/doxygen.*$
 inst/include/stansrc/stan.hpp.*$
+inst/include/stansrc/TO-DO.txt
+inst/include/stansrc/README.*$
+inst/include/stansrc/.*\.sh$
+inst/include/stansrc/makefile$
+inst/include/stansrc/\.travis\.yml$
+inst/include/stansrc/logos/.*$
+inst/include/stansrc/make/.*$
 inst/include/rstan/.*\..pp\.gch$
 inst/libstan.*$
 _inst/include/stansrc/stan/command/.*\.cpp$
