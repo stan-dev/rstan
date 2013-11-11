@@ -35,8 +35,8 @@ before_script:
 
 notifications:
   email:
-    recipients:
-      - stan-buildbot@googlegroups.com
+    # recipients:
+      # - stan-buildbot@googlegroups.com
     on_success: change
     on_failure: always
 
