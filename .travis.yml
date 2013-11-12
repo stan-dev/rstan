@@ -23,7 +23,7 @@ install:
   - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages(c("Rcpp", "coda", "inline", "RUnit"), dep = !TRUE, repos = "http://cran.rstudio.org")'
+  # - Rscript -e 'install.packages(c("Rcpp", "coda", "inline", "RUnit"), dep = !TRUE, repos = "http://cran.rstudio.org")'
 
 before_script: 
   - cd stan && git fetch && git checkout origin/develop && cd ..
@@ -41,5 +41,5 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make build BUILD_OPTS=--no-build-vignettes && make install && make check && cd tests && R -q -f runRunitTests.R
+  - cd rstan && make install_pre_rpkg && make build BUILD_OPTS=--no-build-vignettes && make install && make check && cd tests && R -q -f runRunitTests.R
 

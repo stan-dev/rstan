@@ -68,7 +68,12 @@ help:
 	@echo ' check: use R CMD check on rstan package'
 	@echo ' tmpstanlib: use Boost bcp to strip boost'
 	@echo ' example_csv: create CSV files included in the package for examples'
+	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, and RUnit'
 	@echo '--------------------------------------------------------------------------------'
+
+install_pre_rpkg:
+	@R -q -e 'options(repos=structure(c(CRAN = "http://cran.rstudio.com"))); if (FALSE == require("inline", character.only = TRUE)) install.packages("inline", dep = TRUE); if (FALSE == require("Rcpp", character.only = TRUE)) install.packages("Rcpp", dep = TRUE); if (FALSE == require("RUnit", character.only = TRUE)) install.packages("RUnit", dep = TRUE); library(Rcpp); sessionInfo()'
+
 
 build $(STANPKG): ./rstan/DESCRIPTION ../stan/src/stan/version.hpp
 	@rm -rf "./rstan/inst/include/stanlib"
@@ -139,4 +144,4 @@ clean-all:
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib
+.PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib install_pre_rpkg
