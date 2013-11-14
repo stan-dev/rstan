@@ -75,7 +75,8 @@ install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
 
 
-build $(STANPKG): ./rstan/DESCRIPTION ../stan/src/stan/version.hpp
+build $(STANPKG): ./rstan/DESCRIPTION 
+	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 	@rm -rf "./rstan/inst/include/stanlib"
 	@rm -rf "./rstan/inst/include/stansrc"
 ifeq ($(OS), win)
