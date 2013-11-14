@@ -480,7 +480,7 @@ added.  The help documentation in package \pkg{rstan} should always have the
 up-to-date details.
 
 The test gradient mode in \Stan can be used by setting argument 
-\code{test\_gard} to \code{TRUE}. As in \Stan, the test gradient mode
+\code{test\_grad} to \code{TRUE}. As in \Stan, the test gradient mode
 will not sample from the posterior distribution, but only print out the
 gradients for the log probability density function at an initial point
 calculated by approaches of both the algorithmic differentiation (AD) in \Stan
