@@ -64,7 +64,10 @@ stan(file, model_name = "anon_model", model_code = "",
      of lists) specifies the initial values for parameters by names for a chain.
     \code{function}: a function that returns a list for specifying
       the initial values of parameters for a chain. The function
-      can take an optional parameter \code{chain_id}.
+      can take an optional parameter \code{chain_id} for which the \code{chain_id}
+      if specified or the integers from 1 to \code{chains} will be 
+      supplied respectively to the function for generating initial values.
+      See the examples below of defining such functions.
       See below notes on that RStan treats a vector of length 1 as
       a scalar. 
   }
@@ -347,6 +350,20 @@ excode <- '
     alpha ~ exponential(2);
   } 
 '
+
+## define a function to generate initial values that can
+## be fed to function stan's argument `init`
+
+# function form 1 without argumetns 
+initf1 <- function() {
+  list(mu = 1, sigma = 4, z = array(rnorm(6), dim = c(3,2)), alpha = 1)
+} 
+
+# function form 2 with an argument named `chain_id`
+initf2 <- function(chain_id = 1) {
+  cat("chain_id=", chain_id, "\n")
+  list(mu = 1, sigma = 4, z = array(rnorm(6), dim = c(3,2)), alpha = chain_id)
+} 
 
 exfit <- stan(model_code = excode, save_dso = FALSE, iter = 500)
 print(exfit)

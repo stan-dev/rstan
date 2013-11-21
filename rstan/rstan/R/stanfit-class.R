@@ -687,7 +687,7 @@ sflist2stanfit <- function(sflist) {
   non_zero_modes_idx <- which(sapply(sflist, function(x) x@mode) > 0)
   if (length(non_zero_modes_idx) > 0) { 
     stop("The following elements of 'sflist' do not contain samples: ",
-         non_zero_modes_idx) 
+         paste(non_zero_modes_idx, collapse = ', '), ".") 
   }   
   for (i in 2:sf_len) { 
     if (!identical(sflist[[i]]@sim$pars_oi, sflist[[1]]@sim$pars_oi) || 
