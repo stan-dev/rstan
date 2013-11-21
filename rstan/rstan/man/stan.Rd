@@ -64,7 +64,9 @@ stan(file, model_name = "anon_model", model_code = "",
      of lists) specifies the initial values for parameters by names for a chain.
     \code{function}: a function that returns a list for specifying
       the initial values of parameters for a chain. The function
-      can take an optional parameter \code{chain_id}.
+      can take an optional parameter \code{chain_id} for which the \code{chain_id}
+      if specified or the integers from 1 to \code{chains} will be 
+      supplied respectively to the function for generating initial values.
       See below notes on that RStan treats a vector of length 1 as
       a scalar. 
   }
