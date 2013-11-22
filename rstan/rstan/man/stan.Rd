@@ -67,8 +67,8 @@ stan(file, model_name = "anon_model", model_code = "",
       can take an optional parameter \code{chain_id} for which the \code{chain_id}
       if specified or the integers from 1 to \code{chains} will be 
       supplied respectively to the function for generating initial values.
-      See the examples below of defining such functions.
-      See below notes on that RStan treats a vector of length 1 as
+      See the examples below of defining such functions. Additionally,
+      see below notes on that RStan treats a vector of length 1 as
       a scalar. 
   }
   \item{seed}{The seed, a positive integer, for random number generation. The
