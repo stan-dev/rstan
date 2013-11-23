@@ -10,13 +10,15 @@ OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
 LIBSTANOBJECTS = agrad__rev__var_stack.o
 
 # EIGEN_PATH := $(shell $(R_HOME)/bin/Rscript --vanilla -e "cat(system.file('include', package = 'RcppEigen'))")
-EIGEN_PATH = $(shell find ../inst/include/stanlib -path '*lib/eigen_*' -regex '.*lib\/eigen_[^/]*')
+# EIGEN_PATH = $(shell find ../inst/include/stanlib -path '*lib/eigen_*' -regex '.*lib\/eigen_[^/]*')
+EIGEN_PATH = ../inst/include/stanlib/eigen_3.2.0
 
 PKG_LIBS = $(shell  $(R_HOME)/bin/Rscript --vanilla -e "Rcpp:::LdFlags()") 
 PKG_CPPFLAGS += -I"../inst/include/stansrc"  
 PKG_CPPFLAGS += -isystem"$(EIGEN_PATH)" 
 PKG_CPPFLAGS += -isystem"$(EIGEN_PATH)/unsupported" 
-PKG_CPPFLAGS += -isystem$(shell find ../inst/include/stanlib -path '*lib/boost_*' -regex '.*lib\/boost_[^/]*')
+# PKG_CPPFLAGS += -isystem$(shell find ../inst/include/stanlib -path '*lib/boost_*' -regex '.*lib\/boost_[^/]*')
+PKG_CPPFLAGS += -isystem"../inst/include/stanlib/boost_1.54.0"
 PKG_CPPFLAGS += -I"../inst/include" 
 PKG_CPPFLAGS += -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 PKG_CPPFLAGS += -ftemplate-depth-256
