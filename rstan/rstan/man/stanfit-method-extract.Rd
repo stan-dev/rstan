@@ -34,7 +34,7 @@
   \item{permuted}{\code{TRUE} of \code{FALSE}. If \code{TRUE}, draws
     after the \emph{warmup} period in each chain are \emph{permuted} and \emph{merged}. 
     If \code{FALSE}, the original order are kept. For each \code{stanfit}
-    object, the permutation is fixed (that is, extracing samples a second
+    object, the permutation is fixed (that is, extracting samples a second
     time will give the same sequence of iterations as the previous).}
   \item{inc_warmup}{\code{TRUE} of \code{FALSE}. The argument matters
     only if \code{permuted} is \code{FALSE}. If \code{TRUE}, warmup
