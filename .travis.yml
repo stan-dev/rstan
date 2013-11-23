@@ -41,5 +41,5 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make install_pre_rpkg && make build BUILD_OPTS=--no-build-vignettes && make install && make check && cd tests && R -q -f runRunitTests.R
+  - cd rstan && make install_pre_rpkg && make build BUILD_OPTS="--no-build-vignettes --no-manual" && make install && make check && cd tests && R -q -f runRunitTests.R
 
