@@ -32,6 +32,9 @@ before_script:
   - sed -i "s/g++/$CXX/" ./rstan/R_Makevars
   - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
+  - mkdir -p ~/.R/
+  - cat ./rstan/R_Makevars > ~/.R/Makevars
+  - more ~/.R/Makevars
 
 notifications:
   email:
@@ -41,5 +44,5 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make install_pre_rpkg && make build BUILD_OPTS="--no-build-vignettes --no-manual" && make install && make check && cd tests && R -q -f runRunitTests.R
+  - cd rstan && make install_pre_rpkg && make build NOTBUILD=true && R CMD INSTALL rstan --no-docs --no-html && git clean -f -x && make build BUILD_OPTS="--no-build-vignettes --no-manual" && make install && make check && cd tests && R -q -f runRunitTests.R
 

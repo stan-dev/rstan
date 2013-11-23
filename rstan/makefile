@@ -29,6 +29,7 @@ R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
 BUILD_OPTS ?= 
+NOTBUILD ?= FALSE
 
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
@@ -93,7 +94,9 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
+ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS) # --no-build-vignettes --no-manual
+endif
 
 example_csv : 
 ifneq ($(OS), win)
