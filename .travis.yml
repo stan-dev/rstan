@@ -21,6 +21,7 @@ install:
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
   - sudo apt-get update
   - sudo apt-get install r-base-dev qpdf texinfo texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra ccache
+  - ccache --max-size 8G
   - "[ ! -d ~/$R_LIBS_USER ] && mkdir $R_LIBS_USER"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
@@ -30,7 +31,9 @@ before_script:
   - cd stan && git fetch && git checkout origin/develop && cd ..
   - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
-  - sed -i "s/g++/$CXX/" ./rstan/R_Makevars
+  - export CLANG_EXTRA_ARG=""
+  - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
+  - sed -i "s/g++/${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
   - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
   - mkdir -p ~/.R/
@@ -46,4 +49,7 @@ notifications:
 
 script:
   - cd rstan && make install_pre_rpkg && make build NOTBUILD=true && R CMD INSTALL rstan --no-docs --no-html && git clean -f -x && make build BUILD_OPTS="--no-build-vignettes --no-manual" && make install && make check && cd tests && R -q -f runRunitTests.R
+
+after_script:
+  - ccache -s 
 
