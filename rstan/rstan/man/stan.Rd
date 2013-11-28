@@ -67,7 +67,8 @@ stan(file, model_name = "anon_model", model_code = "",
       can take an optional parameter \code{chain_id} for which the \code{chain_id}
       if specified or the integers from 1 to \code{chains} will be 
       supplied respectively to the function for generating initial values.
-      See the examples below of defining such functions. Additionally,
+      See the examples below of defining such functions and using a 
+      list of lists for specify initial values. Additionally,
       see below notes on that RStan treats a vector of length 1 as
       a scalar. 
   }
@@ -351,22 +352,31 @@ excode <- '
   } 
 '
 
+exfit <- stan(model_code = excode, save_dso = FALSE, iter = 500)
+print(exfit)
+plot(exfit)
+}
+\dontrun{
+## examples of specify argument `init` for function stan
+
 ## define a function to generate initial values that can
 ## be fed to function stan's argument `init`
-
 # function form 1 without argumetns 
 initf1 <- function() {
   list(mu = 1, sigma = 4, z = array(rnorm(6), dim = c(3,2)), alpha = 1)
 } 
-
 # function form 2 with an argument named `chain_id`
 initf2 <- function(chain_id = 1) {
-  cat("chain_id=", chain_id, "\n")
+  # cat("chain_id =", chain_id, "\n")
   list(mu = 1, sigma = 4, z = array(rnorm(6), dim = c(3,2)), alpha = chain_id)
 } 
 
-exfit <- stan(model_code = excode, save_dso = FALSE, iter = 500)
-print(exfit)
-plot(exfit)
+# generate a list of lists to specify initial values
+n_chains <- 4
+init_ll <- lapply(1:n_chains, function(id) initf2(chain_id = id))
+ 
+exfit0 <- stan(model_code = excode, init = initf1) 
+stan(fit = exfit0, init = initf2) 
+stan(fit = exfit0, init = init_ll, chains = n_chains)
 }} 
 \keyword{rstan} 
