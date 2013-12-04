@@ -380,7 +380,7 @@ setMethod("extract", signature = "stanfit",
             fun1 <- function(par_i) {
               # sss <- sapply(tidx[[par_i]], get_kept_samples2, object@sim)
               # if (is.list(sss))  sss <- do.call(c, sss)
-              # the above tow lines are slower than the following line of code
+              # the above two lines are slower than the following line of code
               sss <- do.call(cbind, lapply(tidx[[par_i]], get_kept_samples2, object@sim)) 
               dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par_i]]) 
               dimnames(sss) <- list(iterations = NULL)
