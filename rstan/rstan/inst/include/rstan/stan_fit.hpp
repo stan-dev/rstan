@@ -606,12 +606,12 @@ namespace rstan {
       std::vector<double> cont_params;
       std::vector<int> disc_params;
       std::string init_val = args.get_init();
+      double init_log_prob;
       int num_init_tries = 0;
       // parameter initialization
       if (init_val == "0") {
         disc_params = std::vector<int>(model.num_params_i(),0);
         cont_params = std::vector<double>(model.num_params_r(),0.0);
-        double init_log_prob;
         std::vector<double> init_grad;
         try {
           init_log_prob
@@ -632,15 +632,28 @@ namespace rstan {
             throw std::runtime_error("Error during initialization with 0: divergent gradient.");
         }
       } else if (init_val == "user") {
+        std::vector<double> init_grad;
         try { 
           Rcpp::List init_lst(args.get_init_list()); 
           rstan::io::rlist_ref_var_context init_var_context(init_lst); 
           model.transform_inits(init_var_context,disc_params,cont_params);
+          init_log_prob
+            = stan::model::log_prob_grad<true,true>(model,
+                                                    cont_params, 
+                                                    disc_params, 
+                                                    init_grad, 
+                                                    &rstan::io::rcout);
         } catch (const std::exception& e) {
           std::string msg("Error during user-specified initialization:\n"); 
           msg += e.what(); 
           throw std::runtime_error(msg);
         } 
+        if (!boost::math::isfinite(init_log_prob))  
+          throw std::runtime_error("Rejecting user-specified initialization because of vanishing density.");
+        for (size_t i = 0; i < init_grad.size(); i++) {
+          if (!boost::math::isfinite(init_grad[i])) 
+            throw std::runtime_error("Rejecting user-specified initialization because of divergent gradient.");
+        }
       } else {
         init_val = "random"; 
         double r = args.get_init_radius();
@@ -658,7 +671,6 @@ namespace rstan {
         for (; num_init_tries < MAX_INIT_TRIES; ++num_init_tries) {
           for (size_t i = 0; i < cont_params.size(); ++i)
             cont_params[i] = init_rng();
-          double init_log_prob;
           try {
             init_log_prob 
               = stan::model::log_prob_grad<true,true>(model,cont_params,disc_params,init_grad,&rstan::io::rcout);
