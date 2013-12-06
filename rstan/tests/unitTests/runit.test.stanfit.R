@@ -1,5 +1,5 @@
 .setUp <- function() { }
-test_output_csv <- function() {
+test_output_csv_and_extract <- function() {
   csv_fname <- 'teststanfit.csv'
   model_code <- "
     parameters { 
@@ -64,8 +64,15 @@ test_output_csv <- function() {
   fit2_m <- as.vector(get_posterior_mean(fit2))
   fit2_m2 <- summary(fit2)$summary[,"mean"]
   checkEquals(fit2_m, fit2_m2, checkNames = FALSE)
-
   unlink(csv_fname)
+
+  # test extract 
+  fitb <- stan(fit = fit, iter = 105, warmup = 100, chains = 3, thin = 3)
+  e1 <- extract(fitb)
+  checkEquals(e1$y3[1,1,1,1], 1, checkNames = FALSE)
+  checkEquals(e1$y3[1,2,2,2], 11, checkNames = FALSE)
+  checkEquals(e1$y3[1,2,1,2], 8, checkNames = FALSE)
+  checkEquals(e1$y3[1,3,1,2], 14, checkNames = FALSE)
 } 
 
 test_domain_error_exception <- function() { 
