@@ -1,3 +1,5 @@
+cache: apt
+
 language: cpp
 
 compiler:
