@@ -133,6 +133,9 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{adapt_delta} (\code{double}, between 0 and 1, defaults to 0.65)
       \item \code{adapt_kappa} (\code{double}, positive, defaults to 0.75)
       \item \code{adapt_t0} (\code{double}, positive, defaults to 10)
+      \item \code{adapt_init_buffer} (\code{integer}, positive, defaults to 75)
+      \item \code{adapt_term_buffer} (\code{integer}, positive, defaults to 25)
+      \item \code{adapt_window} (\code{integer}, positive, defaults to 50)
     }
 
     In addition, algorithm HMC (called 'static HMC' in Stan) and NUTS share the
@@ -142,15 +145,19 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{stepsize_jitter} (\code{double}, [0,1])
       \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
     }
-    In addition, depending on which algorithm is specified, different 
-    parameters can be set as in Stan for sampling.  For algorithm HMC
-    we can set 
+    For algorithm HMC, we can also set 
     \enumerate{
       \item \code{int_time} (\code{double}, positive)
     }
     For algorithm NUTS, we can set 
     \enumerate{
       \item \code{max_treedepth} (\code{integer}, positive)
+    }
+
+    For \code{test_grad} mode, the following parameters can be set
+    \enumerate{
+      \item \code{epsilon} (\code{double}, defaults to 1e-6)
+      \item \code{error} (\code{double}, defaults to 1e-6)
     }
   }
   
