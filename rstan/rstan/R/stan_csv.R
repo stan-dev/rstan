@@ -8,8 +8,9 @@ paridx_fun <- function(names) {
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
-  metaidx <- match(c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__'), names)
-  names(metaidx) <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__')
+  sampler_param_names <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__', 'n_divergent__')
+  metaidx <- match(sampler_param_names, names)
+  names(metaidx) <- sampler_param_names
   paridx <- setdiff(seq_along(names), metaidx)
   attr(paridx, "meta") <- metaidx[!sapply(metaidx, is.na)]
   paridx

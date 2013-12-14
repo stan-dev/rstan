@@ -29,6 +29,7 @@ R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
 BUILD_OPTS ?= 
+NOTBUILD ?= FALSE
 
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
@@ -68,9 +69,15 @@ help:
 	@echo ' check: use R CMD check on rstan package'
 	@echo ' tmpstanlib: use Boost bcp to strip boost'
 	@echo ' example_csv: create CSV files included in the package for examples'
+	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, and RUnit'
 	@echo '--------------------------------------------------------------------------------'
 
-build $(STANPKG): ./rstan/DESCRIPTION  ../stan/src/stan/version.hpp
+install_pre_rpkg:
+	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
+
+
+build $(STANPKG): ./rstan/DESCRIPTION 
+	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 	@rm -rf "./rstan/inst/include/stanlib"
 	@rm -rf "./rstan/inst/include/stansrc"
 ifeq ($(OS), win)
@@ -87,7 +94,9 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
-	$(R) CMD build rstan --md5 $(BUILD_OPTS) # --no-build-vignettes --no-manual
+ifeq ($(NOTBUILD),FALSE)
+	$(R) CMD build rstan --md5  $(BUILD_OPTS) # --no-build-vignettes --no-manual
+endif
 
 example_csv : 
 ifneq ($(OS), win)
@@ -139,4 +148,4 @@ clean-all:
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib
+.PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib install_pre_rpkg

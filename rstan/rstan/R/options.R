@@ -18,7 +18,7 @@ init_rstan_opt_env <- function(e) {
   assign("plot_rhat_breaks", c(1.1, 1.2, 1.5, 2), e)
   # in this default setting, 
   # if rhat < rhat.breaks[i], the color is rhat_cols[i]
-  assign("plot_rhat_cols", rhat_cols, e)
+  assign("plot_rhat_cols", rhat_cols[1:4], e)
 
   # when R-hat is NA, NaN, or Inf
   assign("plot_rhat_nan_col", rhat_cols[6] , e)

@@ -6,6 +6,8 @@
 *.out
 *.rds
 *.so
+*.Rdata
+*.RData
 
 # temporary files
 *~

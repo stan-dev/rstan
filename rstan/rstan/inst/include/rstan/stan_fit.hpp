@@ -480,7 +480,19 @@ namespace rstan {
       sampler_ptr2->engage_adaptation();
       sampler_ptr2->init_stepsize();
     }
-    
+
+    template<class Sampler>
+    bool init_windowed_adapt(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args) {
+ 
+      init_adapt<Sampler>(sampler_ptr, args);
+      Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr); 
+      sampler_ptr2->set_window_params(args.get_ctrl_sampling_warmup(),
+                                      args.get_ctrl_sampling_adapt_init_buffer(),
+                                      args.get_ctrl_sampling_adapt_term_buffer(),
+                                      args.get_ctrl_sampling_adapt_window());
+      return true;
+    }
+ 
     template <class Model, class RNG_t> 
     void execute_sampling(stan_args& args, Model& model, Rcpp::List& holder,
                           stan::mcmc::base_mcmc* sampler_ptr, 
@@ -606,12 +618,12 @@ namespace rstan {
       std::vector<double> cont_params;
       std::vector<int> disc_params;
       std::string init_val = args.get_init();
+      double init_log_prob;
       int num_init_tries = 0;
       // parameter initialization
       if (init_val == "0") {
         disc_params = std::vector<int>(model.num_params_i(),0);
         cont_params = std::vector<double>(model.num_params_r(),0.0);
-        double init_log_prob;
         std::vector<double> init_grad;
         try {
           init_log_prob
@@ -632,15 +644,28 @@ namespace rstan {
             throw std::runtime_error("Error during initialization with 0: divergent gradient.");
         }
       } else if (init_val == "user") {
+        std::vector<double> init_grad;
         try { 
           Rcpp::List init_lst(args.get_init_list()); 
           rstan::io::rlist_ref_var_context init_var_context(init_lst); 
           model.transform_inits(init_var_context,disc_params,cont_params);
+          init_log_prob
+            = stan::model::log_prob_grad<true,true>(model,
+                                                    cont_params, 
+                                                    disc_params, 
+                                                    init_grad, 
+                                                    &rstan::io::rcout);
         } catch (const std::exception& e) {
           std::string msg("Error during user-specified initialization:\n"); 
           msg += e.what(); 
           throw std::runtime_error(msg);
         } 
+        if (!boost::math::isfinite(init_log_prob))  
+          throw std::runtime_error("Rejecting user-specified initialization because of vanishing density.");
+        for (size_t i = 0; i < init_grad.size(); i++) {
+          if (!boost::math::isfinite(init_grad[i])) 
+            throw std::runtime_error("Rejecting user-specified initialization because of divergent gradient.");
+        }
       } else {
         init_val = "random"; 
         double r = args.get_init_radius();
@@ -658,7 +683,6 @@ namespace rstan {
         for (; num_init_tries < MAX_INIT_TRIES; ++num_init_tries) {
           for (size_t i = 0; i < cont_params.size(); ++i)
             cont_params[i] = init_rng();
-          double init_log_prob;
           try {
             init_log_prob 
               = stan::model::log_prob_grad<true,true>(model,cont_params,disc_params,init_grad,&rstan::io::rcout);
@@ -692,7 +716,9 @@ namespace rstan {
       if (TEST_GRADIENT == args.get_method()) {
         rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
         std::stringstream ss; 
-        int num_failed = stan::model::test_gradients<true,true>(model,cont_params,disc_params,1e-6,1e-6,ss);
+        double epsilon = args.get_ctrl_test_grad_epsilon();
+        double error = args.get_ctrl_test_grad_error();
+        int num_failed = stan::model::test_gradients<true,true>(model,cont_params,disc_params,epsilon,error,ss);
         rstan::io::rcout << ss.str() << std::endl; 
         holder["num_failed"] = num_failed; 
         holder.attr("test_grad") = Rcpp::wrap(true);
@@ -960,7 +986,7 @@ namespace rstan {
         }
         case 1: {
           typedef stan::mcmc::unit_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_nuts<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -969,7 +995,7 @@ namespace rstan {
         }
         case 10: {
           typedef stan::mcmc::diag_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_static_hmc<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -978,7 +1004,7 @@ namespace rstan {
         }
         case 11: {
           typedef stan::mcmc::diag_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_nuts<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -987,7 +1013,7 @@ namespace rstan {
         }
         case 20: {
           typedef stan::mcmc::dense_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_static_hmc<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -996,7 +1022,7 @@ namespace rstan {
         }
         case 21: {
           typedef stan::mcmc::dense_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_nuts<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1005,7 +1031,7 @@ namespace rstan {
         }
         case 100: {
           typedef stan::mcmc::adapt_unit_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_static_hmc<sampler_t>(&sampler, args);
           init_adapt<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
@@ -1015,7 +1041,7 @@ namespace rstan {
         }
         case 101: {
           typedef stan::mcmc::adapt_unit_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_nuts<sampler_t>(&sampler, args);
           init_adapt<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
@@ -1025,9 +1051,9 @@ namespace rstan {
         }
         case 110: {
           typedef stan::mcmc::adapt_diag_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_static_hmc<sampler_t>(&sampler, args);
-          init_adapt<sampler_t>(&sampler, args);
+          init_windowed_adapt<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1035,9 +1061,9 @@ namespace rstan {
         }
         case 111: {
           typedef stan::mcmc::adapt_diag_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_nuts<sampler_t>(&sampler, args);
-          init_adapt<sampler_t>(&sampler, args);
+          init_windowed_adapt<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1045,9 +1071,9 @@ namespace rstan {
         }
         case 120: {
           typedef stan::mcmc::adapt_dense_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_static_hmc<sampler_t>(&sampler, args);
-          init_adapt<sampler_t>(&sampler, args);
+          init_windowed_adapt<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1055,9 +1081,9 @@ namespace rstan {
         }
         case 121: {
           typedef stan::mcmc::adapt_dense_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, args.get_ctrl_sampling_warmup());
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_nuts<sampler_t>(&sampler, args);
-          init_adapt<sampler_t>(&sampler, args);
+          init_windowed_adapt<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);

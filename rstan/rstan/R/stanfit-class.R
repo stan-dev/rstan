@@ -377,10 +377,12 @@ setMethod("extract", signature = "stanfit",
                                        pars) 
 
             n_kept <- object@sim$n_save - object@sim$warmup2
-            fun1 <- function(par) {
-              sss <- sapply(tidx[[par]], get_kept_samples2, object@sim) 
-              if (is.list(sss))  sss <- do.call(c, sss)
-              dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par]]) 
+            fun1 <- function(par_i) {
+              # sss <- sapply(tidx[[par_i]], get_kept_samples2, object@sim)
+              # if (is.list(sss))  sss <- do.call(c, sss)
+              # the above two lines are slower than the following line of code
+              sss <- do.call(cbind, lapply(tidx[[par_i]], get_kept_samples2, object@sim)) 
+              dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par_i]]) 
               dimnames(sss) <- list(iterations = NULL)
               sss 
             } 
@@ -687,7 +689,7 @@ sflist2stanfit <- function(sflist) {
   non_zero_modes_idx <- which(sapply(sflist, function(x) x@mode) > 0)
   if (length(non_zero_modes_idx) > 0) { 
     stop("The following elements of 'sflist' do not contain samples: ",
-         non_zero_modes_idx) 
+         paste(non_zero_modes_idx, collapse = ', '), ".") 
   }   
   for (i in 2:sf_len) { 
     if (!identical(sflist[[i]]@sim$pars_oi, sflist[[1]]@sim$pars_oi) || 
