@@ -179,7 +179,7 @@ test_grad_log <- function() {
   checkEquals(g1, log_prob_grad_fun(mu, log(sigma), adjust = FALSE))
 }
 
-test_specify_stepsize <- function() {
+test_specify_args <- function() {
   y <- c(0.70,  -0.16,  0.77, -1.37, -1.99,  1.35, 0.08, 
          0.02,  -1.48, -0.08,  0.34,  0.03, -0.42, 0.87, 
          -1.36,  1.43,  0.80, -0.48, -1.61, -1.27)
@@ -204,6 +204,10 @@ test_specify_stepsize <- function() {
   sf2 <- stan(fit = sf, iter = 20, algorithm = 'HMC', data = list(y = y),
              control = list(adapt_engaged = FALSE, stepsize = stepsize0))
   checkEquals(attr(sf2@sim$samples[[1]],"sampler_params")$stepsize__[1], stepsize0)
+
+  sf3 <- stan(fit = sf, iter = 1, data = list(y = y), init = 0, chains = 1)
+  i_u <- unconstrain_pars(sf3, get_inits(sf3)[[1]])
+  checkEquals(i_u, rep(0, 2))
 } 
 
 .tearDown <- function() { 
