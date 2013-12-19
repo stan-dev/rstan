@@ -16,8 +16,6 @@
 #include <boost/random/additive_combine.hpp> // L'Ecuyer RNG
 #include <boost/random/uniform_real_distribution.hpp>
 
-#include <stan/agrad/agrad.hpp>
-
 #include <stan/model/util.hpp>
 
 #include <stan/optimization/newton.hpp>
