@@ -130,7 +130,7 @@ stan(file, model_name = "anon_model", model_code = "",
     \enumerate{
       \item \code{adapt_engaged} (\code{logical})
       \item \code{adapt_gamma} (\code{double}, positive, defaults to 0.05)
-      \item \code{adapt_delta} (\code{double}, between 0 and 1, defaults to 0.65)
+      \item \code{adapt_delta} (\code{double}, between 0 and 1, defaults to 0.8)
       \item \code{adapt_kappa} (\code{double}, positive, defaults to 0.75)
       \item \code{adapt_t0} (\code{double}, positive, defaults to 10)
       \item \code{adapt_init_buffer} (\code{integer}, positive, defaults to 75)
