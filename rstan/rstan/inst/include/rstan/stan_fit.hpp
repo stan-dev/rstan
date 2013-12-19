@@ -551,7 +551,6 @@ namespace rstan {
       end = clock();
       double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
 
-      rstan::io::rcout << std::endl;
       if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
         mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
         for (std::vector<double>::iterator it = mean_pars.begin();
@@ -560,6 +559,7 @@ namespace rstan {
           (*it) /= args.get_ctrl_sampling_iter_save_wo_warmup();
       } 
       if (args.get_ctrl_sampling_refresh() > 0) { 
+        rstan::io::rcout << std::endl;
         outputter.print_timing(warmDeltaT, sampleDeltaT, &rstan::io::rcout);
       }
       
@@ -811,12 +811,14 @@ namespace rstan {
               sample_stream.flush();
             }
           }
-          if (ret >= 0) {
-            rstan::io::rcout << "Optimization terminated normally: ";
-          } else {
-            rstan::io::rcout << "Optimization terminated with error: ";
-          }
-          rstan::io::rcout << bfgs.get_code_string(ret) << std::endl;
+          if (args.get_ctrl_optim_refresh() > 0) {
+            if (ret >= 0) {
+              rstan::io::rcout << "Optimization terminated normally: ";
+            } else {
+              rstan::io::rcout << "Optimization terminated with error: ";
+            }
+            rstan::io::rcout << bfgs.get_code_string(ret) << std::endl;
+          } 
           
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
           holder["par"] = params_inr_etc; 
@@ -851,12 +853,14 @@ namespace rstan {
             R_CheckUserInterrupt(); 
             lastlp = lp;
             lp = stan::optimization::newton_step(model, cont_vector, disc_vector);
-            rstan::io::rcout << "Iteration ";
-            rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
-            rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
-            rstan::io::rcout << ". Improved by " << (lp - lastlp) << ".";
-            rstan::io::rcout << std::endl;
-            rstan::io::rcout.flush();
+            if (args.get_ctrl_optim_refresh() > 0) {
+                rstan::io::rcout << "Iteration ";
+                rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
+                rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
+                rstan::io::rcout << ". Improved by " << (lp - lastlp) << ".";
+                rstan::io::rcout << std::endl;
+                rstan::io::rcout.flush();
+            }
             m++;
             if (args.get_sample_file_flag()) { 
               sample_stream << lp << ',';
