@@ -27,6 +27,13 @@ test_stan_fun_args <- function() {
                control = list())
   fit4 <- stan(fit = fit, iter = 1001, chains = 3, thin = 2,
                control = list(adapt_gamma = .7)) 
+  y_ii <- rnorm(2)
+  fit5 <- stan(fit = fit, init = list(list(y = y_ii)), chains = 1, iter = 100)
+  checkEquals(attr(fit2@sim$samples[[1]],"args")$iter, 1001)
+  checkEquals(attr(fit2@sim$samples[[1]],"args")$control$adapt_delta, 0.8)
+  checkEquals(attr(fit3@sim$samples[[1]],"args")$control$adapt_delta, 0.8)
+  checkEquals(attr(fit4@sim$samples[[1]],"args")$control$adapt_gamma, 0.7)
+  checkEquals(attr(fit5@sim$samples[[1]],"inits")[1:2], y_ii)
 } 
 
 .tearDown <- function() { 
