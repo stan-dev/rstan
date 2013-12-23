@@ -10,7 +10,7 @@ SHLIB = rstan.dll
 
 LIBSTANOBJECTS = agrad__rev__var_stack.o
 
-OBJECTS = stanc.o chains.o misc.o
+OBJECTS = stanc.o chains.o misc.o init.o
 OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
 
 # EIGEN_PATH := $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript" -e "cat(system.file('include', package = 'RcppEigen'))")

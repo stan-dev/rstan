@@ -42,7 +42,7 @@ init_rstan_opt_env <- function(e) {
   assign('plot_max_npar', 40, e)
 
   # color for shading the area of warmup trace plot
-  assign("rstan_warmup_bg_col", rstan:::rstancolgrey[3], e)
+  assign("rstan_warmup_bg_col", rstancolgrey[3], e)
 
   stan_lib_path  <- system.file('include', 'stanlib', package = 'rstan')
   boost_dir <- dir(stan_lib_path, pattern = 'boost.*')

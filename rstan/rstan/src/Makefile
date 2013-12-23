@@ -4,7 +4,7 @@ SHLIB = rstan.so
 
 USERLIB = libstan.a
 
-OBJECTS = stanc.o chains.o misc.o
+OBJECTS = stanc.o chains.o misc.o init.o
 OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
 
 LIBSTANOBJECTS = agrad__rev__var_stack.o
