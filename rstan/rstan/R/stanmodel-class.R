@@ -111,7 +111,7 @@ setMethod("optimizing", "stanmodel",
                 sampler$log_prob(theta, FALSE, FALSE)
               }
               gr <- function(theta) {
-                sampler$log_grad(theta, FALSE)
+                sampler$grad_log_prob(theta, FALSE)
               }
               theta <- list()
               start <- 1L
@@ -119,7 +119,7 @@ setMethod("optimizing", "stanmodel",
                 end <- start + prod(p_dims[[i]]) - 1L
                 theta[[i]] <- optim$par[start:end]
                 if(end > start) dim(theta[[i]]) <- p_dims[[i]]
-                start <- end + 1
+                start <- end + 1L
               }
               optim$hessian <- optimHess(unlist(theta), fn, gr, 
                                          control = list(fnscale = -1))
