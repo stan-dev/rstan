@@ -1,18 +1,32 @@
+/*
+ * To register the functions implemented in C++, see 
+ * http://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
+ *
+ * But it seems not to work as it is supposed to be in that
+ * even they are still working if not registered, which 
+ * is not understood. 
+ */
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h>
 
-extern "C"  SEXP effective_sample_size(SEXP sim, SEXP n_); 
-extern "C"  SEXP effective_sample_size2(SEXP sims);
-extern "C"  SEXP split_potential_scale_reduction(SEXP sim, SEXP n_); 
-extern "C"  SEXP split_potential_scale_reduction2(SEXP sims_);
-extern "C"  SEXP seq_permutation(SEXP conf);  
-extern "C"  SEXP read_comments(SEXP file, SEXP n);
-extern "C"  SEXP stan_prob_autocovariance(SEXP v);
-extern "C"  SEXP is_Null_NS(SEXP ns);
-extern "C"  SEXP stanc(SEXP model_stancode, SEXP model_name);
-extern "C"  SEXP stan_version(); 
+#ifdef __cplusplus
+extern "C"  {
+#endif
+SEXP effective_sample_size(SEXP sim, SEXP n_); 
+SEXP effective_sample_size2(SEXP sims);
+SEXP split_potential_scale_reduction(SEXP sim, SEXP n_); 
+SEXP split_potential_scale_reduction2(SEXP sims_);
+SEXP seq_permutation(SEXP conf);  
+SEXP read_comments(SEXP file, SEXP n);
+SEXP stan_prob_autocovariance(SEXP v);
+SEXP is_Null_NS(SEXP ns);
+SEXP stanc(SEXP model_stancode, SEXP model_name);
+SEXP stan_version(); 
+#ifdef __cplusplus
+}
+#endif
 
 #define CALLDEF(name, n)  {#name, (DL_FUNC) &name, n}
 
@@ -33,5 +47,13 @@ static const R_CallMethodDef CallEntries[] = {
 void attribute_visible R_init_rstan(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
-  R_forceSymbols(dll, TRUE);
+  // The call to R_useDynamicSymbols indicates that if the correct C 
+  // entry point is not found in the shared library, then an error
+  // should be signaled.  Currently, the default
+  // behavior in R is to search all other loaded shared libraries for the
+  // symbol, which is fairly dangerous behavior.  If you have registered 
+  // all routines in your library, then you should set this to FALSE
+  // as done in the stats package. [copied from `R Programming for
+  // Bioinformatics' // by Robert Gentleman]
+  R_forceSymbols(dll, TRUE); // copied from package stats, don't know what it does.
 }
