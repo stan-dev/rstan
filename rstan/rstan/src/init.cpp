@@ -19,11 +19,11 @@ SEXP effective_sample_size2(SEXP sims);
 SEXP split_potential_scale_reduction(SEXP sim, SEXP n_); 
 SEXP split_potential_scale_reduction2(SEXP sims_);
 SEXP seq_permutation(SEXP conf);  
-SEXP read_comments(SEXP file, SEXP n);
+SEXP CPP_read_comments(SEXP file, SEXP n);
 SEXP stan_prob_autocovariance(SEXP v);
 SEXP is_Null_NS(SEXP ns);
-SEXP stanc(SEXP model_stancode, SEXP model_name);
-SEXP stan_version(); 
+SEXP CPP_stanc(SEXP model_stancode, SEXP model_name);
+SEXP CPP_stan_version(); 
 #ifdef __cplusplus
 }
 #endif
@@ -31,19 +31,22 @@ SEXP stan_version();
 #define CALLDEF(name, n)  {#name, (DL_FUNC) &name, n}
 
 static const R_CallMethodDef CallEntries[] = {
-  CALLDEF(is_Null_NS, 3),
   CALLDEF(effective_sample_size, 2),
   CALLDEF(effective_sample_size2, 1),
   CALLDEF(split_potential_scale_reduction, 2),
   CALLDEF(split_potential_scale_reduction2, 1),
   CALLDEF(seq_permutation, 1),
-  CALLDEF(read_comments, 2),
+  CALLDEF(CPP_read_comments, 2),
   CALLDEF(stan_prob_autocovariance, 1),
-  CALLDEF(stanc, 2),
-  CALLDEF(stan_version, 0),
+  CALLDEF(is_Null_NS, 1),
+  CALLDEF(CPP_stanc, 2),
+  CALLDEF(CPP_stan_version, 0),
   {NULL, NULL, 0}
 };
 
+#ifdef __cplusplus
+extern "C"  {
+#endif
 void attribute_visible R_init_rstan(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
@@ -57,3 +60,6 @@ void attribute_visible R_init_rstan(DllInfo *dll) {
   // Bioinformatics' // by Robert Gentleman]
   R_forceSymbols(dll, TRUE); // copied from package stats, don't know what it does.
 }
+#ifdef __cplusplus
+}
+#endif

@@ -1329,7 +1329,7 @@ read_comments <- function(file, n) {
   # Args:
   #   file: the filename 
   #   n: max number of line; -1 means all 
-  .Call("read_comments", file, n)
+  .Call("CPP_read_comments", file, n)
 } 
 
 sqrfnames_to_dotfnames <- function(fnames) {
