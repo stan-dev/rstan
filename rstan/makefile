@@ -140,6 +140,7 @@ clean:
 
 clean-all: 
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
+	rm -rf rstan/R/git_*stan_head.R 
 	rm -rf "./rstan/inst/include/stanlib"
 	rm -rf "./rstan/inst/include/stansrc"
 	rm -rf rstan.Rcheck
