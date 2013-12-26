@@ -114,6 +114,9 @@ namespace rstan {
         double adapt_gamma;
         double adapt_delta;
         double adapt_kappa;
+        unsigned int adapt_init_buffer;
+        unsigned int adapt_term_buffer;
+        unsigned int adapt_window;
         double adapt_t0;
         sampling_metric_t metric; // UNIT_E, DIAG_E, DENSE_E;
         double stepsize; // defaut to 1;
@@ -132,6 +135,10 @@ namespace rstan {
         double tol_grad; // default to 1e-8, for BFGS
         double tol_param; // default to 1e-8, for BFGS
       } optim; 
+      struct {
+        double epsilon; // default to 1e-6, for test_grad 
+        double error;  // default to 1e-6, for test_grad 
+      } test_grad;
     } ctrl; 
 
   private:
@@ -232,6 +239,8 @@ namespace rstan {
       diagnostic_file_flag = get_rlist_element(in, "diagnostic_file", diagnostic_file);
 
       int calculated_thin;
+      get_rlist_element(in, "control", t_sexp, R_NilValue);
+      Rcpp::List ctrl_lst(t_sexp);
       switch (method) { 
         case SAMPLING: 
           get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
@@ -269,43 +278,32 @@ namespace rstan {
             ctrl.sampling.algorithm = NUTS;
           }
   
-          if (get_rlist_element(in, "control", t_sexp)) {
-            Rcpp::List ctrl_lst(t_sexp);
-            get_rlist_element(ctrl_lst, "adapt_engaged", ctrl.sampling.adapt_engaged, true);
-            get_rlist_element(ctrl_lst, "adapt_gamma", ctrl.sampling.adapt_gamma, 0.05);
-            get_rlist_element(ctrl_lst, "adapt_delta", ctrl.sampling.adapt_delta, 0.65);
-            get_rlist_element(ctrl_lst, "adapt_kappa", ctrl.sampling.adapt_kappa, 0.75);
-            get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
-            get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
-            get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
+          get_rlist_element(ctrl_lst, "adapt_engaged", ctrl.sampling.adapt_engaged, true);
+          get_rlist_element(ctrl_lst, "adapt_gamma", ctrl.sampling.adapt_gamma, 0.05);
+          get_rlist_element(ctrl_lst, "adapt_delta", ctrl.sampling.adapt_delta, 0.8);
+          get_rlist_element(ctrl_lst, "adapt_kappa", ctrl.sampling.adapt_kappa, 0.75);
+          get_rlist_element(ctrl_lst, "adapt_t0", ctrl.sampling.adapt_t0, 10.0);
+          get_rlist_element(ctrl_lst, "adapt_init_buffer", ctrl.sampling.adapt_init_buffer, 75U);
+          get_rlist_element(ctrl_lst, "adapt_term_buffer", ctrl.sampling.adapt_term_buffer, 50U);
+          get_rlist_element(ctrl_lst, "adapt_window", ctrl.sampling.adapt_window, 25U);
+          get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
+          get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
 
-            if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
-              if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
-              else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
-              else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
-            } else ctrl.sampling.metric = DIAG_E;
+          if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
+            if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
+            else if ("diag_e" == t_str) ctrl.sampling.metric = DIAG_E;
+            else if ("dense_e" == t_str) ctrl.sampling.metric = DENSE_E;
+          } else ctrl.sampling.metric = DIAG_E;
     
-            switch (ctrl.sampling.algorithm) { 
-              case NUTS: 
-                get_rlist_element(ctrl_lst, "max_treedepth", ctrl.sampling.max_treedepth, 10);
-                break;
-              case HMC: 
-                get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
-                                  6.283185307179586476925286766559005768e+00);
-                break;
-              case Metropolis: break;
-            }
-          } else { 
-            ctrl.sampling.adapt_engaged = true;
-            ctrl.sampling.adapt_gamma = 0.05;
-            ctrl.sampling.adapt_delta = 0.65;
-            ctrl.sampling.adapt_kappa = 0.75;
-            ctrl.sampling.adapt_t0  = 10;
-            ctrl.sampling.max_treedepth = 10;
-            ctrl.sampling.metric = DIAG_E;
-            ctrl.sampling.stepsize = 1;
-            ctrl.sampling.stepsize_jitter = 0;
-            ctrl.sampling.int_time = 6.283185307179586476925286766559005768e+00;
+          switch (ctrl.sampling.algorithm) { 
+            case NUTS: 
+              get_rlist_element(ctrl_lst, "max_treedepth", ctrl.sampling.max_treedepth, 10);
+              break;
+             case HMC: 
+              get_rlist_element(ctrl_lst, "int_time", ctrl.sampling.int_time, 
+                                6.283185307179586476925286766559005768e+00);
+               break;
+             case Metropolis: break;
           }
           break;
 
@@ -338,7 +336,10 @@ namespace rstan {
           get_rlist_element(in, "save_iterations", ctrl.optim.save_iterations, true);
           break;
 
-        case TEST_GRADIENT: break;
+        case TEST_GRADIENT:
+          get_rlist_element(ctrl_lst, "epsilon", ctrl.test_grad.epsilon,1e-6);
+          get_rlist_element(ctrl_lst, "error", ctrl.test_grad.error,1e-6);
+          break;
       } 
 
       if (get_rlist_element(in, "init", t_sexp)) {
@@ -390,6 +391,9 @@ namespace rstan {
           ctrl_list["adapt_delta"] = ctrl.sampling.adapt_delta;
           ctrl_list["adapt_kappa"] = ctrl.sampling.adapt_kappa;
           ctrl_list["adapt_t0"] = ctrl.sampling.adapt_t0;
+          ctrl_list["adapt_init_buffer"] = ctrl.sampling.adapt_init_buffer;
+          ctrl_list["adapt_term_buffer"] = ctrl.sampling.adapt_term_buffer;
+          ctrl_list["adapt_window"] = ctrl.sampling.adapt_window;
           ctrl_list["stepsize"] = ctrl.sampling.stepsize;
           ctrl_list["stepsize_jitter"] = ctrl.sampling.stepsize_jitter;
           switch (ctrl.sampling.algorithm) { 
@@ -446,6 +450,9 @@ namespace rstan {
         case TEST_GRADIENT:
           lst["method"] = "test_grad";
           lst["test_grad"] = true;
+          ctrl_list["epsilon"] = ctrl.test_grad.epsilon;
+          ctrl_list["error"] = ctrl.test_grad.error;
+          lst["control"] = ctrl_list;
       } 
       return lst;
     } 
@@ -504,19 +511,28 @@ namespace rstan {
       return 0;
     } 
     inline bool get_ctrl_sampling_adapt_engaged() const {
-       return ctrl.sampling.adapt_engaged;
+      return ctrl.sampling.adapt_engaged;
     }
     inline double get_ctrl_sampling_adapt_gamma() const {
-       return ctrl.sampling.adapt_gamma;
+      return ctrl.sampling.adapt_gamma;
     }
     inline double get_ctrl_sampling_adapt_delta() const {
-       return ctrl.sampling.adapt_delta;
+      return ctrl.sampling.adapt_delta;
     }
     inline double get_ctrl_sampling_adapt_kappa() const {
-       return ctrl.sampling.adapt_kappa;
+      return ctrl.sampling.adapt_kappa;
     }
     inline double get_ctrl_sampling_adapt_t0() const {
-       return ctrl.sampling.adapt_t0;
+      return ctrl.sampling.adapt_t0;
+    }
+    inline unsigned int get_ctrl_sampling_adapt_init_buffer() const { 
+      return ctrl.sampling.adapt_init_buffer;
+    }
+    inline unsigned int get_ctrl_sampling_adapt_term_buffer() const {
+      return ctrl.sampling.adapt_term_buffer;
+    }
+    inline unsigned int get_ctrl_sampling_adapt_window() const {
+      return ctrl.sampling.adapt_window;
     }
     inline double get_ctrl_sampling_stepsize() const {
        return ctrl.sampling.stepsize;
@@ -560,6 +576,12 @@ namespace rstan {
     inline double get_ctrl_optim_tol_param() const { 
       return ctrl.optim.tol_param;
     }
+    double get_ctrl_test_grad_epsilon() const {
+      return ctrl.test_grad.epsilon;
+    }
+    double get_ctrl_test_grad_error() const {
+      return ctrl.test_grad.error;
+    }
     inline unsigned int get_chain_id() const {
       return chain_id;
     } 
@@ -572,7 +594,8 @@ namespace rstan {
     SEXP get_init_list() const {
       return init_list; 
     } 
-    
+
+
     void write_args_as_comment(std::ostream& ostream) const { 
       write_comment_property(ostream,"init",init);
       write_comment_property(ostream,"seed",random_seed);

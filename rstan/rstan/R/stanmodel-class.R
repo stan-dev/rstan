@@ -56,7 +56,7 @@ setMethod("optimizing", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
                    algorithm = c("BFGS", "Nesterov", "Newton"),
-                   verbose = FALSE, ...) {
+                   verbose = FALSE, hessian = FALSE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -106,6 +106,26 @@ setMethod("optimizing", "stanmodel",
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
+            if(hessian) {
+              fn <- function(theta) {
+                sampler$log_prob(theta, FALSE, FALSE)
+              }
+              gr <- function(theta) {
+                sampler$log_grad(theta, FALSE)
+              }
+              theta <- list()
+              start <- 1L
+              for(i in seq_along(p_dims)) {
+                end <- start + prod(p_dims[[i]]) - 1L
+                theta[[i]] <- optim$par[start:end]
+                if(end > start) dim(theta[[i]]) <- p_dims[[i]]
+                start <- end + 1
+              }
+              optim$hessian <- optimHess(unlist(theta), fn, gr, 
+                                         control = list(fnscale = -1))
+              colnames(optim$hessian) <- rownames(optim$hessian) <- 
+                names(optim$par)[1:ncol(optim$hessian)]
+            }
             invisible(optim)
           }) 
 

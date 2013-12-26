@@ -475,12 +475,12 @@ seed, which is randomly generated in \R if not specified.
 Through changing some of augments for calling function \code{stan}, we
 can use other samplers implemented by \Stan such as HMC (\citealt{Neal:2011}). All the details
 can be found in the help documentation of function \code{stan}. As \Stan
-and \RStan is being actively developed, other samplers might be 
+and \RStan are being actively developed, other samplers might be 
 added.  The help documentation in package \pkg{rstan} should always have the
 up-to-date details.
 
 The test gradient mode in \Stan can be used by setting argument 
-\code{test\_gard} to \code{TRUE}. As in \Stan, the test gradient mode
+\code{test\_grad} to \code{TRUE}. As in \Stan, the test gradient mode
 will not sample from the posterior distribution, but only print out the
 gradients for the log probability density function at an initial point
 calculated by approaches of both the algorithmic differentiation (AD) in \Stan
@@ -490,7 +490,7 @@ will be in test gradient mode and will not contain any sample.
 \subsection{Data preprocessing and passing}
 
 The data passed to \code{stan} will go through a preprocessing procedure. 
-The details of this preprocessing is documented in the help 
+The details of this preprocessing are documented in the help 
 for function \code{stan}. Here we stress a few important steps.  
 First, \pkg{rstan} allows to specify more than what is really needed 
 in that \Stan only looks for the data elements from the input \R list with the
@@ -648,35 +648,23 @@ Last, a common feature for some functions of class \code{stanfit} is that
 there is an argument of name \code{pars}.  This argument is used
 to specify parameters of interest so that a subset of the parameters for a model 
 is, for example, printed (plotted). This
-feature is helpful when there are too many parameters in the model. For instance,
+feature is helpful when there are too many parameters in the model
+or when we need to reduce computer memory usage. For instance,
 in the eight schools example, we have parameter $\theta$ defined as
 ``\code{real theta[J]}''. So we can specify
 \code{pars="theta"} or \code{pars="theta[1]"}.
 However, specifying part of $\theta$ (i.e., \code{pars="theta[1:2]"}) as in \R
 is not allowed---a workaround for this is to specify \code{pars=c("theta[1]","theta[2]")}. 
-Even function \code{stan} allows to specify \code{pars} so that only part of 
-the samples are returned, which might be problematic from the perspective of
+Though function \code{stan} allows to specify \code{pars} so that only part of 
+the samples are returned, it might be problematic from the perspective of
 diagnosing MCMC convergence since we would apply our diagnostic criterion to
-part of our parameters. However, this might be helpful for reducing computer memory 
-usage. To mitigate the loss of diagnostics information, we can use function 
-\code{get\_posterior\_mean}\rstanfunidx{get\_posterior\_mean}, which would
-return the posterior mean of all parameters computed from individual 
+part of our parameters. To mitigate the loss of diagnostics information, we can
+use function \code{get\_posterior\_mean}\rstanfunidx{get\_posterior\_mean},
+which would return the posterior mean of all parameters computed from individual 
 chains and all chains merged excluding warmup samples. A better way for 
 this case is to write samples to external files using argument 
-\code{sample\_file} of function \code{stan}. 
-
-
-Function \code{stan} also allows to specify \code{pars} so that only part of 
-the samples are returned and saved in \R. This is problematic from the perspective of
-diagnosing MCMC convergence since we would apply our diagnostic criterion to
-part of our parameters. However, this might be helpful for reducing computer memory 
-usage. To mitigate the loss of diagnostics information, we can use function 
-\code{get\_posterior\_mean}\rstanfunidx{get\_posterior\_mean}, which would
-return the posterior mean of all parameters computed from individual 
-chains and all chains merged excluding warmup samples. A better way for 
-this case is to write samples to external files using argument 
-\code{sample\_file} of function \code{stan}. 
-
+\code{sample\_file} of function \code{stan} and then conduct diagnostics
+using the external files. 
 
 
 \subsection{The log posterior function and its gradient} 

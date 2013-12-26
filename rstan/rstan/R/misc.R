@@ -345,12 +345,27 @@ config_argss <- function(chains, iter, warmup, thin,
     else inits <- rep("random", chains) 
     inits_specified <- TRUE
   } 
+
+  dotlist <- list(...)
+
+  # use chain_id argument if specified
+  chain_ids <- seq_len(chains)
+  if (!is.null(dotlist$chain_id)) { 
+    chain_id <- as.integer(dotlist$chain_id)
+    if (any(duplicated(chain_id))) stop("chain_id has duplicated elements")
+    chain_id_len <- length(chain_id)
+    chain_ids <- if (chain_id_len >= chains) chain_id else {
+                   c(chain_id, max(chain_id) + seq_len(chains - chain_id_len))
+                 }
+    dotlist$chain_id <- NULL
+  }
+
   if (!inits_specified && is.function(init)) {
     ## the function can take an argument named by chain_id 
     if (any(names(formals(init)) == "chain_id")) {
-      inits <- lapply(1:chains, function(id) init(chain_id = id))
+      inits <- lapply(chain_ids, function(id) init(chain_id = id))
     } else {
-      inits <- lapply(1:chains, function(id) init())
+      inits <- lapply(chain_ids, function(id) init())
     } 
     if (!is_named_list(inits[[1]])) 
       stop('the function for specifying initial values need return a named list')
@@ -373,21 +388,6 @@ config_argss <- function(chains, iter, warmup, thin,
 
   ## only one seed is needed by virtue of the RNG 
   seed <- if (missing(seed)) sample.int(.Machine$integer.max, 1) else check_seed(seed)
-
-  dotlist <- list(...)
-
-  # use chain_id argument if specified
-  if (is.null(dotlist$chain_id)) { 
-    chain_ids <- seq_len(chains)
-  } else {
-    chain_id <- as.integer(dotlist$chain_id)
-    if (any(duplicated(chain_id))) stop("chain_id has duplicated elements")
-    chain_id_len <- length(chain_id)
-    chain_ids <- if (chain_id_len >= chains) chain_id else {
-                   c(chain_id, max(chain_id) + seq_len(chains - chain_id_len))
-                 }
-    dotlist$chain_id <- NULL
-  }
 
   dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) "test_grad" else "sampling"
   
@@ -1329,7 +1329,7 @@ read_comments <- function(file, n) {
   # Args:
   #   file: the filename 
   #   n: max number of line; -1 means all 
-  .Call("read_comments", file, n, PACKAGE = 'rstan')
+  .Call("CPP_read_comments", file, n)
 } 
 
 sqrfnames_to_dotfnames <- function(fnames) {

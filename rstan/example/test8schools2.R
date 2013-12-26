@@ -63,9 +63,19 @@ ls(ss@.MISC)
 ss4 <- stan(fit = ss, data = dat, init = 0) 
 
 initfun <- function(chain_id = 1) {
+  cat("chain_id=", chain_id, "\n", file = 'cid.txt', append = TRUE)
   list(mu = rnorm(1), theta = rnorm(J), tau = rexp(1, chain_id))
 } 
 ss5 <- stan(fit = ss, data = dat, init = initfun)
+
+cat("", file = 'cid.txt')
+library(parallel)
+seed <- 444
+sflist1 <-
+  mclapply(1:4, mc.cores = 4,
+           function(i) stan(fit = ss5, seed = seed, chains = 1, chain_id = i, refresh = -1, data = dat))
+ss5_1 <- sflist2stanfit(sflist1)
+
 
 inits <- lapply(1:4, initfun)
 ss6 <- stan(fit = ss, data = dat, init = inits) 
