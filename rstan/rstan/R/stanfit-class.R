@@ -651,7 +651,7 @@ setMethod("traceplot", signature = "stanfit",
 is_sf_valid <- function(sf) {
   # Similar to is_sm_valid, this is only to test whether
   # the compiled DSO is loaded 
-  return(rstan:::is_sm_valid(sf@stanmodel)) 
+  return(is_sm_valid(sf@stanmodel)) 
 } 
 
 is_sfinstance_valid <- function(object) {

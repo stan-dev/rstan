@@ -18,7 +18,7 @@ extern SEXP is_Null_NS(SEXP ns);
  * Tell if it is a NULL native symbol. 
  * This function mainly used to tell if a function created by cxxfunction of R
  * package inline points to a NULL address, which would happen when it is
- * deserialized (that is, loaded from what is saved previously). 
+ * deserialized (that is, loaded from what was saved previously by using R's save). 
  *  
  */
 SEXP is_Null_NS(SEXP ns) {

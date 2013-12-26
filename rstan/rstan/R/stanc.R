@@ -21,7 +21,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   if (is.na(obfuscate_name))  obfuscate_name <- FALSE
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_name) 
-  r <- .Call("stanc", model_code, model_cppname, PACKAGE = "rstan")
+  r <- .Call("CPP_stanc", model_code, model_cppname)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
@@ -41,13 +41,13 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
 
   if (r$status != SUCCESS_RC) {
     if (verbose)  
-      cat("successful of parsing the Stan model '", model_name, "'.\n", sep = '') 
+      cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '') 
   } 
   invisible(r)
 }
 
 
 stan_version <- function() {
-  .Call('stan_version', PACKAGE = 'rstan')
+  .Call('CPP_stan_version')
 }
 
