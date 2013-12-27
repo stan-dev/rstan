@@ -12,10 +12,10 @@
 #include <Rcpp.h>
 #include <rstan/io/r_ostream.hpp> 
 
-RcppExport SEXP stanc(SEXP model_stancode, SEXP model_name);
-RcppExport SEXP stan_version(); 
+RcppExport SEXP CPP_stanc(SEXP model_stancode, SEXP model_name);
+RcppExport SEXP CPP_stan_version(); 
 
-SEXP stan_version() {
+SEXP CPP_stan_version() {
   BEGIN_RCPP;
   std::string stan_version 
     = stan::MAJOR_VERSION + "." +
@@ -25,7 +25,7 @@ SEXP stan_version() {
   END_RCPP;
 } 
 
-SEXP stanc(SEXP model_stancode, SEXP model_name) { 
+SEXP CPP_stanc(SEXP model_stancode, SEXP model_name) { 
   BEGIN_RCPP;
   static const int SUCCESS_RC = 0;
   static const int EXCEPTION_RC = -1;

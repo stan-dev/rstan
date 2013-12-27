@@ -65,7 +65,7 @@
      to print intermediate output from Stan on the console.}
   \item{hessian}{\code{TRUE} or \code{FALSE} (the default): flag indicating
      whether to calculate the Hessian (via numeric differentiation of the
-     gradient function)}   
+     gradient function in the unconstrained parameter space)}   
   \item{\dots}{Other optional parameters. 
     \enumerate{
       \item \code{iter} (\code{integer}), the maximum number of iterations

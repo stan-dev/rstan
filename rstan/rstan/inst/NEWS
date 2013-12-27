@@ -1,3 +1,8 @@
+Sat Dec 21 2013 
+1. Changes
+   * speed up stanfit@extract for permuted=TRUE (code from R. Boylan)
+   * changes due to changes in Stan's interface 
+
 Sun Oct 20 2013
 1. Bug fixes
    * specify sampler parameters such as using dense_e, unit_e

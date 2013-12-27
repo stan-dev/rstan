@@ -256,7 +256,7 @@ RcppExport SEXP effective_sample_size2(SEXP sims);
 RcppExport SEXP split_potential_scale_reduction(SEXP sim, SEXP n_); 
 RcppExport SEXP split_potential_scale_reduction2(SEXP sims_);
 RcppExport SEXP seq_permutation(SEXP conf);  
-RcppExport SEXP read_comments(SEXP file, SEXP n);
+RcppExport SEXP CPP_read_comments(SEXP file, SEXP n);
 
 RcppExport SEXP stan_prob_autocovariance(SEXP v);
 
@@ -559,7 +559,7 @@ SEXP seq_permutation(SEXP conf) {
  *  @returns A character vector each element of which is a line of comments
  *  begining with `#`
  */ 
-SEXP read_comments(SEXP file, SEXP n) {
+SEXP CPP_read_comments(SEXP file, SEXP n) {
   BEGIN_RCPP; 
   std::string filename = Rcpp::as<std::string>(file);
   int n2 = Rcpp::as<int>(n); 
