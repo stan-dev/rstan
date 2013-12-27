@@ -1207,6 +1207,20 @@ namespace rstan {
       return Rcpp::wrap(params_r);
     } 
 
+    SEXP unconstrained_param_names(SEXP include_tparams, SEXP include_gqs) {
+      std::vector<std::string> n;
+      model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
+                                       Rcpp::as<bool>(include_gqs));
+      return Rcpp::wrap(n);
+    } 
+
+    SEXP constrained_param_names(SEXP include_tparams, SEXP include_gqs) {
+      std::vector<std::string> n;
+      model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
+                                       Rcpp::as<bool>(include_gqs));
+      return Rcpp::wrap(n);
+    } 
+
     /**
      * Contrary to unconstrain_pars, transform parameters
      * from unconstrained support to the constrained. 
