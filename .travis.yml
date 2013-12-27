@@ -50,7 +50,7 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make install_pre_rpkg && make build NOTBUILD=true && R CMD INSTALL rstan --no-docs --no-html && git clean -f -x && make build BUILD_OPTS="--no-build-vignettes --no-manual" && make install && make check && cd tests && R -q -f runRunitTests.R
+  - cd rstan && make install_pre_rpkg && make build NOTBUILD=true && R CMD INSTALL rstan --no-docs --no-html && git clean -f -x && make install && cd tests && R -q -f runRunitTests.R
 
 after_script:
   - ccache -s 
