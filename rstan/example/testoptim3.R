@@ -15,6 +15,7 @@ sm <- stan_model(model_code = mc)
 op3 <- optimizing(sm, hessian = !TRUE)
 op3 
 op4 <- optimizing(sm, hessian = TRUE)
+op4
 
 
 

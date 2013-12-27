@@ -121,7 +121,9 @@ setMethod("optimizing", "stanmodel",
                 if(end > start) dim(theta[[i]]) <- p_dims[[i]]
                 start <- end + 1L
               }
-              optim$hessian <- optimHess(unlist(theta), fn, gr, 
+              names(theta) <- names(p_dims)
+              theta <- sampler$unconstrain_pars(theta)
+              optim$hessian <- optimHess(theta, fn, gr,
                                          control = list(fnscale = -1))
               colnames(optim$hessian) <- rownames(optim$hessian) <- 
                 names(optim$par)[1:ncol(optim$hessian)]
