@@ -11,7 +11,10 @@
   d <- factor(c("a", "b", "b", "a", "a"))
   e <- factor(c(1, 3, 3, 1, 1))
   f <- c(TRUE, TRUE, FALSE)
+  g <- 1000000000
+  h <- 1.1e+10
   rstan:::stan_rdump(c("d", "e", "f"), file = 'standumpabc.Rdump', append = TRUE)
+  rstan:::stan_rdump(c("g", "h"), file = 'standumpabc.Rdump', append = TRUE)
 
   cc <- c("# comment line 1", 
           " no comments line 1", 
@@ -137,6 +140,9 @@ test_stan_rdump <- function() {
   checkEquals(l$d, c(1, 2, 2, 1, 1))
   checkEquals(l$e, c(1, 2, 2, 1, 1))
   checkEquals(l$f, c(1, 1, 0))
+  text <- paste(readLines('standumpabc.Rdump'), collapse = "|")
+  checkTrue(grepl("1000000000", text))
+  checkEquals(l$h, 1.1e10)
 } 
 
 test_seq_array_ind <- function() {
