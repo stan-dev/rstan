@@ -10,6 +10,12 @@ filename_rm_ext <- function(x) {
   sub("\\.[^.]*$", "", x)
 } 
 
+real_is_integer <- function(x) {
+  if (length(x) < 1L ||  any(is.infinite(x)) || any(is.nan(x))) return(FALSE)
+  all(floor(x) == x)
+}
+
+
 list_as_integer_if_doable <- function(x) {
   # change the storage mode from 'real' to 'integer' 
   # if applicable since by default R use real.
@@ -25,8 +31,10 @@ list_as_integer_if_doable <- function(x) {
          FUN = function(y) { 
            if (!is.numeric(y)) return(y) 
            if (is.integer(y)) return(y) 
-           if (isTRUE(all.equal(y, round(y), check.attributes = FALSE))) 
-             storage.mode(y) <- "integer"  
+           ## this commented out is the idea in the function is.wholenumber in
+           ## the help of is.integer
+           # if (isTRUE(all.equal(y, round(y), check.attributes = FALSE))) 
+           if (real_is_integer(y)) storage.mode(y) <- "integer"  
            return(y) 
          })
 } 
@@ -197,7 +205,7 @@ data_preprocess <- function(data) { # , varnames) {
                    if (is.integer(x)) return(x) 
          
                    # change those integers stored as reals to integers 
-                   if (max(abs(x)) < .Machine$integer.max && isTRUE(all.equal(x, round(x), check.attributes = FALSE))) 
+                   if (max(abs(x)) < .Machine$integer.max && real_is_integer(x))
                      storage.mode(x) <- "integer"  
                    return(x) 
                  })   
@@ -527,6 +535,9 @@ stan_rdump <- function(list, file = "", append = FALSE,
         warning(paste0("variable ", v, " is not supported for dumping."))
       next
     } 
+
+    if (!is.integer(vv) && max(abs(vv)) < .Machine$integer.max && real_is_integer(vv)) 
+      storage.mode(vv) <- "integer"
 
     if (is.vector(vv)) {
       if (length(vv) == 1) {

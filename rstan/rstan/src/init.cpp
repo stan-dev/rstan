@@ -10,6 +10,7 @@
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h>
+#include <Rversion.h>
 
 #ifdef __cplusplus
 extern "C"  {
@@ -58,7 +59,9 @@ void attribute_visible R_init_rstan(DllInfo *dll) {
   // all routines in your library, then you should set this to FALSE
   // as done in the stats package. [copied from `R Programming for
   // Bioinformatics' // by Robert Gentleman]
+#if defined(R_VERSION) && R_VERSION >= R_Version(2, 16, 0)
   R_forceSymbols(dll, TRUE); // copied from package stats, don't know what it does.
+#endif
 }
 #ifdef __cplusplus
 }

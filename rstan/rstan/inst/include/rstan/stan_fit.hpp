@@ -1199,12 +1199,32 @@ namespace rstan {
      *  for a chain 
      */
     SEXP unconstrain_pars(SEXP par) {
+      BEGIN_RCPP
       Rcpp::List par_lst(par); 
       rstan::io::rlist_ref_var_context par_context(par_lst); 
       std::vector<int> params_i;
       std::vector<double> params_r;
       model_.transform_inits(par_context, params_i, params_r);
       return Rcpp::wrap(params_r);
+      END_RCPP
+    } 
+
+    SEXP unconstrained_param_names(SEXP include_tparams, SEXP include_gqs) {
+      BEGIN_RCPP
+      std::vector<std::string> n;
+      model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
+                                       Rcpp::as<bool>(include_gqs));
+      return Rcpp::wrap(n);
+      END_RCPP
+    } 
+
+    SEXP constrained_param_names(SEXP include_tparams, SEXP include_gqs) {
+      BEGIN_RCPP
+      std::vector<std::string> n;
+      model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
+                                       Rcpp::as<bool>(include_gqs));
+      return Rcpp::wrap(n);
+      END_RCPP
     } 
 
     /**
@@ -1215,6 +1235,7 @@ namespace rstan {
      *  space 
      */ 
     SEXP constrain_pars(SEXP upar) {
+      BEGIN_RCPP
       std::vector<double> par;
       std::vector<double> params_r = Rcpp::as<std::vector<double> >(upar);
       if (params_r.size() != model_.num_params_r()) {
@@ -1229,6 +1250,7 @@ namespace rstan {
       std::vector<int> params_i(model_.num_params_i());
       model_.write_array(base_rng, params_r, params_i, par);
       return Rcpp::wrap(par);
+      END_RCPP
     } 
   
     /**
@@ -1239,7 +1261,7 @@ namespace rstan {
      *  space. 
      */
     SEXP log_prob(SEXP upar, SEXP jacobian_adjust_transform, SEXP gradient) {
-      BEGIN_RCPP;
+      BEGIN_RCPP
       using std::vector;
       vector<double> par_r = Rcpp::as<vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
@@ -1269,7 +1291,7 @@ namespace rstan {
       Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
       lp2.attr("gradient") = gradient;
       return lp2;
-      END_RCPP;
+      END_RCPP
     } 
 
     /**
@@ -1283,7 +1305,7 @@ namespace rstan {
      *  space to unconstrained space implicitly done in Stan.
      */
     SEXP grad_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
-      BEGIN_RCPP;
+      BEGIN_RCPP
       std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
         std::stringstream msg; 
@@ -1304,21 +1326,21 @@ namespace rstan {
       Rcpp::NumericVector grad = Rcpp::wrap(gradient); 
       grad.attr("log_prob") = lp;
       return grad;
-      END_RCPP;
+      END_RCPP
     } 
 
     /**
      * Return the number of unconstrained parameters 
      */ 
     SEXP num_pars_unconstrained() {
-      BEGIN_RCPP;
+      BEGIN_RCPP
       int n = model_.num_params_r();
       return Rcpp::wrap(n);
-      END_RCPP;
+      END_RCPP
     } 
     
     SEXP call_sampler(SEXP args_) { 
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       Rcpp::List lst_args(args_); 
       stan_args args(lst_args); 
       Rcpp::List holder;
@@ -1330,19 +1352,19 @@ namespace rstan {
         return R_NilValue;  // indicating error happened 
       } 
       return holder; 
-      END_RCPP; 
+      END_RCPP 
     } 
 
     SEXP param_names() const {
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       return Rcpp::wrap(names_);
-      END_RCPP; 
+      END_RCPP 
     } 
 
     SEXP param_names_oi() const {
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       return Rcpp::wrap(names_oi_);
-      END_RCPP; 
+      END_RCPP 
     } 
 
     /**
@@ -1351,7 +1373,7 @@ namespace rstan {
      * all the parameters. 
      */ 
     SEXP param_oi_tidx(SEXP pars) {
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       std::vector<std::string> names = 
         Rcpp::as<std::vector<std::string> >(pars); 
       std::vector<std::string> names2; 
@@ -1386,32 +1408,32 @@ namespace rstan {
       Rcpp::List lst = Rcpp::wrap(indexes); 
       lst.names() = names2; 
       return lst; 
-      END_RCPP;
+      END_RCPP
     } 
 
 
     SEXP param_dims() const {
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       Rcpp::List lst = Rcpp::wrap(dims_); 
       lst.names() = names_; 
       return lst; 
-      END_RCPP;
+      END_RCPP
     } 
 
     SEXP param_dims_oi() const {
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       Rcpp::List lst = Rcpp::wrap(dims_oi_); 
       lst.names() = names_oi_; 
       return lst; 
-      END_RCPP;
+      END_RCPP
     } 
     
     SEXP param_fnames_oi() const {
-      BEGIN_RCPP; 
+      BEGIN_RCPP 
       std::vector<std::string> fnames; 
       get_all_flatnames(names_oi_, dims_oi_, fnames, true); 
       return Rcpp::wrap(fnames); 
-      END_RCPP;
+      END_RCPP
     } 
   };
 } 

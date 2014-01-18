@@ -126,7 +126,7 @@ setMethod("optimizing", "stanmodel",
               optim$hessian <- optimHess(theta, fn, gr,
                                          control = list(fnscale = -1))
               colnames(optim$hessian) <- rownames(optim$hessian) <- 
-                names(optim$par)[1:ncol(optim$hessian)]
+                sampler$unconstrained_param_names(FALSE, FALSE)
             }
             invisible(optim)
           }) 
