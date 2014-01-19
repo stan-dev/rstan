@@ -73,7 +73,7 @@ help:
 	@echo '--------------------------------------------------------------------------------'
 
 install_pre_rpkg:
-	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
+	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE, type = 'source'); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
 
 
 build $(STANPKG): ./rstan/DESCRIPTION 
