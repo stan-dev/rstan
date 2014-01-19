@@ -8,7 +8,7 @@ compiler:
   
 env:
   global:
-    - R_LIBS_USER=~/personal_library
+    - BOOTSTRAP_LATEX="1"
   matrix: 
     - CXX_OLEVEL=0
     - CXX_OLEVEL=3
@@ -24,7 +24,7 @@ before_install:
   - ./travis-tool.sh bootstrap
     
 install:
-  - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
+  - ./travis-tool.sh install_aptget r-cran-runit ccache
   - ./travis-tool.sh install_r inline Rcpp coda
   - ccache --max-size 8G
 
@@ -49,7 +49,7 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make build NOTBUILD=true && R CMD INSTALL rstan --no-docs --no-html && git clean -f -x && make install && cd tests && R -q -f runRunitTests.R
+  - cd rstan && make build NOTBUILD=true && R CMD INSTALL rstan --fake --no-docs --no-html && git clean -f -x && make install && cd tests && R -q -f runRunitTests.R
 
 after_script:
   - ccache -s 
