@@ -20,7 +20,9 @@ matrix:
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - curl -OL https://raw2.github.com/maverickg/utils/master/shell/wait4.sh
   - chmod 755 ./travis-tool.sh
+  - chmod 755 ./wait4.sh
   - ./travis-tool.sh bootstrap
     
 install:
@@ -49,7 +51,8 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan && make build NOTBUILD=true && R CMD INSTALL rstan --fake --no-docs --no-html && git clean -f -x && make install && cd tests && R -q -f runRunitTests.R
+  - cd rstan 
+  - (make install & ../wait4.sh $!) && cd tests && R -q -f runRunitTests.R
 
 after_script:
   - ccache -s 
