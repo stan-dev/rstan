@@ -756,7 +756,7 @@ num_pars <- function(d) prod(d)
 
 calc_starts <- function(dims) {
   len <- length(dims) 
-  s <- sapply(dims, function(d)  num_pars(d), USE.NAMES = FALSE) 
+  s <- sapply(unname(dims), function(d)  num_pars(d), USE.NAMES = FALSE) 
   cumsum(c(1, s))[1:len] 
 } 
 
@@ -1047,42 +1047,18 @@ summary_sim_rhat <- function(sim, pars) {
 } 
 
 
-par_vector2list <- function(v, pars, dims, starts = calc_starts(dims)) {
-  # Turn a vector of sample (typically an iteration)
-  # into a list according to the dims for parameters
-  # Args:
-  #   v: the vector of sample 
-  #   pars: a character vector for parameter names 
-  #   dims: a list of integer vector for parameter dimensions
+create_skeleton <- function(pars, dims) {
+  # for the purpose of using relist to convert 
+  # vector to list
   lst <- lapply(seq_along(pars), 
                 function(i) { 
-                  len <- num_pars(dims[[i]]) 
-                  y <- v[starts[i] + (1:len) - 1] 
-                  if (length(dims[[i]]) > 0) dim(y) <- dims[[i]] 
-                  return(y) 
+                  len_dims <- length(dims[[i]])
+                  if (len_dims < 1) return(0)
+                  return(array(0, dim = dims[[i]]))
                 })
   names(lst) <- pars 
   lst 
 }
-
-organize_inits <- function(inits, pars, dims) {
-  # obtain a list of inital values for each chain in sim
-  # Args: 
-  #   inits: a list of vectors, each vector is the 
-  #     inits for a chain 
-  #   pars: vector of character for the names 
-  #   dims: a list of lists with equal length of `pars` 
-
-  # remove element 'lp__' in the names 
-  idx_of_lp <- which(pars == "lp__")
-  if (idx_of_lp > 0) {
-    pars <- pars[-idx_of_lp] 
-    dims <- dims[-idx_of_lp] 
-  }
-  starts <- calc_starts(dims) 
-  tmpfun <- function(x) par_vector2list(x, pars, dims, starts) 
-  lapply(inits, tmpfun) 
-} 
 
 # ported from bugs.plot.inferences in R2WinBUGS  
 # 

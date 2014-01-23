@@ -33,4 +33,10 @@ print(optim2)
 optim3 <- rstan:::optimizing(sm, data = dat, algorithm = 'Nesterov', stepsize = 0.5)
 print(optim3)
 
+optim4 <- rstan:::optimizing(sm, data = dat, algorithm = 'Nesterov', stepsize = 0.5, as_vector = FALSE)
+print(optim4)
+
+
+
+
 

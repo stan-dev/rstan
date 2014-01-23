@@ -527,7 +527,7 @@ if (!isGeneric("unconstrain_pars")) {
 
 setMethod("unconstrain_pars", signature = "stanfit", 
           function(object, pars) {
-            # pars is a list as specifying inits for a chain
+            # pars is a list as in specifying inits for a chain
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
             object@.MISC$stan_fit_instance$unconstrain_pars(pars)
@@ -545,8 +545,8 @@ setMethod("constrain_pars", signature = "stanfit",
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
             p <- object@.MISC$stan_fit_instance$constrain_pars(upars)
-            par_vector2list(p, object@model_pars[which(object@model_pars != 'lp__')],
-                            object@par_dims)
+            idx_wo_lp <- which(object@model_pars != 'lp__')
+            relist(p, create_skeleton(object@model_pars[idx_wo_lp], object@par_dims[idx_wo_lp]))
           })
 
 

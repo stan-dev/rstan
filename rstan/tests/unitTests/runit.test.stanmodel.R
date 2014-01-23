@@ -16,6 +16,11 @@ test_optimzing <- function() {
     }
   ' 
   m2 <- stan_model(model_code = mc)
-  o2 <- optimizing(m2, hessian = TRUE)
+  set.seed(1287)
+  o2 <- optimizing(m2, hessian = TRUE, seed = 4)
+  set.seed(1287)
+  o3 <- optimizing(m2, as_vector = FALSE, seed = 4)
+  s <- list(a = 1:2, y = 3)
+  checkEquals(o3$par, relist(o2$par, s))
   checkEquals(o2$par[3], 0, tolerance = 0.1, checkNames = FALSE)
 }

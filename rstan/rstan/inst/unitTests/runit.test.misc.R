@@ -365,9 +365,9 @@ test_par_vector2list <- function() {
   v <- c(2.3, 3.4, 4.5, (1:8)/9); 
   pars <- c('alpha', 'beta', 'gamma')
   dims <- list(integer(0), c(2), c(2, 4))
-  vl <- rstan:::par_vector2list(v, pars, dims)
+  vl <- relist(v, rstan:::create_skeleton(pars, dims))
   alpha <- 2.3  
-  beta <- array(v[2:3], dim = 2) 
+  beta <- v[2:3]
   gamma <- array(v[4:11], dim = c(2, 4))
   checkEquals(length(vl), 3)
   checkEquals(vl[[1]], alpha)
