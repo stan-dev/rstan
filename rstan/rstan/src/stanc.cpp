@@ -16,13 +16,16 @@ RcppExport SEXP CPP_stanc(SEXP model_stancode, SEXP model_name);
 RcppExport SEXP CPP_stan_version(); 
 
 SEXP CPP_stan_version() {
-  BEGIN_RCPP;
+  BEGIN_RCPP
   std::string stan_version 
     = stan::MAJOR_VERSION + "." +
       stan::MINOR_VERSION + "." +
       stan::PATCH_VERSION;
-  return  Rcpp::wrap(stan_version); 
-  END_RCPP;
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(stan_version));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 } 
 
 SEXP CPP_stanc(SEXP model_stancode, SEXP model_name) { 
@@ -56,9 +59,14 @@ SEXP CPP_stanc(SEXP model_stancode, SEXP model_name) {
     return Rcpp::List::create(Rcpp::Named("status") = EXCEPTION_RC,
                               Rcpp::Named("msg") = Rcpp::wrap(e.what())); 
   }
-  return Rcpp::List::create(Rcpp::Named("status") = SUCCESS_RC, 
-                            Rcpp::Named("model_cppname") = mname_,
-                            Rcpp::Named("cppcode") = out.str());
 
-  END_RCPP;
+  Rcpp::List lst = 
+    Rcpp::List::create(Rcpp::Named("status") = SUCCESS_RC, 
+                       Rcpp::Named("model_cppname") = mname_,
+                       Rcpp::Named("cppcode") = out.str());
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = lst);
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 }
