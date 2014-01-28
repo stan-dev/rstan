@@ -1311,13 +1311,35 @@ system_info <- function() {
         "; inline: ", packageVersion('inline'), sep = '')
 } 
 
-read_comments <- function(file, n) {
+read_comments_old <- function(file, n) {
   # Read comments beginning with `#`
   # Args:
   #   file: the filename 
   #   n: max number of line; -1 means all 
   .Call("CPP_read_comments", file, n)
 } 
+
+read_comments <- function(f, n = -1) {
+  # Read comments beginning with `#`
+  # Args:
+  #   f: the filename 
+  #   n: max number of line; -1 means all 
+  # Returns:
+  #   a vector of strings 
+  con <- file(f, 'r')
+  comments <- list()
+  iter <- 0
+  while (length(input <- readLines(con, n = 1)) > 0) {
+    if (n > 0 && n <= iter) break;
+    if (grepl("#", input)) {
+      comments <- c(comments, gsub("^.*#", "#", input))
+      iter <- iter + 1
+    } 
+  } 
+  close(con)
+  do.call(c, comments)
+} 
+
 
 sqrfnames_to_dotfnames <- function(fnames) {
   # change names such as alpha[1,1] to alpha.1.1
