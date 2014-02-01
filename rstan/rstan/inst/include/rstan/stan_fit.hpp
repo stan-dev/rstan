@@ -1205,7 +1205,10 @@ namespace rstan {
       std::vector<int> params_i;
       std::vector<double> params_r;
       model_.transform_inits(par_context, params_i, params_r);
-      return Rcpp::wrap(params_r);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(params_r));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1214,7 +1217,10 @@ namespace rstan {
       std::vector<std::string> n;
       model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
                                        Rcpp::as<bool>(include_gqs));
-      return Rcpp::wrap(n);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(n));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1223,7 +1229,10 @@ namespace rstan {
       std::vector<std::string> n;
       model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
                                        Rcpp::as<bool>(include_gqs));
-      return Rcpp::wrap(n);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(n));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1249,7 +1258,10 @@ namespace rstan {
       } 
       std::vector<int> params_i(model_.num_params_i());
       model_.write_array(base_rng, params_r, params_i, par);
-      return Rcpp::wrap(par);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(par));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
   
@@ -1290,7 +1302,10 @@ namespace rstan {
         lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
       Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
       lp2.attr("gradient") = gradient;
-      return lp2;
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(lp2));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1325,7 +1340,10 @@ namespace rstan {
         lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
       Rcpp::NumericVector grad = Rcpp::wrap(gradient); 
       grad.attr("log_prob") = lp;
-      return grad;
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(grad));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1335,7 +1353,10 @@ namespace rstan {
     SEXP num_pars_unconstrained() {
       BEGIN_RCPP
       int n = model_.num_params_r();
-      return Rcpp::wrap(n);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(n));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
     
@@ -1351,19 +1372,28 @@ namespace rstan {
       if (ret != 0) {
         return R_NilValue;  // indicating error happened 
       } 
-      return holder; 
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(holder));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP 
     } 
 
     SEXP param_names() const {
       BEGIN_RCPP 
-      return Rcpp::wrap(names_);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(names_));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP 
     } 
 
     SEXP param_names_oi() const {
       BEGIN_RCPP 
-      return Rcpp::wrap(names_oi_);
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(names_oi_));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP 
     } 
 
@@ -1407,7 +1437,10 @@ namespace rstan {
       }
       Rcpp::List lst = Rcpp::wrap(indexes); 
       lst.names() = names2; 
-      return lst; 
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(lst));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1416,7 +1449,10 @@ namespace rstan {
       BEGIN_RCPP 
       Rcpp::List lst = Rcpp::wrap(dims_); 
       lst.names() = names_; 
-      return lst; 
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(lst));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
 
@@ -1424,7 +1460,10 @@ namespace rstan {
       BEGIN_RCPP 
       Rcpp::List lst = Rcpp::wrap(dims_oi_); 
       lst.names() = names_oi_; 
-      return lst; 
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(lst));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
     
@@ -1432,7 +1471,10 @@ namespace rstan {
       BEGIN_RCPP 
       std::vector<std::string> fnames; 
       get_all_flatnames(names_oi_, dims_oi_, fnames, true); 
-      return Rcpp::wrap(fnames); 
+      SEXP __sexp_result;
+      PROTECT(__sexp_result = Rcpp::wrap(fnames));
+      UNPROTECT(1);
+      return __sexp_result;
       END_RCPP
     } 
   };

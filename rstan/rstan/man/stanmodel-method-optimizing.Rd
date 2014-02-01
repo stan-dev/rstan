@@ -17,7 +17,7 @@
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
     algorithm = c("BFGS", "Nesterov", "Newton"),
-    verbose = FALSE, hessian = FALSE, \dots)   
+    verbose = FALSE, hessian = FALSE, as_vector = TRUE, \dots)   
 } 
 
 \section{Methods}{
@@ -66,6 +66,9 @@
   \item{hessian}{\code{TRUE} or \code{FALSE} (the default): flag indicating
      whether to calculate the Hessian (via numeric differentiation of the
      gradient function in the unconstrained parameter space)}   
+  \item{as_vector}{\code{TRUE} (the default) or \code{FALSE}: flag indicating
+     whether a vector is used to for the point estimate found. A list can be used
+     instead by specifying it to be \code{FALSE}}
   \item{\dots}{Other optional parameters. 
     \enumerate{
       \item \code{iter} (\code{integer}), the maximum number of iterations
@@ -81,7 +84,8 @@
 }
 \value{
    A list with components if the optimization is done successfully:
-   \item{par}{The point estimate found.}
+   \item{par}{The point estimate found. Its form (vector or list) 
+     is determined by argument \code{as_vector}.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
    the \code{"lp__"} in Stan) corresponding to \code{par}.}
 

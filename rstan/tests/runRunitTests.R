@@ -5,7 +5,7 @@
 
 pkg <- 'rstan' 
 
-if(!require("RUnit", quietly = TRUE)) {
+if (!require("RUnit", quietly = TRUE)) {
   stop("Package Runit is not found.") 
 } 
 

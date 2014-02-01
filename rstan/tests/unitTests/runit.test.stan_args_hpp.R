@@ -1,6 +1,5 @@
 # to test part of stan_args.hpp
-.setUp <- function() { }
-test_stan_args_hpp <- function() { 
+.setUp <- function() {
   require(rstan) 
   src <- ' 
     BEGIN_RCPP
@@ -13,6 +12,15 @@ test_stan_args_hpp <- function() {
                     body = src, 
                     includes = "#include <rstan/stan_args.hpp>", 
                     plugin = "rstan", verbose = TRUE)
+  assign("fx", fx, envir = .GlobalEnv)
+}
+
+test_stan_args_hppb <- function() {
+  b1 <- fx(list(iter = 100, seed = 12354, method = 'optim')) 
+  checkEquals(b1$random_seed, "12354")
+}
+
+test_stan_args_hpp <- function() { 
 
   a1 <- fx(list(iter = 100, thin = 100)) 
   a2 <- fx(list(iter = 100, thin = 3)) 

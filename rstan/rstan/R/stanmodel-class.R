@@ -56,7 +56,7 @@ setMethod("optimizing", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
                    algorithm = c("BFGS", "Nesterov", "Newton"),
-                   verbose = FALSE, hessian = FALSE, ...) {
+                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -83,9 +83,9 @@ setMethod("optimizing", "stanmodel",
               return(invisible(list(stanmodel = object)))
             } 
             m_pars <- sampler$param_names() 
-            idx_of_lp <- which(m_pars == "lp__")
-            m_pars <- m_pars[-idx_of_lp]
-            p_dims <- sampler$param_dims()[-idx_of_lp]
+            idx_wo_lp <- which(m_pars != "lp__")
+            m_pars <- m_pars[idx_wo_lp]
+            p_dims <- sampler$param_dims()[idx_wo_lp]
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) init <- init()
             if (!is.list(init) && !is.character(init)) {
@@ -106,6 +106,7 @@ setMethod("optimizing", "stanmodel",
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
+            skeleton <- create_skeleton(m_pars, p_dims)
             if(hessian) {
               fn <- function(theta) {
                 sampler$log_prob(theta, FALSE, FALSE)
@@ -113,21 +114,14 @@ setMethod("optimizing", "stanmodel",
               gr <- function(theta) {
                 sampler$grad_log_prob(theta, FALSE)
               }
-              theta <- list()
-              start <- 1L
-              for(i in seq_along(p_dims)) {
-                end <- start + prod(p_dims[[i]]) - 1L
-                theta[[i]] <- optim$par[start:end]
-                if(end > start) dim(theta[[i]]) <- p_dims[[i]]
-                start <- end + 1L
-              }
-              names(theta) <- names(p_dims)
+              theta <- relist(optim$par, skeleton)
               theta <- sampler$unconstrain_pars(theta)
               optim$hessian <- optimHess(theta, fn, gr,
                                          control = list(fnscale = -1))
               colnames(optim$hessian) <- rownames(optim$hessian) <- 
                 sampler$unconstrained_param_names(FALSE, FALSE)
             }
+            if (!as_vector) optim$par <- relist(optim$par, skeleton)
             invisible(optim)
           }) 
 
@@ -219,8 +213,10 @@ setMethod("sampling", "stanmodel",
               samples[[i]] <- samples_i
             }
 
-            inits_used = organize_inits(lapply(samples, function(x) attr(x, "inits")), 
-                                        m_pars, p_dims) 
+            idx_wo_lp <- which(m_pars != 'lp__')
+            skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
+            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
+                                function(y) relist(y, skeleton))
 
             # test_gradient mode: no sample 
             if (attr(samples[[1]], 'test_grad')) {

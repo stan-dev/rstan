@@ -50,7 +50,7 @@ notifications:
     on_failure: always
 
 script:
-  - cd rstan
+  - cd rstan 
   - (make install & ../wait4.sh $!) && cd tests && R -q -f runRunitTests.R
 
 after_script:

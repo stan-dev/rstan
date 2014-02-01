@@ -237,10 +237,14 @@ namespace rstan {
 
       sample_file_flag = get_rlist_element(in, "sample_file", sample_file);
       diagnostic_file_flag = get_rlist_element(in, "diagnostic_file", diagnostic_file);
+      b = get_rlist_element(in, "seed", t_sexp);
+      if (b) random_seed = sexp2seed(t_sexp);
+      else random_seed = std::time(0);
 
       int calculated_thin;
       get_rlist_element(in, "control", t_sexp, R_NilValue);
       Rcpp::List ctrl_lst(t_sexp);
+
       switch (method) { 
         case SAMPLING: 
           get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
@@ -260,9 +264,6 @@ namespace rstan {
                                   ctrl.sampling.iter / 10 : 1; 
           get_rlist_element(in, "refresh", ctrl.sampling.refresh);
          
-          b = get_rlist_element(in, "seed", t_sexp);
-          if (b) random_seed = sexp2seed(t_sexp);
-          else random_seed = std::time(0);
   
           if (get_rlist_element(in, "algorithm", t_str)) {
             if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
