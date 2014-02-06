@@ -645,8 +645,7 @@ namespace rstan {
         }
       } else if (init_val == "user") {
         try { 
-          rstan::io::rlist_ref_var_context init_var_context(init_lst); 
-          rstan::io::rlist_ref_var_context init_var_context(args.get_init_lst()); 
+          rstan::io::rlist_ref_var_context init_var_context(args.get_init_list()); 
           model.transform_inits(init_var_context,disc_vector,cont_vector);
           init_log_prob
             = stan::model::log_prob_grad<true,true>(model,

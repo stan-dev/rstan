@@ -98,12 +98,11 @@ namespace rstan {
        */
       rlist_ref_var_context(SEXP in): rlist_(in) {
 
-        if (0 == in.size()) return;
+        if (0 == rlist_.size()) return;
         std::vector<std::string> varnames 
-          = Rcpp::as<std::vector<std::string> >(in.names()); 
-        // Rprintf("in.size()=%d.\n", in.size()); 
-        for (int i = 0; i < in.size(); i++) {
-          SEXP ee = in[i]; 
+          = Rcpp::as<std::vector<std::string> >(rlist_.names()); 
+        for (int i = 0; i < rlist_.size(); i++) {
+          SEXP ee = rlist_[i]; 
           SEXP dim = Rf_getAttrib(ee, R_DimSymbol); 
           R_len_t eelen = Rf_length(ee); 
 
