@@ -633,8 +633,7 @@ namespace rstan {
         }
       } else if (init_val == "user") {
         try { 
-          Rcpp::List init_lst(args.get_init_list()); 
-          rstan::io::rlist_ref_var_context init_var_context(init_lst); 
+          rstan::io::rlist_ref_var_context init_var_context(args.get_init_lst()); 
           model.transform_inits(init_var_context,disc_params,cont_params);
         } catch (const std::exception& e) {
           std::string msg("Error during user-specified initialization:\n"); 
@@ -1148,7 +1147,7 @@ namespace rstan {
     } 
 
     stan_fit(SEXP data, SEXP cxxf) : 
-      data_(Rcpp::as<Rcpp::List>(data)), 
+      data_(data),
       model_(data_, &rstan::io::rcout),  
       base_rng(static_cast<boost::uint32_t>(std::time(0))),
       names_(get_param_names(model_)), 
@@ -1175,8 +1174,7 @@ namespace rstan {
      *  for a chain 
      */
     SEXP unconstrain_pars(SEXP par) {
-      Rcpp::List par_lst(par); 
-      rstan::io::rlist_ref_var_context par_context(par_lst); 
+      rstan::io::rlist_ref_var_context par_context(par);
       std::vector<int> params_i;
       std::vector<double> params_r;
       model_.transform_inits(par_context, params_i, params_r);

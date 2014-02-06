@@ -70,7 +70,7 @@ namespace rstan {
      */
     class rlist_ref_var_context : public stan::io::var_context {
     private: 
-      Rcpp::List& rlist_; 
+      Rcpp::List rlist_; 
       std::map<std::string, std::vector<size_t> > vars_r_dim_; 
       std::map<std::string, std::vector<size_t> > vars_i_dim_;
       std::vector<double> const empty_vec_r_;
@@ -93,12 +93,10 @@ namespace rstan {
       /**
        * Construct a rlist_ref__var_context object from the specified R list.
        *
-       * @param in Input of R list (represented by Rcpp::List) 
+       * @param in Input of R list (represented by SEXP)
        * from which to read.
        */
-      rlist_ref_var_context(const Rcpp::List& in) :
-        rlist_(const_cast<Rcpp::List&>(in)) 
-      {
+      rlist_ref_var_context(SEXP in): rlist_(in) {
 
         if (0 == in.size()) return;
         std::vector<std::string> varnames 
