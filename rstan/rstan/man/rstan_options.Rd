@@ -27,7 +27,7 @@ rstan_options(...)
     \item \code{plot_rhat_cols}: A vector of the same length as   
           \code{plot_rhat_breaks} that indicates the colors for the
           breaks.
-    \item \code{plot_rhat_na_col}: The color for Rhat when it is \code{NA}. 
+    \item \code{plot_rhat_nan_col}: The color for Rhat when it is \code{Inf} or \code{NaN}. 
     \item \code{plot_rhat_large_col}: The color for Rhat when it is larger than 
           the largest value of \code{plot_rhat_breaks}. 
     \item \code{rstan_alert_col}: The color used in method \code{plot}

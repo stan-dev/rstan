@@ -1,4 +1,4 @@
-useDynLib(rstan)
+useDynLib(rstan, .registration = TRUE)
 # exportPattern("^[[:alpha:]]+")
 
 importFrom("stats4", summary, plot)

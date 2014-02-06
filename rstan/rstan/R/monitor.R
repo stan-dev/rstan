@@ -1,5 +1,5 @@
 # stan_prob_autocovariance <- function(v) { 
-#   .Call("stan_prob_autocovariance", v, PACKAGE = 'rstan') 
+#   .Call("stan_prob_autocovariance", v)
 # }
 
 ess_rfun <- function(sims) {
