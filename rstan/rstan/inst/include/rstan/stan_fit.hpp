@@ -713,7 +713,7 @@ namespace rstan {
         double error = args.get_ctrl_test_grad_error();
         int num_failed = stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,epsilon,error,ss);
         rstan::io::rcout << ss.str() << std::endl; 
-        holder["num_failed"] = num_failed; 
+        holder = Rcpp::List::create(Rcpp::_["num_failed"] = num_failed);
         holder.attr("test_grad") = Rcpp::wrap(true);
         holder.attr("inits") = initv; 
         return 0;
@@ -818,8 +818,8 @@ namespace rstan {
           } 
           
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
-          holder["par"] = params_inr_etc; 
-          holder["value"] = lp; 
+          holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
+                                      Rcpp::_["value"] = lp);
           if (args.get_sample_file_flag()) { 
             sample_stream << lp << ',';
             print_vector(params_inr_etc, sample_stream);
@@ -865,9 +865,8 @@ namespace rstan {
             }
           }
           model.write_array(base_rng, cont_vector, disc_vector, params_inr_etc);
-          holder["par"] = params_inr_etc; 
-          holder["value"] = lp;
-          // holder.attr("point_estimate") = Rcpp::wrap(true); 
+          holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
+                                      Rcpp::_["value"] = lp);
   
           if (args.get_sample_file_flag()) { 
             sample_stream << lp << ',';
@@ -921,8 +920,8 @@ namespace rstan {
   
           sample_stream << lp << ',';
           model.write_array(base_rng,cont_vector,disc_vector,params_inr_etc);
-          holder["par"] = params_inr_etc; 
-          holder["value"] = lp;
+          holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
+                                      Rcpp::_["value"] = lp);
           if (args.get_sample_file_flag()) { 
             sample_stream << lp << ',';
             print_vector(params_inr_etc, sample_stream);
