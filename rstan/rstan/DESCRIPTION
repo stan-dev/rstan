@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: RStan: R interface to Stan
-Version: 2.1.0
-Date: 2013-10-24
+Version: 2.1.1
+Date: 2014-02-9
 Author: Jiqiang Guo <guojq28@gmail.com>,   
         Michael Betancourt <betanalpha@gmail.com>,
         Marcus Brubaker <mbrubake@cs.toronto.edu>,  

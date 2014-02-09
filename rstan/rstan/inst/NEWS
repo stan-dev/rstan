@@ -1,3 +1,6 @@
+Sun Feb  9 2014
+1. Bug fixes
+   * index out of bounds with Rcpp 0.10
 Sat Dec 21 2013 
 1. Changes
    * speed up stanfit@extract for permuted=TRUE (code from R. Boylan)
