@@ -645,8 +645,7 @@ namespace rstan {
         }
       } else if (init_val == "user") {
         try { 
-          Rcpp::List init_lst(args.get_init_list()); 
-          rstan::io::rlist_ref_var_context init_var_context(init_lst); 
+          rstan::io::rlist_ref_var_context init_var_context(args.get_init_list()); 
           model.transform_inits(init_var_context,disc_vector,cont_vector);
           init_log_prob
             = stan::model::log_prob_grad<true,true>(model,
@@ -714,7 +713,7 @@ namespace rstan {
         double error = args.get_ctrl_test_grad_error();
         int num_failed = stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,epsilon,error,ss);
         rstan::io::rcout << ss.str() << std::endl; 
-        holder["num_failed"] = num_failed; 
+        holder = Rcpp::List::create(Rcpp::_["num_failed"] = num_failed);
         holder.attr("test_grad") = Rcpp::wrap(true);
         holder.attr("inits") = initv; 
         return 0;
@@ -819,8 +818,8 @@ namespace rstan {
           } 
           
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
-          holder["par"] = params_inr_etc; 
-          holder["value"] = lp; 
+          holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
+                                      Rcpp::_["value"] = lp);
           if (args.get_sample_file_flag()) { 
             sample_stream << lp << ',';
             print_vector(params_inr_etc, sample_stream);
@@ -866,9 +865,8 @@ namespace rstan {
             }
           }
           model.write_array(base_rng, cont_vector, disc_vector, params_inr_etc);
-          holder["par"] = params_inr_etc; 
-          holder["value"] = lp;
-          // holder.attr("point_estimate") = Rcpp::wrap(true); 
+          holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
+                                      Rcpp::_["value"] = lp);
   
           if (args.get_sample_file_flag()) { 
             sample_stream << lp << ',';
@@ -922,8 +920,8 @@ namespace rstan {
   
           sample_stream << lp << ',';
           model.write_array(base_rng,cont_vector,disc_vector,params_inr_etc);
-          holder["par"] = params_inr_etc; 
-          holder["value"] = lp;
+          holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
+                                      Rcpp::_["value"] = lp);
           if (args.get_sample_file_flag()) { 
             sample_stream << lp << ',';
             print_vector(params_inr_etc, sample_stream);
@@ -1172,7 +1170,7 @@ namespace rstan {
     } 
 
     stan_fit(SEXP data, SEXP cxxf) : 
-      data_(Rcpp::as<Rcpp::List>(data)), 
+      data_(data),
       model_(data_, &rstan::io::rcout),  
       base_rng(static_cast<boost::uint32_t>(std::time(0))),
       names_(get_param_names(model_)), 
@@ -1200,8 +1198,7 @@ namespace rstan {
      */
     SEXP unconstrain_pars(SEXP par) {
       BEGIN_RCPP
-      Rcpp::List par_lst(par); 
-      rstan::io::rlist_ref_var_context par_context(par_lst); 
+      rstan::io::rlist_ref_var_context par_context(par);
       std::vector<int> params_i;
       std::vector<double> params_r;
       model_.transform_inits(par_context, params_i, params_r);

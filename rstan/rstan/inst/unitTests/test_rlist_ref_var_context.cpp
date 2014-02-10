@@ -27,8 +27,7 @@ void EXPECT_FLOAT_EQ(double a, size_t b) {
 // test for list(foo = c(1L,2L)
 RcppExport SEXP test_rlist_ref_var_context1(SEXP params) {
   BEGIN_RCPP; 
-  Rcpp::List rparam(params);  
-  rstan::io::rlist_ref_var_context  rlist_(rparam); 
+  rstan::io::rlist_ref_var_context  rlist_(params); 
 
   Rprintf("Test1 started.\n-------\n"); 
 
@@ -56,8 +55,7 @@ RcppExport SEXP test_rlist_ref_var_context1(SEXP params) {
 // test for list(foo = c(1L, 2L), bar = 1.0)
 RcppExport SEXP test_rlist_ref_var_context2(SEXP params) {
   BEGIN_RCPP;
-  Rcpp::List rparam(params);  
-  rstan::io::rlist_ref_var_context  rlist_(rparam); 
+  rstan::io::rlist_ref_var_context  rlist_(params); 
 
   Rprintf("Test2 started.\n-------\n"); 
   EXPECT_TRUE(rlist_.contains_i("foo"));
@@ -111,8 +109,7 @@ RcppExport SEXP test_rlist_ref_var_context2(SEXP params) {
    
 RcppExport SEXP test_rlist_ref_var_context3(SEXP params) {
   BEGIN_RCPP;
-  Rcpp::List rparam(params);  
-  rstan::io::rlist_ref_var_context  rlist_(rparam); 
+  rstan::io::rlist_ref_var_context  rlist_(params); 
   Rprintf("Test3 started.\n-------\n"); 
   EXPECT_TRUE(rlist_.contains_i("foo"));
   EXPECT_TRUE(rlist_.contains_r("foo"));

@@ -362,48 +362,47 @@ namespace rstan {
      * @return An R list containing all the arguments for a chain. 
      */ 
     SEXP stan_args_to_rlist() const {
-      Rcpp::List lst;
-      Rcpp::List ctrl_list;
-
+      std::map<std::string, SEXP> args;
+      std::map<std::string, SEXP> ctrl_args;
       std::stringstream ss; 
       ss << random_seed; 
-      lst["random_seed"] = ss.str();
-      lst["chain_id"] = chain_id;
-      lst["init"] = init;
-      lst["init_list"] = init_list;
-      lst["init_radius"] = init_radius;
-      lst["append_samples"] = append_samples;
+      args["random_seed"] = Rcpp::wrap(ss.str());
+      args["chain_id"] = Rcpp::wrap(chain_id);
+      args["init"] = Rcpp::wrap(init);
+      args["init_list"] = init_list;
+      args["init_radius"] = Rcpp::wrap(init_radius);
+      args["append_samples"] = Rcpp::wrap(append_samples);
       if (sample_file_flag) 
-        lst["sample_file"] = sample_file;
+        args["sample_file"] = Rcpp::wrap(sample_file);
       if (diagnostic_file_flag) 
-        lst["diagnostic_file_flag"] = diagnostic_file;
+        args["diagnostic_file_flag"] = Rcpp::wrap(diagnostic_file);
 
       std::string sampler_t;
       switch (method) { 
         case SAMPLING: 
-          lst["method"] = "sampling";
-          lst["iter"] = ctrl.sampling.iter;
-          lst["warmup"] = ctrl.sampling.warmup;
-          lst["thin"] = ctrl.sampling.thin;
-          lst["refresh"] = ctrl.sampling.refresh;
-          lst["test_grad"] = false;
-          ctrl_list["adapt_engaged"] = ctrl.sampling.adapt_engaged;
-          ctrl_list["adapt_gamma"] = ctrl.sampling.adapt_gamma;
-          ctrl_list["adapt_delta"] = ctrl.sampling.adapt_delta;
-          ctrl_list["adapt_kappa"] = ctrl.sampling.adapt_kappa;
-          ctrl_list["adapt_t0"] = ctrl.sampling.adapt_t0;
-          ctrl_list["adapt_init_buffer"] = ctrl.sampling.adapt_init_buffer;
-          ctrl_list["adapt_term_buffer"] = ctrl.sampling.adapt_term_buffer;
-          ctrl_list["adapt_window"] = ctrl.sampling.adapt_window;
-          ctrl_list["stepsize"] = ctrl.sampling.stepsize;
-          ctrl_list["stepsize_jitter"] = ctrl.sampling.stepsize_jitter;
+          args["method"] = Rcpp::wrap("sampling");
+          args["iter"] = Rcpp::wrap(ctrl.sampling.iter);
+          args["warmup"] = Rcpp::wrap(ctrl.sampling.warmup);
+          args["thin"] = Rcpp::wrap(ctrl.sampling.thin);
+          args["refresh"] = Rcpp::wrap(ctrl.sampling.refresh);
+          args["test_grad"] = Rcpp::wrap(false);
+          ctrl_args["adapt_engaged"] = Rcpp::wrap(ctrl.sampling.adapt_engaged);
+          ctrl_args["adapt_gamma"] = Rcpp::wrap(ctrl.sampling.adapt_gamma);
+          ctrl_args["adapt_delta"] = Rcpp::wrap(ctrl.sampling.adapt_delta);
+          ctrl_args["adapt_kappa"] = Rcpp::wrap(ctrl.sampling.adapt_kappa);
+          ctrl_args["adapt_t0"] = Rcpp::wrap(ctrl.sampling.adapt_t0);
+          ctrl_args["adapt_init_buffer"] = Rcpp::wrap(ctrl.sampling.adapt_init_buffer);
+          ctrl_args["adapt_term_buffer"] = Rcpp::wrap(ctrl.sampling.adapt_term_buffer);
+          ctrl_args["adapt_window"] = Rcpp::wrap(ctrl.sampling.adapt_window);
+          ctrl_args["stepsize"] = Rcpp::wrap(ctrl.sampling.stepsize);
+          ctrl_args["stepsize_jitter"] = Rcpp::wrap(ctrl.sampling.stepsize_jitter);
           switch (ctrl.sampling.algorithm) { 
             case NUTS: 
-              ctrl_list["max_treedepth"] = ctrl.sampling.max_treedepth;
+              ctrl_args["max_treedepth"] = Rcpp::wrap(ctrl.sampling.max_treedepth);
               sampler_t.append("NUTS");
               break;
             case HMC: 
-              ctrl_list["int_time"] = ctrl.sampling.int_time;
+              ctrl_args["int_time"] = Rcpp::wrap(ctrl.sampling.int_time);
               sampler_t.append("HMC");
               break;
             case Metropolis: 
@@ -413,49 +412,48 @@ namespace rstan {
           if (ctrl.sampling.algorithm != Metropolis) { 
             switch (ctrl.sampling.metric) { 
               case UNIT_E: 
-                ctrl_list["metric"] = Rcpp::wrap("unit_e"); 
+                ctrl_args["metric"] = Rcpp::wrap("unit_e"); 
                 sampler_t.append("(unit_e)");
                 break;
               case DIAG_E: 
-                ctrl_list["metric"] = Rcpp::wrap("diag_e");
+                ctrl_args["metric"] = Rcpp::wrap("diag_e");
                 sampler_t.append("(diag_e)");
                 break;
               case DENSE_E: 
-                ctrl_list["metric"] = Rcpp::wrap("dense_e");
+                ctrl_args["metric"] = Rcpp::wrap("dense_e");
                 sampler_t.append("(dense_e)");
                 break;
             }
           }
-
-          lst["sampler_t"] = sampler_t;
-          lst["control"] = ctrl_list;
+          args["sampler_t"] = Rcpp::wrap(sampler_t);
+          args["control"] = Rcpp::wrap(ctrl_args);
           break;
         case OPTIM: 
-          lst["method"] = "optim";
-          lst["iter"] = ctrl.optim.iter;
-          lst["refresh"] = ctrl.optim.refresh;
-          lst["save_iterations"] = ctrl.optim.save_iterations;
+          args["method"] = Rcpp::wrap("optim");
+          args["iter"] = Rcpp::wrap(ctrl.optim.iter);
+          args["refresh"] = Rcpp::wrap(ctrl.optim.refresh);
+          args["save_iterations"] = Rcpp::wrap(ctrl.optim.save_iterations);
           switch (ctrl.optim.algorithm) {
-            case Newton: lst["algorithm"] = "Newton"; break;
-            case Nesterov: lst["algorithm"] = "Nesterov"; 
-                           lst["stepsize"] = ctrl.optim.stepsize;
+            case Newton: args["algorithm"] = Rcpp::wrap("Newton"); break;
+            case Nesterov: args["algorithm"] = Rcpp::wrap("Nesterov"); 
+                           args["stepsize"] = Rcpp::wrap(ctrl.optim.stepsize);
                            break;
-            case BFGS: lst["algorithm"] = "BFGS"; 
-                       lst["init_alpha"] = ctrl.optim.init_alpha;
-                       lst["tol_obj"] = ctrl.optim.tol_obj;
-                       lst["tol_grad"] = ctrl.optim.tol_grad;
-                       lst["tol_param"] = ctrl.optim.tol_param;
+            case BFGS: args["algorithm"] = Rcpp::wrap("BFGS"); 
+                       args["init_alpha"] = Rcpp::wrap(ctrl.optim.init_alpha);
+                       args["tol_obj"] = Rcpp::wrap(ctrl.optim.tol_obj);
+                       args["tol_grad"] = Rcpp::wrap(ctrl.optim.tol_grad);
+                       args["tol_param"] = Rcpp::wrap(ctrl.optim.tol_param);
                        break;
           } 
           break;
         case TEST_GRADIENT:
-          lst["method"] = "test_grad";
-          lst["test_grad"] = true;
-          ctrl_list["epsilon"] = ctrl.test_grad.epsilon;
-          ctrl_list["error"] = ctrl.test_grad.error;
-          lst["control"] = ctrl_list;
+          args["method"] = Rcpp::wrap("test_grad");
+          args["test_grad"] = Rcpp::wrap(true);
+          ctrl_args["epsilon"] = Rcpp::wrap(ctrl.test_grad.epsilon);
+          ctrl_args["error"] = Rcpp::wrap(ctrl.test_grad.error);
+          args["control"] = Rcpp::wrap(ctrl_args);
       } 
-      return lst;
+      return Rcpp::wrap(args);
     } 
 
     inline const std::string& get_sample_file() const {
