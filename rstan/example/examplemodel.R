@@ -1,5 +1,4 @@
-# create sysdata.rdat file for the example 
-# in rstan's doc 
+# create csv files for examples in rstan
 library(rstan)
 excode <- '
   transformed data {
@@ -27,6 +26,5 @@ excode <- '
 '
 
 exfit <- stan(model_code = excode, save_dso = FALSE, iter = 200, sample_file = "rstan_doc_ex.csv")
-save(exfit, file = "../rstan/R/sysdata.rda", compress = "xz")
 plot(exfit)
 print(exfit)
