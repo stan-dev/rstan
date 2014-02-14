@@ -1,6 +1,19 @@
+Thu Feb 13 2014 (2.2.0)
+
 Sun Feb  9 2014
 1. Bug fixes
    * index out of bounds with Rcpp 0.11
+
+Wed Jan 22 2014
+1. Bug fixes
+   * RNG seed for optimizing not used (issue #37)
+
+2. Changes
+   * add as_vector with default value of TRUE for stanmodel@optimizing
+   * read_stan_csv uses R's functions to open files so that compressed
+     files such as gzip are supported.  But a compressed file can include
+     only one file.
+
 Sat Dec 21 2013 
 1. Changes
    * speed up stanfit@extract for permuted=TRUE (code from R. Boylan)
