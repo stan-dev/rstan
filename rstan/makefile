@@ -1,4 +1,3 @@
-
 # Set OS if there is no default:
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 uname_O := $(shell sh -c 'uname -o 2>/dev/null || echo not')
@@ -41,7 +40,7 @@ else
   LINKCMD2 = ln -s ../../../../stan/src ./rstan/inst/include/stansrc
   WH = which
 endif
-  
+
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
 
@@ -76,17 +75,19 @@ install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE, type = 'source'); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
 
 
-build $(STANPKG): ./rstan/DESCRIPTION 
-	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
-	@rm -rf "./rstan/inst/include/stanlib"
-	@rm -rf "./rstan/inst/include/stansrc"
+rstan/inst/include/stanlib:
 ifeq ($(OS), win)
 	$(LINKCMD1)
 else 
 	if test -d $(TMP_STANLIB); then $(LINKCMD1b); else $(LINKCMD1); fi
 endif
+
+rstan/inst/include/stansrc:
 	$(LINKCMD2)
-	@rm -f $(STANPKG) 
+
+
+build $(STANPKG): ./rstan/DESCRIPTION rstan/inst/include/stanlib rstan/inst/include/stansrc
+	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"unknown\"" > rstan/R/git_stan_head.R
@@ -111,7 +112,7 @@ install: $(STANPKG)
 ifeq ($(OS), win)
 	$(R) CMD INSTALL --merge-multiarch $(STANPKG) 
 else
-	# $(R) CMD INSTALL --no-multiarch $(STANPKG) 
+#       $(R) CMD INSTALL --no-multiarch $(STANPKG) 
 	$(R) CMD INSTALL $(STANPKG)
 endif
 
@@ -144,7 +145,6 @@ clean-all:
 	rm -rf "./rstan/inst/include/stanlib"
 	rm -rf "./rstan/inst/include/stansrc"
 	rm -rf rstan.Rcheck
-  
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
