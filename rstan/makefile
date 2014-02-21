@@ -75,14 +75,17 @@ install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE, type = 'source'); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
 
 
-rstan/inst/include/stanlib:
+STANLIB := rstan/inst/include/stanlib
+STANSRC := rstan/inst/include/stansrc
+
+$(STANLIB):
 ifeq ($(OS), win)
 	$(LINKCMD1)
 else 
 	if test -d $(TMP_STANLIB); then $(LINKCMD1b); else $(LINKCMD1); fi
 endif
 
-rstan/inst/include/stansrc:
+$(STANSRC):
 	$(LINKCMD2)
 
 
@@ -142,8 +145,8 @@ clean:
 clean-all: 
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
 	rm -rf rstan/R/git_*stan_head.R 
-	rm -rf "./rstan/inst/include/stanlib"
-	rm -rf "./rstan/inst/include/stansrc"
+	rm -rf "./$(STANLIB)"
+	rm -rf "./$(STANSRC)"
 	rm -rf rstan.Rcheck
 
 # buildbin:   # build a binary version  
