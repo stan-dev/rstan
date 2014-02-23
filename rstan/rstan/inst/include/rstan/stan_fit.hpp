@@ -29,6 +29,8 @@
 #include <stan/mcmc/hmc/nuts/adapt_diag_e_nuts.hpp>
 #include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
 
+#include <stan/common/do_print.hpp>
+
 
 #include <rstan/io/rlist_ref_var_context.hpp> 
 #include <rstan/io/r_ostream.hpp> 
@@ -276,8 +278,7 @@ namespace rstan {
     } 
 
     bool do_print(int n, int refresh, int last = 0) {
-      if (refresh < 1) return false;
-      return (n == 0) || ((n + 1) % refresh == 0) || (n == last);
+      return stan::common::do_print(n, n==last, refresh);
     }
     
     void print_progress(int m, int finish, int refresh, bool warmup) {
