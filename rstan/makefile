@@ -89,7 +89,7 @@ $(STANSRC):
 	$(LINKCMD2)
 
 
-build $(STANPKG): ./rstan/DESCRIPTION rstan/inst/include/stanlib rstan/inst/include/stansrc
+build $(STANPKG): ./rstan/DESCRIPTION $(STANLIB) $(STANSRC)
 	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
@@ -101,6 +101,7 @@ endif
 ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS) # --no-build-vignettes --no-manual
 endif
+
 
 example_csv : 
 ifneq ($(OS), win)
@@ -148,8 +149,56 @@ clean-all:
 	rm -rf "./$(STANLIB)"
 	rm -rf "./$(STANSRC)"
 	rm -rf rstan.Rcheck
+	rm -rf rstan/inst/unitTests/cpp/lib
+	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.o')
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
 .PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib install_pre_rpkg
+
+##
+# C++ tests of rstan
+##
+# RCPP_INCLUDE = $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()")
+# R_INCLUDE = -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")
+# GTESTPATH = $(wildcard $(STANLIB)/gtest*)
+# CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(RCPP_INCLUDE) $(R_INCLUDE)
+GTEST_LIB := rstan/inst/unitTests/cpp/gtest.o
+
+CPPTESTS := $(shell find rstan/inst/unitTests/cpp -type f -name '*_test.cpp')
+STAN_LIB := rstan/inst/unitTests/cpp/lib/libstan.a
+STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,rstan/inst/unitTests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
+
+
+$(STAN_INSTANTIATION_FILES) rstan/inst/unitTests/cpp/%: CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256
+
+GTESTPATH = $(wildcard $(STANLIB)/gtest*)
+
+$(STAN_INSTANTIATION_FILES): rstan/inst/unitTests/cpp/lib/src/%.o: rstan/src/%.cpp $(STANLIB) $(STANSRC)
+	@mkdir -p $(dir $@)
+	$(COMPILE.cpp) $(OUTPUT_OPTION) $<  -I $(STANSRC)
+
+$(STAN_LIB): $(STAN_INSTANTIATION_FILES)
+	@mkdir -p $(dir $@)
+	$(AR) -rs $@ $(STAN_INSTANTIATION_FILES)
+
+$(GTEST_LIB): $(STANLIB) $(STANSRC) 
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(OUTPUT_OPTION) $(GTESTPATH)/src/gtest-all.cc
+
+rstan/inst/unitTests/cpp/%$(EXE) : rstan/inst/unitTests/cpp/%.cpp $(GTEST_LIB) $(STANLIB) $(STAN_LIB)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OUTPUT_OPTION) $(GTEST_LIB) $< $(GTESTPATH)/src/gtest_main.cc -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R
+	$@
+
+test-cpp: $(patsubst %.cpp,%$(EXE),$(shell find rstan/inst/unitTests/cpp -type f -name '*_test.cpp'))
+
+
+tmp:
+	@echo 'stansrc:   ' $(STANSRC)
+	@echo 'stanlib:   ' $(STANLIB)
+	@echo 'gtestpath: ' $(GTESTPATH)
+	@echo
+	@echo 'cpptests:  ' $(CPPTESTS)
+	@echo 'cxxflags:  ' $(CXXFLAGS)
+	@echo
+	@echo 'temp inst: ' $(wildcard rstan/src/*_inst.cpp)
