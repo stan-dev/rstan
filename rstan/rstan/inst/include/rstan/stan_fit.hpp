@@ -279,7 +279,7 @@ namespace rstan {
       if (refresh < 1) return false;
       return (n == 0) || ((n + 1) % refresh == 0) || (n == last);
     }
-
+    
     void print_progress(int m, int finish, int refresh, bool warmup) {
       int it_print_width = std::ceil(std::log10(finish));
       if (do_print(m, refresh, finish - 1)) {
@@ -777,7 +777,7 @@ namespace rstan {
           int ret = 0;
           while (0 == ret) {
             int i = bfgs.iter_num();
-            if (do_print(i, 50 * args.get_ctrl_optim_refresh())) {
+            if (do_print(i, 50 * args.get_ctrl_optim_refresh(), 0)) {
               rstan::io::rcout << "    Iter ";
               rstan::io::rcout << "     log prob ";
               rstan::io::rcout << "       ||dx|| ";
@@ -790,7 +790,7 @@ namespace rstan {
             lp = bfgs.logp();
             bfgs.params_r(cont_vector);
 
-            if (do_print(i, args.get_ctrl_optim_refresh()) || ret != 0 || !bfgs.note().empty()) {
+            if (do_print(i, args.get_ctrl_optim_refresh()) || ret != 0 || !bfgs.note().empty(), 0) {
               rstan::io::rcout << " " << std::setw(7) << i << " ";
               rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << lp << " ";
               rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << bfgs.prev_step_size() << " ";
@@ -903,7 +903,7 @@ namespace rstan {
             lastlp = lp;
             lp = ng.step();
             ng.params_r(cont_vector);
-            if (do_print(i, args.get_ctrl_optim_refresh())) {
+            if (do_print(i, args.get_ctrl_optim_refresh(), 0)) {
               rstan::io::rcout << "Iteration ";
               rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
               rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
