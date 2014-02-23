@@ -30,6 +30,7 @@
 #include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
 
 #include <stan/common/do_print.hpp>
+#include <stan/common/print_progress.hpp>
 
 
 #include <rstan/io/rlist_ref_var_context.hpp> 
@@ -281,17 +282,14 @@ namespace rstan {
       return stan::common::do_print(n, n==last, refresh);
     }
     
+    void print_progress(int m, int finish, int refresh, bool warmup, 
+                        std::ostream& o) {
+      stan::common::print_progress(m, 0, finish, refresh, warmup,
+                                   "\r", "", o);
+    }
+
     void print_progress(int m, int finish, int refresh, bool warmup) {
-      int it_print_width = std::ceil(std::log10(finish));
-      if (do_print(m, refresh, finish - 1)) {
-        rstan::io::rcout << "\rIteration: ";
-        rstan::io::rcout << std::setw(it_print_width) << (m + 1)
-                         << " / " << finish;
-        rstan::io::rcout << " [" << std::setw(3) 
-                         << static_cast<int>((100.0 * (m + 1)) / finish)
-                         << "%] ";
-        rstan::io::rcout << (warmup ? " (Warmup)" : " (Sampling)");
-      }
+      print_progress(m, finish, refresh, warmup, rstan::io::rcout);
     }
 
     template <class Model>
