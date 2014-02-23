@@ -145,7 +145,6 @@ clean:
 	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.d')
 	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.d.*')
 
-
 clean-all: 
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
 	rm -rf rstan/R/git_*stan_head.R 
@@ -188,7 +187,7 @@ $(STAN_LIB): $(STAN_INSTANTIATION_FILES)
 $(GTEST_LIB): $(STANLIB) $(STANSRC) 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(OUTPUT_OPTION) $(GTESTPATH)/src/gtest-all.cc
 
-rstan/inst/unitTests/cpp/%.d : rstan/inst/unitTests/cpp/%.cpp
+rstan/inst/unitTests/cpp/%.d : rstan/inst/unitTests/cpp/%.cpp $(STANLIB) $(STANSRC)
 	@if test -d $(dir $@); \
 	then \
 	(set -e; \
