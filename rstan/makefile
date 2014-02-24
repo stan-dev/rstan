@@ -145,14 +145,14 @@ clean:
 	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.d')
 	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.d.*')
 
-clean-all: 
+clean-all: clean
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
 	rm -rf rstan/R/git_*stan_head.R 
 	rm -rf "./$(STANLIB)"
 	rm -rf "./$(STANSRC)"
 	rm -rf rstan.Rcheck
 	rm -rf rstan/inst/unitTests/cpp/lib
-	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.o')
+	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
@@ -172,7 +172,7 @@ CPPTESTS := $(shell find rstan/inst/unitTests/cpp -type f -name '*_test.cpp')
 STAN_LIB := rstan/inst/unitTests/cpp/lib/libstan.a
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,rstan/inst/unitTests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
-$(STAN_INSTANTIATION_FILES) rstan/inst/unitTests/cpp/%: CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256
+$(STAN_INSTANTIATION_FILES) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 
@@ -187,7 +187,7 @@ $(STAN_LIB): $(STAN_INSTANTIATION_FILES)
 $(GTEST_LIB): $(STANLIB) $(STANSRC) 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(OUTPUT_OPTION) $(GTESTPATH)/src/gtest-all.cc
 
-rstan/inst/unitTests/cpp/%.d : rstan/inst/unitTests/cpp/%.cpp $(STANLIB) $(STANSRC)
+$(patsubst %.cpp,%.d,$(CPPTESTS)) : %.d : %.cpp $(STANLIB) $(STANSRC)
 	@if test -d $(dir $@); \
 	then \
 	(set -e; \
@@ -197,8 +197,7 @@ rstan/inst/unitTests/cpp/%.d : rstan/inst/unitTests/cpp/%.cpp $(STANLIB) $(STANS
 	rm -f $@.$$$$);\
 	fi
 
-.PRECIOUS: $(patsubst %.cpp,%.d,$(CPPTESTS))
-rstan/inst/unitTests/cpp/%$(EXE) : rstan/inst/unitTests/cpp/%.cpp rstan/inst/unitTests/cpp/%.d $(GTEST_LIB) $(STANLIB) $(STAN_LIB)
+$(patsubst %.cpp,%$(EXE),$(CPPTESTS)) : %$(EXE) : %.cpp %.d $(GTEST_LIB) $(STANLIB) $(STAN_LIB)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OUTPUT_OPTION) $(GTEST_LIB) $< $(GTESTPATH)/src/gtest_main.cc -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R
 ifeq (,$(filter test-cpp,$(MAKECMDGOALS)))
 	$@
@@ -207,10 +206,9 @@ endif
 test-cpp: $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
 	$(foreach test,$^,$(test); echo;)
 
-ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
-  -include $(addsuffix .d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
-endif
 ifneq (,$(filter test-cpp,$(MAKECMDGOALS)))
   -include $(patsubst %.cpp,%.d,$(CPPTESTS))
 endif
-
+ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
+  -include $(patsubst %$(EXE),%.d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
+endif
