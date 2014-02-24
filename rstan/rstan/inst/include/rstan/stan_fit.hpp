@@ -278,16 +278,6 @@ namespace rstan {
       } 
     } 
     
-    void print_progress(int m, int finish, int refresh, bool warmup, 
-                        std::ostream& o) {
-      stan::common::print_progress(m, 0, finish, refresh, warmup,
-                                   "\r", "", o);
-    }
-
-    void print_progress(int m, int finish, int refresh, bool warmup) {
-      print_progress(m, finish, refresh, warmup, rstan::io::rcout);
-    }
-
     template <class Model>
     std::vector<std::string> get_param_names(Model& m) { 
       std::vector<std::string> names;
@@ -340,7 +330,9 @@ namespace rstan {
         end = args.get_iter();
       } 
       for (int m = start; m < end; ++m) {
-        print_progress(m, args.get_iter(), args.get_ctrl_sampling_refresh(), is_warmup);
+        stan::common::print_progress(m, 0, args.get_iter(), 
+                                     args.get_ctrl_sampling_refresh(), is_warmup,
+                                     "\r", "", rstan::io::rcout);
         R_CheckUserInterrupt();
         init_s = sampler_ptr -> transition(init_s);
         if (args.get_ctrl_sampling_save_warmup() && (((m - start) % args.get_ctrl_sampling_thin()) == 0)) {
