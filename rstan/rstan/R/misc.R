@@ -799,6 +799,34 @@ check_pars_second <- function(sim, pars) {
   check_pars(allpars, pars)
 } 
 
+remove_empty_pars <- function(pars, model_dims) {
+  # 
+  # Remove parameters that are actually empty, which
+  # could happen when for exmample a user specify the
+  # following stan model code: 
+  # 
+  # transformed data { int n; n <- 0; }
+  # parameters { real y[n]; } 
+  # 
+  # Args:
+  #   pars: a character vector of parameters names
+  #   model_dims: a named list of the parameter dimension
+  # 
+  # Returns:
+  #   A character vector of parameter names with empty parameter 
+  #   being removed. 
+  # 
+  ind <- rep(TRUE, length(pars))
+  model_pars <- names(model_dims)
+  if (is.null(model_pars)) stop("model_dims need be a named list")
+  for (i in seq_along(pars)) {
+    p <- pars[i]
+    m <- match(p, model_pars)
+    if (!is.na(m) && prod(model_dims[[p]]) == 0)  ind[i] <- FALSE
+  } 
+  pars[ind]
+}
+
 pars_total_indexes <- function(names, dims, fnames, pars) {
   # Obtain the total indexes for parameters (pars) in the 
   # whole sequences of names that is order by 'column major.' 
