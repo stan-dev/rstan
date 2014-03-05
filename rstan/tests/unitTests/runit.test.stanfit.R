@@ -2,8 +2,13 @@
 test_output_csv_and_extract <- function() {
   csv_fname <- 'teststanfit.csv'
   model_code <- "
+    transformed data {
+      int n;
+      n <- 0;
+    }
     parameters { 
       real y[2];
+      real zeroleny[n];
     } 
     transformed parameters {
       real y2[2, 2];

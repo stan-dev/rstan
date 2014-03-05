@@ -59,6 +59,7 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
             }
 
             pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
+            pars <- remove_empty_pars(pars, x@sim$dims_oi)
             if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
               assign("summary", summary_sim(x@sim), envir = x@.MISC)
             info <- list(model_name = x@model_name, model_date = x@date) 
@@ -335,6 +336,7 @@ setMethod("get_posterior_mean",
               assign("posterior_mean_4all", m, envir = object@.MISC)
             }
             pars <- if (missing(pars)) object@model_pars else check_pars(c(object@model_pars, fnames), pars)
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@model_pars, object@par_dims, fnames, pars) 
             tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
             invisible(object@.MISC$posterior_mean_4all[unlist(tidx), , drop = FALSE])
@@ -371,6 +373,7 @@ setMethod("extract", signature = "stanfit",
             } 
 
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
                                        object@sim$dims_oi, 
                                        object@sim$fnames_oi, 
@@ -447,6 +450,7 @@ setMethod("summary", signature = "stanfit",
               assign("summary", summary_sim(object@sim), envir = object@.MISC)
            
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             if (missing(probs)) 
               probs <- c(0.025, 0.25, 0.50, 0.75, 0.975)  
 
@@ -602,6 +606,7 @@ setMethod("traceplot", signature = "stanfit",
             } 
 
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
                                        object@sim$dims_oi, 
                                        object@sim$fnames_oi, 
@@ -755,6 +760,7 @@ setGeneric("as.mcmc.list", function(object, ...) standardGeneric("as.mcmc.list")
 
 as.mcmc.list.stanfit <- function(object, pars, ...) {
   pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+  pars <- remove_empty_pars(pars, object@sim$dims_oi)
   tidx <- pars_total_indexes(object@sim$pars_oi, object@sim$dims_oi, object@sim$fnames_oi, pars)
   tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
   tidx <- unlist(tidx, use.names = FALSE)

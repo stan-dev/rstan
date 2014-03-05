@@ -374,6 +374,16 @@ test_par_vector2list <- function() {
   checkEquals(vl[[2]], beta)
   checkEquals(vl[[3]], gamma)
 } 
+
+test_remove_empty_pars <- function() {
+  pars <- c('alpha', 'beta', 'gamma', 'eta', 'xi')
+  dims <- list(integer(0), c(2), c(2, 4), 0, c(2,0))
+  names(dims) <- pars 
+  checkEquals(rstan:::remove_empty_pars(pars[1:2], dims), pars[1:2])
+  checkEquals(rstan:::remove_empty_pars(pars[1:4], dims), pars[1:3])
+  checkEquals(rstan:::remove_empty_pars('beta[1]', dims), "beta[1]")
+  checkEquals(rstan:::remove_empty_pars('eta', dims), character(0))
+}
  
 .tearDown <- function() {
   unlink('tmp.stan') 

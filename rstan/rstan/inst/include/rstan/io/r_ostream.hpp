@@ -92,9 +92,9 @@ namespace rstan {
      * 
      */
     // extern 
-    r_ostream<r_cout_streambuf> rcout(false); 
+    static r_ostream<r_cout_streambuf> rcout(false); 
     // extern 
-    r_ostream<r_cerr_streambuf> rcerr(true); 
+    static r_ostream<r_cerr_streambuf> rcerr(true); 
   }
 
 } 
