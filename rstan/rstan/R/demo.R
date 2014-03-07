@@ -30,7 +30,9 @@ stan_demo <- function(model = character(0),
     source(fp, local = STAN_ENV, verbose = FALSE, echo = TRUE)
   }
   method <- match.arg(method)
-  m <- stan_model(MODELS, model_name = model)
-  if(method == "sampling") return(sampling(m, data = STAN_ENV, ...))
-  else return(optimizing(m, data = STAN_ENV, ...))
+  dots <- list(...)
+  if(is.null(dots$object)) dots$object <- stan_model(MODELS, model_name = model)
+  dots$data <- STAN_ENV
+  if(method == "sampling") return(do.call(sampling, args = dots))
+  else return(do.call(optimizing, args = dots))
 }
