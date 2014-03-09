@@ -10,12 +10,14 @@ env:
   global:
     - BOOTSTRAP_LATEX="1"
   matrix: 
-    - CXX_OLEVEL=0
-    - CXX_OLEVEL=3
+    - CXX_OLEVEL=0 RCPP_VER=cran
+    - CXX_OLEVEL=3 RCPP_VER=cran
+    - CXX_OLEVEL=3 RCPP_VER=github
 
 matrix:
   allow_failures:
-    - env: CXX_OLEVEL=0
+    - env: CXX_OLEVEL=0 RCPP_VER=cran
+    - env: CXX_OLEVEL=3 RCPP_VER=github
     - compiler: clang
 
 before_install:
@@ -26,7 +28,7 @@ before_install:
     
 install:
   - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
-  - ./travis-tool.sh install_r inline Rcpp coda
+  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight
   - ccache --max-size 8G
 
 before_script: 
@@ -35,6 +37,7 @@ before_script:
   - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
+  - if [[ $RCPP_VER = 'github' ]]; then R -q -e "library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
   - sed -i "s/g++/${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
   - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
@@ -51,6 +54,7 @@ notifications:
 
 script:
   - cd rstan 
+  - R -q -e "library(Rcpp); sessionInfo()"
   - (make install & ../wait4.sh $!) && cd tests && R -q -f runRunitTests.R
 
 after_script:
