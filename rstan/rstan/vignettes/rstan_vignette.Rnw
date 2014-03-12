@@ -835,7 +835,7 @@ f1 <- stan(file="schools.stan",data=schools_data,
 WINDOWS <- .Platform$OS.type == "windows"
 seed <- 12345 
 sflist1 <-
-  mclapply(1:4, mc.cores = ifelse(WINDOWS, 1, 4),
+  mclapply(1:4, mc.cores = ifelse(WINDOWS, 1, 2),
            function(i) stan(fit = f1, seed = seed, 
                             data = schools_data, 
                             chains = 1, chain_id = i, 
