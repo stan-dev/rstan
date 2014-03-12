@@ -14,3 +14,5 @@ rstan/inst/unitTests/cpp/*
 !rstan/inst/unitTests/cpp/*.cpp
 
 R_Makevars
+
+rstan.Rcheck/
