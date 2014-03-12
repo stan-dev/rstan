@@ -12,3 +12,5 @@ rstan*.tar.gz
 rstan/inst/unitTests/cpp/lib/
 rstan/inst/unitTests/cpp/*
 !rstan/inst/unitTests/cpp/*.cpp
+
+R_Makevars
