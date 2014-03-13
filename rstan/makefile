@@ -1,4 +1,3 @@
-
 # Set OS if there is no default:
 uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
 uname_O := $(shell sh -c 'uname -o 2>/dev/null || echo not')
@@ -41,7 +40,7 @@ else
   LINKCMD2 = ln -s ../../../../stan/src ./rstan/inst/include/stansrc
   WH = which
 endif
-  
+
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
 
@@ -76,17 +75,22 @@ install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); if (FALSE == require('inline', character.only = TRUE)) install.packages('inline', dep = TRUE); if (FALSE == require('Rcpp', character.only = TRUE)) install.packages('Rcpp', dep = TRUE, type = 'source'); if (FALSE == require('RUnit', character.only = TRUE)) install.packages('RUnit', dep = TRUE); library(Rcpp); sessionInfo()"
 
 
-build $(STANPKG): ./rstan/DESCRIPTION 
-	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
-	@rm -rf "./rstan/inst/include/stanlib"
-	@rm -rf "./rstan/inst/include/stansrc"
+STANLIB := rstan/inst/include/stanlib
+STANSRC := rstan/inst/include/stansrc
+
+$(STANLIB):
 ifeq ($(OS), win)
 	$(LINKCMD1)
 else 
 	if test -d $(TMP_STANLIB); then $(LINKCMD1b); else $(LINKCMD1); fi
 endif
+
+$(STANSRC):
 	$(LINKCMD2)
-	@rm -f $(STANPKG) 
+
+
+build $(STANPKG): ./rstan/DESCRIPTION $(STANLIB) $(STANSRC)
+	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
 	@echo "git_stan_head <- function() \"unknown\"" > rstan/R/git_stan_head.R
@@ -97,6 +101,7 @@ endif
 ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS) # --no-build-vignettes --no-manual
 endif
+
 
 example_csv : 
 ifneq ($(OS), win)
@@ -111,7 +116,7 @@ install: $(STANPKG)
 ifeq ($(OS), win)
 	$(R) CMD INSTALL --merge-multiarch $(STANPKG) 
 else
-	# $(R) CMD INSTALL --no-multiarch $(STANPKG) 
+#       $(R) CMD INSTALL --no-multiarch $(STANPKG) 
 	$(R) CMD INSTALL $(STANPKG)
 endif
 
@@ -137,16 +142,74 @@ rmtmpstanlib:
 clean: 
 	rm -f $(STANPKG) 
 	rm -f rstan/R/git_*head.R
+	rm -rf $(shell find tests/cpp -type f -name '*.d')
+	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
 
-clean-all: 
+clean-all: clean
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
 	rm -rf rstan/R/git_*stan_head.R 
-	rm -rf "./rstan/inst/include/stanlib"
-	rm -rf "./rstan/inst/include/stansrc"
+	rm -rf "./$(STANLIB)"
+	rm -rf "./$(STANSRC)"
 	rm -rf rstan.Rcheck
-  
+	rm -rf tests/cpp/lib
+	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
 .PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib install_pre_rpkg
+
+##
+# C++ tests of rstan
+##
+# RCPP_INCLUDE = $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()")
+# R_INCLUDE = -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")
+# GTESTPATH = $(wildcard $(STANLIB)/gtest*)
+# CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(RCPP_INCLUDE) $(R_INCLUDE)
+GTEST_LIB := tests/cpp/gtest.o
+
+CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
+STAN_LIB := tests/cpp/lib/libstan.a
+STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
+
+$(STAN_INSTANTIATION_FILES) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256
+
+GTESTPATH = $(wildcard $(STANLIB)/gtest*)
+
+$(STAN_INSTANTIATION_FILES): tests/cpp/lib/src/%.o: rstan/src/%.cpp $(STANLIB) $(STANSRC)
+	@mkdir -p $(dir $@)
+	$(COMPILE.cpp) $(OUTPUT_OPTION) $<  -I $(STANSRC)
+
+$(STAN_LIB): $(STAN_INSTANTIATION_FILES)
+	@mkdir -p $(dir $@)
+	$(AR) -rs $@ $(STAN_INSTANTIATION_FILES)
+
+$(GTEST_LIB): $(STANLIB) $(STANSRC) 
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(OUTPUT_OPTION) $(GTESTPATH)/src/gtest-all.cc
+
+$(patsubst %.cpp,%.d,$(CPPTESTS)) : %.d : %.cpp $(STANLIB) $(STANSRC)
+	@if test -d $(dir $@); \
+	then \
+	(set -e; \
+	rm -f $@; \
+	$(COMPILE.cpp) -MM $< > $@.$$$$; \
+	sed -e 's,\($(notdir $*)\)\.o[ :]*,$(dir $@)\1$(EXE) $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$);\
+	fi
+
+$(patsubst %.cpp,%$(EXE),$(CPPTESTS)) : %$(EXE) : %.cpp %.d $(GTEST_LIB) $(STANLIB) $(STAN_LIB)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OUTPUT_OPTION) $(GTEST_LIB) $< $(GTESTPATH)/src/gtest_main.cc -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R
+ifeq (,$(filter test-cpp,$(MAKECMDGOALS)))
+	$@
+endif
+
+.PHONY: test-cpp
+test-cpp: $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
+	$(foreach test,$^,$(test); echo;)
+
+ifneq (,$(filter test-cpp,$(MAKECMDGOALS)))
+  -include $(patsubst %.cpp,%.d,$(CPPTESTS))
+endif
+ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
+  -include $(patsubst %$(EXE),%.d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
+endif
