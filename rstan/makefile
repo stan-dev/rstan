@@ -142,8 +142,8 @@ rmtmpstanlib:
 clean: 
 	rm -f $(STANPKG) 
 	rm -f rstan/R/git_*head.R
-	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.d')
-	rm -rf $(shell find rstan/inst/unitTests/cpp -type f -name '*.d.*')
+	rm -rf $(shell find tests/cpp -type f -name '*.d')
+	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
 
 clean-all: clean
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
@@ -151,7 +151,7 @@ clean-all: clean
 	rm -rf "./$(STANLIB)"
 	rm -rf "./$(STANSRC)"
 	rm -rf rstan.Rcheck
-	rm -rf rstan/inst/unitTests/cpp/lib
+	rm -rf tests/cpp/lib
 	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
 
 # buildbin:   # build a binary version  
@@ -166,17 +166,17 @@ clean-all: clean
 # R_INCLUDE = -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")
 # GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 # CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(RCPP_INCLUDE) $(R_INCLUDE)
-GTEST_LIB := rstan/inst/unitTests/cpp/gtest.o
+GTEST_LIB := tests/cpp/gtest.o
 
-CPPTESTS := $(shell find rstan/inst/unitTests/cpp -type f -name '*_test.cpp')
-STAN_LIB := rstan/inst/unitTests/cpp/lib/libstan.a
-STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,rstan/inst/unitTests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
+CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
+STAN_LIB := tests/cpp/lib/libstan.a
+STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
 $(STAN_INSTANTIATION_FILES) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 
-$(STAN_INSTANTIATION_FILES): rstan/inst/unitTests/cpp/lib/src/%.o: rstan/src/%.cpp $(STANLIB) $(STANSRC)
+$(STAN_INSTANTIATION_FILES): tests/cpp/lib/src/%.o: rstan/src/%.cpp $(STANLIB) $(STANSRC)
 	@mkdir -p $(dir $@)
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<  -I $(STANSRC)
 
@@ -203,6 +203,7 @@ ifeq (,$(filter test-cpp,$(MAKECMDGOALS)))
 	$@
 endif
 
+.PHONY: test-cpp
 test-cpp: $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
 	$(foreach test,$^,$(test); echo;)
 

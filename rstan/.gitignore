@@ -9,9 +9,9 @@ rstan/inst/include/stanlib
 rstan/inst/include/stansrc
 rstan*.tar.gz
 
-rstan/inst/unitTests/cpp/lib/
-rstan/inst/unitTests/cpp/*
-!rstan/inst/unitTests/cpp/*.cpp
+tests/cpp/lib/
+tests/cpp/*
+!tests/cpp/*.cpp
 
 R_Makevars
 
