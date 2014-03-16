@@ -151,8 +151,8 @@ clean-all: clean
 	rm -rf "./$(STANLIB)"
 	rm -rf "./$(STANSRC)"
 	rm -rf rstan.Rcheck
-	rm -rf tests/cpp/lib
-	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
+	rm -rf tests/cpp/lib $(GTEST_LIB)
+	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
@@ -161,18 +161,14 @@ clean-all: clean
 
 ##
 # C++ tests of rstan
-##
-# RCPP_INCLUDE = $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()")
-# R_INCLUDE = -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")
-# GTESTPATH = $(wildcard $(STANLIB)/gtest*)
-# CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(RCPP_INCLUDE) $(R_INCLUDE)
 GTEST_LIB := tests/cpp/gtest.o
 
 CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
 STAN_LIB := tests/cpp/lib/libstan.a
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
-$(STAN_INSTANTIATION_FILES) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") $(shell $(RSCRIPT) -e "RInside:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256 -stdlib=libstdc++
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R $(shell $(RSCRIPT) -e "Rcpp:::LdFlags()") $(shell $(RSCRIPT) -e "RInside:::LdFlags()")
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 
@@ -198,7 +194,7 @@ $(patsubst %.cpp,%.d,$(CPPTESTS)) : %.d : %.cpp $(STANLIB) $(STANSRC)
 	fi
 
 $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) : %$(EXE) : %.cpp %.d $(GTEST_LIB) $(STANLIB) $(STAN_LIB)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OUTPUT_OPTION) $(GTEST_LIB) $< $(GTESTPATH)/src/gtest_main.cc -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OUTPUT_OPTION) $(GTEST_LIB) $< $(GTESTPATH)/src/gtest_main.cc $(LDFLAGS)
 ifeq (,$(filter test-cpp,$(MAKECMDGOALS)))
 	$@
 endif
@@ -213,3 +209,7 @@ endif
 ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
   -include $(patsubst %$(EXE),%.d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
 endif
+
+
+.PHONY: test-R
+	cd tests & R -q -f runRunitTests.R
