@@ -27,9 +27,7 @@ public:
 class RStan : public ::testing::Test {
 public:
   static void SetUpTestCase() { 
-    int argc = 0;
-    char *argv[0];
-    RInside R(argc, argv);
+    RInside R;
   }
 
   static void TearDownTestCase() { }
@@ -63,7 +61,6 @@ public:
 TEST_F(RStan, mcmc_output) {
   stan::mcmc::sample s(cont_params, 0, 0);
   int ctrl_sampling_iter_save = 1000;
-  
 
   rstan::mcmc_output<stan_model> mcmc_output(&ss, &ds);
   mcmc_output.inspect_internal("after construction");
@@ -119,6 +116,182 @@ TEST_F(RStan, mcmc_output) {
   EXPECT_EQ("", ss.str());
   EXPECT_EQ("lp__,accept_stat__\n", ds.str());
 }
+
+TEST_F(RStan, mcmc_output_inside_run_markov_chain) {
+  // setup
+  double lp = 123;
+  ASSERT_EQ(47, model_ptr->num_params_r());
+  Eigen::VectorXd x(47);
+  for (int i = 0; i < x.size(); i++) {
+    x(i) = i + 1;
+  }
+  stan::mcmc::sample s(x, lp, 0);
+  
+  int ctrl_sampling_iter_save = 1000;
+  std::vector<std::string> iter_param_names;
+  std::vector<std::string> sampler_param_names;
+  std::vector<Rcpp::NumericVector> sampler_params;
+  std::vector<Rcpp::NumericVector> iter_params;
+
+  rstan::mcmc_output<stan_model> mcmc_output(&ss, &ds);
+  mcmc_output.set_output_names(s, sampler_ptr, *model_ptr, 
+                               iter_param_names, sampler_param_names);
+  mcmc_output.init_sampler_params(sampler_params, ctrl_sampling_iter_save);
+  mcmc_output.init_iter_params(iter_params, ctrl_sampling_iter_save);
+
+
+  ASSERT_EQ(2, iter_params.size());
+  for (int i = 0; i < 2; i++)
+    ASSERT_EQ(ctrl_sampling_iter_save, iter_params[i].size());
+  ASSERT_EQ("", ss.str());
+  ASSERT_EQ("", ds.str());
+
+  ASSERT_EQ(0, sampler_params.size());
+  ASSERT_EQ(2, iter_params.size());
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < ctrl_sampling_iter_save; j++) {
+      EXPECT_FLOAT_EQ(0.0, iter_params[i][j]);
+    }
+  }
+
+  SUCCEED() << "the mcmc_output object is created as it is passed into run_markov_chain()";
+  //----------------------------------------
+
+  // outputter.output_sample_params(base_rng, init_s, sampler_ptr, model,
+  //                                chains, is_warmup,
+  //                                sampler_params, iter_params,
+  //                                sum_pars, sum_lp, qoi_idx,
+  //                                iter_save_i, &rstan::io::rcout);
+  // iter_save_i++;
+  // outputter.output_diagnostic_params(init_s, sampler_ptr);
+
+  ss.str("");
+  ds.str("");
+
+  //mcmc_output.inspect_internal("");
+
+  rng_t base_rng;
+  std::vector<Rcpp::NumericVector> chains;
+  for (int i = 0; i < 2; i++)
+    chains.push_back(Rcpp::NumericVector(ctrl_sampling_iter_save));
+  bool is_warmup = true;
+  std::vector<double> sum_pars(47);
+  double sum_lp = 0;
+  std::vector<size_t> qoi_idx;
+  qoi_idx.push_back(0);
+  qoi_idx.push_back(1);
+  int iter_save_i = 0;
+  std::stringstream rcout;
+
+  mcmc_output.output_sample_params(base_rng, s, sampler_ptr, *model_ptr,
+                                   chains, is_warmup,
+                                   sampler_params, iter_params,
+                                   sum_pars, sum_lp, qoi_idx,
+                                   iter_save_i, &rcout);
+  EXPECT_FLOAT_EQ(0.0, sum_lp);
+  ASSERT_EQ(47, sum_pars.size());
+  for (int i = 0; i < 47; i++) {
+    EXPECT_FLOAT_EQ(0.0, sum_pars[i]);
+  }
+  ASSERT_EQ(0, sampler_params.size());
+  ASSERT_EQ(2, iter_params.size());
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < ctrl_sampling_iter_save; j++) {
+      if (i == 0 && j == 0) {
+        EXPECT_FLOAT_EQ(lp, iter_params[i][j]) 
+          << "i=" << i << ", j=" << j;
+      }
+      else {
+        EXPECT_FLOAT_EQ(0.0, iter_params[i][j]) 
+          << "i=" << i << ", j=" << j;
+      }
+    }
+  }
+  EXPECT_EQ("", rcout.str());
+  EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", 
+            ss.str());
+  EXPECT_EQ("", ds.str());
+
+
+  is_warmup = false;
+  iter_save_i = 1;
+  rcout.str("");
+  ss.str("");
+  ds.str("");
+  mcmc_output.output_sample_params(base_rng, s, sampler_ptr, *model_ptr,
+                                   chains, is_warmup,
+                                   sampler_params, iter_params,
+                                   sum_pars, sum_lp, qoi_idx,
+                                   iter_save_i, &rcout);
+  EXPECT_FLOAT_EQ(1.0 * lp, sum_lp);
+  ASSERT_EQ(47, sum_pars.size());
+  for (int i = 0; i < 47; i++) {
+    if (i == 1) {
+      EXPECT_FLOAT_EQ(exp(x(i)), sum_pars[i]);
+    } else {
+      EXPECT_FLOAT_EQ(x(i), sum_pars[i]) << "index: " << i << std::endl;
+    }
+  }
+  ASSERT_EQ(0, sampler_params.size());
+  ASSERT_EQ(2, iter_params.size());
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < ctrl_sampling_iter_save; j++) {
+      if (i == 0 && j <= iter_save_i) {
+        EXPECT_FLOAT_EQ(lp, iter_params[i][j]) 
+          << "i=" << i << ", j=" << j;
+      }
+      else {
+        EXPECT_FLOAT_EQ(0.0, iter_params[i][j]) 
+          << "i=" << i << ", j=" << j;
+      }
+    }
+  }
+  EXPECT_EQ("", rcout.str());
+  EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", 
+            ss.str());
+  EXPECT_EQ("", ds.str());
+
+
+  is_warmup = false;
+  iter_save_i = 2;
+  rcout.str("");
+  ss.str("");
+  ds.str("");
+  mcmc_output.output_sample_params(base_rng, s, sampler_ptr, *model_ptr,
+                                   chains, is_warmup,
+                                   sampler_params, iter_params,
+                                   sum_pars, sum_lp, qoi_idx,
+                                   iter_save_i, &rcout);
+
+  EXPECT_FLOAT_EQ(2.0 * lp, sum_lp);
+  ASSERT_EQ(47, sum_pars.size());
+  for (int i = 0; i < 47; i++) {
+    if (i == 1) {
+      EXPECT_FLOAT_EQ(2 * exp(x(i)), sum_pars[i]);
+    } else {
+      EXPECT_FLOAT_EQ(2 * x(i), sum_pars[i]) << "index: " << i << std::endl;
+    }
+  }
+  ASSERT_EQ(0, sampler_params.size());
+  ASSERT_EQ(2, iter_params.size());
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < ctrl_sampling_iter_save; j++) {
+      if (i == 0 && j <= iter_save_i) {
+        EXPECT_FLOAT_EQ(lp, iter_params[i][j]) 
+          << "i=" << i << ", j=" << j;
+      }
+      else {
+        EXPECT_FLOAT_EQ(0.0, iter_params[i][j]) 
+          << "i=" << i << ", j=" << j;
+      }
+    }
+  }
+  EXPECT_EQ("", rcout.str());
+  EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", 
+            ss.str());
+  EXPECT_EQ("", ds.str());
+}
+
 
 TEST_F(RStan, mcmc_writer) {
   std::stringstream sample_stream;

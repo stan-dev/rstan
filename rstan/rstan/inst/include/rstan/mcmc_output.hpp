@@ -99,15 +99,17 @@ namespace rstan {
                               std::ostream* pstream) {
       std::vector<double> values;
       s.get_sample_params(values);
-
+      
       std::vector<double> sampler_values;
-      sampler_ptr -> get_sampler_params(sampler_values);
-        
+      sampler_ptr -> get_sampler_params(sampler_values); 
+       
       std::vector<double> param_values;
       std::vector<int> disc_vector; // dummy
       Eigen::VectorXd cont_params = s.cont_params();
       std::vector<double> cont_vector(cont_params.size());
-      for (int i = 0; i < cont_params.size(); i++) cont_vector[i] = cont_params(i);
+      
+      for (int i = 0; i < cont_params.size(); i++) 
+        cont_vector[i] = cont_params(i);
       model.write_array(rng, cont_vector, disc_vector,
                         param_values, true, true, pstream);
       // values in param_values are column-major.
@@ -122,6 +124,7 @@ namespace rstan {
       for (z = 0; z < sample_names_.size(); z++) {
         iter_params[z][iter_save_i] = values[z];
       } 
+
       for (z = 0; z < qoi_idx.size() - 1; ++z) {
         chains[z][iter_save_i] = param_values[qoi_idx[z]];
       } 
