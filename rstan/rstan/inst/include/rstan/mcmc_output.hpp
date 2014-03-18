@@ -11,6 +11,7 @@
 #include <stan/mcmc/base_mcmc.hpp>
 #include <stan/model/prob_grad.hpp>
 
+#include <Rcpp.h>
 // ref: 
 // #include <stan/io/mcmc_writer.hpp>
 
@@ -34,10 +35,7 @@ namespace rstan {
     size_t get_index_for_lp() const {
       return index_for_lp_;
     } 
-    /*
-     * @param iter_param_names
-     * @param sampler_param_names
-     */
+
     void set_output_names(stan::mcmc::sample& s, 
                           stan::mcmc::base_mcmc* sampler_ptr,
                           M& model,
@@ -208,7 +206,24 @@ namespace rstan {
       print_timing(warmDeltaT, sampleDeltaT, psample_stream_, std::string("# "));
       print_timing(warmDeltaT, sampleDeltaT, pdiagnostic_stream_, std::string("# "));
     } 
-      
+
+
+    void inspect_internal(const std::string note) {
+      std::cout << "------------------------------------------------------------\n"
+                << note << "\n"
+                << "sample_names_[" << sample_names_.size() << "]\n";
+      for (int i = 0; i < sample_names_.size(); i++)
+        std::cout << "  [" << i << "]: " << sample_names_[i] << "\n";
+      std::cout << "sampler_names_[" << sampler_names_.size() << "]\n";
+      for (int i = 0; i < sampler_names_.size(); i++)
+        std::cout << "  [" << i << "]: " << sampler_names_[i] << "\n";
+      std::cout << "param_names_[" << param_names_.size() << "]\n";
+      for (int i = 0; i < param_names_.size(); i++)
+        std::cout << "  [" << i << "]: " << param_names_[i] << "\n";
+      std::cout << "index_for_lp_: " << index_for_lp_ << "\n";
+      std::cout << "------------------------------------------------------------"
+                << std::endl;
+    }
   };
 
 } // rstan
