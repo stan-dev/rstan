@@ -318,8 +318,15 @@ TEST_F(RStan, mcmc_writer) {
     x(i) = i + 1;
   }
   stan::mcmc::sample s(x, lp, 0);
-
-  stan::io::mcmc_writer<stan_model> mcmc_writer(&stan_ss, &stan_ds);
+  
+  stan::common::io::as_csv stan_sample_recorder(&stan_ss, "# ");
+  stan::common::io::as_csv stan_diagnostic_recorder(&stan_ds, "# ");
+  stan::io::mcmc_writer<stan_model,
+                        stan::common::io::as_csv,
+                        stan::common::io::as_csv> 
+    mcmc_writer(stan_sample_recorder, 
+                stan_diagnostic_recorder, 
+                &std::cout);
   // Stan's usage:
   //   <nothing else>
   
@@ -347,7 +354,14 @@ TEST_F(RStan, mcmc_writer_inside_run_markov_chain) {
     x(i) = i + 1;
   }
   stan::mcmc::sample s(x, lp, 0);
-  stan::io::mcmc_writer<stan_model> mcmc_writer(&stan_ss, &stan_ds);
+  stan::common::io::as_csv stan_sample_recorder(&stan_ss, "# ");
+  stan::common::io::as_csv stan_diagnostic_recorder(&stan_ds, "# ");
+  stan::io::mcmc_writer<stan_model,
+                        stan::common::io::as_csv,
+                        stan::common::io::as_csv> 
+    mcmc_writer(stan_sample_recorder, 
+                stan_diagnostic_recorder, 
+                &std::cout);
   mcmc_writer.print_sample_names(s, sampler_ptr, *model_ptr);
   mcmc_writer.print_diagnostic_names(s, sampler_ptr, *model_ptr);
 
@@ -396,6 +410,5 @@ TEST_F(RStan, mcmc_writer_inside_run_markov_chain) {
   mcmc_writer.print_diagnostic_params(s, sampler_ptr);
   EXPECT_EQ("", stan_ss.str());
   EXPECT_EQ("123,0\n", stan_ds.str());
-
 }
 

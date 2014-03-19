@@ -114,6 +114,9 @@ namespace rstan {
                         param_values, true, true, pstream);
       // values in param_values are column-major.
 
+      //---------------------------------------- same to here
+
+
       size_t z = 0;
       if (!is_warmup) {
         for (z = 0; z < param_values.size(); z++)
