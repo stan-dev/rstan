@@ -156,14 +156,7 @@ TEST_F(RStan, mcmc_output_inside_run_markov_chain) {
 
   SUCCEED() << "the mcmc_output object is created as it is passed into run_markov_chain()";
   //----------------------------------------
-
-  // outputter.output_sample_params(base_rng, init_s, sampler_ptr, model,
-  //                                chains, is_warmup,
-  //                                sampler_params, iter_params,
-  //                                sum_pars, sum_lp, qoi_idx,
-  //                                iter_save_i, &rstan::io::rcout);
-  // iter_save_i++;
-  // outputter.output_diagnostic_params(init_s, sampler_ptr);
+  // iteration 1.
 
   ss.str("");
   ds.str("");
@@ -212,6 +205,14 @@ TEST_F(RStan, mcmc_output_inside_run_markov_chain) {
             ss.str());
   EXPECT_EQ("", ds.str());
 
+  ss.str("");
+  ds.str("");
+  mcmc_output.output_diagnostic_params(s, sampler_ptr);
+  EXPECT_EQ("", ss.str());
+  EXPECT_EQ("123,0\n", ds.str());
+
+  //------------------------------------------------------------
+  // iteration 2
 
   is_warmup = false;
   iter_save_i = 1;
@@ -251,6 +252,14 @@ TEST_F(RStan, mcmc_output_inside_run_markov_chain) {
             ss.str());
   EXPECT_EQ("", ds.str());
 
+  ss.str("");
+  ds.str("");
+  mcmc_output.output_diagnostic_params(s, sampler_ptr);
+  EXPECT_EQ("", ss.str());
+  EXPECT_EQ("123,0\n", ds.str());
+  
+  //------------------------------------------------------------
+  // iteration 3
 
   is_warmup = false;
   iter_save_i = 2;
@@ -290,12 +299,25 @@ TEST_F(RStan, mcmc_output_inside_run_markov_chain) {
   EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", 
             ss.str());
   EXPECT_EQ("", ds.str());
+
+
+  ss.str("");
+  ds.str("");
+  mcmc_output.output_diagnostic_params(s, sampler_ptr);
+  EXPECT_EQ("", ss.str());
+  EXPECT_EQ("123,0\n", ds.str());
+
 }
 
 
 TEST_F(RStan, mcmc_writer) {
-  std::stringstream sample_stream;
-  std::stringstream diagnostic_stream;
+  double lp = 123;
+  ASSERT_EQ(47, model_ptr->num_params_r());
+  Eigen::VectorXd x(47);
+  for (int i = 0; i < x.size(); i++) {
+    x(i) = i + 1;
+  }
+  stan::mcmc::sample s(x, lp, 0);
 
   stan::io::mcmc_writer<stan_model> mcmc_writer(&stan_ss, &stan_ds);
   // Stan's usage:
@@ -303,10 +325,77 @@ TEST_F(RStan, mcmc_writer) {
   
   // then:
   //   writer.print_sample_names(s, sampler_ptr, model);
-  //   writer.print_diagnostic_names(s, sampler_ptr, model);
+  mcmc_writer.print_sample_names(s, sampler_ptr, *model_ptr);
+  EXPECT_EQ("lp__,accept_stat__,d,sigmasq_delta,mu.1,mu.2,mu.3,mu.4,mu.5,mu.6,mu.7,mu.8,mu.9,mu.10,mu.11,mu.12,mu.13,mu.14,mu.15,mu.16,mu.17,mu.18,mu.19,mu.20,mu.21,mu.22,delta.1,delta.2,delta.3,delta.4,delta.5,delta.6,delta.7,delta.8,delta.9,delta.10,delta.11,delta.12,delta.13,delta.14,delta.15,delta.16,delta.17,delta.18,delta.19,delta.20,delta.21,delta.22,delta_new,sigma_delta\n", 
+            stan_ss.str());
+  EXPECT_EQ("", stan_ds.str());
 
   
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_diagnostic_names(s, sampler_ptr, *model_ptr);
+
   EXPECT_EQ("", stan_ss.str());
+  EXPECT_EQ("lp__,accept_stat__\n", stan_ds.str());
+}
+
+TEST_F(RStan, mcmc_writer_inside_run_markov_chain) {
+  double lp = 123;
+  ASSERT_EQ(47, model_ptr->num_params_r());
+  Eigen::VectorXd x(47);
+  for (int i = 0; i < x.size(); i++) {
+    x(i) = i + 1;
+  }
+  stan::mcmc::sample s(x, lp, 0);
+  stan::io::mcmc_writer<stan_model> mcmc_writer(&stan_ss, &stan_ds);
+  mcmc_writer.print_sample_names(s, sampler_ptr, *model_ptr);
+  mcmc_writer.print_diagnostic_names(s, sampler_ptr, *model_ptr);
+
+  rng_t base_rng;
+  
+  //------------------------------------------------------------
+  // iteration 1
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_sample_params(base_rng, s, *sampler_ptr, *model_ptr);
+  EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", stan_ss.str());
   EXPECT_EQ("", stan_ds.str());
+  
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_diagnostic_params(s, sampler_ptr);
+  EXPECT_EQ("", stan_ss.str());
+  EXPECT_EQ("123,0\n", stan_ds.str());
+
+  //------------------------------------------------------------
+  // iteration 2
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_sample_params(base_rng, s, *sampler_ptr, *model_ptr);
+  EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", stan_ss.str());
+  EXPECT_EQ("", stan_ds.str());
+  
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_diagnostic_params(s, sampler_ptr);
+  EXPECT_EQ("", stan_ss.str());
+  EXPECT_EQ("123,0\n", stan_ds.str());
+
+
+  //------------------------------------------------------------
+  // iteration 3
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_sample_params(base_rng, s, *sampler_ptr, *model_ptr);
+  EXPECT_EQ("123,0,1,7.38906,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,2.71828\n", 
+            stan_ss.str());
+  EXPECT_EQ("", stan_ds.str());
+  
+  stan_ss.str("");
+  stan_ds.str("");
+  mcmc_writer.print_diagnostic_params(s, sampler_ptr);
+  EXPECT_EQ("", stan_ss.str());
+  EXPECT_EQ("123,0\n", stan_ds.str());
+
 }
 
