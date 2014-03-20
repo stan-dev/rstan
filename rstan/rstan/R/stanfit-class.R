@@ -550,7 +550,7 @@ setMethod("constrain_pars", signature = "stanfit",
               stop("the model object is not created or not valid")
             p <- object@.MISC$stan_fit_instance$constrain_pars(upars)
             idx_wo_lp <- which(object@model_pars != 'lp__')
-            relist(p, create_skeleton(object@model_pars[idx_wo_lp], object@par_dims[idx_wo_lp]))
+            rstan_relist(p, create_skeleton(object@model_pars[idx_wo_lp], object@par_dims[idx_wo_lp]))
           })
 
 

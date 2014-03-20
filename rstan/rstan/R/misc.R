@@ -1088,6 +1088,13 @@ create_skeleton <- function(pars, dims) {
   lst 
 }
 
+rstan_relist <- function(x, skeleton) {
+  lst <- relist(x, skeleton)
+  for (n in names(skeleton))
+    attr(lst[[n]], "dim") <- attributes(skeleton[[n]])$dim
+  lst
+}
+
 # ported from bugs.plot.inferences in R2WinBUGS  
 # 
 stan_plot_inferences <- function(sim, summary, pars, model_info, display_parallel = FALSE, ...) {
