@@ -1090,8 +1090,8 @@ create_skeleton <- function(pars, dims) {
 
 rstan_relist <- function(x, skeleton) {
   lst <- relist(x, skeleton)
-  for (n in names(skeleton))
-    attr(lst[[n]], "dim") <- attributes(skeleton[[n]])$dim
+  for (i in length(skeleton))
+    dim(lst[[i]]) <- dim(skeleton[[i]])
   lst
 }
 
