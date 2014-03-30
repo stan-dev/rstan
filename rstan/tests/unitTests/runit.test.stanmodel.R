@@ -21,6 +21,7 @@ test_optimizing <- function() {
   set.seed(1287)
   o3 <- optimizing(m2, as_vector = FALSE, seed = 4)
   s <- list(a = 1:2, y = 3)
-  checkEquals(o3$par, relist(o2$par, s))
+  attr(s$a, "dim") <- 2
+  checkEquals(o3$par, rstan:::rstan_relist(o2$par, s))
   checkEquals(o2$par[3], 0, tolerance = 0.1, checkNames = FALSE)
 }

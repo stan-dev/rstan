@@ -8,3 +8,11 @@ rstan/R/git_*head.R
 rstan/inst/include/stanlib
 rstan/inst/include/stansrc
 rstan*.tar.gz
+
+tests/cpp/lib/
+tests/cpp/*
+!tests/cpp/*.cpp
+
+R_Makevars
+
+rstan.Rcheck/

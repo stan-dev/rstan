@@ -29,6 +29,9 @@
 #include <stan/mcmc/hmc/nuts/adapt_diag_e_nuts.hpp>
 #include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
 
+#include <stan/common/do_print.hpp>
+#include <stan/common/print_progress.hpp>
+
 
 #include <rstan/io/rlist_ref_var_context.hpp> 
 #include <rstan/io/r_ostream.hpp> 
@@ -275,25 +278,7 @@ namespace rstan {
         midx.insert(midx.end(), midxi.begin(), midxi.end());
       } 
     } 
-
-    bool do_print(int n, int refresh, int last = 0) {
-      if (refresh < 1) return false;
-      return (n == 0) || ((n + 1) % refresh == 0) || (n == last);
-    }
-
-    void print_progress(int m, int finish, int refresh, bool warmup) {
-      int it_print_width = std::ceil(std::log10(finish));
-      if (do_print(m, refresh, finish - 1)) {
-        rstan::io::rcout << "\rIteration: ";
-        rstan::io::rcout << std::setw(it_print_width) << (m + 1)
-                         << " / " << finish;
-        rstan::io::rcout << " [" << std::setw(3) 
-                         << static_cast<int>((100.0 * (m + 1)) / finish)
-                         << "%] ";
-        rstan::io::rcout << (warmup ? " (Warmup)" : " (Sampling)");
-      }
-    }
-
+    
     template <class Model>
     std::vector<std::string> get_param_names(Model& m) { 
       std::vector<std::string> names;
@@ -346,7 +331,9 @@ namespace rstan {
         end = args.get_iter();
       } 
       for (int m = start; m < end; ++m) {
-        print_progress(m, args.get_iter(), args.get_ctrl_sampling_refresh(), is_warmup);
+        stan::common::print_progress(m, 0, args.get_iter(), 
+                                     args.get_ctrl_sampling_refresh(), is_warmup,
+                                     "\r", "", rstan::io::rcout);
         R_CheckUserInterrupt();
         init_s = sampler_ptr -> transition(init_s);
         if (args.get_ctrl_sampling_save_warmup() && (((m - start) % args.get_ctrl_sampling_thin()) == 0)) {
@@ -778,7 +765,8 @@ namespace rstan {
           int ret = 0;
           while (0 == ret) {
             int i = bfgs.iter_num();
-            if (do_print(i, 50 * args.get_ctrl_optim_refresh())) {
+            
+            if (stan::common::do_print(i, i==0, 50 * args.get_ctrl_optim_refresh())) {
               rstan::io::rcout << "    Iter ";
               rstan::io::rcout << "     log prob ";
               rstan::io::rcout << "       ||dx|| ";
@@ -791,7 +779,8 @@ namespace rstan {
             lp = bfgs.logp();
             bfgs.params_r(cont_vector);
 
-            if (do_print(i, args.get_ctrl_optim_refresh()) || ret != 0 || !bfgs.note().empty()) {
+            if (stan::common::do_print(i, i==0, args.get_ctrl_optim_refresh()) 
+                || ret != 0 || !bfgs.note().empty()) {
               rstan::io::rcout << " " << std::setw(7) << i << " ";
               rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << lp << " ";
               rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << bfgs.prev_step_size() << " ";
@@ -904,7 +893,7 @@ namespace rstan {
             lastlp = lp;
             lp = ng.step();
             ng.params_r(cont_vector);
-            if (do_print(i, args.get_ctrl_optim_refresh())) {
+            if (stan::common::do_print(i, i==0, args.get_ctrl_optim_refresh())) {
               rstan::io::rcout << "Iteration ";
               rstan::io::rcout << std::setw(2) << (m + 1) << ". ";
               rstan::io::rcout << "Log joint probability = " << std::setw(10) << lp;
@@ -1225,8 +1214,8 @@ namespace rstan {
     SEXP constrained_param_names(SEXP include_tparams, SEXP include_gqs) {
       BEGIN_RCPP
       std::vector<std::string> n;
-      model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
-                                       Rcpp::as<bool>(include_gqs));
+      model_.constrained_param_names(n, Rcpp::as<bool>(include_tparams), 
+                                     Rcpp::as<bool>(include_gqs));
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(n));
       UNPROTECT(1);
