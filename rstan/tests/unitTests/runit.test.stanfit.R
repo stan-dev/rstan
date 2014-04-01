@@ -30,6 +30,18 @@ test_output_csv_and_extract <- function() {
       y3[3,2,1] <- 16;  y3[3,2,2] <- 17;  y3[3,2,3] <- 18;
     } 
   "
+
+  ## Disable the zero length vector as there is a bug with relist in R (< 3.0.3).
+  ## See: https://bugs.r-project.org/bugzilla3/show_bug.cgi?id=15499
+  ## https://github.com/stan-dev/rstan/issues/51
+  rversion_date <- 
+    as.Date(paste(R.version$year, R.version$month, R.version$day, sep = '-')) 
+  rversion_dat_302 <- as.Date("2014-03-06")
+  if (rversion_date < rversion_dat_302) {
+    model_code <- gsub('.*zeroleny.*', '', model_code, perl = TRUE)
+  } 
+  ## 
+ 
   fit <- stan(model_code = model_code, 
               iter = 100, chains = 1, thin = 3, 
               sample_file = csv_fname)
