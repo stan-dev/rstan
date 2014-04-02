@@ -2,7 +2,7 @@ citHeader("To cite Stan in publications use:")
 
 citEntry(entry = "Misc", 
          title = "Stan: A C++ Library for Probability and Sampling, Version 2.2.0",
-         author = person("Stan Development Team"),
+         author = person(given = "Stan Development Team"),
          year = "2013",
          url = "http://mc-stan.org/",
          textVersion =
@@ -13,7 +13,7 @@ citEntry(entry = "Misc",
   
 citEntry(entry = "Manual", 
          title = "Stan Modeling Language User's Guide and Reference Manual, Version 2.2.0",
-         author = person("Stan Development Team"),
+         author = person(given = "Stan Development Team"),
          year = "2013", 
          url = "http://mc-stan.org/",
          textVersion  =
@@ -24,7 +24,7 @@ citEntry(entry = "Manual",
 
 citEntry(entry = "Article", 
          title = "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo",
-         author = c(person("Matthew D. Hoffman"), person("Andrew Gelman")),
+         author = c(person(given = "Matthew  D.", family = "Hoffman"), person(given = "Andrew", family = "Gelman")),
          year = "In press", 
          journal = "Journal of Machine Learning Research",
          textVersion = 
