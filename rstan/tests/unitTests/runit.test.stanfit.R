@@ -198,14 +198,15 @@ test_grad_log <- function() {
   checkEquals(g1, log_prob_grad_fun(mu, log(sigma), adjust = FALSE))
 }
 
-test_specify_args <- function() {
+test_specify_args_and_data <- function() {
   y <- c(0.70,  -0.16,  0.77, -1.37, -1.99,  1.35, 0.08, 
          0.02,  -1.48, -0.08,  0.34,  0.03, -0.42, 0.87, 
          -1.36,  1.43,  0.80, -0.48, -1.61, -1.27)
 
   code <- '
   data {
-    real y[20];
+    int N;
+    real y[N];
   } 
   parameters {
     real mu;
@@ -216,17 +217,37 @@ test_specify_args <- function() {
   } 
   '
   stepsize0 <- 0.15
-  sf <- stan(model_code = code, data = list(y = y), iter = 200, 
+  sf <- stan(model_code = code, data = list(y = y, N = length(y)), iter = 200, 
              control = list(adapt_engaged = FALSE, stepsize = stepsize0))
   checkEquals(attr(sf@sim$samples[[1]],"sampler_params")$stepsize__[1], stepsize0)
 
-  sf2 <- stan(fit = sf, iter = 20, algorithm = 'HMC', data = list(y = y),
+  sf2 <- stan(fit = sf, iter = 20, algorithm = 'HMC', data = list(y = y, N = length(y)),
              control = list(adapt_engaged = FALSE, stepsize = stepsize0))
   checkEquals(attr(sf2@sim$samples[[1]],"sampler_params")$stepsize__[1], stepsize0)
 
-  sf3 <- stan(fit = sf, iter = 1, data = list(y = y), init = 0, chains = 1)
+  sf3 <- stan(fit = sf, iter = 1, data = list(y = y, N = length(y)), init = 0, chains = 1)
   i_u <- unconstrain_pars(sf3, get_inits(sf3)[[1]])
   checkEquals(i_u, rep(0, 2))
+
+  # data in a function frame
+  tfun2 <- function() {
+    y <- rnorm(20)
+    N <- length(y)
+    sm <- sf@stanmodel
+    fit <- sampling(sm, data = c("y", "N"))
+    fit 
+  }
+  s1 <- tfun2()
+  checkEquals(s1@mode, 0L)
+
+  tfun <- function() {
+    y <- rnorm(20)
+    N <- length(y)
+    fit <- stan(fit = sf, data = c("y", "N"))
+    fit
+  } 
+  s <- tfun()
+  checkEquals(s@mode, 0L)
 } 
 
 .tearDown <- function() { 
