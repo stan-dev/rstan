@@ -63,8 +63,7 @@ setMethod("optimizing", "stanmodel",
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
             if (check_data) {
               if (is.character(data)) {
-                e1 <- parent.frame()
-                data <- try(mklist(data, env = e1))
+                data <- try(mklist(data))
                 if (is(data, "try-error")) {
                   message("failed to create the data; optimization not done") 
                   return(invisible(NULL))
@@ -138,12 +137,10 @@ setMethod("sampling", "stanmodel",
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-
             if (check_data) { 
               # allow data to be specified as a vector of character string 
               if (is.character(data)) {
-                e1 <- parent.frame()
-                data <- try(mklist(data, env = e1))
+                data <- try(mklist(data))
                 if (is(data, "try-error")) {
                   message("failed to create the data; sampling not done") 
                   return(invisible(new_empty_stanfit(object)))

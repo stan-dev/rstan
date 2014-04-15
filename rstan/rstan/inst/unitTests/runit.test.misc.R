@@ -267,6 +267,14 @@ test_mklist <- function() {
   d <- rstan:::mklist(c("x", "y", "z"))
   checkTrue(identical(c, d))
   checkException(rstan:::mklist(c("x", "f")))
+
+  p <- 4
+  fun <- function() {
+    p <- 3
+    rstan:::mklist('p')
+  } 
+  checkEquals(fun()$p, 3, checkNames = FALSE )
+  checkEquals(rstan:::mklist('p')$p, 4, checkNames = FALSE)
 } 
 
 test_makeconf_path <- function() {
