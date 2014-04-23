@@ -51,6 +51,20 @@ public:
   sampler_t* sampler_ptr;
 };
 
+std::string read_file(const std::string filename) {
+  std::ifstream f(filename.c_str());
+  if (f) {
+    std::string contents;
+    f.seekg(0, std::ios::end);
+    contents.resize(f.tellg());
+    f.seekg(0, std::ios::beg);
+    f.read(&contents[0], contents.size());
+    f.close();
+    return(contents);
+  }
+  return "";
+}
+
 rstan::stan_args stan_args_factory(const std::string& str) {
   Rcpp::List list;
   std::vector<std::string> lines;
@@ -85,30 +99,73 @@ rstan::stan_args stan_args_factory(const std::string& str) {
       }
     }
   }
-
   return rstan::stan_args(list);
 }
 
-std::string read_stan_args(const std::string filename) {
-  std::ifstream f(filename.c_str());
-  if (f) {
-    std::string contents;
-    f.seekg(0, std::ios::end);
-    contents.resize(f.tellg());
-    f.seekg(0, std::ios::beg);
-    f.read(&contents[0], contents.size());
-    f.close();
-    return(contents);
-  }
-  return "";
+template <class T>
+T convert(const std::string& str) {
+  T value;
+  std::istringstream(str) >> value;
+  return value;
 }
 
-TEST_F(RStan, execute_sampling) {
-  std::string e_stan_args_string = read_stan_args("tests/cpp/test_config/1_stan_args.txt");
-  rstan::stan_args args = stan_args_factory(e_stan_args_string);
+template <>
+std::string convert(const std::string& str) {
+  return str;
+}
 
+template <class T>
+std::vector<T> vector_factory(const std::string str) {
+  std::vector<T> x;
+  std::vector<std::string> lines;
+  boost::split(lines, str, boost::is_any_of("\n"));
+  if (lines.size() == 3) {
+    size_t size;
+    std::vector<std::string> line;
+    boost::split(line, lines[0], boost::is_any_of("()"));
+    if (line.size() < 2) {
+      ADD_FAILURE() << "can't find the size: " << str;
+      return x;
+    }
+    std::istringstream(line[1]) >> size;
+    x.resize(size);
+    
+
+    line.clear();
+    boost::split(line, lines[1], boost::is_any_of("{},"));
+    if (line.size() != size + 2) {
+      ADD_FAILURE() << "can't read the correct number of elements: " << str;
+      return x;
+    }
+    
+    for (size_t n = 0; n < size; n++) {
+      x[n] = convert<T>(line[n+1]);
+    }
+  } else {
+    ADD_FAILURE() << "number of lines (" << lines.size() << ") is not 3: "
+                  << str << std::endl;
+  }
+  return x;
+}
+
+
+TEST_F(RStan, execute_sampling_1) {
   std::stringstream ss;
+
+  std::string e_args_string = read_file("tests/cpp/test_config/1_stan_args.txt");
+  rstan::stan_args args = stan_args_factory(e_args_string);
   args.write_args_as_comment(ss);
+  ASSERT_EQ(e_args_string, ss.str());
+  ss.str("");
   
-  ASSERT_EQ(e_stan_args_string, ss.str());
+  stan::mcmc::sample s(Eigen::VectorXd(model_.num_params_r()), 0, 0);
+  
+  std::vector<size_t> qoi_idx 
+    = vector_factory<size_t>(read_file("tests/cpp/test_config/1_qoi_idx.txt"));
+  std::vector<double> initv 
+    = vector_factory<double>(read_file("tests/cpp/test_config/1_initv.txt"));
+  std::vector<std::string> fnames_oi 
+    = vector_factory<std::string>(read_file("tests/cpp/test_config/1_fnames_oi.txt"));
+  
+  
 }
