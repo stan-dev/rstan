@@ -152,7 +152,7 @@ std::vector<T> vector_factory(const std::string str) {
 TEST_F(RStan, execute_sampling_1) {
   std::stringstream ss;
 
-  std::string e_args_string = read_file("tests/cpp/test_config/1_stan_args.txt");
+  std::string e_args_string = read_file("tests/cpp/test_config/1_input_stan_args.txt");
   rstan::stan_args args = stan_args_factory(e_args_string);
   args.write_args_as_comment(ss);
   ASSERT_EQ(e_args_string, ss.str());
@@ -161,11 +161,11 @@ TEST_F(RStan, execute_sampling_1) {
   stan::mcmc::sample s(Eigen::VectorXd(model_.num_params_r()), 0, 0);
   
   std::vector<size_t> qoi_idx 
-    = vector_factory<size_t>(read_file("tests/cpp/test_config/1_qoi_idx.txt"));
+    = vector_factory<size_t>(read_file("tests/cpp/test_config/1_input_qoi_idx.txt"));
   std::vector<double> initv 
-    = vector_factory<double>(read_file("tests/cpp/test_config/1_initv.txt"));
+    = vector_factory<double>(read_file("tests/cpp/test_config/1_input_initv.txt"));
   std::vector<std::string> fnames_oi 
-    = vector_factory<std::string>(read_file("tests/cpp/test_config/1_fnames_oi.txt"));
+    = vector_factory<std::string>(read_file("tests/cpp/test_config/1_input_fnames_oi.txt"));
   
   
 }

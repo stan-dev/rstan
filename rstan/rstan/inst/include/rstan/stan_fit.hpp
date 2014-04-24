@@ -481,7 +481,51 @@ namespace rstan {
                                       args.get_ctrl_sampling_adapt_window());
       return true;
     }
- 
+
+    template <class T>
+    std::ostream& print(std::ostream& o, const std::string name, 
+                        const std::vector<T> x) {
+      o << name << " (" << x.size() << ")";
+      if (x.size() > 0) {
+        o << ":" << std::endl 
+          << "  {" << x[0];
+        for (size_t n = 1; n < x.size(); n++) {
+          o << "," << x[n];
+        }
+        o << "}";
+      }
+      o << std::endl;
+      return o;
+    }
+
+    template <class RNG_t>
+    void print_execute_sampling_input(stan_args& args, 
+                                      stan::mcmc::sample& s,
+                                      const std::vector<size_t>& qoi_idx, 
+                                      std::vector<double>& initv,
+                                      const std::vector<std::string>& fnames_oi,
+                                      RNG_t& base_rng) {
+      Rcpp::Rcout << "---------- execute_sampling input ----------" << std::endl;
+      args.write_args_as_comment(Rcpp::Rcout);
+      // Rcpp::Rcout << "s:" << std::endl
+      //             << "  cont_parms(): " << s.cont_params() << std::endl
+      //             << "  log_prob:     " << s.log_prob() << std::endl
+      //             << "  accept_stat:  " << s.accept_stat() << std::endl;
+      print(Rcpp::Rcout, "qoi_idx", qoi_idx);
+      print(Rcpp::Rcout, "initv", initv);
+      print(Rcpp::Rcout, "fnames_oi", fnames_oi);
+      Rcpp::Rcout << "base_rng: " << base_rng << std::endl;
+      Rcpp::Rcout << "--------------------------------------------" << std::endl;
+      return;
+    }
+
+    void print_execute_sampling_output(Rcpp::List& holder) {
+      Rcpp::Rcout << "---------- execute_sampling output ----------" << std::endl
+                  << "holder:" << std::endl;
+      ::Rf_PrintValue(holder);
+      Rcpp::Rcout << "---------------------------------------------" << std::endl;
+    }
+
     template <class Model, class RNG_t> 
     void execute_sampling(stan_args& args, Model& model, Rcpp::List& holder,
                           stan::mcmc::base_mcmc* sampler_ptr, 
@@ -491,6 +535,8 @@ namespace rstan {
                           std::fstream& sample_stream,
                           std::fstream& diagnostic_stream,
                           const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {  
+      print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
+
       int iter_save_i = 0;
       double mean_lp(0);
       std::string adaptation_info;
@@ -578,6 +624,8 @@ namespace rstan {
       slst.erase(outputter.get_index_for_lp());
       holder.attr("sampler_params") = slst;
       holder.names() = fnames_oi;
+
+      print_execute_sampling_output(holder);
     } 
 
 
