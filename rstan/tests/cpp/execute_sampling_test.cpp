@@ -7,7 +7,7 @@
 #include <boost/algorithm/string.hpp>
 
 typedef boost::ecuyer1988 rng_t; // (2**50 = 1T samples, 1000 chains)
-typedef stan::mcmc::adapt_dense_e_nuts<stan_model, rng_t> sampler_t;
+typedef stan::mcmc::adapt_diag_e_nuts<stan_model, rng_t> sampler_t;
 
 class RStan : public ::testing::Test {
 public:
@@ -148,8 +148,144 @@ std::vector<T> vector_factory(const std::string str) {
   return x;
 }
 
+void parse_NumericVector(Rcpp::NumericVector& x, const std::string str) { 
+  size_t start = str.find("]")+1;
+  std::string values = str.substr(start);
+  boost::trim(values);
+  std::vector<std::string> value;
+  boost::split(value, values, boost::is_any_of(" "));
+  
+  for (size_t m = 0; m < value.size(); m++) {
+    double val;
+    std::stringstream(value[m]) >> val;
+    x.push_back(val);
+  }
+}
+
+Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
+  Rcpp::List holder;
+
+  std::vector<std::string> lines;
+  boost::split(lines, str, boost::is_any_of("\n"));
+  
+  for (int n = 0; n < lines.size(); n++) {
+    if (lines[n] == "") {
+      // no-op: skip line
+    } else if (lines[n][0] == '$') {
+      std::string name = lines[n].substr(1);
+      if (name[0] == '`') {
+        name = name.substr(1, name.size()-2);
+      }
+      n++;
+      Rcpp::NumericVector x;
+      while (lines[n] != "") {
+        parse_NumericVector(x, lines[n]);
+        n++;
+      }
+      holder[name] = x;
+    } else if (lines[n].substr(0, 5) == "attr(") {
+      std::vector<std::string> tmp;
+      boost::split(tmp, lines[n], boost::is_any_of("\""));
+      std::string name = tmp[1]; 
+      
+      if (name == "args" || name == "sampler_params") {
+        while (lines[n] != "") 
+          n++;
+        if (name == "args") {
+          holder.attr("args") = args.stan_args_to_rlist();
+        } 
+        if (name == "sampler_params") {
+          Rcpp::List sampler_params;
+          sampler_params["accept_stat__"] = double(1);
+          sampler_params["stepsize__"] = double(0.0625);
+          sampler_params["treedepth__"] = int(1);
+          sampler_params["n_leapfrog__"] = int(1);
+          sampler_params["n_divergent__"] = int(0);
+          holder.attr("sampler_params") = sampler_params;
+        }
+      } else {
+        n++;
+        // NumericVector
+        if (name == "inits" || name == "mean_pars") {
+          Rcpp::NumericVector x;
+          while (lines[n].find("]") != std::string::npos) {
+            parse_NumericVector(x, lines[n]);
+            n++;
+          }
+          n--;
+          holder.attr(name) = x;
+        } else if (name == "test_grad") {  // booleans
+          bool x;          
+          size_t start = lines[n].find("]")+1;
+          std::string value = lines[n].substr(start);
+          boost::trim(value);
+          std::stringstream(value) >> x;
+          
+          holder.attr(name) = value;
+        } else if (name == "mean_lp__") { // doubles
+          double x;
+          size_t start = lines[n].find("]")+1;
+          std::string value = lines[n].substr(start);
+          boost::trim(value);
+          std::stringstream(value) >> x;
+          
+          holder.attr(name) = x;
+        } else if (name == "adaptation_info") { // strings
+          size_t start = lines[n].find("]")+1;
+          std::string value = lines[n].substr(start);
+          boost::trim(value);
+          value = value.substr(1, value.size() - 2);
+          holder.attr(name) = value;
+        } else {
+          std::cout << "attr line: " << std::endl;
+          std::cout << name << " = ";
+          std::cout << "  full line: " << lines[n] << std::endl;
+        }
+      }
+    } 
+  }
+  return holder;
+}
+
+void test_holder(const Rcpp::List e, const Rcpp::List x) { 
+  {
+    ASSERT_EQ(e.size(), x.size());
+    for (size_t n = 0; n < e.size(); n++) {
+      Rcpp::NumericVector e_vec = e[n];
+      Rcpp::NumericVector x_vec = x[n];
+      for (size_t i = 0; i < e_vec.size(); i++) {
+        EXPECT_FLOAT_EQ(e_vec[i], x_vec[i]) 
+          << "the " << n << "th variable, " << i << "th variable is off";
+      }
+    }
+  }
+  {
+    Rcpp::NumericVector e_inits = e.attr("inits");
+    Rcpp::NumericVector x_inits = x.attr("inits");
+    
+    ASSERT_EQ(e_inits.size(), x_inits.size());
+    for (size_t n = 0; n < e_inits.size(); n++)
+      EXPECT_FLOAT_EQ(e_inits[n], x_inits[n]);
+  }
+  {
+    Rcpp::NumericVector e_mean_pars = e.attr("mean_pars");
+    Rcpp::NumericVector x_mean_pars = x.attr("mean_pars");
+    
+    ASSERT_EQ(e_mean_pars.size(), x_mean_pars.size());
+    for (size_t n = 0; n < e_mean_pars.size(); n++)
+      EXPECT_FLOAT_EQ(e_mean_pars[n], x_mean_pars[n]);
+  }
+  {
+    double e_mean_lp__ = e.attr("mean_lp__");
+    double x_mean_lp__ = x.attr("mean_lp__");
+    
+    EXPECT_FLOAT_EQ(e_mean_lp__, x_mean_lp__);
+  }
+
+}
 
 TEST_F(RStan, execute_sampling_1) {
+
   std::stringstream ss;
 
   std::string e_args_string = read_file("tests/cpp/test_config/1_input_stan_args.txt");
@@ -158,7 +294,7 @@ TEST_F(RStan, execute_sampling_1) {
   ASSERT_EQ(e_args_string, ss.str());
   ss.str("");
   
-  stan::mcmc::sample s(Eigen::VectorXd(model_.num_params_r()), 0, 0);
+  stan::mcmc::sample s(Eigen::VectorXd::Zero(model_.num_params_r()), 0, 0);
   
   std::vector<size_t> qoi_idx 
     = vector_factory<size_t>(read_file("tests/cpp/test_config/1_input_qoi_idx.txt"));
@@ -167,5 +303,28 @@ TEST_F(RStan, execute_sampling_1) {
   std::vector<std::string> fnames_oi 
     = vector_factory<std::string>(read_file("tests/cpp/test_config/1_input_fnames_oi.txt"));
   
+  std::string e_holder_string = read_file("tests/cpp/test_config/1_output_holder.txt");
+  Rcpp::List e_holder 
+    = holder_factory(read_file("tests/cpp/test_config/1_output_holder.txt"),
+                     args);
+
+  Rcpp::List holder;
   
+  rstan::init_nuts<sampler_t>(sampler_ptr, args);
+  Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
+  rstan::init_windowed_adapt<sampler_t>(sampler_ptr, args, s.cont_params());
+  
+  
+  std::fstream sample_stream, diagnostic_stream;
+  rstan::execute_sampling(args, model_, holder,
+                          sampler_ptr,
+                          s,
+                          qoi_idx,
+                          initv,
+                          sample_stream,
+                          diagnostic_stream,
+                          fnames_oi,
+                          base_rng);
+  
+  test_holder(e_holder, holder);
 }
