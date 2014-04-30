@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
+#include <stdexcept>
 
 typedef boost::ecuyer1988 rng_t; // (2**50 = 1T samples, 1000 chains)
 typedef stan::mcmc::adapt_diag_e_nuts<stan_model, rng_t> sampler_t;
@@ -65,6 +66,32 @@ std::string read_file(const std::string filename) {
   return "";
 }
 
+template <class T>
+T convert(const std::string& str) {
+  T value;
+  std::istringstream(str) >> value;
+  return value;
+}
+
+template <>
+std::string convert<std::string>(const std::string& str) {
+  if (str[0] != '"')
+    return str;
+  else
+    return str.substr(1, str.size()-2);
+}
+
+template <>
+bool convert<bool>(const std::string& str) {
+  if (str == "TRUE")
+    return true;
+  else if (str == "FALSE")
+    return false;
+  throw std::invalid_argument("not sure what \"" + str + "\" is as a boolean");
+}
+
+
+
 rstan::stan_args stan_args_factory(const std::string& str) {
   Rcpp::List list;
   std::vector<std::string> lines;
@@ -85,15 +112,11 @@ rstan::stan_args stan_args_factory(const std::string& str) {
                  || lhs == "warmup" || lhs == "save_warmup" || lhs == "thin" 
                  || lhs == "refresh" || lhs == "adapt_engaged" || lhs == "max_treedepth" 
                  || lhs == "append_samples") {
-        int int_value;
-        std::istringstream(rhs) >> int_value;
-        list[lhs] = int_value;
+        list[lhs] = convert<int>(rhs);
       } else if (lhs == "stepsize" || lhs == "stepsize_jitter" || lhs == "adapt_gamma"
                  || lhs == "adapt_delta" || lhs == "adapt_kappa" 
                  || lhs == "adapt_t0") {
-        double double_value;
-        std::istringstream(rhs) >> double_value;
-        list[lhs] = double_value;
+        list[lhs] = convert<double>(rhs);
       } else {
         ADD_FAILURE() << "don't know how to handle this line: " << lines[n];
       }
@@ -102,17 +125,6 @@ rstan::stan_args stan_args_factory(const std::string& str) {
   return rstan::stan_args(list);
 }
 
-template <class T>
-T convert(const std::string& str) {
-  T value;
-  std::istringstream(str) >> value;
-  return value;
-}
-
-template <>
-std::string convert(const std::string& str) {
-  return str;
-}
 
 template <class T>
 std::vector<T> vector_factory(const std::string str) {
@@ -162,6 +174,79 @@ void parse_NumericVector(Rcpp::NumericVector& x, const std::string str) {
   }
 }
 
+Rcpp::List read_Rcpp_List(const std::string name, const std::vector<std::string> &lines) {
+  Rcpp::List list;
+  std::vector<bool> attr_lines(lines.size());
+  for (size_t n = 0; n < lines.size(); n++)
+    if (lines[n].substr(0, 5) == "attr(")
+      attr_lines[n] = true;
+    else
+      attr_lines[n] = false;
+  
+  Rcpp::List sublist;
+  std::string sublist_name;
+  bool inside_sublist;
+  for (size_t n = 1; n < lines.size(); n++) {
+    if (n < lines.size()-1 && attr_lines[n] && attr_lines[n+1]) {
+      sublist_name = lines[n].substr(lines[n].find_last_of('$') + 1);
+      sublist = Rcpp::List();
+      n++;
+    }
+    std::string lhs = lines[n].substr(lines[n].find_last_of('$') + 1);
+    inside_sublist = (std::count(lines[n].begin(), lines[n].end(), '$') == 2);
+    n++;
+    std::string rhs = lines[n].substr(lines[n].find_last_of(']') + 1);
+    boost::trim(rhs);
+    
+    if (sublist_name != "" && inside_sublist == false) {
+      list[sublist_name] = sublist;
+      sublist_name = "";
+    }
+    
+    
+    if (sublist_name == "") {
+      if (lhs == "append_samples" || lhs == "test_grad")
+        list[lhs] = convert<bool>(rhs);
+      else if (lhs == "chain_id" || lhs == "iter" || lhs == "refresh" 
+               || lhs == "thin" || lhs == "warmup" || lhs == "treedepth__"
+               || lhs == "n_leapfrog__" || lhs == "n_divergent__")
+        list[lhs] = convert<int>(rhs);
+      else if (lhs == "init" || lhs == "method" || lhs == "random_seed" || lhs == "sampler_t")
+        list[lhs] = convert<std::string>(rhs);
+      else if (lhs == "init_list")
+        ; // this is NULL in the output. Not sure how to get that
+        //list[lhs] = Rcpp::List();
+      else
+        list[lhs] = convert<double>(rhs);
+    } else {
+      if (lhs == "adapt_engaged") 
+        sublist[lhs] = convert<bool>(rhs);
+      else if (lhs == "adapt_init_buffer" || lhs == "adapt_t0" || lhs == "adapt_term_buffer"
+               || lhs == "adapt_window" || lhs == "max_treedepth")
+        sublist[lhs] = convert<int>(rhs);
+      else if (lhs == "metric")
+        sublist[lhs] = convert<std::string>(rhs);
+      else
+        sublist[lhs] = convert<double>(rhs);
+    }
+    
+    while (n < lines.size()-1 && lines[n+1] == "")
+      n++;
+  }
+
+  if (sublist_name != "")
+      list[sublist_name] = sublist;
+  return list;
+}
+
+std::string read_name_from_attr(const std::string str) {
+  std::vector<std::string> tmp;
+  boost::split(tmp, str, boost::is_any_of("\""));
+  std::string name = tmp[1]; 
+  boost::trim(name);
+  return name;
+}
+
 Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
   Rcpp::List holder;
 
@@ -184,14 +269,24 @@ Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
       }
       holder[name] = x;
     } else if (lines[n].substr(0, 5) == "attr(") {
-      std::vector<std::string> tmp;
-      boost::split(tmp, lines[n], boost::is_any_of("\""));
-      std::string name = tmp[1]; 
+      std::string name = read_name_from_attr(lines[n]);
       
       if (name == "args" || name == "sampler_params") {
-        while (lines[n] != "") 
+        std::vector<std::string> subsection;
+        std::string next_name = name;
+        while (next_name == name) {
+          subsection.push_back(lines[n]);
           n++;
-        if (name == "args") {
+          if (n == lines.size())
+            break;
+          if (lines[n].substr(0, 5) == "attr(") {
+            next_name = read_name_from_attr(lines[n]);
+          }
+        }
+        n--;
+        Rcpp::List x = read_Rcpp_List(name, subsection);
+        holder.attr(name) = x;
+        /*if (name == "args") {
           holder.attr("args") = args.stan_args_to_rlist();
         } 
         if (name == "sampler_params") {
@@ -202,7 +297,7 @@ Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
           sampler_params["n_leapfrog__"] = int(1);
           sampler_params["n_divergent__"] = int(0);
           holder.attr("sampler_params") = sampler_params;
-        }
+          }*/
       } else {
         n++;
         // NumericVector
@@ -326,5 +421,5 @@ TEST_F(RStan, execute_sampling_1) {
                           fnames_oi,
                           base_rng);
   
-  test_holder(e_holder, holder);
+                          test_holder(e_holder, holder);
 }
