@@ -19,14 +19,18 @@ public:
       model_(data_context_, &std::cout),
       sample_stream(),
       diagnostic_stream(),
-      base_rng(123U),
-      sampler_ptr(new sampler_t(model_, base_rng, 
-                                &rstan::io::rcout, &rstan::io::rcerr)) { 
+      base_rng1(123U),
+      base_rng2(1234U),
+      sampler_ptr1(new sampler_t(model_, base_rng1, 
+                                 &rstan::io::rcout, &rstan::io::rcerr)),
+      sampler_ptr2(new sampler_t(model_, base_rng2, 
+                                 &rstan::io::rcout, &rstan::io::rcerr)) { 
     data_stream_.close();
   }
 
   ~RStan() {
-    delete sampler_ptr;
+    delete sampler_ptr1;
+    delete sampler_ptr2;
   }
 
   static void SetUpTestCase() { 
@@ -48,8 +52,10 @@ public:
   stan_model model_;
   std::fstream sample_stream;
   std::fstream diagnostic_stream;
-  rng_t base_rng;
-  sampler_t* sampler_ptr;
+  rng_t base_rng1;
+  rng_t base_rng2;
+  sampler_t* sampler_ptr1;
+  sampler_t* sampler_ptr2;
 };
 
 std::string read_file(const std::string filename) {
@@ -168,9 +174,11 @@ void parse_NumericVector(Rcpp::NumericVector& x, const std::string str) {
   boost::split(value, values, boost::is_any_of(" "));
   
   for (size_t m = 0; m < value.size(); m++) {
-    double val;
-    std::stringstream(value[m]) >> val;
-    x.push_back(val);
+    if (value[m] != "") {
+      double val;
+      std::stringstream(value[m]) >> val;
+      x.push_back(val);
+    }
   }
 }
 
@@ -207,9 +215,17 @@ Rcpp::List read_Rcpp_List(const std::string name, const std::vector<std::string>
     if (sublist_name == "") {
       if (lhs == "append_samples" || lhs == "test_grad")
         list[lhs] = convert<bool>(rhs);
+      else if (lhs == "accept_stat__" || lhs == "stepsize__" || lhs == "treedepth__" 
+               || lhs == "n_leapfrog__" || lhs == "n_divergent__") {
+        Rcpp::NumericVector vec;
+        while (lines[n] != "") {
+          parse_NumericVector(vec, lines[n]);
+          n++;
+        }
+        list[lhs] = vec;
+      }
       else if (lhs == "chain_id" || lhs == "iter" || lhs == "refresh" 
-               || lhs == "thin" || lhs == "warmup" || lhs == "treedepth__"
-               || lhs == "n_leapfrog__" || lhs == "n_divergent__")
+               || lhs == "thin" || lhs == "warmup")
         list[lhs] = convert<int>(rhs);
       else if (lhs == "init" || lhs == "method" || lhs == "random_seed" || lhs == "sampler_t")
         list[lhs] = convert<std::string>(rhs);
@@ -264,6 +280,7 @@ Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
       n++;
       Rcpp::NumericVector x;
       while (lines[n] != "") {
+        std::cout << "x.size() " << x.size() << std::endl;        
         parse_NumericVector(x, lines[n]);
         n++;
       }
@@ -376,8 +393,49 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
     
     EXPECT_FLOAT_EQ(e_mean_lp__, x_mean_lp__);
   }
+  /*{
+    std::string e_adaptation_info = e.attr("adaptation_info");
+    std::string x_adaptation_info = x.attr("adaptation_info");
+    
+    EXPECT_EQ(e_adaptation_info, x_adaptation_info);
+    }*/
+  {
+    Rcpp::List e_sampler_params = e.attr("sampler_params");
+    Rcpp::List x_sampler_params = x.attr("sampler_params");
+    
+    Rcpp::NumericVector e_accept_stat__ = e_sampler_params["accept_stat__"];
+    Rcpp::NumericVector x_accept_stat__ = x_sampler_params["accept_stat__"];
+    ASSERT_EQ(e_accept_stat__.size(), x_accept_stat__.size());
+    for (size_t n = 0; n < e_accept_stat__.size(); n++)
+      EXPECT_NEAR(e_accept_stat__[n], x_accept_stat__[n], 1e-7);
 
+    Rcpp::NumericVector e_stepsize__ = e_sampler_params["stepsize__"];
+    Rcpp::NumericVector x_stepsize__ = x_sampler_params["stepsize__"];
+    ASSERT_EQ(e_stepsize__.size(), x_stepsize__.size());
+    for (size_t n = 0; n < e_stepsize__.size(); n++)
+      EXPECT_FLOAT_EQ(e_stepsize__[n], x_stepsize__[n]);
+
+    Rcpp::NumericVector e_treedepth__ = e_sampler_params["treedepth__"];
+    Rcpp::NumericVector x_treedepth__ = x_sampler_params["treedepth__"];
+    ASSERT_EQ(e_treedepth__.size(), x_treedepth__.size());
+    for (size_t n = 0; n < e_treedepth__.size(); n++)
+      EXPECT_FLOAT_EQ(e_treedepth__[n], x_treedepth__[n]);
+
+    Rcpp::NumericVector e_n_leapfrog__ = e_sampler_params["n_leapfrog__"];
+    Rcpp::NumericVector x_n_leapfrog__ = x_sampler_params["n_leapfrog__"];
+    ASSERT_EQ(e_n_leapfrog__.size(), x_n_leapfrog__.size());
+    for (size_t n = 0; n < e_n_leapfrog__.size(); n++)
+      EXPECT_FLOAT_EQ(e_n_leapfrog__[n], x_n_leapfrog__[n]);
+
+    Rcpp::NumericVector e_n_divergent__ = e_sampler_params["n_divergent__"];
+    Rcpp::NumericVector x_n_divergent__ = x_sampler_params["n_divergent__"];
+    ASSERT_EQ(e_n_divergent__.size(), x_n_divergent__.size());
+    for (size_t n = 0; n < e_n_divergent__.size(); n++)
+      EXPECT_FLOAT_EQ(e_n_divergent__[n], x_n_divergent__[n]);
+  }
 }
+
+
 
 TEST_F(RStan, execute_sampling_1) {
 
@@ -405,21 +463,68 @@ TEST_F(RStan, execute_sampling_1) {
 
   Rcpp::List holder;
   
-  rstan::init_nuts<sampler_t>(sampler_ptr, args);
+  rstan::init_nuts<sampler_t>(sampler_ptr1, args);
   Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
-  rstan::init_windowed_adapt<sampler_t>(sampler_ptr, args, s.cont_params());
+  rstan::init_windowed_adapt<sampler_t>(sampler_ptr1, args, s.cont_params());
   
   
   std::fstream sample_stream, diagnostic_stream;
   rstan::execute_sampling(args, model_, holder,
-                          sampler_ptr,
+                          sampler_ptr1,
                           s,
                           qoi_idx,
                           initv,
                           sample_stream,
                           diagnostic_stream,
                           fnames_oi,
-                          base_rng);
+                          base_rng1);
   
                           test_holder(e_holder, holder);
+}
+
+
+TEST_F(RStan, execute_sampling_2) {
+  std::stringstream ss;
+
+  std::string e_args_string = read_file("tests/cpp/test_config/2_input_stan_args.txt");
+  rstan::stan_args args = stan_args_factory(e_args_string);
+  args.write_args_as_comment(ss);
+  ASSERT_EQ(e_args_string, ss.str());
+  ss.str("");
+  
+  stan::mcmc::sample s(Eigen::VectorXd::Zero(model_.num_params_r()), 0, 0);
+  
+  std::vector<size_t> qoi_idx 
+    = vector_factory<size_t>(read_file("tests/cpp/test_config/2_input_qoi_idx.txt"));
+  std::vector<double> initv 
+    = vector_factory<double>(read_file("tests/cpp/test_config/2_input_initv.txt"));
+  std::vector<std::string> fnames_oi 
+    = vector_factory<std::string>(read_file("tests/cpp/test_config/2_input_fnames_oi.txt"));
+  
+  std::string e_holder_string = read_file("tests/cpp/test_config/2_output_holder.txt");
+  Rcpp::List e_holder 
+    = holder_factory(read_file("tests/cpp/test_config/2_output_holder.txt"),
+                     args);
+
+  Rcpp::List holder;
+  
+  rstan::init_nuts<sampler_t>(sampler_ptr2, args);
+  Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
+  rstan::init_windowed_adapt<sampler_t>(sampler_ptr2, args, s.cont_params());
+  
+  
+  std::fstream sample_stream, diagnostic_stream;
+  rstan::execute_sampling(args, model_, holder,
+                          sampler_ptr2,
+                          s,
+                          qoi_idx,
+                          initv,
+                          sample_stream,
+                          diagnostic_stream,
+                          fnames_oi,
+                          base_rng2);
+  
+  
+  
+  test_holder(e_holder, holder);
 }
