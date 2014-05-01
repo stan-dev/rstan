@@ -280,7 +280,6 @@ Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
       n++;
       Rcpp::NumericVector x;
       while (lines[n] != "") {
-        std::cout << "x.size() " << x.size() << std::endl;        
         parse_NumericVector(x, lines[n]);
         n++;
       }

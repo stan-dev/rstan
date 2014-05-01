@@ -535,7 +535,7 @@ namespace rstan {
                           std::fstream& sample_stream,
                           std::fstream& diagnostic_stream,
                           const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {  
-      print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
+      //print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
 
       int iter_save_i = 0;
       double mean_lp(0);
@@ -625,7 +625,7 @@ namespace rstan {
       holder.attr("sampler_params") = slst;
       holder.names() = fnames_oi;
 
-      print_execute_sampling_output(holder);
+      //print_execute_sampling_output(holder);
     } 
 
 
