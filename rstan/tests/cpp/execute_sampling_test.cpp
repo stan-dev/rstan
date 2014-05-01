@@ -406,35 +406,35 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
     Rcpp::List e_sampler_params = e.attr("sampler_params");
     Rcpp::List x_sampler_params = x.attr("sampler_params");
     
-    ASSERT_TRUE(x_sampler_params.attr("accept_stat__") != R_NilValue);
+    ASSERT_TRUE(x_sampler_params["accept_stat__"] != R_NilValue);
     Rcpp::NumericVector e_accept_stat__ = e_sampler_params["accept_stat__"];
     Rcpp::NumericVector x_accept_stat__ = x_sampler_params["accept_stat__"];
     ASSERT_EQ(e_accept_stat__.size(), x_accept_stat__.size());
     for (size_t n = 0; n < e_accept_stat__.size(); n++)
       EXPECT_NEAR(e_accept_stat__[n], x_accept_stat__[n], 1e-7);
 
-    ASSERT_TRUE(x_sampler_params.attr("stepsize__") != R_NilValue);
+    ASSERT_TRUE(x_sampler_params["stepsize__"] != R_NilValue);
     Rcpp::NumericVector e_stepsize__ = e_sampler_params["stepsize__"];
     Rcpp::NumericVector x_stepsize__ = x_sampler_params["stepsize__"];
     ASSERT_EQ(e_stepsize__.size(), x_stepsize__.size());
     for (size_t n = 0; n < e_stepsize__.size(); n++)
       EXPECT_FLOAT_EQ(e_stepsize__[n], x_stepsize__[n]);
 
-    ASSERT_TRUE(x_sampler_params.attr("treedepth__") != R_NilValue);
+    ASSERT_TRUE(x_sampler_params["treedepth__"] != R_NilValue);
     Rcpp::NumericVector e_treedepth__ = e_sampler_params["treedepth__"];
     Rcpp::NumericVector x_treedepth__ = x_sampler_params["treedepth__"];
     ASSERT_EQ(e_treedepth__.size(), x_treedepth__.size());
     for (size_t n = 0; n < e_treedepth__.size(); n++)
       EXPECT_FLOAT_EQ(e_treedepth__[n], x_treedepth__[n]);
 
-    ASSERT_TRUE(x_sampler_params.attr("n_leapfrog__") != R_NilValue);
+    ASSERT_TRUE(x_sampler_params["n_leapfrog__"] != R_NilValue);
     Rcpp::NumericVector e_n_leapfrog__ = e_sampler_params["n_leapfrog__"];
     Rcpp::NumericVector x_n_leapfrog__ = x_sampler_params["n_leapfrog__"];
     ASSERT_EQ(e_n_leapfrog__.size(), x_n_leapfrog__.size());
     for (size_t n = 0; n < e_n_leapfrog__.size(); n++)
       EXPECT_FLOAT_EQ(e_n_leapfrog__[n], x_n_leapfrog__[n]);
 
-    ASSERT_TRUE(x_sampler_params.attr("n_divergent__") != R_NilValue);
+    ASSERT_TRUE(x_sampler_params["n_divergent__"] != R_NilValue);
     Rcpp::NumericVector e_n_divergent__ = e_sampler_params["n_divergent__"];
     Rcpp::NumericVector x_n_divergent__ = x_sampler_params["n_divergent__"];
     ASSERT_EQ(e_n_divergent__.size(), x_n_divergent__.size());
@@ -491,7 +491,7 @@ TEST_F(RStan, execute_sampling_1) {
 }
 
 
-TEST_F(RStan, DISABLED_execute_sampling_2) {
+TEST_F(RStan, execute_sampling_2) {
   std::stringstream ss;
 
   std::string e_args_string = read_file("tests/cpp/test_config/2_input_stan_args.txt");
