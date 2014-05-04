@@ -389,6 +389,7 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
       EXPECT_FLOAT_EQ(e_mean_pars[n], x_mean_pars[n]);
   }
   {
+    ASSERT_TRUE(x.attr("mean_lp__") != R_NilValue);
     double e_mean_lp__ = e.attr("mean_lp__");
     double x_mean_lp__ = x.attr("mean_lp__");
     
@@ -405,6 +406,8 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
     ASSERT_TRUE(x.attr("sampler_params") != R_NilValue);
     Rcpp::List e_sampler_params = e.attr("sampler_params");
     Rcpp::List x_sampler_params = x.attr("sampler_params");
+    
+    ASSERT_EQ(e_sampler_params.size(), x_sampler_params.size());
     
     ASSERT_TRUE(x_sampler_params["accept_stat__"] != R_NilValue);
     Rcpp::NumericVector e_accept_stat__ = e_sampler_params["accept_stat__"];
