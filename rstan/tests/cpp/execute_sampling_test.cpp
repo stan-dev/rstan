@@ -380,7 +380,8 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
     
     ASSERT_EQ(e_mean_pars.size(), x_mean_pars.size());
     for (size_t n = 0; n < e_mean_pars.size(); n++)
-      EXPECT_FLOAT_EQ(e_mean_pars[n], x_mean_pars[n]);
+      EXPECT_FLOAT_EQ(e_mean_pars[n], x_mean_pars[n]) 
+        << "n = " << n;
   }
   {
     ASSERT_TRUE(x.attr("mean_lp__") != R_NilValue);

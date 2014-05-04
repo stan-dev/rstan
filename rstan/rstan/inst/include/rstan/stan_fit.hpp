@@ -560,7 +560,6 @@ namespace rstan {
       
       model.unconstrained_param_names(model_unconstrained_param_names, false, false);
       
-      std::vector<std::string> s_diagnostic_names;
       sampler_ptr->get_sampler_diagnostic_names(model_unconstrained_param_names, 
                                                 sampler_diagnostic_names);
 
@@ -672,10 +671,32 @@ namespace rstan {
            interruptCallback);
         
         end = clock();
-        double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
-        
+        double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;        
         writer.write_timing(warmDeltaT, sampleDeltaT);
 
+        if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
+          for (size_t n = 0; n < diagnostic_recorder.recorder2_.x()[0].size(); n++)
+            mean_lp += diagnostic_recorder.recorder2_.x()[0][n];
+          mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
+          
+          size_t offset = sample_names.size() + sampler_names.size();
+          std::vector<double> cont_vector(mean_pars.size());
+          std::vector<int> disc_vector(0);
+          std::vector<double> pars;
+          for (size_t n = 0; n < args.get_ctrl_sampling_iter_save(); n++) {
+            for (size_t m = 0; m < mean_pars.size(); m++) {
+              cont_vector[m] = diagnostic_recorder.recorder2_.x()[offset + m][n];
+            }
+            model.write_array(base_rng, cont_vector, disc_vector,
+                              pars, true, true, &Rcpp::Rcout);
+            for (size_t m = 0; m < mean_pars.size(); m++) {
+              mean_pars[m] += pars[m];
+            }
+          }
+          for (size_t m = 0; m < mean_pars.size(); m++) {
+            mean_pars[m] /= args.get_ctrl_sampling_iter_save_wo_warmup();
+          }
+        }
 
         if (args.get_sample_file_flag()) {
           rstan::io::rcout << "Sample of chain " 
@@ -718,7 +739,7 @@ namespace rstan {
         holder.names() = fnames_oi;
 
       } else {
-        //print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
+        print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
 
         int iter_save_i = 0;
         double mean_lp(0);
@@ -808,8 +829,7 @@ namespace rstan {
         holder.attr("sampler_params") = slst;
         holder.names() = fnames_oi;
         
-        ::Rf_PrintValue(slst);
-        //print_execute_sampling_output(holder);
+        print_execute_sampling_output(holder);
       }
     } 
 
