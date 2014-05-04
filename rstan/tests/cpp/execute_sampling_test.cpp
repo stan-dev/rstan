@@ -21,16 +21,20 @@ public:
       diagnostic_stream(),
       base_rng1(123U),
       base_rng2(1234U),
+      base_rng3(1234U),
       sampler_ptr1(new sampler_t(model_, base_rng1, 
                                  &rstan::io::rcout, &rstan::io::rcerr)),
       sampler_ptr2(new sampler_t(model_, base_rng2, 
-                                 &rstan::io::rcout, &rstan::io::rcerr)) { 
+                                 &rstan::io::rcout, &rstan::io::rcerr)),
+    sampler_ptr3(new sampler_t(model_, base_rng3, 
+                               &rstan::io::rcout, &rstan::io::rcerr)) { 
     data_stream_.close();
   }
 
   ~RStan() {
     delete sampler_ptr1;
     delete sampler_ptr2;
+    delete sampler_ptr3;
   }
 
   static void SetUpTestCase() { 
@@ -54,8 +58,10 @@ public:
   std::fstream diagnostic_stream;
   rng_t base_rng1;
   rng_t base_rng2;
+  rng_t base_rng3;
   sampler_t* sampler_ptr1;
   sampler_t* sampler_ptr2;
+  sampler_t* sampler_ptr3;
 };
 
 std::string read_file(const std::string filename) {
@@ -302,18 +308,6 @@ Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
         n--;
         Rcpp::List x = read_Rcpp_List(name, subsection);
         holder.attr(name) = x;
-        /*if (name == "args") {
-          holder.attr("args") = args.stan_args_to_rlist();
-        } 
-        if (name == "sampler_params") {
-          Rcpp::List sampler_params;
-          sampler_params["accept_stat__"] = double(1);
-          sampler_params["stepsize__"] = double(0.0625);
-          sampler_params["treedepth__"] = int(1);
-          sampler_params["n_leapfrog__"] = int(1);
-          sampler_params["n_divergent__"] = int(0);
-          holder.attr("sampler_params") = sampler_params;
-          }*/
       } else {
         n++;
         // NumericVector
@@ -377,7 +371,7 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
     
     ASSERT_EQ(e_inits.size(), x_inits.size());
     for (size_t n = 0; n < e_inits.size(); n++)
-      EXPECT_FLOAT_EQ(e_inits[n], x_inits[n]);
+      EXPECT_NEAR(e_inits[n], x_inits[n], 1e-4);
   }
   {
     ASSERT_TRUE(x.attr("mean_pars") != R_NilValue);
@@ -515,6 +509,62 @@ TEST_F(RStan, execute_sampling_2) {
   std::string e_holder_string = read_file("tests/cpp/test_config/2_output_holder.txt");
   Rcpp::List e_holder 
     = holder_factory(read_file("tests/cpp/test_config/2_output_holder.txt"),
+                     args);
+
+  Rcpp::List holder;
+  
+  rstan::init_nuts<sampler_t>(sampler_ptr2, args);
+  Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
+  rstan::init_windowed_adapt<sampler_t>(sampler_ptr2, args, s.cont_params());
+  
+  
+  std::fstream sample_stream, diagnostic_stream;
+  rstan::execute_sampling(args, model_, holder,
+                          sampler_ptr2,
+                          s,
+                          qoi_idx,
+                          initv,
+                          sample_stream,
+                          diagnostic_stream,
+                          fnames_oi,
+                          base_rng2);
+  
+  
+  
+  test_holder(e_holder, holder);
+}
+
+TEST_F(RStan, execute_sampling_3) {
+  std::stringstream ss;
+
+  std::string e_args_string = read_file("tests/cpp/test_config/3_input_stan_args.txt");
+  rstan::stan_args args = stan_args_factory(e_args_string);
+  args.write_args_as_comment(ss);
+  ASSERT_EQ(e_args_string, ss.str());
+  ss.str("");
+
+  double r = args.get_init_radius();
+  boost::random::uniform_real_distribution<double> 
+    init_range_distribution(-r, r);
+  boost::variate_generator<rng_t&, boost::random::uniform_real_distribution<double> >
+    init_rng(base_rng3,init_range_distribution);
+  Eigen::VectorXd cont_params(model_.num_params_r());
+  for (size_t i = 0; i < cont_params.size(); ++i)
+    cont_params[i] = init_rng();
+  
+  stan::mcmc::sample s(cont_params, 0, 0);
+  
+  
+  std::vector<size_t> qoi_idx 
+    = vector_factory<size_t>(read_file("tests/cpp/test_config/3_input_qoi_idx.txt"));
+  std::vector<double> initv 
+    = vector_factory<double>(read_file("tests/cpp/test_config/3_input_initv.txt"));
+  std::vector<std::string> fnames_oi 
+    = vector_factory<std::string>(read_file("tests/cpp/test_config/3_input_fnames_oi.txt"));
+  
+  std::string e_holder_string = read_file("tests/cpp/test_config/3_output_holder.txt");
+  Rcpp::List e_holder 
+    = holder_factory(read_file("tests/cpp/test_config/3_output_holder.txt"),
                      args);
 
   Rcpp::List holder;
