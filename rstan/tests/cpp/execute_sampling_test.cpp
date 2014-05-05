@@ -26,7 +26,7 @@ public:
                                  &rstan::io::rcout, &rstan::io::rcerr)),
       sampler_ptr2(new sampler_t(model_, base_rng2, 
                                  &rstan::io::rcout, &rstan::io::rcerr)),
-    sampler_ptr3(new sampler_t(model_, base_rng3, 
+    sampler_ptr3(new sampler_t(model_, base_rng3,
                                &rstan::io::rcout, &rstan::io::rcerr)) { 
     data_stream_.close();
   }
@@ -237,7 +237,7 @@ Rcpp::List read_Rcpp_List(const std::string name, const std::vector<std::string>
         list[lhs] = convert<std::string>(rhs);
       else if (lhs == "init_list")
         ; // this is NULL in the output. Not sure how to get that
-        //list[lhs] = Rcpp::List();
+      //list[lhs] = Rcpp::List();
       else
         list[lhs] = convert<double>(rhs);
     } else {
@@ -257,7 +257,7 @@ Rcpp::List read_Rcpp_List(const std::string name, const std::vector<std::string>
   }
 
   if (sublist_name != "")
-      list[sublist_name] = sublist;
+    list[sublist_name] = sublist;
   return list;
 }
 
@@ -340,6 +340,7 @@ Rcpp::List holder_factory(const std::string str, const rstan::stan_args args) {
           std::string value = lines[n].substr(start);
           boost::trim(value);
           value = value.substr(1, value.size() - 2);
+          boost::replace_all(value, "\\n", "\n");
           holder.attr(name) = value;
         } else {
           std::cout << "attr line: " << std::endl;
@@ -390,13 +391,13 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
     
     EXPECT_FLOAT_EQ(e_mean_lp__, x_mean_lp__);
   }
-  /*{
+  {
     ASSERT_TRUE(x.attr("adaptation_info") != R_NilValue);
     std::string e_adaptation_info = e.attr("adaptation_info");
     std::string x_adaptation_info = x.attr("adaptation_info");
     
     EXPECT_EQ(e_adaptation_info, x_adaptation_info);
-    }*/
+  }
   {
     ASSERT_TRUE(x.attr("sampler_params") != R_NilValue);
     Rcpp::List e_sampler_params = e.attr("sampler_params");

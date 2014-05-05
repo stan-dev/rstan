@@ -580,7 +580,7 @@ namespace rstan {
                           std::fstream& sample_stream,
                           std::fstream& diagnostic_stream,
                           const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {  
-      bool use_new_code = true;
+      bool use_new_code = false;
       if (use_new_code) {
         size_t sample_recorder_size, sample_recorder_offset, diagnostic_recorder_size;
         std::vector<std::string> sample_names;
@@ -652,9 +652,16 @@ namespace rstan {
         
         clock_t end = clock();
         double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
+        std::string adaptation_info;
         if (args.get_ctrl_sampling_adapt_engaged()) {
           dynamic_cast<stan::mcmc::base_adapter*>(sampler_ptr)->disengage_adaptation();
           writer.write_adapt_finish(sampler_ptr);
+
+          std::stringstream ss;
+          stan::common::recorder::messages info(&ss, "# ");
+          writer.write_adapt_finish(sampler_ptr, info);
+          adaptation_info = ss.str();
+          adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
         }
         
         // Sampling
@@ -715,7 +722,6 @@ namespace rstan {
         holder.attr("inits") = initv; 
         holder.attr("mean_pars") = mean_pars; 
         holder.attr("mean_lp__") = mean_lp; 
-        std::string adaptation_info;
         holder.attr("adaptation_info") = adaptation_info;
         
         std::vector<Rcpp::NumericVector> sampler_parameters;
@@ -739,7 +745,7 @@ namespace rstan {
         holder.names() = fnames_oi;
 
       } else {
-        print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
+        //print_execute_sampling_input(args, s, qoi_idx, initv, fnames_oi, base_rng);
 
         int iter_save_i = 0;
         double mean_lp(0);
@@ -829,7 +835,7 @@ namespace rstan {
         holder.attr("sampler_params") = slst;
         holder.names() = fnames_oi;
         
-        print_execute_sampling_output(holder);
+        //print_execute_sampling_output(holder);
       }
     } 
 
