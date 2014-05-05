@@ -1248,8 +1248,8 @@ namespace rstan {
     SEXP constrained_param_names(SEXP include_tparams, SEXP include_gqs) {
       BEGIN_RCPP
       std::vector<std::string> n;
-      model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams), 
-                                       Rcpp::as<bool>(include_gqs));
+      model_.constrained_param_names(n, Rcpp::as<bool>(include_tparams), 
+                                     Rcpp::as<bool>(include_gqs));
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(n));
       UNPROTECT(1);

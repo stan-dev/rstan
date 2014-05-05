@@ -69,6 +69,7 @@ help:
 	@echo ' tmpstanlib: use Boost bcp to strip boost'
 	@echo ' example_csv: create CSV files included in the package for examples'
 	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, and RUnit'
+	@echo ' test-cpp: to compile c++ code directly (for dev)'
 	@echo '--------------------------------------------------------------------------------'
 
 install_pre_rpkg:

@@ -114,14 +114,14 @@ setMethod("optimizing", "stanmodel",
               gr <- function(theta) {
                 sampler$grad_log_prob(theta, FALSE)
               }
-              theta <- relist(optim$par, skeleton)
+              theta <- rstan_relist(optim$par, skeleton)
               theta <- sampler$unconstrain_pars(theta)
               optim$hessian <- optimHess(theta, fn, gr,
                                          control = list(fnscale = -1))
               colnames(optim$hessian) <- rownames(optim$hessian) <- 
                 sampler$unconstrained_param_names(FALSE, FALSE)
             }
-            if (!as_vector) optim$par <- relist(optim$par, skeleton)
+            if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             invisible(optim)
           }) 
 
@@ -137,7 +137,6 @@ setMethod("sampling", "stanmodel",
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-
             if (check_data) { 
               # allow data to be specified as a vector of character string 
               if (is.character(data)) {
@@ -216,7 +215,7 @@ setMethod("sampling", "stanmodel",
             idx_wo_lp <- which(m_pars != 'lp__')
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
-                                function(y) relist(y, skeleton))
+                                function(y) rstan_relist(y, skeleton))
 
             # test_gradient mode: no sample 
             if (attr(samples[[1]], 'test_grad')) {

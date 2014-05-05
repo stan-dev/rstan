@@ -26,7 +26,7 @@
           "# comment line 6",
           "not comments #comment line 7",
           "not comments at the end of file")
-  cat(file = 'cc.csv', paste(cc, collapse = '\n'))
+  cat(file = 'cc.csv', paste(cc, collapse = '\n'), "\n")
 } 
 
 test_get_model_strcode <- function() {
@@ -267,6 +267,14 @@ test_mklist <- function() {
   d <- rstan:::mklist(c("x", "y", "z"))
   checkTrue(identical(c, d))
   checkException(rstan:::mklist(c("x", "f")))
+
+  p <- 4
+  fun <- function() {
+    p <- 3
+    rstan:::mklist('p')
+  } 
+  checkEquals(fun()$p, 3, checkNames = FALSE )
+  checkEquals(rstan:::mklist('p')$p, 4, checkNames = FALSE)
 } 
 
 test_makeconf_path <- function() {
@@ -362,17 +370,19 @@ test_dotfnames_fromto_sqrfnames <- function() {
 }
 
 test_par_vector2list <- function() {
-  v <- c(2.3, 3.4, 4.5, (1:8)/9); 
-  pars <- c('alpha', 'beta', 'gamma')
-  dims <- list(integer(0), c(2), c(2, 4))
-  vl <- relist(v, rstan:::create_skeleton(pars, dims))
+  v <- c(2.3, 3.4, 4.5, (1:8)/9, 3.1415); 
+  pars <- c('alpha', 'beta', 'gamma', 'delta')
+  dims <- list(integer(0), c(2), c(2, 4), 1)
+  vl <- rstan:::rstan_relist(v, rstan:::create_skeleton(pars, dims))
   alpha <- 2.3  
-  beta <- v[2:3]
+  beta <- array(v[2:3], dim = 2)
   gamma <- array(v[4:11], dim = c(2, 4))
-  checkEquals(length(vl), 3)
+  delta <- array(v[12], dim = 1)
+  checkEquals(length(vl), 4)
   checkEquals(vl[[1]], alpha)
   checkEquals(vl[[2]], beta)
   checkEquals(vl[[3]], gamma)
+  checkEquals(vl[[4]], delta)
 } 
 
 test_remove_empty_pars <- function() {
