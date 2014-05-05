@@ -665,8 +665,6 @@ namespace rstan {
           if (!boost::math::isfinite(init_grad[i])) 
             throw std::runtime_error("Error during initialization with 0: divergent gradient.");
         }
-        Rcpp::Rcout << "Inside sampler_command, init_val == \"0\", base_rng looks like: " 
-                    << base_rng << std::endl;
       } else if (init_val == "user") {
         try { 
           rstan::io::rlist_ref_var_context init_var_context(args.get_init_list()); 
@@ -729,9 +727,6 @@ namespace rstan {
       // keep a record of the initial values 
       std::vector<double> initv;
       model.write_array(base_rng,cont_vector,disc_vector,initv); 
-
-      Rcpp::Rcout << "--- Inside sampler_command, after model.write_array(): " 
-                  << base_rng << std::endl;
 
       if (TEST_GRADIENT == args.get_method()) {
         rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
@@ -1085,25 +1080,10 @@ namespace rstan {
           break;
         }
         case 111: {
-          Rcpp::Rcout << "*** Inside sampler, adapt_diag_e_nuts: " 
-                      << base_rng << std::endl;
-
           typedef stan::mcmc::adapt_diag_e_nuts<Model, RNG_t> sampler_t;
           sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
-          Rcpp::Rcout << "*** created sampler: "
-                      << base_rng << std::endl;
-
           init_nuts<sampler_t>(&sampler, args);
-
-          Rcpp::Rcout << "*** after init_nuts: "
-                      << base_rng << std::endl;
-
-
           init_windowed_adapt<sampler_t>(&sampler, args, cont_params);
-
-          Rcpp::Rcout << "*** after init_windowed_adapt: "
-                      << base_rng << std::endl;
-          
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
