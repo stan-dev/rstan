@@ -23,16 +23,25 @@ parse_stancsv_comments <- function(comments) {
 
   adapt_term_lineno <- which(grepl("Adaptation terminated", comments))
   time_lineno <- which(grepl("Elapsed Time", comments))
+  has_time <- length(time_lineno) > 0
   len <- length(comments)
   if (length(adapt_term_lineno) < 1) 
     adapt_term_lineno <- len
-  if (length(time_lineno) < 1) {
-    stop("line with \"Elapsed Time\" not found")
-  }
+  if (length(time_lineno) < 1)
+    warning("line with \"Elapsed Time\" not found")
 
-  if (adapt_term_lineno == len) adaptation_info <- ''
-  else adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
-  time_info <- comments[time_lineno:len]
+  if (adapt_term_lineno == len)
+    adaptation_info <- ''
+  else {
+    if (has_time)
+      adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
+    else
+      adaptation_info <- paste(comments[(adapt_term_lineno+1):len], collapse = '\n')
+  }
+  if (has_time)
+    time_info <- comments[time_lineno:len]
+  else
+    time_info <- ''
   comments <- comments[1:(adapt_term_lineno - 1)]
 
   has_eq <- sapply(comments, function(i) grepl('=', i))
