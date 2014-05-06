@@ -9,6 +9,8 @@ compiler:
 env:
   global:
     - BOOTSTRAP_LATEX="1"
+    # - STAN_BRANCH="origin/develop"
+    - STAN_BRANCH="origin/feature/refactor-common-run_markov_chain"
   matrix: 
     - CXX_OLEVEL=0 RCPP_VER=cran
     - CXX_OLEVEL=3 RCPP_VER=cran
@@ -32,7 +34,7 @@ install:
   - ccache --max-size 8G
 
 before_script: 
-  - cd stan && git fetch && git checkout origin/develop && cd ..
+  - cd stan && git fetch && git checkout ${STAN_BRANCH} && cd ..
   - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
