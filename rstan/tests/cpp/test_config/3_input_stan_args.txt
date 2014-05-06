@@ -1,0 +1,19 @@
+# init=random
+# seed=1234
+# chain_id=1
+# iter=1
+# warmup=0
+# save_warmup=1
+# thin=1
+# refresh=1
+# stepsize=1
+# stepsize_jitter=0
+# adapt_engaged=1
+# adapt_gamma=0.05
+# adapt_delta=0.8
+# adapt_kappa=0.75
+# adapt_t0=10
+# max_treedepth=10
+# sampler_t=NUTS(diag_e)
+# append_samples=0
+#

@@ -1,0 +1,252 @@
+$d
+[1] 0.005992338
+
+$sigmasq_delta
+[1] 1.012008
+
+$`mu[1]`
+[1] -0.1237995
+
+$`mu[2]`
+[1] -0.1032616
+
+$`mu[3]`
+[1] -0.1564586
+
+$`mu[4]`
+[1] -2.524306
+
+$`mu[5]`
+[1] -0.5416894
+
+$`mu[6]`
+[1] -0.1339686
+
+$`mu[7]`
+[1] -1.321208
+
+$`mu[8]`
+[1] -0.8325832
+
+$`mu[9]`
+[1] -0.3199866
+
+$`mu[10]`
+[1] -3.072587
+
+$`mu[11]`
+[1] -1.14461
+
+$`mu[12]`
+[1] -0.2115055
+
+$`mu[13]`
+[1] -0.6145458
+
+$`mu[14]`
+[1] -1.519898
+
+$`mu[15]`
+[1] -0.1736046
+
+$`mu[16]`
+[1] -0.2554905
+
+$`mu[17]`
+[1] -0.269573
+
+$`mu[18]`
+[1] -0.3293937
+
+$`mu[19]`
+[1] -0.2582757
+
+$`mu[20]`
+[1] -0.1841576
+
+$`mu[21]`
+[1] -0.586937
+
+$`mu[22]`
+[1] -1.224485
+
+$`delta[1]`
+[1] -0.04250724
+
+$`delta[2]`
+[1] -0.1612416
+
+$`delta[3]`
+[1] -0.06676697
+
+$`delta[4]`
+[1] -1.392789
+
+$`delta[5]`
+[1] -0.3015675
+
+$`delta[6]`
+[1] -0.04532056
+
+$`delta[7]`
+[1] -0.6681844
+
+$`delta[8]`
+[1] -0.5584354
+
+$`delta[9]`
+[1] -0.1401688
+
+$`delta[10]`
+[1] -1.553191
+
+$`delta[11]`
+[1] -0.8021078
+
+$`delta[12]`
+[1] -0.1760413
+
+$`delta[13]`
+[1] -0.4026448
+
+$`delta[14]`
+[1] -0.9135397
+
+$`delta[15]`
+[1] -0.02245778
+
+$`delta[16]`
+[1] -0.0923679
+
+$`delta[17]`
+[1] -0.1809256
+
+$`delta[18]`
+[1] -0.1113464
+
+$`delta[19]`
+[1] -0.2084189
+
+$`delta[20]`
+[1] -0.1751882
+
+$`delta[21]`
+[1] -0.2486589
+
+$`delta[22]`
+[1] -0.5809902
+
+$delta_new
+[1] -0.09328768
+
+$sigma_delta
+[1] 1.005986
+
+$lp__
+[1] -7807.052
+
+attr(,"test_grad")
+[1] FALSE
+attr(,"args")
+attr(,"args")$append_samples
+[1] FALSE
+
+attr(,"args")$chain_id
+[1] 1
+
+attr(,"args")$control
+attr(,"args")$control$adapt_delta
+[1] 0.8
+
+attr(,"args")$control$adapt_engaged
+[1] TRUE
+
+attr(,"args")$control$adapt_gamma
+[1] 0.05
+
+attr(,"args")$control$adapt_init_buffer
+[1] 75
+
+attr(,"args")$control$adapt_kappa
+[1] 0.75
+
+attr(,"args")$control$adapt_t0
+[1] 10
+
+attr(,"args")$control$adapt_term_buffer
+[1] 50
+
+attr(,"args")$control$adapt_window
+[1] 25
+
+attr(,"args")$control$max_treedepth
+[1] 10
+
+attr(,"args")$control$metric
+[1] "diag_e"
+
+attr(,"args")$control$stepsize
+[1] 1
+
+attr(,"args")$control$stepsize_jitter
+[1] 0
+
+
+attr(,"args")$init
+[1] "0"
+
+attr(,"args")$init_list
+NULL
+
+attr(,"args")$init_radius
+[1] 2
+
+attr(,"args")$iter
+[1] 1
+
+attr(,"args")$method
+[1] "sampling"
+
+attr(,"args")$random_seed
+[1] "123"
+
+attr(,"args")$refresh
+[1] 1
+
+attr(,"args")$sampler_t
+[1] "NUTS(diag_e)"
+
+attr(,"args")$test_grad
+[1] FALSE
+
+attr(,"args")$thin
+[1] 1
+
+attr(,"args")$warmup
+[1] 1
+
+attr(,"inits")
+ [1] 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[39] 0 0 0 0 0 0 0 0 0 1
+attr(,"mean_pars")
+ [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+[39] 0 0 0 0 0 0 0 0 0 0
+attr(,"mean_lp__")
+[1] 0
+attr(,"adaptation_info")
+[1] "# Adaptation terminated\n# Step size = 14.3855\n# Diagonal elements of inverse mass matrix:\n# 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1\n"
+attr(,"sampler_params")
+attr(,"sampler_params")$accept_stat__
+[1] 1
+
+attr(,"sampler_params")$stepsize__
+[1] 0.0625
+
+attr(,"sampler_params")$treedepth__
+[1] 1
+
+attr(,"sampler_params")$n_leapfrog__
+[1] 1
+
+attr(,"sampler_params")$n_divergent__
+[1] 0

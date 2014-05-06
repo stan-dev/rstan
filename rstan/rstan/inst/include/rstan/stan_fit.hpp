@@ -36,7 +36,6 @@
 #include <rstan/io/rlist_ref_var_context.hpp> 
 #include <rstan/io/r_ostream.hpp> 
 #include <rstan/stan_args.hpp> 
-#include <rstan/mcmc_output.hpp>
 // #include <stan/mcmc/chains.hpp>
 #include <Rcpp.h>
 // #include <Rinternals.h>
@@ -47,6 +46,12 @@
 
 
 // REF: stan/gm/command.hpp 
+
+#include <stan/io/mcmc_writer.hpp>
+#include <stan/common/recorder/messages.hpp>
+#include <stan/common/warmup.hpp>
+#include <stan/common/sample.hpp>
+#include <rstan/rstan_recorder.hpp>
 
 namespace rstan {
 
@@ -308,90 +313,6 @@ namespace rstan {
       o << std::endl;
     }
 
-    template <class Model, class RNG_t>
-    void run_markov_chain(stan::mcmc::base_mcmc* sampler_ptr,
-                          const stan_args& args, 
-                          bool is_warmup,
-                          mcmc_output<Model>& outputter, 
-                          stan::mcmc::sample& init_s,
-                          Model& model,
-                          std::vector<Rcpp::NumericVector>& chains, 
-                          int& iter_save_i,
-                          const std::vector<size_t>& qoi_idx,
-                          std::vector<double>& sum_pars,
-                          double& sum_lp,
-                          std::vector<Rcpp::NumericVector>& sampler_params, 
-                          std::vector<Rcpp::NumericVector>& iter_params, 
-                          std::string& adaptation_info, 
-                          RNG_t& base_rng) {
-      int start = 0;
-      int end = args.get_ctrl_sampling_warmup();
-      if (!is_warmup) { 
-        start = end;
-        end = args.get_iter();
-      } 
-      for (int m = start; m < end; ++m) {
-        stan::common::print_progress(m, 0, args.get_iter(), 
-                                     args.get_ctrl_sampling_refresh(), is_warmup,
-                                     "\r", "", rstan::io::rcout);
-        R_CheckUserInterrupt();
-        init_s = sampler_ptr -> transition(init_s);
-        if (args.get_ctrl_sampling_save_warmup() && (((m - start) % args.get_ctrl_sampling_thin()) == 0)) {
-          outputter.output_sample_params(base_rng, init_s, sampler_ptr, model,
-                                        chains, is_warmup,
-                                        sampler_params, iter_params,
-                                        sum_pars, sum_lp, qoi_idx,
-                                        iter_save_i, &rstan::io::rcout);
-          iter_save_i++;
-          outputter.output_diagnostic_params(init_s, sampler_ptr);
-        }
-      }
-    }
-
-    template <class Model, class RNG_t>
-    void warmup_phase(stan::mcmc::base_mcmc* sampler_ptr,
-                      stan_args& args, 
-                      mcmc_output<Model>& outputter,
-                      stan::mcmc::sample& init_s,
-                      Model& model,
-                      std::vector<Rcpp::NumericVector>& chains, 
-                      int& iter_save_i,
-                      const std::vector<size_t>& qoi_idx,
-                      std::vector<double>& sum_pars,
-                      double& sum_lp,
-                      std::vector<Rcpp::NumericVector>& sampler_params, 
-                      std::vector<Rcpp::NumericVector>& iter_params, 
-                      std::string& adaptation_info, 
-                      RNG_t& base_rng) {
-      run_markov_chain<Model, RNG_t>(sampler_ptr, args, true, outputter,
-                                     init_s, model, chains, iter_save_i, qoi_idx,
-                                     sum_pars, sum_lp, sampler_params, iter_params,
-                                     adaptation_info, base_rng);
-    }
-
-    template <class Model, class RNG_t>
-    void sampling_phase(stan::mcmc::base_mcmc* sampler_ptr,
-                        const stan_args& args,
-                        mcmc_output<Model>& outputter,
-                        stan::mcmc::sample& init_s,
-                        Model& model,
-                        std::vector<Rcpp::NumericVector>& chains, 
-                        int& iter_save_i,
-                        const std::vector<size_t>& qoi_idx,
-                        std::vector<double>& sum_pars,
-                        double& sum_lp,
-                        std::vector<Rcpp::NumericVector>& sampler_params, 
-                        std::vector<Rcpp::NumericVector>& iter_params, 
-                        std::string& adaptation_info, 
-                        RNG_t& base_rng) {
-      run_markov_chain<Model, RNG_t>(sampler_ptr, args, false, outputter,
-                                     init_s, model, chains, iter_save_i, qoi_idx,
-                                     sum_pars, sum_lp, sampler_params, iter_params,
-                                     adaptation_info,
-                                     base_rng);
-    }
-    
-
     /**
      * Cast a size_t vector to an unsigned int vector. 
      * The reason is that first Rcpp::wrap/as does not 
@@ -481,7 +402,46 @@ namespace rstan {
                                       args.get_ctrl_sampling_adapt_window());
       return true;
     }
- 
+
+    struct R_CheckUserInterrupt_Functor {
+      void operator()() { 
+        R_CheckUserInterrupt();
+      }
+    };
+
+    // in:  model, s, sampler_ptr
+    // out: sample_recorder_size, diagnostic_recorder_size
+    template <class Model>
+    void calculate_sizes(Model& model,
+                         stan::mcmc::sample& s,
+                         stan::mcmc::base_mcmc* sampler_ptr,
+                         size_t& sample_recorder_size,
+                         size_t& sample_recorder_offset,
+                         size_t& diagnostic_recorder_size,
+                         std::vector<std::string>& sample_names,
+                         std::vector<std::string>& sampler_names,
+                         std::vector<std::string>& model_constrained_param_names,
+                         std::vector<std::string>& model_unconstrained_param_names,
+                         std::vector<std::string>& sampler_diagnostic_names) {
+      s.get_sample_param_names(sample_names);
+      
+      sampler_ptr->get_sampler_param_names(sampler_names);
+      
+      model.constrained_param_names(model_constrained_param_names, true, true);
+      
+      model.unconstrained_param_names(model_unconstrained_param_names, false, false);
+      
+      sampler_ptr->get_sampler_diagnostic_names(model_unconstrained_param_names, 
+                                                sampler_diagnostic_names);
+
+      sample_recorder_size = sample_names.size() + sampler_names.size() 
+        + model_constrained_param_names.size();
+      sample_recorder_offset = sample_names.size() + sampler_names.size();
+      diagnostic_recorder_size = sample_names.size() + sampler_names.size() 
+        + sampler_diagnostic_names.size();
+    }
+
+
     template <class Model, class RNG_t> 
     void execute_sampling(stan_args& args, Model& model, Rcpp::List& holder,
                           stan::mcmc::base_mcmc* sampler_ptr, 
@@ -491,65 +451,129 @@ namespace rstan {
                           std::fstream& sample_stream,
                           std::fstream& diagnostic_stream,
                           const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {  
-      int iter_save_i = 0;
-      double mean_lp(0);
-      std::string adaptation_info;
-      
-      std::vector<Rcpp::NumericVector> chains; 
-      for (unsigned int i = 0; i < qoi_idx.size(); i++) 
-        chains.push_back(Rcpp::NumericVector(args.get_ctrl_sampling_iter_save())); 
-      std::vector<double> mean_pars;
-      mean_pars.resize(initv.size(), 0);
-      std::vector<Rcpp::NumericVector> sampler_params;
-      std::vector<Rcpp::NumericVector> iter_params;
-      std::vector<std::string> sampler_param_names;
-      std::vector<std::string> iter_param_names;
-
-      mcmc_output<Model> outputter(&sample_stream, &diagnostic_stream);
-      outputter.set_output_names(s, sampler_ptr, model, iter_param_names, sampler_param_names);
-      outputter.init_sampler_params(sampler_params, args.get_ctrl_sampling_iter_save());
-      outputter.init_iter_params(iter_params, args.get_ctrl_sampling_iter_save());
+      size_t sample_recorder_size, sample_recorder_offset, diagnostic_recorder_size;
+      std::vector<std::string> sample_names;
+      std::vector<std::string> sampler_names;
+      std::vector<std::string> model_constrained_param_names;
+      std::vector<std::string> model_unconstrained_param_names;
+      std::vector<std::string> sampler_diagnostic_names;
+      rstan::calculate_sizes(model, s, sampler_ptr,
+                             sample_recorder_size, 
+                             sample_recorder_offset, 
+                             diagnostic_recorder_size,
+                             sample_names,
+                             sampler_names,
+                             model_constrained_param_names,
+                             model_unconstrained_param_names,
+                             sampler_diagnostic_names);
+      // TODO: this is because we want lp__ at the end and it's not initialized to anything sensible.
+        
+      rstan_sample_recorder sample_recorder 
+        = sample_recorder_factory(&sample_stream, "# ",
+                                  sample_recorder_size,
+                                  args.get_ctrl_sampling_iter_save(), 
+                                  sample_recorder_offset,
+                                  qoi_idx);
+        
+      rstan_diagnostic_recorder diagnostic_recorder 
+        = diagnostic_recorder_factory(&diagnostic_stream, "# ",
+                                      diagnostic_recorder_size,
+                                      args.get_ctrl_sampling_iter_save());
+        
+      stan::common::recorder::messages message_recorder(&Rcpp::Rcout, "# ");
+        
+      stan::io::mcmc_writer<Model,
+                            rstan_sample_recorder, rstan_diagnostic_recorder,
+                            stan::common::recorder::messages>
+        writer(sample_recorder, diagnostic_recorder, message_recorder, &Rcpp::Rcout);
+        
 
       if (!args.get_append_samples()) {
-        outputter.print_sample_names();
-        outputter.output_diagnostic_names(s, sampler_ptr, model);
-      } 
+        writer.write_sample_names(s, sampler_ptr, model);
+        writer.write_diagnostic_names(s, sampler_ptr, model);
+      }
+
+      double mean_lp(0);
+      std::vector<double> mean_pars;
+      mean_pars.resize(initv.size(), 0);
+        
       // Warm-Up
       clock_t start = clock();
-      warmup_phase<Model, RNG_t>(sampler_ptr, args, outputter,
-                                 s, model, chains, iter_save_i,
-                                 qoi_idx, mean_pars, mean_lp,
-                                 sampler_params, iter_params, adaptation_info,
-                                 base_rng); 
+        
+      int num_warmup = 0,
+        num_samples = 0,
+        num_thin = 0,
+        refresh = 0;
+      bool save_warmup = false;
+      std::string prefix = "\r";
+      std::string suffix = "";
+      R_CheckUserInterrupt_Functor interruptCallback;
+        
+      stan::common::warmup<Model, RNG_t,
+                           R_CheckUserInterrupt_Functor>
+        (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(), 
+         args.get_ctrl_sampling_thin(),
+         args.get_ctrl_sampling_refresh(), args.get_ctrl_sampling_save_warmup(),
+         writer,
+         s, model, base_rng,
+         prefix, suffix, Rcpp::Rcout,
+         interruptCallback);
+        
       clock_t end = clock();
       double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
-      if (args.get_ctrl_sampling_adapt_engaged()) { 
+      std::string adaptation_info;
+      if (args.get_ctrl_sampling_adapt_engaged()) {
         dynamic_cast<stan::mcmc::base_adapter*>(sampler_ptr)->disengage_adaptation();
-        outputter.output_adapt_finish(sampler_ptr, adaptation_info);
+        writer.write_adapt_finish(sampler_ptr);
+
+        std::stringstream ss;
+        stan::common::recorder::messages info(&ss, "# ");
+        writer.write_adapt_finish(sampler_ptr, info);
+        adaptation_info = ss.str();
+        adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
       }
+        
       // Sampling
       start = clock();
-      sampling_phase<Model, RNG_t>(sampler_ptr, args, outputter,
-                                   s, model, chains, iter_save_i,
-                                   qoi_idx, mean_pars, mean_lp, 
-                                   sampler_params, iter_params, adaptation_info,  
-                                   base_rng); 
+        
+      stan::common::sample<Model, RNG_t,
+                           R_CheckUserInterrupt_Functor>
+        (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(), 
+         args.get_ctrl_sampling_thin(),
+         args.get_ctrl_sampling_refresh(), true,
+         writer,
+         s, model, base_rng,
+         prefix, suffix, Rcpp::Rcout,
+         interruptCallback);
+        
       end = clock();
-      double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
+      double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;        
+      writer.write_timing(warmDeltaT, sampleDeltaT);
 
       if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
+        for (size_t n = 0; n < diagnostic_recorder.recorder2_.x()[0].size(); n++)
+          mean_lp += diagnostic_recorder.recorder2_.x()[0][n];
         mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
-        for (std::vector<double>::iterator it = mean_pars.begin();
-             it != mean_pars.end(); 
-             ++it) 
-          (*it) /= args.get_ctrl_sampling_iter_save_wo_warmup();
-      } 
-      if (args.get_ctrl_sampling_refresh() > 0) { 
-        rstan::io::rcout << std::endl;
-        outputter.print_timing(warmDeltaT, sampleDeltaT, &rstan::io::rcout);
+          
+        size_t offset = sample_names.size() + sampler_names.size();
+        std::vector<double> cont_vector(mean_pars.size());
+        std::vector<int> disc_vector(0);
+        std::vector<double> pars;
+        for (size_t n = 0; n < args.get_ctrl_sampling_iter_save(); n++) {
+          for (size_t m = 0; m < mean_pars.size(); m++) {
+            cont_vector[m] = diagnostic_recorder.recorder2_.x()[offset + m][n];
+          }
+          model.write_array(base_rng, cont_vector, disc_vector,
+                            pars, true, true, &Rcpp::Rcout);
+          for (size_t m = 0; m < mean_pars.size(); m++) {
+            mean_pars[m] += pars[m];
+          }
+        }
+        for (size_t m = 0; m < mean_pars.size(); m++) {
+          mean_pars[m] /= args.get_ctrl_sampling_iter_save_wo_warmup();
+        }
       }
-      
-      outputter.output_timing(warmDeltaT, sampleDeltaT);
+
       if (args.get_sample_file_flag()) {
         rstan::io::rcout << "Sample of chain " 
                          << args.get_chain_id() 
@@ -559,24 +583,34 @@ namespace rstan {
       }
       if (args.get_diagnostic_file_flag()) 
         diagnostic_stream.close();
-     
-      holder = Rcpp::List(chains.begin(), chains.end());
+        
+      holder = Rcpp::List(sample_recorder.recorder2_.x().begin(), 
+                          sample_recorder.recorder2_.x().end());
       holder.attr("test_grad") = Rcpp::wrap(false); 
       holder.attr("args") = args.stan_args_to_rlist(); 
       holder.attr("inits") = initv; 
       holder.attr("mean_pars") = mean_pars; 
       holder.attr("mean_lp__") = mean_lp; 
       holder.attr("adaptation_info") = adaptation_info;
-      // put sampler parameters such as treedepth together with iter_params 
-      iter_params.insert(iter_params.end(), sampler_params.begin(), sampler_params.end());
-      // put iter_param_names and sampler_param_name tegether for returning to R
-      iter_param_names.insert(iter_param_names.end(),
-                              sampler_param_names.begin(),
-                              sampler_param_names.end());
-      Rcpp::List slst(iter_params.begin(), iter_params.end());
-      slst.names() = iter_param_names;
-      slst.erase(outputter.get_index_for_lp());
+        
+      std::vector<Rcpp::NumericVector> sampler_parameters;
+      // start at 1 to skip over lp__
+      for (size_t n = 1; n < sample_recorder_offset; n++)
+        sampler_parameters.push_back(diagnostic_recorder.recorder2_.x()[n]);
+        
+      // // put sampler parameters such as treedepth together with iter_params 
+      // iter_params.insert(iter_params.end(), sampler_params.begin(), sampler_params.end());
+      // // put iter_param_names and sampler_param_name tegether for returning to R
+      // iter_param_names.insert(iter_param_names.end(),
+      //                         sampler_param_names.begin(),
+      //                         sampler_param_names.end());
+      Rcpp::List slst(sampler_parameters.begin(), sampler_parameters.end());
+      std::vector<std::string> slst_names(sample_names.begin()+1, sample_names.end());
+      slst_names.insert(slst_names.end(), sampler_names.begin(), sampler_names.end());
+      slst.names() = slst_names;
+        
       holder.attr("sampler_params") = slst;
+        
       holder.names() = fnames_oi;
     } 
 
@@ -659,7 +693,7 @@ namespace rstan {
           init_range_distribution(-r, r);
         boost::variate_generator<RNG_t&, boost::random::uniform_real_distribution<double> >
           init_rng(base_rng,init_range_distribution);
-
+        
         static int MAX_INIT_TRIES = 100;
         for (; num_init_tries < MAX_INIT_TRIES; ++num_init_tries) {
           for (size_t i = 0; i < cont_vector.size(); ++i)
