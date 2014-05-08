@@ -28,3 +28,11 @@ excode <- '
 exfit <- stan(model_code = excode, save_dso = FALSE, iter = 200, sample_file = "rstan_doc_ex.csv")
 plot(exfit)
 print(exfit)
+
+num_lines <- 100
+incomplete_sample_file <- paste(readLines("rstan_doc_ex_1.csv", 100), collapse="\n")
+
+fileConnection <- file("rstan_doc_ex_incomplete.csv")
+writeLines(incomplete_sample_file, fileConnection)
+close(fileConnection)
+
