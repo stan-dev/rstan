@@ -9,8 +9,7 @@ compiler:
 env:
   global:
     - BOOTSTRAP_LATEX="1"
-    # - STAN_BRANCH="origin/develop"
-    - STAN_BRANCH="origin/feature/refactor-common-run_markov_chain"
+    - STAN_BRANCH="origin/develop"
   matrix: 
     - CXX_OLEVEL=0 RCPP_VER=cran
     - CXX_OLEVEL=3 RCPP_VER=cran
