@@ -22,11 +22,14 @@ public:
       base_rng1(123U),
       base_rng2(1234U),
       base_rng3(1234U),
+      base_rng4(1234U),
       sampler_ptr1(new sampler_t(model_, base_rng1, 
                                  &rstan::io::rcout, &rstan::io::rcerr)),
       sampler_ptr2(new sampler_t(model_, base_rng2, 
                                  &rstan::io::rcout, &rstan::io::rcerr)),
     sampler_ptr3(new sampler_t(model_, base_rng3,
+                               &rstan::io::rcout, &rstan::io::rcerr)),
+    sampler_ptr4(new sampler_t(model_, base_rng4,
                                &rstan::io::rcout, &rstan::io::rcerr)) { 
     data_stream_.close();
   }
@@ -35,6 +38,7 @@ public:
     delete sampler_ptr1;
     delete sampler_ptr2;
     delete sampler_ptr3;
+    delete sampler_ptr4;
   }
 
   static void SetUpTestCase() { 
@@ -59,9 +63,11 @@ public:
   rng_t base_rng1;
   rng_t base_rng2;
   rng_t base_rng3;
+  rng_t base_rng4;
   sampler_t* sampler_ptr1;
   sampler_t* sampler_ptr2;
   sampler_t* sampler_ptr3;
+  sampler_t* sampler_ptr4;
 };
 
 std::string read_file(const std::string filename) {
@@ -360,8 +366,14 @@ void test_holder(const Rcpp::List e, const Rcpp::List x) {
       Rcpp::NumericVector e_vec = e[n];
       Rcpp::NumericVector x_vec = x[n];
       for (size_t i = 0; i < e_vec.size(); i++) {
-        EXPECT_FLOAT_EQ(e_vec[i], x_vec[i]) 
-          << "the " << n << "th variable, " << i << "th variable is off";
+        if (fabs(e_vec[i]) < 2) {
+          EXPECT_NEAR(e_vec[i], x_vec[i], 1e-5) 
+            << "the " << n << "th variable, " << i << "th variable is off";
+        }
+        else {
+          EXPECT_FLOAT_EQ(e_vec[i], x_vec[i]) 
+            << "the " << n << "th variable, " << i << "th variable is off";
+        }
       }
     }
   }
@@ -571,14 +583,14 @@ TEST_F(RStan, execute_sampling_3) {
 
   Rcpp::List holder;
   
-  rstan::init_nuts<sampler_t>(sampler_ptr2, args);
+  rstan::init_nuts<sampler_t>(sampler_ptr3, args);
   Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
-  rstan::init_windowed_adapt<sampler_t>(sampler_ptr2, args, s.cont_params());
+  rstan::init_windowed_adapt<sampler_t>(sampler_ptr3, args, s.cont_params());
   
   
   std::fstream sample_stream, diagnostic_stream;
   rstan::execute_sampling(args, model_, holder,
-                          sampler_ptr2,
+                          sampler_ptr3,
                           s,
                           qoi_idx,
                           initv,
@@ -588,6 +600,60 @@ TEST_F(RStan, execute_sampling_3) {
                           base_rng2);
   
   
+  
+  test_holder(e_holder, holder);
+}
+
+TEST_F(RStan, execute_sampling_4) {
+  std::stringstream ss;
+
+  std::string e_args_string = read_file("tests/cpp/test_config/4_input_stan_args.txt");
+  rstan::stan_args args = stan_args_factory(e_args_string);
+  args.write_args_as_comment(ss);
+  ASSERT_EQ(e_args_string, ss.str());
+  ss.str("");
+
+  double r = args.get_init_radius();
+  boost::random::uniform_real_distribution<double> 
+    init_range_distribution(-r, r);
+  boost::variate_generator<rng_t&, boost::random::uniform_real_distribution<double> >
+    init_rng(base_rng4,init_range_distribution);
+  Eigen::VectorXd cont_params(model_.num_params_r());
+  for (size_t i = 0; i < cont_params.size(); ++i)
+    cont_params[i] = init_rng();
+  
+  stan::mcmc::sample s(cont_params, 0, 0);
+  
+  
+  std::vector<size_t> qoi_idx 
+    = vector_factory<size_t>(read_file("tests/cpp/test_config/4_input_qoi_idx.txt"));
+  std::vector<double> initv 
+    = vector_factory<double>(read_file("tests/cpp/test_config/4_input_initv.txt"));
+  std::vector<std::string> fnames_oi 
+    = vector_factory<std::string>(read_file("tests/cpp/test_config/4_input_fnames_oi.txt"));
+  
+  std::string e_holder_string = read_file("tests/cpp/test_config/4_output_holder.txt");
+  Rcpp::List e_holder 
+    = holder_factory(read_file("tests/cpp/test_config/4_output_holder.txt"),
+                     args);
+
+  Rcpp::List holder;
+
+  rstan::init_nuts<sampler_t>(sampler_ptr4, args);
+  Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
+  rstan::init_windowed_adapt<sampler_t>(sampler_ptr4, args, s.cont_params());
+  
+  
+  std::fstream sample_stream, diagnostic_stream;
+  rstan::execute_sampling(args, model_, holder,
+                          sampler_ptr4,
+                          s,
+                          qoi_idx,
+                          initv,
+                          sample_stream,
+                          diagnostic_stream,
+                          fnames_oi,
+                          base_rng4);
   
   test_holder(e_holder, holder);
 }

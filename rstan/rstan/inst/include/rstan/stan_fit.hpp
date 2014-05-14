@@ -551,7 +551,7 @@ namespace rstan {
       writer.write_timing(warmDeltaT, sampleDeltaT);
 
       if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
-        for (size_t n = 0; n < diagnostic_recorder.recorder2_.x()[0].size(); n++)
+        for (size_t n = args.get_ctrl_sampling_warmup(); n < args.get_ctrl_sampling_iter_save(); n++)
           mean_lp += diagnostic_recorder.recorder2_.x()[0][n];
         mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
           
@@ -559,7 +559,8 @@ namespace rstan {
         std::vector<double> cont_vector(mean_pars.size());
         std::vector<int> disc_vector(0);
         std::vector<double> pars;
-        for (size_t n = 0; n < args.get_ctrl_sampling_iter_save(); n++) {
+
+        for (size_t n = args.get_ctrl_sampling_warmup(); n < args.get_ctrl_sampling_iter_save(); n++) {
           for (size_t m = 0; m < mean_pars.size(); m++) {
             cont_vector[m] = diagnostic_recorder.recorder2_.x()[offset + m][n];
           }
