@@ -493,9 +493,6 @@ namespace rstan {
         writer.write_diagnostic_names(s, sampler_ptr, model);
       }
 
-      double mean_lp(0);
-      std::vector<double> mean_pars;
-      mean_pars.resize(initv.size(), 0);
         
       // Warm-Up
       clock_t start = clock();
@@ -532,7 +529,7 @@ namespace rstan {
         adaptation_info = ss.str();
         adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
       }
-        
+
       // Sampling
       start = clock();
         
@@ -550,17 +547,20 @@ namespace rstan {
       double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;        
       writer.write_timing(warmDeltaT, sampleDeltaT);
 
+      double mean_lp(0);
+      std::vector<double> mean_pars;
+      mean_pars.resize(initv.size(), 0);
+
       if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
-        for (size_t n = args.get_ctrl_sampling_warmup(); n < args.get_ctrl_sampling_iter_save(); n++)
-          mean_lp += diagnostic_recorder.recorder2_.x()[0][n];
-        mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
-          
         size_t offset = sample_names.size() + sampler_names.size();
         std::vector<double> cont_vector(mean_pars.size());
         std::vector<int> disc_vector(0);
         std::vector<double> pars;
 
-        for (size_t n = args.get_ctrl_sampling_warmup(); n < args.get_ctrl_sampling_iter_save(); n++) {
+        for (size_t n = args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(); 
+             n < args.get_ctrl_sampling_iter_save(); 
+             n++) {
+          mean_lp += diagnostic_recorder.recorder2_.x()[0][n];
           for (size_t m = 0; m < mean_pars.size(); m++) {
             cont_vector[m] = diagnostic_recorder.recorder2_.x()[offset + m][n];
           }
@@ -570,9 +570,11 @@ namespace rstan {
             mean_pars[m] += pars[m];
           }
         }
+
         for (size_t m = 0; m < mean_pars.size(); m++) {
           mean_pars[m] /= args.get_ctrl_sampling_iter_save_wo_warmup();
         }
+        mean_lp /= args.get_ctrl_sampling_iter_save_wo_warmup();
       }
 
       if (args.get_sample_file_flag()) {
@@ -611,7 +613,7 @@ namespace rstan {
       slst.names() = slst_names;
         
       holder.attr("sampler_params") = slst;
-        
+
       holder.names() = fnames_oi;
     } 
 
