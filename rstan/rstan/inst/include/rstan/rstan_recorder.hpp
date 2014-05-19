@@ -4,75 +4,90 @@
 #include <Rcpp.h>
 #include <stan/common/recorder/csv.hpp>
 #include <stan/common/recorder/filtered_values.hpp>
-#include <stan/common/recorder/values.hpp>
-
+#include <stan/common/recorder/sum_values.hpp>
 
 namespace rstan {
-  template <class Recorder1, class Recorder2>
-  class rstan_recorder {
-  public:
-    Recorder1 recorder1_;
-    Recorder2 recorder2_;
 
-    rstan_recorder(Recorder1 recorder1, Recorder2 recorder2)
-      : recorder1_(recorder1), recorder2_(recorder2) { }
+  class rstan_sample_recorder {
+  public:
+    typedef stan::common::recorder::csv CsvRecorder;
+    typedef stan::common::recorder::filtered_values<Rcpp::NumericVector> FilteredValuesRecorder;
+    typedef stan::common::recorder::sum_values SumValuesRecorder;
+
+    CsvRecorder csv_;
+    FilteredValuesRecorder values_;
+    FilteredValuesRecorder sampler_values_;
+    SumValuesRecorder sum_;
+    
+    rstan_sample_recorder(CsvRecorder csv, FilteredValuesRecorder values, FilteredValuesRecorder sampler_values, SumValuesRecorder sum) 
+      : csv_(csv), values_(values), sampler_values_(sampler_values), sum_(sum) { }
 
     void operator()(const std::vector<std::string>& x) {
-      recorder1_(x);
-      recorder2_(x);
+      csv_(x);
+      values_(x);
+      sampler_values_(x);
+      sum_(x);
     }
     
     template <class T>
     void operator()(const std::vector<T>& x) {
-      recorder1_(x);
-      recorder2_(x);
+      csv_(x);
+      values_(x);
+      sampler_values_(x);
+      sum_(x);
     }
     
     void operator()(const std::string x) { 
-      recorder1_(x);
-      recorder2_(x);
+      csv_(x);
+      values_(x);
+      sampler_values_(x);
+      sum_(x);
     }
     
     void operator()() {
-      recorder1_();
-      recorder2_();
+      csv_();
+      values_();
+      sampler_values_();
+      sum_();
     }
     
     bool is_recording() const {
-      return recorder1_.is_recording() || recorder2_.is_recording();
+      return csv_.is_recording() || values_.is_recording() || sampler_values_.is_recording() || sum_.is_recording();
     }
   };
-  
-  typedef rstan_recorder<stan::common::recorder::csv,
-                         stan::common::recorder::filtered_values<Rcpp::NumericVector> >
-  rstan_sample_recorder;
 
-  typedef rstan_recorder<stan::common::recorder::csv,
-                         stan::common::recorder::values<Rcpp::NumericVector> >
-  rstan_diagnostic_recorder;
 
   rstan_sample_recorder
   sample_recorder_factory(std::ostream *o, const std::string prefix,
-                          const size_t N, const size_t M, const size_t offset,
+                          const size_t N, const size_t M, const size_t warmup,
+                          const size_t offset,
                           const std::vector<size_t>& qoi_idx) {
     std::vector<size_t> filter(qoi_idx);
-    filter.back() = 0;
-    for (size_t n = 0; n < filter.size() - 1; n++)
+    std::vector<size_t> lp;
+    for (size_t n = 0; n < filter.size(); n++) 
+      if (filter[n] >= N)
+        lp.push_back(n);
+    for (size_t n = 0; n < filter.size(); n++)
       filter[n] += offset;
-
-    stan::common::recorder::csv recorder1(o, prefix);
-    stan::common::recorder::filtered_values<Rcpp::NumericVector> recorder2(N, M, filter);
+    for (size_t n = 0; n < lp.size(); n++)
+      filter[lp[n]] = 0;
     
-    return rstan_sample_recorder(recorder1, recorder2);
+    std::vector<size_t> filter_sampler_values(offset);
+    for (size_t n = 0; n < offset; n++)
+      filter_sampler_values[n] = n;
+    
+    stan::common::recorder::csv csv(o, prefix);
+    stan::common::recorder::filtered_values<Rcpp::NumericVector> values(N, M, filter);
+    stan::common::recorder::filtered_values<Rcpp::NumericVector> sampler_values(N, M, filter_sampler_values);
+    stan::common::recorder::sum_values sum(N, warmup);
+    
+    return rstan_sample_recorder(csv, values, sampler_values, sum);
   }
 
-  rstan_diagnostic_recorder
-  diagnostic_recorder_factory(std::ostream *o, const std::string prefix,
-                              const size_t N, const size_t M) {
-    stan::common::recorder::csv recorder1(o, prefix);
-    stan::common::recorder::values<Rcpp::NumericVector> recorder2(N, M);
-    
-    return rstan_diagnostic_recorder(recorder1, recorder2);
+  stan::common::recorder::csv
+  diagnostic_recorder_factory(std::ostream *o, const std::string prefix) {
+    stan::common::recorder::csv csv(o, prefix);
+    return csv;
   }
 
 }
