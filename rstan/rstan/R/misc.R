@@ -39,25 +39,34 @@ list_as_integer_if_doable <- function(x) {
          })
 } 
 
-mklist <- function(names, env = parent.frame()) { 
+mklist <- function(names) {
   # Make a list using names 
   # Args: 
   #   names: character strings of names of objects 
-  #   env: the environment to look for objects with names
-  # Note: we use inherits = TRUE when calling mget 
-  #   and only mode of numeric and list are extracted (this
-  #   is to avoid such as get a primitive function such as
-  #   gamma.)
-  d <- mget(names, env, ifnotfound = NA, inherits = TRUE, mode = 'numeric') 
-  idx_is_na <- is.na(d)
-  names_nf <- names[idx_is_na]
-  if (length(names_nf) == 0) return(d)
-  d2 <- mget(names_nf, env, ifnotfound = NA, inherits = TRUE, mode = 'list') 
-  n <- which(is.na(d2))
-  if (length(n) > 0) {
-    stop(paste("objects ", paste("'", names_nf[n], "'", collapse = ', ', sep = ''), " not found", sep = ''))
-  } 
-  c(d[!idx_is_na],  d2)
+  # Note: 
+  #   Only extracted are modes of numeric and list, which
+  #   are enough for stan 
+
+  cenv <- environment()
+  for (fn in rev(sys.parents())) { 
+    env1 <- sys.frame(fn)
+    if (identical(env1, cenv)) next
+    d1 <- mget(names, envir = env1, ifnotfound = NA, inherits = FALSE, mode = "numeric")
+    d2 <- mget(names, envir = env1, ifnotfound = NA, inherits = FALSE, mode = "list")
+    na_idx1 <- is.na(d1)
+    na_idx2 <- is.na(d2)
+    na_idx <- na_idx1 & na_idx2
+    numf <- sum(na_idx) 
+    if (numf > 0 && numf < length(names))
+      stop(paste("objects ", paste("'", names[na_idx], "'", collapse = ', ', sep = ''), 
+                 " of mode numeric and list not found", sep = ''))
+    if (numf == length(names))  next
+    r <- c(d1[!na_idx1], d2[!na_idx2])
+    names(r) <- names
+    return(r)
+  }
+  stop(paste("objects ", paste("'", names, "'", collapse = ', ', sep = ''), 
+             " of mode numeric and list not found", sep = ''))
 } 
 
 stan_kw1 <- c('for', 'in', 'while', 'repeat', 'until', 'if', 'then', 'else',
@@ -1086,6 +1095,13 @@ create_skeleton <- function(pars, dims) {
                 })
   names(lst) <- pars 
   lst 
+}
+
+rstan_relist <- function(x, skeleton) {
+  lst <- relist(x, skeleton)
+  for (i in seq_along(skeleton))
+    dim(lst[[i]]) <- dim(skeleton[[i]])
+  lst
 }
 
 # ported from bugs.plot.inferences in R2WinBUGS  

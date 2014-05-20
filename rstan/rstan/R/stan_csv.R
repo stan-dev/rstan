@@ -110,7 +110,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     stop("csvfiles does not contain any CSV file name")
 
   g_skip <- 10
-  g_max_comm <- 50 # maximum number of lines of comments 
+  g_max_comm <- -1 # to read all 
   ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
   # use the first CSV file name as model name

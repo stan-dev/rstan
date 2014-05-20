@@ -31,6 +31,7 @@ inst/include/stansrc/makefile$
 inst/include/stansrc/\.travis\.yml$
 inst/include/stansrc/logos/.*$
 inst/include/stansrc/make/.*$
+inst/include/unitTests/cp.*$
 inst/include/rstan/.*\..pp\.gch$
 inst/libstan.*$
 _inst/include/stansrc/stan/command/.*\.cpp$
