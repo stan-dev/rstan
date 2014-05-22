@@ -1,7 +1,7 @@
 
 [![Stan logo](https://github.com/stan-dev/stan/blob/master/logos/stanlogo-main.png?raw=true)](http://mc-stan.org)
 
-[![Build Status](https://travis-ci.org/stan-dev/rstan.png)](https://travis-ci.org/stan-dev/rstan)
+[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 
 
