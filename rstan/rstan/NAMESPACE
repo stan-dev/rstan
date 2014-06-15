@@ -19,6 +19,7 @@ export(
   sflist2stanfit,
   read_stan_csv,
   monitor,
+  rm_stanmodel_cache,
   rstan_options 
 # get_rstan.options
 )
@@ -40,6 +41,7 @@ exportMethods(
   get_sampler_params,
   get_logposterior, 
   get_posterior_mean,
+  rm_cache,
   get_stanmodel
 )
 S3method(print, stanfit)

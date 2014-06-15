@@ -27,6 +27,7 @@ setClass(Class = "stanmodel",
            model_cpp = "list", 
              # model_cppname (used to define Rcpp module)  & 
              # model_cppcode (just the C++ code for the model) 
+           md5hash = "character",
            dso = 'cxxdso'), 
          validity = function(object) {
            return(TRUE)

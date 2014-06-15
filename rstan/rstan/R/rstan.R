@@ -1,3 +1,44 @@
+
+.stanmodel_list <- create_sm_list()
+
+rstan_options(cache_stanmodel = TRUE)
+
+rstan_options(cache_path = file.path(path.expand("~"), ".stan"),
+              cache_folder = "stanmodel") 
+
+cache_full_path <- function() {
+  file.path(rstan_options("cache_path"), rstan_options("cache_folder"))
+}
+
+load_stanmodel <- function(md5hash) {
+  sm_saved <- file.path(cache_full_path(), paste0(md5hash, '.RData'))
+  if (file.exists(sm_saved)) {
+    obj <- local({load(sm_saved); obj}) 
+    .stanmodel_list$set(md5hash, obj)
+    return(obj)
+  }
+  NULL
+}
+
+get_stanmodel_by_md5 <- function(md5hash) {
+  sm <- .stanmodel_list$get(md5hash) 
+  if (is.null(sm)) {
+    sm <- load_stanmodel(md5hash)
+  }
+  sm 
+}
+
+rm_stanmodel_cache <- function() {
+  x <- cache_full_path()
+  if (0 == unlink(x, recursive = TRUE)) { 
+    .stanmodel_list <- create_sm_list()
+    message("Succeeded in removing folder ", x, " that caches stanmodel.\n")
+  } else {
+    message("Failed to remove folder ", x, " that caches stanmodel files.\n")
+  }
+  invisible(NULL)
+}
+
 ## 
 stan_model <- function(file, 
                        model_name = "anon_model", 
@@ -6,6 +47,7 @@ stan_model <- function(file,
                        boost_lib = NULL, 
                        eigen_lib = NULL, 
                        save_dso = TRUE,
+                       cache_stanmodel = rstan_options('cache_stanmodel'),
                        verbose = FALSE, ...) { 
 
   # Construct a stan model from stan code 
@@ -15,7 +57,7 @@ stan_model <- function(file,
   #   model_name: a character for naming the model. 
   #   stanc_ret: An alternative way to specify the model
   #     by using returned results from stanc. 
-  #   model_code: if file is not specified, we can used 
+  #   model_code: if file is not specified, we can use
   #     a character to specify the model.   
 
   if (is.null(stanc_ret)) {
@@ -40,6 +82,12 @@ stan_model <- function(file,
   model_cppname <- stanc_ret$model_cppname 
   model_name <- stanc_ret$model_name 
   model_code <- stanc_ret$model_code 
+  if (cache_stanmodel) {
+    md5hash <- md5sum_stan_code(model_name, model_code) 
+    sm <- get_stanmodel_by_md5(md5hash)
+    if (!is.null(sm)) return(sm)
+  }
+  
   inc <- paste(stanc_ret$cppcode, 
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
@@ -67,7 +115,16 @@ stan_model <- function(file,
              model_code = model_code, 
              dso = dso, # keep a reference to dso
              model_cpp = list(model_cppname = model_cppname, 
-                              model_cppcode = stanc_ret$cppcode)) 
+                              model_cppcode = stanc_ret$cppcode),
+             md5hash = md5hash) 
+  if (cache_stanmodel) {
+    sm_cache_path <- cache_full_path()
+    sm_cache_file <- file.path(sm_cache_path, paste0(md5hash, '.RData'))
+    .stanmodel_list$set(md5hash, obj)
+    if (!file.exists(sm_cache_path)) 
+      dir.create(sm_cache_path, recursive = TRUE, mode = '0777')
+    save(obj, file = sm_cache_file)
+  }
   invisible(obj) 
   ## We keep a reference to *dso* above to avoid dso to be 
   ## deleted by R's garbage collection. Note that if dso 
@@ -108,6 +165,7 @@ stan <- function(file, model_name = "anon_model",
                  sample_file, # the file to which the samples are written
                  diagnostic_file, # the file to which diagnostics are written 
                  save_dso = TRUE,
+                 cache_stanmodel = rstan_options('cache_stanmodel'),
                  verbose = FALSE, ...,
                  boost_lib = NULL, 
                  eigen_lib = NULL) {
@@ -125,7 +183,8 @@ stan <- function(file, model_name = "anon_model",
     if (missing(model_name)) model_name <- NULL 
     sm <- stan_model(file, model_name = model_name, model_code = model_code,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
-                     save_dso = save_dso, verbose = verbose, 
+                     save_dso = save_dso, cache_stanmodel = cache_stanmodel, 
+                     verbose = verbose, 
                      ...)
   }
 

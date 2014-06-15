@@ -1448,3 +1448,35 @@ all_int_eq <- function(is) {
     stop("not all are integers")
   min(is) == max(is)
 } 
+
+create_sm_list <- function() {
+  lst <- list()
+  set <- function(id, sm) {
+    lst[[id]] <<- sm
+  }
+  get <- function(id) {
+    lst[[id]]
+  }
+  rm <- function(id) {
+    lst[[id]] <<- NULL
+  }
+  get_all <- function() {
+    lst
+  }
+  get_names <- function() {
+    names(lst)
+  } 
+  list(set = set, get = get, rm = rm, get_all = get_all, get_names = get_names)
+}
+
+md5sum_stan_code <- function(model_name, model_code) { 
+  require(digest)
+  digest(list(model_name = model_name,
+              model_code = model_code,
+              r_ver = R.version.string,
+              git_head = rstan:::git_head(),
+              git_stan_head = rstan:::git_stan_head()));
+}
+
+
+

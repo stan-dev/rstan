@@ -13,6 +13,21 @@ setGeneric(name = "sampling",
 setGeneric(name = "get_cppcode", 
            def = function(object, ...) { standardGeneric("get_cppcode") })
 
+setGeneric(name = 'rm_cache', 
+           def = function(object, ...) { standardGeneric("rm_cache") })
+
+setMethod("rm_cache", "stanmodel",
+          function(object) {
+            sm_cache_file <- file.path(sm_cache_path, paste0(object$md5sum, '.RData'))
+            if (file.remove(sm_cache_file)) {
+              message("Succeeded in removing the cached stanmodel object with md5 ", object$md5sum, ".\n")
+              .stanmodel_list$rm(md5sum)
+            } else {
+              message("Failed to remove the cached stanmodel object with md5 ", object$md5sum, ".\n")
+            }
+            invisible(NULL)
+          })
+
 setMethod("get_cppcode", "stanmodel", 
           function(object) {
             object@model_cpp$model_cppcode  
