@@ -131,7 +131,7 @@ setMethod("sampling", "stanmodel",
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
                    sample_file, diagnostic_file, verbose = FALSE, 
-                   algorithm = c("NUTS", "HMC"), #, "Metropolis"), 
+                   algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
