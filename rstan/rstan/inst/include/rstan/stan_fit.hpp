@@ -28,6 +28,8 @@
 #include <stan/mcmc/hmc/nuts/adapt_unit_e_nuts.hpp>
 #include <stan/mcmc/hmc/nuts/adapt_diag_e_nuts.hpp>
 #include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
+#include <stan/mcmc/fixed_param_sampler.hpp>
+
 
 #include <stan/common/do_print.hpp>
 #include <stan/common/print_progress.hpp>
@@ -45,7 +47,7 @@
 // void R_CheckUserInterrupt(void);
 
 
-// REF: stan/gm/command.hpp 
+// REF: stan/common/command.hpp 
 
 #include <stan/io/mcmc_writer.hpp>
 #include <stan/common/recorder/messages.hpp>
@@ -490,11 +492,6 @@ namespace rstan {
       // Warm-Up
       clock_t start = clock();
         
-      int num_warmup = 0,
-        num_samples = 0,
-        num_thin = 0,
-        refresh = 0;
-      bool save_warmup = false;
       std::string prefix = "\r";
       std::string suffix = "";
       R_CheckUserInterrupt_Functor interruptCallback;
@@ -954,13 +951,30 @@ namespace rstan {
       else if (DIAG_E == metric) metric_index = 1;
       else if(DENSE_E == metric) metric_index = 2;
       sampling_algo_t algorithm = args.get_ctrl_sampling_algorithm();
+      if (model.num_params_r() == 0 && algorithm != Fixed_param) {
+        throw std::runtime_error("Must use algorithm=\"Fixed_param\" for model that has no parameters.");
+      }
+
+      stan::mcmc::sample s(cont_params, 0, 0);
+
+      if (algorithm == Fixed_param) {
+        stan::mcmc::fixed_param_sampler sampler;
+        if (args.get_ctrl_sampling_warmup() != 0) {
+          rstan::io::rcout << "Warning: warmup will be skipped for the fixed parameter sampler!" << std::endl;
+          args.set_ctrl_sampling_warmup(0);
+        }
+        execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
+                         sample_stream, diagnostic_stream, fnames_oi,
+                         base_rng);
+        return 0;
+        
+      }
       switch (algorithm) {
          case Metropolis: engine_index = 3; break;
          case HMC: engine_index = 0; break;
          case NUTS: engine_index = 1; break;
+         default: engine_index = 10000; // make it fail in the end
       } 
-
-      stan::mcmc::sample s(cont_params, 0, 0);
 
       int sampler_select = engine_index + 10 * metric_index;
       if (args.get_ctrl_sampling_adapt_engaged())  sampler_select += 100;

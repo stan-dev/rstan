@@ -52,6 +52,9 @@ test_stan_args_hpp <- function() {
   a11 <- fx(list(iter = 5, thin = 3, algorithm = 'HMC', 
                  control = list(stepsize = .1, metric = 'dense_e')))
 
+  a12 <- fx(list(iter = 5, thin = 3, algorithm = 'Fixed_param', 
+                 control = list(adapt_engaged = TRUE)))
+
   checkEquals(a1$iter, 100) 
   checkEquals(a1$thin, 100) 
   checkEquals(a2$iter, 100) 
@@ -88,5 +91,6 @@ test_stan_args_hpp <- function() {
   checkEquals(a10$control$metric, "diag_e")
   checkEquals(a11$control$metric, "dense_e")
   checkEquals(a11$control$adapt_window, 25)
+  checkEquals(a12$control$adapt_engaged, FALSE)
 } 
 

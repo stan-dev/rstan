@@ -79,7 +79,7 @@ namespace rstan {
     } 
   } 
 
-  enum sampling_algo_t { NUTS = 1, HMC = 2, Metropolis = 3};
+  enum sampling_algo_t { NUTS = 1, HMC = 2, Metropolis = 3, Fixed_param = 4};
   enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
   enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
   enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
@@ -263,21 +263,6 @@ namespace rstan {
           ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ? 
                                   ctrl.sampling.iter / 10 : 1; 
           get_rlist_element(in, "refresh", ctrl.sampling.refresh);
-         
-  
-          if (get_rlist_element(in, "algorithm", t_str)) {
-            if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
-            else if (t_str == "Metropolis") ctrl.sampling.algorithm = Metropolis;
-            else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
-            else {
-              std::stringstream msg;
-              msg << "Invalid value for parameter algorithm (found "
-                  << t_str << "; require HMC, Metropolis, or NUTS).";
-              throw std::invalid_argument(msg.str());
-            } 
-          } else {
-            ctrl.sampling.algorithm = NUTS;
-          }
   
           get_rlist_element(ctrl_lst, "adapt_engaged", ctrl.sampling.adapt_engaged, true);
           get_rlist_element(ctrl_lst, "adapt_gamma", ctrl.sampling.adapt_gamma, 0.05);
@@ -289,6 +274,24 @@ namespace rstan {
           get_rlist_element(ctrl_lst, "adapt_window", ctrl.sampling.adapt_window, 25U);
           get_rlist_element(ctrl_lst, "stepsize", ctrl.sampling.stepsize, 1.0);
           get_rlist_element(ctrl_lst, "stepsize_jitter", ctrl.sampling.stepsize_jitter, 0.0);
+
+          if (get_rlist_element(in, "algorithm", t_str)) {
+            if (t_str == "HMC") ctrl.sampling.algorithm = HMC;
+            else if (t_str == "Metropolis") ctrl.sampling.algorithm = Metropolis;
+            else if (t_str == "NUTS") ctrl.sampling.algorithm = NUTS;
+            else if (t_str == "Fixed_param") {
+              ctrl.sampling.algorithm = Fixed_param;
+              ctrl.sampling.adapt_engaged = false;
+            }
+            else {
+              std::stringstream msg;
+              msg << "Invalid value for parameter algorithm (found "
+                  << t_str << "; require HMC, Metropolis, Fixed_param, or NUTS).";
+              throw std::invalid_argument(msg.str());
+            } 
+          } else {
+            ctrl.sampling.algorithm = NUTS;
+          }
 
           if (get_rlist_element(ctrl_lst, "metric", t_str)) { 
             if ("unit_e" == t_str) ctrl.sampling.metric = UNIT_E;
@@ -305,6 +308,7 @@ namespace rstan {
                                 6.283185307179586476925286766559005768e+00);
                break;
              case Metropolis: break;
+             case Fixed_param: break;
           }
           break;
 
@@ -408,6 +412,7 @@ namespace rstan {
             case Metropolis: 
               sampler_t.append("Metropolis");
               break;
+            default: break;
           } 
           if (ctrl.sampling.algorithm != Metropolis) { 
             switch (ctrl.sampling.metric) { 
@@ -489,6 +494,9 @@ namespace rstan {
     inline int get_ctrl_sampling_warmup() const { 
       return ctrl.sampling.warmup;
     } 
+    void set_ctrl_sampling_warmup(int n) {
+      ctrl.sampling.warmup = n;
+    }
     inline int get_ctrl_sampling_thin() const { 
       return ctrl.sampling.thin; 
     } 
@@ -626,6 +634,8 @@ namespace rstan {
                       write_comment_property(ostream,"int_time", ctrl.sampling.int_time); 
                       break;
             case Metropolis: write_comment_property(ostream,"sampler_t", "Metropolis"); break;
+            case Fixed_param: write_comment_property(ostream, "sampler_t", "Fixed_param"); break;
+            default: break;
           } 
           break;
 
