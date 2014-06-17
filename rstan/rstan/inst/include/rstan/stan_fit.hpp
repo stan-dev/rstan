@@ -492,7 +492,7 @@ namespace rstan {
       // Warm-Up
       clock_t start = clock();
         
-      std::string prefix = "\r";
+      std::string prefix = "\n";
       std::string suffix = "";
       R_CheckUserInterrupt_Functor interruptCallback;
         
