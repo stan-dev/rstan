@@ -959,6 +959,10 @@ namespace rstan {
 
       if (algorithm == Fixed_param) {
         stan::mcmc::fixed_param_sampler sampler;
+        if (args.get_ctrl_sampling_warmup() != 0) {
+          rstan::io::rcout << "Warning: warmup will be skipped for the fixed parameter sampler!" << std::endl;
+          args.set_ctrl_sampling_warmup(0);
+        }
         execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                          sample_stream, diagnostic_stream, fnames_oi,
                          base_rng);

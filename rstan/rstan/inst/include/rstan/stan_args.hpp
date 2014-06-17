@@ -494,6 +494,9 @@ namespace rstan {
     inline int get_ctrl_sampling_warmup() const { 
       return ctrl.sampling.warmup;
     } 
+    void set_ctrl_sampling_warmup(int n) {
+      ctrl.sampling.warmup = n;
+    }
     inline int get_ctrl_sampling_thin() const { 
       return ctrl.sampling.thin; 
     } 
