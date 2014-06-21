@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: RStan: R interface to Stan
-Version: 2.2.0
-Date: 2014-02-9
+Version: 2.3.1
+Date: 2014-06-21
 Author: Jiqiang Guo <guojq28@gmail.com>,   
         Michael Betancourt <betanalpha@gmail.com>,
         Marcus Brubaker <mbrubake@cs.toronto.edu>,  
@@ -19,12 +19,8 @@ Description: R interface to Stan (Stan is an open-source package for obtaining
         Bayesian inference using the No-U-Turn sampler, a variant of
         Hamiltonian Monte Carlo.)
 License: GPL (>=3)
-LicenseNote: RStan includes part of unmodified copies of Stan (http://mc-stan.org), 
-  Boost (http://www.boost.org), and Eigen (http://eigen.tuxfamily.org/), which
-  are under licenses of "new BSD license", "Boost license", and "MPL2",
-  respectively.  These three licenses are compatible with version 3 of the GPL. 
 Imports: stats4
-Depends: R (>= 2.15.1), Rcpp (>= 0.9.10), utils, inline, methods
-LinkingTo: Rcpp
+Depends: R (>= 3.0), Rcpp (>= 0.9.10), utils, inline, methods, RcppEigen, BH
+LinkingTo: Rcpp, RcppEigen, BH
 Suggests: RUnit
 URL: http://mc-stan.org

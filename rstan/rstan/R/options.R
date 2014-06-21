@@ -44,13 +44,14 @@ init_rstan_opt_env <- function(e) {
   # color for shading the area of warmup trace plot
   assign("rstan_warmup_bg_col", rstancolgrey[3], e)
 
-  stan_lib_path  <- system.file('include', 'stanlib', package = 'rstan')
-  boost_dir <- dir(stan_lib_path, pattern = 'boost.*')
+#   stan_lib_path  <- system.file('include', 'stanlib', package = 'rstan')
+#   boost_dir <- dir(stan_lib_path, pattern = 'boost.*')
   # boost lib path 
-  boost_lib_path <- file.path(stan_lib_path, boost_dir)
-  # eigen_lib_path <- system.file('include', package = 'RcppEigen')
-  eigen_dir <- dir(stan_lib_path, pattern = 'eigen.*')
-  eigen_lib_path <- file.path(stan_lib_path, eigen_dir)
+#   boost_lib_path <- file.path(stan_lib_path, boost_dir)
+  boost_lib_path <- system.file('include', package = 'BH')
+  eigen_lib_path <- system.file('include', package = 'RcppEigen')
+#   eigen_dir <- dir(stan_lib_path, pattern = 'eigen.*')
+#   eigen_lib_path <- file.path(stan_lib_path, eigen_dir)
   assign("eigen_lib", eigen_lib_path, e) 
   assign("boost_lib", boost_lib_path, e) 
 
