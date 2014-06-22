@@ -78,7 +78,7 @@ stan_rdump(list, file = "", append = FALSE,
 }
 
 \references{
-  The Stan Development Team (\Sexpr[eval=TRUE,results=text,stage=build]{format(Sys.time(),'\%Y')})
+  The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
   \url{http://mc-stan.org}. 
 }
