@@ -26,7 +26,7 @@ install_rstan <- function(multiarch = FALSE) {
   library(rstan)
   set_cppo("fast")
   if (any(grepl("^darwin", R.version$os, ignore.case = TRUE))) {
-    cat('CC=clang', 'CXX=clang++ -arch x86_64 -ftemplate-depth-256', 
+    cat('\nCC=clang', 'CXX=clang++ -arch x86_64 -ftemplate-depth-256', 
         file = "~/.R/Makevars", sep = "\n", append = TRUE)
   }
   return(invisible(NULL))
