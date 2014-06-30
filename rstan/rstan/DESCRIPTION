@@ -20,7 +20,7 @@ Description: R interface to Stan (Stan is an open-source package for obtaining
         Hamiltonian Monte Carlo.)
 License: GPL (>=3)
 Imports: stats4
-Depends: R (>= 3.0), Rcpp (>= 0.9.10), utils, inline, methods, RcppEigen, BH
-LinkingTo: Rcpp, RcppEigen, BH
+Depends: R (>= 3.0.2), Rcpp (>= 0.9.10), utils, inline, methods
+LinkingTo: Rcpp, RcppEigen, BH (>= 1.54)
 Suggests: RUnit
 URL: http://mc-stan.org
