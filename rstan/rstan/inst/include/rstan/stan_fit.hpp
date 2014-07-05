@@ -769,16 +769,16 @@ namespace rstan {
           bfgs._conv_opts.tolAbsGrad = args.get_ctrl_optim_tol_abs_grad();
           bfgs._conv_opts.tolRelGrad = args.get_ctrl_optim_tol_rel_grad();
           bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_abs_x();
-          bfgs._opts.maxIts          = args.get_iter();
+          bfgs._conv_opts.maxIts     = args.get_iter();
           
-          int return_code = do_bfgs_optimize(model, bfgs, base_rng,
-                                             lp, cont_vector, disc_vector,
-                                             &sample_stream, &rstan::io::rcout, 
-                                             save_iterations, refresh);
+          int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,
+                                                           lp, cont_vector, disc_vector,
+                                                           &sample_stream, &rstan::io::rcout, 
+                                                           save_iterations, refresh);
 
           if (args.get_sample_file_flag()) { 
-            write_iteration(sample_stream, model, base_rng,
-                            lp, cont_vector, disc_vector);
+            stan::common::write_iteration(sample_stream, model, base_rng,
+                                          lp, cont_vector, disc_vector);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
