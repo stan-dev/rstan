@@ -32,6 +32,7 @@
 
 
 #include <stan/common/do_print.hpp>
+#include <stan/common/do_bfgs_optimize.hpp>
 #include <stan/common/print_progress.hpp>
 
 
@@ -728,9 +729,11 @@ namespace rstan {
             rstan::io::rcout << "output = " << args.get_sample_file() << std::endl;
           rstan::io::rcout << "save_iterations = " << args.get_ctrl_optim_save_iterations() << std::endl;
           rstan::io::rcout << "init_alpha = " << args.get_ctrl_optim_init_alpha() << std::endl;
-          rstan::io::rcout << "tol_obj = " << args.get_ctrl_optim_tol_obj() << std::endl;
-          rstan::io::rcout << "tol_grad = " << args.get_ctrl_optim_tol_grad() << std::endl;
-          rstan::io::rcout << "tol_param = " << args.get_ctrl_optim_tol_param() << std::endl;
+          rstan::io::rcout << "tol_abs_x = " << args.get_ctrl_optim_tol_abs_x() << std::endl;
+          rstan::io::rcout << "tol_abs_f = " << args.get_ctrl_optim_tol_abs_f() << std::endl;
+          rstan::io::rcout << "tol_abs_grad = " << args.get_ctrl_optim_tol_abs_grad() << std::endl;
+          rstan::io::rcout << "tol_rel_f = " << args.get_ctrl_optim_tol_rel_f() << std::endl;
+          rstan::io::rcout << "tol_rel_grad = " << args.get_ctrl_optim_tol_rel_grad() << std::endl;
           rstan::io::rcout << "seed = " << args.get_random_seed() << std::endl;
           
           if (args.get_sample_file_flag()) { 
@@ -742,80 +745,45 @@ namespace rstan {
             write_comment_property(sample_stream,"init",init_val);
             write_comment_property(sample_stream,"save_iterations",args.get_ctrl_optim_save_iterations());
             write_comment_property(sample_stream,"init_alpha",args.get_ctrl_optim_init_alpha());
-            write_comment_property(sample_stream,"tol_obj",args.get_ctrl_optim_tol_obj());
-            write_comment_property(sample_stream,"tol_grad",args.get_ctrl_optim_tol_grad());
-            write_comment_property(sample_stream,"tol_param",args.get_ctrl_optim_tol_param());
+            write_comment_property(sample_stream,"tol_abs_x", args.get_ctrl_optim_tol_abs_x());
+            write_comment_property(sample_stream,"tol_abs_f", args.get_ctrl_optim_tol_abs_f());
+            write_comment_property(sample_stream,"tol_abs_grad", args.get_ctrl_optim_tol_abs_grad());
+            write_comment_property(sample_stream,"tol_rel_f", args.get_ctrl_optim_tol_rel_f());
+            write_comment_property(sample_stream,"tol_rel_grad", args.get_ctrl_optim_tol_rel_grad());
             write_comment_property(sample_stream,"seed",args.get_random_seed());
             write_comment(sample_stream);
             
             sample_stream << "lp__,"; // log probability first
             model.write_csv_header(sample_stream);
           } 
-          
-          stan::optimization::BFGSLineSearch<Model> bfgs(model, cont_vector, disc_vector,
-                                                         &rstan::io::rcout);
-          bfgs._opts.alpha0 = args.get_ctrl_optim_init_alpha();
-          bfgs._opts.tolF = args.get_ctrl_optim_tol_obj();
-          bfgs._opts.tolGrad = args.get_ctrl_optim_tol_grad();
-          bfgs._opts.tolX = args.get_ctrl_optim_tol_param();
-          bfgs._opts.maxIts = args.get_iter();
-          
-          double lp = bfgs.logp();
-          
-          rstan::io::rcout << "initial log joint probability = " << lp << std::endl;
-          int ret = 0;
-          while (0 == ret) {
-            int i = bfgs.iter_num();
-            
-            if (stan::common::do_print(i, i==0, 50 * args.get_ctrl_optim_refresh())) {
-              rstan::io::rcout << "    Iter ";
-              rstan::io::rcout << "     log prob ";
-              rstan::io::rcout << "       ||dx|| ";
-              rstan::io::rcout << "     ||grad|| ";
-              rstan::io::rcout << "      alpha ";
-              rstan::io::rcout << " # evals ";
-              rstan::io::rcout << " Notes " << std::endl;
-            }
-            ret = bfgs.step();
-            lp = bfgs.logp();
-            bfgs.params_r(cont_vector);
+          double lp(0);
+          bool save_iterations = args.get_ctrl_optim_save_iterations();
+          int refresh = args.get_ctrl_sampling_refresh();
 
-            if (stan::common::do_print(i, i==0, args.get_ctrl_optim_refresh()) 
-                || ret != 0 || !bfgs.note().empty()) {
-              rstan::io::rcout << " " << std::setw(7) << i << " ";
-              rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << lp << " ";
-              rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << bfgs.prev_step_size() << " ";
-              rstan::io::rcout << " " << std::setw(12) << std::setprecision(6) << bfgs.curr_g().norm() << " ";
-              rstan::io::rcout << " " << std::setw(10) << std::setprecision(4) << bfgs.alpha() << " ";
-              rstan::io::rcout << " " << std::setw(7) << bfgs.grad_evals() << " ";
-              rstan::io::rcout << " " << bfgs.note() << " ";
-              rstan::io::rcout << std::endl;
-              rstan::io::rcout.flush();
-            }
+          typedef stan::optimization::BFGSLineSearch<Model,stan::optimization::BFGSUpdate_HInv<> > Optimizer;
+          Optimizer bfgs(model, cont_vector, disc_vector, &rstan::io::rcout);
 
-            if (args.get_ctrl_optim_save_iterations()) {
-              sample_stream << lp << ',';
-              model.write_csv(base_rng,cont_vector,disc_vector,sample_stream);
-              sample_stream.flush();
-            }
+          bfgs._ls_opts.alpha0       = args.get_ctrl_optim_init_alpha();
+          bfgs._conv_opts.tolAbsF    = args.get_ctrl_optim_tol_abs_f();
+          bfgs._conv_opts.tolRelF    = args.get_ctrl_optim_tol_rel_f();
+          bfgs._conv_opts.tolAbsGrad = args.get_ctrl_optim_tol_abs_grad();
+          bfgs._conv_opts.tolRelGrad = args.get_ctrl_optim_tol_rel_grad();
+          bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_abs_x();
+          bfgs._conv_opts.maxIts     = args.get_iter();
+          
+          int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,
+                                                           lp, cont_vector, disc_vector,
+                                                           &sample_stream, &rstan::io::rcout, 
+                                                           save_iterations, refresh);
+
+          if (args.get_sample_file_flag()) { 
+            stan::common::write_iteration(sample_stream, model, base_rng,
+                                          lp, cont_vector, disc_vector);
+            sample_stream.close();
           }
-          if (args.get_ctrl_optim_refresh() > 0) {
-            if (ret >= 0) {
-              rstan::io::rcout << "Optimization terminated normally: ";
-            } else {
-              rstan::io::rcout << "Optimization terminated with error: ";
-            }
-            rstan::io::rcout << bfgs.get_code_string(ret) << std::endl;
-          } 
-          
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
           holder = Rcpp::List::create(Rcpp::_["par"] = params_inr_etc, 
                                       Rcpp::_["value"] = lp);
-          if (args.get_sample_file_flag()) { 
-            sample_stream << lp << ',';
-            print_vector(params_inr_etc, sample_stream);
-            sample_stream.close();
-          }
         } else if (Newton == args.get_ctrl_optim_algorithm()) {
           rstan::io::rcout << "STAN OPTIMIZATION COMMAND (Newton)" << std::endl;
           if (args.get_sample_file_flag()) {
