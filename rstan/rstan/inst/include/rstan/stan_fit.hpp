@@ -32,6 +32,7 @@
 
 
 #include <stan/common/do_print.hpp>
+#include <stan/common/do_bfgs_optimize.hpp>
 #include <stan/common/print_progress.hpp>
 
 
