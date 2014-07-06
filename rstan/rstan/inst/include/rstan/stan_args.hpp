@@ -131,7 +131,7 @@ namespace rstan {
         bool save_iterations; // default to false
         double stepsize; // default to 1, for Nesterov
         double init_alpha; // default to 0.001, for BFGS
-        double tol_obj; // default to 1e-8, for BFGS
+        double tol_obj; // default to 1e-12, for BFGS
         double tol_grad; // default to 1e-8, for BFGS
         double tol_param; // default to 1e-8, for BFGS
         double tol_rel_obj; // default to 1e4, for BFGS
