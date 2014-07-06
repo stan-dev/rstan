@@ -729,10 +729,10 @@ namespace rstan {
             rstan::io::rcout << "output = " << args.get_sample_file() << std::endl;
           rstan::io::rcout << "save_iterations = " << args.get_ctrl_optim_save_iterations() << std::endl;
           rstan::io::rcout << "init_alpha = " << args.get_ctrl_optim_init_alpha() << std::endl;
-          rstan::io::rcout << "tol_abs_x = " << args.get_ctrl_optim_tol_abs_x() << std::endl;
-          rstan::io::rcout << "tol_abs_f = " << args.get_ctrl_optim_tol_abs_f() << std::endl;
-          rstan::io::rcout << "tol_abs_grad = " << args.get_ctrl_optim_tol_abs_grad() << std::endl;
-          rstan::io::rcout << "tol_rel_f = " << args.get_ctrl_optim_tol_rel_f() << std::endl;
+          rstan::io::rcout << "tol_obj = " << args.get_ctrl_optim_tol_obj() << std::endl;
+          rstan::io::rcout << "tol_grad = " << args.get_ctrl_optim_tol_grad() << std::endl;
+          rstan::io::rcout << "tol_param = " << args.get_ctrl_optim_tol_param() << std::endl;
+          rstan::io::rcout << "tol_rel_obj = " << args.get_ctrl_optim_tol_rel_obj() << std::endl;
           rstan::io::rcout << "tol_rel_grad = " << args.get_ctrl_optim_tol_rel_grad() << std::endl;
           rstan::io::rcout << "seed = " << args.get_random_seed() << std::endl;
           
@@ -745,10 +745,10 @@ namespace rstan {
             write_comment_property(sample_stream,"init",init_val);
             write_comment_property(sample_stream,"save_iterations",args.get_ctrl_optim_save_iterations());
             write_comment_property(sample_stream,"init_alpha",args.get_ctrl_optim_init_alpha());
-            write_comment_property(sample_stream,"tol_abs_x", args.get_ctrl_optim_tol_abs_x());
-            write_comment_property(sample_stream,"tol_abs_f", args.get_ctrl_optim_tol_abs_f());
-            write_comment_property(sample_stream,"tol_abs_grad", args.get_ctrl_optim_tol_abs_grad());
-            write_comment_property(sample_stream,"tol_rel_f", args.get_ctrl_optim_tol_rel_f());
+            write_comment_property(sample_stream,"tol_obj",args.get_ctrl_optim_tol_obj());
+            write_comment_property(sample_stream,"tol_grad",args.get_ctrl_optim_tol_grad());
+            write_comment_property(sample_stream,"tol_param",args.get_ctrl_optim_tol_param());
+            write_comment_property(sample_stream,"tol_rel_obj", args.get_ctrl_optim_tol_rel_obj());
             write_comment_property(sample_stream,"tol_rel_grad", args.get_ctrl_optim_tol_rel_grad());
             write_comment_property(sample_stream,"seed",args.get_random_seed());
             write_comment(sample_stream);
@@ -764,11 +764,11 @@ namespace rstan {
           Optimizer bfgs(model, cont_vector, disc_vector, &rstan::io::rcout);
 
           bfgs._ls_opts.alpha0       = args.get_ctrl_optim_init_alpha();
-          bfgs._conv_opts.tolAbsF    = args.get_ctrl_optim_tol_abs_f();
-          bfgs._conv_opts.tolRelF    = args.get_ctrl_optim_tol_rel_f();
-          bfgs._conv_opts.tolAbsGrad = args.get_ctrl_optim_tol_abs_grad();
+          bfgs._conv_opts.tolAbsF    = args.get_ctrl_optim_tol_obj();
+          bfgs._conv_opts.tolRelF    = args.get_ctrl_optim_tol_rel_obj();
+          bfgs._conv_opts.tolAbsGrad = args.get_ctrl_optim_tol_grad();
           bfgs._conv_opts.tolRelGrad = args.get_ctrl_optim_tol_rel_grad();
-          bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_abs_x();
+          bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           bfgs._conv_opts.maxIts     = args.get_iter();
           
           int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,

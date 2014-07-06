@@ -131,10 +131,10 @@ namespace rstan {
         bool save_iterations; // default to false
         double stepsize; // default to 1, for Nesterov
         double init_alpha; // default to 0.001, for BFGS
-        double tol_abs_x; // default to 1e-8, for BFGS
-        double tol_abs_f; // default to 1e-12, for BFGS
-        double tol_abs_grad; // default to 1e-8, for BFGS
-        double tol_rel_f; // default to 1e4, for BFGS
+        double tol_obj; // default to 1e-8, for BFGS
+        double tol_grad; // default to 1e-8, for BFGS
+        double tol_param; // default to 1e-8, for BFGS
+        double tol_rel_obj; // default to 1e4, for BFGS
         double tol_rel_grad; // default to 1e3, for BFGS
       } optim; 
       struct {
@@ -337,10 +337,10 @@ namespace rstan {
   
           get_rlist_element(in, "stepsize", ctrl.optim.stepsize, 1.0);
           get_rlist_element(in, "init_alpha", ctrl.optim.init_alpha, 0.001);
-          get_rlist_element(in, "tol_abs_x", ctrl.optim.tol_abs_x, 1e-8);
-          get_rlist_element(in, "tol_abs_f", ctrl.optim.tol_abs_f, 1e-8);
-          get_rlist_element(in, "tol_abs_grad", ctrl.optim.tol_abs_grad, 1e-8);
-          get_rlist_element(in, "tol_rel_f", ctrl.optim.tol_rel_f, 1e4);
+          get_rlist_element(in, "tol_obj", ctrl.optim.tol_obj, 1e-12);
+          get_rlist_element(in, "tol_grad", ctrl.optim.tol_grad, 1e-8);
+          get_rlist_element(in, "tol_param", ctrl.optim.tol_param, 1e-8);
+          get_rlist_element(in, "tol_rel_obj", ctrl.optim.tol_rel_obj, 1e4);
           get_rlist_element(in, "tol_rel_grad", ctrl.optim.tol_rel_grad, 1e3);
           get_rlist_element(in, "save_iterations", ctrl.optim.save_iterations, true);
           break;
@@ -449,10 +449,10 @@ namespace rstan {
                            break;
             case BFGS: args["algorithm"] = Rcpp::wrap("BFGS"); 
                        args["init_alpha"] = Rcpp::wrap(ctrl.optim.init_alpha);
-                       args["tol_abs_x"] = Rcpp::wrap(ctrl.optim.tol_abs_x);
-                       args["tol_abs_f"] = Rcpp::wrap(ctrl.optim.tol_abs_f);
-                       args["tol_abs_grad"] = Rcpp::wrap(ctrl.optim.tol_abs_grad);
-                       args["tol_rel_f"] = Rcpp::wrap(ctrl.optim.tol_rel_f);
+                       args["tol_param"] = Rcpp::wrap(ctrl.optim.tol_param);
+                       args["tol_obj"] = Rcpp::wrap(ctrl.optim.tol_obj);
+                       args["tol_grad"] = Rcpp::wrap(ctrl.optim.tol_grad);
+                       args["tol_rel_obj"] = Rcpp::wrap(ctrl.optim.tol_rel_obj);
                        args["tol_rel_grad"] = Rcpp::wrap(ctrl.optim.tol_rel_grad);
                        break;
           } 
@@ -580,17 +580,17 @@ namespace rstan {
     inline double get_ctrl_optim_init_alpha() const { 
       return ctrl.optim.init_alpha;
     }
-    inline double get_ctrl_optim_tol_abs_x() const {
-      return ctrl.optim.tol_abs_x;
+    inline double get_ctrl_optim_tol_obj() const {
+      return ctrl.optim.tol_obj;
     }
-    inline double get_ctrl_optim_tol_abs_f() const {
-      return ctrl.optim.tol_abs_f;
+    inline double get_ctrl_optim_tol_grad() const {
+      return ctrl.optim.tol_grad;
     }
-    inline double get_ctrl_optim_tol_abs_grad() const {
-      return ctrl.optim.tol_abs_grad;
+    inline double get_ctrl_optim_tol_param() const {
+      return ctrl.optim.tol_param;
     }
-    inline double get_ctrl_optim_tol_rel_f() const {
-      return ctrl.optim.tol_rel_f;
+    inline double get_ctrl_optim_tol_rel_obj() const {
+      return ctrl.optim.tol_rel_obj;
     }
     inline double get_ctrl_optim_tol_rel_grad() const {
       return ctrl.optim.tol_rel_grad;
@@ -661,10 +661,10 @@ namespace rstan {
                            break;
             case BFGS: write_comment_property(ostream,"algorithm", "BFGS");
                        write_comment_property(ostream,"init_alpha", ctrl.optim.init_alpha);
-                       write_comment_property(ostream,"tol_abs_x", ctrl.optim.tol_abs_x);
-                       write_comment_property(ostream,"tol_abs_f", ctrl.optim.tol_abs_f);
-                       write_comment_property(ostream,"tol_abs_grad", ctrl.optim.tol_abs_grad);
-                       write_comment_property(ostream,"tol_rel_f", ctrl.optim.tol_rel_f);
+                       write_comment_property(ostream,"tol_obj", ctrl.optim.tol_obj);
+                       write_comment_property(ostream,"tol_grad", ctrl.optim.tol_grad);
+                       write_comment_property(ostream,"tol_param", ctrl.optim.tol_param);
+                       write_comment_property(ostream,"tol_rel_obj", ctrl.optim.tol_rel_obj);
                        write_comment_property(ostream,"tol_rel_grad", ctrl.optim.tol_rel_grad);
                        break;
           } 
