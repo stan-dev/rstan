@@ -100,7 +100,7 @@ else
 	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
 ifeq ($(NOTBUILD),FALSE)
-	$(R) CMD build rstan --md5  $(BUILD_OPTS) # --no-build-vignettes --no-manual
+	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
 endif
 
 

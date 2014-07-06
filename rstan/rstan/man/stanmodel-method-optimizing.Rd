@@ -76,9 +76,11 @@
       \item \code{refresh} (\code{integer})
       \item \code{stepsize} (\code{double}), for Nesterov, see the manual of Stan
       \item \code{init_alpha} (\code{double}, default to 0.0001), for BFGS, see manual of Stan
-      \item \code{tol_obj} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-12), for BFGS, see the manual of Stan
       \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
       \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{tol_rel_obj} (\code{double}, default to 1e4), for BFGS, see the manual of Stan
+      \item \code{tol_rel_grad} (\code{double}, default to 1e3), for BFGS, see the manual of Stan
     }
   }
 }
