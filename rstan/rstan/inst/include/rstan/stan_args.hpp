@@ -607,6 +607,9 @@ namespace rstan {
     inline double get_ctrl_optim_tol_rel_grad() const {
       return ctrl.optim.tol_rel_grad;
     }
+    inline int get_ctrl_optim_history_size() const { 
+      return ctrl.optim.history_size;
+    } 
     inline double get_ctrl_test_grad_epsilon() const {
       return ctrl.test_grad.epsilon;
     }

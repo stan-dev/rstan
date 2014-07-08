@@ -16,12 +16,15 @@
 }
 
 test_stan_args_hppb <- function() {
-  b1 <- fx(list(iter = 100, seed = 12354, method = 'optim')) 
+  b1 <- fx(list(iter = 100, seed = 12354, method = 'optim'))
   checkEquals(b1$random_seed, "12354")
-  b2 <- fx(list(iter = 100, seed = 12354, method = 'optim', algoritm = 'BFGS')) 
-  b3 <- fx(list(iter = 100, seed = 12354, method = 'optim', algoritm = 'LBFGS')) 
+  b2 <- fx(list(iter = 100, seed = 12354, method = 'optim', algorithm = 'BFGS'))
+  b3 <- fx(list(iter = 100, seed = 12354, method = 'optim', algorithm = 'LBFGS'))
+  b4 <- fx(list(iter = 100, seed = 12354, method = 'optim', algorithm = 'LBFGS', history_size = 6))
   checkEquals(b1$random_seed, "12354")
-  checkEquals(b2$
+  checkTrue(is.null(b2$history_size))
+  checkEquals(b3$history_size, 5)
+  checkEquals(b4$history_size, 6)
 }
 
 test_stan_args_hpp <- function() { 
