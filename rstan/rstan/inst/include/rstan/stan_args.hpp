@@ -80,7 +80,7 @@ namespace rstan {
   } 
 
   enum sampling_algo_t { NUTS = 1, HMC = 2, Metropolis = 3, Fixed_param = 4};
-  enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
+  enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3, LBFGS = 4};
   enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
   enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
 
@@ -127,15 +127,16 @@ namespace rstan {
       struct {
         int iter; // default to 2000
         int refresh; // default to 100
-        optim_algo_t algorithm; // Newton, Nesterov, BFGS
+        optim_algo_t algorithm; // Newton, Nesterov, (L)BFGS
         bool save_iterations; // default to false
         double stepsize; // default to 1, for Nesterov
-        double init_alpha; // default to 0.001, for BFGS
-        double tol_obj; // default to 1e-12, for BFGS
-        double tol_grad; // default to 1e-8, for BFGS
-        double tol_param; // default to 1e-8, for BFGS
-        double tol_rel_obj; // default to 1e4, for BFGS
-        double tol_rel_grad; // default to 1e3, for BFGS
+        double init_alpha; // default to 0.001, for (L)BFGS
+        double tol_obj; // default to 1e-12, for (L)BFGS
+        double tol_grad; // default to 1e-8, for (L)BFGS
+        double tol_param; // default to 1e-8, for (L)BFGS
+        double tol_rel_obj; // default to 1e4, for (L)BFGS
+        double tol_rel_grad; // default to 1e7, for (L)BFGS
+        int history_size; // default to 5, for LBFGS only
       } optim; 
       struct {
         double epsilon; // default to 1e-6, for test_grad 
@@ -320,10 +321,11 @@ namespace rstan {
             if ("BFGS" == t_str)  ctrl.optim.algorithm = BFGS;
             else if ("Newton" == t_str)  ctrl.optim.algorithm = Newton;
             else if ("Nesterov" == t_str)  ctrl.optim.algorithm = Nesterov;
+            else if ("LBFGS" == t_str)  ctrl.optim.algorithm = LBFGS;
             else {
               std::stringstream msg;
               msg << "Invalid value for parameter algorithm (found "
-                  << t_str << "; require BFGS, Newton, or Nesterov).";
+                  << t_str << "; require (L)BFGS, Newton, or Nesterov).";
               throw std::invalid_argument(msg.str());
             }
           } else {
@@ -341,8 +343,9 @@ namespace rstan {
           get_rlist_element(in, "tol_grad", ctrl.optim.tol_grad, 1e-8);
           get_rlist_element(in, "tol_param", ctrl.optim.tol_param, 1e-8);
           get_rlist_element(in, "tol_rel_obj", ctrl.optim.tol_rel_obj, 1e4);
-          get_rlist_element(in, "tol_rel_grad", ctrl.optim.tol_rel_grad, 1e3);
+          get_rlist_element(in, "tol_rel_grad", ctrl.optim.tol_rel_grad, 1e7);
           get_rlist_element(in, "save_iterations", ctrl.optim.save_iterations, true);
+          get_rlist_element(in, "history_size", ctrl.optim.history_size, static_cast<int>(5));
           break;
 
         case TEST_GRADIENT:
@@ -447,6 +450,15 @@ namespace rstan {
             case Nesterov: args["algorithm"] = Rcpp::wrap("Nesterov"); 
                            args["stepsize"] = Rcpp::wrap(ctrl.optim.stepsize);
                            break;
+            case LBFGS: args["algorithm"] = Rcpp::wrap("LBFGS"); 
+                        args["init_alpha"] = Rcpp::wrap(ctrl.optim.init_alpha);
+                        args["tol_param"] = Rcpp::wrap(ctrl.optim.tol_param);
+                        args["tol_obj"] = Rcpp::wrap(ctrl.optim.tol_obj);
+                        args["tol_grad"] = Rcpp::wrap(ctrl.optim.tol_grad);
+                        args["tol_rel_obj"] = Rcpp::wrap(ctrl.optim.tol_rel_obj);
+                        args["tol_rel_grad"] = Rcpp::wrap(ctrl.optim.tol_rel_grad);
+                        args["history_size"] = Rcpp::wrap(ctrl.optim.history_size);
+                        break;
             case BFGS: args["algorithm"] = Rcpp::wrap("BFGS"); 
                        args["init_alpha"] = Rcpp::wrap(ctrl.optim.init_alpha);
                        args["tol_param"] = Rcpp::wrap(ctrl.optim.tol_param);
@@ -595,6 +607,9 @@ namespace rstan {
     inline double get_ctrl_optim_tol_rel_grad() const {
       return ctrl.optim.tol_rel_grad;
     }
+    inline int get_ctrl_optim_history_size() const { 
+      return ctrl.optim.history_size;
+    } 
     inline double get_ctrl_test_grad_epsilon() const {
       return ctrl.test_grad.epsilon;
     }
@@ -666,6 +681,15 @@ namespace rstan {
                        write_comment_property(ostream,"tol_param", ctrl.optim.tol_param);
                        write_comment_property(ostream,"tol_rel_obj", ctrl.optim.tol_rel_obj);
                        write_comment_property(ostream,"tol_rel_grad", ctrl.optim.tol_rel_grad);
+                       break;
+            case LBFGS: write_comment_property(ostream,"algorithm", "LBFGS");
+                       write_comment_property(ostream,"init_alpha", ctrl.optim.init_alpha);
+                       write_comment_property(ostream,"tol_obj", ctrl.optim.tol_obj);
+                       write_comment_property(ostream,"tol_grad", ctrl.optim.tol_grad);
+                       write_comment_property(ostream,"tol_param", ctrl.optim.tol_param);
+                       write_comment_property(ostream,"tol_rel_obj", ctrl.optim.tol_rel_obj);
+                       write_comment_property(ostream,"tol_rel_grad", ctrl.optim.tol_rel_grad);
+                       write_comment_property(ostream,"history_size", ctrl.optim.history_size);
                        break;
           } 
         case TEST_GRADIENT: break;

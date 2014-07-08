@@ -168,7 +168,7 @@ CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
 STAN_LIB := tests/cpp/lib/libstan.a
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
-$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") $(shell $(RSCRIPT) -e "RInside:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256 -stdlib=libstdc++
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") $(shell $(RSCRIPT) -e "RInside:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R $(shell $(RSCRIPT) -e "Rcpp:::LdFlags()") $(shell $(RSCRIPT) -e "RInside:::LdFlags()")
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
