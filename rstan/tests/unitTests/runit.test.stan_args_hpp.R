@@ -18,6 +18,10 @@
 test_stan_args_hppb <- function() {
   b1 <- fx(list(iter = 100, seed = 12354, method = 'optim')) 
   checkEquals(b1$random_seed, "12354")
+  b2 <- fx(list(iter = 100, seed = 12354, method = 'optim', algoritm = 'BFGS')) 
+  b3 <- fx(list(iter = 100, seed = 12354, method = 'optim', algoritm = 'LBFGS')) 
+  checkEquals(b1$random_seed, "12354")
+  checkEquals(b2$
 }
 
 test_stan_args_hpp <- function() { 
