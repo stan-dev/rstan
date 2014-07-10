@@ -134,8 +134,8 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{adapt_kappa} (\code{double}, positive, defaults to 0.75)
       \item \code{adapt_t0} (\code{double}, positive, defaults to 10)
       \item \code{adapt_init_buffer} (\code{integer}, positive, defaults to 75)
-      \item \code{adapt_term_buffer} (\code{integer}, positive, defaults to 25)
-      \item \code{adapt_window} (\code{integer}, positive, defaults to 50)
+      \item \code{adapt_term_buffer} (\code{integer}, positive, defaults to 50)
+      \item \code{adapt_window} (\code{integer}, positive, defaults to 25)
     }
 
     In addition, algorithm HMC (called 'static HMC' in Stan) and NUTS share the
