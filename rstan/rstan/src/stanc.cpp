@@ -12,7 +12,7 @@
 #include <Rcpp.h>
 #include <rstan/io/r_ostream.hpp> 
 
-RcppExport SEXP CPP_stanc220(SEXP model_stancode, SEXP model_name);
+RcppExport SEXP CPP_stanc230(SEXP model_stancode, SEXP model_name);
 RcppExport SEXP CPP_stan_version(); 
 
 SEXP CPP_stan_version() {
@@ -28,13 +28,12 @@ SEXP CPP_stan_version() {
   END_RCPP
 } 
 
-SEXP CPP_stanc220(SEXP model_stancode, SEXP model_name) { 
+SEXP CPP_stanc230(SEXP model_stancode, SEXP model_name) { 
   BEGIN_RCPP;
   static const int SUCCESS_RC = 0;
   static const int EXCEPTION_RC = -1;
   static const int PARSE_FAIL_RC = -2;
   
-  static const bool INCLUDE_MAIN = true; 
   /*
   std::string stan_version 
     = stan::MAJOR_VERSION + "." +
@@ -49,7 +48,7 @@ SEXP CPP_stanc220(SEXP model_stancode, SEXP model_name) {
   std::istringstream in(mcode_); 
   try {
     bool valid_model
-      = stan::gm::compile(&rstan::io::rcerr,in,out,mname_,!INCLUDE_MAIN);
+      = stan::gm::compile(&rstan::io::rcerr,in,out,mname_);
     if (!valid_model) {
       return Rcpp::List::create(Rcpp::Named("status") = PARSE_FAIL_RC); 
 

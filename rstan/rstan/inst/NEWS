@@ -1,3 +1,17 @@
+Sat Jul 12 2014
+1. changes
+  * remove nesterov optim algorithm
+
+Mon Jun 23 2014 (2.3.0)
+1. changes
+  * updates for Stan 2.3.0 
+  * use \n instead of \r for printing sampling progress
+  * default to 2 digits after decimal place for print method for stanfit 
+
+Wed Apr 15 2014
+1. Bug fixes
+  * issue 62
+
 Wed Feb 26 2014
 1. Bug fixes
   * issue 51

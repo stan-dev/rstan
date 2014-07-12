@@ -16,7 +16,7 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    algorithm = c("BFGS", "Nesterov", "Newton"),
+    algorithm = c("BFGS", "LBFGS", "Newton"),
     verbose = FALSE, hessian = FALSE, as_vector = TRUE, \dots)   
 } 
 
@@ -59,7 +59,7 @@
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
-  \item{algorithm}{One of "Newton", "Nesterov", and "BFGS" indicating which
+  \item{algorithm}{One of "Newton", "BFGS", and "LBFGS" indicating which
     optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
@@ -74,11 +74,13 @@
       \item \code{iter} (\code{integer}), the maximum number of iterations
       \item \code{save_iterations} (logical), whether to save the iterations 
       \item \code{refresh} (\code{integer})
-      \item \code{stepsize} (\code{double}), for Nesterov, see the manual of Stan
-      \item \code{init_alpha} (\code{double}, default to 0.0001), for BFGS, see manual of Stan
-      \item \code{tol_obj} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
-      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
-      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{init_alpha} (\code{double}, default to 0.001), for BFGS and LBFGS, see manual of Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-12), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_rel_obj} (\code{double}, default to 1e4), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_rel_grad} (\code{double}, default to 1e7), for BFGS and LBFGS, see the manual of Stan
+      \item \code{history_size} (\code{integer}, default to 5), for LBFGS, see the manual of Stan
     }
   }
 }

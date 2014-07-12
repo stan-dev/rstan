@@ -30,7 +30,7 @@
 \note{
   The best practice is to use \code{sflist2stanfit} on a list of \code{stanfit}
   objects created with the same \code{seed} but different \code{chain_id} (see
-  the below example). Using the same seed but different chain_id can make sure 
+  example below). Using the same seed but different chain_id can make sure 
   the random number generations for all chains are not correlated. 
 
   This function would do some check to see if the \code{stanfit} objects in the input list 
