@@ -29,7 +29,7 @@ before_install:
     
 install:
   - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
-  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight
+  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen
   - ccache --max-size 8G
 
 before_script: 
