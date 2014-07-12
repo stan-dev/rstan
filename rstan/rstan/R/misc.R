@@ -329,7 +329,7 @@ is_named_list <- function(x) {
 ## from stan_args.hpp
 # 
 # enum sampling_algo_t { NUTS = 1, HMC = 2, Metroplos = 3};
-# enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
+# enum optim_algo_t { Newton = 1, BFGS = 2, LBFGS = 3};
 # enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
 # enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
 
