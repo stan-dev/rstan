@@ -80,7 +80,7 @@ namespace rstan {
   } 
 
   enum sampling_algo_t { NUTS = 1, HMC = 2, Metropolis = 3, Fixed_param = 4};
-  enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3, LBFGS = 4};
+  enum optim_algo_t { Newton = 1, BFGS = 3, LBFGS = 4};
   enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
   enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
 
@@ -127,9 +127,8 @@ namespace rstan {
       struct {
         int iter; // default to 2000
         int refresh; // default to 100
-        optim_algo_t algorithm; // Newton, Nesterov, (L)BFGS
+        optim_algo_t algorithm; // Newton, (L)BFGS
         bool save_iterations; // default to false
-        double stepsize; // default to 1, for Nesterov
         double init_alpha; // default to 0.001, for (L)BFGS
         double tol_obj; // default to 1e-12, for (L)BFGS
         double tol_grad; // default to 1e-8, for (L)BFGS
@@ -204,12 +203,6 @@ namespace rstan {
           } 
           break;
         case OPTIM:
-          if (ctrl.optim.stepsize < 0) {
-            std::stringstream msg; 
-            msg << "Invalid adaptation parameter (found stepsize="
-                << ctrl.optim.stepsize << "; require stepsize > 0).";
-            throw std::invalid_argument(msg.str());
-          } 
           if (ctrl.optim.init_alpha < 0) {  
             std::stringstream msg; 
             msg << "Invalid adaptation parameter (found init_alpha="
@@ -320,12 +313,11 @@ namespace rstan {
           if (get_rlist_element(in, "algorithm", t_str)) {
             if ("BFGS" == t_str)  ctrl.optim.algorithm = BFGS;
             else if ("Newton" == t_str)  ctrl.optim.algorithm = Newton;
-            else if ("Nesterov" == t_str)  ctrl.optim.algorithm = Nesterov;
             else if ("LBFGS" == t_str)  ctrl.optim.algorithm = LBFGS;
             else {
               std::stringstream msg;
               msg << "Invalid value for parameter algorithm (found "
-                  << t_str << "; require (L)BFGS, Newton, or Nesterov).";
+                  << t_str << "; require (L)BFGS or Newton).";
               throw std::invalid_argument(msg.str());
             }
           } else {
@@ -337,7 +329,6 @@ namespace rstan {
             if (ctrl.optim.refresh < 1) ctrl.optim.refresh = 1;
           } 
   
-          get_rlist_element(in, "stepsize", ctrl.optim.stepsize, 1.0);
           get_rlist_element(in, "init_alpha", ctrl.optim.init_alpha, 0.001);
           get_rlist_element(in, "tol_obj", ctrl.optim.tol_obj, 1e-12);
           get_rlist_element(in, "tol_grad", ctrl.optim.tol_grad, 1e-8);
@@ -447,9 +438,6 @@ namespace rstan {
           args["save_iterations"] = Rcpp::wrap(ctrl.optim.save_iterations);
           switch (ctrl.optim.algorithm) {
             case Newton: args["algorithm"] = Rcpp::wrap("Newton"); break;
-            case Nesterov: args["algorithm"] = Rcpp::wrap("Nesterov"); 
-                           args["stepsize"] = Rcpp::wrap(ctrl.optim.stepsize);
-                           break;
             case LBFGS: args["algorithm"] = Rcpp::wrap("LBFGS"); 
                         args["init_alpha"] = Rcpp::wrap(ctrl.optim.init_alpha);
                         args["tol_param"] = Rcpp::wrap(ctrl.optim.tol_param);
@@ -586,9 +574,6 @@ namespace rstan {
     inline bool get_ctrl_optim_save_iterations() const {
       return ctrl.optim.save_iterations;
     }
-    inline double get_ctrl_optim_stepsize() const { 
-      return ctrl.optim.stepsize;
-    }
     inline double get_ctrl_optim_init_alpha() const { 
       return ctrl.optim.init_alpha;
     }
@@ -671,9 +656,6 @@ namespace rstan {
           write_comment_property(ostream,"save_iterations",ctrl.optim.save_iterations);
           switch (ctrl.optim.algorithm) {
             case Newton: write_comment_property(ostream,"algorithm", "Newton"); break;
-            case Nesterov: write_comment_property(ostream,"algorithm", "Nesterov");
-                           write_comment_property(ostream,"stepsize", ctrl.optim.stepsize);
-                           break;
             case BFGS: write_comment_property(ostream,"algorithm", "BFGS");
                        write_comment_property(ostream,"init_alpha", ctrl.optim.init_alpha);
                        write_comment_property(ostream,"tol_obj", ctrl.optim.tol_obj);

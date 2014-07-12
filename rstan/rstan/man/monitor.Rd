@@ -62,7 +62,7 @@ ecode <- '
   }
 '
 fit <- stan(model_code = ecode)
-# The below is just for the purpose of giving an example
+# The following is just for the purpose of giving an example
 # since print can be used for a stanfit object.
 monitor(extract(fit, permuted = FALSE, inc_warmup = TRUE))
 } 
