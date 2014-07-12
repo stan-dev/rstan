@@ -30,6 +30,11 @@ optim2 <- rstan:::optimizing(sm, data = dat, algorithm = 'BFGS',
                              tol_obj = 1e-7, tol_grad=1e-9, tol_param=1e-7)
 print(optim2)
 
+optim2l <- rstan:::optimizing(sm, data = dat, algorithm = 'LBFGS', 
+                              sample_file = 'opt.csv', init_alpha = 0.02,
+                              tol_obj = 1e-7, tol_grad=1e-9, tol_param=1e-7)
+print(optim2l)
+
 optim3 <- rstan:::optimizing(sm, data = dat, algorithm = 'Nesterov', stepsize = 0.5)
 print(optim3)
 

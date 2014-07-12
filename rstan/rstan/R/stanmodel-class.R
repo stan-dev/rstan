@@ -55,7 +55,7 @@ setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   algorithm = c("BFGS", "Nesterov", "Newton"),
+                   algorithm = c("BFGS", "LBFGS", "Nesterov", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
