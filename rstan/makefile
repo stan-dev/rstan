@@ -90,7 +90,7 @@ $(STANSRC):
 	$(LINKCMD2)
 
 
-build $(STANPKG): ./rstan/DESCRIPTION $(STANLIB) $(STANSRC)
+build $(STANPKG): ./rstan/DESCRIPTION $(STANSRC)
 	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R

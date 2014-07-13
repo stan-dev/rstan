@@ -45,7 +45,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', file.path(eigen_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '/unsupported" '),
          ' -isystem"', boost_path_fun(), '"',
-         ' -isystem"', boost2_path_fun(), '"',
+         ' -isystem"', boost_path_fun2(), '"',
          ' -I"', rstan_inc_path_fun(), '"', 
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
 }
