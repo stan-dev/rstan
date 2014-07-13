@@ -23,6 +23,10 @@ boost_path_fun <- function() {
   rstan_options("boost_lib")
 }
 
+boost_path_fun2 <- function() {
+  rstan_options("boost_lib2")
+}
+
 # If included in RStan
 # eigen_path_fun() <- paste0(rstan_inc_path_fun(), '/stanlib/eigen_3.1.0')
 
@@ -41,6 +45,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', file.path(eigen_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '/unsupported" '),
          ' -isystem"', boost_path_fun(), '"',
+         ' -isystem"', boost2_path_fun(), '"',
          ' -I"', rstan_inc_path_fun(), '"', 
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
 }
