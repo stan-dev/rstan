@@ -20,7 +20,7 @@ eigen_path_fun <- function() {
 }
 
 boost_path_fun <- function() {
-  rstan_options("boost_lib")
+  file.path(rstan_inc_path_fun(), "boost_not_in_BH")
 }
 
 boost_path_fun2 <- function() {
@@ -96,7 +96,7 @@ rstanplugin <- function() {
 
   list(includes = '',
        body = function(x) x,
-       LinkingTo = c("Rcpp"),
+       LinkingTo = c("Rcpp", "BH"),
        ## FIXME see if we can use LinkingTo for RcppEigen's header files
        env = list(PKG_LIBS = paste(rcpp_pkg_libs, RSTAN_LIBS_fun(), collapse = " "),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
