@@ -24,6 +24,6 @@ libstan.a:  $(LIBSTANOBJECTS)
 RM = rm -f 
 
 clean: 
-	$(RM) -f $(OBJECTS) $(SHLIB) $(USERLIB) $(LIBSTANOBJECTS) 
+	$(RM) -f $(OBJECTS) $(SHLIB) $(LIBSTANOBJECTS)  libstan.a
 
 .PHONY: all clean
