@@ -55,9 +55,6 @@ init_rstan_opt_env <- function(e) {
   assign("eigen_lib", eigen_lib_path, e) 
   assign("boost_lib", boost_lib_path, e) 
 
-  ya_boost  <- system.file('include', 'boost_not_in_BH', package = 'rstan')
-  assign('boost_lib2', ya_boost, e)
-
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
 }

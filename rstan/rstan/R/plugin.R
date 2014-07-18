@@ -23,10 +23,6 @@ boost_path_fun <- function() {
   rstan_options("boost_lib")
 }
 
-boost_path_fun2 <- function() {
-  rstan_options("boost_lib2")
-}
-
 # If included in RStan
 # eigen_path_fun() <- paste0(rstan_inc_path_fun(), '/stanlib/eigen_3.1.0')
 
