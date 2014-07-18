@@ -20,7 +20,11 @@ eigen_path_fun <- function() {
 }
 
 boost_path_fun <- function() {
-  file.path(rstan_inc_path_fun(), "boost_not_in_BH")
+  rstan_options("boost_lib")
+}
+
+boost_path_fun2 <- function() {
+  rstan_options("boost_lib2")
 }
 
 # If included in RStan
@@ -40,8 +44,9 @@ PKG_CPPFLAGS_env_fun <- function() {
    paste(' -I"', file.path(rstan_inc_path_fun(), '/stansrc" '),
          ' -isystem"', file.path(eigen_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '/unsupported" '),
-         ' -isystem"', boost_path_fun(), '"',
-         ' -isystem"', rstan_inc_path_fun(), '"', 
+         ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come         
+         ' -isystem"', boost_path_fun(), '"',  # before BH/include
+         ' -I"', rstan_inc_path_fun(), '"', 
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
 }
 
@@ -91,7 +96,7 @@ rstanplugin <- function() {
 
   list(includes = '',
        body = function(x) x,
-       LinkingTo = c("Rcpp", "BH"),
+       LinkingTo = c("Rcpp"),
        ## FIXME see if we can use LinkingTo for RcppEigen's header files
        env = list(PKG_LIBS = paste(rcpp_pkg_libs, RSTAN_LIBS_fun(), collapse = " "),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
