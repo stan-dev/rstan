@@ -40,9 +40,9 @@
     instead of using parameter \code{file} or \code{model_code}. 
   }
   \item{boost_lib}{The path to a version of the Boost C++ library to
-    use instead of the one supplied with RStan.}
+    use instead of the one in the \pkg{BH} package.}
   \item{eigen_lib}{The path to a version of the Eigen C++ library to
-    use instead of the one in package \pkg{RcppEigen}.} 
+    use instead of the one in the \pkg{RcppEigen} package.} 
   \item{save_dso}{Logical with the default of \code{TRUE}: indication of whether the 
     dynamic shared object (DSO) compiled from the C++ code for the model 
     will be saved or not. If \code{TRUE}, we can draw samples from
