@@ -90,7 +90,6 @@ stan(file, model_name = "anon_model", model_code = "",
     \code{"12345"}, which is converted to integer.}
   \item{algorithm}{One of algorithms that are implemented in Stan such 
     as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011) and static HMC.}
-    % and Metropolis based on random walk.}
 
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
@@ -196,7 +195,7 @@ stan(file, model_name = "anon_model", model_code = "",
   } 
 
   \item{boost_lib}{The path for an alternative version of the Boost C++ 
-     library to the one supplied with RStan.}
+    to use instead of the one in the \pkg{BH} package.}
 
   \item{eigen_lib}{The path for an alternative version of the Eigen C++ 
      library to the one in \pkg{RcppEigen}.} 
