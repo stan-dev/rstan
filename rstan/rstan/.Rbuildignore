@@ -1,15 +1,4 @@
-inst/include/stanlib/gtest.*$
-_inst/include/stanlib/boost.*$
-_inst/include/stanlib/eigen.*$
-inst/include/stanlib/eigen.*/.*CMakeLists\.txt$
-inst/include/stanlib/eigen.*/unsupported/.*CMakeLists\.txt$
-inst/include/stanlib/eigen.*/unsupported/.*README\.txt$
-inst/include/stanlib/eigen.*/unsupported/bench.*$
-inst/include/stanlib/eigen.*/unsupported/doc.*$
-inst/include/stanlib/eigen.*/unsupported/Eigen/(?!FFT)$
-inst/include/stanlib/eigen.*/unsupported/Eigen/src/(?!FFT).*$
-inst/include/stanlib/eigen.*/unsupported/Eigen/src/FFT/.*CMakeLists\.txt$
-inst/include/stanlib/eigen.*/unsupported/test.*$
+inst/include/stanlib/
 inst/include/stansrc/test.*$
 _inst/include/stansrc/models.*$
 inst/include/stansrc/models/.*README$/i
@@ -19,6 +8,7 @@ inst/include/stansrc/models/.*[.]stan[.]0$
 inst/include/stansrc/models/.*makefile$
 inst/include/stansrc/models/.*post.*\.R$
 inst/include/stansrc/models/.*\.csv$
+inst/include/stansrc/models/ARM/.*$
 inst/include/stansrc/.*\.hpp\.d$
 inst/include/stansrc/.*\..pp\.gch$
 inst/include/stansrc/docs.*$
