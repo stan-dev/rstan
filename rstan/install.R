@@ -1,12 +1,13 @@
 
-install_rstan <- function(multiarch = FALSE) {
+install_rstan <- function() {
   on.exit(Sys.unsetenv("R_MAKEVARS_USER"))
   on.exit(Sys.unsetenv("R_MAKEVARS_SITE"), add = TRUE)
 
   try(remove.packages("rstan"), silent = TRUE)
   Sys.setenv(R_MAKEVARS_USER = "foobar")
   Sys.setenv(R_MAKEVARS_SITE = "foobar")
-  install.packages(c("inline", "Rcpp"), type = "source")
+  install.packages(c("inline", "BH", "RcppEigen"))
+  install.packages("Rcpp", type = "source")
   library(inline) 
   library(Rcpp)
   src <- ' 
@@ -21,8 +22,7 @@ install_rstan <- function(multiarch = FALSE) {
 
   options(repos = c(getOption("repos"), 
           rstan = "http://rstan.org/repo/"))
-  if(multiarch) install.packages("rstan", type = 'source', INSTALL_opts = '--merge-multiarch')
-  else install.packages("rstan", type = 'source')
+  install.packages("rstan", type = 'source')
   library(rstan)
   set_cppo("fast")
   if (any(grepl("^darwin", R.version$os, ignore.case = TRUE))) {
