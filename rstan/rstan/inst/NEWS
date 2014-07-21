@@ -1,6 +1,7 @@
 Sat Jul 12 2014
 1. changes
   * remove nesterov optim algorithm
+  * fix issue 90 (https://github.com/stan-dev/rstan/issues/90)
 
 Mon Jun 23 2014 (2.3.0)
 1. changes
