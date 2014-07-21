@@ -12,7 +12,7 @@
 #include <Rcpp.h>
 #include <rstan/io/r_ostream.hpp> 
 
-RcppExport SEXP CPP_stanc230(SEXP model_stancode, SEXP model_name);
+RcppExport SEXP CPP_stanc240(SEXP model_stancode, SEXP model_name);
 RcppExport SEXP CPP_stan_version(); 
 
 SEXP CPP_stan_version() {
@@ -28,7 +28,7 @@ SEXP CPP_stan_version() {
   END_RCPP
 } 
 
-SEXP CPP_stanc230(SEXP model_stancode, SEXP model_name) { 
+SEXP CPP_stanc240(SEXP model_stancode, SEXP model_name) { 
   BEGIN_RCPP;
   static const int SUCCESS_RC = 0;
   static const int EXCEPTION_RC = -1;
