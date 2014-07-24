@@ -1,0 +1,62 @@
+cache: apt
+
+language: cpp
+
+compiler:
+  - gcc 
+  - clang
+  
+env:
+  global:
+    - BOOTSTRAP_LATEX="1"
+    - STAN_BRANCH="origin/develop"
+  matrix: 
+    - CXX_OLEVEL=0 RCPP_VER=cran
+    - CXX_OLEVEL=3 RCPP_VER=cran
+    - CXX_OLEVEL=3 RCPP_VER=github
+
+matrix:
+  allow_failures:
+    - env: CXX_OLEVEL=0 RCPP_VER=cran
+    - env: CXX_OLEVEL=3 RCPP_VER=github
+    - compiler: clang
+
+before_install:
+  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - curl -OL https://raw2.github.com/maverickg/utils/master/shell/wait4.sh
+  - chmod 755 ./travis-tool.sh wait4.sh
+  - ./travis-tool.sh bootstrap
+    
+install:
+  - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
+  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen
+  - ccache --max-size 8G
+
+before_script: 
+  - cd stan && git fetch && git checkout ${STAN_BRANCH} && cd ..
+  - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
+  - export CLANG_EXTRA_ARG=""
+  - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
+  - if [[ $RCPP_VER = 'github' ]]; then R -q -e "options(repos = getCRANmirrors()[1,'URL']); library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
+  - sed -i "s/g++/${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
+  - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
+  - more ./rstan/R_Makevars
+  - mkdir -p ~/.R/
+  - cat ./rstan/R_Makevars > ~/.R/Makevars
+  - more ~/.R/Makevars
+
+notifications:
+  email:
+    # recipients:
+      # - stan-buildbot@googlegroups.com
+    on_success: change
+    on_failure: always
+
+script:
+  - cd rstan 
+  - R -q -e "library(Rcpp); sessionInfo()"
+  - (make install & ../wait4.sh $!) && cd tests && R -q -f runRunitTests.R
+
+after_script:
+  - ccache -s 

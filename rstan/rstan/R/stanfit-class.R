@@ -8,7 +8,7 @@ setMethod("show", "stanfit",
 
 print.stanfit <- function(x, pars = x@sim$pars_oi, 
                           probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
-                          digits_summary = 1, ...) { 
+                          digits_summary = 2, ...) { 
   if (x@mode == 1L) { 
     cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
         "sampling is not conducted.\n", sep = '')
@@ -59,6 +59,7 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
             }
 
             pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
+            pars <- remove_empty_pars(pars, x@sim$dims_oi)
             if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
               assign("summary", summary_sim(x@sim), envir = x@.MISC)
             info <- list(model_name = x@model_name, model_date = x@date) 
@@ -335,6 +336,7 @@ setMethod("get_posterior_mean",
               assign("posterior_mean_4all", m, envir = object@.MISC)
             }
             pars <- if (missing(pars)) object@model_pars else check_pars(c(object@model_pars, fnames), pars)
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@model_pars, object@par_dims, fnames, pars) 
             tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
             invisible(object@.MISC$posterior_mean_4all[unlist(tidx), , drop = FALSE])
@@ -371,16 +373,19 @@ setMethod("extract", signature = "stanfit",
             } 
 
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
                                        object@sim$dims_oi, 
                                        object@sim$fnames_oi, 
                                        pars) 
 
             n_kept <- object@sim$n_save - object@sim$warmup2
-            fun1 <- function(par) {
-              sss <- sapply(tidx[[par]], get_kept_samples2, object@sim) 
-              if (is.list(sss))  sss <- do.call(c, sss)
-              dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par]]) 
+            fun1 <- function(par_i) {
+              # sss <- sapply(tidx[[par_i]], get_kept_samples2, object@sim)
+              # if (is.list(sss))  sss <- do.call(c, sss)
+              # the above two lines are slower than the following line of code
+              sss <- do.call(cbind, lapply(tidx[[par_i]], get_kept_samples2, object@sim)) 
+              dim(sss) <- c(sum(n_kept), object@sim$dims_oi[[par_i]]) 
               dimnames(sss) <- list(iterations = NULL)
               sss 
             } 
@@ -445,6 +450,7 @@ setMethod("summary", signature = "stanfit",
               assign("summary", summary_sim(object@sim), envir = object@.MISC)
            
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             if (missing(probs)) 
               probs <- c(0.025, 0.25, 0.50, 0.75, 0.975)  
 
@@ -525,7 +531,7 @@ if (!isGeneric("unconstrain_pars")) {
 
 setMethod("unconstrain_pars", signature = "stanfit", 
           function(object, pars) {
-            # pars is a list as specifying inits for a chain
+            # pars is a list as in specifying inits for a chain
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
             object@.MISC$stan_fit_instance$unconstrain_pars(pars)
@@ -543,8 +549,8 @@ setMethod("constrain_pars", signature = "stanfit",
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
             p <- object@.MISC$stan_fit_instance$constrain_pars(upars)
-            par_vector2list(p, object@model_pars[which(object@model_pars != 'lp__')],
-                            object@par_dims)
+            idx_wo_lp <- which(object@model_pars != 'lp__')
+            rstan_relist(p, create_skeleton(object@model_pars[idx_wo_lp], object@par_dims[idx_wo_lp]))
           })
 
 
@@ -600,6 +606,7 @@ setMethod("traceplot", signature = "stanfit",
             } 
 
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+            pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
                                        object@sim$dims_oi, 
                                        object@sim$fnames_oi, 
@@ -649,7 +656,7 @@ setMethod("traceplot", signature = "stanfit",
 is_sf_valid <- function(sf) {
   # Similar to is_sm_valid, this is only to test whether
   # the compiled DSO is loaded 
-  return(rstan:::is_sm_valid(sf@stanmodel)) 
+  return(is_sm_valid(sf@stanmodel)) 
 } 
 
 is_sfinstance_valid <- function(object) {
@@ -687,7 +694,7 @@ sflist2stanfit <- function(sflist) {
   non_zero_modes_idx <- which(sapply(sflist, function(x) x@mode) > 0)
   if (length(non_zero_modes_idx) > 0) { 
     stop("The following elements of 'sflist' do not contain samples: ",
-         non_zero_modes_idx) 
+         paste(non_zero_modes_idx, collapse = ', '), ".") 
   }   
   for (i in 2:sf_len) { 
     if (!identical(sflist[[i]]@sim$pars_oi, sflist[[1]]@sim$pars_oi) || 
@@ -753,6 +760,7 @@ setGeneric("as.mcmc.list", function(object, ...) standardGeneric("as.mcmc.list")
 
 as.mcmc.list.stanfit <- function(object, pars, ...) {
   pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+  pars <- remove_empty_pars(pars, object@sim$dims_oi)
   tidx <- pars_total_indexes(object@sim$pars_oi, object@sim$dims_oi, object@sim$fnames_oi, pars)
   tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
   tidx <- unlist(tidx, use.names = FALSE)

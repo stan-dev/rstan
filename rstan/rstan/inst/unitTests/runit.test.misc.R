@@ -11,7 +11,10 @@
   d <- factor(c("a", "b", "b", "a", "a"))
   e <- factor(c(1, 3, 3, 1, 1))
   f <- c(TRUE, TRUE, FALSE)
+  g <- 1000000000
+  h <- 1.1e+10
   rstan:::stan_rdump(c("d", "e", "f"), file = 'standumpabc.Rdump', append = TRUE)
+  rstan:::stan_rdump(c("g", "h"), file = 'standumpabc.Rdump', append = TRUE)
 
   cc <- c("# comment line 1", 
           " no comments line 1", 
@@ -23,7 +26,7 @@
           "# comment line 6",
           "not comments #comment line 7",
           "not comments at the end of file")
-  cat(file = 'cc.csv', paste(cc, collapse = '\n'))
+  cat(file = 'cc.csv', paste(cc, collapse = '\n'), "\n")
 } 
 
 test_get_model_strcode <- function() {
@@ -137,6 +140,9 @@ test_stan_rdump <- function() {
   checkEquals(l$d, c(1, 2, 2, 1, 1))
   checkEquals(l$e, c(1, 2, 2, 1, 1))
   checkEquals(l$f, c(1, 1, 0))
+  text <- paste(readLines('standumpabc.Rdump'), collapse = "|")
+  checkTrue(grepl("1000000000", text))
+  checkEquals(l$h, 1.1e10)
 } 
 
 test_seq_array_ind <- function() {
@@ -261,6 +267,14 @@ test_mklist <- function() {
   d <- rstan:::mklist(c("x", "y", "z"))
   checkTrue(identical(c, d))
   checkException(rstan:::mklist(c("x", "f")))
+
+  p <- 4
+  fun <- function() {
+    p <- 3
+    rstan:::mklist('p')
+  } 
+  checkEquals(fun()$p, 3, checkNames = FALSE )
+  checkEquals(rstan:::mklist('p')$p, 4, checkNames = FALSE)
 } 
 
 test_makeconf_path <- function() {
@@ -356,18 +370,30 @@ test_dotfnames_fromto_sqrfnames <- function() {
 }
 
 test_par_vector2list <- function() {
-  v <- c(2.3, 3.4, 4.5, (1:8)/9); 
-  pars <- c('alpha', 'beta', 'gamma')
-  dims <- list(integer(0), c(2), c(2, 4))
-  vl <- rstan:::par_vector2list(v, pars, dims)
+  v <- c(2.3, 3.4, 4.5, (1:8)/9, 3.1415); 
+  pars <- c('alpha', 'beta', 'gamma', 'delta')
+  dims <- list(integer(0), c(2), c(2, 4), 1)
+  vl <- rstan:::rstan_relist(v, rstan:::create_skeleton(pars, dims))
   alpha <- 2.3  
-  beta <- array(v[2:3], dim = 2) 
+  beta <- array(v[2:3], dim = 2)
   gamma <- array(v[4:11], dim = c(2, 4))
-  checkEquals(length(vl), 3)
+  delta <- array(v[12], dim = 1)
+  checkEquals(length(vl), 4)
   checkEquals(vl[[1]], alpha)
   checkEquals(vl[[2]], beta)
   checkEquals(vl[[3]], gamma)
+  checkEquals(vl[[4]], delta)
 } 
+
+test_remove_empty_pars <- function() {
+  pars <- c('alpha', 'beta', 'gamma', 'eta', 'xi')
+  dims <- list(integer(0), c(2), c(2, 4), 0, c(2,0))
+  names(dims) <- pars 
+  checkEquals(rstan:::remove_empty_pars(pars[1:2], dims), pars[1:2])
+  checkEquals(rstan:::remove_empty_pars(pars[1:4], dims), pars[1:3])
+  checkEquals(rstan:::remove_empty_pars('beta[1]', dims), "beta[1]")
+  checkEquals(rstan:::remove_empty_pars('eta', dims), character(0))
+}
  
 .tearDown <- function() {
   unlink('tmp.stan') 

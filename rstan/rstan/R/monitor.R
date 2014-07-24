@@ -1,5 +1,5 @@
 # stan_prob_autocovariance <- function(v) { 
-#   .Call("stan_prob_autocovariance", v, PACKAGE = 'rstan') 
+#   .Call("stan_prob_autocovariance", v)
 # }
 
 ess_rfun <- function(sims) {
@@ -36,6 +36,7 @@ ess_rfun <- function(sims) {
   rho_hat_sum <- 0
   for (t in 2:nrow(acov)) {
     rho_hat <- 1 - (mean_var - mean(acov[t, ])) / var_plus
+    if (is.nan(rho_hat)) rho_hat <- 0
     if (rho_hat < 0) break
     rho_hat_sum <- rho_hat_sum + rho_hat
   } 

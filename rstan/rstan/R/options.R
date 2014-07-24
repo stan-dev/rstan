@@ -18,7 +18,7 @@ init_rstan_opt_env <- function(e) {
   assign("plot_rhat_breaks", c(1.1, 1.2, 1.5, 2), e)
   # in this default setting, 
   # if rhat < rhat.breaks[i], the color is rhat_cols[i]
-  assign("plot_rhat_cols", rhat_cols, e)
+  assign("plot_rhat_cols", rhat_cols[1:4], e)
 
   # when R-hat is NA, NaN, or Inf
   assign("plot_rhat_nan_col", rhat_cols[6] , e)
@@ -42,17 +42,21 @@ init_rstan_opt_env <- function(e) {
   assign('plot_max_npar', 40, e)
 
   # color for shading the area of warmup trace plot
-  assign("rstan_warmup_bg_col", rstan:::rstancolgrey[3], e)
+  assign("rstan_warmup_bg_col", rstancolgrey[3], e)
 
-  stan_lib_path  <- system.file('include', 'stanlib', package = 'rstan')
-  boost_dir <- dir(stan_lib_path, pattern = 'boost.*')
+#   stan_lib_path  <- system.file('include', 'stanlib', package = 'rstan')
+#   boost_dir <- dir(stan_lib_path, pattern = 'boost.*')
   # boost lib path 
-  boost_lib_path <- file.path(stan_lib_path, boost_dir)
-  # eigen_lib_path <- system.file('include', package = 'RcppEigen')
-  eigen_dir <- dir(stan_lib_path, pattern = 'eigen.*')
-  eigen_lib_path <- file.path(stan_lib_path, eigen_dir)
+#   boost_lib_path <- file.path(stan_lib_path, boost_dir)
+  boost_lib_path <- system.file('include', package = 'BH')
+  eigen_lib_path <- system.file('include', package = 'RcppEigen')
+#   eigen_dir <- dir(stan_lib_path, pattern = 'eigen.*')
+#   eigen_lib_path <- file.path(stan_lib_path, eigen_dir)
   assign("eigen_lib", eigen_lib_path, e) 
   assign("boost_lib", boost_lib_path, e) 
+
+  ya_boost  <- system.file('include', 'boost_not_in_BH', package = 'rstan')
+  assign('boost_lib2', ya_boost, e)
 
   # cat("init_rstan_opt_env called.\n")
   invisible(e)

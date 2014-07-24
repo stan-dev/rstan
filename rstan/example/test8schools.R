@@ -81,6 +81,11 @@ ss.inits <- ss@inits
 ss.same <- stan(sfile, data = dat, iter = iter, chains = 4, seed = ss@stan_args[[1]]$seed, 
                 init = ss.inits, sample_file = 'ya8schools.csv') 
 
+ss.inits2 <- ss.same@inits
+c <- identical(ss.inits, ss.inits2)
+cat("expect TRUE:", c, "\n")
+
+
 b <- identical(ss@sim$samples, ss.same@sim$samples) 
 # b is not true as ss is initialized randomly while ss.same is not. 
 

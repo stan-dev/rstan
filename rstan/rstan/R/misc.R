@@ -10,6 +10,12 @@ filename_rm_ext <- function(x) {
   sub("\\.[^.]*$", "", x)
 } 
 
+real_is_integer <- function(x) {
+  if (length(x) < 1L ||  any(is.infinite(x)) || any(is.nan(x))) return(FALSE)
+  all(floor(x) == x)
+}
+
+
 list_as_integer_if_doable <- function(x) {
   # change the storage mode from 'real' to 'integer' 
   # if applicable since by default R use real.
@@ -25,31 +31,42 @@ list_as_integer_if_doable <- function(x) {
          FUN = function(y) { 
            if (!is.numeric(y)) return(y) 
            if (is.integer(y)) return(y) 
-           if (isTRUE(all.equal(y, round(y), check.attributes = FALSE))) 
-             storage.mode(y) <- "integer"  
+           ## this commented out is the idea in the function is.wholenumber in
+           ## the help of is.integer
+           # if (isTRUE(all.equal(y, round(y), check.attributes = FALSE))) 
+           if (real_is_integer(y)) storage.mode(y) <- "integer"  
            return(y) 
          })
 } 
 
-mklist <- function(names, env = parent.frame()) { 
+mklist <- function(names) {
   # Make a list using names 
   # Args: 
   #   names: character strings of names of objects 
-  #   env: the environment to look for objects with names
-  # Note: we use inherits = TRUE when calling mget 
-  #   and only mode of numeric and list are extracted (this
-  #   is to avoid such as get a primitive function such as
-  #   gamma.)
-  d <- mget(names, env, ifnotfound = NA, inherits = TRUE, mode = 'numeric') 
-  idx_is_na <- is.na(d)
-  names_nf <- names[idx_is_na]
-  if (length(names_nf) == 0) return(d)
-  d2 <- mget(names_nf, env, ifnotfound = NA, inherits = TRUE, mode = 'list') 
-  n <- which(is.na(d2))
-  if (length(n) > 0) {
-    stop(paste("objects ", paste("'", names_nf[n], "'", collapse = ', ', sep = ''), " not found", sep = ''))
-  } 
-  c(d[!idx_is_na],  d2)
+  # Note: 
+  #   Only extracted are modes of numeric and list, which
+  #   are enough for stan 
+
+  cenv <- environment()
+  for (fn in rev(sys.parents())) { 
+    env1 <- sys.frame(fn)
+    if (identical(env1, cenv)) next
+    d1 <- mget(names, envir = env1, ifnotfound = NA, inherits = FALSE, mode = "numeric")
+    d2 <- mget(names, envir = env1, ifnotfound = NA, inherits = FALSE, mode = "list")
+    na_idx1 <- is.na(d1)
+    na_idx2 <- is.na(d2)
+    na_idx <- na_idx1 & na_idx2
+    numf <- sum(na_idx) 
+    if (numf > 0 && numf < length(names))
+      stop(paste("objects ", paste("'", names[na_idx], "'", collapse = ', ', sep = ''), 
+                 " of mode numeric and list not found", sep = ''))
+    if (numf == length(names))  next
+    r <- c(d1[!na_idx1], d2[!na_idx2])
+    names(r) <- names
+    return(r)
+  }
+  stop(paste("objects ", paste("'", names, "'", collapse = ', ', sep = ''), 
+             " of mode numeric and list not found", sep = ''))
 } 
 
 stan_kw1 <- c('for', 'in', 'while', 'repeat', 'until', 'if', 'then', 'else',
@@ -197,7 +214,7 @@ data_preprocess <- function(data) { # , varnames) {
                    if (is.integer(x)) return(x) 
          
                    # change those integers stored as reals to integers 
-                   if (max(abs(x)) < .Machine$integer.max && isTRUE(all.equal(x, round(x), check.attributes = FALSE))) 
+                   if (max(abs(x)) < .Machine$integer.max && real_is_integer(x))
                      storage.mode(x) <- "integer"  
                    return(x) 
                  })   
@@ -309,10 +326,10 @@ is_named_list <- function(x) {
 } 
 
 
-## from stan_args.hpp
+## from ../inst/include/rstan/stan_args.hpp
 # 
 # enum sampling_algo_t { NUTS = 1, HMC = 2, Metroplos = 3};
-# enum optim_algo_t { Newton = 1, Nesterov = 2, BFGS = 3};
+# enum optim_algo_t { Newton = 1, BFGS = 3, LBFGS = 4};
 # enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
 # enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
 
@@ -345,12 +362,27 @@ config_argss <- function(chains, iter, warmup, thin,
     else inits <- rep("random", chains) 
     inits_specified <- TRUE
   } 
+
+  dotlist <- list(...)
+
+  # use chain_id argument if specified
+  chain_ids <- seq_len(chains)
+  if (!is.null(dotlist$chain_id)) { 
+    chain_id <- as.integer(dotlist$chain_id)
+    if (any(duplicated(chain_id))) stop("chain_id has duplicated elements")
+    chain_id_len <- length(chain_id)
+    chain_ids <- if (chain_id_len >= chains) chain_id else {
+                   c(chain_id, max(chain_id) + seq_len(chains - chain_id_len))
+                 }
+    dotlist$chain_id <- NULL
+  }
+
   if (!inits_specified && is.function(init)) {
     ## the function can take an argument named by chain_id 
     if (any(names(formals(init)) == "chain_id")) {
-      inits <- lapply(1:chains, function(id) init(chain_id = id))
+      inits <- lapply(chain_ids, function(id) init(chain_id = id))
     } else {
-      inits <- lapply(1:chains, function(id) init())
+      inits <- lapply(chain_ids, function(id) init())
     } 
     if (!is_named_list(inits[[1]])) 
       stop('the function for specifying initial values need return a named list')
@@ -373,21 +405,6 @@ config_argss <- function(chains, iter, warmup, thin,
 
   ## only one seed is needed by virtue of the RNG 
   seed <- if (missing(seed)) sample.int(.Machine$integer.max, 1) else check_seed(seed)
-
-  dotlist <- list(...)
-
-  # use chain_id argument if specified
-  if (is.null(dotlist$chain_id)) { 
-    chain_ids <- seq_len(chains)
-  } else {
-    chain_id <- as.integer(dotlist$chain_id)
-    if (any(duplicated(chain_id))) stop("chain_id has duplicated elements")
-    chain_id_len <- length(chain_id)
-    chain_ids <- if (chain_id_len >= chains) chain_id else {
-                   c(chain_id, max(chain_id) + seq_len(chains - chain_id_len))
-                 }
-    dotlist$chain_id <- NULL
-  }
 
   dotlist$method <- if (!is.null(dotlist$test_grad) && dotlist$test_grad) "test_grad" else "sampling"
   
@@ -527,6 +544,9 @@ stan_rdump <- function(list, file = "", append = FALSE,
         warning(paste0("variable ", v, " is not supported for dumping."))
       next
     } 
+
+    if (!is.integer(vv) && max(abs(vv)) < .Machine$integer.max && real_is_integer(vv)) 
+      storage.mode(vv) <- "integer"
 
     if (is.vector(vv)) {
       if (length(vv) == 1) {
@@ -745,7 +765,7 @@ num_pars <- function(d) prod(d)
 
 calc_starts <- function(dims) {
   len <- length(dims) 
-  s <- sapply(dims, function(d)  num_pars(d), USE.NAMES = FALSE) 
+  s <- sapply(unname(dims), function(d)  num_pars(d), USE.NAMES = FALSE) 
   cumsum(c(1, s))[1:len] 
 } 
 
@@ -787,6 +807,34 @@ check_pars_second <- function(sim, pars) {
   allpars <- c(sim$pars_oi, sim$fnames_oi) 
   check_pars(allpars, pars)
 } 
+
+remove_empty_pars <- function(pars, model_dims) {
+  # 
+  # Remove parameters that are actually empty, which
+  # could happen when for exmample a user specify the
+  # following stan model code: 
+  # 
+  # transformed data { int n; n <- 0; }
+  # parameters { real y[n]; } 
+  # 
+  # Args:
+  #   pars: a character vector of parameters names
+  #   model_dims: a named list of the parameter dimension
+  # 
+  # Returns:
+  #   A character vector of parameter names with empty parameter 
+  #   being removed. 
+  # 
+  ind <- rep(TRUE, length(pars))
+  model_pars <- names(model_dims)
+  if (is.null(model_pars)) stop("model_dims need be a named list")
+  for (i in seq_along(pars)) {
+    p <- pars[i]
+    m <- match(p, model_pars)
+    if (!is.na(m) && prod(model_dims[[p]]) == 0)  ind[i] <- FALSE
+  } 
+  pars[ind]
+}
 
 pars_total_indexes <- function(names, dims, fnames, pars) {
   # Obtain the total indexes for parameters (pars) in the 
@@ -1036,42 +1084,25 @@ summary_sim_rhat <- function(sim, pars) {
 } 
 
 
-par_vector2list <- function(v, pars, dims, starts = calc_starts(dims)) {
-  # Turn a vector of sample (typically an iteration)
-  # into a list according to the dims for parameters
-  # Args:
-  #   v: the vector of sample 
-  #   pars: a character vector for parameter names 
-  #   dims: a list of integer vector for parameter dimensions
+create_skeleton <- function(pars, dims) {
+  # for the purpose of using relist to convert 
+  # vector to list
   lst <- lapply(seq_along(pars), 
                 function(i) { 
-                  len <- num_pars(dims[[i]]) 
-                  y <- v[starts[i] + (1:len) - 1] 
-                  if (length(dims[[i]]) > 0) dim(y) <- dims[[i]] 
-                  return(y) 
+                  len_dims <- length(dims[[i]])
+                  if (len_dims < 1) return(0)
+                  return(array(0, dim = dims[[i]]))
                 })
   names(lst) <- pars 
   lst 
 }
 
-organize_inits <- function(inits, pars, dims) {
-  # obtain a list of inital values for each chain in sim
-  # Args: 
-  #   inits: a list of vectors, each vector is the 
-  #     inits for a chain 
-  #   pars: vector of character for the names 
-  #   dims: a list of lists with equal length of `pars` 
-
-  # remove element 'lp__' in the names 
-  idx_of_lp <- which(pars == "lp__")
-  if (idx_of_lp > 0) {
-    pars <- pars[-idx_of_lp] 
-    dims <- dims[-idx_of_lp] 
-  }
-  starts <- calc_starts(dims) 
-  tmpfun <- function(x) par_vector2list(x, pars, dims, starts) 
-  lapply(inits, tmpfun) 
-} 
+rstan_relist <- function(x, skeleton) {
+  lst <- relist(x, skeleton)
+  for (i in seq_along(skeleton))
+    dim(lst[[i]]) <- dim(skeleton[[i]])
+  lst
+}
 
 # ported from bugs.plot.inferences in R2WinBUGS  
 # 
@@ -1324,13 +1355,35 @@ system_info <- function() {
         "; inline: ", packageVersion('inline'), sep = '')
 } 
 
-read_comments <- function(file, n) {
+read_comments_old <- function(file, n) {
   # Read comments beginning with `#`
   # Args:
   #   file: the filename 
   #   n: max number of line; -1 means all 
-  .Call("read_comments", file, n, PACKAGE = 'rstan')
+  .Call("CPP_read_comments", file, n)
 } 
+
+read_comments <- function(f, n = -1) {
+  # Read comments beginning with `#`
+  # Args:
+  #   f: the filename 
+  #   n: max number of line; -1 means all 
+  # Returns:
+  #   a vector of strings 
+  con <- file(f, 'r')
+  comments <- list()
+  iter <- 0
+  while (length(input <- readLines(con, n = 1)) > 0) {
+    if (n > 0 && n <= iter) break;
+    if (grepl("#", input)) {
+      comments <- c(comments, gsub("^.*#", "#", input))
+      iter <- iter + 1
+    } 
+  } 
+  close(con)
+  do.call(c, comments)
+} 
+
 
 sqrfnames_to_dotfnames <- function(fnames) {
   # change names such as alpha[1,1] to alpha.1.1

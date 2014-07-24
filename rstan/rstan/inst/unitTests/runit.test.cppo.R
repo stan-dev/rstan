@@ -31,5 +31,5 @@ test_set_cppo <- function() {
 } 
 
 .tearDown <- function() {
-  rstan:::rm_last_makefile()
+  set_cppo('fast', NDEBUG = FALSE)
 } 

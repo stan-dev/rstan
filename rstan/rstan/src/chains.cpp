@@ -256,7 +256,7 @@ RcppExport SEXP effective_sample_size2(SEXP sims);
 RcppExport SEXP split_potential_scale_reduction(SEXP sim, SEXP n_); 
 RcppExport SEXP split_potential_scale_reduction2(SEXP sims_);
 RcppExport SEXP seq_permutation(SEXP conf);  
-RcppExport SEXP read_comments(SEXP file, SEXP n);
+RcppExport SEXP CPP_read_comments(SEXP file, SEXP n);
 
 RcppExport SEXP stan_prob_autocovariance(SEXP v);
 
@@ -278,7 +278,7 @@ RcppExport SEXP stan_prob_autocovariance(SEXP v);
  */
 // FIXME: reimplement using autocorrelation.
 SEXP effective_sample_size(SEXP sim, SEXP n_) { 
-  BEGIN_RCPP; 
+  BEGIN_RCPP 
   rstan::validate_sim(sim); 
   Rcpp::List lst(sim); 
   unsigned int n = Rcpp::as<unsigned int>(n_); 
@@ -335,8 +335,11 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
   if (rho_hat_t.size() > 0) {
     ess /= 1 + 2 * stan::math::sum(rho_hat_t);
   }
-  return Rcpp::wrap(ess);
-  END_RCPP; 
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(ess));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP 
 }
 
 /*
@@ -344,12 +347,15 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
  * @param v: a vector in R
  */ 
 SEXP stan_prob_autocovariance(SEXP v) {
-  BEGIN_RCPP; 
+  BEGIN_RCPP 
   std::vector<double> dv = Rcpp::as<std::vector<double> >(v);
   std::vector<double> acov;
   stan::prob::autocovariance(dv, acov);
-  return Rcpp::wrap(acov);
-  END_RCPP;
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(acov));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 } 
 
 /**
@@ -362,7 +368,7 @@ SEXP stan_prob_autocovariance(SEXP v) {
  * @return The effective sample size.
  */ 
 SEXP effective_sample_size2(SEXP sims) { 
-  BEGIN_RCPP; 
+  BEGIN_RCPP 
   Rcpp::NumericMatrix nm(sims);
   unsigned int m(nm.ncol());
   unsigned int n_samples(nm.nrow());
@@ -403,8 +409,11 @@ SEXP effective_sample_size2(SEXP sims) {
   if (rho_hat_t.size() > 0) {
     ess /= 1 + 2 * stan::math::sum(rho_hat_t);
   }
-  return Rcpp::wrap(ess);
-  END_RCPP; 
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(ess));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 } 
 
 
@@ -418,7 +427,7 @@ SEXP effective_sample_size2(SEXP sims) {
  * @return split R hat.
  */ 
 SEXP split_potential_scale_reduction2(SEXP sims_) {
-  BEGIN_RCPP; 
+  BEGIN_RCPP 
   Rcpp::NumericMatrix nm(sims_);
   unsigned int n_chains = nm.ncol();
   unsigned int n_samples = nm.nrow(); 
@@ -446,9 +455,12 @@ SEXP split_potential_scale_reduction2(SEXP sims_) {
   
   // rewrote [(n-1)*W/n + B/n]/W as (n-1+ B/W)/n
   double srhat = sqrt((var_between/var_within + n_samples/2 -1)/(n_samples/2));
-  return Rcpp::wrap(srhat);
 
-  END_RCPP;
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(srhat));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 } 
 
 /** 
@@ -464,7 +476,7 @@ SEXP split_potential_scale_reduction2(SEXP sims_) {
  */
 SEXP split_potential_scale_reduction(SEXP sim, SEXP n_) { 
 
-  BEGIN_RCPP; 
+  BEGIN_RCPP 
   rstan::validate_sim(sim); 
   Rcpp::List lst(sim); 
   unsigned int n = Rcpp::as<unsigned int>(n_); 
@@ -515,8 +527,11 @@ SEXP split_potential_scale_reduction(SEXP sim, SEXP n_) {
   
   // rewrote [(n-1)*W/n + B/n]/W as (n-1+ B/W)/n
   double srhat = sqrt((var_between/var_within + n_samples/2 -1)/(n_samples/2));
-  return Rcpp::wrap(srhat);
-  END_RCPP; 
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(srhat));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP 
 }
 
 /*
@@ -528,7 +543,7 @@ SEXP split_potential_scale_reduction(SEXP sim, SEXP n_) {
  * @return A permutation of length 'n' starting from 0.
  */ 
 SEXP seq_permutation(SEXP conf) { 
-  BEGIN_RCPP; 
+  BEGIN_RCPP 
   Rcpp::List lst(conf); 
   rstan::perm_args args(lst);
   boost::uintmax_t DISCARD_STRIDE = static_cast<boost::uintmax_t>(1) << 50; 
@@ -548,8 +563,11 @@ SEXP seq_permutation(SEXP conf) {
     x[i] = x[j];
     x[j] = temp;
   } 
-  return x; 
-  END_RCPP;
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(x));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 } 
 
 /**
@@ -559,13 +577,16 @@ SEXP seq_permutation(SEXP conf) {
  *  @returns A character vector each element of which is a line of comments
  *  begining with `#`
  */ 
-SEXP read_comments(SEXP file, SEXP n) {
-  BEGIN_RCPP; 
+SEXP CPP_read_comments(SEXP file, SEXP n) {
+  BEGIN_RCPP 
   std::string filename = Rcpp::as<std::string>(file);
   int n2 = Rcpp::as<int>(n); 
   size_t n3 = (0 <= n2) ? static_cast<size_t>(n2) : std::numeric_limits<size_t>::max();
   std::vector<std::string> comments;
   rstan::read_comments0(filename, n3, comments);
-  return Rcpp::wrap(comments);
-  END_RCPP;
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = Rcpp::wrap(comments));
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
 } 

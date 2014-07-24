@@ -41,7 +41,7 @@ monitor(sims, warmup = floor(dim(sims)[1]/2),
 }
 
 \references{
-  The Stan Development Team (\Sexpr[eval=TRUE,results=text,stage=build]{format(Sys.time(),'\%Y')})
+  The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
   \url{http://mc-stan.org}. 
 }
@@ -52,17 +52,10 @@ monitor(sims, warmup = floor(dim(sims)[1]/2),
 }
 
 \examples{
-ecode <- '
-  parameters {
-    real y[2];
-  } 
-  model {
-    y[1] ~ normal(0, 1);
-    y[2] ~ double_exponential(0, 1);
-  }
-'
-fit <- stan(model_code = ecode)
-# The below is just for the purpose of giving an example
+csvfiles <- dir(system.file('misc', package = 'rstan'),
+                pattern = 'rstan_doc_ex_[0-9].csv', full.names = TRUE)
+fit <- read_stan_csv(csvfiles)
+# The following is just for the purpose of giving an example
 # since print can be used for a stanfit object.
 monitor(extract(fit, permuted = FALSE, inc_warmup = TRUE))
 } 

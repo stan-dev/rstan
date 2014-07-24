@@ -8,8 +8,9 @@ paridx_fun <- function(names) {
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
-  metaidx <- match(c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__'), names)
-  names(metaidx) <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__')
+  sampler_param_names <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__', 'n_divergent__', 'n_leapfrog__')
+  metaidx <- match(sampler_param_names, names)
+  names(metaidx) <- sampler_param_names
   paridx <- setdiff(seq_along(names), metaidx)
   attr(paridx, "meta") <- metaidx[!sapply(metaidx, is.na)]
   paridx
@@ -22,16 +23,25 @@ parse_stancsv_comments <- function(comments) {
 
   adapt_term_lineno <- which(grepl("Adaptation terminated", comments))
   time_lineno <- which(grepl("Elapsed Time", comments))
+  has_time <- length(time_lineno) > 0
   len <- length(comments)
   if (length(adapt_term_lineno) < 1) 
     adapt_term_lineno <- len
-  if (length(time_lineno) < 1) {
-    stop("line with \"Elapsed Time\" not found")
-  }
+  if (length(time_lineno) < 1)
+    warning("line with \"Elapsed Time\" not found")
 
-  if (adapt_term_lineno == len) adaptation_info <- ''
-  else adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
-  time_info <- comments[time_lineno:len]
+  if (adapt_term_lineno == len)
+    adaptation_info <- ''
+  else {
+    if (has_time)
+      adaptation_info <- paste(comments[(adapt_term_lineno+1):(time_lineno-1)], collapse = '\n')
+    else
+      adaptation_info <- paste(comments[(adapt_term_lineno+1):len], collapse = '\n')
+  }
+  if (has_time)
+    time_info <- comments[time_lineno:len]
+  else
+    time_info <- ''
   comments <- comments[1:(adapt_term_lineno - 1)]
 
   has_eq <- sapply(comments, function(i) grepl('=', i))
@@ -100,7 +110,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     stop("csvfiles does not contain any CSV file name")
 
   g_skip <- 10
-  g_max_comm <- 50 # maximum number of lines of comments 
+  g_max_comm <- -1 # to read all 
   ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
   # use the first CSV file name as model name
@@ -130,7 +140,8 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     if (!all(sapply(ss_lst[-1], function(i) identical(length(i[[1]]), n_save)))) 
       stop('the number of iterations are not the same in all CSV files')
   } 
-
+  mode <- 0L
+  
   cs_lst2 <- lapply(cs_lst, parse_stancsv_comments)
 
   samples <- lapply(ss_lst, 
@@ -162,9 +173,22 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     n_kept <- n_save - warmup2 
   } 
   
-  if (n_kept0[1] != n_kept) 
-    stop("the number of iterations after warmup found (", n_kept, 
-         ") does not match iter/warmup/thin from CSV comments (", n_kept0, ")")
+  if (n_kept0[1] != n_kept) {
+    warning("the number of iterations after warmup found (", n_kept, 
+            ") does not match iter/warmup/thin from CSV comments (", n_kept0, ")")
+    if (n_kept < 0) {
+      warmup <- warmup + n_kept
+      n_kept <- 0
+      mode <- 2L
+    }
+    n_kept0 <- n_save
+    iter <- n_save
+
+    for (i in 1:length(cs_lst2)) {
+      cs_lst2[[i]]$warmup <- warmup
+      cs_lst2[[i]]$iter <- iter
+    }
+  }
 
   idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
   for (i in seq_along(samples)) {
@@ -197,7 +221,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
               model_name = m_name,
               model_pars = pars_oi,
               par_dims = dims_oi, 
-              mode = 0L,
+              mode = mode,
               sim = sim,
               inits = list(), 
               stan_args = cs_lst2,

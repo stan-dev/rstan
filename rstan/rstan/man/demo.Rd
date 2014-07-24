@@ -8,7 +8,7 @@
   created from matching user input and gets fitted in the demonstration.} 
  
 \usage{
-  stan_demo(model = character(0), ...) 
+  stan_demo(model = character(0), method = c("sampling", "optimizing"), ...)
 } 
  
 \arguments{
@@ -18,24 +18,25 @@
     a character vector of all models is returned without any user intervention.
     If \code{model = i} where \code{i > 0}, then the ith available model is
     chosen without user intervention, which is useful for testing.}
-  \item{\dots}{passed to \code{stan}.}
+  \item{method}{Whether to call \code{\link{sampling}} (the default) or call
+    \code{\link{optimizing}} for the demonstration}
+  \item{\dots}{Further arguments passed to \code{method}.}
 } 
 
 
 \value{
-  An S4 object of \code{stanfit} returned from \code{stan}, unless
-  \code{model = 0}, in which case a character vector of paths to
-  available models is returned.
+  An S4 object of \code{stanfit}, unless \code{model = 0}, in which case a 
+  character vector of paths to available models is returned.
 }
 
 \references{
-  The Stan Development Team (\Sexpr[eval=TRUE,results=text,stage=build]{format(Sys.time(),'\%Y')})
+  The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
   \url{http://mc-stan.org/}. 
 } 
 
 \seealso{
-  \code{\link{stan}} 
+  \code{\link{sampling}}, \code{\link{optimizing}}
 } 
 
 \examples{

@@ -209,7 +209,7 @@
 }
 
 \references{
-  The Stan Development Team (\Sexpr[eval=TRUE,results=text,stage=build]{format(Sys.time(),'\%Y')})
+  The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
   \url{http://mc-stan.org}. 
 }
@@ -288,7 +288,9 @@ excode <- '
 #               sample_file = "rstan_doc_ex.csv")
 # 
 
-exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'), full.names = TRUE))
+exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'),
+                       pattern='rstan_doc_ex_[[:digit:]].csv',
+                       full.names = TRUE))
 
 print(exfit)
 plot(exfit)

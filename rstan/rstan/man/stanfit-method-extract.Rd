@@ -34,7 +34,7 @@
   \item{permuted}{\code{TRUE} of \code{FALSE}. If \code{TRUE}, draws
     after the \emph{warmup} period in each chain are \emph{permuted} and \emph{merged}. 
     If \code{FALSE}, the original order are kept. For each \code{stanfit}
-    object, the permutation is fixed (that is, extracing samples a second
+    object, the permutation is fixed (that is, extracting samples a second
     time will give the same sequence of iterations as the previous).}
   \item{inc_warmup}{\code{TRUE} of \code{FALSE}. The argument matters
     only if \code{permuted} is \code{FALSE}. If \code{TRUE}, warmup
@@ -130,7 +130,9 @@ excode <- '
 # exfit <- stan(model_code = excode, save_dso = FALSE, iter = 200, 
 #               sample_file = "rstan_doc_ex.csv")
 # 
-exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'), full.names = TRUE))
+exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'),
+                       pattern='rstan_doc_ex_[[:digit:]].csv',
+                       full.names = TRUE))
 
 ee1 <- extract(exfit, permuted = TRUE)
 print(names(ee1))

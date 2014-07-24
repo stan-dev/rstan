@@ -1,3 +1,45 @@
+Sun Jul 20 2014 (2.4.0)
+1. changes
+  * remove nesterov optim algorithm
+  * fix issue 90 (https://github.com/stan-dev/rstan/issues/90)
+  * use CRAN BH and RcppEigen 
+
+Mon Jun 23 2014 (2.3.0)
+1. changes
+  * updates for Stan 2.3.0 
+  * use \n instead of \r for printing sampling progress
+  * default to 2 digits after decimal place for print method for stanfit 
+
+Wed Apr 15 2014
+1. Bug fixes
+  * issue 62
+
+Wed Feb 26 2014
+1. Bug fixes
+  * issue 51
+
+
+Thu Feb 13 2014 (2.2.0)
+
+Sun Feb  9 2014
+1. Bug fixes
+   * index out of bounds with Rcpp 0.11
+
+Wed Jan 22 2014
+1. Bug fixes
+   * RNG seed for optimizing not used (issue #37)
+
+2. Changes
+   * add as_vector with default value of TRUE for stanmodel@optimizing
+   * read_stan_csv uses R's functions to open files so that compressed
+     files such as gzip are supported.  But a compressed file can include
+     only one file.
+
+Sat Dec 21 2013 
+1. Changes
+   * speed up stanfit@extract for permuted=TRUE (code from R. Boylan)
+   * changes due to changes in Stan's interface 
+
 Sun Oct 20 2013
 1. Bug fixes
    * specify sampler parameters such as using dense_e, unit_e

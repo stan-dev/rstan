@@ -55,8 +55,8 @@ setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   algorithm = c("BFGS", "Nesterov", "Newton"),
-                   verbose = FALSE, ...) {
+                   algorithm = c("BFGS", "LBFGS", "Newton"),
+                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -83,9 +83,9 @@ setMethod("optimizing", "stanmodel",
               return(invisible(list(stanmodel = object)))
             } 
             m_pars <- sampler$param_names() 
-            idx_of_lp <- which(m_pars == "lp__")
-            m_pars <- m_pars[-idx_of_lp]
-            p_dims <- sampler$param_dims()[-idx_of_lp]
+            idx_wo_lp <- which(m_pars != "lp__")
+            m_pars <- m_pars[idx_wo_lp]
+            p_dims <- sampler$param_dims()[idx_wo_lp]
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) init <- init()
             if (!is.list(init) && !is.character(init)) {
@@ -106,6 +106,22 @@ setMethod("optimizing", "stanmodel",
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
+            skeleton <- create_skeleton(m_pars, p_dims)
+            if(hessian) {
+              fn <- function(theta) {
+                sampler$log_prob(theta, FALSE, FALSE)
+              }
+              gr <- function(theta) {
+                sampler$grad_log_prob(theta, FALSE)
+              }
+              theta <- rstan_relist(optim$par, skeleton)
+              theta <- sampler$unconstrain_pars(theta)
+              optim$hessian <- optimHess(theta, fn, gr,
+                                         control = list(fnscale = -1))
+              colnames(optim$hessian) <- rownames(optim$hessian) <- 
+                sampler$unconstrained_param_names(FALSE, FALSE)
+            }
+            if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             invisible(optim)
           }) 
 
@@ -115,13 +131,12 @@ setMethod("sampling", "stanmodel",
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
                    sample_file, diagnostic_file, verbose = FALSE, 
-                   algorithm = c("NUTS", "HMC"), #, "Metropolis"), 
+                   algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-
             if (check_data) { 
               # allow data to be specified as a vector of character string 
               if (is.character(data)) {
@@ -187,7 +202,7 @@ setMethod("sampling", "stanmodel",
 
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 
-                cat(mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", i, ").\n", sep = '')
+                cat('\n', mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", i, ").\n", sep = '')
               samples_i <- try(sampler$call_sampler(args_list[[i]])) 
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 message("error occurred during calling the sampler; sampling not done") 
@@ -197,8 +212,10 @@ setMethod("sampling", "stanmodel",
               samples[[i]] <- samples_i
             }
 
-            inits_used = organize_inits(lapply(samples, function(x) attr(x, "inits")), 
-                                        m_pars, p_dims) 
+            idx_wo_lp <- which(m_pars != 'lp__')
+            skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
+            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
+                                function(y) rstan_relist(y, skeleton))
 
             # test_gradient mode: no sample 
             if (attr(samples[[1]], 'test_grad')) {

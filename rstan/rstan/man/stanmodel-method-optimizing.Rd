@@ -16,8 +16,8 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    algorithm = c("BFGS", "Nesterov", "Newton"),
-    verbose = FALSE, \dots)   
+    algorithm = c("BFGS", "LBFGS", "Newton"),
+    verbose = FALSE, hessian = FALSE, as_vector = TRUE, \dots)   
 } 
 
 \section{Methods}{
@@ -59,26 +59,35 @@
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
-  \item{algorithm}{One of "Newton", "Nesterov", and "BFGS" indicating which
+  \item{algorithm}{One of "Newton", "BFGS", and "LBFGS" indicating which
     optimization algorithm is used. The default is BFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
+  \item{hessian}{\code{TRUE} or \code{FALSE} (the default): flag indicating
+     whether to calculate the Hessian (via numeric differentiation of the
+     gradient function in the unconstrained parameter space)}   
+  \item{as_vector}{\code{TRUE} (the default) or \code{FALSE}: flag indicating
+     whether a vector is used to for the point estimate found. A list can be used
+     instead by specifying it to be \code{FALSE}}
   \item{\dots}{Other optional parameters. 
     \enumerate{
       \item \code{iter} (\code{integer}), the maximum number of iterations
       \item \code{save_iterations} (logical), whether to save the iterations 
       \item \code{refresh} (\code{integer})
-      \item \code{stepsize} (\code{double}), for Nesterov, see the manual of Stan
-      \item \code{init_alpha} (\code{double}, default to 0.0001), for BFGS, see manual of Stan
-      \item \code{tol_obj} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
-      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
-      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS, see the manual of Stan
+      \item \code{init_alpha} (\code{double}, default to 0.001), for BFGS and LBFGS, see manual of Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-12), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_rel_obj} (\code{double}, default to 1e4), for BFGS and LBFGS, see the manual of Stan
+      \item \code{tol_rel_grad} (\code{double}, default to 1e7), for BFGS and LBFGS, see the manual of Stan
+      \item \code{history_size} (\code{integer}, default to 5), for LBFGS, see the manual of Stan
     }
   }
 }
 \value{
    A list with components if the optimization is done successfully:
-   \item{par}{The point estimate found.}
+   \item{par}{The point estimate found. Its form (vector or list) 
+     is determined by argument \code{as_vector}.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
    the \code{"lp__"} in Stan) corresponding to \code{par}.}
 
@@ -92,6 +101,6 @@
 
 \examples{\dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
-f <- optimizing(m)
+f <- optimizing(m, hessian = TRUE)
 }} 
 
