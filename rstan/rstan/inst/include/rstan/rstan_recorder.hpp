@@ -56,6 +56,11 @@ namespace rstan {
     }
   };
 
+  /**
+    @param      N
+    @param      M  number of iterations to be saved 
+    @param      warmup number of warmup iterations to be saved 
+   */
 
   rstan_sample_recorder
   sample_recorder_factory(std::ostream *o, const std::string prefix,
