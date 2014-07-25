@@ -1,4 +1,4 @@
-// #include <stan/mcmc/chains.hpp> 
+// #include <stan/mcmc/chains.hpp>
 
 #include <R.h>
 #include <Rinternals.h>
@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-extern SEXP is_Null_NS(SEXP ns); 
+extern SEXP is_Null_NS(SEXP ns);
 
 #ifdef __cplusplus
 }
@@ -15,11 +15,11 @@ extern SEXP is_Null_NS(SEXP ns);
 
 
 /*
- * Tell if it is a NULL native symbol. 
+ * Tell if it is a NULL native symbol.
  * This function mainly used to tell if a function created by cxxfunction of R
  * package inline points to a NULL address, which would happen when it is
- * deserialized (that is, loaded from what was saved previously by using R's save). 
- *  
+ * deserialized (that is, loaded from what was saved previously by using R's save).
+ *
  */
 SEXP is_Null_NS(SEXP ns) {
   SEXP ans;

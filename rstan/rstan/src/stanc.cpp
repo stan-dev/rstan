@@ -10,14 +10,14 @@
 #include <string>
 
 #include <Rcpp.h>
-#include <rstan/io/r_ostream.hpp> 
+#include <rstan/io/r_ostream.hpp>
 
 RcppExport SEXP CPP_stanc240(SEXP model_stancode, SEXP model_name);
-RcppExport SEXP CPP_stan_version(); 
+RcppExport SEXP CPP_stan_version();
 
 SEXP CPP_stan_version() {
   BEGIN_RCPP
-  std::string stan_version 
+  std::string stan_version
     = stan::MAJOR_VERSION + "." +
       stan::MINOR_VERSION + "." +
       stan::PATCH_VERSION;
@@ -26,41 +26,41 @@ SEXP CPP_stan_version() {
   UNPROTECT(1);
   return __sexp_result;
   END_RCPP
-} 
+}
 
-SEXP CPP_stanc240(SEXP model_stancode, SEXP model_name) { 
+SEXP CPP_stanc240(SEXP model_stancode, SEXP model_name) {
   BEGIN_RCPP;
   static const int SUCCESS_RC = 0;
   static const int EXCEPTION_RC = -1;
   static const int PARSE_FAIL_RC = -2;
-  
+
   /*
-  std::string stan_version 
+  std::string stan_version
     = stan::MAJOR_VERSION + "." +
       stan::MINOR_VERSION + "." +
       stan::PATCH_VERSION;
   */
 
-  std::string mcode_ = Rcpp::as<std::string>(model_stancode); 
-  std::string mname_ = Rcpp::as<std::string>(model_name); 
-   
+  std::string mcode_ = Rcpp::as<std::string>(model_stancode);
+  std::string mname_ = Rcpp::as<std::string>(model_name);
+
   std::stringstream out;
-  std::istringstream in(mcode_); 
+  std::istringstream in(mcode_);
   try {
     bool valid_model
       = stan::gm::compile(&rstan::io::rcerr,in,out,mname_);
     if (!valid_model) {
-      return Rcpp::List::create(Rcpp::Named("status") = PARSE_FAIL_RC); 
+      return Rcpp::List::create(Rcpp::Named("status") = PARSE_FAIL_RC);
 
     }
   } catch(const std::exception& e) {
-    // REprintf("\nERROR PARSING\n %s\n", e.what()); 
+    // REprintf("\nERROR PARSING\n %s\n", e.what());
     return Rcpp::List::create(Rcpp::Named("status") = EXCEPTION_RC,
-                              Rcpp::Named("msg") = Rcpp::wrap(e.what())); 
+                              Rcpp::Named("msg") = Rcpp::wrap(e.what()));
   }
 
-  Rcpp::List lst = 
-    Rcpp::List::create(Rcpp::Named("status") = SUCCESS_RC, 
+  Rcpp::List lst =
+    Rcpp::List::create(Rcpp::Named("status") = SUCCESS_RC,
                        Rcpp::Named("model_cppname") = mname_,
                        Rcpp::Named("cppcode") = out.str());
   SEXP __sexp_result;
