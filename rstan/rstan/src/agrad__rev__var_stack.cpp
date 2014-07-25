@@ -1,3 +1,3 @@
-#include <stan/agrad/rev/var_stack.cpp> 
+#include <stan/agrad/rev/var_stack.cpp>
 
 
