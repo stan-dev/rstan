@@ -1,1 +1,1 @@
-#include <stan/gm/grammars/term_grammar_inst.cpp> 
+#include <stan/gm/grammars/term_grammar_inst.cpp>
