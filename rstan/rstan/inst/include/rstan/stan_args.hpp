@@ -321,7 +321,7 @@ namespace rstan {
               throw std::invalid_argument(msg.str());
             }
           } else {
-            ctrl.optim.algorithm = BFGS;
+            ctrl.optim.algorithm = LBFGS;
           }
 
           if (!get_rlist_element(in, "refresh", ctrl.optim.refresh)) {
