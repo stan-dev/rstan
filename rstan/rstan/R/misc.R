@@ -1448,3 +1448,19 @@ all_int_eq <- function(is) {
     stop("not all are integers")
   min(is) == max(is)
 } 
+
+read_csv_header <- function(f, comment.char = '#') {
+  # Read the header of a csv file (the first line not beginning with
+  # comment.char). And the line number is return as attribute of name 'lineno'.
+  con <- file(f, 'r')
+  niter <- 0
+  while (length(input <- readLines(con, n = 1)) > 0) {
+    niter <- niter + 1
+    if (!grepl(comment.char, input)) break;
+  }
+  header <- input
+  attr(header, "lineno") <- niter
+  close(con)
+  header
+}
+
