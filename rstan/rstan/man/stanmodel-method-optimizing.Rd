@@ -16,7 +16,7 @@
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file, 
-    algorithm = c("BFGS", "LBFGS", "Newton"),
+    algorithm = c("LBFGS", "BFGS", "Newton"),
     verbose = FALSE, hessian = FALSE, as_vector = TRUE, \dots)   
 } 
 
@@ -60,7 +60,7 @@
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
   \item{algorithm}{One of "Newton", "BFGS", and "LBFGS" indicating which
-    optimization algorithm is used. The default is BFGS.}
+    optimization algorithm is used. The default is LBFGS.}
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
      to print intermediate output from Stan on the console.}
   \item{hessian}{\code{TRUE} or \code{FALSE} (the default): flag indicating
