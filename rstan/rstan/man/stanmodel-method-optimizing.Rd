@@ -69,18 +69,19 @@
   \item{as_vector}{\code{TRUE} (the default) or \code{FALSE}: flag indicating
      whether a vector is used to for the point estimate found. A list can be used
      instead by specifying it to be \code{FALSE}}
-  \item{\dots}{Other optional parameters. 
+  \item{\dots}{Other optional parameters, refer to the manuals for both
+    CmdStan and Stan. 
     \enumerate{
       \item \code{iter} (\code{integer}), the maximum number of iterations
       \item \code{save_iterations} (logical), whether to save the iterations 
       \item \code{refresh} (\code{integer})
-      \item \code{init_alpha} (\code{double}, default to 0.001), for BFGS and LBFGS, see manual of Stan
-      \item \code{tol_obj} (\code{double}, default to 1e-12), for BFGS and LBFGS, see the manual of Stan
-      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of Stan
-      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of Stan
-      \item \code{tol_rel_obj} (\code{double}, default to 1e4), for BFGS and LBFGS, see the manual of Stan
-      \item \code{tol_rel_grad} (\code{double}, default to 1e7), for BFGS and LBFGS, see the manual of Stan
-      \item \code{history_size} (\code{integer}, default to 5), for LBFGS, see the manual of Stan
+      \item \code{init_alpha} (\code{double}, default to 0.001), for BFGS and LBFGS, see manual of (Cmd)Stan
+      \item \code{tol_obj} (\code{double}, default to 1e-12), for BFGS and LBFGS, see the manual of (Cmd)Stan
+      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of (Cmd)Stan
+      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of (Cmd)Stan
+      \item \code{tol_rel_obj} (\code{double}, default to 1e4), for BFGS and LBFGS, see the manual of (Cmd)Stan
+      \item \code{tol_rel_grad} (\code{double}, default to 1e7), for BFGS and LBFGS, see the manual of (Cmd)Stan
+      \item \code{history_size} (\code{integer}, default to 5), for LBFGS, see the manual of (Cmd)Stan
     }
   }
 }
