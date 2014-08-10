@@ -612,6 +612,7 @@ namespace rstan {
       std::string init_val = args.get_init();
       double init_log_prob;
       int num_init_tries = 0;
+      R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       if (init_val == "0") {
         try {
@@ -778,7 +779,7 @@ namespace rstan {
           int return_code = stan::common::do_bfgs_optimize(model, lbfgs, base_rng,
                                                            lp, cont_vector, disc_vector,
                                                            &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh);
+                                                           save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::common::write_iteration(sample_stream, model, base_rng,
@@ -842,7 +843,7 @@ namespace rstan {
           int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,
                                                            lp, cont_vector, disc_vector,
                                                            &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh);
+                                                           save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::common::write_iteration(sample_stream, model, base_rng,
