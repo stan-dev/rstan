@@ -378,7 +378,7 @@ plot(exfit)
 
 ## define a function to generate initial values that can
 ## be fed to function stan's argument `init`
-# function form 1 without argumetns 
+# function form 1 without arguments 
 initf1 <- function() {
   list(mu = 1, sigma = 4, z = array(rnorm(6), dim = c(3,2)), alpha = 1)
 } 
