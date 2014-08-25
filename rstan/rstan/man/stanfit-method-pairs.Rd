@@ -10,7 +10,7 @@
   \method{pairs}{stanfit}(x, labels = NULL, panel = NULL, \dots, lower.panel = NULL, 
     upper.panel = NULL, diag.panel = NULL, text.panel = NULL, 
     label.pos = 0.5 + has.diag/3, cex.labels = NULL, font.labels = 1, 
-    row1attop = TRUE, gap = 1, pars = NULL, chain_id = NULL) 
+    row1attop = TRUE, gap = 1, pars = NULL, condition = NULL) 
 } 
 
 \arguments{
@@ -24,13 +24,28 @@
     to include in the plots, which is passed to \code{\link{extract}}. Thus,
     by default, all unknown quantities are included, which may be far too many
     to visualize on a small computer screen.}
-  \item{chain_id}{By default, \code{NULL}, which will plot roughly half of the
-    chains in the lower panel and the rest in the upper panel. Otherwise, an
+  \item{condition}{By default, \code{NULL}, which will plot roughly half of the
+    chains in the lower panel and the rest in the upper panel. An
     integer vector can be passed to select some subset of the chains, of which
     roughly half will be plotted in the lower panel and the rest in the upper
-    panel. Or a list of two integer vectors, each specifying a subset of the
-    chains to be plotted in the lower and upper panels respectively. The latter
-    option can be useful if you suspect that one chain has failed to converge.}  
+    panel. A list of two integer vectors can be passed, each specifying a subset
+    of the chains to be plotted in the lower and upper panels respectively.
+    A single number between zero and one exclusive can be passed, which is 
+    interpreted as the proportion of realizations (among all chains) to plot
+    in the lower panel starting with the first realization in each chain, 
+    with the complement (from the end of each chain) plotted in the upper panel.
+    A (possibly abbreviated) character vector of length one can be passed among 
+    \code{"accept_stat__", "stepsize__", "treedepth__", "n_leapfrog__"} or
+    \code{"n_divergent__"}, which are the variables produced by 
+    \code{\link{get_sampler_params}}, in which case the lower panel will plot
+    realizations that are below the median of the indicated variable (or are
+    zero in the case of \code{"n_divergent__"}) and the upper panel will plot
+    realizations that are greater than or equal to the median of the indicated
+    variable (or are one in the case of \code{"n_divergent__"}). Finally, any
+    logical vector whose length is equal to the product of the number of iterations
+    and the number of chains can be passed, in which case realizations
+    corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 
+    and upper panel respectively.}
 } 
 
 \details{
@@ -68,5 +83,5 @@ ex_model_code <- '
 ## fit the model 
 fit <- stan(model_code = ex_model_code, chains = 4) 
 
-pairs(fit, pars = "alpha", chain_id = list(1, 2:4))
+pairs(fit, pars = "alpha", condition = list(1, 2:4))
 }}  
