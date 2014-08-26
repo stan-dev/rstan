@@ -670,7 +670,7 @@ using the external files.
 \subsection{The log posterior function and its gradient} 
 
 Essentially, we define the log of the probability
-density of a posterior distribution up to a unknown additive constant.
+density of a posterior distribution up to an unknown additive constant.
 In \Stan, we use \code{lp\_\_} to represent this log density evaluated at 
 each iteration.  Often \code{lp\_\_} becomes one quantity that we are interested in. 
 In \pkg{rstan}, \code{lp\_\_} is treated as if it is a parameter 
