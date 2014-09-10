@@ -714,8 +714,8 @@ seq_array_ind <- function(d, col_major = FALSE) {
     return(numeric(0L)) 
 
   ## Handles one by one matrices
-  if (all(d == 1))
-    return(array(1, dim = d))
+  if (all(d == 1L))
+    return(array(1L, dim = d))
 
   total <- prod(d) 
   len <- length(d) 
