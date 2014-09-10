@@ -1,4 +1,3 @@
-
 #ifndef __RSTAN__STAN_FIT_HPP__
 #define __RSTAN__STAN_FIT_HPP__
 
@@ -33,6 +32,7 @@
 #include <stan/common/do_print.hpp>
 #include <stan/common/do_bfgs_optimize.hpp>
 #include <stan/common/print_progress.hpp>
+#include <stan/common/initialize_state.hpp>
 
 
 #include <rstan/io/rlist_ref_var_context.hpp>
@@ -615,24 +615,9 @@ namespace rstan {
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       if (init_val == "0") {
-        try {
-          init_log_prob
-            = stan::model::log_prob_grad<true,true>(model,
-                                                    cont_vector,
-                                                    disc_vector,
-                                                    init_grad,
-                                                    &rstan::io::rcout);
-        } catch (const std::domain_error& e) {
-          std::string msg("Domain error during initialization with 0:\n");
-          msg += e.what();
-          throw std::runtime_error(msg);
-        }
-        if (!boost::math::isfinite(init_log_prob))
-          throw std::runtime_error("Error during initialization with 0: vanishing density.");
-        for (size_t i = 0; i < init_grad.size(); i++) {
-          if (!boost::math::isfinite(init_grad[i]))
-            throw std::runtime_error("Error during initialization with 0: divergent gradient.");
-        }
+        if (stan::common::initialize_state_zero(cont_vector, model,
+                                                &rstan::io::rcout) == false)
+          throw std::runtime_error("");
       } else if (init_val == "user") {
         try {
           rstan::io::rlist_ref_var_context init_var_context(args.get_init_list());
