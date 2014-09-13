@@ -606,6 +606,8 @@ namespace rstan {
       base_rng.discard(DISCARD_STRIDE * (args.get_chain_id() - 1));
 
       std::vector<double> cont_vector = std::vector<double>(model.num_params_r(), 0);
+      Eigen::VectorXd cont_params = Eigen::VectorXd::Zero(model.num_params_r());
+
       std::vector<int> disc_vector = std::vector<int>(model.num_params_i(),0);
       std::vector<double> params_inr_etc; // cont, disc, and others
       std::vector<double> init_grad;
@@ -615,9 +617,11 @@ namespace rstan {
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       if (init_val == "0") {
-        if (stan::common::initialize_state_zero(cont_vector, model,
+        if (stan::common::initialize_state_zero(cont_params, model,
                                                 &rstan::io::rcout) == false)
           throw std::runtime_error("");
+        for (int n = 0; n < cont_params.size(); n++)
+          cont_vector[n] = cont_params[n];
       } else if (init_val == "user") {
         try {
           rstan::io::rlist_ref_var_context init_var_context(args.get_init_list());
@@ -640,42 +644,12 @@ namespace rstan {
             throw std::runtime_error("Rejecting user-specified initialization because of divergent gradient.");
         }
       } else {
-        init_val = "random";
-        double r = args.get_init_radius();
-        boost::random::uniform_real_distribution<double>
-          init_range_distribution(-r, r);
-        boost::variate_generator<RNG_t&, boost::random::uniform_real_distribution<double> >
-          init_rng(base_rng,init_range_distribution);
-
-        static int MAX_INIT_TRIES = 100;
-        for (; num_init_tries < MAX_INIT_TRIES; ++num_init_tries) {
-          for (size_t i = 0; i < cont_vector.size(); ++i)
-            cont_vector[i] = init_rng();
-          try {
-            init_log_prob
-              = stan::model::log_prob_grad<true,true>(model,cont_vector,disc_vector,init_grad,&rstan::io::rcout);
-          } catch (const std::domain_error& e) {
-            // write_error_msg(&rstan::io::rcout, e);
-            rstan::io::rcout << e.what();
-            rstan::io::rcout << "Rejecting proposed initial value with zero density." << std::endl;
-            continue;
-          }
-          if (!boost::math::isfinite(init_log_prob))
-            continue;
-          for (size_t i = 0; i < init_grad.size(); ++i)
-            if (!boost::math::isfinite(init_grad[i]))
-              continue;
-          break;
-        }
-        if (num_init_tries == MAX_INIT_TRIES) {
-          rstan::io::rcout << "Initialization failed after " << MAX_INIT_TRIES
-                           << " attempts. "
-                           << " Try specifying initial values,"
-                           << " reducing ranges of constrained values,"
-                           << " or reparameterizing the model."
-                           << std::endl;
-          return -1;
-        }
+        double R = args.get_init_radius();
+        if (stan::common::initialize_state_random(R, cont_params, model, base_rng,
+                                                  &rstan::io::rcout) == false)
+          throw std::runtime_error("");
+        for (int n = 0; n < cont_params.size(); n++)
+          cont_vector[n] = cont_params[n];
       }
       // keep a record of the initial values
       std::vector<double> initv;
@@ -889,7 +863,7 @@ namespace rstan {
         }
         return 0;
       }
-      Eigen::VectorXd cont_params = Eigen::VectorXd::Zero(model.num_params_r());
+      
       for (size_t i = 0; i < cont_vector.size(); i++) cont_params(i) = cont_vector[i];
 
       // method = 3 //sampling
