@@ -474,195 +474,37 @@ TEST_F(RStan, initialize_state_zero) {
   EXPECT_EQ("", ss.str());
   for (int n = 0; n < model_.num_params_r(); n++)
     EXPECT_FLOAT_EQ(0.0, cont_vector[n]);
-}  
-//   stan::mcmc::sample s(Eigen::VectorXd::Zero(model_.num_params_r()), 0, 0);
-  
-//   std::vector<size_t> qoi_idx 
-//     = vector_factory<size_t>(read_file("tests/cpp/test_config/1_input_qoi_idx.txt"));
-//   std::vector<double> initv 
-//     = vector_factory<double>(read_file("tests/cpp/test_config/1_input_initv.txt"));
-//   std::vector<std::string> fnames_oi 
-//     = vector_factory<std::string>(read_file("tests/cpp/test_config/1_input_fnames_oi.txt"));
-  
-//   std::string e_holder_string = read_file("tests/cpp/test_config/1_output_holder.txt");
-//   Rcpp::List e_holder 
-//     = holder_factory(read_file("tests/cpp/test_config/1_output_holder.txt"),
-//                      args);
+} 
 
-//   Rcpp::List holder;
-  
-//   rstan::init_nuts<sampler_t>(sampler_ptr1, args);
-//   Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
-//   rstan::init_windowed_adapt<sampler_t>(sampler_ptr1, args, s.cont_params());
-  
-  
-//   std::fstream sample_stream, diagnostic_stream;
-//   rstan::execute_sampling(args, model_, holder,
-//                           sampler_ptr1,
-//                           s,
-//                           qoi_idx,
-//                           initv,
-//                           sample_stream,
-//                           diagnostic_stream,
-//                           fnames_oi,
-//                           base_rng1);
-  
-//   test_holder(e_holder, holder);
-// }
+TEST_F(RStan, initialize_state_random) {
+  std::stringstream ss;
 
+  std::string e_args_string = read_file("tests/cpp/test_config/3_input_stan_args.txt");
+  rstan::stan_args args = stan_args_factory(e_args_string);
+  args.write_args_as_comment(ss);
+  ASSERT_EQ(e_args_string, ss.str());
+  ss.str("");
+  
+  std::string init_val = args.get_init();
+  ASSERT_EQ("random", init_val);
+  double R = 2;
 
-// TEST_F(RStan, execute_sampling_2) {
-//   std::stringstream ss;
+  boost::random::uniform_01<rng_t> rng1(base_rng1), rng2(base_rng2);
+  
+  Eigen::VectorXd cont_vector1 = Eigen::VectorXd::Zero(model_.num_params_r());
+  Eigen::VectorXd cont_vector2 = Eigen::VectorXd::Zero(model_.num_params_r());
+    
+  EXPECT_TRUE(stan::common::initialize_state_random(R, cont_vector1, model_, base_rng1, &ss));
+  EXPECT_EQ("", ss.str());
 
-//   std::string e_args_string = read_file("tests/cpp/test_config/2_input_stan_args.txt");
-//   rstan::stan_args args = stan_args_factory(e_args_string);
-//   args.write_args_as_comment(ss);
-//   ASSERT_EQ(e_args_string, ss.str());
-//   ss.str("");
+  EXPECT_TRUE(stan::common::initialize_state_random(R, cont_vector2, model_, base_rng2, &ss));
+  EXPECT_EQ("", ss.str());
   
-//   stan::mcmc::sample s(Eigen::VectorXd::Zero(model_.num_params_r()), 0, 0);
-  
-//   std::vector<size_t> qoi_idx 
-//     = vector_factory<size_t>(read_file("tests/cpp/test_config/2_input_qoi_idx.txt"));
-//   std::vector<double> initv 
-//     = vector_factory<double>(read_file("tests/cpp/test_config/2_input_initv.txt"));
-//   std::vector<std::string> fnames_oi 
-//     = vector_factory<std::string>(read_file("tests/cpp/test_config/2_input_fnames_oi.txt"));
-  
-//   std::string e_holder_string = read_file("tests/cpp/test_config/2_output_holder.txt");
-//   Rcpp::List e_holder 
-//     = holder_factory(read_file("tests/cpp/test_config/2_output_holder.txt"),
-//                      args);
+    
+  for (int n = 0; n < model_.num_params_r(); n++)
+    EXPECT_FLOAT_EQ(rng1() * 4 - 2, cont_vector1[n]);
 
-//   Rcpp::List holder;
-  
-//   rstan::init_nuts<sampler_t>(sampler_ptr2, args);
-//   Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
-//   rstan::init_windowed_adapt<sampler_t>(sampler_ptr2, args, s.cont_params());
-  
-  
-//   std::fstream sample_stream, diagnostic_stream;
-//   rstan::execute_sampling(args, model_, holder,
-//                           sampler_ptr2,
-//                           s,
-//                           qoi_idx,
-//                           initv,
-//                           sample_stream,
-//                           diagnostic_stream,
-//                           fnames_oi,
-//                           base_rng2);
-  
-  
-  
-//   test_holder(e_holder, holder);
-// }
+  for (int n = 0; n < model_.num_params_r(); n++)
+    EXPECT_FLOAT_EQ(rng2() * 4 - 2, cont_vector2[n]);
+} 
 
-// TEST_F(RStan, execute_sampling_3) {
-//   std::stringstream ss;
-
-//   std::string e_args_string = read_file("tests/cpp/test_config/3_input_stan_args.txt");
-//   rstan::stan_args args = stan_args_factory(e_args_string);
-//   args.write_args_as_comment(ss);
-//   ASSERT_EQ(e_args_string, ss.str());
-//   ss.str("");
-
-//   double r = args.get_init_radius();
-//   boost::random::uniform_real_distribution<double> 
-//     init_range_distribution(-r, r);
-//   boost::variate_generator<rng_t&, boost::random::uniform_real_distribution<double> >
-//     init_rng(base_rng3,init_range_distribution);
-//   Eigen::VectorXd cont_params(model_.num_params_r());
-//   for (size_t i = 0; i < cont_params.size(); ++i)
-//     cont_params[i] = init_rng();
-  
-//   stan::mcmc::sample s(cont_params, 0, 0);
-  
-  
-//   std::vector<size_t> qoi_idx 
-//     = vector_factory<size_t>(read_file("tests/cpp/test_config/3_input_qoi_idx.txt"));
-//   std::vector<double> initv 
-//     = vector_factory<double>(read_file("tests/cpp/test_config/3_input_initv.txt"));
-//   std::vector<std::string> fnames_oi 
-//     = vector_factory<std::string>(read_file("tests/cpp/test_config/3_input_fnames_oi.txt"));
-  
-//   std::string e_holder_string = read_file("tests/cpp/test_config/3_output_holder.txt");
-//   Rcpp::List e_holder 
-//     = holder_factory(read_file("tests/cpp/test_config/3_output_holder.txt"),
-//                      args);
-
-//   Rcpp::List holder;
-  
-//   rstan::init_nuts<sampler_t>(sampler_ptr3, args);
-//   Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
-//   rstan::init_windowed_adapt<sampler_t>(sampler_ptr3, args, s.cont_params());
-  
-  
-//   std::fstream sample_stream, diagnostic_stream;
-//   rstan::execute_sampling(args, model_, holder,
-//                           sampler_ptr3,
-//                           s,
-//                           qoi_idx,
-//                           initv,
-//                           sample_stream,
-//                           diagnostic_stream,
-//                           fnames_oi,
-//                           base_rng2);
-  
-  
-  
-//   test_holder(e_holder, holder);
-// }
-
-// TEST_F(RStan, execute_sampling_4) {
-//   std::stringstream ss;
-
-//   std::string e_args_string = read_file("tests/cpp/test_config/4_input_stan_args.txt");
-//   rstan::stan_args args = stan_args_factory(e_args_string);
-//   args.write_args_as_comment(ss);
-//   ASSERT_EQ(e_args_string, ss.str());
-//   ss.str("");
-
-//   double r = args.get_init_radius();
-//   boost::random::uniform_real_distribution<double> 
-//     init_range_distribution(-r, r);
-//   boost::variate_generator<rng_t&, boost::random::uniform_real_distribution<double> >
-//     init_rng(base_rng4,init_range_distribution);
-//   Eigen::VectorXd cont_params(model_.num_params_r());
-//   for (size_t i = 0; i < cont_params.size(); ++i)
-//     cont_params[i] = init_rng();
-  
-//   stan::mcmc::sample s(cont_params, 0, 0);
-  
-  
-//   std::vector<size_t> qoi_idx 
-//     = vector_factory<size_t>(read_file("tests/cpp/test_config/4_input_qoi_idx.txt"));
-//   std::vector<double> initv 
-//     = vector_factory<double>(read_file("tests/cpp/test_config/4_input_initv.txt"));
-//   std::vector<std::string> fnames_oi 
-//     = vector_factory<std::string>(read_file("tests/cpp/test_config/4_input_fnames_oi.txt"));
-  
-//   std::string e_holder_string = read_file("tests/cpp/test_config/4_output_holder.txt");
-//   Rcpp::List e_holder 
-//     = holder_factory(read_file("tests/cpp/test_config/4_output_holder.txt"),
-//                      args);
-
-//   Rcpp::List holder;
-
-//   rstan::init_nuts<sampler_t>(sampler_ptr4, args);
-//   Eigen::VectorXd tmp = Eigen::VectorXd::Zero(model_.num_params_r());
-//   rstan::init_windowed_adapt<sampler_t>(sampler_ptr4, args, s.cont_params());
-  
-  
-//   std::fstream sample_stream, diagnostic_stream;
-//   rstan::execute_sampling(args, model_, holder,
-//                           sampler_ptr4,
-//                           s,
-//                           qoi_idx,
-//                           initv,
-//                           sample_stream,
-//                           diagnostic_stream,
-//                           fnames_oi,
-//                           base_rng4);
-  
-//   test_holder(e_holder, holder);
-// }
