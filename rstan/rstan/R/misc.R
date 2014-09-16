@@ -712,12 +712,18 @@ seq_array_ind <- function(d, col_major = FALSE) {
   # 
   if (length(d) == 0L)
     return(numeric(0L)) 
+
   total <- prod(d) 
   len <- length(d) 
   if (len == 1L)
     return(array(1:total, dim = c(total, 1)))
 
   res <- array(1L, dim = c(total, len)) 
+
+  # Handle cases like 1x1 matrices
+  if (total == 1)
+    return(res)
+  
   jidx <- if (col_major) 1L:len else len:1L
   for (i in 2L:total) {
     res[i, ] <- res[i - 1, ]

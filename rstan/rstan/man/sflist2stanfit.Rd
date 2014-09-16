@@ -65,25 +65,47 @@
 \examples{\dontrun{
 library(rstan)
 scode <- "
+data {
+  int<lower=1> N;
+} 
 parameters {
-  real y[2]; 
+  real y1[N]; 
+  real y2[N]; 
 } 
 model {
-  y[1] ~ normal(0, 1);
-  y[2] ~ double_exponential(0, 2);
+  y1 ~ normal(0, 1);
+  y2 ~ double_exponential(0, 2);
 } 
 "
 seed <- 123 # or any other integer 
-f1 <- stan(model_code = scode, chains = 1, seed = seed, chain_id = 1) 
-f2 <- stan(fit = f1, chains = 2, seed = seed, chain_id = 2:3) 
+foo_data <- list(N = 2)
+foo <- stan(model_code = scode, data = foo_data, chains = 1, iter = 0)
+f1 <- stan(fit = foo, data = foo_data, chains = 1, seed = seed, chain_id = 1) 
+f2 <- stan(fit = foo, data = foo_data, chains = 2, seed = seed, chain_id = 2:3) 
 f12 <- sflist2stanfit(list(f1, f2)) 
 
-## parallel stan call 
+## parallel stan call for unix-like OS
 library(parallel)
 
 ## this may not work on Windows 
 sflist1 <- 
   mclapply(1:4, mc.cores = 4, 
-           function(i) stan(fit = f1, seed = seed, chains = 1, chain_id = i, refresh = -1))
+           function(i) stan(fit = foo, data = foo_data, seed = seed, chains = 1, chain_id = i, refresh = -1))
 f3 <- sflist2stanfit(sflist1)
+
+## for Windows (this works on Unix-like OS as well)
+
+CL = makeCluster(4)
+clusterExport(cl = CL, c("foo_data", "foo", "seed")) 
+sflist1 <- parLapply(CL, 1:4, fun = function(cid) {  
+  require(rstan)
+  stan(fit = foo, data = foo_data, chains = 1, 
+       iter = 2000, seed = seed, chain_id = cid)
+})
+
+fit <- sflist2stanfit(sflist1)
+print(fit)
+stopCluster(CL)
+
+## end example for Windows 
 }} 
