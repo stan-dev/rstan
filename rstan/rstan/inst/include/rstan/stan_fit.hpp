@@ -616,63 +616,33 @@ namespace rstan {
       double init_log_prob;
       int num_init_tries = 0;
       R_CheckUserInterrupt_Functor interruptCallback;
-      // parameter initialization
-      if (init_val == "0") {
+      // parameter initialization: use initialize_state() once it has a config
+      {
 	std::stringstream ss;
-        if (stan::common::initialize_state_zero(cont_params, model,
-                                                &ss) == false)
-          throw std::runtime_error(ss.str());
-	
-	rstan::io::rcout << ss.str();
-        for (int n = 0; n < cont_params.size(); n++)
-          cont_vector[n] = cont_params[n];
-      } else if (init_val == "user") {
-	std::stringstream ss;
-	rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
-	
-	if (stan::common::initialize_state_source(init_val,
-						  cont_params,
-						  model,
-						  base_rng,
-						  &ss,
-						  context_factory) == false)
-	  throw std::runtime_error(ss.str());
-	
-	rstan::io::rcout << ss.str();
-        for (int n = 0; n < cont_params.size(); n++)
-          cont_vector[n] = cont_params[n];
-	/*
-        try {
-          rstan::io::rlist_ref_var_context init_var_context(args.get_init_list());
-          model.transform_inits(init_var_context,disc_vector,cont_vector);
-          init_log_prob
-            = stan::model::log_prob_grad<true,true>(model,
-                                                    cont_vector,
-                                                    disc_vector,
-                                                    init_grad,
-                                                    &rstan::io::rcout);
-        } catch (const std::exception& e) {
-          std::string msg("Error during user-specified initialization:\n");
-          msg += e.what();
-          throw std::runtime_error(msg);
-        }
-        if (!boost::math::isfinite(init_log_prob))
-          throw std::runtime_error("Rejecting user-specified initialization because of vanishing density.");
-        for (size_t i = 0; i < init_grad.size(); i++) {
-          if (!boost::math::isfinite(init_grad[i]))
-            throw std::runtime_error("Rejecting user-specified initialization because of divergent gradient.");
-        }
-	*/
-      } else {
-	std::stringstream ss;
-        double R = args.get_init_radius();
-        if (stan::common::initialize_state_random(R, cont_params, model, base_rng,
-                                                  &ss) == false)
-          throw std::runtime_error(ss.str());
 
+	if (init_val == "0") {
+	  if (stan::common::initialize_state_zero(cont_params, model,
+						  &ss) == false)
+	    throw std::runtime_error(ss.str());
+	} else if (init_val == "user") {
+	  rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
+	  if (stan::common::initialize_state_source(init_val,
+						    cont_params,
+						    model,
+						    base_rng,
+						    &ss,
+						    context_factory) == false)
+	    throw std::runtime_error(ss.str());
+	} else {
+	  double R = args.get_init_radius();
+	  if (stan::common::initialize_state_random(R, cont_params, model, base_rng,
+						    &ss) == false)
+	    throw std::runtime_error(ss.str());
+
+	}
 	rstan::io::rcout << ss.str();
-        for (int n = 0; n < cont_params.size(); n++)
-          cont_vector[n] = cont_params[n];
+	for (int n = 0; n < cont_params.size(); n++)
+	  cont_vector[n] = cont_params[n];
       }
       // keep a record of the initial values
       std::vector<double> initv;
