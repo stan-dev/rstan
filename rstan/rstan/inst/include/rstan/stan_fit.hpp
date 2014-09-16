@@ -36,6 +36,7 @@
 
 
 #include <rstan/io/rlist_ref_var_context.hpp>
+#include <rstan/io/rlist_ref_var_context_factory.hpp>
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 // #include <stan/mcmc/chains.hpp>
@@ -617,12 +618,30 @@ namespace rstan {
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       if (init_val == "0") {
+	std::stringstream ss;
         if (stan::common::initialize_state_zero(cont_params, model,
-                                                &rstan::io::rcout) == false)
-          throw std::runtime_error("");
+                                                &ss) == false)
+          throw std::runtime_error(ss.str());
+	
+	rstan::io::rcout << ss.str();
         for (int n = 0; n < cont_params.size(); n++)
           cont_vector[n] = cont_params[n];
       } else if (init_val == "user") {
+	std::stringstream ss;
+	rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
+	
+	if (stan::common::initialize_state_source(init_val,
+						  cont_params,
+						  model,
+						  base_rng,
+						  &ss,
+						  context_factory) == false)
+	  throw std::runtime_error(ss.str());
+	
+	rstan::io::rcout << ss.str();
+        for (int n = 0; n < cont_params.size(); n++)
+          cont_vector[n] = cont_params[n];
+	/*
         try {
           rstan::io::rlist_ref_var_context init_var_context(args.get_init_list());
           model.transform_inits(init_var_context,disc_vector,cont_vector);
@@ -643,11 +662,15 @@ namespace rstan {
           if (!boost::math::isfinite(init_grad[i]))
             throw std::runtime_error("Rejecting user-specified initialization because of divergent gradient.");
         }
+	*/
       } else {
+	std::stringstream ss;
         double R = args.get_init_radius();
         if (stan::common::initialize_state_random(R, cont_params, model, base_rng,
-                                                  &rstan::io::rcout) == false)
-          throw std::runtime_error("");
+                                                  &ss) == false)
+          throw std::runtime_error(ss.str());
+
+	rstan::io::rcout << ss.str();
         for (int n = 0; n < cont_params.size(); n++)
           cont_vector[n] = cont_params[n];
       }
