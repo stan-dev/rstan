@@ -618,31 +618,31 @@ namespace rstan {
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       {
-	std::stringstream ss;
-	std::string init;
-	rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
+        std::stringstream ss;
+        std::string init;
+        rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
+        
+        if (init_val == "0") 
+          init = "0";
+        else if (init_val == "user")
+          init = "user";
+        else {
+          std::stringstream R;
+          R << args.get_init_radius();
+          init = R.str();
+        }
+        
+        if (stan::common::initialize_state(init,
+                                           cont_params,
+                                           model,
+                                           base_rng,
+                                           &ss,
+                                           context_factory) == false)
+          throw std::runtime_error(ss.str());
 
-	if (init_val == "0") 
-	  init = "0";
-	else if (init_val == "user")
-	  init = "user";
-	else {
-	  std::stringstream R;
-	  R << args.get_init_radius();
-	  init = R.str();
-	}
-	
-	if (stan::common::initialize_state(init,
-					   cont_params,
-					   model,
-					   base_rng,
-					   &ss,
-					   context_factory) == false)
-	  throw std::runtime_error(ss.str());
-
-	rstan::io::rcout << ss.str();
-	for (int n = 0; n < cont_params.size(); n++)
-	  cont_vector[n] = cont_params[n];
+        rstan::io::rcout << ss.str();
+        for (int n = 0; n < cont_params.size(); n++)
+          cont_vector[n] = cont_params[n];
       }
       
       // keep a record of the initial values
