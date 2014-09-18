@@ -19,7 +19,7 @@ matrix:
   allow_failures:
     - env: CXX_OLEVEL=0 RCPP_VER=cran
     - env: CXX_OLEVEL=3 RCPP_VER=github
-    - compiler: clang
+    - compiler: gcc
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh

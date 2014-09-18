@@ -103,6 +103,20 @@ setMethod("optimizing", "stanmodel",
             if (!missing(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
+<<<<<<< HEAD
+=======
+            is_arg_recognizable(names(dotlist), 
+                                c("iter", "save_iterations", 
+                                  "save_iterations",
+                                  "refresh",
+                                  "init_alpha",
+                                  "tol_obj",
+                                  "tol_grad",
+                                  "tol_param",
+                                  "tol_rel_obj",
+                                  "tol_rel_grad",
+                                  "history_size"))
+>>>>>>> d788e07... more on issue #102
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
@@ -133,6 +147,10 @@ setMethod("sampling", "stanmodel",
                    sample_file, diagnostic_file, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, ...) {
+            dots <- list(...)
+            is_arg_recognizable(names(dots), 
+                                c("chain_id", "init_r", "test_grad", 
+                                  "append_samples", "refresh", "control"))
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
