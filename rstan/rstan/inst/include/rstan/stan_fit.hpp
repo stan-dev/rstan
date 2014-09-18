@@ -1,4 +1,3 @@
-
 #ifndef __RSTAN__STAN_FIT_HPP__
 #define __RSTAN__STAN_FIT_HPP__
 
@@ -33,9 +32,11 @@
 #include <stan/common/do_print.hpp>
 #include <stan/common/do_bfgs_optimize.hpp>
 #include <stan/common/print_progress.hpp>
+#include <stan/common/initialize_state.hpp>
 
 
 #include <rstan/io/rlist_ref_var_context.hpp>
+#include <rstan/io/rlist_ref_var_context_factory.hpp>
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 // #include <stan/mcmc/chains.hpp>
@@ -606,6 +607,8 @@ namespace rstan {
       base_rng.discard(DISCARD_STRIDE * (args.get_chain_id() - 1));
 
       std::vector<double> cont_vector = std::vector<double>(model.num_params_r(), 0);
+      Eigen::VectorXd cont_params = Eigen::VectorXd::Zero(model.num_params_r());
+
       std::vector<int> disc_vector = std::vector<int>(model.num_params_i(),0);
       std::vector<double> params_inr_etc; // cont, disc, and others
       std::vector<double> init_grad;
@@ -614,84 +617,34 @@ namespace rstan {
       int num_init_tries = 0;
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
-      if (init_val == "0") {
-        try {
-          init_log_prob
-            = stan::model::log_prob_grad<true,true>(model,
-                                                    cont_vector,
-                                                    disc_vector,
-                                                    init_grad,
-                                                    &rstan::io::rcout);
-        } catch (const std::domain_error& e) {
-          std::string msg("Domain error during initialization with 0:\n");
-          msg += e.what();
-          throw std::runtime_error(msg);
+      {
+        std::stringstream ss;
+        std::string init;
+        rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
+        
+        if (init_val == "0") 
+          init = "0";
+        else if (init_val == "user")
+          init = "user";
+        else {
+          std::stringstream R;
+          R << args.get_init_radius();
+          init = R.str();
         }
-        if (!boost::math::isfinite(init_log_prob))
-          throw std::runtime_error("Error during initialization with 0: vanishing density.");
-        for (size_t i = 0; i < init_grad.size(); i++) {
-          if (!boost::math::isfinite(init_grad[i]))
-            throw std::runtime_error("Error during initialization with 0: divergent gradient.");
-        }
-      } else if (init_val == "user") {
-        try {
-          rstan::io::rlist_ref_var_context init_var_context(args.get_init_list());
-          model.transform_inits(init_var_context,disc_vector,cont_vector);
-          init_log_prob
-            = stan::model::log_prob_grad<true,true>(model,
-                                                    cont_vector,
-                                                    disc_vector,
-                                                    init_grad,
-                                                    &rstan::io::rcout);
-        } catch (const std::exception& e) {
-          std::string msg("Error during user-specified initialization:\n");
-          msg += e.what();
-          throw std::runtime_error(msg);
-        }
-        if (!boost::math::isfinite(init_log_prob))
-          throw std::runtime_error("Rejecting user-specified initialization because of vanishing density.");
-        for (size_t i = 0; i < init_grad.size(); i++) {
-          if (!boost::math::isfinite(init_grad[i]))
-            throw std::runtime_error("Rejecting user-specified initialization because of divergent gradient.");
-        }
-      } else {
-        init_val = "random";
-        double r = args.get_init_radius();
-        boost::random::uniform_real_distribution<double>
-          init_range_distribution(-r, r);
-        boost::variate_generator<RNG_t&, boost::random::uniform_real_distribution<double> >
-          init_rng(base_rng,init_range_distribution);
+        
+        if (stan::common::initialize_state(init,
+                                           cont_params,
+                                           model,
+                                           base_rng,
+                                           &ss,
+                                           context_factory) == false)
+          throw std::runtime_error(ss.str());
 
-        static int MAX_INIT_TRIES = 100;
-        for (; num_init_tries < MAX_INIT_TRIES; ++num_init_tries) {
-          for (size_t i = 0; i < cont_vector.size(); ++i)
-            cont_vector[i] = init_rng();
-          try {
-            init_log_prob
-              = stan::model::log_prob_grad<true,true>(model,cont_vector,disc_vector,init_grad,&rstan::io::rcout);
-          } catch (const std::domain_error& e) {
-            // write_error_msg(&rstan::io::rcout, e);
-            rstan::io::rcout << e.what();
-            rstan::io::rcout << "Rejecting proposed initial value with zero density." << std::endl;
-            continue;
-          }
-          if (!boost::math::isfinite(init_log_prob))
-            continue;
-          for (size_t i = 0; i < init_grad.size(); ++i)
-            if (!boost::math::isfinite(init_grad[i]))
-              continue;
-          break;
-        }
-        if (num_init_tries == MAX_INIT_TRIES) {
-          rstan::io::rcout << "Initialization failed after " << MAX_INIT_TRIES
-                           << " attempts. "
-                           << " Try specifying initial values,"
-                           << " reducing ranges of constrained values,"
-                           << " or reparameterizing the model."
-                           << std::endl;
-          return -1;
-        }
+        rstan::io::rcout << ss.str();
+        for (int n = 0; n < cont_params.size(); n++)
+          cont_vector[n] = cont_params[n];
       }
+      
       // keep a record of the initial values
       std::vector<double> initv;
       model.write_array(base_rng,cont_vector,disc_vector,initv);
@@ -904,7 +857,7 @@ namespace rstan {
         }
         return 0;
       }
-      Eigen::VectorXd cont_params = Eigen::VectorXd::Zero(model.num_params_r());
+      
       for (size_t i = 0; i < cont_vector.size(); i++) cont_params(i) = cont_vector[i];
 
       // method = 3 //sampling
