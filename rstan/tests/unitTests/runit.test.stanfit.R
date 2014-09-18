@@ -94,7 +94,7 @@ test_output_csv_and_extract <- function() {
   checkEquals(e1$y3[1,3,1,2], 14, checkNames = FALSE)
 } 
 
-test_domain_error_exception <- function() { 
+test_init_zero_gradient_failure <- function() { 
   code <- '
   parameters {
     real x;
@@ -111,8 +111,9 @@ test_domain_error_exception <- function() {
   sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
-  checkTrue(grepl('.*Domain error during initialization with 0.*', geterrmessage()))
+  checkTrue(grepl('.*Rejecting initialization at zero because of gradient failure.*', geterrmessage()))
 } 
+
 
 test_init_zero_exception_inf_lp <- function() {
   code <- '
@@ -120,7 +121,7 @@ test_init_zero_exception_inf_lp <- function() {
     real x;
   }
   model {
-    lp__ <- 1 / x;
+    increment_log_prob(1 / x);
   }
   '
   sm <- stan_model(model_code = code)
@@ -140,7 +141,7 @@ test_init_zero_exception_inf_grad <- function() {
     real x;
   }
   model {
-    lp__ <- 1 / log(x);
+    increment_log_prob(1 / log(x));
   }
   '
   sm <- stan_model(model_code = code)
