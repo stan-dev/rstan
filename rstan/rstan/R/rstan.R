@@ -119,6 +119,12 @@ stan <- function(file, model_name = "anon_model",
   # Returns: 
   #   A S4 class stanfit object  
 
+  dot_arg_names <- names(list(...))
+  is_arg_recognizable(dot_arg_names, 
+                      "chain_id", "init_r", "test_grad", 
+                      "append_samples", "refresh", "control"
+                      "obfuscate_model_name")
+
   if (is(fit, "stanfit")) sm <- get_stanmodel(fit)
   else { 
     attr(model_code, "model_name2") <- deparse(substitute(model_code))  

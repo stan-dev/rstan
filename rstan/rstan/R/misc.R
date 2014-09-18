@@ -1464,3 +1464,15 @@ read_csv_header <- function(f, comment.char = '#') {
   header
 }
 
+is_arg_recognizable <- function(x, y) {
+  # check if all elements of x are in y.  
+  # x: a vector of characters 
+  # y: a vector of characters 
+  idx <- match(x, y)
+  na_idx <- which(is.na(idx))
+  if (length(na_idx) > 0) {
+    stop(paste(x[na_idx], collapse = ', '), " not found.")
+  }
+  TRUE
+}
+
