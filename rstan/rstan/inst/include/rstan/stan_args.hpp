@@ -1,6 +1,5 @@
-
-#ifndef __RSTAN__STAN_ARGS_HPP__
-#define __RSTAN__STAN_ARGS_HPP__
+#ifndef RSTAN__STAN_ARGS_HPP
+#define RSTAN__STAN_ARGS_HPP
 
 
 #include <Rcpp.h>

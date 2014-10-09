@@ -1,5 +1,5 @@
-#ifndef __RSTAN__STAN_FIT_HPP__
-#define __RSTAN__STAN_FIT_HPP__
+#ifndef RSTAN__STAN_FIT_HPP
+#define RSTAN__STAN_FIT_HPP
 
 #include <iomanip>
 #include <fstream>

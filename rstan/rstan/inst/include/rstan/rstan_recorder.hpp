@@ -1,5 +1,5 @@
-#ifndef __RSTAN__RSTAN_RECORDER_HPP__
-#define __RSTAN__RSTAN_RECORDER_HPP__
+#ifndef RSTAN__RSTAN_RECORDER_HPP
+#define RSTAN__RSTAN_RECORDER_HPP
 
 #include <Rcpp.h>
 #include <stan/common/recorder/csv.hpp>

@@ -1,6 +1,5 @@
-
-#ifndef __R__IO_R_OSTREAM_HPP__
-#define __R__IO_R_OSTREAM_HPP__
+#ifndef R__IO_R_OSTREAM_HPP
+#define R__IO_R_OSTREAM_HPP
 
 #include <streambuf>
 #include <ostream>

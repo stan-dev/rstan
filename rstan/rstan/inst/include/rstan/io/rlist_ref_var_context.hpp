@@ -1,6 +1,5 @@
-
-#ifndef __RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP__
-#define __RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP__
+#ifndef RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP
+#define RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP
 
 #include <cstddef>
 #include <stdexcept>
@@ -266,15 +265,7 @@ namespace rstan {
 
     };
 
-
-
-
-
   }
-
-
 }
 
-
 #endif
-
