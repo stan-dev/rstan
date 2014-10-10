@@ -633,6 +633,7 @@ namespace rstan {
         }
         
         if (stan::common::initialize_state(init,
+                                           args.get_init_radius(),
                                            cont_params,
                                            model,
                                            base_rng,
