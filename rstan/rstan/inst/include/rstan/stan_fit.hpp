@@ -638,7 +638,8 @@ namespace rstan {
                                            model,
                                            base_rng,
                                            &ss,
-                                           context_factory) == false)
+                                           context_factory,
+                                           args.get_enable_random_init()) == false)
           throw std::runtime_error(ss.str());
 
         rstan::io::rcout << ss.str();
