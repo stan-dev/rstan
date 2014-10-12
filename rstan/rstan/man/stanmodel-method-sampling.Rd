@@ -108,8 +108,9 @@
     \code{\link{stan}}.} 
 
   \item{\dots}{Additional arguments can be \code{chain_id}, \code{init_r}, 
-    \code{test_grad}, \code{append_samples}, \code{refresh}. See 
-    the document in \code{\link{stan}}.} 
+    \code{test_grad}, \code{append_samples}, \code{refresh},
+    \code{enable_random_init}. 
+    See the document in \code{\link{stan}}.} 
 }
 
 \value{

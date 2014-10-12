@@ -146,8 +146,9 @@ setMethod("sampling", "stanmodel",
                    control = NULL, ...) {
             dots <- list(...)
             is_arg_recognizable(names(dots), 
-                                c("chain_id", "init_r", "test_grad", 
-                                  "append_samples", "refresh", "control"))
+                                c("chain_id", "init_r", "test_grad",
+                                  "append_samples", "refresh", "control", 
+                                  "enable_random_init"))
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 

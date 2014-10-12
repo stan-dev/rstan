@@ -12,7 +12,9 @@ data {
 parameters {
   real mu;
   real alpha;
+  simplex[3] delta;
   real eta;
+  real<lower=0> sigma;
 }
 
 transformed parameters {
@@ -25,6 +27,7 @@ model {
   y ~ normal(mu, 1);
   alpha ~ normal(0, 1);
   eta ~ normal(0, 1);
+  sigma ~ exponential(2);
 }
 
 generated quantities {
@@ -49,21 +52,16 @@ fit <- sampling(rr, data = dat, iter = 10, chains = 1,
 
 print(get_inits(fit))
 
-
 fit <- sampling(rr, data = dat, iter = 10, chains = 1,
-                init = list(list(mu = 2)), seed = 3, thin = 1,
-                sample_file = 'norm1.csv')
+                init = list(list(mu2 = 2)), seed = 3, thin = 1,
+                sample_file = 'norm1.csv', enable_random_init = FALSE)
 
 print(get_inits(fit))
 
+## initialization with dimension not matching
 fit <- sampling(rr, data = dat, iter = 10, chains = 1,
-                init = "random", init_r = .5, seed = 3, thin = 1,
-                sample_file = 'norm1.csv')
+                init = list(list(delta = 2)), seed = 3, thin = 1,
+                sample_file = 'norm1.csv', enable_random_init = !FALSE)
 
 print(get_inits(fit))
 
-fit <- sampling(rr, data = dat, iter = 10, chains = 1,
-                init = "0", seed = 3, thin = 1,
-                sample_file = 'norm1.csv')
-
-print(get_inits(fit))
