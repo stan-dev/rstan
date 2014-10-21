@@ -22,30 +22,57 @@ pairs.stanfit <-
             lower.panel = NULL, upper.panel = NULL, diag.panel = NULL, 
             text.panel = NULL, label.pos = 0.5 + has.diag/3, 
             cex.labels = NULL, font.labels = 1, row1attop = TRUE, gap = 1, 
-            pars = NULL, chain_id = NULL) {
+            pars = NULL, condition = NULL) {
     
     if(is.null(pars)) pars <- dimnames(x)[[3]]
     arr <- extract(x, pars = pars, permuted = FALSE)
     sims <- nrow(arr)
-    if(is.list(chain_id)) {
-      if(length(chain_id) != 2) stop("if a list, 'chain_id' must be of length 2")
-      arr <- arr[,c(chain_id[[1]], chain_id[[2]]),,drop = FALSE]
-      k <- length(chain_id[[1]])
+    chains <- ncol(arr)
+    
+    if(is.list(condition)) {
+      if(length(condition) != 2) stop("if a list, 'condition' must be of length 2")
+      arr <- arr[,c(condition[[1]], condition[[2]]),,drop = FALSE]
+      k <- length(condition[[1]])
+      mark <- c(rep(TRUE, sims * k), rep(FALSE, sims * (chains - k)))
     }
-    else if(!is.null(chain_id)) {
-      arr <- arr[,chain_id,,drop = FALSE]
+    else if(is.logical(condition)) {
+      stopifnot(length(condition) == (sims * chains))
+      mark <- !condition
+    }
+    else if(is.character(condition)) {
+      condition <- match.arg(condition, several.ok = FALSE,
+                             choices = c("accept_stat__", "stepsize__", "treedepth__", 
+                                         "n_leapfrog__", "n_divergent__"))
+      mark <- sapply(get_sampler_params(x), FUN = function(y) {
+        tail(y[,condition], sims)
+      })
+      if(condition == "n_divergent__") mark <- as.logical(mark)
+      else mark <- c(mark) >= median(mark)
+    }
+    else if(!is.null(condition)) {
+      if(all(condition == as.integer(condition))) {
+        arr <- arr[,condition,,drop = FALSE]
+        k <- ncol(arr) %/% 2
+        mark <- c(rep(FALSE, sims * k), rep(TRUE, sims * (chains - k)))
+      }
+      else if(condition > 0 && condition < 1) {
+        mark <- rep(1:sims > (condition * sims), times = chains)
+      }
+      else stop("'condition' must be an integer (vector) or a number between 0 and 1 exclusive")
+    }
+    else {
       k <- ncol(arr) %/% 2
+      mark <- c(rep(FALSE, sims * k), rep(TRUE, sims * (chains - k)))
     }
-    else k <- ncol(arr) %/% 2
-    mark <- 1:(sims * k)
+    
     x <- apply(arr, MARGIN = "parameters", FUN = function(y) y)
     
     if(is.null(lower.panel)) {
       if(!is.null(panel)) lower.panel <- panel
       else lower.panel <- function(x,y, ...) {
         dots <- list(...)
-        dots$x <- x[mark]
-        dots$y <- y[mark]
+        dots$x <- x[!mark]
+        dots$y <- y[!mark]
         if(is.null(dots$nrpoints)) dots$nrpoints <- 0
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
@@ -55,8 +82,8 @@ pairs.stanfit <-
       if(!is.null(panel)) upper.panel <- panel
       else upper.panel <- function(x,y, ...) {
         dots <- list(...)
-        dots$x <- x[-mark]
-        dots$y <- y[-mark]
+        dots$x <- x[mark]
+        dots$y <- y[mark]
         if(is.null(dots$nrpoints)) dots$nrpoints <- 0
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
@@ -88,7 +115,7 @@ pairs.stanfit <-
     mc$upper.panel <- upper.panel
     mc$diag.panel <- diag.panel
     mc$text.panel <- textPanel
-    mc$chain_id <- NULL
+    mc$condition <- NULL
     mc$pars <- NULL
     eval(mc)
   }
