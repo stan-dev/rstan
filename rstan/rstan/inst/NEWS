@@ -8,6 +8,7 @@ Tue Oct 21 2014 (2.5.0)
 2. Changes
   * issue 103 (using stan::common::initialize_state)
   * add a simple parallel exapmle for Windows
+  * update pairs function
 
 
 Sun Jul 20 2014 (2.4.0)
