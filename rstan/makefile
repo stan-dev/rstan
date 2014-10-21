@@ -33,11 +33,13 @@ NOTBUILD ?= FALSE
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
   LINKCMD2 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stansrc"  "..^\..^\..^\..^\stan^\src"
+  LINKCMD3 = @cmd /c mklink /D ".^\rstan^\inst^\ex_models"  "..^\..^\..^\example-models"
   WH = where
 else
   LINKCMD1 = ln -s ../../../../stan/lib ./rstan/inst/include/stanlib
   LINKCMD1b = ln -s ../../../$(TMP_STANLIB)/ ./rstan/inst/include/stanlib
   LINKCMD2 = ln -s ../../../../stan/src ./rstan/inst/include/stansrc
+  LINKCMD3 = ln -s ../../../example-models ./rstan/inst/ex_models
   WH = which
 endif
 
@@ -78,6 +80,7 @@ install_pre_rpkg:
 
 STANLIB := rstan/inst/include/stanlib
 STANSRC := rstan/inst/include/stansrc
+EXAMPLE_MODELS := rstan/inst/ex_models
 
 $(STANLIB):
 ifeq ($(OS), win)
@@ -89,8 +92,10 @@ endif
 $(STANSRC):
 	$(LINKCMD2)
 
+$(EXAMPLE_MODELS):
+	$(LINKCMD3)
 
-build $(STANPKG): ./rstan/DESCRIPTION $(STANSRC)
+build $(STANPKG): ./rstan/DESCRIPTION $(STANSRC) $(EXAMPLE_MODELS)
 	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
@@ -151,6 +156,7 @@ clean-all: clean
 	rm -rf rstan/R/git_*stan_head.R 
 	rm -rf "./$(STANLIB)"
 	rm -rf "./$(STANSRC)"
+	rm -rf "./$(EXAMPLE_MODELS)"
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
 	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
