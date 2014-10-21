@@ -65,23 +65,11 @@
   well as the \code{\link{pairs}} generic function
 } 
 
-\examples{\dontrun{
-ex_model_code <- '
-  parameters {
-    real alpha[2,3];
-    real beta[2]; 
-  } 
-  model {
-    for (i in 1:2) for (j in 1:3) 
-      alpha[i, j] ~ normal(0, 1); 
-    for (i in 1:2) 
-      beta[i] ~ normal(0, 2); 
-    # beta ~ normal(0, 2) // vectorized version
-  } 
-'
-
-## fit the model 
-fit <- stan(model_code = ex_model_code, chains = 4) 
-
-pairs(fit, pars = "alpha", condition = list(1, 2:4))
-}}  
+\examples{
+example(read_stan_csv)
+pairs(fit, condition = list(1, 2:4))
+pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = 0.25)
+pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = "acc")
+lp <- sapply(get_logposterior(fit), FUN = function(x) tail(x, nrow(fit)))
+pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = lp > median(lp))
+}
