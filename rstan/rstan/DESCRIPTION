@@ -22,5 +22,5 @@ License: GPL (>=3)
 Imports: stats4
 Depends: R (>= 3.0.2), Rcpp (>= 0.9.10), utils, inline, methods
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.54)
-Suggests: RUnit, RcppEigen, BH (>= 1.54), parallel
+Suggests: RUnit, RcppEigen, BH (>= 1.54), parallel, KernSmooth
 URL: http://mc-stan.org
