@@ -4,7 +4,7 @@ paridx_fun <- function(names) {
   #          alpha, beta.1, 
   # Returns: 
   #   The indexes in the names that are parameters other than lp__,
-  #   treedepth__, or stepsize__. The vector has atttibute meta
+  #   treedepth__, or stepsize__. The vector has attribute meta
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
@@ -111,8 +111,23 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
   g_skip <- 10
   g_max_comm <- -1 # to read all 
-  ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
+
   cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
+  cs_lst2 <- lapply(cs_lst, parse_stancsv_comments)
+  
+  ss_lst <- vector("list", length(csvfiles))
+  for (i in seq_along(csvfiles)) {
+    header <- read_csv_header(csvfiles[i])
+    lineno <- attr(header, 'lineno')
+    vnames <- strsplit(header, ",")[[1]]
+    m <- matrix(scan(csvfiles[i], skip = lineno, comment.char = '#', sep = ',', quiet = TRUE),
+                ncol = length(vnames), byrow = TRUE)
+    ss_lst[[i]] <- as.data.frame(m)
+    colnames(ss_lst[[i]]) <- vnames 
+  } 
+
+  ## read.csv is slow for large files 
+  ##ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   # use the first CSV file name as model name
   m_name <- sub("(_\\d+)*$", '', filename_rm_ext(basename(csvfiles[1])))
 
@@ -142,8 +157,6 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
   } 
   mode <- 0L
   
-  cs_lst2 <- lapply(cs_lst, parse_stancsv_comments)
-
   samples <- lapply(ss_lst, 
                     function(df) {
                       ss <- df[c(paridx, lp__idx)[midx]]
@@ -175,7 +188,9 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
   
   if (n_kept0[1] != n_kept) {
     warning("the number of iterations after warmup found (", n_kept, 
-            ") does not match iter/warmup/thin from CSV comments (", n_kept0, ")")
+            ") does not match iter/warmup/thin from CSV comments (",
+            paste(n_kept0, collapse = ','), ")")
+
     if (n_kept < 0) {
       warmup <- warmup + n_kept
       n_kept <- 0

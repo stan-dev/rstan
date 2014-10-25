@@ -55,7 +55,7 @@ setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file, 
-                   algorithm = c("BFGS", "LBFGS", "Newton"),
+                   algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
@@ -103,6 +103,17 @@ setMethod("optimizing", "stanmodel",
             if (!missing(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
+            is_arg_recognizable(names(dotlist), 
+                                c("iter", "save_iterations", 
+                                  "save_iterations",
+                                  "refresh",
+                                  "init_alpha",
+                                  "tol_obj",
+                                  "tol_grad",
+                                  "tol_param",
+                                  "tol_rel_obj",
+                                  "tol_rel_grad",
+                                  "history_size"))
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
@@ -133,6 +144,10 @@ setMethod("sampling", "stanmodel",
                    sample_file, diagnostic_file, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, ...) {
+            dots <- list(...)
+            is_arg_recognizable(names(dots), 
+                                c("chain_id", "init_r", "test_grad", 
+                                  "append_samples", "refresh", "control"))
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -197,7 +212,6 @@ setMethod("sampling", "stanmodel",
             n_save <- n_kept + warmup2 
 
             samples <- vector("list", chains)
-            dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
 
             for (i in 1:chains) {

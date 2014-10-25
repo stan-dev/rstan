@@ -27,6 +27,8 @@
           "not comments #comment line 7",
           "not comments at the end of file")
   cat(file = 'cc.csv', paste(cc, collapse = '\n'), "\n")
+  cc2 <- c("# line 1", "#line 2", "# line 3", "#line4", "c,a,b", "1,2,3")
+  cat(file = 'cc2.csv', paste(cc2, collapse = '\n'), "\n")
 } 
 
 test_get_model_strcode <- function() {
@@ -344,6 +346,12 @@ test_read_comments <- function() {
   checkEquals(length(a3), 7L)
 } 
 
+test_read_csv_header <- function() {
+  h1 <- rstan:::read_csv_header('cc2.csv')
+  checkEquals(attr(h1, 'lineno'), 5)
+  checkEquals(h1, 'c,a,b', check.attributes = FALSE)
+}
+
 test_get_dims_from_fnames <- function() {
   names <- c('alpha', 'beta2', 'g2amma', 'theta0')
   dims <- list(c(2L, 3L), integer(0L), c(4L), c(3L, 5L, 4L))
@@ -400,5 +408,6 @@ test_remove_empty_pars <- function() {
   unlink('dumpabc.Rdump') 
   unlink('standumpabc.Rdump') 
   unlink('cc.csv')
+  unlink('cc2.csv')
 }
 

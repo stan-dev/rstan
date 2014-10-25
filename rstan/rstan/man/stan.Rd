@@ -176,7 +176,7 @@ stan(file, model_name = "anon_model", model_code = "",
 
     \code{init_r} is only valid for \code{init="random"}. If 
     specified, the initial values are simulated from [-init_r, init_r]
-    rather than using the default interval (see the manual of Stan).
+    rather than using the default interval (see the manual of (cmd)Stan).
 
     Argument \code{refresh} (\code{integer}) can be used to
     control how to indicate the progress during sampling (i.e. 
@@ -260,7 +260,7 @@ stan(file, model_name = "anon_model", model_code = "",
 
    \item Check whether the names of objects in the data list are legal 
      Stan names. If illegal names are found, it will stop and 
-     report an error. See Stan's manual for the rules of variable names. 
+     report an error. See (Cmd)Stan's manual for the rules of variable names. 
 
    \item When an element is of type \code{data.frame}, it will be converted to
      \code{matrix} by function \code{data.matrix}. 
@@ -303,6 +303,10 @@ stan(file, model_name = "anon_model", model_code = "",
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
   \url{http://mc-stan.org}. 
+
+  The Stan Development Team
+  \emph{CmdStan Interface User's Guide}.
+  \url{http://mc-stan.org}.
 }
 \seealso{
   \code{\link{stanc}} for translating model code in Stan modeling language to C++, 
@@ -374,7 +378,7 @@ plot(exfit)
 
 ## define a function to generate initial values that can
 ## be fed to function stan's argument `init`
-# function form 1 without argumetns 
+# function form 1 without arguments 
 initf1 <- function() {
   list(mu = 1, sigma = 4, z = array(rnorm(6), dim = c(3,2)), alpha = 1)
 } 

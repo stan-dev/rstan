@@ -1,5 +1,5 @@
-#ifndef __RSTAN__RSTANINC_HPP__
-#define __RSTAN__RSTANINC_HPP__
+#ifndef RSTAN__RSTANINC_HPP
+#define RSTAN__RSTANINC_HPP
 #include <rstan/stan_fit.hpp>
-#endif 
+#endif
 

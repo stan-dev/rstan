@@ -33,11 +33,13 @@ NOTBUILD ?= FALSE
 ifeq ($(OS), win)
   LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
   LINKCMD2 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stansrc"  "..^\..^\..^\..^\stan^\src"
+  LINKCMD3 = @cmd /c mklink /D ".^\rstan^\inst^\ex_models"  "..^\..^\..^\example-models"
   WH = where
 else
   LINKCMD1 = ln -s ../../../../stan/lib ./rstan/inst/include/stanlib
   LINKCMD1b = ln -s ../../../$(TMP_STANLIB)/ ./rstan/inst/include/stanlib
   LINKCMD2 = ln -s ../../../../stan/src ./rstan/inst/include/stansrc
+  LINKCMD3 = ln -s ../../../example-models ./rstan/inst/ex_models
   WH = which
 endif
 
@@ -78,6 +80,7 @@ install_pre_rpkg:
 
 STANLIB := rstan/inst/include/stanlib
 STANSRC := rstan/inst/include/stansrc
+EXAMPLE_MODELS := rstan/inst/ex_models
 
 $(STANLIB):
 ifeq ($(OS), win)
@@ -89,8 +92,10 @@ endif
 $(STANSRC):
 	$(LINKCMD2)
 
+$(EXAMPLE_MODELS):
+	$(LINKCMD3)
 
-build $(STANPKG): ./rstan/DESCRIPTION $(STANSRC)
+build $(STANPKG): ./rstan/DESCRIPTION $(STANSRC) $(EXAMPLE_MODELS)
 	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
@@ -151,6 +156,7 @@ clean-all: clean
 	rm -rf rstan/R/git_*stan_head.R 
 	rm -rf "./$(STANLIB)"
 	rm -rf "./$(STANSRC)"
+	rm -rf "./$(EXAMPLE_MODELS)"
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
 	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
@@ -168,8 +174,28 @@ CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
 STAN_LIB := tests/cpp/lib/libstan.a
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
-$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include $(shell $(RSCRIPT) -e "Rcpp:::CxxFlags()") $(shell $(RSCRIPT) -e "RInside:::CxxFlags()") -isystem $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))") -ftemplate-depth=256 
-$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += -L $(dir $(STAN_LIB)) -l stan -L $(shell $(RSCRIPT) -e "cat(Sys.getenv('R_INCLUDE_DIR'))")/../lib -l R $(shell $(RSCRIPT) -e "Rcpp:::LdFlags()") $(shell $(RSCRIPT) -e "RInside:::LdFlags()")
+## comment this out if you need a different version of R, 
+## and set set R_HOME accordingly as an environment variable
+R_HOME := 		$(shell R RHOME)
+
+## include headers and libraries for R 
+RCPPFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --cppflags)
+RLDFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --ldflags)
+
+## include headers and libraries for Rcpp interface classes
+RCPPINCL := 		$(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
+RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --slave)
+
+## include headers and libraries for RInside embedding classes
+RINSIDEINCL := 		$(shell echo 'RInside:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
+RINSIDELIBS := 		$(shell echo 'RInside:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --slave)
+
+
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)
+
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += $(RCPPFLAGS) $(RCPPINCL) $(RINSIDEINCL) $(shell $(R_HOME)/bin/R CMD config CXXFLAGS) -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include -ftemplate-depth=256 -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
+
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += $(RLDFLAGS) $(RCPPLIBS) $(RINSIDELIBS) -L $(dir $(STAN_LIB)) -l stan
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 
@@ -213,4 +239,5 @@ endif
 
 
 .PHONY: test-R
-	cd tests & R -q -f runRunitTests.R
+test-R:
+	cd tests; R -q -f runRunitTests.R 

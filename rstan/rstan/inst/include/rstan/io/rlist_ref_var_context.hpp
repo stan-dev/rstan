@@ -1,6 +1,5 @@
-
-#ifndef __RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP__
-#define __RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP__
+#ifndef RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP
+#define RSTAN__IO__RLIST_REF_VAR_CONTEXT_HPP
 
 #include <cstddef>
 #include <stdexcept>
@@ -33,17 +32,17 @@ namespace rstan {
       }
       */
 
-      template <class T1, class T2> 
+      template <class T1, class T2>
       void  T1v_to_T2v(const std::vector<T1>& v,
                        std::vector<T2>& v2) {
-        v2.resize(0); 
+        v2.resize(0);
         for (typename std::vector<T1>::const_iterator it = v.begin();
              it != v.end();
-             ++it) { 
+             ++it) {
           v2.push_back(static_cast<T2>(*it));
-        }     
-      } 
-    } 
+        }
+      }
+    }
 
     /**
      * Represents named arrays with dimensions.
@@ -53,25 +52,25 @@ namespace rstan {
      * vector, array) with dimensions.  The values for
      * an array are typed to double or int.  However,
      * it is R's job to pass data with correct types
-     * though R uses double as the default atomic type. 
-     * Instead of copying the data as in 
-     * <code>rlist_var_context</code>, data are 
-     * obtained by references. 
-     * 
-     * <p>The dimensions and values of variables
-     * may be accessed by name. 
+     * though R uses double as the default atomic type.
+     * Instead of copying the data as in
+     * <code>rlist_var_context</code>, data are
+     * obtained by references.
      *
-     * <p> Difference from <code>rlist_var_context</code>: 
-     * here, when the object is constructed, we only 
+     * <p>The dimensions and values of variables
+     * may be accessed by name.
+     *
+     * <p> Difference from <code>rlist_var_context</code>:
+     * here, when the object is constructed, we only
      * keep in the information of dimensions (the same as
-     * in rlist_var_context) but the data are not copied. The 
-     * data are accessed directly from the R list. 
+     * in rlist_var_context) but the data are not copied. The
+     * data are accessed directly from the R list.
      * T
      */
     class rlist_ref_var_context : public stan::io::var_context {
-    private: 
-      Rcpp::List rlist_; 
-      std::map<std::string, std::vector<size_t> > vars_r_dim_; 
+    private:
+      Rcpp::List rlist_;
+      std::map<std::string, std::vector<size_t> > vars_r_dim_;
       std::map<std::string, std::vector<size_t> > vars_i_dim_;
       std::vector<double> const empty_vec_r_;
       std::vector<int> const empty_vec_i_;
@@ -82,13 +81,13 @@ namespace rstan {
        * returns <code>false</code> if the values are all integers.
        *
        * @param name Variable name to test.
-       * @return <code>true</code> if the variable exists in the 
+       * @return <code>true</code> if the variable exists in the
        * real values of the rlist_ref_var_context.
        */
       bool contains_r_only(const std::string& name) const {
-        return vars_r_dim_.count(name) > 0; 
+        return vars_r_dim_.count(name) > 0;
       }
-    public: 
+    public:
 
       /**
        * Construct a rlist_ref__var_context object from the specified R list.
@@ -99,53 +98,53 @@ namespace rstan {
       rlist_ref_var_context(SEXP in): rlist_(in) {
 
         if (0 == rlist_.size()) return;
-        std::vector<std::string> varnames 
-          = Rcpp::as<std::vector<std::string> >(rlist_.names()); 
+        std::vector<std::string> varnames
+          = Rcpp::as<std::vector<std::string> >(rlist_.names());
         for (int i = 0; i < rlist_.size(); i++) {
-          SEXP ee = rlist_[i]; 
-          SEXP dim = Rf_getAttrib(ee, R_DimSymbol); 
-          R_len_t eelen = Rf_length(ee); 
+          SEXP ee = rlist_[i];
+          SEXP dim = Rf_getAttrib(ee, R_DimSymbol);
+          R_len_t eelen = Rf_length(ee);
 
           // Note that in R, the default is real, which causes problems as we
           // are thinking they are integers, but Rf_isInteger would return
           // FALSE. One solution is use L suffix. Anyway, the R code should
-          // change the data to integers when it is convertible. 
+          // change the data to integers when it is convertible.
 
-          typedef std::map<std::string, std::vector<size_t> >::value_type 
+          typedef std::map<std::string, std::vector<size_t> >::value_type
             psd_v_t; // a Pair of String and Dimensions
 
           if (Rf_isInteger(ee)) {
-            if (Rf_length(dim) > 0) { 
-              std::vector<size_t> d; 
-              T1v_to_T2v(Rcpp::as<std::vector<unsigned int> >(dim), d);     
-              vars_i_dim_.insert(psd_v_t(varnames[i], d)); 
+            if (Rf_length(dim) > 0) {
+              std::vector<size_t> d;
+              T1v_to_T2v(Rcpp::as<std::vector<unsigned int> >(dim), d);
+              vars_i_dim_.insert(psd_v_t(varnames[i], d));
             } else {
-              if (1 == eelen) {  // scalar 
-                vars_i_dim_.insert(psd_v_t(varnames[i], empty_vec_ui_)); 
-              } else { // vector 
-                vars_i_dim_.insert(psd_v_t(varnames[i], 
+              if (1 == eelen) {  // scalar
+                vars_i_dim_.insert(psd_v_t(varnames[i], empty_vec_ui_));
+              } else { // vector
+                vars_i_dim_.insert(psd_v_t(varnames[i],
                                            std::vector<size_t>(1, eelen)));
               }
-            } 
+            }
           } else if(Rf_isNumeric(ee)) {
-            if (Rf_length(dim) > 0) { 
-              std::vector<size_t> d; 
-              T1v_to_T2v(Rcpp::as<std::vector<unsigned int> >(dim), d);     
-              vars_r_dim_.insert(psd_v_t(varnames[i], d)); 
+            if (Rf_length(dim) > 0) {
+              std::vector<size_t> d;
+              T1v_to_T2v(Rcpp::as<std::vector<unsigned int> >(dim), d);
+              vars_r_dim_.insert(psd_v_t(varnames[i], d));
             } else {
-              if (1 == eelen) {  // scalar 
-                vars_r_dim_.insert(psd_v_t(varnames[i], empty_vec_ui_)); 
+              if (1 == eelen) {  // scalar
+                vars_r_dim_.insert(psd_v_t(varnames[i], empty_vec_ui_));
               } else {
-                vars_r_dim_.insert(psd_v_t(varnames[i], 
+                vars_r_dim_.insert(psd_v_t(varnames[i],
                                            std::vector<size_t>(1, eelen)));
               }
             }
           } else {
-            continue; // ignore non-numeric data 
-            // or should we report error? 
-          } 
-        } 
-      } 
+            continue; // ignore non-numeric data
+            // or should we report error?
+          }
+        }
+      }
 
       /**
        * Return <code>true</code> if this rlist_ref_var_context contains the
@@ -161,31 +160,31 @@ namespace rstan {
 
       /**
        * Return <code>true</code> if this rlist_ref_var_context contains an integer
-       * valued array with the specified name. 
+       * valued array with the specified name.
        *
        * @param name Variable name to test.
        * @return <code>true</code> if the variable name has an integer
        * array value.
        */
       bool contains_i(const std::string& name) const {
-        return vars_i_dim_.count(name) > 0; 
+        return vars_i_dim_.count(name) > 0;
       }
 
       /**
        * Return the double values for the variable with the specified
-       * name or null. 
+       * name or null.
        *
        * @param name Name of variable.
        * @return Values of variable.
        */
       std::vector<double> vals_r(const std::string& name) const {
-        if (contains_r(name)) { 
-          SEXP ee = rlist_[name]; 
-          return Rcpp::as<std::vector<double> >(ee); 
+        if (contains_r(name)) {
+          SEXP ee = rlist_[name];
+          return Rcpp::as<std::vector<double> >(ee);
         }
         return empty_vec_r_;
       }
-      
+
       /**
        * Return the dimensions for the double variable with the specified
        * name.
@@ -211,12 +210,12 @@ namespace rstan {
        */
       std::vector<int> vals_i(const std::string& name) const {
         if (contains_i(name)) {
-          SEXP ee = rlist_[name]; 
-          return Rcpp::as<std::vector<int> >(ee); 
+          SEXP ee = rlist_[name];
+          return Rcpp::as<std::vector<int> >(ee);
         }
         return empty_vec_i_;
       }
-      
+
       /**
        * Return the dimensions for the integer variable with the specified
        * name.
@@ -238,7 +237,7 @@ namespace rstan {
        * @param names Vector to store the list of names in.
        */
       virtual void names_r(std::vector<std::string>& names) const {
-        names.resize(0);        
+        names.resize(0);
         for (std::map<std::string, std::vector<size_t> >
                  ::const_iterator it = vars_r_dim_.begin();
              it != vars_r_dim_.end(); ++it)
@@ -252,26 +251,21 @@ namespace rstan {
        * @param names Vector to store the list of names in.
        */
       virtual void names_i(std::vector<std::string>& names) const {
-        names.resize(0);        
-        for (std::map<std::string, std::vector<size_t> > 
+        names.resize(0);
+        for (std::map<std::string, std::vector<size_t> >
                  ::const_iterator it = vars_i_dim_.begin();
              it != vars_i_dim_.end(); ++it)
           names.push_back((*it).first);
       }
 
       bool remove(const std::string& name) {
-        return (vars_i_dim_.erase(name) > 0) 
+        return (vars_i_dim_.erase(name) > 0)
           || (vars_r_dim_.erase(name) > 0);
       }
-      
+
     };
-    
 
   }
-
-
 }
 
-
 #endif
-

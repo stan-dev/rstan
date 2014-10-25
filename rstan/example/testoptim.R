@@ -22,6 +22,11 @@ dat <- list(N = N, y = y)
 dump(c("N", "y"), file = 'optim.data.R')
 sm <- stan_model(model_code = stdnorm)
 
+
+# default algorithm 
+optim0 <- rstan:::optimizing(sm, data = dat)
+print(optim0)
+
 optim1 <- rstan:::optimizing(sm, data = dat, algorithm = "Newton")
 print(optim1)
 

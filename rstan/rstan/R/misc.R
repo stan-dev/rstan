@@ -712,12 +712,18 @@ seq_array_ind <- function(d, col_major = FALSE) {
   # 
   if (length(d) == 0L)
     return(numeric(0L)) 
+
   total <- prod(d) 
   len <- length(d) 
   if (len == 1L)
     return(array(1:total, dim = c(total, 1)))
 
   res <- array(1L, dim = c(total, len)) 
+
+  # Handle cases like 1x1 matrices
+  if (total == 1)
+    return(res)
+  
   jidx <- if (col_major) 1L:len else len:1L
   for (i in 2L:total) {
     res[i, ] <- res[i - 1, ]
@@ -1448,3 +1454,31 @@ all_int_eq <- function(is) {
     stop("not all are integers")
   min(is) == max(is)
 } 
+
+read_csv_header <- function(f, comment.char = '#') {
+  # Read the header of a csv file (the first line not beginning with
+  # comment.char). And the line number is return as attribute of name 'lineno'.
+  con <- file(f, 'r')
+  niter <- 0
+  while (length(input <- readLines(con, n = 1)) > 0) {
+    niter <- niter + 1
+    if (!grepl(comment.char, input)) break;
+  }
+  header <- input
+  attr(header, "lineno") <- niter
+  close(con)
+  header
+}
+
+is_arg_recognizable <- function(x, y) {
+  # check if all elements of x are in y.  
+  # x: a vector of characters 
+  # y: a vector of characters 
+  idx <- match(x, y)
+  na_idx <- which(is.na(idx))
+  if (length(na_idx) > 0) {
+    warning(paste(x[na_idx], collapse = ', '), " not found.")
+  }
+  TRUE
+}
+

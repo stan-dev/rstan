@@ -5,8 +5,7 @@ stan_demo <- function(model = character(0),
     model <- character(0)
   }
   else MODEL_NUM <- -1
-  MODELS_HOME <- file.path(system.file('include', package = 'rstan'), 
-                           "stansrc", "models")
+  MODELS_HOME <- system.file('ex_models', package = 'rstan') 
   MODELS <- dir(MODELS_HOME, pattern = paste0(model, ".stan", "$"), 
                 recursive = TRUE, full.names = TRUE)
   if(length(MODELS) == 0) {

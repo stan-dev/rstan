@@ -248,11 +248,12 @@ set_cppo <- function(mode = c("fast", "presentation2", "presentation1", "debug",
     stop(paste(level, " might not be a legal optimization level for C++ compilation", sep = '')) 
   old_olevel <- get_cxxo_level(curr_cxxflags) 
   withstr <- if (NDEBUG) 'with' else 'without'
-  curr_withndebug <- grepl("-DNDEBUG", curr_r_xtra_cppflags)
-  curr_withdebug <- grepl("-DDEBUG", curr_r_xtra_cppflags)
+  curr_withndebug <- grepl("-DNDEBUG(\\s|$)", curr_r_xtra_cppflags)
+  curr_withdebug <- grepl("-DDEBUG(\\s|$)", curr_r_xtra_cppflags)
+  dashg <- "(\\s|^)-g(\\s|$)"
   if (old_olevel == level)  {
-    if ((level == '0' && grepl("-DDEBUG", curr_r_xtra_cppflags) && grepl(" -g", curr_cxxflags)) ||  
-        (level != '0' && (NDEBUG == curr_withndebug) && !grepl(" -g", curr_cxxflags))) {
+    if ((level == '0' && grepl("-DDEBUG(\\s|$)", curr_r_xtra_cppflags) && grepl(dashg, curr_cxxflags)) ||  
+        (level != '0' && (NDEBUG == curr_withndebug) && !grepl(dashg, curr_cxxflags))) {
       message(paste('mode ', mode, ' ', withstr, ' NDEBUG for compiling C++ code has been set already', sep = ''))
       return(invisible(list(CXXFLAGS = curr_cxxflags, 
                             R_XTRA_CPPFLAGS = curr_r_xtra_cppflags))) 
@@ -274,8 +275,8 @@ set_cppo <- function(mode = c("fast", "presentation2", "presentation1", "debug",
       new_r_xtra_cppflags <- curr_r_xtra_cppflags
     msg <- paste('mode debug with DDEBUG for compiling C++ code is set')
   } else {
-    new_cxxflags <- sub("-g", "", new_cxxflags, fixed = TRUE)
-    new_r_xtra_cppflags <- sub("\\s*-DDEBUG", " ", curr_r_xtra_cppflags)
+    new_cxxflags <- gsub(dashg, " ", new_cxxflags, perl = TRUE)
+    new_r_xtra_cppflags <- gsub("\\s*-DDEBUG(\\s|$)", " ", curr_r_xtra_cppflags, perl = TRUE)
     if (NDEBUG) { 
       warning("removing NDEBUG flag would turn off some index checking and\n", 
               "thus cause R to crash if an index is out of range in the model.",
@@ -283,7 +284,7 @@ set_cppo <- function(mode = c("fast", "presentation2", "presentation1", "debug",
       if (!curr_withndebug) 
         new_r_xtra_cppflags <- paste(new_r_xtra_cppflags, " -DNDEBUG ")
     } else { 
-      new_r_xtra_cppflags <- sub("\\s*-DNDEBUG", " ", new_r_xtra_cppflags, perl = TRUE) 
+      new_r_xtra_cppflags <- sub("\\s*-DNDEBUG(\\s|$)", " ", new_r_xtra_cppflags, perl = TRUE) 
     }
     msg <- paste('mode ', mode, ' ', withstr, ' NDEBUG for compiling C++ code is set', sep = '')
   } 
