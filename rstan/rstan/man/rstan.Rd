@@ -15,7 +15,7 @@
     Package: \tab rstan\cr
     Type: \tab Package\cr
     Version: \tab 2.5.0\cr
-    Date: Oct 20, 2014\cr
+    Date: \tab Oct 20, 2014\cr
     License: \tab GPL-3 \cr
   }
 
