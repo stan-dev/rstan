@@ -142,5 +142,5 @@ stan <- function(file, model_name = "anon_model",
            check_data = TRUE, sample_file = sample_file, 
            diagnostic_file = diagnostic_file,
            verbose = verbose, algorithm = match.arg(algorithm), 
-           control = control, ...) 
+           control = control, check_unknown_args = FALSE, ...)
 } 
