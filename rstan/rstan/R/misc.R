@@ -1477,7 +1477,7 @@ is_arg_recognizable <- function(x, y) {
   idx <- match(x, y)
   na_idx <- which(is.na(idx))
   if (length(na_idx) > 0) {
-    stop(paste(x[na_idx], collapse = ', '), " not found.")
+    warning(paste(x[na_idx], collapse = ', '), " not found.")
   }
   TRUE
 }

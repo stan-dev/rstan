@@ -145,15 +145,22 @@ setMethod("sampling", "stanmodel",
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, ...) {
             dots <- list(...)
-            is_arg_recognizable(names(dots), 
-                                c("chain_id", "init_r", "test_grad",
-                                  "append_samples", "refresh", "control", 
-                                  "enable_random_init"))
+            check_unknown_args <- dots$check_unknown_args
+            if (is.null(check_unknown_args) || check_unknown_args) {
+              is_arg_recognizable(names(dots),
+                                  c("chain_id", "init_r", "test_grad",
+                                    "append_samples", "refresh", "control"))
+            }
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
             if (check_data) { 
+              data <- try(force(data))
+              if (is(data, "try-error")) {
+                message("failed to evaluate the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
               # allow data to be specified as a vector of character string 
               if (is.character(data)) {
                 data <- try(mklist(data))
