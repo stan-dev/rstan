@@ -22,8 +22,9 @@ matrix:
     - compiler: gcc
 
 before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - curl -OL https://raw2.github.com/maverickg/utils/master/shell/wait4.sh
+  - curl -OL https://raw.githubusercontent.com/craigcitro/r-travis/master/scripts/travis-tool.sh
+  - curl -OL https://raw.githubusercontent.com/maverickg/utils/master/shell/wait4.sh
+
   - chmod 755 ./travis-tool.sh wait4.sh
   - ./travis-tool.sh bootstrap
     
@@ -60,3 +61,5 @@ script:
 
 after_script:
   - ccache -s 
+  - git submodule status
+  - git rev-parse HEAD
