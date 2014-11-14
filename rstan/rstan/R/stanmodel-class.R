@@ -149,6 +149,7 @@ setMethod("sampling", "stanmodel",
             if (is.null(check_unknown_args) || check_unknown_args) {
               is_arg_recognizable(names(dots),
                                   c("chain_id", "init_r", "test_grad",
+                                    "obfuscate_model_name",
                                     "append_samples", "refresh", "control"))
             }
             prep_call_sampler(object)
