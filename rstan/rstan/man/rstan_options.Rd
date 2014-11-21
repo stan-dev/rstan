@@ -19,10 +19,11 @@ rstan_options(...)
 %%  ~~ If necessary, more details than the description above ~~
   The available options are:
   \enumerate{
-    \item \code{plot_rhat_breaks}: The cut off points for Rhat for which we would indicate
-      using a different color. This is a numeric vector, defaults to \code{c(1.1, 1.2, 1.5, 2)}
-      The value for this option will be sorted in ascending order. 
-      So \code{plot_rhat_breaks = c(1.2, 1.5)} is equivalent to 
+    \item \code{plot_rhat_breaks}: The cut off points for Rhat for which we
+      would indicate using a different color. This is a numeric vector,
+      defaulting to \code{c(1.1, 1.2, 1.5, 2)}.
+      The value for this option will be sorted in ascending order,
+      so for example \code{plot_rhat_breaks = c(1.2, 1.5)} is equivalent to
       \code{plot_rhat_breaks = c(1.5, 1.2)}. 
     \item \code{plot_rhat_cols}: A vector of the same length as   
           \code{plot_rhat_breaks} that indicates the colors for the
