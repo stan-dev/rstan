@@ -23,9 +23,12 @@ matrix:
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - curl -OL https://raw2.github.com/maverickg/utils/master/shell/wait4.sh
+  - echo -e "#\x21/bin/sh\nPROCESS=\"\$1\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`\n " > wait4.sh
+  - echo -e "  if [ \"\${RESULT:-null}\" = null ]; then\n    break\n  else\n    echo \"-\"\n    sleep 10\n  fi\ndone" >> wait4.sh
+  - more wait4.sh
   - chmod 755 ./travis-tool.sh wait4.sh
   - ./travis-tool.sh bootstrap
+
     
 install:
   - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
