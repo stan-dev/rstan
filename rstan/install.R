@@ -3,11 +3,19 @@ install_rstan <- function() {
   on.exit(Sys.unsetenv("R_MAKEVARS_USER"))
   on.exit(Sys.unsetenv("R_MAKEVARS_SITE"), add = TRUE)
 
+  opts <- options(repos = c(
+    getOption("repos"), 
+    rstan = "http://rstan.org/repo/",
+    CRAN = "http://cran.rstudio.com"
+  ))
+  on.exit(options(opts), add = TRUE)
   try(remove.packages("rstan"), silent = TRUE)
   Sys.setenv(R_MAKEVARS_USER = "foobar")
   Sys.setenv(R_MAKEVARS_SITE = "foobar")
-  install.packages(c("inline", "BH", "RcppEigen"))
-  install.packages("Rcpp", type = "source")
+  for (pkg in c("inline", "BH", "RcppEigen")) {
+    if (!requireNamespace(pkg)) install.packages(pkg)
+  }
+  if (!requireNamespace("Rcpp")) install.packages("Rcpp", type = "source")
   library(inline) 
   library(Rcpp)
   src <- ' 
@@ -20,8 +28,6 @@ install_rstan <- function() {
   test <- try(hellofun())
   if(inherits(test, "try-error")) stop("hello world failed; ask for help on Rcpp list")
 
-  options(repos = c(getOption("repos"), 
-          rstan = "http://rstan.org/repo/"))
   install.packages("rstan", type = 'source')
   library(rstan)
   set_cppo("fast")
@@ -29,5 +35,4 @@ install_rstan <- function() {
     cat('\nCC=clang', 'CXX=clang++ -arch x86_64 -ftemplate-depth-256', 
         file = "~/.R/Makevars", sep = "\n", append = TRUE)
   }
-  return(invisible(NULL))
 }
