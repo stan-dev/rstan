@@ -1,7 +1,4 @@
-all: symbols.rds $(SHLIB) libstan.a
-
-# SHLIB = rstan.so
-LIBSTANOBJECTS = agrad__rev__var_stack.o
+all: symbols.rds $(SHLIB)
 
 OBJECTS = stanc.o chains.o misc.o init.o
 OBJECTS += $(patsubst %.cpp,%.o,$(wildcard gm__*.cpp))
@@ -14,16 +11,10 @@ PKG_CPPFLAGS += -ftemplate-depth-256
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)
 
-
-libstan.a:  $(LIBSTANOBJECTS)
-	$(AR) qc $@ $^ 
-	@if test -n "$(RANLIB)"; then $(RANLIB) $@; fi
-
-
 # include $(R_SHARE_DIR)/make/shlib.mk
 RM = rm -f 
 
 clean: 
-	$(RM) -f $(OBJECTS) $(SHLIB) $(LIBSTANOBJECTS)  libstan.a
+	$(RM) -f $(OBJECTS) $(SHLIB)
 
 .PHONY: all clean

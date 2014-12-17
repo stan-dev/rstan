@@ -729,10 +729,10 @@ namespace rstan {
           lbfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           lbfgs._conv_opts.maxIts     = args.get_iter();
 
-          int return_code = stan::common::do_bfgs_optimize(model, lbfgs, base_rng,
-                                                           lp, cont_vector, disc_vector,
-                                                           &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh, interruptCallback);
+          stan::common::do_bfgs_optimize(model, lbfgs, base_rng,
+                                         lp, cont_vector, disc_vector,
+                                         &sample_stream, &rstan::io::rcout,
+                                         save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::common::write_iteration(sample_stream, model, base_rng,
@@ -793,10 +793,10 @@ namespace rstan {
           bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           bfgs._conv_opts.maxIts     = args.get_iter();
 
-          int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,
-                                                           lp, cont_vector, disc_vector,
-                                                           &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh, interruptCallback);
+          stan::common::do_bfgs_optimize(model, bfgs, base_rng,
+                                         lp, cont_vector, disc_vector,
+                                         &sample_stream, &rstan::io::rcout,
+                                         save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::common::write_iteration(sample_stream, model, base_rng,

@@ -7,13 +7,6 @@ rstan_inc_path_fun <- function() {
   system.file('include', package = 'rstan')
 } 
 
-rstan_libs_path_fun <- function() {
-  if (nzchar(.Platform$r_arch)) {
-    return(system.file('libstan', .Platform$r_arch, package = 'rstan'))
-  }
-  system.file('libstan', package = 'rstan')
-}
-
 # Using RcppEigen
 eigen_path_fun <- function() {
   rstan_options("eigen_lib")
@@ -29,16 +22,6 @@ boost_path_fun2 <- function() {
 
 # If included in RStan
 # eigen_path_fun() <- paste0(rstan_inc_path_fun(), '/stanlib/eigen_3.1.0')
-
-static_linking <- function() {
-  # return(Rcpp:::staticLinking());
-  ## not following Rcpp's link, we only have either dynamic version or static
-  ## version because the libraries are big.
-  ## (In Rcpp, both versions are compiled.)
-  # return(.Platform$OS.type == 'windows')
-  # For the time being, use static linking for libstan on all platforms. 
-  TRUE
-}
 
 PKG_CPPFLAGS_env_fun <- function() {
    paste(' -I"', file.path(rstan_inc_path_fun(), '/stansrc" '),
@@ -64,22 +47,6 @@ legitimate_space_in_path <- function(path) {
   path 
 } 
 
-RSTAN_LIBS_fun <- function() {
-  static <- static_linking() 
-  rstan.libs.path <- rstan_libs_path_fun()
-
-  # It seems that adding quotes to the path does not work well 
-  # in the case there is space in the path name 
-  if (grepl('[^\\\\]\\s', rstan.libs.path, perl = TRUE))
-    rstan.libs.path <- legitimate_space_in_path(rstan.libs.path)
-
-  if (static) {
-    paste(' "', rstan.libs.path, '/libstan.a', '"', sep = '')
-  } else {
-    paste(' -L"', rstan.libs.path, '" -Wl,-rpath,"', rstan.libs.path, '" -lstan ', sep = '')
-  }
-}
-
 rstanplugin <- function() {
   Rcpp_plugin <- getPlugin("Rcpp")
   rcpp_pkg_libs <- Rcpp_plugin$env$PKG_LIBS
@@ -98,7 +65,7 @@ rstanplugin <- function() {
        body = function(x) x,
        LinkingTo = c("Rcpp"),
        ## FIXME see if we can use LinkingTo for RcppEigen's header files
-       env = list(PKG_LIBS = paste(rcpp_pkg_libs, RSTAN_LIBS_fun(), collapse = " "),
+       env = list(PKG_LIBS = paste(rcpp_pkg_libs),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }
