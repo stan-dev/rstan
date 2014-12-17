@@ -305,7 +305,7 @@ provide just the names instead of creating a new list. The following
 J <- 8
 y <- c(28,  8, -3,  7, -1,  1, 18, 12)
 sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
-schools_data <- c("J", "y", "sigma") 
+schools_data_nms <- c("J", "y", "sigma") 
 @
 
 It would also be possible (indeed, encouraged) to read in the data
@@ -823,10 +823,15 @@ the same number of warmup and iteration into one \code{stanfit} object. As a
 result, if we can run multiple chains in parallel using any approach provided by 
 other packages on one computer (or a cluster), then we can essentially 
 run multiple chains in parallel. For example, we can easily achieve this goal
-on one computer using function \code{mclapply} in package
-\pkg{parallel}\footnote{\pkg{parallel} works only for non-Windows, so we set
-\code{mc.cores} to $1$ for Windows.}%
-as follows.  
+on one computer using package \pkg{parallel}, provided within \R base. 
+
+
+Because of the differences in different operating systems (OS), using 
+\pkg{parallel} is different for Unix-like operating systems (for example,
+Linux and Mac OS X) from Microsoft Windows. First, we provide some demonstration
+code, which uses function \code{mclapply}, for Unix-like OS. 
+
+
 <<parallel, echo=TRUE, results=hide, cache=TRUE>>=
 library(rstan)
 library(parallel)
@@ -843,9 +848,42 @@ sflist1 <-
 fit <- sflist2stanfit(sflist1)
 @
 
-Note in the above code, we specify the same seed for all the chains but use
+For Windows, a different function called \code{parLapply} in
+\pkg{parallel} can be used since \code{mclapply} on Windows
+can use only one core.
+
+<<parallelwin, echo=TRUE, results=hide, cache=TRUE>>=
+library(rstan)
+library(parallel)
+f1 <- stan(file="schools.stan",data=schools_data, 
+           chains=1, iter=1)
+seed <- 12345 
+
+num_core = 2
+CL = makeCluster(num_core, outfile = 'cluster.log')
+clusterExport(cl = CL, c("seed", "schools_data", "f1"))
+
+sflist1 <-
+  parLapply(CL, 1:4, 
+            fun = function(i) {
+              require(rstan)
+              stan(fit = f1, seed = seed, 
+              data = schools_data, 
+              chains = 1, chain_id = i, 
+              refresh = -1) 
+            })
+fit <- sflist2stanfit(sflist1)
+
+stopCluster(CL)
+@
+
+
+In the above code, we specify the same seed for all the chains but use
 different chain ID (argument \code{chain\_id}). This is to make sure 
 that the random numbers generated in \Stan for all chains are independent. 
+Though the above code for Windows is a bit more complicated than
+the one for Unix, it can also be used for Unix. So the code using 
+\code{parLapply} is more portable. 
 
 \section[Work with Stan]{Work with \Stan} 
 \label{sec0workwstan}
