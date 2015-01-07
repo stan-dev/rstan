@@ -613,7 +613,6 @@ namespace rstan {
       std::vector<double> params_inr_etc; // cont, disc, and others
       std::vector<double> init_grad;
       std::string init_val = args.get_init();
-      double init_log_prob;
       int num_init_tries = 0;
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
@@ -1145,7 +1144,7 @@ namespace rstan {
       rstan::io::rlist_ref_var_context par_context(par);
       std::vector<int> params_i;
       std::vector<double> params_r;
-      model_.transform_inits(par_context, params_i, params_r);
+      model_.transform_inits(par_context, params_i, params_r, &rstan::io::rcout);
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(params_r));
       UNPROTECT(1);
