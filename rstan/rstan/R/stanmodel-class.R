@@ -113,7 +113,9 @@ setMethod("optimizing", "stanmodel",
                                   "tol_param",
                                   "tol_rel_obj",
                                   "tol_rel_grad",
-                                  "history_size"))
+                                  "history_size"),
+                                 pre_msg = "passing unknown arguments: ",
+                                 call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
@@ -150,7 +152,9 @@ setMethod("sampling", "stanmodel",
               is_arg_recognizable(names(dots),
                                   c("chain_id", "init_r", "test_grad",
                                     "obfuscate_model_name",
-                                    "append_samples", "refresh", "control"))
+                                    "append_samples", "refresh", "control"), 
+                                  pre_msg = "passing unknown arguments: ",
+                                  call. = FALSE)
             }
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 

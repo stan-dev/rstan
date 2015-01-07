@@ -1,7 +1,7 @@
 library(rstan)
 
 model_name <- "_8chools";
-sfile <- "../../stan/src/models/misc/eight_schools/eight_schools.stan"
+sfile <- "../../example-models/misc/eight_schools/eight_schools.stan"
 m <- stan_model(file = sfile, 
                 model_name = model_name, 
                 verbose = TRUE)  
