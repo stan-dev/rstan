@@ -411,10 +411,21 @@ config_argss <- function(chains, iter, warmup, thin,
   all_metrics <- c("unit_e", "diag_e", "dense_e")
   if (!is.null(control)) {
     if (!is.list(control)) 
-      stop("control should be a named list")
+      stop("'control' should be a named list")
+      is_arg_recognizable(names(control),
+                          c("adapt_engaged", "adapt_gamma",
+                            "adapt_delta", "adapt_kappa", "adapt_t0", 
+                            "adapt_init_buffer", "adapt_term_buffer",
+                            "adapt_window", "stepsize", 
+                            "stepsize_jitter", "metric", "int_time",
+                            "max_treedepth", 
+                            "epsilon", "error"),
+                          pre_msg = "'control' list contains unknown members of names: ",
+                          call. = FALSE)
     metric <- control$metric
-    if (!is.null(metric))
-      control$metric <- match.arg(metric, all_metrics)
+    if (is.null(metric) || is.na(match(metric, all_metrics))) {
+      stop("metric should be one of ", paste0(paste0('"', all_metrics, '"'), collapse = ", "))
+    }
     dotlist$control <- control
   } 
 
@@ -1470,14 +1481,15 @@ read_csv_header <- function(f, comment.char = '#') {
   header
 }
 
-is_arg_recognizable <- function(x, y) {
+is_arg_recognizable <- function(x, y, pre_msg = '', post_msg = '', ...) {
   # check if all elements of x are in y.  
   # x: a vector of characters 
   # y: a vector of characters 
   idx <- match(x, y)
   na_idx <- which(is.na(idx))
   if (length(na_idx) > 0) {
-    warning(paste(x[na_idx], collapse = ', '), " not found.")
+    warning(pre_msg, paste(x[na_idx], collapse = ', '), ".", post_msg, ...)
+    return(FALSE)
   }
   TRUE
 }
