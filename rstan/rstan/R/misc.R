@@ -423,7 +423,7 @@ config_argss <- function(chains, iter, warmup, thin,
                           pre_msg = "'control' list contains unknown members of names: ",
                           call. = FALSE)
     metric <- control$metric
-    if (is.null(metric) || is.na(match(metric, all_metrics))) {
+    if (!is.null(metric) && is.na(match(metric, all_metrics))) {
       stop("metric should be one of ", paste0(paste0('"', all_metrics, '"'), collapse = ", "))
     }
     dotlist$control <- control
