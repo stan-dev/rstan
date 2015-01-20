@@ -9,7 +9,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   model_code <- get_model_strcode(file, model_code)  
   if (missing(model_name) || is.null(model_name)) 
     model_name <- attr(model_code, "model_name2") 
-  cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
+  message("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.")
   SUCCESS_RC <- 0 
   EXCEPTION_RC <- -1
   PARSE_FAIL_RC <- -2 
@@ -45,7 +45,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   } 
 
   if (r$status == SUCCESS_RC && verbose)
-    cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
+    message("successful in parsing the Stan model '", model_name, "'.")
 
   r$status = !as.logical(r$status)
   invisible(r)

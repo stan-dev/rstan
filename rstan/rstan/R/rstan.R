@@ -45,8 +45,8 @@ stan_model <- function(file,
                get_Rcpp_module_def_code(model_cppname), 
                sep = '')  
 
-  cat("COMPILING THE C++ CODE FOR MODEL '", model_name, "' NOW.\n", sep = '') 
-  if (verbose) cat(system_info(), "\n")
+  message("COMPILING THE C++ CODE FOR MODEL '", model_name, "' NOW.")
+  if (verbose) message(system_info())
   if (!is.null(boost_lib)) { 
     old.boost_lib <- rstan_options(boost_lib = boost_lib) 
     on.exit(rstan_options(boost_lib = old.boost_lib)) 
