@@ -30,6 +30,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come         
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
          ' -I"', rstan_inc_path_fun(), '"', 
+         ' -Wno-unused-function -Wno-uninitialized',
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG', sep = '')
 }
 
