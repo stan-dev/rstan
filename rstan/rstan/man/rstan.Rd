@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab rstan\cr
     Type: \tab Package\cr
-    Version: \tab 2.5.0\cr
-    Date: Oct 20, 2014\cr
+    Version: \tab 2.6.0\cr
+    Date: \tab Oct 20, 2014\cr
     License: \tab GPL-3 \cr
   }
 
@@ -31,12 +31,12 @@
          \tab Michael Betancourt <betanalpha@gmail.com> \cr 
          \tab Marcus Brubaker <mbrubake@cs.toronto.edu>   \cr 
          \tab Bob Carpenter <carp@alias-i.com>   \cr 
-         \tab Yuanjun Gao <yg2312@columbia.edu>  \cr
          \tab Ben Goodrich <bg2382@columbia.edu> \cr 
          \tab Matt Hoffman <mdhoffma@cs.princeton.edu>  \cr 
          \tab Daniel Lee <bearlee@alum.mit.edu>  \cr 
          \tab Peter Li <li.peter94@gmail.com>  \cr 
-         \tab Michael Malecki <malecki@gmail.com>  \cr 
+         \tab Mitzi Morris <mitzi@panix.com> \cr
+         \tab Rob Trangucci <robert.trangucci@gmail.com> \cr
          \tab Andrew Gelman <gelman@stat.columbia.edu> \cr 
   } 
 

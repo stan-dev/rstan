@@ -2,6 +2,6 @@
 ## 
 
 ## for clang++ on Mac OS X Mavericks with Xcode 5
-# CXX = ccache clang++ -stdlib=libstdc++ 
+# CXX = ccache clang++
 
 # CXXFLAGS = -O3 $(LTO) 

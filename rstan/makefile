@@ -171,7 +171,6 @@ clean-all: clean
 GTEST_LIB := tests/cpp/gtest.o
 
 CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
-STAN_LIB := tests/cpp/lib/libstan.a
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
 ## comment this out if you need a different version of R, 
@@ -187,25 +186,24 @@ RCPPINCL := 		$(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --sla
 RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --slave)
 
 ## include headers and libraries for RInside embedding classes
-RINSIDEINCL := 		$(shell echo 'RInside:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
-RINSIDELIBS := 		$(shell echo 'RInside:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --slave)
+RINSIDEINCL := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::CxxFlags()')
+RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::LdFlags()')
+
+print:
+	echo $(RINSIDEINCL)
 
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += $(RCPPFLAGS) $(RCPPINCL) $(RINSIDEINCL) $(shell $(R_HOME)/bin/R CMD config CXXFLAGS) -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include -ftemplate-depth=256 -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 
-$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += $(RLDFLAGS) $(RCPPLIBS) $(RINSIDELIBS) -L $(dir $(STAN_LIB)) -l stan
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += $(RLDFLAGS) $(RCPPLIBS) $(RINSIDELIBS)
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 
 $(STAN_INSTANTIATION_FILES): tests/cpp/lib/src/%.o: rstan/src/%.cpp $(STANLIB) $(STANSRC)
 	@mkdir -p $(dir $@)
 	$(COMPILE.cpp) $(OUTPUT_OPTION) $<  -I $(STANSRC)
-
-$(STAN_LIB): $(STAN_INSTANTIATION_FILES)
-	@mkdir -p $(dir $@)
-	$(AR) -rs $@ $(STAN_INSTANTIATION_FILES)
 
 $(GTEST_LIB): $(STANLIB) $(STANSRC) 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(OUTPUT_OPTION) $(GTESTPATH)/src/gtest-all.cc
@@ -220,7 +218,7 @@ $(patsubst %.cpp,%.d,$(CPPTESTS)) : %.d : %.cpp $(STANLIB) $(STANSRC)
 	rm -f $@.$$$$);\
 	fi
 
-$(patsubst %.cpp,%$(EXE),$(CPPTESTS)) : %$(EXE) : %.cpp %.d $(GTEST_LIB) $(STANLIB) $(STAN_LIB)
+$(patsubst %.cpp,%$(EXE),$(CPPTESTS)) : %$(EXE) : %.cpp %.d $(GTEST_LIB) $(STANLIB)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(OUTPUT_OPTION) $(GTEST_LIB) $< $(GTESTPATH)/src/gtest_main.cc $(LDFLAGS)
 ifeq (,$(filter test-cpp,$(MAKECMDGOALS)))
 	$@

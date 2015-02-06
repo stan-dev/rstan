@@ -123,7 +123,9 @@ stan <- function(file, model_name = "anon_model",
   is_arg_recognizable(dot_arg_names, 
                       c("chain_id", "init_r", "test_grad", 
                         "append_samples", "refresh", "control",
-                        "obfuscate_model_name"))
+                        "obfuscate_model_name"),
+                      pre_msg = "passing unknown arguments: ", 
+                      call. = FALSE)
 
   if (is(fit, "stanfit")) sm <- get_stanmodel(fit)
   else { 
@@ -142,5 +144,5 @@ stan <- function(file, model_name = "anon_model",
            check_data = TRUE, sample_file = sample_file, 
            diagnostic_file = diagnostic_file,
            verbose = verbose, algorithm = match.arg(algorithm), 
-           control = control, ...) 
+           control = control, check_unknown_args = FALSE, ...)
 } 

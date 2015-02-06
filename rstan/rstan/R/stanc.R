@@ -21,28 +21,33 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   if (is.na(obfuscate_name))  obfuscate_name <- FALSE
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_name) 
-  r <- .Call("CPP_stanc250", model_code, model_cppname)
+  r <- .Call("CPP_stanc260", model_code, model_cppname)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
   r$model_code <- model_code 
   if (is.null(r)) {
-    stop(paste("failed to run stanc for model '", model_name, 
-               "' and no error message provided", sep = '')) 
+    stop(paste("failed to run stanc for model '", model_name,
+               "' and no error message provided", sep = ''))
   } else if (r$status == PARSE_FAIL_RC) {
-    stop(paste("failed to parse Stan model '", model_name, 
-               "' and no error message provided"), sep = '') 
+    stop(paste("failed to parse Stan model '", model_name,
+               "' and no error message provided"), sep = '')
   } else if (r$status == EXCEPTION_RC) {
-    stop(paste("failed to parse Stan model '", model_name, 
-               "' with error message:\n", r$msg, sep = '')) 
+    error_msg <- paste("failed to parse Stan model '", model_name,
+                       "' with error message:\n", r$msg, sep = '')
+    error_msg_len <- nchar(error_msg)
+    warning.length <- getOption('warning.length')
+    if (error_msg_len > warning.length) {
+      options(warning.length = error_msg_len)
+      on.exit(options(warning.length = warning.length), add = TRUE)
+    }
+    stop(error_msg)
   } 
-  
-  r$status = if (r$status == 0) TRUE else FALSE
 
-  if (r$status != SUCCESS_RC) {
-    if (verbose)  
-      cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '') 
-  } 
+  if (r$status == SUCCESS_RC && verbose)
+    cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
+
+  r$status = !as.logical(r$status)
   invisible(r)
 }
 

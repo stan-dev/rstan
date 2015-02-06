@@ -20,7 +20,7 @@ y <- rnorm(N)
 cat("mean(y)=", mean(y), ", and sd(y)=", sd(y), "\n", sep = '')
 dat <- list(N = N, y = y)
 dump(c("N", "y"), file = 'optim.data.R')
-sm <- stan_model(model_code = stdnorm)
+sm <- stan_model(model_code = stdnorm, verbose = TRUE)
 
 
 # default algorithm 

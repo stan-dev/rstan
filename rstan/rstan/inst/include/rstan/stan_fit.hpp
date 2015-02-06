@@ -613,7 +613,6 @@ namespace rstan {
       std::vector<double> params_inr_etc; // cont, disc, and others
       std::vector<double> init_grad;
       std::string init_val = args.get_init();
-      double init_log_prob;
       int num_init_tries = 0;
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
@@ -729,10 +728,10 @@ namespace rstan {
           lbfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           lbfgs._conv_opts.maxIts     = args.get_iter();
 
-          int return_code = stan::common::do_bfgs_optimize(model, lbfgs, base_rng,
-                                                           lp, cont_vector, disc_vector,
-                                                           &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh, interruptCallback);
+          stan::common::do_bfgs_optimize(model, lbfgs, base_rng,
+                                         lp, cont_vector, disc_vector,
+                                         &sample_stream, &rstan::io::rcout,
+                                         save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::common::write_iteration(sample_stream, model, base_rng,
@@ -793,10 +792,10 @@ namespace rstan {
           bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           bfgs._conv_opts.maxIts     = args.get_iter();
 
-          int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,
-                                                           lp, cont_vector, disc_vector,
-                                                           &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh, interruptCallback);
+          stan::common::do_bfgs_optimize(model, bfgs, base_rng,
+                                         lp, cont_vector, disc_vector,
+                                         &sample_stream, &rstan::io::rcout,
+                                         save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::common::write_iteration(sample_stream, model, base_rng,
@@ -1145,7 +1144,7 @@ namespace rstan {
       rstan::io::rlist_ref_var_context par_context(par);
       std::vector<int> params_i;
       std::vector<double> params_r;
-      model_.transform_inits(par_context, params_i, params_r);
+      model_.transform_inits(par_context, params_i, params_r, &rstan::io::rcout);
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(params_r));
       UNPROTECT(1);
