@@ -21,7 +21,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   if (is.na(obfuscate_name))  obfuscate_name <- FALSE
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_name) 
-  r <- .Call("CPP_stanc250", model_code, model_cppname)
+  r <- .Call("CPP_stanc260", model_code, model_cppname)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
