@@ -732,6 +732,22 @@ sflist2stanfit <- function(sflist) {
 } 
 # sflist2stan(list(l1=ss1, l2=ss2))
 
+names.stanfit <- function(x) dimnames(x)$parameters
+
+`names<-.stanfit` <- function(x, value) {
+  value <- as.character(value)
+  len <- length(x@sim$fnames_oi)
+  if(length(value) != len)
+    stop(paste("parameter names must be of length", len))
+  x@sim$fnames_oi <- value
+  if(length(x@.MISC$summary)) {
+    x@.MISC$summary <- rapply(x@.MISC$summary, f = function(y) {
+      rownames(y) <- value
+      return(y)
+    }, how = "replace")
+  }
+  return(x)
+}
 
 as.array.stanfit <- function(x, ...) {
   if (x@mode != 0) return(numeric(0)) 
