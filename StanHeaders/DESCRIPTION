@@ -1,0 +1,10 @@
+Package: StanHeaders
+Date: 2015-02-08
+Title: C++ Header Files for Stan
+Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')))
+URL: http://mc-stan.org/
+Description: This is a header-only package that provides C++ header files of the Stan project.
+Suggests: RcppEigen, BH
+Version: 2.6.1
+License: BSD_3_clause + file LICENSE
+URL: http://mc-stan.org/
