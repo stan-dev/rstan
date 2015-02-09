@@ -4,6 +4,7 @@ Title: C++ Header Files for Stan
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut', 'ctb')),
              person("Andrew", "Gelman", role = "ctb"),
              person("Matt", "Hoffman", role = "ctb"),
+             person("Daniel", "Lee", role = "ctb"),
              person("Jiqiang", "Guo", role = "ctb"),
              person("Marcus", "Brubaker", role = "ctb"),
              person("Michael", "Betancourt", role = "ctb"),
