@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: RStan: R interface to Stan
-Version: 2.6.0
-Date: 2015-02-06
+Version: 2.6.1
+Date: 2015-02-08
 Author: Jiqiang Guo <guojq28@gmail.com>,   
         Michael Betancourt <betanalpha@gmail.com>,
         Marcus Brubaker <mbrubake@cs.toronto.edu>,  
@@ -20,7 +20,7 @@ Description: R interface to Stan (Stan is an open-source package for obtaining
         Hamiltonian Monte Carlo.)
 License: GPL (>=3)
 Imports: stats4
-Depends: R (>= 3.0.2), Rcpp (>= 0.9.10), utils, inline, methods
-LinkingTo: Rcpp, RcppEigen, BH (>= 1.54)
-Suggests: RUnit, RcppEigen, BH (>= 1.54), parallel, KernSmooth
+Depends: R (>= 3.0.0), Rcpp (>= 0.11.0), utils, inline, methods
+LinkingTo: Rcpp, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.6.1)
+Suggests: RUnit, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.6.1), parallel, KernSmooth, rstanDemo
 URL: http://mc-stan.org
