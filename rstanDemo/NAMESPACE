@@ -1,0 +1,4 @@
+exportPattern("^[[:alpha:]]+")
+
+importFrom("rstan", optimizing, sampling, stan_model)
+

@@ -1,0 +1,8 @@
+inst/example-models/.git
+inst/example-models/ARM
+inst/example-models/Bayesian_Cognitive_Modeling
+inst/example-models/bugs_examples/vol3/fire
+^.*\.txt$
+post\.R$
+makefile$
+

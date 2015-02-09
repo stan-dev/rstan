@@ -1,0 +1,10 @@
+Package: rstanDemo
+Type: Package
+Title: Example models for the rstan package
+Version: 2.6.1
+Date: 2015-02-08
+Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')))
+URL: http://mc-stan.org/
+Description: This package includes many of the example models that come with Stan
+Imports: rstan (>= 2.6.1)
+License: BSD_3_clause + file LICENSE

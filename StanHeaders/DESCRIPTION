@@ -1,0 +1,21 @@
+Package: StanHeaders
+Date: 2015-02-08
+Title: C++ Header Files for Stan
+Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut', 'ctb')),
+             person("Andrew", "Gelman", role = "ctb"),
+             person("Matt", "Hoffman", role = "ctb"),
+             person("Jiqiang", "Guo", role = "ctb"),
+             person("Marcus", "Brubaker", role = "ctb"),
+             person("Michael", "Betancourt", role = "ctb"),
+             person("Yuanjun", "Gao", role = "ctb"),
+             person("Peter", "Li", role = "ctb"),
+             person("Allen", "Riddell", role = "ctb"),
+             person("Marco", "Inacio", role = "ctb"),
+             person("Mitzi", "Morris", role = "ctb"),
+             person("Jeffrey", "Arnold", role = "ctb"))
+URL: http://mc-stan.org/
+Description: This is a header-only package that provides C++ header files of the Stan project.
+Suggests: RcppEigen, BH
+Version: 2.6.1
+License: BSD_3_clause + file LICENSE
+URL: http://mc-stan.org/

@@ -1,8 +1,8 @@
 [submodule "stan"]
-	path = stan
+	path = StanHeaders/inst/include/upstream
 	url = https://github.com/stan-dev/stan.git
 	ignore = dirty
 [submodule "example-models"]
-	path = example-models
+	path = rstanDemo/inst/example-models
 	url = https://github.com/stan-dev/example-models
 	ignore = dirty

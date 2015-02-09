@@ -292,10 +292,9 @@ stan(file, model_name = "anon_model", model_code = "",
   through parameter \code{fit} in order to reuse the compiled model; other
   configuration may change.
 
-  The optimization level for compiling the C++ code generated for the 
-  model can be set by \code{set_cppo}. In general, the higher the optimization
-  level is set, the faster the generated binary code for the model runs. However, 
-  the binary code generated for the model runs fast by using higher
+  In general, the higher the optimization level is set, the faster the 
+  generated binary code for the model runs, which can be set in a Makevars file.
+  However, the binary code generated for the model runs fast by using higher
   optimization level is at the cost of long time to compile the C++ code. 
 }
 

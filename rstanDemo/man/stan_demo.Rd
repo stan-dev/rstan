@@ -1,5 +1,6 @@
 \name{stan_demo}
 \alias{stan_demo} 
+\alias{StanHeaders-package}
 
 \title{Demonstrate examples included in Stan} 
 

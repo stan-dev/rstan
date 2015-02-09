@@ -7,6 +7,10 @@ rstan_inc_path_fun <- function() {
   system.file('include', package = 'rstan')
 } 
 
+stanheaders_inc_path_fun <- function() {
+  system.file('include', package = 'StanHeaders')
+}
+
 # Using RcppEigen
 eigen_path_fun <- function() {
   rstan_options("eigen_lib")
@@ -20,13 +24,10 @@ boost_path_fun2 <- function() {
   rstan_options("boost_lib2")
 }
 
-# If included in RStan
-# eigen_path_fun() <- paste0(rstan_inc_path_fun(), '/stanlib/eigen_3.1.0')
-
 PKG_CPPFLAGS_env_fun <- function() {
-   paste(' -I"', file.path(rstan_inc_path_fun(), '/stansrc" '),
+   paste(' -isystem"', file.path(stanheaders_inc_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '" '),
-         ' -isystem"', file.path(eigen_path_fun(), '/unsupported" '),
+         ' -isystem"', file.path(eigen_path_fun(), 'unsupported" '),
          ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come         
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
          ' -I"', rstan_inc_path_fun(), '"', 

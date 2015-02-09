@@ -1,11 +1,10 @@
 
-stopifnot(require(rstan))
+stopifnot(require(rstanDemo))
 stopifnot(require(parallel))
 
 example(stan_demo)
 
 bench <- function(i) {
-  if(model_names[i] == "fire") return(rep(NA_real_, 3))
   mark <- "elapsed"
   compile <- system.time(fit <- stan_demo(i, chains = 0, iter = 0))[mark]
   execute <- system.time(fit <- stan_demo(i, fit = fit, seed = 12345, refresh = -1))[mark]
