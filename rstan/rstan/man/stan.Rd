@@ -314,9 +314,6 @@ stan(file, model_name = "anon_model", model_code = "",
 
   see \code{\link{extract}} and \code{\link{as.array.stanfit}} for extracting
   samples from \code{stanfit} objects.
-
-  see \code{\link{set_cppo}} for setting higher optimization level for
-  compiling the C++ code.
 }
 \examples{\dontrun{
 #### example 1 
