@@ -3,9 +3,9 @@ Type: Package
 Title: RStan: R interface to Stan
 Version: 2.6.1
 Date: 2015-02-08
-Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = c("cre", "aut")),
+Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
-             person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = "aut"))
+             person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")))
 Maintainer: Jiqiang Guo <guojq28@gmail.com>
 Description: R interface to Stan (Stan is an open-source package for obtaining
         Bayesian inference using the No-U-Turn sampler, a variant of
@@ -13,6 +13,6 @@ Description: R interface to Stan (Stan is an open-source package for obtaining
 License: GPL (>=3)
 Imports: stats4
 Depends: R (>= 3.0.2), Rcpp (>= 0.11.0), utils, inline, methods
-LinkingTo: Rcpp, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.6.1)
-Suggests: RUnit, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.6.1), parallel, KernSmooth, rstanDemo
+LinkingTo: Rcpp, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.6.0)
+Suggests: RUnit, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.6.0), parallel, KernSmooth, rstanDemo
 URL: http://mc-stan.org
