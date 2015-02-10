@@ -17,6 +17,7 @@ export(
   sflist2stanfit,
   read_stan_csv,
   monitor,
+  lookup,
   rstan_options 
 # get_rstan.options
 )
