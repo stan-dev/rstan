@@ -30,29 +30,14 @@ export R_MAKEVARS_USER
 BUILD_OPTS ?= 
 NOTBUILD ?= FALSE
 
-ifeq ($(OS), win)
-  LINKCMD1 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stanlib"  "..^\..^\..^\..^\stan^\lib"
-  LINKCMD2 = @cmd /c mklink /D ".^\rstan^\inst^\include^\stansrc"  "..^\..^\..^\..^\stan^\src"
-  LINKCMD3 = @cmd /c mklink /D ".^\rstan^\inst^\ex_models"  "..^\..^\..^\example-models"
-  WH = where
-else
-  LINKCMD1 = ln -s ../../../../stan/lib ./rstan/inst/include/stanlib
-  LINKCMD1b = ln -s ../../../$(TMP_STANLIB)/ ./rstan/inst/include/stanlib
-  LINKCMD2 = ln -s ../../../../stan/src ./rstan/inst/include/stansrc
-  LINKCMD3 = ln -s ../../../example-models ./rstan/inst/ex_models
-  WH = which
-endif
-
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
 
-BOOSTPATH := $(shell find ../stan/lib -path '*lib/boost_*' -regex '.*lib\/boost_[^/]*')
-EIGENPATH := $(shell find ../stan/lib -path '*lib/eigen_*' -regex '.*lib\/eigen_[^/]*')
+STANLIB := rstan/inst/include/stanlib
+STANSRC := rstan/inst/include/stansrc
+EXAMPLE_MODELS := rstan/inst/ex_models
 TMP_STANLIB := tmpstanlib#
-BOOST_FOR_RSTAN := $(TMP_STANLIB)/$(subst ../stan/lib/,,$(BOOSTPATH))
-EIGEN_FOR_RSTAN := $(TMP_STANLIB)/$(subst ../stan/lib/,,$(EIGENPATH))
 
-# a tool in boost 
 BCP = $(strip $(shell $(WH) bcp))
 GIT = $(strip $(shell $(WH) git))
 
@@ -68,7 +53,6 @@ help:
 	@echo ' uninstall: to install rstan using R CMD REMOVE rstan'
 	@echo ' clean: to remove the gzip package file'
 	@echo ' check: use R CMD check on rstan package'
-	@echo ' tmpstanlib: use Boost bcp to strip boost'
 	@echo ' example_csv: create CSV files included in the package for examples'
 	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, RcppEigen, BH, and RUnit'
 	@echo ' test-cpp: to compile c++ code directly (for dev)'
@@ -77,32 +61,11 @@ help:
 install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
 
-
-STANLIB := rstan/inst/include/stanlib
-STANSRC := rstan/inst/include/stansrc
-EXAMPLE_MODELS := rstan/inst/ex_models
-
-$(STANLIB):
-ifeq ($(OS), win)
-	$(LINKCMD1)
-else 
-	if test -d $(TMP_STANLIB); then $(LINKCMD1b); else $(LINKCMD1); fi
-endif
-
-$(STANSRC):
-	$(LINKCMD2)
-
-$(EXAMPLE_MODELS):
-	$(LINKCMD3)
-
-build $(STANPKG): ./rstan/DESCRIPTION $(STANSRC) $(EXAMPLE_MODELS)
-	@test -f "../stan/src/stan/version.hpp" || { echo "Stan version header file is not found; maybe the submodule of Stan is not initialized."; exit 1;}
+build $(STANPKG): ./rstan/DESCRIPTION
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
-	@echo "git_stan_head <- function() \"unknown\"" > rstan/R/git_stan_head.R
 else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
-	@echo "git_stan_head <- function() \"`cd ..; git submodule status`\"" > rstan/R/git_stan_head.R
 endif
 ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
@@ -129,34 +92,16 @@ endif
 uninstall:
 	$(R) CMD REMOVE rstan
 
-$(TMP_STANLIB): 
-ifneq "$(BCP)" ""
-	mkdir -p ${BOOST_FOR_RSTAN} 
-	mkdir -p ${EIGEN_FOR_RSTAN} 
-	cp -r $(EIGENPATH)/* $(EIGEN_FOR_RSTAN)
-	find ../stan/src/ -name \*\.\[ch]pp -exec bcp --scan --boost=${BOOSTPATH} '{}' ${BOOST_FOR_RSTAN} \; &> bcp.log  
-	find ./rstan/inst/include -name \*\.\[ch]pp -exec bcp --scan --boost=${BOOSTPATH} '{}' ${BOOST_FOR_RSTAN} \; >> bcp.log  2>&1
-else 
-	@echo "cannot find boost bcp"
-endif 
-
-
-rmtmpstanlib: 
-	rm -rf $(TMP_STANLIB) 
-	rm -f bcp.log 
-
 clean: 
 	rm -f $(STANPKG) 
 	rm -f rstan/R/git_*head.R
 	rm -rf $(shell find tests/cpp -type f -name '*.d')
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
+	rm -rf $(STANLIB) $(STANSRC) $(EXAMPLE_MODELS) # remove files created <= 2.6.0
 
 clean-all: clean
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
 	rm -rf rstan/R/git_*stan_head.R 
-	rm -rf "./$(STANLIB)"
-	rm -rf "./$(STANSRC)"
-	rm -rf "./$(EXAMPLE_MODELS)"
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
 	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
@@ -164,7 +109,7 @@ clean-all: clean
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all $(TMP_STANLIB) rmtmpstanlib install_pre_rpkg
+.PHONY: build check install clean clean-all install_pre_rpkg
 
 ##
 # C++ tests of rstan

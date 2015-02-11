@@ -13,4 +13,4 @@ NEW_VER2=${NEW_VER//./}
 ${SED} -i "s/stanc${OLD_VER2}/stanc${NEW_VER2}/g" ./rstan/R/stanc.R ./rstan/src/init.cpp ./rstan/src/stanc.cpp
 
 echo "use git diff to double check" 
-
+echo "please change dates in DESCRIPTION and man/rstan.md"
