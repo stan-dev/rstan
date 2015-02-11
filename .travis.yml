@@ -36,7 +36,8 @@ install:
   - ccache --max-size 8G
 
 before_script: 
-  - cd stan && git fetch && git checkout ${STAN_BRANCH} && cd ..
+  - cd StanHeaders/inst/include/upstream && git fetch && git checkout ${STAN_BRANCH} && cd ../../../..
+  - R CMD INSTALL StanHeaders
   - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
