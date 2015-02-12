@@ -28,7 +28,7 @@ PKG_CPPFLAGS_env_fun <- function() {
    paste(' -isystem"', file.path(stanheaders_inc_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), 'unsupported" '),
-         ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come         
+#        ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
          ' -I"', rstan_inc_path_fun(), '"', 
          ' -Wno-unused-function -Wno-uninitialized',
