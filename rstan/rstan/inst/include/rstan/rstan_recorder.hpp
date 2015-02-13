@@ -2,17 +2,17 @@
 #define RSTAN__RSTAN_RECORDER_HPP
 
 #include <Rcpp.h>
-#include <stan/common/recorder/csv.hpp>
-#include <stan/common/recorder/filtered_values.hpp>
-#include <stan/common/recorder/sum_values.hpp>
+#include <stan/interface/recorder/csv.hpp>
+#include <stan/interface/recorder/filtered_values.hpp>
+#include <stan/interface/recorder/sum_values.hpp>
 
 namespace rstan {
 
   class rstan_sample_recorder {
   public:
-    typedef stan::common::recorder::csv CsvRecorder;
-    typedef stan::common::recorder::filtered_values<Rcpp::NumericVector> FilteredValuesRecorder;
-    typedef stan::common::recorder::sum_values SumValuesRecorder;
+    typedef stan::interface::recorder::csv CsvRecorder;
+    typedef stan::interface::recorder::filtered_values<Rcpp::NumericVector> FilteredValuesRecorder;
+    typedef stan::interface::recorder::sum_values SumValuesRecorder;
 
     CsvRecorder csv_;
     FilteredValuesRecorder values_;
@@ -81,21 +81,17 @@ namespace rstan {
     for (size_t n = 0; n < offset; n++)
       filter_sampler_values[n] = n;
 
-    stan::common::recorder::csv csv(o, prefix);
-    stan::common::recorder::filtered_values<Rcpp::NumericVector> values(N, M, filter);
-    stan::common::recorder::filtered_values<Rcpp::NumericVector> sampler_values(N, M, filter_sampler_values);
-    stan::common::recorder::sum_values sum(N, warmup);
+    rstan_sample_recorder::CsvRecorder csv(o, prefix);
+    rstan_sample_recorder::FilteredValuesRecorder values(N, M, filter);
+    rstan_sample_recorder::FilteredValuesRecorder sampler_values(N, M, filter_sampler_values);
+    rstan_sample_recorder::SumValuesRecorder sum(N, warmup);
 
-    return rstan_sample_recorder(csv, values, sampler_values, sum);
+    return rstan_sample_recorder::rstan_sample_recorder(csv, values, sampler_values, sum);
   }
 
-  stan::common::recorder::csv
-  diagnostic_recorder_factory(std::ostream *o, const std::string prefix) {
-    stan::common::recorder::csv csv(o, prefix);
-    return csv;
+  rstan_sample_recorder::CsvRecorder diagnostic_recorder_factory(std::ostream *o, const std::string prefix) {
+    return rstan_sample_recorder::CsvRecorder(o, prefix);
   }
-
 }
-
 
 #endif
