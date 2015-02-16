@@ -1,12 +1,12 @@
-#!/bin/sh -e
+#!/bin/sh
 
 R_HOME=`R RHOME`
 if test -z "${R_HOME}"; then
   echo "could not determine R_HOME"
-  exit 1
+  exit -1
 fi
 
-"${R_HOME}/bin/Rscript" tools/stan-functions.R
+"${R_HOME}/bin/Rscript" --vanilla tools/stan-functions.R
 
-exit 0
+exit $?
 
