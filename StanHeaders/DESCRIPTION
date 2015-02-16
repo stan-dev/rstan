@@ -2,7 +2,7 @@ Package: StanHeaders
 Date: 2015-02-08
 Title: C++ Header Files for Stan
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
-             person("Joshua", "Pritikin", role = "cre"),
+             person("Joshua", "Pritikin", role = "ctb"),
              person("Andrew", "Gelman", role = "aut"),
              person("Matt", "Hoffman", role = "aut"),
              person("Daniel", "Lee", role = "aut"),
