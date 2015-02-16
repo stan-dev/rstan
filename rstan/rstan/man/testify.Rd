@@ -19,6 +19,25 @@ Export User-Defined Stan Functions to \R for Testing
     contains a non-empty functions block}
 }
 
+\details{
+  If a user-defined Stan function ends in \code{_rng}, then it can
+  use the Boost pseudo-random number generator used by Stan. Note
+  that a \code{seed} argument will be added to the \code{\link{formals}}
+  on the R side that defaults to 0. Thus, by default, the same 
+  pseudo-random number(s) will be returned each time the function is
+  called from R. To change this behavior, an positive integer must be
+  passed to the \code{seed} argument when the function is called from R.
+  
+  If a user-defined Stan function ends in \code{_lp}, then it can
+  modify the log-probability used by Stan to evaluate Metropolis
+  proposals or as an objective function for optimization. Note that a
+  \code{lp__} argument and a \code{lp_accum__} argument will be added
+  to the \code{\link{formals}} on the R side but do not have default
+  arguments. Thus, \code{\link{double}} precision scalars must be 
+  passed to these arguments when the function is called from R and 
+  their values in the \R workspace may be modified by the function
+  evaluation.
+}
 \value{
   \code{NULL} invisibly but the side effect is that new functions
   are defined in \code{\link{.GlobalEnv}}
