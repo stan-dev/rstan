@@ -18,6 +18,7 @@ export(
   read_stan_csv,
   monitor,
   lookup,
+  testify,
   rstan_options 
 # get_rstan.options
 )
@@ -48,4 +49,6 @@ S3method(as.data.frame, stanfit)
 S3method(is.array, stanfit)
 S3method(dim, stanfit)
 S3method(dimnames, stanfit)
+S3method(names, stanfit)
+S3method(`names<-`, stanfit)
 S3method(pairs, stanfit)

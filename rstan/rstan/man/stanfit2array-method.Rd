@@ -6,6 +6,8 @@
 \alias{as.data.frame.stanfit}
 \alias{dim.stanfit}
 \alias{dimnames.stanfit}
+\alias{names.stanfit}
+\alias{names<-.stanfit}
 
 \title{Create array, matrix, or data.frame objects from samples in a \code{stanfit} object} 
 
@@ -20,6 +22,8 @@
   \method{is.array}{stanfit}(x) 
   \method{dim}{stanfit}(x)
   \method{dimnames}{stanfit}(x)
+  \method{names}{stanfit}{x}
+  \method{names<-}{stanfit}{x}
 } 
 
 \arguments{
@@ -45,14 +49,17 @@
   matrix, or data.frame of samples respectively.
 
   \code{dim} and \code{dimnames} return the dim and dimnames of the 
-  array object that could be created. 
+  array object that could be created, while \code{names} returns the third
+  element of the \code{dimnames}, which are the names of the margins of the
+  posterior distribution. The \code{names} assignment method allows for assigning
+  more interpretable names to them.
 
   \code{is.array} returns \code{TRUE} for \code{stanfit} objects that include
   samples; otherwise \code{FALSE}. 
 
   When the \code{stanfit} object does not contain samples, empty objects
   are returned from \code{as.array}, \code{as.matrix}, \code{as.data.frame},
-  \code{dim}, and \code{dimnames}. 
+  \code{dim}, \code{dimnames}, and \code{names}. 
 }
   
 \seealso{
