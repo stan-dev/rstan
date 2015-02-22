@@ -18,6 +18,7 @@ export(
   read_stan_csv,
   monitor,
   lookup,
+  testify,
   rstan_options 
 # get_rstan.options
 )
