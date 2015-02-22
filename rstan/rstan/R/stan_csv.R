@@ -243,5 +243,5 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
               stanmodel = null_sm,
               date = sdate, # not the time of sampling
               .MISC = new.env())
-  invisible(nfit)
+  return(nfit)
 }
