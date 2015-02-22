@@ -31,12 +31,12 @@ Export User-Defined Stan Functions to \R for Testing
   If a user-defined Stan function ends in \code{_lp}, then it can
   modify the log-probability used by Stan to evaluate Metropolis
   proposals or as an objective function for optimization. Note that a
-  \code{lp__} argument and a \code{lp_accum__} argument will be added
-  to the \code{\link{formals}} on the R side but do not have default
-  arguments. Thus, \code{\link{double}} precision scalars must be 
-  passed to these arguments when the function is called from R and 
-  their values in the \R workspace may be modified by the function
-  evaluation.
+  \code{lp__} argument will be added to the \code{\link{formals}} 
+  on the R side that does not have a default argument. Thus, a 
+  \code{\link{double}} precision scalar must be  passed to this 
+  arguments when the function is called from R. The Stan function 
+  can terminate with \code{return lp;} or can execute 
+  \code{print(lp);} to verify that the calculation is correct.
 }
 \value{
   \code{NULL} invisibly but the side effect is that new functions

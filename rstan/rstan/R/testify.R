@@ -55,8 +55,8 @@ testify <- function(stanmodel) {
   }
   for(i in rev(openings)) {
     # hard-code former arguments that cannot be passed from R
-    if(grepl("_rng(", lines[i], fixed = TRUE)) {
-      lines[i] <- gsub(", RNG&.*\\{$", ", const int& seed = 0) {", lines[i])
+    if(grepl("_rng", lines[i], fixed = TRUE)) {
+      lines[i] <- gsub("RNG\\&.*\\{$", "const int& seed = 0) {", lines[i])
       lines <- append(lines, c("boost::ecuyer1988 base_rng__(seed);", 
                                "std::ostream* pstream__ = &Rcpp::Rcout;"), i)
     }
@@ -80,6 +80,7 @@ testify <- function(stanmodel) {
   declarations <- grep("std::ostream* pstream__);", lines, fixed = TRUE)
   if(length(declarations) > 0) for(i in rev(declarations)) { # walk back
     lines[i] <- gsub(", std::ostream* pstream__);", ");", lines[i], fixed = TRUE)
+    lines[i] <- gsub("RNG& base_rng__", "const int& seed", lines[i], fixed = TRUE)
     j <- i - 1L
     while(lines[j] != "// [[Rcpp::export]]") j <- j - 1L
     lines <- lines[-j]
@@ -91,14 +92,15 @@ testify <- function(stanmodel) {
   lines <- gsub(", pstream__)", ")", lines, fixed = TRUE)
   
   # remove more base_rng__ arguments
-  lines <- gsub(", RNG& base_rng__) const {", ") const {", 
+  lines <- gsub(", RNG& base_rng__", "", 
                 lines, fixed = TRUE)
-  lines <- gsub(", base_rng__)", ")", lines, fixed = TRUE)
-  
-  # pass the base_rng__ argument to any C++ function that needs it
-  lines <- gsub("(stan::math::promote_scalar<.*_rng\\(.*)\\)\\)", 
-                "\\1, base_rng__))", lines)
-                
+  lines <- gsub("(RNG& base_rng__", "(",
+                lines, fixed = TRUE)
+  lines <- gsub("([[:space:]]+return .*_rng.*), base_rng__\\);",
+                "\\1);", lines)
+  lines <- gsub("([[:space:]]+return .*_rng)\\(base_rng__\\);",
+                "\\1();", lines)
+                  
   # replace more templating with doubles
   lines <- gsub("const T[0-9]+__&", "double&", lines)
   lines <- gsub("T_lp__&", "double&", lines)
@@ -106,6 +108,11 @@ testify <- function(stanmodel) {
   lines <- gsub("^typename.*$", "double", lines)
   lines <- grep("^template", lines, invert = TRUE, value = TRUE)
 
+  # deal with (lack of) accumulators
+  lines <- gsub(", double& lp_accum__", "", lines, fixed = TRUE)
+  lines <- gsub("lp_accum__.add", "lp__ += ", lines, fixed = TRUE)
+  lines <- gsub(", lp_accum__", "", lines, fixed = TRUE)
+  
   # add dependencies
   lines <- c("// [[Rcpp::depends(StanHeaders)]]", 
              "// [[Rcpp::depends(BH)]]",
