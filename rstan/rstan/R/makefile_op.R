@@ -164,8 +164,8 @@ set_makefile_flags <- function(flags) {
 rm_last_makefile <- function(force = TRUE) {
   # remove the file given by last_makefile()
   # return: 
-  #  ‘0’ for success, ‘1’ for failure, invisibly. 
-  #  '-1' file not exists 
+  #  0 for success, 1 for failure, invisibly. 
+  #  -1 file does not exist
   lmf <- last_makefile() 
   msgs <- c(paste(lmf, " does not exist", sep = ''), 
             paste("removed file ", lmf, sep = ''), 

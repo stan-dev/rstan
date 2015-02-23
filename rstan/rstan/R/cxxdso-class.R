@@ -35,7 +35,7 @@ setMethod('grab_cxxfun', signature(object = "cxxdso"),
 
             # If the file is still loaded  
             # from the help of function dyn.load 
-            #   The function ‘dyn.unload’ unlinks the DLL.  Note that unloading a
+            #   The function dyn.unload unlinks the DLL.  Note that unloading a
             #   DLL and then re-loading a DLL of the same name may or may not
             #   work: on Solaris it uses the first version loaded.
             f <- sub("\\.[^.]*$", "", basename(object@dso_filename)) 
