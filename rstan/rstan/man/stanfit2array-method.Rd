@@ -1,4 +1,3 @@
-
 \name{as.array}
 \alias{is.array.stanfit}
 \alias{as.array.stanfit}
@@ -22,8 +21,8 @@
   \method{is.array}{stanfit}(x) 
   \method{dim}{stanfit}(x)
   \method{dimnames}{stanfit}(x)
-  \method{names}{stanfit}{x}
-  \method{names<-}{stanfit}{x}
+  \method{names}{stanfit}(x)
+  \method{names}{stanfit}(x) <- value
 } 
 
 \arguments{
@@ -31,7 +30,10 @@
   \item{\dots}{Additional parameters that can be passed to \code{extract} 
     for extracting samples from \code{stanfit} object. For now, \code{pars}
     is the only additional parameter.  
-  } 
+  }
+  \item{value}{A character vector of replacement names, which must be equal
+    in length to that of the original.
+  }
 } 
 
 \details{
