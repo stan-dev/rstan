@@ -96,7 +96,7 @@ setMethod('get_stancode', signature = "stanfit",
           function(object, print = FALSE) {
             code <- object@stanmodel@model_code
             if (print) cat(code, "\n") 
-            invisible(code)
+            return(code)
           }) 
 
 setGeneric(name = 'get_stanmodel', 
@@ -104,14 +104,14 @@ setGeneric(name = 'get_stanmodel',
 
 setMethod("get_stanmodel", signature = "stanfit", 
           function(object) { 
-            invisible(object@stanmodel) 
+            return(object@stanmodel)
           }) 
 
 setGeneric(name = 'get_inits', 
            def = function(object, ...) { standardGeneric("get_inits")})
 
 setMethod("get_inits", signature = "stanfit", 
-          function(object) { invisible(object@inits) })
+          function(object) { return(object@inits) })
 
 setGeneric(name = 'get_seed', 
            def = function(object, ...) { standardGeneric("get_seed")})
@@ -259,7 +259,7 @@ setMethod("get_adaptation_info",
               FALSE
             }
             if (all(sapply(lai, FUN = is_empty))) return(invisible(NULL))  
-            invisible(lai) 
+            return(lai) 
           }) 
 
 setGeneric(name = "get_logposterior", 
@@ -279,7 +279,7 @@ setMethod("get_logposterior",
 
             llp <- lapply(object@sim$samples, function(x) x[['lp__']]) 
             if (inc_warmup) return(invisible(llp)) 
-            invisible(mapply(function(x, w) x[-(1:w)], 
+            return(mapply(function(x, w) x[-(1:w)], 
                              llp, object@sim$warmup2,
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
           }) 
@@ -302,7 +302,7 @@ setMethod("get_sampler_params",
                           function(x) do.call(cbind, attr(x, "sampler_params")))   
             if (all(sapply(ldf, is.null))) return(invisible(NULL))  
             if (inc_warmup) return(invisible(ldf)) 
-            invisible(mapply(function(x, w) x[-(1:w), , drop = FALSE], 
+            return(mapply(function(x, w) x[-(1:w), , drop = FALSE], 
                              ldf, object@sim$warmup2, 
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
           }) 
@@ -339,7 +339,7 @@ setMethod("get_posterior_mean",
             pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@model_pars, object@par_dims, fnames, pars) 
             tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
-            invisible(object@.MISC$posterior_mean_4all[unlist(tidx), , drop = FALSE])
+            return(object@.MISC$posterior_mean_4all[unlist(tidx), , drop = FALSE])
           })
 
 setGeneric(name = "extract",
@@ -464,7 +464,7 @@ setMethod("summary", signature = "stanfit",
               idx2 <- match(attr(ss, "row_major_idx"), attr(ss, "col_major_idx"))
               sf <- list(summary = s1[idx2, , drop = FALSE],
                          c_summary = s2[idx2, , , drop = FALSE])
-              return(invisible(sf)) 
+              return(sf)
             } 
             m <- match(probs, default_summary_probs())
             if (any(is.na(m))) { # unordinary quantiles are requested 
@@ -482,7 +482,7 @@ setMethod("summary", signature = "stanfit",
               idx2 <- match(attr(ss, "row_major_idx"), col_idx)
               ss <- list(summary = s1[idx2, , drop = FALSE],
                          c_summary = s2[idx2, , , drop = FALSE])
-              return(invisible(ss)) 
+              return(ss)
             }
 
             tidx <- pars_total_indexes(object@sim$pars_oi, 
@@ -511,7 +511,7 @@ setMethod("summary", signature = "stanfit",
             # dimnames(s2) <- list(parameter = pars_names, 
             #                      stats = c("mean", "sd", qnames), NULL) 
             ss <- list(summary = s1, c_summary = s2) 
-            invisible(ss) 
+            return(ss)
           })  
 
 if (!isGeneric("traceplot")) {
@@ -728,7 +728,7 @@ sflist2stanfit <- function(sflist) {
               stanmodel = sflist[[1]]@stanmodel, 
               date = date(), 
               .MISC = new.env()) 
-  invisible(nfit)
+  return(nfit)
 } 
 # sflist2stan(list(l1=ss1, l2=ss2))
 
@@ -795,7 +795,7 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
     lst[[ic]] <- x 
   }
   class(lst) <- "mcmc.list"
-  invisible(lst)
+  return(lst)
 }
 
 setMethod("as.mcmc.list", "stanfit", as.mcmc.list.stanfit)

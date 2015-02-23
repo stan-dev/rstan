@@ -48,7 +48,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
     cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
 
   r$status = !as.logical(r$status)
-  invisible(r)
+  return(r)
 }
 
 
