@@ -1,6 +1,6 @@
 Package: rstan
 Type: Package
-Title: rstan: R Interface to Stan
+Title: R Interface to Stan
 Version: 2.6.1
 Date: 2015-02-23
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
