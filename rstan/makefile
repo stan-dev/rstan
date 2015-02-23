@@ -33,12 +33,6 @@ NOTBUILD ?= FALSE
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
 
-STANLIB := rstan/inst/include/stanlib
-STANSRC := rstan/inst/include/stansrc
-EXAMPLE_MODELS := rstan/inst/ex_models
-TMP_STANLIB := tmpstanlib#
-
-BCP = $(strip $(shell $(WH) bcp))
 GIT = $(strip $(shell $(WH) git))
 
 # The default target of this makefile 
@@ -54,18 +48,18 @@ help:
 	@echo ' clean: to remove the gzip package file'
 	@echo ' check: use R CMD check on rstan package'
 	@echo ' example_csv: create CSV files included in the package for examples'
-	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, RcppEigen, BH, and RUnit'
+	@echo ' install_pre_rpkg: to install R packages that rstan depends on'
 	@echo ' test-cpp: to compile c++ code directly (for dev)'
 	@echo '--------------------------------------------------------------------------------'
 
 install_pre_rpkg:
-	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
+	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH', 'StanHeaders', 'RInside')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
 
 build $(STANPKG): ./rstan/DESCRIPTION
 ifeq ($(GIT),)
-	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
+	@echo "git_head <- function() \"unknown\"" >> rstan/R/git_rstan_head.R
 else
-	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
+	@echo "git_head <- function() \"`git rev-parse HEAD`\"" >> rstan/R/git_rstan_head.R
 endif
 ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
@@ -97,10 +91,9 @@ clean:
 	rm -f rstan/R/git_*head.R
 	rm -rf $(shell find tests/cpp -type f -name '*.d')
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
-	rm -rf $(STANLIB) $(STANSRC) $(EXAMPLE_MODELS) # remove files created <= 2.6.0
 
 clean-all: clean
-	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
+	rm -f $(STANPKG)
 	rm -rf rstan/R/git_*stan_head.R 
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
