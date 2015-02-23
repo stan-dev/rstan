@@ -152,7 +152,7 @@ setMethod("optimizing", "stanmodel",
                 sampler$unconstrained_param_names(FALSE, FALSE)
             }
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
-            invisible(optim)
+            return(optim)
           }) 
 
 setMethod("sampling", "stanmodel",
@@ -303,6 +303,6 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv) 
-             invisible(nfit)
+             return(nfit)
           }) 
 

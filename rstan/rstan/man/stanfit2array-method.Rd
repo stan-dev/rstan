@@ -22,8 +22,8 @@
   \method{is.array}{stanfit}(x) 
   \method{dim}{stanfit}(x)
   \method{dimnames}{stanfit}(x)
-  \method{names}{stanfit}{x}
-  \method{names<-}{stanfit}{x}
+  \method{names}{stanfit}(x)
+  \method{names}{stanfit}(x) <- value
 } 
 
 \arguments{
@@ -32,6 +32,8 @@
     for extracting samples from \code{stanfit} object. For now, \code{pars}
     is the only additional parameter.  
   } 
+  \item{value}{A character vector to set/replace the parameter names
+    in the \code{stanfit} object.}
 } 
 
 \details{
