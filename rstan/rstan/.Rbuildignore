@@ -19,3 +19,5 @@ Rbuildignore.*$
 .*\.so$
 .*\.o$
 .*\.out$
+.*\.backup$
+
