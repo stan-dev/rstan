@@ -2,6 +2,10 @@ cache: apt
 
 language: cpp
 
+os:
+  - linux
+  - osx
+
 compiler:
   - gcc 
   - clang
