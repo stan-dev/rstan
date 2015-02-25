@@ -29,14 +29,10 @@ before_install:
   - more wait4.sh
   - chmod 755 ./travis-tool.sh wait4.sh
   - ./travis-tool.sh bootstrap
-  - /bin/dd if=/dev/zero of=~/swap.1 bs=1M count=2048
-  - /sbin/mkswap ~/swap.1
-  - /sbin/swapon ~/swap.1
-
     
 install:
   - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
-  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen
+  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen RInside
   - ccache --max-size 8G
 
 before_script: 
