@@ -86,7 +86,7 @@ namespace rstan {
     rstan_sample_recorder::FilteredValuesRecorder sampler_values(N, M, filter_sampler_values);
     rstan_sample_recorder::SumValuesRecorder sum(N, warmup);
 
-    return rstan_sample_recorder::rstan_sample_recorder(csv, values, sampler_values, sum);
+    return rstan_sample_recorder(csv, values, sampler_values, sum);
   }
 
   rstan_sample_recorder::CsvRecorder diagnostic_recorder_factory(std::ostream *o, const std::string prefix) {
