@@ -7,7 +7,6 @@ os:
   - osx
 
 compiler:
-  - gcc 
   - clang
   
 env:
@@ -15,9 +14,7 @@ env:
     - BOOTSTRAP_LATEX="1"
     - STAN_BRANCH="origin/master"
   matrix: 
-    - CXX_OLEVEL=0 RCPP_VER=cran
-    - CXX_OLEVEL=3 RCPP_VER=cran
-    - CXX_OLEVEL=3 RCPP_VER=github
+    - CXX_OLEVEL=2 RCPP_VER=cran
 
 matrix:
   allow_failures:
