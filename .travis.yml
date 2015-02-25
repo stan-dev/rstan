@@ -13,7 +13,7 @@ compiler:
 env:
   global:
     - BOOTSTRAP_LATEX="1"
-    - STAN_BRANCH="origin/for_rstan"
+    - STAN_BRANCH="origin/master"
   matrix: 
     - CXX_OLEVEL=0 RCPP_VER=cran
     - CXX_OLEVEL=3 RCPP_VER=cran
@@ -32,6 +32,9 @@ before_install:
   - more wait4.sh
   - chmod 755 ./travis-tool.sh wait4.sh
   - ./travis-tool.sh bootstrap
+  - /bin/dd if=/dev/zero of=~/swap.1 bs=1M count=2048
+  - /sbin/mkswap ~/swap.1
+  - /sbin/swapon ~/swap.1
 
     
 install:
