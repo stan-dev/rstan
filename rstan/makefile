@@ -113,8 +113,8 @@ STANSRC := $(STAN_SUBMODULE)/src
 GTEST_LIB := tests/cpp/gtest.o
 
 LIBPTHREAD = 
-ifeq ($(OS), Linux)
-  LIBPTHREAD += ' -lpthread '
+ifeq ($(OS), linux)
+  LIBPTHREAD += -lpthread
 endif
 
 CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
