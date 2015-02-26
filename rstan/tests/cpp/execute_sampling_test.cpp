@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include <RInside.h>
+#include <stan/model/model_header.hpp>
 #include <rstan/stan_fit.hpp>  
-#include "blocker.cpp"
+#include "blocker.hpp"
 #include <sstream>
 #include <fstream>
 #include <boost/algorithm/string.hpp>

@@ -33,12 +33,6 @@ NOTBUILD ?= FALSE
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
 
-STANLIB := rstan/inst/include/stanlib
-STANSRC := rstan/inst/include/stansrc
-EXAMPLE_MODELS := rstan/inst/ex_models
-TMP_STANLIB := tmpstanlib#
-
-BCP = $(strip $(shell $(WH) bcp))
 GIT = $(strip $(shell $(WH) git))
 
 # The default target of this makefile 
@@ -55,8 +49,11 @@ help:
 	@echo ' check: use R CMD check on rstan package'
 	@echo ' example_csv: create CSV files included in the package for examples'
 	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, RcppEigen, BH, and RUnit'
+	@echo ' test-R: run tests not packaged in rstan for package rstan'
 	@echo ' test-cpp: to compile c++ code directly (for dev)'
 	@echo '--------------------------------------------------------------------------------'
+
+.PHONY: build check install clean clean-all install_pre_rpkg test-R example_csv
 
 install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
@@ -68,9 +65,8 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 endif
 ifeq ($(NOTBUILD),FALSE)
-	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
+	$(R) CMD build rstan --md5  $(BUILD_OPTS)    --no-build-vignettes --no-manual
 endif
-
 
 example_csv : 
 ifneq ($(OS), win)
@@ -82,15 +78,13 @@ check: $(STANPKG)
 	$(R) CMD check --as-cran $(STANPKG) 
 
 install: $(STANPKG) 
-ifeq ($(OS), win)
-	$(R) CMD INSTALL --merge-multiarch $(STANPKG) 
-else
-#       $(R) CMD INSTALL --no-multiarch $(STANPKG) 
 	$(R) CMD INSTALL $(STANPKG)
-endif
 
 uninstall:
 	$(R) CMD REMOVE rstan
+
+test-R:
+	cd tests; R -q -f runRunitTests.R 
 
 clean: 
 	rm -f $(STANPKG) 
@@ -109,10 +103,13 @@ clean-all: clean
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all install_pre_rpkg
-
 ##
 # C++ tests of rstan
+
+STAN_SUBMODULE := ../StanHeaders/inst/include/upstream/
+
+STANLIB := $(STAN_SUBMODULE)/lib
+STANSRC := $(STAN_SUBMODULE)/src
 GTEST_LIB := tests/cpp/gtest.o
 
 CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
@@ -180,7 +177,3 @@ ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
   -include $(patsubst %$(EXE),%.d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
 endif
 
-
-.PHONY: test-R
-test-R:
-	cd tests; R -q -f runRunitTests.R 
