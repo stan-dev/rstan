@@ -12,7 +12,7 @@ compiler:
 env:
   global:
     - BOOTSTRAP_LATEX="1"
-    - STAN_BRANCH="origin/master"
+    - STAN_BRANCH="master"
   matrix: 
     - CXX_OLEVEL=2 RCPP_VER=cran
 
