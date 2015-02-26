@@ -49,6 +49,7 @@ help:
 	@echo ' check: use R CMD check on rstan package'
 	@echo ' example_csv: create CSV files included in the package for examples'
 	@echo ' install_pre_rpkg: to install R packages that rstan depends on'
+	@echo ' test-R: run tests not packaged in rstan for package rstan'
 	@echo ' test-cpp: to compile c++ code directly (for dev)'
 	@echo '--------------------------------------------------------------------------------'
 
@@ -76,12 +77,7 @@ check: $(STANPKG)
 	$(R) CMD check --as-cran $(STANPKG) 
 
 install: $(STANPKG) 
-ifeq ($(OS), win)
-	$(R) CMD INSTALL --merge-multiarch $(STANPKG) 
-else
-#       $(R) CMD INSTALL --no-multiarch $(STANPKG) 
 	$(R) CMD INSTALL $(STANPKG)
-endif
 
 uninstall:
 	$(R) CMD REMOVE rstan
@@ -102,7 +98,7 @@ clean-all: clean
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all install_pre_rpkg
+.PHONY: build check install clean clean-all install_pre_rpkg example_csv
 
 ##
 # C++ tests of rstan
