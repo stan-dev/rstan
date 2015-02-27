@@ -5,21 +5,18 @@ cache:
     - $HOME/.ccache
     - $HOME/.m2
 
-language: cpp
+language: r
+pandoc: false
 
 os:
   - linux
   - osx
 
-compiler:
-  - clang
-  
 env:
   global:
-    - BOOTSTRAP_LATEX="1"
-    - STAN_BRANCH="master"
+    - STAN_BRANCH=master
   matrix: 
-    - CXX_OLEVEL=2 RCPP_VER=cran
+    - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
 matrix:
   allow_failures:
@@ -28,19 +25,14 @@ matrix:
     - compiler: gcc
 
 before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
   - echo -e "#\x21/bin/sh\n\$1 &\nPROCESS=\"\$!\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`" > wait4.sh
   - echo -e "  if [ -z \"\${RESULT}\" ]; then\n    wait \${PROCESS}; exit \$?\n  else\n    echo \"-\"; sleep 10\n  fi\ndone\nexit \$?" >> wait4.sh
   - more wait4.sh
-  - chmod 755 ./travis-tool.sh wait4.sh
-
-    
-install:
-  - ./travis-tool.sh bootstrap
-  - ./travis-tool.sh install_aptget r-cran-runit texinfo
-  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen RInside
+  - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
+  - chmod 755 wait4.sh
 
 before_script: 
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit'), repos='http://cran.rstudio.com')"
   - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
   - git submodule update --remote
   - R CMD build StanHeaders/
@@ -67,6 +59,3 @@ script:
   - cd rstan 
   - R -q -e "library(Rcpp); sessionInfo()"
   - ../wait4.sh "make install" && cd tests && R -q -f runRunitTests.R
-
-after_script:
-  - ccache -s 
