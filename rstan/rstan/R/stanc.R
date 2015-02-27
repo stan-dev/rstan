@@ -73,3 +73,8 @@ stan_version <- function() {
   .Call('CPP_stan_version')
 }
 
+rstudio_stanc <- function(filename) {
+  output <- stanc(filename)
+  message(filename, " is syntactically correct.")
+  return(invisible(output))
+}
