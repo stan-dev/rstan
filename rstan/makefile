@@ -65,10 +65,10 @@ else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
 endif
 ifeq ($(NOTBUILD),FALSE)
-	$(R) CMD build rstan --md5  $(BUILD_OPTS)    --no-build-vignettes --no-manual
+	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
 endif
 
-example_csv : 
+example_csv: 
 ifneq ($(OS), win)
 	@if test -f "example/rstan_doc_ex_1.csv"; then cp example/rstan_doc_ex_*.csv ./rstan/inst/misc && echo "Copy done.";  \
 	else echo "Not found example/rstan_doc_ex_1.csv, run example/examplemodel.R first."; fi
@@ -91,7 +91,6 @@ clean:
 	rm -f rstan/R/git_*head.R
 	rm -rf $(shell find tests/cpp -type f -name '*.d')
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
-	rm -rf $(STANLIB) $(STANSRC) $(EXAMPLE_MODELS) # remove files created <= 2.6.0
 
 clean-all: clean
 	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
@@ -135,9 +134,6 @@ RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --sla
 ## include headers and libraries for RInside embedding classes
 RINSIDEINCL := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::CxxFlags()')
 RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::LdFlags()')
-
-print:
-	echo $(RINSIDEINCL)
 
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)
