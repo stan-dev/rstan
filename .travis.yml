@@ -1,20 +1,22 @@
-cache: apt
+cache: 
+  apt: true
+  ccache: true
+  directories:
+    - $HOME/.ccache
+    - $HOME/.m2
 
-language: cpp
+language: r
+pandoc: false
 
 os:
   - linux
   - osx
 
-compiler:
-  - clang
-  
 env:
   global:
-    - BOOTSTRAP_LATEX="1"
-    - STAN_BRANCH="origin/master"
+    - STAN_BRANCH=master
   matrix: 
-    - CXX_OLEVEL=2 RCPP_VER=cran
+    - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
 matrix:
   allow_failures:
@@ -23,20 +25,14 @@ matrix:
     - compiler: gcc
 
 before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - echo -e "#\x21/bin/sh\nPROCESS=\"\$1\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`\n " > wait4.sh
-  - echo -e "  if [ \"\${RESULT:-null}\" = null ]; then\n    break\n  else\n    echo \"-\"\n    sleep 10\n  fi\ndone" >> wait4.sh
+  - echo -e "#\x21/bin/sh\n\$1 &\nPROCESS=\"\$!\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`" > wait4.sh
+  - echo -e "  if [ -z \"\${RESULT}\" ]; then\n    wait \${PROCESS}; exit \$?\n  else\n    echo \"-\"; sleep 10\n  fi\ndone\nexit \$?" >> wait4.sh
   - more wait4.sh
-  - chmod 755 ./travis-tool.sh wait4.sh
-  - ./travis-tool.sh bootstrap
-
-    
-install:
-  - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
-  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen RInside
-  - ccache --max-size 8G
+  - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
+  - chmod 755 wait4.sh
 
 before_script: 
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit'), repos='http://cran.rstudio.com')"
   - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
   - git submodule update --remote
   - R CMD build StanHeaders/
@@ -49,8 +45,7 @@ before_script:
   - sed -i "s/g++/${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
   - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
-  - mkdir -p ~/.R/
-  - cat ./rstan/R_Makevars > ~/.R/Makevars
+  - mkdir -p ~/.R/; cat ./rstan/R_Makevars > ~/.R/Makevars
   - more ~/.R/Makevars
 
 notifications:
@@ -63,7 +58,4 @@ notifications:
 script:
   - cd rstan 
   - R -q -e "library(Rcpp); sessionInfo()"
-  - (make install & ../wait4.sh $!) && cd tests && R -q -f runRunitTests.R
-
-after_script:
-  - ccache -s 
+  - ../wait4.sh "make install" && cd tests && R -q -f runRunitTests.R
