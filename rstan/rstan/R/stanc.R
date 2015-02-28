@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FALSE, ...) {
+stanc_helper <- function(file, model_code = '', model_name = "anon_model", verbose = FALSE, ...) {
   # Call stanc, written in C++ 
   # Args:
   # ..., to pass argument obfuscate_model_name 
@@ -27,20 +27,25 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   if (missing(model_name) || is.null(model_name)) 
     model_name <- attr(model_code, "model_name2") 
   cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
-  SUCCESS_RC <- 0 
-  EXCEPTION_RC <- -1
-  PARSE_FAIL_RC <- -2 
   
   dotlst <- list(...) 
   omn_con <- "obfuscate_model_name" %in% names(dotlst) 
-
+  
   obfuscate_name <- if (!omn_con) TRUE else as.logical(dotlst[["obfuscate_model_name"]]) 
   if (is.na(obfuscate_name))  obfuscate_name <- FALSE
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_name) 
   r <- .Call("CPP_stanc261", model_code, model_cppname)
+  return(r)  
+}
+  
+stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FALSE, ...) {
+  SUCCESS_RC <- 0 
+  EXCEPTION_RC <- -1
+  PARSE_FAIL_RC <- -2
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
+  r <- stanc_helper(file, model_code, model_name, verbose, ...)
   r$model_name <- model_name  
   r$model_code <- model_code 
   if (is.null(r)) {
@@ -74,7 +79,18 @@ stan_version <- function() {
 }
 
 rstudio_stanc <- function(filename) {
-  output <- stanc(filename)
-  message(filename, " is syntactically correct.")
-  return(invisible(output))
+  output <- stanc_helper(filename)
+  if(output$status == 0) {
+    message(filename, " is syntactically correct.")
+    return(invisible(output))
+  }
+  msg <- scan(text = output$msg, what = character(), sep = "\n", quiet = TRUE)
+  line <- grep("^ERROR at line [[:digit:]]+$", msg, value = TRUE)
+  line <- strsplit(line, " ", fixed = TRUE)[[1]]
+  line <- as.integer(line[length(line)])
+  column <- nchar(grep("^[[:space:]]*\\^$", msg, value = TRUE))
+  message <- grep("SYNTAX ERROR, MESSAGE(S) FROM PARSER:", msg, fixed = TRUE)
+  message <- msg[message + 1L]
+  return(list(type = "error", file = filename, 
+              line = line, column = column, message = message))
 }
