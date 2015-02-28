@@ -23,10 +23,15 @@ testify <- function(stanmodel) {
   else if(is.list(stanmodel)) {
     stanmodel <- stanmodel$cppcode
   }
-  else {
-    stopifnot(is(stanmodel, "stanmodel"))
+  else if(is(stanmodel, "stanmodel")) {
     stanmodel <- get_cppcode(stanmodel)
-  }  
+  }
+  else if(is.character(stanmodel)) {
+    if(length(stanmodel) == 1) stanmodel <- stanc(file = stanmodel)$cppcode
+    else stanmodel <- stanc(model_code = stanmodel)$cppcode
+  }
+  else stop("'stanmodel' is not a valid object")
+  
   if(is.null(stanmodel)) {
     warning("could not obtain C++ code for this 'stanmodel'")
     return(invisible(NULL))
@@ -119,12 +124,13 @@ testify <- function(stanmodel) {
                 "\\1();", lines)
                   
   # replace more templating with doubles
-  lines <- gsub("const T[0-9]+__&", "double&", lines)
+  lines <- gsub("const T[0-9]+__&", "const double&", lines)
   lines <- gsub("T_lp__&", "double&", lines)
   lines <- gsub("T_lp_accum__&", "double&", lines)
   lines <- gsub("^typename.*$", "double", lines)
   lines <- grep("^template", lines, invert = TRUE, value = TRUE)
-
+  lines <- gsub("<T[0-9]+__>", "<double>", lines)
+  
   # deal with (lack of) accumulators
   lines <- gsub(", double& lp_accum__", "", lines, fixed = TRUE)
   lines <- gsub("lp_accum__.add", "lp__ += ", lines, fixed = TRUE)
@@ -139,6 +145,6 @@ testify <- function(stanmodel) {
              lines)
   
   # try to compile
-  compiled <- sourceCpp(code = paste(lines, collapse = "\n"))
+  compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
   return(invisible(NULL))
 }
