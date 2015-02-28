@@ -4,6 +4,6 @@
 #include <string>
 #include <RInside.h>
 
-TEST(a,b) {
+TEST(stan_fit,b) {
   RInside R;
 }

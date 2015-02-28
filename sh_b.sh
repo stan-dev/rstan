@@ -1,9 +1,10 @@
-#!/bin/bash 
+#!/bin/sh 
 
 STAN_REPO_BRANCH=develop
 grepstanbranch=`git ls-remote --heads https://github.com/stan-dev/stan.git | grep "/${STAN_REPO_BRANCH}"`
 if [ -z "$grepstanbranch" ]; then
-    STAN_REPO_BRANCH=master
+    echo "stan repo does not have {STAN_REPO_BRANCH}"
+    exit 20
 fi
 
 git config -f .gitmodules submodule.stan.branch ${STAN_REPO_BRANCH}
@@ -20,5 +21,8 @@ if [ -z "$lookforverfile" ]; then
     echo "stan/version.hpp is not found in StanHeaders pkg"
     exit 2
 fi
+
+git checkout .gitmodules
+# git submodule deinit -f .
 
 R CMD INSTALL ${stanheadtargz}
