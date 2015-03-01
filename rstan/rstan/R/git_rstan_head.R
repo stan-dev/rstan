@@ -14,13 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-.onLoad <- function(libname, pkgname) { }
 
-.onAttach <- function(...) {
-  rstanLib <- dirname(system.file(package = "rstan"))
-  pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
-  builddate <- gsub(';.*$', '', pkgdesc$Packaged)
-  gitrev <- substring(git_head(), 0, 12)
-  packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", packaged: ", builddate, ", GitRev: ", gitrev, ")", sep = ""))
-} 
-
+git_head <- function() "57643021a05d101485c55f7b331ea59d91a3cd75"
+git_head <- function() "04cfa06a318f7947c8610d2a857c9cb64c16b8fe"
+git_head <- function() "04cfa06a318f7947c8610d2a857c9cb64c16b8fe"

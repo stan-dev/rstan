@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 ###  deal with the optimization level for c++ compilation 
 
 get_makefile_txt <- function() { 
@@ -164,8 +181,8 @@ set_makefile_flags <- function(flags) {
 rm_last_makefile <- function(force = TRUE) {
   # remove the file given by last_makefile()
   # return: 
-  #  ‘0’ for success, ‘1’ for failure, invisibly. 
-  #  '-1' file not exists 
+  #  0 for success, 1 for failure, invisibly. 
+  #  -1 file does not exist
   lmf <- last_makefile() 
   msgs <- c(paste(lmf, " does not exist", sep = ''), 
             paste("removed file ", lmf, sep = ''), 

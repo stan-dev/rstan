@@ -28,7 +28,6 @@ R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
 BUILD_OPTS ?= 
-NOTBUILD ?= FALSE
 
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
@@ -48,7 +47,7 @@ help:
 	@echo ' clean: to remove the gzip package file'
 	@echo ' check: use R CMD check on rstan package'
 	@echo ' example_csv: create CSV files included in the package for examples'
-	@echo ' install_pre_rpkg: to install R packages of Rcpp, inline, RcppEigen, BH, and RUnit'
+	@echo ' install_pre_rpkg: to install R packages that rstan depends on'
 	@echo ' test-R: run tests not packaged in rstan for package rstan'
 	@echo ' test-cpp: to compile c++ code directly (for dev)'
 	@echo '--------------------------------------------------------------------------------'
@@ -56,17 +55,15 @@ help:
 .PHONY: build check install clean clean-all install_pre_rpkg test-R example_csv
 
 install_pre_rpkg:
-	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
+	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH', 'StanHeaders', 'RInside')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
 
 build $(STANPKG): ./rstan/DESCRIPTION
 ifeq ($(GIT),)
-	@echo "git_head <- function() \"unknown\"" > rstan/R/git_rstan_head.R
+	@echo "git_head <- function() \"unknown\"" >> rstan/R/git_rstan_head.R
 else
-	@echo "git_head <- function() \"`git rev-parse HEAD`\"" > rstan/R/git_rstan_head.R
+	@echo "git_head <- function() \"`git rev-parse HEAD`\"" >> rstan/R/git_rstan_head.R
 endif
-ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
-endif
 
 example_csv: 
 ifneq ($(OS), win)
@@ -93,14 +90,14 @@ clean:
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
 
 clean-all: clean
-	rm -f $(STANPKG); rm -rf $(TMP_STANLIB); rm -f bcp.log 
-	rm -rf rstan/R/git_*stan_head.R 
+	rm -f $(shell find . -name 'rstan_*.tar.gz')
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
 	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
 
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
+
 
 ##
 # C++ tests of rstan
