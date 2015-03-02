@@ -40,7 +40,7 @@ Export User-Defined Stan Functions to \R for Testing
   \code{lp__} argument will be added to the \code{\link{formals}} 
   on the R side that defaults to zero. A \code{\link{double}} precision 
   scalar may be  passed to this argument when the function is called from R. 
-  Such a user-defined Stan function can terminate with \code{return lp__;} or 
+  Such a user-defined Stan function can terminate with \code{return get_lp();} or 
   can execute \code{print(lp__);} to verify that the calculation is correct.
 }
 \value{
@@ -51,6 +51,24 @@ Export User-Defined Stan Functions to \R for Testing
   \code{\link[Rcpp]{sourceCpp}}
 }
 \examples{
-example(read_stan_csv)
-testify(fit) # correct useage but throws warning because no C++ code
+  # You could use a function like this to calculate the log-likelihood
+  # for an observation over the posterior distribution to then use as
+  # an ingredient to the calculation of the WAIC
+  mc <- 
+  '
+  functions {
+    vector logLik(int y, real x, vector beta) {
+      vector[rows(beta)] logLik;
+      for (i in 1:rows(beta)) {
+        logLik[i] <- poisson_log_log(y, x * beta[i]);
+      }
+      return logLik;
+    }
+  }
+  model {}
+  '
+  cppcode <- stanc(model_code = mc, model_name = "Demonstration")
+  \dontrun{
+  testify(cppcode)
+  }
 }

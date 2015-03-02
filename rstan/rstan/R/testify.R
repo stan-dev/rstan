@@ -82,6 +82,11 @@ testify <- function(stanmodel) {
       lines <- append(lines, c("static boost::ecuyer1988 base_rng__(seed);", 
                                "std::ostream* pstream__ = &Rcpp::Rcout;"), i)
     }
+    else if(grepl("_lp", lines[i], fixed = TRUE)) {
+      lines[i] <- gsub(", T_lp_accum__\\&.*\\{$", ") {", lines[i])
+      lines <- append(lines, c("stan::math::accumulator<double> lp_accum__;",
+                               "std::ostream* pstream__ = &Rcpp::Rcout;"), i)
+    }
     else {
       lines[i] <- gsub(", std::ostream* pstream__) {", ") {", lines[i], fixed = TRUE)
       lines <- append(lines, "std::ostream* pstream__ = &Rcpp::Rcout;", i)
@@ -126,15 +131,14 @@ testify <- function(stanmodel) {
   # replace more templating with doubles
   lines <- gsub("const T[0-9]+__&", "const double&", lines)
   lines <- gsub("T_lp__&", "double&", lines)
-  lines <- gsub("T_lp_accum__&", "double&", lines)
   lines <- gsub("^typename.*$", "double", lines)
   lines <- grep("^template", lines, invert = TRUE, value = TRUE)
   lines <- gsub("<T[0-9]+__>", "<double>", lines)
   
-  # deal with (lack of) accumulators
-  lines <- gsub(", double& lp_accum__", "", lines, fixed = TRUE)
-  lines <- gsub("lp_accum__.add", "lp__ += ", lines, fixed = TRUE)
+  # deal with accumulators
+  lines <- gsub(", T_lp_accum__& lp_accum__)", ")", lines, fixed = TRUE)
   lines <- gsub(", lp_accum__", "", lines, fixed = TRUE)
+  lines <- gsub("get_lp(lp__)", "get_lp(lp__, lp_accum__)", lines, fixed = TRUE)
   
   # make propto__ false to not skip anything that is double
   lines <- gsub("const static bool propto__ = true;",
