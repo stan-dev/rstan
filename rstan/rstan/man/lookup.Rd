@@ -7,13 +7,19 @@ Look up the Stan function that corresponds to a \R function.
   This function helps to map between R functions and Stan functions.
 }
 \usage{
-  lookup(FUN) 
+  lookup(FUN, ReturnType = character()) 
 } 
 
 \arguments{
   \item{FUN}{A character string naming a \R function or a \R function for
     which the (near) equivalent Stan function is sought. If \code{"~"},
     then all Stan sampling statements are returned.}
+  \item{ReturnType}{A character string of positive length naming a valid
+    return type for a Stan function: \code{int}, \code{int[]}, \code{matrix},
+    \code{real}, \code{real[,]}, \code{real[]}, \code{row_vector}, 
+    \code{T[]}, \code{vector}, or \code{void}. If \code{"ANY"} is passed,
+    then the entire \code{\link{data.frame}} is returned and can be 
+    inspected with the \code{\link{View}} function, for example.}
 }
 
 \value{
@@ -34,7 +40,7 @@ Look up the Stan function that corresponds to a \R function.
     \item \code{Page} Integer indicating the page of the Stan reference manual where  
                       that Stan sampling statement is defined. 
   }
-  If \code{FUN} does not match with any Stan function, a character string indicating so is returned.
+  If there are no matching Stan functions, a character string indicating so is returned.
 }
 
 \references{

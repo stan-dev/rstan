@@ -15,11 +15,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-lookup <- function(FUN) {
+lookup <- function(FUN, ReturnType = character()) {
+  if(length(ReturnType) > 0) {
+    if(ReturnType == "ANY") return(rosetta[,-1])
+    if(ReturnType %in% rosetta$ReturnType) {
+      return(rosetta[rosetta$ReturnType == ReturnType,-1,drop=FALSE])
+    }
+    else return(paste("no matching Stan functions; ReturnType must be 'ANY' or one of:",
+                      paste(sort(unique(rosetta$ReturnType)), collapse = ",")))
+  }
   if(is.function(FUN)) FUN <- deparse(substitute(FUN))
   if(!is.character(FUN)) stop("'FUN' must be a character string for a function")
   if(length(FUN) != 1) stop("'FUN' must be of length one")
   
+  if(!exists(FUN)) stop(paste("there is no R function by the name of", FUN))
+  if(FUN == "nrow") FUN <- "NROW"
+  if(FUN == "ncol") FUN <- "NCOL"
   if(FUN == "~") {
     statements <- paste(rosetta$StanFunction[rosetta$Arguments == "~"], "log", sep = "_")
     rosetta <- rosetta[rosetta$StanFunction %in% statements & rosetta$Arguments != "~",]
@@ -35,7 +46,9 @@ lookup <- function(FUN) {
     return(rosetta)
   }
   
-  matches <- as.logical(pmatch(rosetta$RFunction, FUN, nomatch = 0L, duplicates.ok = TRUE))
-  if(any(matches)) return(rosetta[matches,-1])
-  else return("no matching Stan functions")  
+  matches <- as.logical(charmatch(rosetta$RFunction, FUN, nomatch = 0L))
+  if(any(matches)) return(rosetta[matches,-1,drop=FALSE])
+  matches <- grepl(FUN, rosetta$StanFunction)
+  if(any(matches)) return(rosetta[matches,-1,drop=FALSE])
+  else return("no matching Stan functions")
 }
