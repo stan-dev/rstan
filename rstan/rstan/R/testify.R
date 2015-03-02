@@ -79,7 +79,7 @@ testify <- function(stanmodel) {
     # hard-code former arguments that cannot be passed from R
     if(grepl("_rng", lines[i], fixed = TRUE)) {
       lines[i] <- gsub("RNG\\&.*\\{$", "const int& seed = 0) {", lines[i])
-      lines <- append(lines, c("boost::ecuyer1988 base_rng__(seed);", 
+      lines <- append(lines, c("static boost::ecuyer1988 base_rng__(seed);", 
                                "std::ostream* pstream__ = &Rcpp::Rcout;"), i)
     }
     else {
@@ -136,6 +136,10 @@ testify <- function(stanmodel) {
   lines <- gsub("lp_accum__.add", "lp__ += ", lines, fixed = TRUE)
   lines <- gsub(", lp_accum__", "", lines, fixed = TRUE)
   
+  # make propto__ false to not skip anything that is double
+  lines <- gsub("const static bool propto__ = true;",
+                "const static bool propto__ = false;", lines, fixed = TRUE)
+  
   # add dependencies
   lines <- c("// [[Rcpp::depends(StanHeaders)]]", 
              "// [[Rcpp::depends(BH)]]",
@@ -146,5 +150,11 @@ testify <- function(stanmodel) {
   
   # try to compile
   compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
+  for(x in compiled$functions) {
+    if(!grepl("_lp$", x)) next 
+    fun <- get(x, envir = .GlobalEnv)
+    formals(fun)$lp__ <- 0.0
+    assign(x, fun, envir = .GlobalEnv)
+  }
   return(invisible(NULL))
 }
