@@ -56,5 +56,5 @@ Look up the Stan function that corresponds to a \R function.
 \examples{
 lookup(dnorm)
 nrow(lookup("~"))
-lookup("foo")
+try(lookup("foo")) # fails
 }
