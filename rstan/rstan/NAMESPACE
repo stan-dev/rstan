@@ -19,6 +19,7 @@ export(
   monitor,
   lookup,
   testify,
+  stan_demo,
   rstan_options 
 # get_rstan.options
 )
