@@ -474,8 +474,8 @@ rayleigh_cdf;(real y, real sigma);real;362
 rayleigh_log;(reals y, reals sigma);real;362
 rayleigh;~;real;362
 rayleigh_rng;(real sigma);real;362
-rep_array;(T x, int k, int m, int n);];306
-rep_array;(T x, int m, int n);];306
+rep_array;(T x, int k, int m, int n);T[];306
+rep_array;(T x, int m, int n);T[];306
 rep_array;(T x, int n);T[];306
 rep_matrix;(real x, int m, int n);matrix;319
 rep_matrix;(row_vector rv, int m);matrix;319
