@@ -28,7 +28,6 @@ R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
 BUILD_OPTS ?= 
-NOTBUILD ?= FALSE
 
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
 STANPKG := rstan_$(RSTANVER).tar.gz 
@@ -53,6 +52,8 @@ help:
 	@echo ' test-cpp: to compile c++ code directly (for dev)'
 	@echo '--------------------------------------------------------------------------------'
 
+.PHONY: build check install clean clean-all install_pre_rpkg test-R example_csv
+
 install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH', 'StanHeaders', 'RInside')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
 
@@ -62,12 +63,9 @@ ifeq ($(GIT),)
 else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" >> rstan/R/git_rstan_head.R
 endif
-ifeq ($(NOTBUILD),FALSE)
 	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
-endif
 
-
-example_csv : 
+example_csv: 
 ifneq ($(OS), win)
 	@if test -f "example/rstan_doc_ex_1.csv"; then cp example/rstan_doc_ex_*.csv ./rstan/inst/misc && echo "Copy done.";  \
 	else echo "Not found example/rstan_doc_ex_1.csv, run example/examplemodel.R first."; fi
@@ -82,6 +80,9 @@ install: $(STANPKG)
 uninstall:
 	$(R) CMD REMOVE rstan
 
+test-R:
+	cd tests; R -q -f runRunitTests.R 
+
 clean: 
 	rm -f $(STANPKG) 
 	rm -f rstan/R/git_*head.R
@@ -89,8 +90,7 @@ clean:
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
 
 clean-all: clean
-	rm -f $(STANPKG)
-	rm -rf rstan/R/git_*stan_head.R 
+	rm -f $(shell find . -name 'rstan_*.tar.gz')
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
 	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
@@ -98,11 +98,20 @@ clean-all: clean
 # buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
-.PHONY: build check install clean clean-all install_pre_rpkg example_csv
 
 ##
 # C++ tests of rstan
+
+STAN_SUBMODULE := ../StanHeaders/inst/include/upstream/
+
+STANLIB := $(STAN_SUBMODULE)/lib
+STANSRC := $(STAN_SUBMODULE)/src
 GTEST_LIB := tests/cpp/gtest.o
+
+LIBPTHREAD = 
+ifeq ($(OS), linux)
+  LIBPTHREAD += -lpthread
+endif
 
 CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
@@ -123,15 +132,12 @@ RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --sla
 RINSIDEINCL := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::CxxFlags()')
 RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::LdFlags()')
 
-print:
-	echo $(RINSIDEINCL)
-
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += $(RCPPFLAGS) $(RCPPINCL) $(RINSIDEINCL) $(shell $(R_HOME)/bin/R CMD config CXXFLAGS) -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include -ftemplate-depth=256 -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 
-$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += $(RLDFLAGS) $(RCPPLIBS) $(RINSIDELIBS)
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += $(RLDFLAGS) $(RCPPLIBS) $(RINSIDELIBS) $(LIBPTHREAD)
 
 GTESTPATH = $(wildcard $(STANLIB)/gtest*)
 
@@ -169,7 +175,3 @@ ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
   -include $(patsubst %$(EXE),%.d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
 endif
 
-
-.PHONY: test-R
-test-R:
-	cd tests; R -q -f runRunitTests.R 
