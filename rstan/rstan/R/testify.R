@@ -130,7 +130,7 @@ testify <- function(stanmodel) {
                   
   # replace more templating with doubles
   lines <- gsub("const T[0-9]+__&", "const double&", lines)
-  lines <- gsub("T_lp__&", "double&", lines)
+  lines <- gsub("T_lp__& lp__", "double lp__ = 0.0", lines)
   lines <- gsub("^typename.*$", "double", lines)
   lines <- grep("^template", lines, invert = TRUE, value = TRUE)
   lines <- gsub("<T[0-9]+__>", "<double>", lines)
@@ -154,11 +154,11 @@ testify <- function(stanmodel) {
   
   # try to compile
   compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
-  for(x in compiled$functions) {
-    if(!grepl("_lp$", x)) next 
-    fun <- get(x, envir = .GlobalEnv)
-    formals(fun)$lp__ <- 0.0
-    assign(x, fun, envir = .GlobalEnv)
-  }
+#   for(x in compiled$functions) {
+#     if(!grepl("_lp$", x)) next 
+#     fun <- get(x, envir = .GlobalEnv)
+#     formals(fun)$lp__ <- 0.0
+#     assign(x, fun, envir = .GlobalEnv)
+#   }
   return(invisible(NULL))
 }
