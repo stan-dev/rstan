@@ -20,8 +20,7 @@
  * http://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
  *
  * But it seems not to work as it is supposed to be in that
- * even they are still working if not registered, which
- * is not understood.
+ * they are still working if not registered.
  */
 #include <R.h>
 #include <Rinternals.h>

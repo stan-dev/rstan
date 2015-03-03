@@ -15,4 +15,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-#include <stan/gm/grammars/expression07_grammar_inst.cpp>
+
+#include <stan/lang/grammars/whitespace_grammar_inst.cpp>
+

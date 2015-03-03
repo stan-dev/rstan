@@ -154,11 +154,5 @@ testify <- function(stanmodel) {
   
   # try to compile
   compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
-#   for(x in compiled$functions) {
-#     if(!grepl("_lp$", x)) next 
-#     fun <- get(x, envir = .GlobalEnv)
-#     formals(fun)$lp__ <- 0.0
-#     assign(x, fun, envir = .GlobalEnv)
-#   }
   return(invisible(NULL))
 }

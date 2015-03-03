@@ -79,7 +79,7 @@ model {
 "
 seed <- 123 # or any other integer 
 foo_data <- list(N = 2)
-foo <- stan(model_code = scode, data = foo_data, chains = 1, iter = 0)
+foo <- stan(model_code = scode, data = foo_data, chains = 1, iter = 1)
 f1 <- stan(fit = foo, data = foo_data, chains = 1, seed = seed, chain_id = 1) 
 f2 <- stan(fit = foo, data = foo_data, chains = 2, seed = seed, chain_id = 2:3) 
 f12 <- sflist2stanfit(list(f1, f2)) 

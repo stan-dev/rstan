@@ -19,7 +19,7 @@
 // #include <string>
 // #include <iostream>
 #include <stan/version.hpp>
-#include <stan/gm/compiler.hpp>
+#include <stan/lang/compiler.hpp>
 
 #include <exception>
 #include <iostream>
@@ -65,7 +65,7 @@ SEXP CPP_stanc261(SEXP model_stancode, SEXP model_name) {
   std::istringstream in(mcode_);
   try {
     bool valid_model
-      = stan::gm::compile(&rstan::io::rcerr,in,out,mname_);
+      = stan::lang::compile(&rstan::io::rcerr,in,out,mname_);
     if (!valid_model) {
       return Rcpp::List::create(Rcpp::Named("status") = PARSE_FAIL_RC);
 
