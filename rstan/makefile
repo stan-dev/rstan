@@ -58,6 +58,7 @@ install_pre_rpkg:
 	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH', 'StanHeaders', 'RInside')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
 
 build $(STANPKG): ./rstan/DESCRIPTION
+	@head -n 17 rstan/R/AllClass.R > rstan/R/git_rstan_head.R
 ifeq ($(GIT),)
 	@echo "git_head <- function() \"unknown\"" >> rstan/R/git_rstan_head.R
 else

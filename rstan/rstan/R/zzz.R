@@ -20,7 +20,8 @@
   rstanLib <- dirname(system.file(package = "rstan"))
   pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
   builddate <- gsub(';.*$', '', pkgdesc$Packaged)
-  gitrev <- substring(git_head(), 0, 12)
+  ghfun <- mget("git_head", envir = asNamespace('rstan'), ifnotfound = NA, mode = 'function')[[1]]
+  gitrev <- ifelse(is.na(ghfun), 'unknown', substring(git_head(), 0, 12))
   packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", packaged: ", builddate, ", GitRev: ", gitrev, ")", sep = ""))
 } 
 
