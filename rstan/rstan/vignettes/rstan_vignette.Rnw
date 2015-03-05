@@ -779,9 +779,8 @@ defined for the \code{stanfit} class to diagnose and analyze the samples.
 In this vignette, we have described the main functionality of RStan
 from a user's perspective. The help pages with the \pkg{rstan} package provide more details
 for all exposed \pkg{rstan} functions. The \Stan manual (\citealt{StanManual}) provides 
-many details and includes a variety of model examples, many of which are included in the
-suggested \pkg{rstanDemo} package that also provides the \code{stan\_demo} function to choose 
-and execute them.
+many details and includes a variety of model examples, many of which are can be executed
+via function \code{stan\_demo} in this package.
 
 \nocite{*} 
 \bibliography{rstan} 

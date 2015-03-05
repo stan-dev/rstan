@@ -1,3 +1,25 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+delete_stan_demo_folder <- function() {
+  MODELS_HOME <- system.file('include', 'example-models-master', package = 'rstan')
+  unlink(MODELS_HOME, recursive = TRUE) 
+}
+
 stan_demo <-
 function(model = character(0), 
          method = c("sampling", "optimizing"), ...) {
@@ -22,8 +44,10 @@ function(model = character(0),
                           "example-models-master.zip")
       }
       else FILE <- file.path(tempdir(), "example-models-master.zip")
-      request <- httr::GET("https://github.com/stan-dev/example-models/archive/master.zip")
-      writeBin(httr::content(request, type = "raw"), FILE)
+      if (!require(RCurl)) stop("cannot proceed without R package RCurl being installed")
+      writeBin(getBinaryURL("https://github.com/stan-dev/example-models/archive/master.zip",
+                            .opts = curlOptions(followlocation = TRUE)), 
+               FILE)
       unzip(FILE, exdir = dirname(FILE))
       MODELS_HOME <- file.path(dirname(FILE), "example-models-master")
     }
