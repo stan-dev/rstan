@@ -44,9 +44,10 @@ function(model = character(0),
                           "example-models-master.zip")
       }
       else FILE <- file.path(tempdir(), "example-models-master.zip")
-      if (!require(RCurl)) stop("cannot proceed without R package RCurl being installed")
-      writeBin(getBinaryURL("https://github.com/stan-dev/example-models/archive/master.zip",
-                            .opts = curlOptions(followlocation = TRUE)), 
+      if (!require(RCurl, quietly = TRUE))
+        stop("cannot proceed without R package RCurl being installed")
+      writeBin(RCurl::getBinaryURL("https://github.com/stan-dev/example-models/archive/master.zip",
+                                   .opts = RCurl::curlOptions(followlocation = TRUE)),
                FILE)
       unzip(FILE, exdir = dirname(FILE))
       MODELS_HOME <- file.path(dirname(FILE), "example-models-master")
