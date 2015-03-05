@@ -13,7 +13,8 @@
 
 \usage{
   %% extract(object, \dots)  
-  \S4method{extract}{stanfit}(object, pars, permuted = TRUE, inc_warmup = FALSE) 
+  \S4method{extract}{stanfit}(object, pars, permuted = TRUE, 
+                              inc_warmup = FALSE, include = TRUE) 
 } 
 
 \section{Methods}{
@@ -39,6 +40,9 @@
   \item{inc_warmup}{\code{TRUE} of \code{FALSE}. The argument matters
     only if \code{permuted} is \code{FALSE}. If \code{TRUE}, warmup
     draws are included; otherwise excluded.}
+  \item{include}{Logical scalar (\code{TRUE} by default) that if set to
+    \code{FALSE} implies that the named \code{pars} are interpreted as
+    the parameters to not extract from the \code{object}}
 }
 \value{
   When \code{permuted = TRUE}, this function returns a named list,  
@@ -77,8 +81,12 @@ alpha <- fit_ss$alpha
 beta <- fit_ss$beta 
 ## or extract alpha by just specifying pars = 'alpha' 
 alpha2 <- extract(fit, pars = 'alpha', permuted = TRUE)$alpha 
-
 print(identical(alpha, alpha2)) 
+
+## or extract alpha by excluding beta and lp__
+alpha3 <- extract(fit, pars = c('beta', 'lp__'), 
+                  permuted = TRUE, include = FALSE)$alpha
+print(identical(alpha, alpha3))
 
 ## get the samples for alpha[1,1] and beta[2] 
 alpha_11 <- alpha[, 1, 1] 

@@ -25,7 +25,7 @@ setMethod("show", "stanfit",
 
 print.stanfit <- function(x, pars = x@sim$pars_oi, 
                           probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
-                          digits_summary = 2, ...) { 
+                          digits_summary = 2, include = TRUE, ...) { 
   if (x@mode == 1L) { 
     cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
         "sampling is not conducted.\n", sep = '')
@@ -35,6 +35,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
     return(invisible(NULL)) 
   } 
 
+  if(!include) pars <- setdiff(x@sim$pars_oi, pars)
   s <- summary(x, pars, probs, ...)  
   if (is.null(s)) return(invisible(NULL))
   n_kept <- x@sim$n_save - x@sim$warmup2
@@ -363,7 +364,8 @@ setGeneric(name = "extract",
            def = function(object, ...) { standardGeneric("extract")}) 
 
 setMethod("extract", signature = "stanfit",
-          definition = function(object, pars, permuted = TRUE, inc_warmup = FALSE) {
+          definition = function(object, pars, permuted = TRUE, 
+                                inc_warmup = FALSE, include = TRUE) {
             # Extract the samples in different forms for different parameters. 
             #
             # Args:
@@ -373,6 +375,7 @@ setMethod("extract", signature = "stanfit",
             #     warming up. And all the chains are merged. 
             #   inc_warmup: if TRUE, warmup samples are kept; otherwise, 
             #     discarded. If permuted is TRUE, inc_warmup is ignored. 
+            #   include: if FALSE interpret pars as those to exclude
             #
             # Returns:
             #   If permuted is TRUE, return an array (matrix) of samples with each
@@ -389,6 +392,7 @@ setMethod("extract", signature = "stanfit",
               return(invisible(NULL)) 
             } 
 
+            if(!include) pars <- setdiff(object@sim$pars_oi, pars)
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
             pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
