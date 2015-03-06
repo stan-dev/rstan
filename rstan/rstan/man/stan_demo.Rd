@@ -1,6 +1,5 @@
 \name{stan_demo}
 \alias{stan_demo} 
-\alias{rstan-package}
 
 \title{Demonstrate examples included in Stan} 
 
