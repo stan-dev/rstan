@@ -1,5 +1,5 @@
 RStan, the R interface for Stan
-Copyright (c) 2011--2013, Stan Development Team.
+Copyright (c) 2011--2015, Stan Development Team.
 All rights reserved.
 
 
