@@ -23,7 +23,8 @@ stan_model <- function(file,
                        boost_lib = NULL, 
                        eigen_lib = NULL, 
                        save_dso = TRUE,
-                       verbose = FALSE, ...) { 
+                       verbose = FALSE, 
+                       auto_write = rstan_options("auto_write"), ...) { 
 
   # Construct a stan model from stan code 
   # 
@@ -40,8 +41,24 @@ stan_model <- function(file,
     if (is.null(attr(model_code, "model_name2")))
       attr(model_code, "model_name2") <- model_name2
     if (missing(model_name)) model_name <- NULL 
-    stanc_ret <- stanc(file = file, model_code = model_code, 
-                       model_name = model_name, verbose, ...)
+    
+    if(missing(file)) {
+      tf <- tempfile()
+      writeLines(model_code, con = tf)
+      file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
+      if(!file.exists(file)) file.rename(from = tf, to = file)
+    }
+    mtime <- file.info(file)$mtime
+    file.rda <- gsub("stan$", "rda", file)
+    if(!file.exists(file.rda) ||
+       file.info(file.rda)$mtime <  mtime ||
+       mtime < as.POSIXct(packageDescription("rstan")$Date) ||
+       !is_sm_valid(obj <- readRDS(file.rda))) {
+         
+          stanc_ret <- stanc(file = file, model_code = model_code, 
+                             model_name = model_name, verbose, ...)
+    }
+    else return(invisible(obj))
   }
   if (!is.list(stanc_ret)) {
     stop("stanc_ret needs to be the returned object from stanc.")
@@ -76,7 +93,7 @@ stan_model <- function(file,
 
   
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
-                         includes = inc, plugin = "rstan", save_dso = save_dso,
+                         includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
                          verbose = verbose) 
                
@@ -84,13 +101,22 @@ stan_model <- function(file,
              model_code = model_code, 
              dso = dso, # keep a reference to dso
              model_cpp = list(model_cppname = model_cppname, 
-                              model_cppcode = stanc_ret$cppcode)) 
+                              model_cppcode = stanc_ret$cppcode))
+  if(isTRUE(auto_write)) {
+    if(missing(file) || (file.access(dirname(file), mode = 2) != 0)) {
+      tf <- tempfile()
+      writeLines(model_code, con = tf)
+      file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
+      if(!file.exists(file)) file.rename(from = tf, to = file)
+    }
+    saveRDS(obj, file = gsub("stan$", "rda", file))
+  }
   invisible(obj) 
   ## We keep a reference to *dso* above to avoid dso to be 
   ## deleted by R's garbage collection. Note that if dso 
   ## is freed, we can lose the compiled shared object, which
   ## can cause segfault later. 
-} 
+}
 
 is_sm_valid <- function(sm) {
   # Test if a stan model (compiled object) is still valid. 

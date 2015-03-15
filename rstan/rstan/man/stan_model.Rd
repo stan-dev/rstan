@@ -16,7 +16,8 @@
   stan_model(file, model_name = "anon_model", 
              model_code = "", stanc_ret = NULL, 
              boost_lib = NULL, eigen_lib = NULL, 
-             save_dso = TRUE, verbose = FALSE, ...)
+             save_dso = TRUE, verbose = FALSE, 
+             auto_write = rstan_options("auto_write"), ...)
 }
 %- maybe also 'usage' for other objects documented here.
 
@@ -51,10 +52,23 @@
   \item{verbose}{\code{TRUE} or \code{FALSE}: indication of whether
     to report intermediate output to the console, 
     which might be helpful for debugging.}
+  \item{auto_write}{\code{TRUE} or \code{FALSE}: indication of whether to write the
+    object to the hard disk using \code{\link{saveRDS}}. By default, this argument
+    is \code{FALSE}, but we recommend to always avoid the default behavior by calling 
+    \code{rstan_options("auto_write" = TRUE)} in order to avoid unnecessary recompilations.
+    If \code{file} is supplied and its \code{\link{dirname}} is writable, then the object
+    will be written to that same directory, substituting a \code{.rda} extension for the 
+    \code{.stan} extension. Otherwise, the object will be written to the 
+    \code{\link{tempdir}}}.
   \item{\dots}{passed to \code{stanc}.}
 }
 
 \details{
+  If a previously compiled \code{stan_model} exists on the hard drive, its validity
+  is checked and then returned without recompiling. To avoid reading previously 
+  compiled \code{stan_model}s from the hard drive, supply the \code{stanc_ret}
+  argument rather than the \code{file} or \code{model_code} arguments.
+  
   More details of Stan, including the full user's guide and reference 
   manual can be found at \url{http://mc-stan.org/}. 
 
