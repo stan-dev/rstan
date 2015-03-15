@@ -481,7 +481,7 @@ namespace rstan {
       clock_t start = clock();
 
       std::stringstream prefix_stream;
-      prefix_stream << "\nChain " << args.get_chain_id() ", ";
+      prefix_stream << "\nChain " << args.get_chain_id() << ", ";
       std::string prefix = prefix_stream.str();
       std::string suffix = "";
       R_CheckUserInterrupt_Functor interruptCallback;
