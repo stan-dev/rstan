@@ -1,4 +1,21 @@
 # test some functionality of function stan()
+
+test_stan_fun_parallel <- function() {
+  code <- 'data { int N; } parameters { real y[N]; }  model {y ~ normal(0,1); }';
+  N <- 3
+  fit <- stan(model_code = code,
+              data = "N",
+              chains = 0,
+              cores = 2,
+              show_progress = FALSE)
+  checkTrue(fit@mode != 0)
+
+  fit2 <- stan(fit = fit, data = 'N', cores = 2,
+               chains = 4, show_progress = FALSE)
+  checkTrue(fit@mode == 0)
+  checkEquals(fit@chains, 4L)
+}
+
 test_stan_fun_args <- function() {
   csv_fname <- 'tsfa.csv'
   csv_fname2 <- 'tsfa2.csv'
