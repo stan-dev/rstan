@@ -45,6 +45,10 @@ rstan_options(...)
     \item \code{eigen_lib}: The path for the Eigen C++ library used
           to compile Stan models.  This option is valid 
          for the whole \R session if not changed again. 
+    \item \code{auto_write}: A logical scalar (defaulting to \code{FALSE}) that
+         controls whether a compiled instance of a \code{\link{stanmodel-class}}
+         is written to the hard disk in the same directory as the \code{.stan}
+         program.
   } 
 }
 \value{

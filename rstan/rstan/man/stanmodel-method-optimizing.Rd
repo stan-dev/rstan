@@ -15,7 +15,7 @@
   %% optimizing(object, \dots)  
   \S4method{optimizing}{stanmodel}(object, data = list(), 
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
-    check_data = TRUE, sample_file, 
+    check_data = TRUE, sample_file = NULL, 
     algorithm = c("LBFGS", "BFGS", "Newton"),
     verbose = FALSE, hessian = FALSE, as_vector = TRUE, \dots)   
 } 

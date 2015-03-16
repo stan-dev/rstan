@@ -23,7 +23,8 @@ stan_model <- function(file,
                        boost_lib = NULL, 
                        eigen_lib = NULL, 
                        save_dso = TRUE,
-                       verbose = FALSE, ...) { 
+                       verbose = FALSE, 
+                       auto_write = rstan_options("auto_write"), ...) { 
 
   # Construct a stan model from stan code 
   # 
@@ -40,8 +41,25 @@ stan_model <- function(file,
     if (is.null(attr(model_code, "model_name2")))
       attr(model_code, "model_name2") <- model_name2
     if (missing(model_name)) model_name <- NULL 
-    stanc_ret <- stanc(file = file, model_code = model_code, 
-                       model_name = model_name, verbose, ...)
+    
+    if(missing(file)) {
+      tf <- tempfile()
+      writeLines(model_code, con = tf)
+      file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
+      if(!file.exists(file)) file.rename(from = tf, to = file)
+    }
+    mtime <- file.info(file)$mtime
+    file.rda <- gsub("stan$", "rda", file)
+    if(mtime < as.POSIXct(packageDescription("rstan")$Date) ||
+       !file.exists(file.rda) ||
+       file.info(file.rda)$mtime <  mtime ||
+       !is(obj <- readRDS(file.rda), "stanmodel") ||
+       !is_sm_valid(obj)) {
+         
+          stanc_ret <- stanc(file = file, model_code = model_code, 
+                             model_name = model_name, verbose, ...)
+    }
+    else return(invisible(obj))
   }
   if (!is.list(stanc_ret)) {
     stop("stanc_ret needs to be the returned object from stanc.")
@@ -76,7 +94,7 @@ stan_model <- function(file,
 
   
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
-                         includes = inc, plugin = "rstan", save_dso = save_dso,
+                         includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
                          verbose = verbose) 
                
@@ -84,13 +102,22 @@ stan_model <- function(file,
              model_code = model_code, 
              dso = dso, # keep a reference to dso
              model_cpp = list(model_cppname = model_cppname, 
-                              model_cppcode = stanc_ret$cppcode)) 
+                              model_cppcode = stanc_ret$cppcode))
+  if(isTRUE(auto_write)) {
+    if(missing(file) || (file.access(dirname(file), mode = 2) != 0)) {
+      tf <- tempfile()
+      writeLines(model_code, con = tf)
+      file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
+      if(!file.exists(file)) file.rename(from = tf, to = file)
+    }
+    saveRDS(obj, file = gsub("stan$", "rda", file))
+  }
   invisible(obj) 
   ## We keep a reference to *dso* above to avoid dso to be 
   ## deleted by R's garbage collection. Note that if dso 
   ## is freed, we can lose the compiled shared object, which
   ## can cause segfault later. 
-} 
+}
 
 is_sm_valid <- function(sm) {
   # Test if a stan model (compiled object) is still valid. 
@@ -122,10 +149,13 @@ stan <- function(file, model_name = "anon_model",
                  seed = sample.int(.Machine$integer.max, 1), 
                  algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"),
                  control = NULL,
-                 sample_file, # the file to which the samples are written
-                 diagnostic_file, # the file to which diagnostics are written 
+                 sample_file = NULL, # the file to which the samples are written
+                 diagnostic_file = NULL, # the file to which diagnostics are written 
                  save_dso = TRUE,
-                 verbose = FALSE, ...,
+                 verbose = FALSE, 
+                 cores = getOption("mc.cores", 1L),
+                 open_progress = interactive() && !isatty(stdout()), 
+                 ...,
                  boost_lib = NULL, 
                  eigen_lib = NULL) {
   # Return a fitted model (stanfit object)  from a stan model, data, etc.  
@@ -150,16 +180,16 @@ stan <- function(file, model_name = "anon_model",
     if (missing(model_name)) model_name <- NULL 
     sm <- stan_model(file, model_name = model_name, model_code = model_code,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
-                     save_dso = save_dso, verbose = verbose, 
-                     ...)
+                     save_dso = save_dso, verbose = verbose, ...)
   }
 
-  if (missing(sample_file))  sample_file <- NA 
-  if (missing(diagnostic_file))  diagnostic_file <- NA 
+  if (is.null(sample_file))  sample_file <- NA 
+  if (is.null(diagnostic_file))  diagnostic_file <- NA 
 
   sampling(sm, data, pars, chains, iter, warmup, thin, seed, init, 
            check_data = TRUE, sample_file = sample_file, 
            diagnostic_file = diagnostic_file,
            verbose = verbose, algorithm = match.arg(algorithm), 
-           control = control, check_unknown_args = FALSE, ...)
+           control = control, check_unknown_args = FALSE, 
+           cores = cores, open_progress = open_progress, ...)
 } 

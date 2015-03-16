@@ -75,6 +75,8 @@ init_rstan_opt_env <- function(e) {
   ya_boost  <- system.file('include', 'boost_not_in_BH', package = 'rstan')
   assign('boost_lib2', ya_boost, e)
 
+  assign('auto_write', FALSE, e)
+  
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
 }

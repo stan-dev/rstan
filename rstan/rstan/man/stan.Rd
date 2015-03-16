@@ -12,9 +12,12 @@ stan(file, model_name = "anon_model", model_code = "",
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   algorithm = c("NUTS", "HMC", "Fixed_param"), %, "Metropolis"),
   control = NULL,
-  sample_file, diagnostic_file, 
+  sample_file = NULL, diagnostic_file = NULL, 
   save_dso = TRUE, 
-  verbose = FALSE, ...,
+  verbose = FALSE, 
+  cores = getOption("mc.cores", 1L),
+  open_progress = interactive() && !isatty(stdout()),
+  ...,
   boost_lib = NULL,
   eigen_lib = NULL)
 }
@@ -159,6 +162,17 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{error} (\code{double}, defaults to 1e-6)
     }
   }
+  
+  \item{cores}{Number of cores to use when executing the chains in parallel,
+    which defaults to 1 but we recommend setting the \code{mc.cores} option 
+    to be as many processors as the hardware and RAM allow (up to the 
+    number of chains).}
+    
+  \item{open_progress}{Logical scalar that only takes effect if 
+    \code{cores > 1} but is recommended to be \code{TRUE} in interactive
+    use so that the progress of the chains will be redirected to a file
+    that is automatically opened for inspection. For very short runs, the
+    user might prefer \code{FALSE}.}
   
   \item{\dots}{Other optional parameters: 
     \enumerate{

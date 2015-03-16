@@ -15,10 +15,10 @@
   \S4method{sampling}{stanmodel}(object, data = list(), pars = NA, 
     chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1,
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
-    check_data = TRUE, sample_file, diagnostic_file, verbose = FALSE, 
+    check_data = TRUE, sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
     algorithm = c("NUTS", "HMC", "Fixed_param"),%, "Metropolis")
-    control = NULL,
-    \dots)   
+    control = NULL, cores = getOption("mc.cores", 1L),
+    open_progress = interactive() && !isatty(stdout()), \dots)
 } 
 
 \section{Methods}{
@@ -105,7 +105,18 @@
     or Fixed_param.} 
 
   \item{control}{See the argument \code{control} of function
-    \code{\link{stan}}.} 
+    \code{\link{stan}}.}
+    
+  \item{cores}{Number of cores to use when executing the chains in parallel,
+    which defaults to 1 but we recommend setting the \code{mc.cores} option 
+    to be as many processors as the hardware and RAM allow (up to the 
+    number of chains).}
+    
+  \item{open_progress}{Logical scalar that only takes effect if 
+    \code{cores > 1} but is recommended to be \code{TRUE} in interactive
+    use so that the progress of the chains will be redirected to a file
+    that is automatically opened for inspection. For very short runs, the
+    user might prefer \code{FALSE}.}
 
   \item{\dots}{Additional arguments can be \code{chain_id}, \code{init_r}, 
     \code{test_grad}, \code{append_samples}, \code{refresh}. See 
