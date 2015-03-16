@@ -455,7 +455,7 @@ config_argss <- function(chains, iter, warmup, thin,
                        warmup = warmups[i], init = inits[[i]], 
                        algorithm = algorithm) 
     
-  if (!missing(sample_file) && !is.na(sample_file)) {
+  if (!is.null(sample_file) && !is.na(sample_file)) {
     sample_file <- writable_sample_file(sample_file) 
     if (chains == 1) 
         argss[[1]]$sample_file <- sample_file
@@ -465,7 +465,7 @@ config_argss <- function(chains, iter, warmup, thin,
     }
   }
 
-  if (!missing(diagnostic_file) && !is.na(diagnostic_file)) {
+  if (!is.null(diagnostic_file) && !is.na(diagnostic_file)) {
     diagnostic_file <- writable_sample_file(diagnostic_file) 
     if (chains == 1) 
         argss[[1]]$diagnostic_file <- diagnostic_file

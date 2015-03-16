@@ -117,7 +117,7 @@ setMethod("optimizing", "stanmodel",
                          method = "optim", 
                          algorithm = match.arg(algorithm)) 
          
-            if (!missing(sample_file) && !is.na(sample_file)) 
+            if (!is.null(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
             is_arg_recognizable(names(dotlist), 

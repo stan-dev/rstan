@@ -183,8 +183,8 @@ stan <- function(file, model_name = "anon_model",
                      save_dso = save_dso, verbose = verbose, ...)
   }
 
-  if (missing(sample_file))  sample_file <- NA 
-  if (missing(diagnostic_file))  diagnostic_file <- NA 
+  if (is.null(sample_file))  sample_file <- NA 
+  if (is.null(diagnostic_file))  diagnostic_file <- NA 
 
   sampling(sm, data, pars, chains, iter, warmup, thin, seed, init, 
            check_data = TRUE, sample_file = sample_file, 
