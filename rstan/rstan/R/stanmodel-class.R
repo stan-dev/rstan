@@ -194,6 +194,8 @@ setMethod("sampling", "stanmodel",
                                   envir = environment()), list(...))
               dotlist$chains <- 1L
               dotlist$cores <- 1L
+              dotlist$data <- data
+              dotlist$check_data <- FALSE
               if(open_progress) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
                 cat("Refresh to see progress\n", file = sinkfile)
