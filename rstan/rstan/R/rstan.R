@@ -50,10 +50,11 @@ stan_model <- function(file,
     }
     mtime <- file.info(file)$mtime
     file.rda <- gsub("stan$", "rda", file)
-    if(!file.exists(file.rda) ||
+    if(mtime < as.POSIXct(packageDescription("rstan")$Date) ||
+       !file.exists(file.rda) ||
        file.info(file.rda)$mtime <  mtime ||
-       mtime < as.POSIXct(packageDescription("rstan")$Date) ||
-       !is_sm_valid(obj <- readRDS(file.rda))) {
+       !is(obj <- readRDS(file.rda), "stanmodel") ||
+       !is_sm_valid(obj)) {
          
           stanc_ret <- stanc(file = file, model_code = model_code, 
                              model_name = model_name, verbose, ...)
@@ -151,7 +152,10 @@ stan <- function(file, model_name = "anon_model",
                  sample_file, # the file to which the samples are written
                  diagnostic_file, # the file to which diagnostics are written 
                  save_dso = TRUE,
-                 verbose = FALSE, ...,
+                 verbose = FALSE, 
+                 cores = getOption("mc.cores", 1L),
+                 open_progress = interactive() && !isatty(stdout()), 
+                 ...,
                  boost_lib = NULL, 
                  eigen_lib = NULL) {
   # Return a fitted model (stanfit object)  from a stan model, data, etc.  
@@ -176,8 +180,7 @@ stan <- function(file, model_name = "anon_model",
     if (missing(model_name)) model_name <- NULL 
     sm <- stan_model(file, model_name = model_name, model_code = model_code,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
-                     save_dso = save_dso, verbose = verbose, 
-                     ...)
+                     save_dso = save_dso, verbose = verbose, ...)
   }
 
   if (missing(sample_file))  sample_file <- NA 
@@ -187,5 +190,6 @@ stan <- function(file, model_name = "anon_model",
            check_data = TRUE, sample_file = sample_file, 
            diagnostic_file = diagnostic_file,
            verbose = verbose, algorithm = match.arg(algorithm), 
-           control = control, check_unknown_args = FALSE, ...)
+           control = control, check_unknown_args = FALSE, 
+           cores = cores, open_progress = open_progress, ...)
 } 

@@ -160,16 +160,45 @@ setMethod("sampling", "stanmodel",
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
-                   sample_file, diagnostic_file, verbose = FALSE, 
+                   sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
-                   control = NULL, ...) {
+                   control = NULL, cores = getOption("mc.cores", 1L), 
+                   open_progress = interactive() && !isatty(stdout()), ...) {
+            
+            if(cores > 1) {
+              dotlist <- c(sapply(ls(), simplify = FALSE, FUN = get,
+                                  envir = environment()), list(...))
+              dotlist$chains <- 1L
+              dotlist$cores <- 1L
+              if(open_progress) {
+                sinkfile <- paste0(tempfile(), "_StanProgress.txt")
+                cat("Refresh to see progress\n", file = sinkfile)
+                utils::browseURL(sinkfile)
+              }
+              else sinkfile <- ""
+              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = FALSE)
+              on.exit(parallel::stopCluster(cl))
+              parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
+              callFun <- function(i) {
+                dotlist$chain_id <- i
+                do.call(rstan::sampling, args = dotlist)
+              }
+              parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
+              nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
+              if(all(sapply(nfits, is, class2 = "stanfit")) &&
+                 all(sapply(nfits, FUN = function(x) x@mode == 0))) {
+                nfits <- sflist2stanfit(nfits)
+              }
+              return(nfits)
+            }
             dots <- list(...)
             check_unknown_args <- dots$check_unknown_args
             if (is.null(check_unknown_args) || check_unknown_args) {
               is_arg_recognizable(names(dots),
                                   c("chain_id", "init_r", "test_grad",
                                     "obfuscate_model_name",
-                                    "append_samples", "refresh", "control"), 
+                                    "append_samples", "refresh", "control", 
+                                    "cores", "open_progress"), 
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }

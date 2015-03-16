@@ -745,13 +745,9 @@ By default, the chains are executed serially (i.e., one at a time) using the par
 consolidates a list of multiple \code{stanfit} objects (sampled from one model with
 the same number of warmup and iteration) into one \code{stanfit} object. Thus, we can run 
 multiple chains in parallel using any approach provided by other \R packages on one computer 
-or a networked cluster. There is a CRAN-incompatible function at
-\url{http://mc-stan.org/rstan/stan.R}
-that can be \code{source}d to supersede the \code{stan} function in \pkg{rstan}. This function
-should work on a typical multicore laptop but could be adapted to work on more exotic computer
-clusters. This function also saves compiled \code{stanfit} objects to the working directory
-or the temporary directory and checks whether an identical compiled model is available on the disk 
-before compiling a new one.
+or a networked cluster. There is a \code{cores} argument to \code{stan} and \code{sampling}
+that can be set to the number of chains (if the hardware has sufficient processors and RAM),
+which is appropriate on most laptops.
 
 However one does parallel sampling, it is important to specify the same seed for all the chains
 and equally important to use a different chain ID (argument \code{chain\_id}). This ensures
