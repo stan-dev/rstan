@@ -7,13 +7,13 @@ test_stan_fun_parallel <- function() {
               data = "N",
               chains = 0,
               cores = 2,
-              show_progress = FALSE)
+              open_progress = FALSE)
   checkTrue(fit@mode != 0)
 
   fit2 <- stan(fit = fit, data = 'N', cores = 2,
-               chains = 4, show_progress = FALSE)
-  checkTrue(fit@mode == 0)
-  checkEquals(fit@chains, 4L)
+               chains = 4, open_progress = FALSE)
+  checkTrue(fit2@mode == 0)
+  checkEquals(fit2@sim$chains, 4L)
 }
 
 test_stan_fun_args <- function() {
