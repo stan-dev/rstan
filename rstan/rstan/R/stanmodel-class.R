@@ -71,7 +71,7 @@ prep_call_sampler <- function(object) {
 setMethod("optimizing", "stanmodel", 
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
-                   init = 'random', check_data = TRUE, sample_file, 
+                   init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             prep_call_sampler(object)
@@ -117,7 +117,7 @@ setMethod("optimizing", "stanmodel",
                          method = "optim", 
                          algorithm = match.arg(algorithm)) 
          
-            if (!missing(sample_file) && !is.na(sample_file)) 
+            if (!is.null(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
             is_arg_recognizable(names(dotlist), 
@@ -257,7 +257,8 @@ setMethod("sampling", "stanmodel",
 
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
-                                          init = init, seed = seed, sample_file, diagnostic_file, 
+                                          init = init, seed = seed, sample_file = sample_file, 
+                                          diagnostic_file = diagnostic_file, 
                                           algorithm = match.arg(algorithm), control = control, ...))
    
             if (is(args_list, "try-error")) {

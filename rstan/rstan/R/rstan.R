@@ -149,8 +149,8 @@ stan <- function(file, model_name = "anon_model",
                  seed = sample.int(.Machine$integer.max, 1), 
                  algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"),
                  control = NULL,
-                 sample_file, # the file to which the samples are written
-                 diagnostic_file, # the file to which diagnostics are written 
+                 sample_file = NULL, # the file to which the samples are written
+                 diagnostic_file = NULL, # the file to which diagnostics are written 
                  save_dso = TRUE,
                  verbose = FALSE, 
                  cores = getOption("mc.cores", 1L),
@@ -183,8 +183,8 @@ stan <- function(file, model_name = "anon_model",
                      save_dso = save_dso, verbose = verbose, ...)
   }
 
-  if (missing(sample_file))  sample_file <- NA 
-  if (missing(diagnostic_file))  diagnostic_file <- NA 
+  if (is.null(sample_file))  sample_file <- NA 
+  if (is.null(diagnostic_file))  diagnostic_file <- NA 
 
   sampling(sm, data, pars, chains, iter, warmup, thin, seed, init, 
            check_data = TRUE, sample_file = sample_file, 

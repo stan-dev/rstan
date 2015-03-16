@@ -345,7 +345,7 @@ the numbers in the \R script.
 Next, we can call the \code{stan} function to draw posterior samples:
 <<callstan, echo=TRUE, results=hide, cache=TRUE>>=
 fit1 <- stan(file="schools.stan", data=schools_data, 
-             iter=2000, chains=4)
+             iter=2000, chains=4, cores = 2)
 @
 
 Function \code{stan} wraps the following three steps: 
