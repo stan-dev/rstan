@@ -196,17 +196,25 @@ setMethod("sampling", "stanmodel",
               dotlist$cores <- 1L
               dotlist$data <- data
               dotlist$check_data <- FALSE
-              if(open_progress) {
+              if(open_progress && 
+                 !identical(browser <- getOption("browser"), "false")) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
                 cat("Refresh to see progress\n", file = sinkfile)
-                utils::browseURL(sinkfile)
+                if(.Platform$OS.type == "windows" && is.null(browser)) {
+                  browser <- "start"
+                }
+                else if(Sys.info()["sysname"] == "Darwin" && grepl("open$", browser)) {
+                  browser <- "/Applications/Safari.app/Contents/MacOS/Safari"
+                }
+                utils::browseURL(sinkfile, browser = browser)
               }
               else sinkfile <- ""
-              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = FALSE)
+              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = TRUE)
               on.exit(parallel::stopCluster(cl))
               parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
               callFun <- function(i) {
                 dotlist$chain_id <- i
+                Sys.sleep(0.5 * i)
                 do.call(rstan::sampling, args = dotlist)
               }
               parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
