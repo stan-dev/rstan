@@ -284,7 +284,8 @@ setMethod("sampling", "stanmodel",
 
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 
-                cat('\n', mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", i, ").\n", sep = '')
+                cat('\n', mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", 
+                    ifelse(chains == 1 && !is.null(dots$chain_id), dots$chain_id, i), ").\n", sep = '')
               samples_i <- try(sampler$call_sampler(args_list[[i]])) 
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 message("error occurred during calling the sampler; sampling not done") 
