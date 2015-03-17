@@ -220,9 +220,9 @@ setMethod("sampling", "stanmodel",
               nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
               if(all(sapply(nfits, is, class2 = "stanfit")) &&
                  all(sapply(nfits, FUN = function(x) x@mode == 0))) {
-                nfits <- sflist2stanfit(nfits)
+                 return(sflist2stanfit(nfits))
               }
-              return(nfits)
+              return(nfits[[1]])
             }
             dots <- list(...)
             check_unknown_args <- dots$check_unknown_args

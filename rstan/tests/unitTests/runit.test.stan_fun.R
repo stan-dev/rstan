@@ -20,7 +20,7 @@ test_stan_fun_parallel <- function() {
   fit3 <- sampling(fit@stanmodel, data = list(N = 2), chains = 2,
                    check_data = FALSE,  iter = 40,
                    cores = 2, open_progress = FALSE)
-  checkTrue(fit3@mode == 0)
+  checkTrue(fit3@mode != 0)
 }
 
 test_stan_fun_args <- function() {
