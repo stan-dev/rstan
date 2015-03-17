@@ -1511,3 +1511,24 @@ is_arg_recognizable <- function(x, y, pre_msg = '', post_msg = '', ...) {
   TRUE
 }
 
+get_time_from_csv <- function(tlines) {
+  # get the warmup time and sample time from the commented lines
+  # about time in the CSV files
+  # Args:
+  #  tlines: character vector of length 3 (or 2 since the last one is not used)
+  #          from the CSV File. For example, it could be
+  #          # Elapsed Time: 0.005308 seconds (Warm-up)
+  #                          0.003964 seconds (Sampling)
+  #                          0.009272 seconds (Total)
+  t <- rep(NA, 2)
+  names(t) <- c("warmup", "sample")
+  if (length(tlines) < 2) return(t)
+  warmupt <- gsub(".*#\\s*Elapsed.*:\\s*", "", tlines[1])
+  warmupt <- gsub("\\s*seconds.*$", "", warmupt)
+  samplet <- gsub(".*#\\s*", "", tlines[2])
+  samplet <- gsub("\\s*seconds.*$", "", samplet)
+  t[1] <- as.double(warmupt)
+  t[2] <- as.double(samplet)
+  t
+}
+

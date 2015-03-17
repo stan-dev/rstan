@@ -140,7 +140,7 @@
       get the posterior mean for parameters of interest (using \code{pars}
       to specify) among \emph{all} parameters.} 
     \item{\code{get_elapsed_time}}{\code{signature(object = "stanfit")}:
-      get the warmup time and sample time spent to draw the samples.
+      get the warmup time and sample time in seconds spent to draw the samples.
       A matrix of two columns is returned: each row has the time information
       for one chain.}
     \item{\code{get_stancode}}{\code{signature(object = "stanfit")}:
