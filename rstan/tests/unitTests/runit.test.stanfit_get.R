@@ -3,4 +3,7 @@ test_get_elapsed_time <- function() {
   nchains = 5L
   fit <- stan(model_code = code, chains = nchains, iter = 30)
   checkEquals(dim(get_elapsed_time(fit)), c(nchains, 2L))
+  nchains = 1L
+  fit2 <- stan(fit = fit, chains = nchains, iter = 30)
+  checkEquals(dim(get_elapsed_time(fit2)), c(nchains, 2L))
 }
