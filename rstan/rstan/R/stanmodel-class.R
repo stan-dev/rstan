@@ -165,21 +165,21 @@ setMethod("sampling", "stanmodel",
                    control = NULL, cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()), ...) {
 
-            if (check_data || is.character(data)) {
+            # allow data to be specified as a vector of character string
+            if (is.character(data)) {
+              data <- try(mklist(data))
+              if (is(data, "try-error")) {
+                message("failed to create the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+            }
+            # check data and preprocess
+            if (check_data) {
               data <- try(force(data))
               if (is(data, "try-error")) {
                 message("failed to evaluate the data; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
               }
-              # allow data to be specified as a vector of character string
-              if (is.character(data)) {
-                data <- try(mklist(data))
-                if (is(data, "try-error")) {
-                  message("failed to create the data; sampling not done")
-                  return(invisible(new_empty_stanfit(object)))
-                }
-              }
-              # check data and preprocess
               if (!missing(data) && length(data) > 0) {
                 data <- try(data_preprocess(data))
                 if (is(data, "try-error")) {
@@ -195,7 +195,6 @@ setMethod("sampling", "stanmodel",
               dotlist$chains <- 1L
               dotlist$cores <- 1L
               dotlist$data <- data
-              dotlist$check_data <- FALSE
               if(open_progress && 
                  !identical(browser <- getOption("browser"), "false")) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")

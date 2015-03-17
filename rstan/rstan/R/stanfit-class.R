@@ -341,7 +341,10 @@ setMethod("get_elapsed_time",
 
             ltime <- lapply(object@sim$samples,
                             function(x) attr(x, "elapsed_time"))
-            do.call(rbind, ltime)
+            t <- do.call(rbind, ltime)
+            cids <- sapply(object@stan_args, function(x) x$chain_id)
+            rownames(t) <- paste0("chain:", cids)
+            t
           })
 
 setGeneric(name = 'get_posterior_mean', 
