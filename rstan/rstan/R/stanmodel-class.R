@@ -165,7 +165,7 @@ setMethod("sampling", "stanmodel",
                    control = NULL, cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()), ...) {
 
-            if (check_data) {
+            if (check_data || is.character(data)) {
               data <- try(force(data))
               if (is(data, "try-error")) {
                 message("failed to evaluate the data; sampling not done")

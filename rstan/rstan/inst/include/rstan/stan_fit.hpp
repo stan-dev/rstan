@@ -558,6 +558,9 @@ namespace rstan {
       holder.attr("mean_pars") = mean_pars;
       holder.attr("mean_lp__") = mean_lp;
       holder.attr("adaptation_info") = adaptation_info;
+      holder.attr("elapsed_time") =
+        Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
+                                    Rcpp::_["sample"] = sampleDeltaT);
 
       Rcpp::List slst(sample_recorder.sampler_values_.x().begin()+1,
                       sample_recorder.sampler_values_.x().end());
