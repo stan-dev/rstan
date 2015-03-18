@@ -325,6 +325,29 @@ setMethod("get_sampler_params",
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
           }) 
 
+setGeneric(name = 'get_elapsed_time',
+           def = function(object, ...) { standardGeneric("get_elapsed_time")})
+
+setMethod("get_elapsed_time",
+          definition = function(object, inc_warmup = TRUE) {
+            if (object@mode == 1L) {
+              cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
+                  "sampling is not conducted.\n", sep = '')
+              return(invisible(NULL))
+            } else if (object@mode == 2L) {
+              cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '')
+              return(invisible(NULL))
+            }
+
+            ltime <- lapply(object@sim$samples,
+                            function(x) attr(x, "elapsed_time"))
+            t <- do.call(rbind, ltime)
+            if (is.null(t)) return(t)
+            cids <- sapply(object@stan_args, function(x) x$chain_id)
+            rownames(t) <- paste0("chain:", cids)
+            t
+          })
+
 setGeneric(name = 'get_posterior_mean', 
            def = function(object, ...) { standardGeneric("get_posterior_mean")}) 
 
