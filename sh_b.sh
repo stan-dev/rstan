@@ -13,12 +13,12 @@ git submodule status
 
 R CMD build StanHeaders/
 
-stanheadtargz=`find StanHeaders*.tar.gz`
+stanheadtargz=`find StanHeaders*.tar.gz | sort | tail -n 1`
 
 lookforverfile=`tar ztf ${stanheadtargz} | grep stan/version.hpp`
 
 if [ -z "$lookforverfile" ]; then
-    echo "stan/version.hpp is not found in StanHeaders pkg"
+    echo "\e[31mERROR:\e[0m stan/version.hpp is not found in StanHeaders pkg"
     exit 2
 fi
 
