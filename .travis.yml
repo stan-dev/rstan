@@ -1,19 +1,22 @@
-cache: apt
+cache: 
+  apt: true
+  ccache: true
+  directories:
+    - $HOME/.ccache
+    - $HOME/.m2
 
-language: cpp
+language: r
+pandoc: false
 
-compiler:
-  - gcc 
-  - clang
-  
+os:
+  - linux
+  - osx
+
 env:
   global:
-    - BOOTSTRAP_LATEX="1"
-    - STAN_BRANCH="origin/develop"
+    - STAN_BRANCH=develop
   matrix: 
-    - CXX_OLEVEL=0 RCPP_VER=cran
-    - CXX_OLEVEL=3 RCPP_VER=cran
-    - CXX_OLEVEL=3 RCPP_VER=github
+    - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
 matrix:
   allow_failures:
@@ -22,29 +25,27 @@ matrix:
     - compiler: gcc
 
 before_install:
-  - curl -OL https://raw.githubusercontent.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - curl -OL https://raw.githubusercontent.com/maverickg/utils/master/shell/wait4.sh
-
-  - chmod 755 ./travis-tool.sh wait4.sh
-  - ./travis-tool.sh bootstrap
-    
-install:
-  - ./travis-tool.sh install_aptget r-cran-runit ccache texinfo
-  - ./travis-tool.sh install_r inline Rcpp coda devtools highlight BH RcppEigen
-  - ccache --max-size 8G
+  - echo -e "#\x21/bin/sh\n\$1 &\nPROCESS=\"\$!\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`" > wait4.sh
+  - echo -e "  if [ -z \"\${RESULT}\" ]; then\n    wait \${PROCESS}; exit \$?\n  else\n    echo \"-\"; sleep 10\n  fi\ndone\nexit \$?" >> wait4.sh
+  - more wait4.sh
+  - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
+  - chmod 755 wait4.sh
 
 before_script: 
-  - cd stan && git fetch && git checkout ${STAN_BRANCH} && cd ..
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit'), repos='http://cran.rstudio.com')"
+  - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
+  - git submodule update --remote
+  - R CMD build StanHeaders/
+  - R CMD INSTALL `find StanHeaders*.tar.gz`
   - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
-  - echo "CXXFLAGS = `R CMD config CXXFLAGS`" >> ./rstan/R_Makevars 
+  - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
   - if [[ $RCPP_VER = 'github' ]]; then R -q -e "options(repos = getCRANmirrors()[1,'URL']); library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
   - sed -i "s/g++/${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
   - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - more ./rstan/R_Makevars
-  - mkdir -p ~/.R/
-  - cat ./rstan/R_Makevars > ~/.R/Makevars
+  - mkdir -p ~/.R/; cat ./rstan/R_Makevars > ~/.R/Makevars
   - more ~/.R/Makevars
 
 notifications:
@@ -57,9 +58,4 @@ notifications:
 script:
   - cd rstan 
   - R -q -e "library(Rcpp); sessionInfo()"
-  - (make install & ../wait4.sh $!) && cd tests && R -q -f runRunitTests.R
-
-after_script:
-  - ccache -s 
-  - git submodule status
-  - git rev-parse HEAD
+  - ../wait4.sh "make install" && cd tests && R -q -f runRunitTests.R

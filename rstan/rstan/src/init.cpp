@@ -1,10 +1,26 @@
+// This file is part of RStan
+// Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+//
+// RStan is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 3
+// of the License, or (at your option) any later version.
+//
+// RStan is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 /*
  * To register the functions implemented in C++, see
  * http://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
  *
  * But it seems not to work as it is supposed to be in that
- * even they are still working if not registered, which
- * is not understood.
+ * they are still working if not registered.
  */
 #include <R.h>
 #include <Rinternals.h>
@@ -23,7 +39,7 @@ SEXP seq_permutation(SEXP conf);
 SEXP CPP_read_comments(SEXP file, SEXP n);
 SEXP stan_prob_autocovariance(SEXP v);
 SEXP is_Null_NS(SEXP ns);
-SEXP CPP_stanc250(SEXP model_stancode, SEXP model_name);
+SEXP CPP_stanc261(SEXP model_stancode, SEXP model_name);
 SEXP CPP_stan_version();
 #ifdef __cplusplus
 }
@@ -40,7 +56,7 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(CPP_read_comments, 2),
   CALLDEF(stan_prob_autocovariance, 1),
   CALLDEF(is_Null_NS, 1),
-  CALLDEF(CPP_stanc250, 2),
+  CALLDEF(CPP_stanc261, 2),
   CALLDEF(CPP_stan_version, 0),
   {NULL, NULL, 0}
 };

@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 ##
 ## Define rstan plugin for inline package.
 ## (original name: inline.R)
@@ -7,11 +24,8 @@ rstan_inc_path_fun <- function() {
   system.file('include', package = 'rstan')
 } 
 
-rstan_libs_path_fun <- function() {
-  if (nzchar(.Platform$r_arch)) {
-    return(system.file('libstan', .Platform$r_arch, package = 'rstan'))
-  }
-  system.file('libstan', package = 'rstan')
+stanheaders_inc_path_fun <- function() {
+  system.file('include', package = 'StanHeaders')
 }
 
 # Using RcppEigen
@@ -27,26 +41,14 @@ boost_path_fun2 <- function() {
   rstan_options("boost_lib2")
 }
 
-# If included in RStan
-# eigen_path_fun() <- paste0(rstan_inc_path_fun(), '/stanlib/eigen_3.1.0')
-
-static_linking <- function() {
-  # return(Rcpp:::staticLinking());
-  ## not following Rcpp's link, we only have either dynamic version or static
-  ## version because the libraries are big.
-  ## (In Rcpp, both versions are compiled.)
-  # return(.Platform$OS.type == 'windows')
-  # For the time being, use static linking for libstan on all platforms. 
-  TRUE
-}
-
 PKG_CPPFLAGS_env_fun <- function() {
-   paste(' -I"', file.path(rstan_inc_path_fun(), '/stansrc" '),
+   paste(' -isystem"', file.path(stanheaders_inc_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '" '),
-         ' -isystem"', file.path(eigen_path_fun(), '/unsupported" '),
-         ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come         
+         ' -isystem"', file.path(eigen_path_fun(), 'unsupported" '),
+#        ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
          ' -I"', rstan_inc_path_fun(), '"', 
+         ' -Wno-unused-function -Wno-uninitialized',
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG', sep = '')
 }
 
@@ -63,22 +65,6 @@ legitimate_space_in_path <- function(path) {
   }
   path 
 } 
-
-RSTAN_LIBS_fun <- function() {
-  static <- static_linking() 
-  rstan.libs.path <- rstan_libs_path_fun()
-
-  # It seems that adding quotes to the path does not work well 
-  # in the case there is space in the path name 
-  if (grepl('[^\\\\]\\s', rstan.libs.path, perl = TRUE))
-    rstan.libs.path <- legitimate_space_in_path(rstan.libs.path)
-
-  if (static) {
-    paste(' "', rstan.libs.path, '/libstan.a', '"', sep = '')
-  } else {
-    paste(' -L"', rstan.libs.path, '" -Wl,-rpath,"', rstan.libs.path, '" -lstan ', sep = '')
-  }
-}
 
 rstanplugin <- function() {
   Rcpp_plugin <- getPlugin("Rcpp")
@@ -98,7 +84,7 @@ rstanplugin <- function() {
        body = function(x) x,
        LinkingTo = c("Rcpp"),
        ## FIXME see if we can use LinkingTo for RcppEigen's header files
-       env = list(PKG_LIBS = paste(rcpp_pkg_libs, RSTAN_LIBS_fun(), collapse = " "),
+       env = list(PKG_LIBS = paste(rcpp_pkg_libs),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }

@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 # require(methods)
 # source('AllClass.R')
 
@@ -8,7 +25,7 @@ setMethod("show", "stanfit",
 
 print.stanfit <- function(x, pars = x@sim$pars_oi, 
                           probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
-                          digits_summary = 2, ...) { 
+                          digits_summary = 2, include = TRUE, ...) { 
   if (x@mode == 1L) { 
     cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
         "sampling is not conducted.\n", sep = '')
@@ -18,6 +35,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
     return(invisible(NULL)) 
   } 
 
+  if(!include) pars <- setdiff(x@sim$pars_oi, pars)
   s <- summary(x, pars, probs, ...)  
   if (is.null(s)) return(invisible(NULL))
   n_kept <- x@sim$n_save - x@sim$warmup2
@@ -96,7 +114,7 @@ setMethod('get_stancode', signature = "stanfit",
           function(object, print = FALSE) {
             code <- object@stanmodel@model_code
             if (print) cat(code, "\n") 
-            invisible(code)
+            return(code)
           }) 
 
 setGeneric(name = 'get_stanmodel', 
@@ -104,14 +122,14 @@ setGeneric(name = 'get_stanmodel',
 
 setMethod("get_stanmodel", signature = "stanfit", 
           function(object) { 
-            invisible(object@stanmodel) 
+            return(object@stanmodel)
           }) 
 
 setGeneric(name = 'get_inits', 
            def = function(object, ...) { standardGeneric("get_inits")})
 
 setMethod("get_inits", signature = "stanfit", 
-          function(object) { invisible(object@inits) })
+          function(object) { return(object@inits) })
 
 setGeneric(name = 'get_seed', 
            def = function(object, ...) { standardGeneric("get_seed")})
@@ -259,7 +277,7 @@ setMethod("get_adaptation_info",
               FALSE
             }
             if (all(sapply(lai, FUN = is_empty))) return(invisible(NULL))  
-            invisible(lai) 
+            return(lai) 
           }) 
 
 setGeneric(name = "get_logposterior", 
@@ -279,7 +297,7 @@ setMethod("get_logposterior",
 
             llp <- lapply(object@sim$samples, function(x) x[['lp__']]) 
             if (inc_warmup) return(invisible(llp)) 
-            invisible(mapply(function(x, w) x[-(1:w)], 
+            return(mapply(function(x, w) x[-(1:w)], 
                              llp, object@sim$warmup2,
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
           }) 
@@ -302,10 +320,33 @@ setMethod("get_sampler_params",
                           function(x) do.call(cbind, attr(x, "sampler_params")))   
             if (all(sapply(ldf, is.null))) return(invisible(NULL))  
             if (inc_warmup) return(invisible(ldf)) 
-            invisible(mapply(function(x, w) x[-(1:w), , drop = FALSE], 
+            return(mapply(function(x, w) x[-(1:w), , drop = FALSE], 
                              ldf, object@sim$warmup2, 
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
           }) 
+
+setGeneric(name = 'get_elapsed_time',
+           def = function(object, ...) { standardGeneric("get_elapsed_time")})
+
+setMethod("get_elapsed_time",
+          definition = function(object, inc_warmup = TRUE) {
+            if (object@mode == 1L) {
+              cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
+                  "sampling is not conducted.\n", sep = '')
+              return(invisible(NULL))
+            } else if (object@mode == 2L) {
+              cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '')
+              return(invisible(NULL))
+            }
+
+            ltime <- lapply(object@sim$samples,
+                            function(x) attr(x, "elapsed_time"))
+            t <- do.call(rbind, ltime)
+            if (is.null(t)) return(t)
+            cids <- sapply(object@stan_args, function(x) x$chain_id)
+            rownames(t) <- paste0("chain:", cids)
+            t
+          })
 
 setGeneric(name = 'get_posterior_mean', 
            def = function(object, ...) { standardGeneric("get_posterior_mean")}) 
@@ -339,14 +380,15 @@ setMethod("get_posterior_mean",
             pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@model_pars, object@par_dims, fnames, pars) 
             tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
-            invisible(object@.MISC$posterior_mean_4all[unlist(tidx), , drop = FALSE])
+            return(object@.MISC$posterior_mean_4all[unlist(tidx), , drop = FALSE])
           })
 
 setGeneric(name = "extract",
            def = function(object, ...) { standardGeneric("extract")}) 
 
 setMethod("extract", signature = "stanfit",
-          definition = function(object, pars, permuted = TRUE, inc_warmup = FALSE) {
+          definition = function(object, pars, permuted = TRUE, 
+                                inc_warmup = FALSE, include = TRUE) {
             # Extract the samples in different forms for different parameters. 
             #
             # Args:
@@ -356,6 +398,7 @@ setMethod("extract", signature = "stanfit",
             #     warming up. And all the chains are merged. 
             #   inc_warmup: if TRUE, warmup samples are kept; otherwise, 
             #     discarded. If permuted is TRUE, inc_warmup is ignored. 
+            #   include: if FALSE interpret pars as those to exclude
             #
             # Returns:
             #   If permuted is TRUE, return an array (matrix) of samples with each
@@ -372,6 +415,7 @@ setMethod("extract", signature = "stanfit",
               return(invisible(NULL)) 
             } 
 
+            if(!include) pars <- setdiff(object@sim$pars_oi, pars)
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
             pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
@@ -464,7 +508,7 @@ setMethod("summary", signature = "stanfit",
               idx2 <- match(attr(ss, "row_major_idx"), attr(ss, "col_major_idx"))
               sf <- list(summary = s1[idx2, , drop = FALSE],
                          c_summary = s2[idx2, , , drop = FALSE])
-              return(invisible(sf)) 
+              return(sf)
             } 
             m <- match(probs, default_summary_probs())
             if (any(is.na(m))) { # unordinary quantiles are requested 
@@ -482,7 +526,7 @@ setMethod("summary", signature = "stanfit",
               idx2 <- match(attr(ss, "row_major_idx"), col_idx)
               ss <- list(summary = s1[idx2, , drop = FALSE],
                          c_summary = s2[idx2, , , drop = FALSE])
-              return(invisible(ss)) 
+              return(ss)
             }
 
             tidx <- pars_total_indexes(object@sim$pars_oi, 
@@ -511,7 +555,7 @@ setMethod("summary", signature = "stanfit",
             # dimnames(s2) <- list(parameter = pars_names, 
             #                      stats = c("mean", "sd", qnames), NULL) 
             ss <- list(summary = s1, c_summary = s2) 
-            invisible(ss) 
+            return(ss)
           })  
 
 if (!isGeneric("traceplot")) {
@@ -728,10 +772,26 @@ sflist2stanfit <- function(sflist) {
               stanmodel = sflist[[1]]@stanmodel, 
               date = date(), 
               .MISC = new.env()) 
-  invisible(nfit)
+  return(nfit)
 } 
 # sflist2stan(list(l1=ss1, l2=ss2))
 
+names.stanfit <- function(x) dimnames(x)$parameters
+
+`names<-.stanfit` <- function(x, value) {
+  value <- as.character(value)
+  len <- length(x@sim$fnames_oi)
+  if(length(value) != len)
+    stop(paste("parameter names must be of length", len))
+  x@sim$fnames_oi <- value
+  if(length(x@.MISC$summary)) {
+    x@.MISC$summary <- rapply(x@.MISC$summary, f = function(y) {
+      rownames(y) <- value
+      return(y)
+    }, how = "replace")
+  }
+  return(x)
+}
 
 as.array.stanfit <- function(x, ...) {
   if (x@mode != 0) return(numeric(0)) 
@@ -779,7 +839,7 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
     lst[[ic]] <- x 
   }
   class(lst) <- "mcmc.list"
-  invisible(lst)
+  return(lst)
 }
 
 setMethod("as.mcmc.list", "stanfit", as.mcmc.list.stanfit)

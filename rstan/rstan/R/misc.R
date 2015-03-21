@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 filename_ext <- function(x) {
   # obtain the file extension 
   # copied from tools package 
@@ -411,10 +428,21 @@ config_argss <- function(chains, iter, warmup, thin,
   all_metrics <- c("unit_e", "diag_e", "dense_e")
   if (!is.null(control)) {
     if (!is.list(control)) 
-      stop("control should be a named list")
+      stop("'control' should be a named list")
+      is_arg_recognizable(names(control),
+                          c("adapt_engaged", "adapt_gamma",
+                            "adapt_delta", "adapt_kappa", "adapt_t0", 
+                            "adapt_init_buffer", "adapt_term_buffer",
+                            "adapt_window", "stepsize", 
+                            "stepsize_jitter", "metric", "int_time",
+                            "max_treedepth", 
+                            "epsilon", "error"),
+                          pre_msg = "'control' list contains unknown members of names: ",
+                          call. = FALSE)
     metric <- control$metric
-    if (!is.null(metric))
-      control$metric <- match.arg(metric, all_metrics)
+    if (!is.null(metric) && is.na(match(metric, all_metrics))) {
+      stop("metric should be one of ", paste0(paste0('"', all_metrics, '"'), collapse = ", "))
+    }
     dotlist$control <- control
   } 
 
@@ -427,7 +455,7 @@ config_argss <- function(chains, iter, warmup, thin,
                        warmup = warmups[i], init = inits[[i]], 
                        algorithm = algorithm) 
     
-  if (!missing(sample_file) && !is.na(sample_file)) {
+  if (!missing(sample_file) && !is.null(sample_file) && !is.na(sample_file)) {
     sample_file <- writable_sample_file(sample_file) 
     if (chains == 1) 
         argss[[1]]$sample_file <- sample_file
@@ -437,7 +465,7 @@ config_argss <- function(chains, iter, warmup, thin,
     }
   }
 
-  if (!missing(diagnostic_file) && !is.na(diagnostic_file)) {
+  if (!missing(diagnostic_file) && !is.null(diagnostic_file) && !is.na(diagnostic_file)) {
     diagnostic_file <- writable_sample_file(diagnostic_file) 
     if (chains == 1) 
         argss[[1]]$diagnostic_file <- diagnostic_file
@@ -1470,15 +1498,37 @@ read_csv_header <- function(f, comment.char = '#') {
   header
 }
 
-is_arg_recognizable <- function(x, y) {
+is_arg_recognizable <- function(x, y, pre_msg = '', post_msg = '', ...) {
   # check if all elements of x are in y.  
   # x: a vector of characters 
   # y: a vector of characters 
   idx <- match(x, y)
   na_idx <- which(is.na(idx))
   if (length(na_idx) > 0) {
-    warning(paste(x[na_idx], collapse = ', '), " not found.")
+    warning(pre_msg, paste(x[na_idx], collapse = ', '), ".", post_msg, ...)
+    return(FALSE)
   }
   TRUE
+}
+
+get_time_from_csv <- function(tlines) {
+  # get the warmup time and sample time from the commented lines
+  # about time in the CSV files
+  # Args:
+  #  tlines: character vector of length 3 (or 2 since the last one is not used)
+  #          from the CSV File. For example, it could be
+  #          # Elapsed Time: 0.005308 seconds (Warm-up)
+  #                          0.003964 seconds (Sampling)
+  #                          0.009272 seconds (Total)
+  t <- rep(NA, 2)
+  names(t) <- c("warmup", "sample")
+  if (length(tlines) < 2) return(t)
+  warmupt <- gsub(".*#\\s*Elapsed.*:\\s*", "", tlines[1])
+  warmupt <- gsub("\\s*seconds.*$", "", warmupt)
+  samplet <- gsub(".*#\\s*", "", tlines[2])
+  samplet <- gsub("\\s*seconds.*$", "", samplet)
+  t[1] <- as.double(warmupt)
+  t[2] <- as.double(samplet)
+  t
 }
 

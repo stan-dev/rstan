@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 setMethod("show", "stanmodel",
           function(object) {
             cat("S4 class stanmodel '", object@model_name, "' coded as follows:\n" ,sep = '') 
@@ -54,7 +71,7 @@ prep_call_sampler <- function(object) {
 setMethod("optimizing", "stanmodel", 
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
-                   init = 'random', check_data = TRUE, sample_file, 
+                   init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             prep_call_sampler(object)
@@ -100,7 +117,7 @@ setMethod("optimizing", "stanmodel",
                          method = "optim", 
                          algorithm = match.arg(algorithm)) 
          
-            if (!missing(sample_file) && !is.na(sample_file)) 
+            if (!is.null(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
             is_arg_recognizable(names(dotlist), 
@@ -113,7 +130,9 @@ setMethod("optimizing", "stanmodel",
                                   "tol_param",
                                   "tol_rel_obj",
                                   "tol_rel_grad",
-                                  "history_size"))
+                                  "history_size"),
+                                 pre_msg = "passing unknown arguments: ",
+                                 call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
@@ -133,7 +152,7 @@ setMethod("optimizing", "stanmodel",
                 sampler$unconstrained_param_names(FALSE, FALSE)
             }
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
-            invisible(optim)
+            return(optim)
           }) 
 
 setMethod("sampling", "stanmodel",
@@ -141,44 +160,85 @@ setMethod("sampling", "stanmodel",
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 
-                   sample_file, diagnostic_file, verbose = FALSE, 
+                   sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
-                   control = NULL, ...) {
-            dots <- list(...)
-            check_unknown_args <- dots$check_unknown_args
-            if (is.null(check_unknown_args) || check_unknown_args) {
-              is_arg_recognizable(names(dots),
-                                  c("chain_id", "init_r", "test_grad",
-                                    "append_samples", "refresh", "control"))
+                   control = NULL, cores = getOption("mc.cores", 1L), 
+                   open_progress = interactive() && !isatty(stdout()), ...) {
+
+            # allow data to be specified as a vector of character string
+            if (is.character(data)) {
+              data <- try(mklist(data))
+              if (is(data, "try-error")) {
+                message("failed to create the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
             }
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname 
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-            if (check_data) { 
+            # check data and preprocess
+            if (check_data) {
               data <- try(force(data))
               if (is(data, "try-error")) {
                 message("failed to evaluate the data; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
               }
-              # allow data to be specified as a vector of character string 
-              if (is.character(data)) {
-                data <- try(mklist(data))
-                if (is(data, "try-error")) {
-                  message("failed to create the data; sampling not done") 
-                  return(invisible(new_empty_stanfit(object)))
-                }
-              }
-              # check data and preprocess
               if (!missing(data) && length(data) > 0) {
                 data <- try(data_preprocess(data))
                 if (is(data, "try-error")) {
-                  message("failed to preprocess the data; sampling not done") 
+                  message("failed to preprocess the data; sampling not done")
                   return(invisible(new_empty_stanfit(object)))
                 }
               } else data <- list()
-            } 
+            }
 
+            if (chains > 1 && cores > 1) {
+              dotlist <- c(sapply(ls(), simplify = FALSE, FUN = get,
+                                  envir = environment()), list(...))
+              dotlist$chains <- 1L
+              dotlist$cores <- 1L
+              dotlist$data <- data
+              if(open_progress && 
+                 !identical(browser <- getOption("browser"), "false")) {
+                sinkfile <- paste0(tempfile(), "_StanProgress.txt")
+                cat("Refresh to see progress\n", file = sinkfile)
+                if(.Platform$OS.type == "windows" && is.null(browser)) {
+                  browser <- "start"
+                }
+                else if(Sys.info()["sysname"] == "Darwin" && grepl("open$", browser)) {
+                  browser <- "/Applications/Safari.app/Contents/MacOS/Safari"
+                }
+                utils::browseURL(sinkfile, browser = browser)
+              }
+              else sinkfile <- ""
+              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = TRUE)
+              on.exit(parallel::stopCluster(cl))
+              parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
+              callFun <- function(i) {
+                dotlist$chain_id <- i
+                Sys.sleep(0.5 * i)
+                do.call(rstan::sampling, args = dotlist)
+              }
+              parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
+              nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
+              if(all(sapply(nfits, is, class2 = "stanfit")) &&
+                 all(sapply(nfits, FUN = function(x) x@mode == 0))) {
+                 return(sflist2stanfit(nfits))
+              }
+              return(nfits[[1]])
+            }
+            dots <- list(...)
+            check_unknown_args <- dots$check_unknown_args
+            if (is.null(check_unknown_args) || check_unknown_args) {
+              is_arg_recognizable(names(dots),
+                                  c("chain_id", "init_r", "test_grad",
+                                    "obfuscate_model_name",
+                                    "append_samples", "refresh", "control", 
+                                    "cores", "open_progress"), 
+                                  pre_msg = "passing unknown arguments: ",
+                                  call. = FALSE)
+            }
+            prep_call_sampler(object)
+            model_cppname <- object@model_cpp$model_cppname 
+            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
+            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
             sfmiscenv <- new.env()
             if (is(sampler, "try-error")) {
@@ -206,7 +266,8 @@ setMethod("sampling", "stanmodel",
 
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
-                                          init = init, seed = seed, sample_file, diagnostic_file, 
+                                          init = init, seed = seed, sample_file = sample_file, 
+                                          diagnostic_file = diagnostic_file, 
                                           algorithm = match.arg(algorithm), control = control, ...))
    
             if (is(args_list, "try-error")) {
@@ -224,7 +285,8 @@ setMethod("sampling", "stanmodel",
 
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 
-                cat('\n', mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", i, ").\n", sep = '')
+                cat('\n', mode, " FOR MODEL '", object@model_name, 
+                    "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
               samples_i <- try(sampler$call_sampler(args_list[[i]])) 
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 message("error occurred during calling the sampler; sampling not done") 
@@ -281,6 +343,6 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv) 
-             invisible(nfit)
+             return(nfit)
           }) 
 

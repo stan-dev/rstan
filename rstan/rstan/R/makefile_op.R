@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 ###  deal with the optimization level for c++ compilation 
 
 get_makefile_txt <- function() { 
@@ -164,8 +181,8 @@ set_makefile_flags <- function(flags) {
 rm_last_makefile <- function(force = TRUE) {
   # remove the file given by last_makefile()
   # return: 
-  #  ‘0’ for success, ‘1’ for failure, invisibly. 
-  #  '-1' file not exists 
+  #  0 for success, 1 for failure, invisibly. 
+  #  -1 file does not exist
   lmf <- last_makefile() 
   msgs <- c(paste(lmf, " does not exist", sep = ''), 
             paste("removed file ", lmf, sep = ''), 
@@ -214,98 +231,4 @@ rm_rstan_makefile_flags <- function() {
   cat(paste(lmf_txt, collapse = '\n'), file = lmf) 
   message("compiler flags set by rstan are removed.") 
   invisible(NULL)
-} 
-
-reset_cppo <- function() {
-  rm_rstan_makefile_flags() 
-} 
-
-set_cppo <- function(mode = c("fast", "presentation2", "presentation1", "debug", "small"), NDEBUG = FALSE) { 
-  # set the optimization level for compiling C++ code using R CMD SHLIB
-  # Args:
-  #   mode: one of fast, presentation2, presentation1, debug, small, corresponding
-  #     to level 3, 2, 1, 0, s. 
-  #     In addition, when debug mode is specified, it will add -g to CXXFLAGS. 
-  #     In modes other than debug, -g is removed if exists. 
-  #     For modes other than debug, '-DNDEBUG' is included depending on 'NDEBUG'. 
-  #     For mode debug, 'NDEBUG' is neglected. 
-  #   NDEBUG: indicate whether to incude -DNDEBUG in the flags. This argument 
-  #     is neglected for debug mode.
-  # Return: 
-  #   A list with names CXXFLAGS and R_XTRA_CPPFLAGS that are set 
-  # 
-  mode = match.arg(mode) 
-  level = c('3', '2', '1', '0', 's')[match(mode, c("fast", "presentation2", "presentation1", "debug", "small"))]  
-  makefile_txt <- get_makefile_txt() 
-  sys_cxxflags <- get_makefile_flags("CXXFLAGS", makefile_txt, headtotail = TRUE)
-  curr_cxxflags <- get_makefile_flags("CXXFLAGS", makefile_txt) 
-  curr_r_xtra_cppflags <- get_makefile_flags("R_XTRA_CPPFLAGS", makefile_txt) 
-  curr_cxxflags <- sub("#.*$", '', curr_cxxflags)  # remove all comments
-  curr_r_xtra_cppflags <- sub("#.*$", '', curr_r_xtra_cppflags)
-  if (is.numeric(level)) 
-    level <- as.character(level) 
-  if (!level %in% c('0', '1', '2', '3', 's', 'g')) 
-    stop(paste(level, " might not be a legal optimization level for C++ compilation", sep = '')) 
-  old_olevel <- get_cxxo_level(curr_cxxflags) 
-  withstr <- if (NDEBUG) 'with' else 'without'
-  curr_withndebug <- grepl("-DNDEBUG(\\s|$)", curr_r_xtra_cppflags)
-  curr_withdebug <- grepl("-DDEBUG(\\s|$)", curr_r_xtra_cppflags)
-  dashg <- "(\\s|^)-g(\\s|$)"
-  if (old_olevel == level)  {
-    if ((level == '0' && grepl("-DDEBUG(\\s|$)", curr_r_xtra_cppflags) && grepl(dashg, curr_cxxflags)) ||  
-        (level != '0' && (NDEBUG == curr_withndebug) && !grepl(dashg, curr_cxxflags))) {
-      message(paste('mode ', mode, ' ', withstr, ' NDEBUG for compiling C++ code has been set already', sep = ''))
-      return(invisible(list(CXXFLAGS = curr_cxxflags, 
-                            R_XTRA_CPPFLAGS = curr_r_xtra_cppflags))) 
-    }
-  } 
-  new_cxxflags <- if (old_olevel == '')  { 
-                    paste(curr_cxxflags, " -O", level, sep = '') 
-                  } else {
-                    sub(paste("-O", old_olevel, sep = ''), 
-                        paste("-O", level, sep = ''), curr_cxxflags, fixed = TRUE) 
-                  } 
-  if (level == '0') { 
-    if (!grepl(" -g", new_cxxflags)) new_cxxflags <- sub("\\s*$", " -g", new_cxxflags) 
-    if (curr_withndebug) 
-      new_r_xtra_cppflags <- sub("\\s*-DNDEBUG", " -DDEBUG", curr_r_xtra_cppflags, perl = TRUE) 
-    else if (!curr_withdebug)
-      new_r_xtra_cppflags <- paste(curr_r_xtra_cppflags, " -DDEBUG ")
-    else 
-      new_r_xtra_cppflags <- curr_r_xtra_cppflags
-    msg <- paste('mode debug with DDEBUG for compiling C++ code is set')
-  } else {
-    new_cxxflags <- gsub(dashg, " ", new_cxxflags, perl = TRUE)
-    new_r_xtra_cppflags <- gsub("\\s*-DDEBUG(\\s|$)", " ", curr_r_xtra_cppflags, perl = TRUE)
-    if (NDEBUG) { 
-      warning("removing NDEBUG flag would turn off some index checking and\n", 
-              "thus cause R to crash if an index is out of range in the model.",
-              call. = FALSE, immediate. = TRUE)
-      if (!curr_withndebug) 
-        new_r_xtra_cppflags <- paste(new_r_xtra_cppflags, " -DNDEBUG ")
-    } else { 
-      new_r_xtra_cppflags <- sub("\\s*-DNDEBUG(\\s|$)", " ", new_r_xtra_cppflags, perl = TRUE) 
-    }
-    msg <- paste('mode ', mode, ' ', withstr, ' NDEBUG for compiling C++ code is set', sep = '')
-  } 
-  flags <- list(CXXFLAGS = new_cxxflags,
-                R_XTRA_CPPFLAGS = new_r_xtra_cppflags) 
-  set_makefile_flags(flags) 
-  message(msg)
-  invisible(flags) 
-} 
-
-get_cppo <- function() {
-  # get the optimization level as a character 
-  makefile_txt <- get_makefile_txt()
-  curr_cxxflags <- get_makefile_flags("CXXFLAGS", makefile_txt)
-  curr_r_xtra_cppflags <- get_makefile_flags("R_XTRA_CPPFLAGS", makefile_txt)
-  o <- get_cxxo_level(curr_cxxflags)  
-  if (!nzchar(o)) o <- "0"
-  p <- match(o, c("3", "2", "1", "0", "s")) 
-  with_ndebug <- grepl("DNDEBUG", curr_r_xtra_cppflags)
-  with_debug <- grepl("DDEBUG", curr_r_xtra_cppflags)
-  list(mode = c("fast", "presentation2", "presentation1", "debug", "small")[p],
-       NDEBUG = with_ndebug, 
-       DEBUG = with_debug) 
 } 

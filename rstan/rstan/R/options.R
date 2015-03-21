@@ -1,3 +1,20 @@
+# This file is part of RStan
+# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 ## Use an environment to keep some options, especially, 
 ## for plotting. 
 
@@ -58,6 +75,8 @@ init_rstan_opt_env <- function(e) {
   ya_boost  <- system.file('include', 'boost_not_in_BH', package = 'rstan')
   assign('boost_lib2', ya_boost, e)
 
+  assign('auto_write', FALSE, e)
+  
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
 }

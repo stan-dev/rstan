@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
 #include <RInside.h>
+#include <stan/model/model_header.hpp>
 #include <rstan/stan_fit.hpp>  
-#include "blocker.cpp"
+#include "blocker.hpp"
 #include <sstream>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
@@ -469,7 +470,7 @@ TEST_F(RStan, initialize_state_zero) {
   ASSERT_EQ("0", init_val);
   
   Eigen::VectorXd cont_vector = Eigen::VectorXd::Zero(model_.num_params_r());
-  EXPECT_TRUE(stan::common::initialize_state_zero(cont_vector, model_, &ss));
+  EXPECT_TRUE(stan::services::init::initialize_state_zero(cont_vector, model_, &ss));
   
   EXPECT_EQ("", ss.str());
   for (int n = 0; n < model_.num_params_r(); n++)
@@ -494,10 +495,10 @@ TEST_F(RStan, initialize_state_random) {
   Eigen::VectorXd cont_vector1 = Eigen::VectorXd::Zero(model_.num_params_r());
   Eigen::VectorXd cont_vector2 = Eigen::VectorXd::Zero(model_.num_params_r());
     
-  EXPECT_TRUE(stan::common::initialize_state_random(R, cont_vector1, model_, base_rng1, &ss));
+  EXPECT_TRUE(stan::services::init::initialize_state_random(R, cont_vector1, model_, base_rng1, &ss));
   EXPECT_EQ("", ss.str());
 
-  EXPECT_TRUE(stan::common::initialize_state_random(R, cont_vector2, model_, base_rng2, &ss));
+  EXPECT_TRUE(stan::services::init::initialize_state_random(R, cont_vector2, model_, base_rng2, &ss));
   EXPECT_EQ("", ss.str());
   
     

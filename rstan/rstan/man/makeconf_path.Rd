@@ -28,14 +28,10 @@ makeconf_path()
   This file may also be modified to specify alternative C++ compilers,
   such as clang++ or later versions of g++.
 
-  As of rstan 1.0.2, \code{set_cppo} can be used to create/change 
-  a file that can be used to define compiling flags in the user's home
-  directoty, in which a flag can be set to overwrite what is 
-  set in the system's Makeconf file. 
 }
 
 \seealso{
-  \code{\link{stan}}, \code{\link{set_cppo}}  
+  \code{\link{stan}}  
 }
 \examples{
 makeconf_path() 

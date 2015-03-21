@@ -12,10 +12,7 @@
 #include <locale>
 
 #include <boost/throw_exception.hpp>
-
-#include <stan/math/matrix.hpp>
 #include <stan/io/var_context.hpp>
-
 #include <Rcpp.h>
 
 namespace rstan {

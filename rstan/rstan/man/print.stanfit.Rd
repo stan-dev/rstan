@@ -11,17 +11,20 @@
 \usage{
   \method{print}{stanfit}(x, pars = x@sim$pars_oi, 
       probs = c(0.025, 0.25, 0.5, 0.75, 0.975),
-      digits_summary = 2, ...)
+      digits_summary = 2, include = TRUE, ...)
 }
 
 \arguments{
   \item{x}{An object of S4 class \code{stanfit}.}
   \item{pars}{Parameters in which the summaries are interest; defaults to all parameters
-    for which samples are saved.}
+    for which samples are saved. If \code{include = FALSE}, then the specified parameters
+    are excluded from the printed summary.}
   \item{probs}{Quantiles of interest; defaults to \code{"c(0.025,0.25,0.5,0.75,0.975)"}}
   \item{digits_summary}{The number of significant digits for printing out
     the summary; defaults to 1. The effective sample size is always rounded to
-    integers.} 
+    integers.}
+  \item{include}{Logical scalar (defaulting to \code{TRUE}) that indicates whether to
+    include or exclude the parameters named by the \code{pars} argument}
   \item{\dots}{Additional arguments that would be passed to method
     \code{summary} of \code{stanfit}.}
 }

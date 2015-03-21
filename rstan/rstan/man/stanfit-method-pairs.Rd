@@ -67,9 +67,5 @@
 
 \examples{
 example(read_stan_csv)
-pairs(fit, condition = list(1, 2:4))
-pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = 0.25)
 pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = "acc")
-lp <- sapply(get_logposterior(fit), FUN = function(x) tail(x, nrow(fit)))
-pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = lp > median(lp))
 }

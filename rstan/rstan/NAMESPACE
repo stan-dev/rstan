@@ -14,11 +14,12 @@ export(
   stan_rdump,
   read_rdump,
   makeconf_path,
-  set_cppo, get_cppo, reset_cppo,
-  stan_demo, 
   sflist2stanfit,
   read_stan_csv,
   monitor,
+  lookup,
+  testify,
+  stan_demo,
   rstan_options 
 # get_rstan.options
 )
@@ -40,6 +41,7 @@ exportMethods(
   get_sampler_params,
   get_logposterior, 
   get_posterior_mean,
+  get_elapsed_time,
   get_stanmodel
 )
 S3method(print, stanfit)
@@ -49,4 +51,6 @@ S3method(as.data.frame, stanfit)
 S3method(is.array, stanfit)
 S3method(dim, stanfit)
 S3method(dimnames, stanfit)
+S3method(names, stanfit)
+S3method(`names<-`, stanfit)
 S3method(pairs, stanfit)

@@ -21,6 +21,8 @@
 \alias{get_inits}
 \alias{get_posterior_mean}
 \alias{get_posterior_mean,stanfit-method}
+\alias{get_elapsed_time}
+\alias{get_elapsed_time,stanfit-method}
 \alias{get_inits,stanfit-method}
 \alias{get_logposterior} 
 \alias{get_logposterior,stanfit,logical-method}
@@ -137,6 +139,10 @@
     \item{\code{get_posterior_mean}}{\code{signature(object = "stanfit")}:
       get the posterior mean for parameters of interest (using \code{pars}
       to specify) among \emph{all} parameters.} 
+    \item{\code{get_elapsed_time}}{\code{signature(object = "stanfit")}:
+      get the warmup time and sample time in seconds spent to draw the samples.
+      A matrix of two columns is returned: each row has the time information
+      for one chain.}
     \item{\code{get_stancode}}{\code{signature(object = "stanfit")}:
       get the Stan code for the fitted model.}
     \item{\code{get_cppo_mode}}{\code{signature(object = "stanfit")}:

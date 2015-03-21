@@ -17,22 +17,10 @@
 
 #include <stan/model/util.hpp>
 
-#include <stan/optimization/newton.hpp>
-#include <stan/optimization/bfgs.hpp>
-
-#include <stan/mcmc/hmc/static/adapt_unit_e_static_hmc.hpp>
-#include <stan/mcmc/hmc/static/adapt_diag_e_static_hmc.hpp>
-#include <stan/mcmc/hmc/static/adapt_dense_e_static_hmc.hpp>
-#include <stan/mcmc/hmc/nuts/adapt_unit_e_nuts.hpp>
-#include <stan/mcmc/hmc/nuts/adapt_diag_e_nuts.hpp>
-#include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
-#include <stan/mcmc/fixed_param_sampler.hpp>
-
-
-#include <stan/common/do_print.hpp>
-#include <stan/common/do_bfgs_optimize.hpp>
-#include <stan/common/print_progress.hpp>
-#include <stan/common/initialize_state.hpp>
+#include <stan/services/io.hpp>
+#include <stan/services/init.hpp>
+#include <stan/services/mcmc.hpp>
+#include <stan/services/optimization.hpp>
 
 
 #include <rstan/io/rlist_ref_var_context.hpp>
@@ -48,12 +36,11 @@
 // void R_CheckUserInterrupt(void);
 
 
-// REF: stan/common/command.hpp
+// REF: stan/services/command.hpp
 
 #include <stan/io/mcmc_writer.hpp>
-#include <stan/common/recorder/messages.hpp>
-#include <stan/common/warmup.hpp>
-#include <stan/common/sample.hpp>
+#include <stan/interface/recorder.hpp>
+#include <stan/services/mcmc.hpp>
 #include <rstan/rstan_recorder.hpp>
 
 namespace rstan {
@@ -475,14 +462,14 @@ namespace rstan {
                                   sample_recorder_offset,
                                   qoi_idx);
 
-      stan::common::recorder::csv diagnostic_recorder
+      stan::interface::recorder::csv diagnostic_recorder
         = diagnostic_recorder_factory(&diagnostic_stream, "# ");
 
-      stan::common::recorder::messages message_recorder(&Rcpp::Rcout, "# ");
+      stan::interface::recorder::messages message_recorder(&Rcpp::Rcout, "# ");
 
       stan::io::mcmc_writer<Model,
-                            rstan_sample_recorder, stan::common::recorder::csv,
-                            stan::common::recorder::messages>
+                            rstan_sample_recorder, stan::interface::recorder::csv,
+                            stan::interface::recorder::messages>
         writer(sample_recorder, diagnostic_recorder, message_recorder, &Rcpp::Rcout);
 
       if (!args.get_append_samples()) {
@@ -493,12 +480,14 @@ namespace rstan {
       // Warm-Up
       clock_t start = clock();
 
-      std::string prefix = "\n";
+      std::stringstream prefix_stream;
+      prefix_stream << "\nChain " << args.get_chain_id() << ", ";
+      std::string prefix = prefix_stream.str();
       std::string suffix = "";
       R_CheckUserInterrupt_Functor interruptCallback;
 
-      stan::common::warmup<Model, RNG_t,
-                           R_CheckUserInterrupt_Functor>
+      stan::services::mcmc::warmup<Model, RNG_t,
+                                   R_CheckUserInterrupt_Functor>
         (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(),
          args.get_ctrl_sampling_thin(),
          args.get_ctrl_sampling_refresh(), args.get_ctrl_sampling_save_warmup(),
@@ -515,7 +504,7 @@ namespace rstan {
         writer.write_adapt_finish(sampler_ptr);
 
         std::stringstream ss;
-        stan::common::recorder::messages info(&ss, "# ");
+        stan::interface::recorder::messages info(&ss, "# ");
         writer.write_adapt_finish(sampler_ptr, info);
         adaptation_info = ss.str();
         adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
@@ -524,8 +513,8 @@ namespace rstan {
       // Sampling
       start = clock();
 
-      stan::common::sample<Model, RNG_t,
-                           R_CheckUserInterrupt_Functor>
+      stan::services::mcmc::sample<Model, RNG_t,
+                                   R_CheckUserInterrupt_Functor>
         (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(),
          args.get_ctrl_sampling_thin(),
          args.get_ctrl_sampling_refresh(), true,
@@ -538,8 +527,6 @@ namespace rstan {
       double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
 
       writer.write_timing(warmDeltaT, sampleDeltaT);
-
-
 
       double mean_lp(0);
       std::vector<double> mean_pars;
@@ -571,6 +558,9 @@ namespace rstan {
       holder.attr("mean_pars") = mean_pars;
       holder.attr("mean_lp__") = mean_lp;
       holder.attr("adaptation_info") = adaptation_info;
+      holder.attr("elapsed_time") =
+        Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
+                                    Rcpp::_["sample"] = sampleDeltaT);
 
       Rcpp::List slst(sample_recorder.sampler_values_.x().begin()+1,
                       sample_recorder.sampler_values_.x().end());
@@ -613,7 +603,6 @@ namespace rstan {
       std::vector<double> params_inr_etc; // cont, disc, and others
       std::vector<double> init_grad;
       std::string init_val = args.get_init();
-      double init_log_prob;
       int num_init_tries = 0;
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
@@ -632,17 +621,16 @@ namespace rstan {
           init = R.str();
         }
         
-        if (stan::common::initialize_state(init,
-                                           args.get_init_radius(),
-                                           cont_params,
-                                           model,
-                                           base_rng,
-                                           &ss,
-                                           context_factory,
-                                           args.get_enable_random_init()) == false)
+        if (!stan::services::init::initialize_state(init,
+                                                    cont_params,
+                                                    model,
+                                                    base_rng,
+                                                    &ss,
+                                                    context_factory,
+                                                    args.get_enable_random_init()),
+                                                    args.get_init_radius()) {
           throw std::runtime_error(ss.str());
-
-        rstan::io::rcout << ss.str();
+        }
         for (int n = 0; n < cont_params.size(); n++)
           cont_vector[n] = cont_params[n];
       }
@@ -731,14 +719,14 @@ namespace rstan {
           lbfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           lbfgs._conv_opts.maxIts     = args.get_iter();
 
-          int return_code = stan::common::do_bfgs_optimize(model, lbfgs, base_rng,
-                                                           lp, cont_vector, disc_vector,
-                                                           &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh, interruptCallback);
+          stan::services::optimization::do_bfgs_optimize(model, lbfgs, base_rng,
+                                                         lp, cont_vector, disc_vector,
+                                                         &sample_stream, &rstan::io::rcout,
+                                                         save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
-            stan::common::write_iteration(sample_stream, model, base_rng,
-                                          lp, cont_vector, disc_vector);
+            stan::services::io::write_iteration(sample_stream, model, base_rng,
+                                                lp, cont_vector, disc_vector);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
@@ -795,14 +783,14 @@ namespace rstan {
           bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           bfgs._conv_opts.maxIts     = args.get_iter();
 
-          int return_code = stan::common::do_bfgs_optimize(model, bfgs, base_rng,
-                                                           lp, cont_vector, disc_vector,
-                                                           &sample_stream, &rstan::io::rcout,
-                                                           save_iterations, refresh, interruptCallback);
+          stan::services::optimization::do_bfgs_optimize(model, bfgs, base_rng,
+                                                         lp, cont_vector, disc_vector,
+                                                         &sample_stream, &rstan::io::rcout,
+                                                         save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
-            stan::common::write_iteration(sample_stream, model, base_rng,
-                                          lp, cont_vector, disc_vector);
+            stan::services::io::write_iteration(sample_stream, model, base_rng,
+                                                lp, cont_vector, disc_vector);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
@@ -1147,7 +1135,7 @@ namespace rstan {
       rstan::io::rlist_ref_var_context par_context(par);
       std::vector<int> params_i;
       std::vector<double> params_r;
-      model_.transform_inits(par_context, params_i, params_r);
+      model_.transform_inits(par_context, params_i, params_r, &rstan::io::rcout);
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(params_r));
       UNPROTECT(1);

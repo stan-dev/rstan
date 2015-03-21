@@ -12,9 +12,12 @@ stan(file, model_name = "anon_model", model_code = "",
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   algorithm = c("NUTS", "HMC", "Fixed_param"), %, "Metropolis"),
   control = NULL,
-  sample_file, diagnostic_file, 
+  sample_file = NULL, diagnostic_file = NULL, 
   save_dso = TRUE, 
-  verbose = FALSE, ...,
+  verbose = FALSE, 
+  cores = getOption("mc.cores", 1L),
+  open_progress = interactive() && !isatty(stdout()),
+  ...,
   boost_lib = NULL,
   eigen_lib = NULL)
 }
@@ -164,6 +167,17 @@ stan(file, model_name = "anon_model", model_code = "",
     }
   }
   
+  \item{cores}{Number of cores to use when executing the chains in parallel,
+    which defaults to 1 but we recommend setting the \code{mc.cores} option 
+    to be as many processors as the hardware and RAM allow (up to the 
+    number of chains).}
+    
+  \item{open_progress}{Logical scalar that only takes effect if 
+    \code{cores > 1} but is recommended to be \code{TRUE} in interactive
+    use so that the progress of the chains will be redirected to a file
+    that is automatically opened for inspection. For very short runs, the
+    user might prefer \code{FALSE}.}
+  
   \item{\dots}{Other optional parameters: 
     \enumerate{
       \item \code{chain_id} (\code{integer})
@@ -303,10 +317,9 @@ stan(file, model_name = "anon_model", model_code = "",
   through parameter \code{fit} in order to reuse the compiled model; other
   configuration may change.
 
-  The optimization level for compiling the C++ code generated for the 
-  model can be set by \code{set_cppo}. In general, the higher the optimization
-  level is set, the faster the generated binary code for the model runs. However, 
-  the binary code generated for the model runs fast by using higher
+  In general, the higher the optimization level is set, the faster the 
+  generated binary code for the model runs, which can be set in a Makevars file.
+  However, the binary code generated for the model runs fast by using higher
   optimization level is at the cost of long time to compile the C++ code. 
 }
 
@@ -326,9 +339,6 @@ stan(file, model_name = "anon_model", model_code = "",
 
   see \code{\link{extract}} and \code{\link{as.array.stanfit}} for extracting
   samples from \code{stanfit} objects.
-
-  see \code{\link{set_cppo}} for setting higher optimization level for
-  compiling the C++ code.
 }
 \examples{\dontrun{
 #### example 1 
