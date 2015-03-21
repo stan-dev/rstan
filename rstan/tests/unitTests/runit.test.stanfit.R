@@ -111,7 +111,9 @@ test_init_zero_gradient_failure <- function() {
   sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
-  checkTrue(grepl('.*Rejecting initialization at zero because of gradient failure.*', geterrmessage()))
+  errmsg <- geterrmessage()
+  checkTrue(grepl('.*zero.*', errmsg))
+  checkTrue(grepl('.*gradient failure.*', errmsg))
 } 
 
 
