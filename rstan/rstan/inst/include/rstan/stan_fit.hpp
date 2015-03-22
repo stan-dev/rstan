@@ -16,6 +16,10 @@
 #include <boost/random/uniform_real_distribution.hpp>
 
 #include <stan/model/util.hpp>
+#include <stan/mcmc.hpp>
+#include <stan/mcmc/fixed_param_sampler.hpp>
+#include <stan/optimization/newton.hpp>
+#include <stan/optimization/bfgs.hpp>
 
 #include <stan/services/io.hpp>
 #include <stan/services/init.hpp>
