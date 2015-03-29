@@ -607,7 +607,6 @@ namespace rstan {
       std::vector<double> params_inr_etc; // cont, disc, and others
       std::vector<double> init_grad;
       std::string init_val = args.get_init();
-      int num_init_tries = 0;
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       {
@@ -625,15 +624,16 @@ namespace rstan {
           init = R.str();
         }
         
-        if (stan::services::init::initialize_state(init,
-                                                   cont_params,
-                                                   model,
-                                                   base_rng,
-                                                   &ss,
-                                                   context_factory) == false)
+        if (!stan::services::init::initialize_state(init,
+                                                    cont_params,
+                                                    model,
+                                                    base_rng,
+                                                    &ss,
+                                                    context_factory,
+                                                    args.get_enable_random_init(),
+                                                    args.get_init_radius())) {
           throw std::runtime_error(ss.str());
-
-        rstan::io::rcout << ss.str();
+        }
         for (int n = 0; n < cont_params.size(); n++)
           cont_vector[n] = cont_params[n];
       }
@@ -669,8 +669,6 @@ namespace rstan {
         if (LBFGS == args.get_ctrl_optim_algorithm()) {
           rstan::io::rcout << "STAN OPTIMIZATION COMMAND (LBFGS)" << std::endl;
           rstan::io::rcout << "init = " << init_val << std::endl;
-          if (num_init_tries > 0)
-            rstan::io::rcout << "init tries = " << num_init_tries << std::endl;
           if (args.get_sample_file_flag())
             rstan::io::rcout << "output = " << args.get_sample_file() << std::endl;
           rstan::io::rcout << "save_iterations = " << args.get_ctrl_optim_save_iterations() << std::endl;
@@ -738,8 +736,6 @@ namespace rstan {
         } else if (BFGS == args.get_ctrl_optim_algorithm()) {
           rstan::io::rcout << "STAN OPTIMIZATION COMMAND (BFGS)" << std::endl;
           rstan::io::rcout << "init = " << init_val << std::endl;
-          if (num_init_tries > 0)
-            rstan::io::rcout << "init tries = " << num_init_tries << std::endl;
           if (args.get_sample_file_flag())
             rstan::io::rcout << "output = " << args.get_sample_file() << std::endl;
           rstan::io::rcout << "save_iterations = " << args.get_ctrl_optim_save_iterations() << std::endl;

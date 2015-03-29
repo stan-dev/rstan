@@ -78,7 +78,11 @@ stan(file, model_name = "anon_model", model_code = "",
       See the examples below of defining such functions and using a 
       list of lists for specify initial values. Additionally,
       see below notes on that RStan treats a vector of length 1 as
-      a scalar. 
+      a scalar.
+    When the initial values for some parameters are specified through a
+    \code{list} or a \code{function} partially, initial values are
+    simulated for un-specifed parameters in a way the same as random initial
+    values.
   }
   \item{seed}{The seed, a positive integer, for random number generation of Stan. The
     default is generated from 1 to the maximum integer supported by \R so 
@@ -181,6 +185,7 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{test_grad} (\code{logical})
       \item \code{append_samples} (\code{logical})
       \item \code{refresh}(\code{integer})
+      \item \code{enable_random_init}(\code{logical})
     }
 
     \code{chain_id} can be a vector to specify the chain_id for all 
@@ -188,8 +193,10 @@ stan(file, model_name = "anon_model", model_code = "",
     For the latter, the sequence of integers starting from the given
     \code{chain_id} are used for all chains. 
 
-    \code{init_r} is only valid for \code{init="random"}. If 
-    specified, the initial values are simulated from [-init_r, init_r]
+    \code{init_r} is used only for generating random initial values,
+    specifically when \code{init="random"} and not all parameters
+    are initialized in the user-supplied list. If specified, the initial values
+    are simulated uniformly from interval [-init_r, init_r]
     rather than using the default interval (see the manual of (cmd)Stan).
 
     Argument \code{refresh} (\code{integer}) can be used to
@@ -197,6 +204,10 @@ stan(file, model_name = "anon_model", model_code = "",
     show the progress every \code{refresh} iterations). 
     By default, \code{refresh = max(iter/10, 1)}. 
     The progress indicator is turned off if \code{refresh <= 0}.
+
+    Argument \code{enable_random_init} (\code{logical}) being \code{TRUE}
+    enables specifying initial values randomly when the initial
+    values are not fully specified from the user. 
 
     Another parameter is \code{test_grad} (\code{TRUE} or \code{FALSE}).  
     If \code{test_grad=TRUE}, Stan will not do any sampling. Instead,

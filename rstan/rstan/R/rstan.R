@@ -171,6 +171,7 @@ stan <- function(file, model_name = "anon_model",
   is_arg_recognizable(dot_arg_names, 
                       c("chain_id", "init_r", "test_grad", 
                         "append_samples", "refresh", "control",
+                        "enable_random_init",
                         "obfuscate_model_name"),
                       pre_msg = "passing unknown arguments: ", 
                       call. = FALSE)
