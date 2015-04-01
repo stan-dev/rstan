@@ -175,15 +175,28 @@ setMethod("sampling", "stanmodel",
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
                 cat("Refresh to see progress\n", file = sinkfile)
                 if(.Platform$OS.type == "windows" && is.null(browser)) {
-                  browser <- "start"
+                  browser <- file.path(Sys.getenv("ProgramFiles(x86)"), 
+                                       "Internet Explorer", "iexplore.exe")
+                  if(!file.exists(browser)) {
+                    browser <- file.path(Sys.getenv("ProgramFiles"), 
+                                         "Internet Explorer", "iexplore.exe")
+                    if(!file.exists(browser)) {
+                      warning("Cannot find Internet Explorer; consider setting 'options(browser = )' explicitly")
+                      browser <- NULL
+                    }
+                  }
                 }
                 else if(Sys.info()["sysname"] == "Darwin" && grepl("open$", browser)) {
                   browser <- "/Applications/Safari.app/Contents/MacOS/Safari"
+                  if(!file.exists(browser)) {
+                    warning("Cannot find Safari; consider setting 'options(browser = )' explicitly")
+                    browser <- "/usr/bin/open"
+                  }
                 }
                 utils::browseURL(sinkfile, browser = browser)
               }
               else sinkfile <- ""
-              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = TRUE)
+              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
               parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
               callFun <- function(i) {
