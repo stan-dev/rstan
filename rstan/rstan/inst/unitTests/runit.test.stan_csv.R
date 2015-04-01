@@ -60,10 +60,11 @@ test_parse_stancsv_comments3 <- function() {
   lst <- rstan:::parse_stancsv_comments(comments)
   checkEquals(lst$chain_id, 0)
   existence <- c("seed", "chain_id", "iter", "warmup", "thin", 
-                 "save_warmup", "stepsize",
+                 "save_warmup", "stepsize", "time_info", "has_time",
                  "adaptation_info") %in% names(lst)
   checkTrue(all(existence))
   checkEquals(lst$seed, "3086139456")
   checkEquals(lst$stepsize, 1)
   checkEquals(lst$sampler_t, "NUTS(diag_e)")
+  checkEquals(lst$has_time, TRUE)
 }

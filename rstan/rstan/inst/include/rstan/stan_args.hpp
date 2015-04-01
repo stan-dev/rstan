@@ -93,6 +93,7 @@ namespace rstan {
     std::string init;
     SEXP init_list;
     double init_radius;
+    bool enable_random_init; // enable randomly partially specifying inits 
     std::string sample_file; // the file for outputting the samples
     bool append_samples;
     bool sample_file_flag; // true: write out to a file; false, do not
@@ -355,6 +356,7 @@ namespace rstan {
       }
       get_rlist_element(in, "init_r", init_radius, 2.0);
       if (0 >= init_radius)  init = "0";
+      get_rlist_element(in, "enable_random_init", enable_random_init, true);
       validate_args();
     }
 
@@ -372,6 +374,7 @@ namespace rstan {
       args["init"] = Rcpp::wrap(init);
       args["init_list"] = init_list;
       args["init_radius"] = Rcpp::wrap(init_radius);
+      args["enable_random_init"] = Rcpp::wrap(enable_random_init);
       args["append_samples"] = Rcpp::wrap(append_samples);
       if (sample_file_flag)
         args["sample_file"] = Rcpp::wrap(sample_file);
@@ -606,6 +609,9 @@ namespace rstan {
     inline double get_init_radius() const {
       return init_radius;
     }
+    inline bool get_enable_random_init() const {
+      return enable_random_init;
+    }
     const std::string& get_init() const {
       return init;
     }
@@ -616,6 +622,7 @@ namespace rstan {
 
     void write_args_as_comment(std::ostream& ostream) const {
       write_comment_property(ostream,"init",init);
+      write_comment_property(ostream,"enable_random_init",enable_random_init);
       write_comment_property(ostream,"seed",random_seed);
       write_comment_property(ostream,"chain_id",chain_id);
       write_comment_property(ostream,"iter",get_iter());

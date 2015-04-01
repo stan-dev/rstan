@@ -78,7 +78,8 @@ stan_model <- function(file,
   model_cppname <- stanc_ret$model_cppname 
   model_name <- stanc_ret$model_name 
   model_code <- stanc_ret$model_code 
-  inc <- paste(stanc_ret$cppcode, 
+  inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
+               stanc_ret$cppcode,
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
                sep = '')  
@@ -178,6 +179,7 @@ stan <- function(file, model_name = "anon_model",
   is_arg_recognizable(dot_arg_names, 
                       c("chain_id", "init_r", "test_grad", 
                         "append_samples", "refresh", "control",
+                        "enable_random_init",
                         "obfuscate_model_name"),
                       pre_msg = "passing unknown arguments: ", 
                       call. = FALSE)

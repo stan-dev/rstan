@@ -121,7 +121,7 @@ setMethod("optimizing", "stanmodel",
               args$sample_file <- writable_sample_file(sample_file) 
             dotlist <- list(...)
             is_arg_recognizable(names(dotlist), 
-                                c("iter", "save_iterations", 
+                                c("iter",
                                   "save_iterations",
                                   "refresh",
                                   "init_alpha",
@@ -164,12 +164,37 @@ setMethod("sampling", "stanmodel",
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()), ...) {
-            
-            if(cores > 1) {
+
+            # allow data to be specified as a vector of character string
+            if (is.character(data)) {
+              data <- try(mklist(data))
+              if (is(data, "try-error")) {
+                message("failed to create the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+            }
+            # check data and preprocess
+            if (check_data) {
+              data <- try(force(data))
+              if (is(data, "try-error")) {
+                message("failed to evaluate the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              if (!missing(data) && length(data) > 0) {
+                data <- try(data_preprocess(data))
+                if (is(data, "try-error")) {
+                  message("failed to preprocess the data; sampling not done")
+                  return(invisible(new_empty_stanfit(object)))
+                }
+              } else data <- list()
+            }
+
+            if (chains > 1 && cores > 1) {
               dotlist <- c(sapply(ls(), simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               dotlist$chains <- 1L
               dotlist$cores <- 1L
+              dotlist$data <- data
               if(open_progress && 
                  !identical(browser <- getOption("browser"), "false")) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
@@ -208,9 +233,9 @@ setMethod("sampling", "stanmodel",
               nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
               if(all(sapply(nfits, is, class2 = "stanfit")) &&
                  all(sapply(nfits, FUN = function(x) x@mode == 0))) {
-                nfits <- sflist2stanfit(nfits)
+                 return(sflist2stanfit(nfits))
               }
-              return(nfits)
+              return(nfits[[1]])
             }
             dots <- list(...)
             check_unknown_args <- dots$check_unknown_args
@@ -218,6 +243,7 @@ setMethod("sampling", "stanmodel",
               is_arg_recognizable(names(dots),
                                   c("chain_id", "init_r", "test_grad",
                                     "obfuscate_model_name",
+                                    "enable_random_init",
                                     "append_samples", "refresh", "control", 
                                     "cores", "open_progress"), 
                                   pre_msg = "passing unknown arguments: ",
@@ -227,30 +253,6 @@ setMethod("sampling", "stanmodel",
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-            if (check_data) { 
-              data <- try(force(data))
-              if (is(data, "try-error")) {
-                message("failed to evaluate the data; sampling not done")
-                return(invisible(new_empty_stanfit(object)))
-              }
-              # allow data to be specified as a vector of character string 
-              if (is.character(data)) {
-                data <- try(mklist(data))
-                if (is(data, "try-error")) {
-                  message("failed to create the data; sampling not done") 
-                  return(invisible(new_empty_stanfit(object)))
-                }
-              }
-              # check data and preprocess
-              if (!missing(data) && length(data) > 0) {
-                data <- try(data_preprocess(data))
-                if (is(data, "try-error")) {
-                  message("failed to preprocess the data; sampling not done") 
-                  return(invisible(new_empty_stanfit(object)))
-                }
-              } else data <- list()
-            } 
-
             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
             sfmiscenv <- new.env()
             if (is(sampler, "try-error")) {
@@ -297,8 +299,8 @@ setMethod("sampling", "stanmodel",
 
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 
-                cat('\n', mode, " FOR MODEL '", object@model_name, "' NOW (CHAIN ", 
-                    ifelse(chains == 1 && !is.null(dots$chain_id), dots$chain_id, i), ").\n", sep = '')
+                cat('\n', mode, " FOR MODEL '", object@model_name, 
+                    "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
               samples_i <- try(sampler$call_sampler(args_list[[i]])) 
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 message("error occurred during calling the sampler; sampling not done") 

@@ -111,7 +111,8 @@ test_init_zero_gradient_failure <- function() {
   sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
-  checkTrue(grepl('.*Rejecting initialization at zero because of gradient failure.*', geterrmessage()))
+  errmsg <- geterrmessage()
+  checkTrue(grepl('.*Rejecting initial value.*', errmsg))
 } 
 
 
@@ -132,7 +133,8 @@ test_init_zero_exception_inf_lp <- function() {
   sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
-  checkTrue(grepl('.*vanishing density.*', geterrmessage()))
+  errmsg <- geterrmessage()
+  checkTrue(grepl('.*negative infinity.*', errmsg))
 } 
 
 test_init_zero_exception_inf_grad <- function() {
@@ -152,7 +154,8 @@ test_init_zero_exception_inf_grad <- function() {
   sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
-  checkTrue(grepl('.*divergent gradient.*', geterrmessage()))
+  errmsg <- geterrmessage()
+  checkTrue(grepl('.*not finite.*', errmsg))
 }
 
 test_grad_log <- function() {
