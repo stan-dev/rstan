@@ -70,7 +70,10 @@ stan_model <- function(file,
   } else {
     if (!stanc_ret$status)
       stop("stanc_ret is not a successfully returned list from stanc")
-  } 
+  }
+  
+  # check for compilers
+  
 
   model_cppname <- stanc_ret$model_cppname 
   model_name <- stanc_ret$model_name 
@@ -92,7 +95,12 @@ stan_model <- function(file,
     on.exit(rstan_options(eigen_lib = old.eigen_lib), add = TRUE) 
   }
 
-  
+  check <- system2("R", args = "CMD config CXX", 
+                   stdout = TRUE, stderr = FALSE)
+  if(identical(check, "")) {
+    WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
+    warning(paste("C++ compiler not found on system. If absent, see", WIKI))
+  }
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
