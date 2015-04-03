@@ -152,7 +152,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
              modulename = module_name, 
              system = R.version$system, 
              cxxflags = get_makefile_flags("CXXFLAGS"), 
-             .CXXDSOMISC = new.env()) 
+             .CXXDSOMISC = new.env(parent = emptyenv())) 
   assign("cxxfun", fx, envir = dso@.CXXDSOMISC)
   assign("dso_last_path", dso_last_path, envir = dso@.CXXDSOMISC)
   assign("dso_bin", dso_bin, envir = dso@.CXXDSOMISC)

@@ -39,7 +39,7 @@ setGeneric(name = "get_cxxflags",
            def = function(object, ...) { standardGeneric("get_cxxflags") })
 setMethod("get_cxxflags", "stanmodel", function(object) { object@dso@cxxflags }) 
 
-new_empty_stanfit <- function(stanmodel, miscenv = new.env(), 
+new_empty_stanfit <- function(stanmodel, miscenv = new.env(parent = emptyenv()), 
                               model_pars = character(0), par_dims = list(), 
                               mode = 2L, sim = list(), 
                               inits = list(), stan_args = list()) { 
@@ -240,7 +240,7 @@ setMethod("sampling", "stanmodel",
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
-            sfmiscenv <- new.env()
+            sfmiscenv <- new.env(parent = emptyenv())
             if (is(sampler, "try-error")) {
               message('failed to create the sampler; sampling not done') 
               return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
