@@ -771,7 +771,7 @@ sflist2stanfit <- function(sflist) {
               stan_args = do.call(c, lapply(sflist, function(x) x@stan_args)), 
               stanmodel = sflist[[1]]@stanmodel, 
               date = date(), 
-              .MISC = new.env()) 
+              .MISC = new.env(parent = emptyenv())) 
   return(nfit)
 } 
 # sflist2stan(list(l1=ss1, l2=ss2))

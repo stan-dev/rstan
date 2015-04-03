@@ -248,7 +248,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
              n_flatnames = length(par_fnames))
   null_dso <- new("cxxdso", sig = list(character(0)), dso_saved = FALSE, dso_filename = character(0), 
                   modulename = character(0), system = R.version$system, cxxflags = character(0), 
-                 .CXXDSOMISC = new.env())
+                 .CXXDSOMISC = new.env(parent = emptyenv()))
   null_sm <- new("stanmodel", model_name = m_name, model_code = character(0), 
                  model_cpp = list(), dso = null_dso)
 
@@ -262,6 +262,6 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
               stan_args = cs_lst2,
               stanmodel = null_sm,
               date = sdate, # not the time of sampling
-              .MISC = new.env())
+              .MISC = new.env(parent = emptyenv()))
   return(nfit)
 }
