@@ -663,7 +663,7 @@ read_rdump <- function(f) {
 
   if (missing(f)) 
     stop("no file specified.")
-  e <- new.env(parent = emptyenv()) 
+  e <- new.env()
   source(file = f, local = e)
   as.list(e)
 } 
