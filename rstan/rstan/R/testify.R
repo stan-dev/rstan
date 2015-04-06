@@ -45,9 +45,12 @@ testify <- function(stanmodel) {
   
   # get rid of templating and just use double because that is about all R can pass
   lines <- gsub("typename boost::math::tools::promote_args.*type ", "double ", lines)  
+  lines <- gsub("vector<Eigen::Matrix<.*Eigen::Dynamic,1> >", "vector<vector_d>", lines)
   lines <- gsub("Eigen::Matrix<.*Eigen::Dynamic,1>", "vector_d", lines)
+  lines <- gsub("vector<Eigen::Matrix<.*1,Eigen::Dynamic> >", "vector<row_vector_d>", lines)
   lines <- gsub("Eigen::Matrix<.*1,Eigen::Dynamic>", "row_vector_d", lines)
-  lines <- gsub("Eigen::Matrix<.*>", "matrix_d", lines)
+  lines <- gsub("vector<Eigen::Matrix<.*,Eigen::Dynamic> >", "vector<matrix_d>", lines)
+  lines <- gsub("Eigen::Matrix<.*,Eigen::Dynamic>", "matrix_d", lines)
   
   # restore Stan's Eigen typedefs that were clobbered by the previous lines
   lines <- gsub("typedef vector_d vector_d;", 
