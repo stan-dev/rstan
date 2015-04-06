@@ -1,5 +1,6 @@
 # This file is part of RStan
 # Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2005-2010 Oleg Sklyar
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
