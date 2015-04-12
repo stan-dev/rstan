@@ -226,6 +226,13 @@ setMethod("sampling", "stanmodel",
               parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
               callFun <- function(i) {
                 dotlist$chain_id <- i
+                if(is.list(dotlist$init)) dotlist$init <- dotlist$init[i]
+                if(is.character(dotlist$sample_file)) {
+                  dotlist$sample_file <- paste0(dotlist$sample_file, i)
+                }
+                if(is.character(dotlist$diagnostic_file)) {
+                  dotlist$diagnostic_file <- paste0(dotlist$diagnostic_file, i)
+                }
                 Sys.sleep(0.5 * i)
                 do.call(rstan::sampling, args = dotlist)
               }
