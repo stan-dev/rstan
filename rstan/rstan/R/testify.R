@@ -44,7 +44,8 @@ testify <- function(stanmodel) {
   lines <- grep("namespace \\{$", lines[1:end], value = TRUE, invert = TRUE)
   
   # get rid of templating and just use double because that is about all R can pass
-  lines <- gsub("typename boost::math::tools::promote_args.*type ", "double ", lines)  
+  lines <- gsub("typename boost::math::tools::promote_args.*type ", "double ", lines)
+  lines <- gsub("^((std::vector<)+)typename boost::math::tools::promote_args.*(>::type)+", "\\1double", lines)
   lines <- gsub("vector<Eigen::Matrix<.*Eigen::Dynamic,1> >", "vector<vector_d>", lines)
   lines <- gsub("Eigen::Matrix<.*Eigen::Dynamic,1>", "vector_d", lines)
   lines <- gsub("vector<Eigen::Matrix<.*1,Eigen::Dynamic> >", "vector<row_vector_d>", lines)
