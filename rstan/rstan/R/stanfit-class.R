@@ -576,8 +576,7 @@ if (!isGeneric("unconstrain_pars")) {
 setMethod("unconstrain_pars", signature = "stanfit", 
           function(object, pars) {
             # pars is a list as in specifying inits for a chain
-            if (!is_sfinstance_valid(object)) 
-              stop("the model object is not created or not valid")
+            check_sfinstance_valid(object)
             object@.MISC$stan_fit_instance$unconstrain_pars(pars)
           })
 
@@ -590,8 +589,7 @@ setMethod("constrain_pars", signature = "stanfit",
           function(object, upars) {
             # upars is a vector on the unconstrained space (R^N*), 
             # where N* is the number of unconstrained parameters. 
-            if (!is_sfinstance_valid(object)) 
-              stop("the model object is not created or not valid")
+            check_sfinstance_valid(object)
             p <- object@.MISC$stan_fit_instance$constrain_pars(upars)
             idx_wo_lp <- which(object@model_pars != 'lp__')
             rstan_relist(p, create_skeleton(object@model_pars[idx_wo_lp], object@par_dims[idx_wo_lp]))
@@ -600,8 +598,7 @@ setMethod("constrain_pars", signature = "stanfit",
 
 setMethod("log_prob", signature = "stanfit", 
           function(object, upars, adjust_transform = TRUE, gradient = FALSE) {
-            if (!is_sfinstance_valid(object)) 
-              stop("the model object is not created or not valid")
+            check_sfinstance_valid(object)
             return(object@.MISC$stan_fit_instance$log_prob(upars, adjust_transform, gradient))
           }) 
 
@@ -612,8 +609,7 @@ if (!isGeneric("get_num_upars")) {
 
 setMethod("get_num_upars", signature = "stanfit", 
           function(object) {
-            if (!is_sfinstance_valid(object)) 
-              stop("the model object is not created or not valid")
+            check_sfinstance_valid(object)
             object@.MISC$stan_fit_instance$num_pars_unconstrained()
           })
 
@@ -624,8 +620,7 @@ if (!isGeneric("grad_log_prob")) {
 
 setMethod("grad_log_prob", signature = "stanfit", 
           function(object, upars, adjust_transform = TRUE) {
-            if (!is_sfinstance_valid(object)) 
-              stop("the model object is not created or not valid")
+            check_sfinstance_valid(object)
             object@.MISC$stan_fit_instance$grad_log_prob(upars, adjust_transform) 
           }) 
 
@@ -712,6 +707,26 @@ is_sfinstance_valid <- function(object) {
     is_null_ptr(object@.MISC$stan_fit_instance@.xData$.cppclass)) 
 } 
 
+check_sfinstance_valid <- function(object) {
+  # Args
+  #  object: an instance of S4 class stanfit
+  err <- NA
+  if ( !exists("stan_fit_instance", envir = object@.MISC, inherits = FALSE) ) {
+    err <- ".MISC environment not found"
+  }
+  else if (is_null_ptr(object@.MISC$stan_fit_instance@.xData$.pointer)) {
+    err <- ".pointer pointer is NULL"
+  }
+  else if (is_null_ptr(object@.MISC$stan_fit_instance@.xData$.module)) {
+    err <- ".module pointer is NULL"
+  }
+  else if (is_null_ptr(object@.MISC$stan_fit_instance@.xData$.cppclass)) {
+    err <- ".cppclass pointer is NULL"
+  }
+  if ( !is.na(err) ) {
+    stop("the model object is not created or not valid: ", err)
+  }
+}
 
 sflist2stanfit <- function(sflist) {
   # merge a list of stanfit objects into one
