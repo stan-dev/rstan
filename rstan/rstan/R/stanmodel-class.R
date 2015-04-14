@@ -115,7 +115,8 @@ setMethod("optimizing", "stanmodel",
             args <- list(init = init, 
                          seed = seed, 
                          method = "optim", 
-                         algorithm = match.arg(algorithm)) 
+                         algorithm = match.arg(algorithm),
+                         verbosity = ifelse( verbose, 2, 0 ) )
          
             if (!is.null(sample_file) && !is.na(sample_file)) 
               args$sample_file <- writable_sample_file(sample_file) 
@@ -289,7 +290,8 @@ setMethod("sampling", "stanmodel",
                                           warmup = warmup, thin = thin,
                                           init = init, seed = seed, sample_file = sample_file, 
                                           diagnostic_file = diagnostic_file, 
-                                          algorithm = match.arg(algorithm), control = control, ...))
+                                          algorithm = match.arg(algorithm), control = control,
+                                          verbosity = ifelse( verbose, 2, 0), ...))
    
             if (is(args_list, "try-error")) {
               message('error in specifying arguments; sampling not done') 
