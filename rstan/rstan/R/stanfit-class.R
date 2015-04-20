@@ -250,7 +250,7 @@ par_traceplot <- function(sim, n, par_name, inc_warmup = TRUE, window = NULL, ..
   } 
 
   for (i in 1:sim$chains)  
-    lines(id, sim$samples[[i]][[n]][idx], lwd = 1, 
+    lines(id, sim$samples[[i]][[n]][idx], 
           xlab = '', ylab = '', col = chain_cols[(i-1) %% 6 + 1], ...) 
 } 
 
