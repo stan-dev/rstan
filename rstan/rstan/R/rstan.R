@@ -96,7 +96,8 @@ stan_model <- function(file,
     on.exit(rstan_options(eigen_lib = old.eigen_lib), add = TRUE) 
   }
 
-  check <- system2("R", args = "CMD config CXX", 
+  check <- system2(file.path(R.home(component = "bin"), "R"),
+                   args = "CMD config CXX", 
                    stdout = TRUE, stderr = FALSE)
   if(identical(check, "")) {
     WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
