@@ -227,7 +227,9 @@ data_preprocess <- function(data) { # , varnames) {
                      warning("data with name ", name, " is not numeric and not used")
                      return(NULL) 
                    }
- 
+                   
+                   if (0 == length(x)) return(integer(0))
+                   
                    if (is.integer(x)) return(x) 
          
                    # change those integers stored as reals to integers 
