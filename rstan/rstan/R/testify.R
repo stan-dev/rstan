@@ -158,5 +158,5 @@ testify <- function(stanmodel) {
   
   # try to compile
   compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
-  return(invisible(NULL))
+  return(invisible(lines))
 }
