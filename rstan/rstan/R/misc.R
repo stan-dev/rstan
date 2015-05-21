@@ -752,8 +752,8 @@ seq_array_ind <- function(d, col_major = FALSE) {
 
   res <- array(1L, dim = c(total, len)) 
 
-  # Handle cases like 1x1 matrices
-  if (total == 1)
+  # Handle cases like 1x1 or 0xN matrices
+  if (total <= 1)
     return(res)
   
   jidx <- if (col_major) 1L:len else len:1L
