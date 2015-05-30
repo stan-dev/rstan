@@ -231,7 +231,7 @@ namespace rstan {
                         std::vector<double>& acov) {
       std::vector<double> samples;
       get_kept_samples(sim,k,n,samples);
-      stan::prob::autocovariance(samples, acov);
+      stan::math::autocovariance(samples, acov);
     }
 
     /**
@@ -369,7 +369,7 @@ SEXP stan_prob_autocovariance(SEXP v) {
   BEGIN_RCPP
   std::vector<double> dv = Rcpp::as<std::vector<double> >(v);
   std::vector<double> acov;
-  stan::prob::autocovariance(dv, acov);
+  stan::math::autocovariance(dv, acov);
   SEXP __sexp_result;
   PROTECT(__sexp_result = Rcpp::wrap(acov));
   UNPROTECT(1);
@@ -399,7 +399,7 @@ SEXP effective_sample_size2(SEXP sims) {
     vector<double> samples;
     samples.assign(samples_c.begin(), samples_c.end());
     vector<double> acov_chain;
-    stan::prob::autocovariance(samples, acov_chain);
+    stan::math::autocovariance(samples, acov_chain);
     acov.push_back(acov_chain);
     chain_mean.push_back(stan::math::mean(samples));
   }
