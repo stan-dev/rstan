@@ -45,7 +45,8 @@ function(model = character(0),
       }
       else FILE <- file.path(tempdir(), "example-models-master.zip")
       writeBin(RCurl::getBinaryURL("https://github.com/stan-dev/example-models/archive/master.zip",
-                                   .opts = RCurl::curlOptions(followlocation = TRUE)), FILE)
+                                   .opts = RCurl::curlOptions(followlocation = TRUE,
+                                                              ssl.verifypeer = FALSE)), FILE)
       unzip(FILE, exdir = dirname(FILE))
       MODELS_HOME <- file.path(dirname(FILE), "example-models-master")
     }
