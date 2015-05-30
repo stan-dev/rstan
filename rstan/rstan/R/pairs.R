@@ -33,7 +33,7 @@ pairs.stanfit <-
       if(length(condition) != 2) stop("if a list, 'condition' must be of length 2")
       arr <- arr[,c(condition[[1]], condition[[2]]),,drop = FALSE]
       k <- length(condition[[1]])
-      mark <- c(rep(TRUE, sims * k), rep(FALSE, sims * (chains - k)))
+      mark <- c(rep(TRUE, sims * k), rep(FALSE, sims * length(condition[[2]])))
     }
     else if(is.logical(condition)) {
       stopifnot(length(condition) == (sims * chains))
