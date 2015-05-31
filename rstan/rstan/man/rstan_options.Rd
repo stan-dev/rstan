@@ -37,7 +37,7 @@ rstan_options(...)
     \item \code{rstan_chain_cols}: The colors used in methods \code{plot}
           and \code{traceplot} of S4 class \code{\linkS4class{stanfit}}  
           for coloring different chains. 
-    \item \code{rstawarmup_bg_col}: The background color for  
+    \item \code{rstan_warmup_bg_col}: The background color for  
           the warmup area in the traceplots. 
     \item \code{boost_lib}: The path for the Boost C++ library used
           to compile Stan models.  This option is valid 
