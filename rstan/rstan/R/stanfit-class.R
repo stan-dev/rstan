@@ -844,6 +844,11 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
 
 setMethod("as.mcmc.list", "stanfit", as.mcmc.list.stanfit)
 
+As.mcmc.list <- function(object, pars, ...) {
+  pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
+  return(as.mcmc.list(object, pars))
+}
+
 dimnames.stanfit <- function(x) {
   if (x@mode != 0) return(character(0)) 
   cids <- sapply(x@stan_args, function(x) x$chain_id)

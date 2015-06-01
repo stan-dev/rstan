@@ -20,7 +20,8 @@ export(
   lookup,
   testify,
   stan_demo,
-  rstan_options 
+  rstan_options,
+  As.mcmc.list
 # get_rstan.options
 )
 

@@ -45,7 +45,7 @@
 %%\alias{grad_log_prob,stanfit-method}
 %% \alias{grad_log_prob,stanfit,numeric-method}
 %% \alias{traceplot,stanfit-method}
-
+\alias{As.mcmc.list}
 \title{Class \code{stanfit}: fitted Stan model}
 
 \description{
@@ -67,7 +67,15 @@
   \code{sampling} method in S4 class \code{stan_model}.
 }
 
+\usage{
+  As.mcmc.list(object, pars, ...)
+}
 
+\arguments{
+  \item{object}{object of class \code{"stanfit"}}
+  \item{pars}{optional character vector of parameters to include}
+  \item{\dots}{unused}
+}
 \section{Slots}{
   \describe{
     \item{\code{model_name}:}{The model name, object of type \code{character}} 
@@ -131,8 +139,9 @@
       return a list of all the chains that can be treated as an
       \code{\link[coda]{mcmc.list}} as in package \pkg{coda}. 
       Parameter of interest can be specified using \code{pars}. 
-      The warmup samples are discarded. 
-    } 
+      The warmup samples are discarded. This method is not exported but
+      \code{As.mcmc.list} is.
+    }
     \item{\code{traceplot}}{\code{signature(object = "stanfit")}:
       plot the trace of chains (see \code{\link{traceplot}}). 
     } 
@@ -304,6 +313,7 @@ plot(exfit)
 adaptinfo <- get_adaptation_info(exfit)
 seed <- get_seed(exfit)
 sp <- get_sampler_params(exfit)
+ml <- As.mcmc.list(exfit)
 }
 
 \keyword{classes}
