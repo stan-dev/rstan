@@ -28,7 +28,8 @@ filename_rm_ext <- function(x) {
 } 
 
 real_is_integer <- function(x) {
-  if (length(x) < 1L ||  any(is.infinite(x)) || any(is.nan(x))) return(FALSE)
+  if (length(x) < 1L) return(TRUE)
+  if (any(is.infinite(x)) || any(is.nan(x))) return(FALSE)
   all(floor(x) == x)
 }
 
