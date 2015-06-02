@@ -231,7 +231,7 @@ stan(file, model_name = "anon_model", model_code = "",
   First, it translates the Stan model to C++ code.  Second, the 
   C++ code is compiled into a binary shared object, which
   is loaded into the current \R session (an object
-  of S4 class \code{stanmodel} is created). Finally, sample
+  of S4 class \code{stanmodel} is created). Finally, samples
   are drawn and wrapped in an object of S4 class \code{stanfit}, 
   which provides functions such as \code{print}, \code{summary}, and \code{plot}
   to inspect and retrieve the results of the fitted model. 
