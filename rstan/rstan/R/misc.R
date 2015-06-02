@@ -229,12 +229,10 @@ data_preprocess <- function(data) { # , varnames) {
                      return(NULL) 
                    }
                    
-                   if (0 == length(x)) return(integer(0))
-                   
                    if (is.integer(x)) return(x) 
          
                    # change those integers stored as reals to integers 
-                   if (max(abs(x)) < .Machine$integer.max && real_is_integer(x))
+                   if (all(abs(x) < .Machine$integer.max) && real_is_integer(x))
                      storage.mode(x) <- "integer"  
                    return(x) 
                  })   
