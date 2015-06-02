@@ -43,9 +43,9 @@ stan(file, model_name = "anon_model", model_code = "",
     If \code{fit} is not \code{NA}, the compiled model associated with the fitted result 
     is re-used; thus the time that would otherwise be spent 
     recompiling the C++ code for the model can be saved.}
-  \item{data}{An object of class \code{list}, \code{environment}
-    providing the data for the model, or a vector of character strings 
-    for all the names of objects used as data in the working space. 
+  \item{data}{A named \code{list} or \code{environment}
+    providing the data for the model or a character vector 
+    for all the names of objects used as data. 
     See the notes below.}    
   \item{pars}{A vector of character string specifying parameters of interest; defaults
     to \code{NA} indicating all parameters in the model. Only samples for parameters
@@ -250,9 +250,14 @@ stan(file, model_name = "anon_model", model_code = "",
 }
 
 \note{
-  The data passed to \code{stan} are preprocessed before
-  passing to Stan. In general, each element of data should be either a numeric
-  vector (including special case 'scalar') or a numeric array (matrix). 
+  The data passed to \code{stan} are preprocessed before being passed to Stan.
+  If \code{data} is not a character vector, the data block of the Stan program
+  is parsed and \R objects of the same name are searched starting from the
+  calling environment. Then, if \code{data} is list-like but not a \code{data.frame}
+  the elements of \code{data} take precedence. This behavior is similar to how
+  a \code{formula} is evaluated by the \code{\link{lm}} function when \code{data} is
+  supplied. In general, each \R object being passed to Stan should be either a numeric
+  vector (including the special case of a 'scalar') or a numeric array (matrix). 
   The first exception is that an element can be a logical vector: \code{TRUE}'s 
   are converted to 1 and \code{FALSE}'s to 0.
   An element can also be a data frame or a specially structured list (see
@@ -277,7 +282,7 @@ stan(file, model_name = "anon_model", model_code = "",
   
    \item Check data types.  Stan allows only numeric data, that is,
      doubles, integers, and arrays of these.  Data of other types (for
-     examples, characters) are not passed to Stan. 
+     example, characters and factors) are not passed to Stan. 
 
    \item Check whether there are objects in the data list with duplicated names.
      Duplicated names, if found, will cause the function to stop and
@@ -297,9 +302,9 @@ stan(file, model_name = "anon_model", model_code = "",
      each of which is an array (matrix) of dimension "J*K". However, it is 
      not possible to pass a list for data declared such as 
      \code{"vector[K] y3[I,J]"}; the only way for it is to use an array with
-     dimension "I*J*K". In addition, technically a data frame in R is 
-     also a list, but it should not be used for the purpose here since a data frame
-     will be converted to a matrix as described above.  
+     dimension "I*J*K". In addition, technically a \code{data.frame} in R is 
+     also a list, but it should not be used for the purpose here since a
+     \code{data.frame} will be converted to a matrix as described above.  
   } 
 
   Stan treats a vector of length 1 in R as a scalar.  So technically 

@@ -33,9 +33,9 @@
 
 \arguments{
   \item{object}{An object of class \code{\linkS4class{stanmodel}}.}
-  \item{data}{An object of class \code{list}, \code{environment}
-    providing the data for the model, or a vector character strings 
-    for all the names of objects used as data in the working space. 
+  \item{data}{A named \code{list} or \code{environment}
+    providing the data for the model or a character vector 
+    for all the names of objects used as data. 
     See the notes in \code{\link{stan}}.} 
   \item{seed}{The seed for random number generation. The default is generated
     from 1 to the maximum integer supported by \R on the machine. 

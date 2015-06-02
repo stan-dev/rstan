@@ -1534,3 +1534,15 @@ get_time_from_csv <- function(tlines) {
   t
 }
 
+parse_data <- function(cppcode, e = parent.frame()) {
+  cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
+                  text = cppcode)
+  private <- grep("^private:$", cppcode) + 1L
+  public <- grep("^public:$", cppcode) - 1L
+  # pull out object names from the data block
+  objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
+                  cppcode[private:public])
+  # get them from the calling environment
+  mget(objects, envir = e, inherits = TRUE,
+       ifnotfound = vector("list", length(objects)))
+}

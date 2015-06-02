@@ -77,15 +77,28 @@ setMethod("optimizing", "stanmodel",
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-            if (check_data) {
-              if (is.character(data)) {
-                data <- try(mklist(data))
-                if (is(data, "try-error")) {
-                  message("failed to create the data; optimization not done") 
-                  return(invisible(NULL))
-                }
+            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+            
+            if (is.environment(data) | (is.list(data) & !is.data.frame(data))) {
+              parsed_data <- parse_data(get_cppcode(object))
+              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              data <- parsed_data
+            }
+            else if (is.character(data)) { # names of objects
+              data <- try(mklist(data))
+              if (is(data, "try-error")) {
+                message("failed to create the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
               }
+            }
+            
+            if (check_data) {
+              data <- try(force(data))
+              if (is(data, "try-error")) {
+                message("failed to evaluate the data; sampling not done")
+                return(invisible(NULL))
+              }
+              
               if (!missing(data) && length(data) > 0) {
                 data <- try(data_preprocess(data))
                 if (is(data, "try-error")) {
@@ -165,8 +178,12 @@ setMethod("sampling", "stanmodel",
                    control = NULL, cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()), ...) {
 
-            # allow data to be specified as a vector of character string
-            if (is.character(data)) {
+            if (is.environment(data) | (is.list(data) & !is.data.frame(data))) {
+              parsed_data <- parse_data(get_cppcode(object))
+              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              data <- parsed_data
+            }
+            else if (is.character(data)) { # names of objects
               data <- try(mklist(data))
               if (is(data, "try-error")) {
                 message("failed to create the data; sampling not done")
