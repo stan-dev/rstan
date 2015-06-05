@@ -79,7 +79,7 @@ setMethod("optimizing", "stanmodel",
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
             
-            if (is.environment(data) | (is.list(data) & !is.data.frame(data))) {
+            if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
               data <- parsed_data
@@ -178,7 +178,7 @@ setMethod("sampling", "stanmodel",
                    control = NULL, cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()), ...) {
 
-            if (is.environment(data) | (is.list(data) & !is.data.frame(data))) {
+            if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
               data <- parsed_data

@@ -50,7 +50,10 @@ stan_model <- function(file,
     }
     mtime <- file.info(file)$mtime
     file.rda <- gsub("stan$", "rda", file)
-    if(mtime < as.POSIXct(packageDescription("rstan")$Date) ||
+    if (!file.exists(file.rda)) {
+      file.rda <- file.path(tempdir(), paste0(tools::md5sum(file), ".rda"))
+    }
+    if( mtime < as.POSIXct(packageDescription("rstan")$Date) ||
        !file.exists(file.rda) ||
        file.info(file.rda)$mtime <  mtime ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
@@ -73,8 +76,13 @@ stan_model <- function(file,
   }
   
   # check for compilers
+  check <- system2("R", args = "CMD config CXX", 
+                   stdout = TRUE, stderr = FALSE)
+  if(identical(check, "")) {
+    WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
+    warning(paste("C++ compiler not found on system. If absent, see", WIKI))
+  }
   
-
   model_cppname <- stanc_ret$model_cppname 
   model_name <- stanc_ret$model_name 
   model_code <- stanc_ret$model_code 
@@ -96,12 +104,6 @@ stan_model <- function(file,
     on.exit(rstan_options(eigen_lib = old.eigen_lib), add = TRUE) 
   }
 
-  check <- system2("R", args = "CMD config CXX", 
-                   stdout = TRUE, stderr = FALSE)
-  if(identical(check, "")) {
-    WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
-    warning(paste("C++ compiler not found on system. If absent, see", WIKI))
-  }
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
@@ -112,15 +114,16 @@ stan_model <- function(file,
              dso = dso, # keep a reference to dso
              model_cpp = list(model_cppname = model_cppname, 
                               model_cppcode = stanc_ret$cppcode))
-  if(isTRUE(auto_write)) {
-    if(missing(file) || (file.access(dirname(file), mode = 2) != 0)) {
-      tf <- tempfile()
-      writeLines(model_code, con = tf)
-      file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
-      if(!file.exists(file)) file.rename(from = tf, to = file)
-    }
+  
+  if(missing(file) || (file.access(dirname(file), mode = 2) != 0) || !isTRUE(auto_write)) {
+    tf <- tempfile()
+    writeLines(model_code, con = tf)
+    file <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
+    if(!file.exists(file)) file.rename(from = tf, to = file)
     saveRDS(obj, file = gsub("stan$", "rda", file))
   }
+  else if(isTRUE(auto_write)) saveRDS(obj, file = gsub("stan$", "rda", file))
+  
   invisible(obj) 
   ## We keep a reference to *dso* above to avoid dso to be 
   ## deleted by R's garbage collection. Note that if dso 
