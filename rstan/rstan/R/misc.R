@@ -28,7 +28,8 @@ filename_rm_ext <- function(x) {
 } 
 
 real_is_integer <- function(x) {
-  if (length(x) < 1L ||  any(is.infinite(x)) || any(is.nan(x))) return(FALSE)
+  if (length(x) < 1L) return(TRUE)
+  if (any(is.infinite(x)) || any(is.nan(x))) return(FALSE)
   all(floor(x) == x)
 }
 
@@ -228,12 +229,10 @@ data_preprocess <- function(data) { # , varnames) {
                      return(NULL) 
                    }
                    
-                   if (0 == length(x)) return(integer(0))
-                   
                    if (is.integer(x)) return(x) 
          
                    # change those integers stored as reals to integers 
-                   if (max(abs(x)) < .Machine$integer.max && real_is_integer(x))
+                   if (all(abs(x) < .Machine$integer.max) && real_is_integer(x))
                      storage.mode(x) <- "integer"  
                    return(x) 
                  })   
