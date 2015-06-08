@@ -82,6 +82,7 @@ setMethod("optimizing", "stanmodel",
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             }
             else if (is.character(data)) { # names of objects
@@ -181,6 +182,7 @@ setMethod("sampling", "stanmodel",
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             }
             else if (is.character(data)) { # names of objects
