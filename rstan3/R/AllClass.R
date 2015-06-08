@@ -260,14 +260,15 @@ setClass("StanUnit", contains = "StanVector")
 #' @field permutation A positive integer vector of length iterations x chains
 #' 
 #' @seealso \code{\link{StanFitOptimization-methods}}
-setRefClass("StanFitMCMC", fields = list(warmup_draws = "list",
-                                         sample_draws = "list",
-                                         added_draws  = "list",
-                                         timestamps = "integer",
-                                         seed = "integer",
-                                         inits = "list",
-                                         mass_matrix = "matrix", 
-                                         permutation = "integer"),
+StanFitMCMC <- 
+  setRefClass("StanFitMCMC", fields = list(warmup_draws = "list",
+                                           sample_draws = "list",
+                                           added_draws  = "list",
+                                           timestamps = "integer",
+                                           seed = "integer",
+                                           inits = "list",
+                                           mass_matrix = "array", 
+                                           permutation = "integer"),
             # FIXME: add other extraction methods but without the get_ prefixes
             methods = list(show = function() {},
                            summary = function() {},
