@@ -18,3 +18,4 @@
 git_head <- function() "57643021a05d101485c55f7b331ea59d91a3cd75"
 git_head <- function() "04cfa06a318f7947c8610d2a857c9cb64c16b8fe"
 git_head <- function() "04cfa06a318f7947c8610d2a857c9cb64c16b8fe"
+git_head <- function() "edb702c04ad7a29cabc0f192679700574fee6ab9"
