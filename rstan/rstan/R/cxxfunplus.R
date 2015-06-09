@@ -161,6 +161,3 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     assign("module", Module(module_name, getDynLib(fx)), envir = dso@.CXXDSOMISC)
   return(dso)
 } 
-
-# write_dso 
-# writeBin(dso, '/tmp/Rtmpdb9w5A/aa.so')

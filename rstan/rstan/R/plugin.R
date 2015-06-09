@@ -20,12 +20,8 @@
 ## (original name: inline.R)
 ##
 
-rstan_inc_path_fun <- function() { 
-  system.file('include', package = 'rstan')
-} 
-
-stanheaders_inc_path_fun <- function() {
-  system.file('include', package = 'StanHeaders')
+inc_path_fun <- function(package) {
+  system.file('include', package = package)
 }
 
 # Using RcppEigen
@@ -42,13 +38,14 @@ boost_path_fun2 <- function() {
 }
 
 PKG_CPPFLAGS_env_fun <- function() {
-   paste(' -isystem"', file.path(stanheaders_inc_path_fun(), '" '),
+   paste(' -isystem"', file.path(inc_path_fun("Rcpp"), '" '),
          ' -isystem"', file.path(eigen_path_fun(), '" '),
          ' -isystem"', file.path(eigen_path_fun(), 'unsupported" '),
 #        ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
-         ' -I"', rstan_inc_path_fun(), '"', 
-         ' -Wno-unused-function -Wno-uninitialized',
+         ' -isystem"', file.path(inc_path_fun("StanHeaders"), '" '),
+         ' -I"', inc_path_fun("rstan"), '"', 
+         ' -O3 -Wno-unused-function -Wno-uninitialized',
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG', sep = '')
 }
 
@@ -82,8 +79,6 @@ rstanplugin <- function() {
 
   list(includes = '',
        body = function(x) x,
-       LinkingTo = c("Rcpp"),
-       ## FIXME see if we can use LinkingTo for RcppEigen's header files
        env = list(PKG_LIBS = paste(rcpp_pkg_libs),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
