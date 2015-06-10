@@ -32,7 +32,10 @@ StanFitMCMC$methods(summary = function() {
 
 StanFitMCMC$methods(as.mcmc.list = function() {
   "Convert to an mcmc.list object for use with the coda package"
-  stop("FIXME: Implement") # similar to current
+  arr <- as.array(.self)
+  return(coda::as.mcmc.list(lapply(1:ncol(arr), FUN = function(j) {
+    mcmc(t(arr[,j,]))
+  })))
 })
 
 StanFitMCMC$methods(extract = function() {
@@ -112,4 +115,11 @@ dim.StanFitMCMC <- function(x) {
   iterations <- chains[2]
   chains <- chains[1]
   return(c(params, chains, iterations))
+}
+
+as.array.StanFitMCMC <- function(x) {
+  out <- do.call(rbind, args = 
+                   sapply(x$sample_draws, FUN = as.matrix, simplify = FALSE))
+  dim(out) <- c(nrow(out), dim(x)[-1])
+  return(out)
 }
