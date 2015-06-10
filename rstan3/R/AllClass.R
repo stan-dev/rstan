@@ -24,7 +24,6 @@
 #' \item code. a character vector defining a program in the Stan language 
 #' }
 #' 
-#' @field file A length-one character vector usually passed to the constructor
 #' @field stan_code A derived character vector of any length with Stan code
 #' @field cpp_code A derived character vector of any length containing C++ code
 #' @field dso A derived object of \code{\link{cxxdso-class}}
@@ -44,14 +43,14 @@
 #' @export StanProgram
 StanProgram <- 
   setRefClass("StanProgram", 
-              fields = list(file = "character", stan_code = "character", 
-                            cpp_code = "character", dso = "cxxdso"), 
-              methods = list(initialize = function(file, code, ...) {},
+              fields = list(stan_code = "character", cpp_code = "character", 
+                            dso = "cxxdso"), 
+              methods = list(initialize = function(file, code, auto_write, ...) {},
                              show = function() {},
                              cpp_code = function() {},
                              expose = function() {},
                              instantiate = function(data = list()) {},
-                             save = function(filepath) {},
+                             save = function(file) {},
                              help = function(topic) {}))
 StanProgram$lock(names(StanProgram$fields()))
 

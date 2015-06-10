@@ -15,26 +15,28 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-StanProgram$methods(initialize = function(file, code, ...) {
+StanProgram$methods(initialize = function(file = file.choose(), code, auto_write = 
+                                          rstan_options("auto_write"), ...) {
   "Initializes an object of the StanProgram class"
-  if (missing(file)) {
-    .self$file <- NA_character_
+  if (!missing(code)) {
     tf <- tempfile()
     writeLines(code, con = tf)
-    file2 <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
-    if(!file.exists(file2)) file.rename(from = tf, to = file2)
-    ret <- rstan::stanc(file2, ...)
+    md5 <- tools::md5sum(tf)
+    file <- file.path(tempdir(), paste0(md5, ".stan"))
+    if(!file.exists(file)) file.rename(from = tf, to = file)
+    ret <- rstan::stanc(file)
   }
   else {
-    ret <- rstan::stanc(file, ...)
-    .self$file <<- file
-    file2 <- file
+    md5 <- tools::md5sum(file)
+    ret <- rstan::stanc(file)
   }
   .self$stan_code <<- scan(text = ret$model_code, what = character(), 
                            sep = "\n", quiet = TRUE)
   .self$cpp_code <<- scan(text = ret$cppcode, what = character(), 
                           sep = "\n", quiet = TRUE)
-  .self$dso <<- rstan::stan_model(file2)@dso
+  .self$dso <<- rstan::stan_model(file, auto_write = FALSE, ...)@dso
+  if (auto_write) .self$save(file = sub("stan$", "rda", file))
+  else .self$save(file = file.path(tempdir(), paste0(md5, ".rda")))
   return(invisible(NULL))
 })
 
@@ -46,12 +48,7 @@ StanProgram$methods(show = function() {
 StanProgram$methods(expose = function() {
   "Brings user-defined Stan functions into the R environment
   Useful for unit-testing, posterior simulation, information criteria, etc."
-  if(is.na(.self$file)) {
-    file2 <- paste0(tempfile(), ".stan")
-    writeLines(.self$stan_code, con = file2)
-  }
-  else file2 <- .self$file
-  rstan::testify(file2)
+  rstan::testify(writeLines(.self$stan_code, con = tempfile()))
 })
 
 StanProgram$methods(instantiate = function(data = list()) {
@@ -60,16 +57,9 @@ StanProgram$methods(instantiate = function(data = list()) {
   # return an instance of StanProgramWithData
 })
 
-StanProgram$methods(save = function(filepath) {
+StanProgram$methods(save = function(file) {
   "Save this StanProgram object to the disk in serialized form"
-  if(is.na(.self$file)) {
-    tf <- tempfile()
-    writeLines(.self$stan_code, con = tf)
-    file2 <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
-  }
-  else file2 <- .self$file
-  if (missing(filepath)) filepath <- sub("stan$", "rda", file2)
-  saveRDS(.self, file = filepath)
+  saveRDS(.self, file = file)
 })
 
 StanProgram$methods(help = help_from_instance)
