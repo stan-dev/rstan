@@ -144,10 +144,21 @@ setMethod("Complex", signature = "StanParameter",
   else return(theta = x@theta[i,j,...])
 }
 
+dim.StanParameter <- function(x) dim(x@theta)
+
 as.array.StanParameter <- function(x, ...) x@theta
 as.matrix.StanParameter <- function(x, ...) {
-  mat <- apply(x, MARGIN = "draws", FUN = c)
-  stop("FIXME: Implement the row names")
+  dims <- dim(x)
+  leading <- head(dims, n = -2L)
+  rows <- prod(leading)
+  cols <- prod(tail(dims, n =  2L))
+  mat <- x@theta
+  dim(mat) <- c(rows, cols)
+  combos <- do.call(expand.grid, args = 
+                    lapply(leading, function(z) 1:z))
+  rownames(mat) <- paste0(x@name, "[",
+                          apply(combos, 1, paste, collapse = ","), "]")
   return(mat)
 }
 as.matrix.StanReal <- function(x, ...) x@theta
+
