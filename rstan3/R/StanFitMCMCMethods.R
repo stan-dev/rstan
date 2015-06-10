@@ -17,12 +17,17 @@
 
 StanFitMCMC$methods(show = function() {
   "Show a brief version of the posterior"
-  stop("FIXME: Implement what Andrew wants")
+  dims <- dim(.self)
+  cat(dims[1], "unknowns,", dims[2], "chains, and", 
+      dims[3], "retained samples")
+  return(invisible(NULL))
 })
 
 StanFitMCMC$methods(summary = function() {
   "Compute the summary of the posterior"
-  stop("FIXME: Implement") # similar to current
+  out <- sapply(.self$sample_draws, FUN = stats4::summary, 
+                simplify = FALSE)
+  return(t(do.call(cbind, args = out)))
 })
 
 StanFitMCMC$methods(as.mcmc.list = function() {
@@ -98,4 +103,13 @@ StanFitMCMC$methods(help = help_from_instance)
       return(x@sample_params[[param]][i - param + 1,])
     }))
   }
+}
+
+dim.StanFitMCMC <- function(x) {
+  dims <- sapply(x$sample_draws, FUN = dim, simplify = FALSE)
+  params <- sum(unlist(sapply(dims, FUN = head, n = -2L)))
+  chains <- tail(dims[[1]], 2)
+  iterations <- chains[2]
+  chains <- chains[1]
+  return(c(params, chains, iterations))
 }

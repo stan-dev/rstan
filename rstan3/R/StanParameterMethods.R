@@ -30,8 +30,10 @@ setMethod("show", signature = "StanParameter", definition = function(object) {
 })
 
 setMethod("summary", signature = "StanParameter", definition = function(object) {
-  stop("FIXME: Implement")
-  monitor(object@theta)
+  leading <- head(dim(object), n = -2L)
+  out <- apply(object@theta, MARGIN = leading, FUN = fivenum)
+  dim(out) <- c(5L, length(out) %/% 5L)
+  return(out)
 })
 
 setMethod("show", signature = "StanFactor", definition = function(object) {
