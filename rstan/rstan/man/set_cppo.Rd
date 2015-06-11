@@ -7,7 +7,7 @@
 } 
  
 \usage{
-  set_cppo(...)) 
+  set_cppo(...)
 } 
  
 \arguments{
