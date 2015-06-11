@@ -62,4 +62,10 @@ StanProgram$methods(save = function(file) {
   saveRDS(.self, file = file)
 })
 
+StanProgram$methods(identical = function(program) {
+  "Test whether this StanProgram is identical to another"
+  if (!is(program, "StanProgram")) return(FALSE)
+  return(identical(.self$stan_code, program$stan_code))
+})
+  
 StanProgram$methods(help = help_from_instance)

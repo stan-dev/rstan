@@ -51,6 +51,7 @@ StanProgram <-
                              expose = function() {},
                              instantiate = function(data = list()) {},
                              save = function(file) {},
+                             identical = function(program) {}
                              help = function(topic) {}))
 StanProgram$lock(names(StanProgram$fields()))
 
