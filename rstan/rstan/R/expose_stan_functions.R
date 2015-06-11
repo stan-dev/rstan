@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-testify <- function(stanmodel) {
+expose_stan_functions <- function(stanmodel) {
   if(is(stanmodel, "stanfit")) {
     stanmodel <- get_stanmodel(stanmodel)
     stanmodel <- get_cppcode(stanmodel)
@@ -158,5 +158,5 @@ testify <- function(stanmodel) {
   
   # try to compile
   compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
-  return(invisible(lines))
+  return(invisible(compiled$functions))
 }

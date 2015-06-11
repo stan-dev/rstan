@@ -18,7 +18,7 @@ export(
   read_stan_csv,
   monitor,
   lookup,
-  testify,
+  expose_stan_functions,
   stan_demo,
   rstan_options,
   As.mcmc.list,

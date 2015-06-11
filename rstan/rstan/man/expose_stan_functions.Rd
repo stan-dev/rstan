@@ -1,7 +1,7 @@
-\name{testify}
-\alias{testify} 
+\name{expose_stan_functions}
+\alias{expose_stan_functions} 
 \title{
-Export User-Defined Stan Functions to \R for Testing
+Expose user-defined Stan functions to \R for testing and simulation
 }
 \description{
   Stan's language allows users to define their own functions in a 
@@ -12,7 +12,7 @@ Export User-Defined Stan Functions to \R for Testing
   \code{generated quantities} block of a .stan program
 }
 \usage{
-  testify(stanmodel) 
+  expose_stan_functions(stanmodel)
 } 
 
 \arguments{
@@ -44,8 +44,7 @@ Export User-Defined Stan Functions to \R for Testing
   can execute \code{print(lp__);} to verify that the calculation is correct.
 }
 \value{
-  \code{NULL} invisibly but the side effect is that new functions
-  are defined in \code{\link{.GlobalEnv}}
+  The names of the new functions in \code{\link{.GlobalEnv}} are returned invisibly
 }
 \seealso{
   \code{\link[Rcpp]{sourceCpp}}
@@ -69,6 +68,6 @@ Export User-Defined Stan Functions to \R for Testing
   '
   cppcode <- stanc(model_code = mc, model_name = "Demonstration")
   \dontrun{
-  testify(cppcode)
+  expose_stan_functions(cppcode)
   }
 }

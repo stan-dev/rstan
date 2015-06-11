@@ -295,10 +295,10 @@ block can be much more readible if several lines of \Stan code that accomplish o
 (or perhaps two) task(s) are replaced by a call to a user-defined function.
 
 Another reason to utilize user-defined functions is that \pkg{rstan} provides a 
-\code{testify} function that exports such functions to the \R global environment so
+\code{expose\_stan\_functions} function that exports such functions to the \R global environment so
 that they can be tested in \R to ensure that they are working properly. For example,
 
-<<testify, echo=TRUE>>=
+<<expose_stan_functions, echo=TRUE>>=
 model_code <-
 '
 functions {
@@ -308,7 +308,7 @@ functions {
 }
 model {}
 '
-testify(stanc(model_code = model_code))
+expose_stan_functions(stanc(model_code = model_code))
 standard_normal_rng(seed = 1)
 @
 
