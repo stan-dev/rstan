@@ -1545,3 +1545,8 @@ parse_data <- function(cppcode, e = parent.frame()) {
   mget(objects, envir = e, inherits = TRUE,
        ifnotfound = vector("list", length(objects)))
 }
+
+set_cppo <- function(...) {
+  warning("'set_cppo' is defunct; manually edit your Makevars file if necessary")
+  return(invisible(NULL))
+}

@@ -21,7 +21,8 @@ export(
   testify,
   stan_demo,
   rstan_options,
-  As.mcmc.list
+  As.mcmc.list,
+  set_cppo
 # get_rstan.options
 )
 
