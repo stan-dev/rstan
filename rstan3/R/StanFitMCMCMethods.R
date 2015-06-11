@@ -83,11 +83,9 @@ StanFitMCMC$methods(help = help_from_instance)
 "[.StanFitMCMC" <- function(x, i, ...) {
   if (length(i) == 1) {
     out <- x$sample_draws[[i]]
-    stop("Implement permutation maybe")
   }
   else {
     out <- x$sample_draws[i]
-    stop("Implement permutation maybe")
   }
   return(out)
 }
@@ -123,3 +121,12 @@ as.array.StanFitMCMC <- function(x) {
   dim(out) <- c(nrow(out), dim(x)[-1])
   return(out)
 }
+
+as.matrix.StanFitMCMC <- function(x) {
+  out <- as.array(x)
+  n <- nrow(out)
+  dim(out) <- c(n, length(out) %/% n)
+  return(out)
+}
+
+names.StanFitMCMC <- function(x) names(x$sample_draws)

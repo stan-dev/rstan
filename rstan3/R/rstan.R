@@ -259,10 +259,11 @@
 #' dprogram <- program$instantiate()
 #' 
 #' # Step 3 --- Estimate the parameters
-#' estimates <- dprogram$optimize() # maximum a posteriori estimator
-#' estimates <- dprogram$ehmc()     # MCMC from the posterior distribution
+#' estimates <- dprogram$optimize()        # maximum a posteriori estimator
+#' estimates <- dprogram$ehmc(delta = 0.9) # MCMC from posterior distribution
 #' 
 #' # Step 4 --- Diagnose any problems
+#' estimates$summary()
 #' }
 #' @docType package
 #' @name rstan3

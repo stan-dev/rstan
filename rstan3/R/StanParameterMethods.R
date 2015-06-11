@@ -24,8 +24,8 @@ setMethod("show", signature = "StanParameter", definition = function(object) {
   if( length(dim(object@theta)) == 1) 
     cat("StanParameter is not filled in yet")
   else
-    cat("Dimensions of", object@name, "=", head(dim(object@theta), -1), 
-        "and has", tail(dim(object@theta), 1), "total draws")
+    cat("Dimensions of", object@name, "=", head(dim(object@theta), -2L), 
+        "and has", prod(tail(dim(object@theta), 2L)), "total draws")
   return(invisible(NULL))
 })
 
