@@ -167,7 +167,8 @@ stan <- function(file, model_name = "anon_model",
                  save_dso = TRUE,
                  verbose = FALSE, 
                  cores = getOption("mc.cores", 1L),
-                 open_progress = interactive() && !isatty(stdout()), 
+                 open_progress = interactive() && !isatty(stdout()) &&
+                                 !identical(Sys.getenv("RSTUDIO"), "1"), 
                  ...,
                  boost_lib = NULL, 
                  eigen_lib = NULL) {
