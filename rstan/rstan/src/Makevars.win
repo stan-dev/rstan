@@ -1,4 +1,3 @@
-PKG_CPPFLAGS = -I"../inst/include" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
-
+PKG_CPPFLAGS = -I"../inst/include" -I`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "cat(system.file('include', 'stan_math', package = 'StanHeaders'))"` -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)

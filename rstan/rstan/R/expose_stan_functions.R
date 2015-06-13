@@ -42,7 +42,11 @@ expose_stan_functions <- function(stanmodel) {
   
   # get rid of Stan's local namespace declaration
   lines <- grep("namespace \\{$", lines[1:end], value = TRUE, invert = TRUE)
-  
+
+  # deal with lack of PKG_CFLAGS (necessary stuff is #included in the last step before compilation)
+  lines <- sub("#include <stan/model/model_header.hpp>", "", lines, fixed = TRUE)
+  lines <- sub("#include <stan/services/command.hpp>", "", lines, fixed = TRUE)
+    
   # get rid of templating and just use double because that is about all R can pass
   lines <- gsub("typename boost::math::tools::promote_args.*type ", "double ", lines)
   lines <- gsub("^((std::vector<)+)typename boost::math::tools::promote_args.*(>::type)+", "\\1double", lines)
@@ -98,6 +102,10 @@ expose_stan_functions <- function(stanmodel) {
     lines <- append(lines, usings, i) # make the usings:: local to the function
   }
   
+  # yank unused using statements
+  lines <- grep("^using stan::io::", lines, value = TRUE, invert = TRUE)
+  lines <- grep("^using stan::model::prob_grad", lines, value = TRUE, invert = TRUE)
+  
   # get rid of inline declarations
   lines <- grep("^inline", lines, value = TRUE, invert = TRUE)
   
@@ -148,12 +156,41 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("const static bool propto__ = true;",
                 "const static bool propto__ = false;", lines, fixed = TRUE)
   
+
   # add dependencies
   lines <- c("// [[Rcpp::depends(StanHeaders)]]", 
              "// [[Rcpp::depends(BH)]]",
              "// [[Rcpp::depends(RcppEigen)]]",
              "#include<Rcpp.h>",
              "#include<RcppEigen.h>",
+             "#include<stan/math.hpp>",
+#              "#include <src/stan/io/cmd_line.hpp>",
+             # "#include <src/stan/io/dump.hpp>",
+#              "#include <src/stan/io/reader.hpp>",
+#              "#include <src/stan/io/writer.hpp>",
+#              "#include <src/stan/io/csv_writer.hpp>",
+             
+             "#include <src/stan/lang/rethrow_located.hpp>",
+             # "#include <src/stan/model/prob_grad.hpp>",
+             # "#include <src/stan/services/command.hpp>",
+             
+             "#include <boost/exception/all.hpp>",
+             "#include <boost/random/linear_congruential.hpp>",
+             
+             "#include <cmath>",
+             "#include <cstddef>",
+             "#include <fstream>",
+             "#include <iostream>",
+             "#include <sstream>",
+             "#include <stdexcept>",
+             "#include <utility>",
+             "#include <vector>",
+
+             "#include <boost/date_time/posix_time/posix_time_types.hpp>",
+             "#include <boost/math/special_functions/fpclassify.hpp>",
+             "#include <boost/random/additive_combine.hpp>",
+             "#include <boost/random/uniform_real_distribution.hpp>",
+             
              lines)
   
   # try to compile

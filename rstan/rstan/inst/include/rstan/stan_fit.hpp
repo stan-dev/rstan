@@ -16,15 +16,64 @@
 #include <boost/random/uniform_real_distribution.hpp>
 
 #include <stan/model/util.hpp>
-#include <stan/mcmc.hpp>
+//#include <stan/mcmc.hpp>
+#include <stan/mcmc/base_adaptation.hpp>
+#include <stan/mcmc/base_adapter.hpp>
+#include <stan/mcmc/base_mcmc.hpp>
+#include <stan/mcmc/covar_adaptation.hpp>
 #include <stan/mcmc/fixed_param_sampler.hpp>
+#include <stan/mcmc/hmc/base_hmc.hpp>
+#include <stan/mcmc/hmc/hamiltonians/base_hamiltonian.hpp>
+#include <stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp>
+#include <stan/mcmc/hmc/hamiltonians/dense_e_point.hpp>
+#include <stan/mcmc/hmc/hamiltonians/diag_e_metric.hpp>
+#include <stan/mcmc/hmc/hamiltonians/diag_e_point.hpp>
+#include <stan/mcmc/hmc/hamiltonians/ps_point.hpp>
+#include <stan/mcmc/hmc/hamiltonians/unit_e_metric.hpp>
+#include <stan/mcmc/hmc/hamiltonians/unit_e_point.hpp>
+#include <stan/mcmc/hmc/integrators/base_integrator.hpp>
+#include <stan/mcmc/hmc/integrators/base_leapfrog.hpp>
+#include <stan/mcmc/hmc/integrators/expl_leapfrog.hpp>
+#include <stan/mcmc/hmc/nuts/adapt_dense_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/adapt_diag_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/adapt_unit_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/base_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/dense_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/diag_e_nuts.hpp>
+#include <stan/mcmc/hmc/nuts/unit_e_nuts.hpp>
+#include <stan/mcmc/hmc/static/adapt_dense_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/adapt_diag_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/adapt_unit_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/base_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/dense_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/diag_e_static_hmc.hpp>
+#include <stan/mcmc/hmc/static/unit_e_static_hmc.hpp>
+#include <stan/mcmc/sample.hpp>
+#include <stan/mcmc/stepsize_adaptation.hpp>
+#include <stan/mcmc/stepsize_adapter.hpp>
+#include <stan/mcmc/stepsize_covar_adapter.hpp>
+#include <stan/mcmc/stepsize_var_adapter.hpp>
+#include <stan/mcmc/var_adaptation.hpp>
+#include <stan/mcmc/windowed_adaptation.hpp>
 #include <stan/optimization/newton.hpp>
 #include <stan/optimization/bfgs.hpp>
 
-#include <stan/services/io.hpp>
-#include <stan/services/init.hpp>
-#include <stan/services/mcmc.hpp>
-#include <stan/services/optimization.hpp>
+#include <stan/services/io/do_print.hpp>
+#include <stan/services/io/write_error_msg.hpp>
+#include <stan/services/io/write_iteration.hpp>
+#include <stan/services/io/write_iteration_csv.hpp>
+#include <stan/services/io/write_model.hpp>
+#include <stan/services/io/write_stan.hpp>
+#include <stan/services/init/init_adapt.hpp>
+#include <stan/services/init/init_nuts.hpp>
+#include <stan/services/init/init_static_hmc.hpp>
+#include <stan/services/init/init_windowed_adapt.hpp>
+#include <stan/services/init/initialize_state.hpp>
+#include <stan/services/mcmc/print_progress.hpp>
+#include <stan/services/mcmc/run_markov_chain.hpp>
+#include <stan/services/mcmc/sample.hpp>
+#include <stan/services/mcmc/warmup.hpp>
+#include <stan/services/optimization/do_bfgs_optimize.hpp>
 
 
 #include <rstan/io/rlist_ref_var_context.hpp>
@@ -43,8 +92,14 @@
 // REF: stan/services/command.hpp
 
 #include <stan/io/mcmc_writer.hpp>
-#include <stan/interface/recorder.hpp>
-#include <stan/services/mcmc.hpp>
+#include <stan/interface/recorder/csv.hpp>
+#include <stan/interface/recorder/filtered_values.hpp>
+#include <stan/interface/recorder/messages.hpp>
+#include <stan/interface/recorder/noop.hpp>
+#include <stan/interface/recorder/recorder.hpp>
+#include <stan/interface/recorder/sum_values.hpp>
+#include <stan/interface/recorder/values.hpp>
+//#include <stan/services/mcmc.hpp>
 #include <rstan/rstan_recorder.hpp>
 
 namespace rstan {
