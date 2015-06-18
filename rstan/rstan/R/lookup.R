@@ -22,13 +22,12 @@ lookup <- function(FUN, ReturnType = character()) {
       return(rosetta[rosetta$ReturnType == ReturnType,-1,drop=FALSE])
     }
     else return(paste("no matching Stan functions; ReturnType must be 'ANY' or one of:",
-                      paste(sort(unique(rosetta$ReturnType)), collapse = ",")))
+                      paste(sort(unique(rosetta$ReturnType)), collapse = ", ")))
   }
   if(is.function(FUN)) FUN <- deparse(substitute(FUN))
   if(!is.character(FUN)) stop("'FUN' must be a character string for a function")
   if(length(FUN) != 1) stop("'FUN' must be of length one")
   
-  if(!exists(FUN)) stop(paste("there is no R function by the name of", FUN))
   if(FUN == "nrow") FUN <- "NROW"
   if(FUN == "ncol") FUN <- "NCOL"
   if(FUN == "~") {
@@ -45,10 +44,12 @@ lookup <- function(FUN, ReturnType = character()) {
     rosetta$Arguments <- gsub("^\\([^,]+, ", "\\(", rosetta$Arguments)
     return(rosetta)
   }
-  
-  matches <- as.logical(charmatch(rosetta$RFunction, FUN, nomatch = 0L))
-  if(any(matches)) return(rosetta[matches,-1,drop=FALSE])
-  matches <- grepl(FUN, rosetta$StanFunction)
+
+  if(exists(FUN)) {
+    matches <- as.logical(charmatch(rosetta$RFunction, FUN, nomatch = 0L))
+    if(any(matches)) return(rosetta[matches,-1,drop=FALSE])
+  }
+  matches <- grepl(FUN, rosetta$StanFunction, ignore.case = TRUE)
   if(any(matches)) return(rosetta[matches,-1,drop=FALSE])
   else return("no matching Stan functions")
 }

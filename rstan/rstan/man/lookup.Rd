@@ -1,7 +1,7 @@
 \name{lookup}
 \alias{lookup} 
 \title{
-Look up the Stan function that corresponds to a \R function.
+Look up the Stan function that corresponds to a \R function or name.
 }
 \description{
   This function helps to map between R functions and Stan functions.
@@ -12,8 +12,10 @@ Look up the Stan function that corresponds to a \R function.
 
 \arguments{
   \item{FUN}{A character string naming a \R function or a \R function for
-    which the (near) equivalent Stan function is sought. If \code{"~"},
-    then all Stan sampling statements are returned.}
+    which the (near) equivalent Stan function is sought. If no matching
+    \R function is found, \code{FUN} is reinterpreted as a \code{\link{regexp}} 
+    and matches are sought. If \code{"~"}, all Stan sampling statements are 
+    returned.}
   \item{ReturnType}{A character string of positive length naming a valid
     return type for a Stan function: \code{int}, \code{int[]}, \code{matrix},
     \code{real}, \code{real[,]}, \code{real[]}, \code{row_vector}, 
@@ -54,7 +56,9 @@ Look up the Stan function that corresponds to a \R function.
 } 
 
 \examples{
-lookup(dnorm)
-nrow(lookup("~"))
-try(lookup("foo")) # fails
+lookup(dnorm)      # Stan equivalents for the normal PDF (in log form)
+nrow(lookup("~"))  # number of sampling statements available
+lookup("foo")      # fails
+lookup("Student")  # succeeds even though there is no such R function
+lookup("^poisson") # every Stan function that starts with poisson
 }
