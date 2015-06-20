@@ -346,7 +346,7 @@ namespace rstan {
                       const std::vector<size_t>& midx,
                       const std::string& sep = ",") {
       if (v.size() > 0)
-        o << v[0];
+        o << v[midx.at(0)];
       for (size_t i = 1; i < v.size(); i++)
         o << sep << v[midx.at(i)];
       o << std::endl;
@@ -631,7 +631,6 @@ namespace rstan {
       holder.names() = fnames_oi;
     }
 
-
     /**
      * @tparam Model
      * @tparam RNG
@@ -754,8 +753,10 @@ namespace rstan {
             write_comment_property(sample_stream,"seed",args.get_random_seed());
             write_comment(sample_stream);
 
-            sample_stream << "lp__,"; // log probability first
-            model.write_csv_header(sample_stream);
+            std::vector<std::string> names;
+            names.push_back("lp__");
+            model.constrained_param_names(names);
+            print_vector(names, sample_stream); 
           }
 
           double lp(0);
@@ -819,8 +820,10 @@ namespace rstan {
             write_comment_property(sample_stream,"seed",args.get_random_seed());
             write_comment(sample_stream);
 
-            sample_stream << "lp__,"; // log probability first
-            model.write_csv_header(sample_stream);
+            std::vector<std::string> names;
+            names.push_back("lp__");
+            model.constrained_param_names(names);
+            print_vector(names, sample_stream); 
           }
           double lp(0);
           bool save_iterations = args.get_ctrl_optim_save_iterations();
@@ -862,8 +865,10 @@ namespace rstan {
             write_comment_property(sample_stream,"seed",args.get_random_seed());
             write_comment(sample_stream);
 
-            sample_stream << "lp__,"; // log probability first
-            model.write_csv_header(sample_stream);
+            std::vector<std::string> names;
+            names.push_back("lp__");
+            model.constrained_param_names(names);
+            print_vector(names, sample_stream); 
           }
           std::vector<double> gradient;
           double lp = stan::model::log_prob_grad<true,true>(model, cont_vector, disc_vector, gradient);
@@ -886,7 +891,8 @@ namespace rstan {
             m++;
             if (args.get_sample_file_flag()) {
               sample_stream << lp << ',';
-              model.write_csv(base_rng,cont_vector,disc_vector,sample_stream);
+              model.write_array(base_rng, cont_vector, disc_vector, params_inr_etc);
+              print_vector(params_inr_etc, sample_stream);
             }
           }
           model.write_array(base_rng, cont_vector, disc_vector, params_inr_etc);
