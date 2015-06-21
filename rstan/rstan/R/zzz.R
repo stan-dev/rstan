@@ -22,5 +22,8 @@
   builddate <- gsub(';.*$', '', pkgdesc$Packaged)
   gitrev <- substring(git_head(), 0, 12)
   packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", packaged: ", builddate, ", GitRev: ", gitrev, ")", sep = ""))
+  packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
+                        "rstan_options(auto_write = TRUE)\n",
+                        "options(mc.cores = parallel::detectCores())")
 } 
 
