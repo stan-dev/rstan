@@ -192,8 +192,14 @@ stan <- function(file, model_name = "anon_model",
   if (is(fit, "stanfit")) sm <- get_stanmodel(fit)
   else { 
     attr(model_code, "model_name2") <- deparse(substitute(model_code))  
-    if (missing(model_name)) model_name <- NULL 
-    sm <- stan_model(file, model_name = model_name, model_code = model_code,
+    if (missing(model_name)) model_name <- NULL
+    if (cores == 1) {
+      sr <- stanc(file, model_name = model_name, model_code = model_code,
+                  verbose = verbose)
+    }
+    else sr <- NULL
+    sm <- stan_model(file, model_name = model_name, 
+                     model_code = model_code, stanc_ret = sr,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
                      save_dso = save_dso, verbose = verbose, ...)
   }
