@@ -701,7 +701,9 @@ namespace rstan {
         std::stringstream ss;
         double epsilon = args.get_ctrl_test_grad_epsilon();
         double error = args.get_ctrl_test_grad_error();
-        int num_failed = stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,epsilon,error,ss);
+        int num_failed =
+          stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,
+                                                 epsilon,error,ss,&rstan::io::rcout);
         rstan::io::rcout << ss.str() << std::endl;
         holder = Rcpp::List::create(Rcpp::_["num_failed"] = num_failed);
         holder.attr("test_grad") = Rcpp::wrap(true);
@@ -783,7 +785,8 @@ namespace rstan {
 
           if (args.get_sample_file_flag()) {
             stan::services::io::write_iteration(sample_stream, model, base_rng,
-                                                lp, cont_vector, disc_vector);
+                                                lp, cont_vector, disc_vector,
+                                                &rstan::io::rcout);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
@@ -847,7 +850,8 @@ namespace rstan {
 
           if (args.get_sample_file_flag()) {
             stan::services::io::write_iteration(sample_stream, model, base_rng,
-                                                lp, cont_vector, disc_vector);
+                                                lp, cont_vector, disc_vector,
+                                                &rstan::io::rcout);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
@@ -944,7 +948,7 @@ namespace rstan {
       stan::mcmc::sample s(cont_params, 0, 0);
 
       if (algorithm == Fixed_param) {
-        stan::mcmc::fixed_param_sampler sampler;
+        stan::mcmc::fixed_param_sampler sampler(&rstan::io::rcout, &rstan::io::rcerr);
         if (args.get_ctrl_sampling_warmup() != 0) {
           rstan::io::rcout << "Warning: warmup will be skipped for the fixed parameter sampler!" << std::endl;
           args.set_ctrl_sampling_warmup(0);
@@ -967,7 +971,7 @@ namespace rstan {
       switch (sampler_select) {
         case 0: {
           typedef stan::mcmc::unit_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng);
+          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
           init_static_hmc<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
