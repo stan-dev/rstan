@@ -2,7 +2,7 @@ Package: rstan
 Type: Package
 Title: R Interface to Stan
 Version: 2.7.0
-Date: 2015-06-01
+Date: 2015-06-22
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")))
@@ -12,6 +12,6 @@ Description: R interface to Stan (Stan is an open-source package for obtaining
 License: GPL (>=3)
 Imports: stats4
 Depends: R (>= 3.0.2), Rcpp (>= 0.11.0), utils, inline, methods
-LinkingTo: Rcpp, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.7.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.7.0), parallel, KernSmooth, RCurl
+LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.0)
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.0), parallel, KernSmooth, RCurl
 URL: http://mc-stan.org
