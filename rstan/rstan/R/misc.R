@@ -1550,3 +1550,13 @@ set_cppo <- function(...) {
   warning("'set_cppo' is defunct; manually edit your Makevars file if necessary")
   return(invisible(NULL))
 }
+
+get_stan_param_names <- function(object) {
+  stopifnot(is(object, "stanfit"))
+  params <- grep("vals_r__ = context__.vals_r(", fixed = TRUE, value = TRUE,
+                 x = strsplit(get_cppcode(get_stanmodel(object)), "\n")[[1]])
+  params <- sapply(strsplit(params, "\""), FUN = function(x) x[[2]])
+  params <- intersect(params, object@sim$pars_oi)
+  stopifnot(length(params) > 0)
+  return(params)
+}
