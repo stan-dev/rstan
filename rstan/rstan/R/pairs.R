@@ -48,6 +48,8 @@ pairs.stanfit <-
       })
       if(condition == "n_divergent__") mark <- as.logical(mark)
       else mark <- c(mark) >= median(mark)
+      if (length(unique(mark)) == 1) 
+        stop(paste(condition, "is constant so it cannot be used as a condition"))
     }
     else if(!is.null(condition)) {
       if(all(condition == as.integer(condition))) {
