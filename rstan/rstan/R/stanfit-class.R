@@ -729,7 +729,7 @@ sflist2stanfit <- function(sflist) {
   #     only from the first chain. 
   #  
   sf_len <- length(sflist) 
-  if (sf_len < 2) stop("'sflist' should have more than 1 elements")
+  if (sf_len == 0) stop("'sflist' should have at least 1 element")
   if (!is.list(sflist) || 
       any(sapply(sflist, function(x) !is(x, "stanfit")))) {   
     stop("'sflist' must be a list of 'stanfit' objects")
@@ -740,6 +740,7 @@ sflist2stanfit <- function(sflist) {
     stop("The following elements of 'sflist' do not contain samples: ",
          paste(non_zero_modes_idx, collapse = ', '), ".") 
   }   
+  if (sf_len == 1) return(sflist[[1]])
   for (i in 2:sf_len) { 
     if (!identical(sflist[[i]]@sim$pars_oi, sflist[[1]]@sim$pars_oi) || 
         !identical(sflist[[i]]@sim$dims_oi, sflist[[1]]@sim$dims_oi))   
