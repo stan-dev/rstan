@@ -1,3 +1,4 @@
-PKG_CPPFLAGS = -I"../inst/include" -I`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "cat(system.file('include', 'src', package = 'StanHeaders'))"` -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
+STANHEADERS_SRC = $(shell "$(R_HOME)/bin${R_ARCH_BIN}/Rscript" -e "cat(system.file('include', 'src', package = 'StanHeaders'))")
+PKG_CPPFLAGS = -I"../inst/include" -I"$(STANHEADERS_SRC)" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)
