@@ -177,7 +177,8 @@ setMethod("sampling", "stanmodel",
                    sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
                    control = NULL, cores = getOption("mc.cores", 1L), 
-                   open_progress = interactive() && !isatty(stdout()), ...) {
+                   open_progress = interactive() && !isatty(stdout()) &&
+                     !identical(Sys.getenv("RSTUDIO"), "1"), ...) {
 
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))

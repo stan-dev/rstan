@@ -18,7 +18,8 @@
     check_data = TRUE, sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
     algorithm = c("NUTS", "HMC", "Fixed_param"),%, "Metropolis")
     control = NULL, cores = getOption("mc.cores", 1L),
-    open_progress = interactive() && !isatty(stdout()), \dots)
+    open_progress = interactive() && !isatty(stdout()) &&
+                    !identical(Sys.getenv("RSTUDIO"), "1"), \dots)
 } 
 
 \section{Methods}{
