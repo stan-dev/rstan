@@ -207,9 +207,25 @@ setMethod("sampling", "stanmodel",
                 }
               } else data <- list()
             }
-
-            if (chains > 1 && cores > 1) {
-              dotlist <- c(sapply(ls(), simplify = FALSE, FUN = get,
+            objects <- ls()
+            prep_call_sampler(object)
+            model_cppname <- object@model_cpp$model_cppname 
+            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
+            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
+            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
+            sfmiscenv <- new.env(parent = emptyenv())
+            if (is(sampler, "try-error")) {
+              message('failed to create the sampler; sampling not done') 
+              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+            } 
+            assign("stan_fit_instance", sampler, envir = sfmiscenv)
+            m_pars = sampler$param_names()
+            p_dims = sampler$param_dims()
+            dots <- list(...)
+            mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
+            
+            if (chains > 1 && cores > 1 && mode == "SAMPLING") {
+              dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               dotlist$chains <- 1L
               dotlist$cores <- 1L
@@ -257,13 +273,26 @@ setMethod("sampling", "stanmodel",
               }
               parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
               nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
-              if(all(sapply(nfits, is, class2 = "stanfit")) &&
-                 all(sapply(nfits, FUN = function(x) x@mode == 0))) {
-                 return(sflist2stanfit(nfits))
+              valid <- sapply(nfits, is, class2 = "stanfit") &
+                       sapply(nfits, FUN = function(x) x@mode == 0)
+              if(all(valid)) {
+                nfits <- sflist2stanfit(nfits)
+                nfits@.MISC <- sfmiscenv
+                return(nfits)
               }
-              return(nfits[[1]])
+              else {
+                warning("some chains had errors; consider specifying chains = 1 to debug")
+                message("here are whatever error messages were returned")
+                print(nfits[!valid])
+                if(any(valid)) {
+                  nfits <- sflist2stanfit(nfits[valid])
+                  nfits@.MISC <- sfmiscenv
+                  return(nfits)
+                }
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, 
+                                                   m_pars, p_dims, 2L)))
+              }
             }
-            dots <- list(...)
             check_unknown_args <- dots$check_unknown_args
             if (is.null(check_unknown_args) || check_unknown_args) {
               is_arg_recognizable(names(dots),
@@ -275,21 +304,7 @@ setMethod("sampling", "stanmodel",
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname 
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
-            sfmiscenv <- new.env(parent = emptyenv())
-            if (is(sampler, "try-error")) {
-              message('failed to create the sampler; sampling not done') 
-              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
-            } 
-            assign("stan_fit_instance", sampler, envir = sfmiscenv)
-            # on.exit({rm(sampler); invisible(gc())}) 
 
-            m_pars = sampler$param_names() 
-            p_dims = sampler$param_dims() 
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)
@@ -321,7 +336,6 @@ setMethod("sampling", "stanmodel",
             n_save <- n_kept + warmup2 
 
             samples <- vector("list", chains)
-            mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
 
             for (i in 1:chains) {
               if (is.null(dots$refresh) || dots$refresh > 0) 

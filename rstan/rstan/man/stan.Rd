@@ -243,10 +243,9 @@ stan(file, model_name = "anon_model", model_code = "",
   for the model is reused. 
 }
 \value{
-  Generally, an object of S4 class \code{stanfit}. However, if \code{cores > 1}
-  and there is an error for any of the chains, then a list of objecs of S4
-  class \code{stanfit} or class \code{character} explaining the error(s). If 
-  \code{cores = 1} and an error occurs before or during sampling, the returned
+  An object of S4 class \code{stanfit}. However, if \code{cores > 1}
+  and there is an error for any of the chains, then the error(s) are printed. If 
+  all chains have errors and an error occurs before or during sampling, the returned
   object does not contain samples. But the compiled binary object for the 
   model is still included, so we can reuse the returned object for another
   sampling. 
