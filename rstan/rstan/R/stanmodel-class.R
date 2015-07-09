@@ -180,6 +180,7 @@ setMethod("sampling", "stanmodel",
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), ...) {
 
+            objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
@@ -208,7 +209,6 @@ setMethod("sampling", "stanmodel",
                 }
               } else data <- list()
             }
-            objects <- ls()
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
