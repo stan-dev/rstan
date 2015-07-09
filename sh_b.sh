@@ -10,7 +10,15 @@ if [ -z "$grepstanbranch" ]; then
     exit 20
 fi
 
+STAN_MATH_REPO_BRANCH=develop
+grepstanmathbranch=`git ls-remote --heads https://github.com/stan-dev/math.git | grep "/${STAN_MATH_REPO_BRANCH}"`
+if [ -z "$grepstanmathbranch" ]; then
+    echo -e "${red}ERROR:${NC} stan math repo does not have {STAN_MATH_REPO_BRANCH}"
+    exit 20
+fi
+
 git config -f .gitmodules submodule.stan.branch ${STAN_REPO_BRANCH}
+git config -f .gitmodules submodule.StanHeaders/inst/include/mathlib.branch ${STAN_MATH_REPO_BRANCH}
 git submodule update --init --remote
 git submodule status
 
