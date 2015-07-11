@@ -80,8 +80,9 @@ namespace rstan {
 
   enum sampling_algo_t { NUTS = 1, HMC = 2, Metropolis = 3, Fixed_param = 4};
   enum optim_algo_t { Newton = 1, BFGS = 3, LBFGS = 4};
+  enum variational_algo_t { MEANFIELD = 1, FULLRANK = 2};
   enum sampling_metric_t { UNIT_E = 1, DIAG_E = 2, DENSE_E = 3};
-  enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3};
+  enum stan_args_method_t { SAMPLING = 1, OPTIM = 2, TEST_GRADIENT = 3, VARIATIONAL = 4};
 
   /**
    *
@@ -137,6 +138,16 @@ namespace rstan {
         double tol_rel_grad; // default to 1e7, for (L)BFGS
         int history_size; // default to 5, for LBFGS only
       } optim;
+      struct {
+        int iter; // default to 10000
+        variational_algo_t algorithm;  // MEANFIELD or FULLRANK
+        int grad_samples; // default to 1
+        int elbo_samples; // default to 100
+        int eval_elbo;    // default to 100
+        int output_samples; // default to 1000
+        double eta_adagrad; // default to 0.1
+        double tol_rel_obj; // default to 0.01
+      } variational;
       struct {
         double epsilon; // default to 1e-6, for test_grad
         double error;  // default to 1e-6, for test_grad
@@ -211,6 +222,7 @@ namespace rstan {
           }
           break;
         case TEST_GRADIENT: break;
+        case VARIATIONAL: break; // TODO: add more validation
       }
     }
 
@@ -228,6 +240,7 @@ namespace rstan {
         if ("sampling" == t_str)  method = SAMPLING;
         else if ("optim" == t_str)  method = OPTIM;
         else if ("test_grad" == t_str)  method = TEST_GRADIENT;
+        else if ("variational" == t_str) method = VARIATIONAL;
         else method = SAMPLING;
       }
 
@@ -242,6 +255,19 @@ namespace rstan {
       Rcpp::List ctrl_lst(t_sexp);
 
       switch (method) {
+        case VARIATIONAL:
+          get_rlist_element(in, "iter", ctrl.variational.iter, 10000);
+          get_rlist_element(in, "grad_samples", ctrl.variational.grad_samples, 1);
+          get_rlist_element(in, "elbo_samples", ctrl.variational.elbo_samples, 100);
+          get_rlist_element(in, "eval_elbo", ctrl.variational.eval_elbo, 100);
+          get_rlist_element(in, "output_samples", ctrl.variational.output_samples, 1000);
+          get_rlist_element(in, "eta_adagrad", ctrl.variational.eta_adagrad, 0.1);
+          get_rlist_element(in, "tol_rel_obj", ctrl.variational.tol_rel_obj, 0.01);
+          if (get_rlist_element(in, "algorithm", t_str)) {
+            if (t_str == "fullrank") ctrl.variational.algorithm = FULLRANK;
+            else ctrl.variational.algorithm = MEANFIELD;
+          }
+          break;
         case SAMPLING:
           get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
           get_rlist_element(in, "warmup", ctrl.sampling.warmup, ctrl.sampling.iter / 2);
@@ -383,6 +409,20 @@ namespace rstan {
 
       std::string sampler_t;
       switch (method) {
+        case VARIATIONAL:
+          args["method"] = Rcpp::wrap("variational");
+          args["iter"] = Rcpp::wrap(ctrl.variational.iter);
+          args["grad_samples"] = Rcpp::wrap(ctrl.variational.grad_samples);
+          args["elbo_samples"] = Rcpp::wrap(ctrl.variational.elbo_samples);
+          args["eval_elbo"] = Rcpp::wrap(ctrl.variational.eval_elbo);
+          args["output_samples"] = Rcpp::wrap(ctrl.variational.output_samples);
+          args["eta_adagrad"] = Rcpp::wrap(ctrl.variational.eta_adagrad);
+          args["tol_rel_obj"] = Rcpp::wrap(ctrl.variational.tol_rel_obj);
+          switch (ctrl.variational.algorithm) {
+            case MEANFIELD: args["algorithm"] = Rcpp::wrap("meanfield"); break;
+            case FULLRANK: args["algorithm"] = Rcpp::wrap("fullrank"); break;
+          }
+          break;
         case SAMPLING:
           args["method"] = Rcpp::wrap("sampling");
           args["iter"] = Rcpp::wrap(ctrl.sampling.iter);
@@ -490,6 +530,28 @@ namespace rstan {
       return random_seed;
     }
 
+    inline int get_ctrl_variational_grad_samples() const {
+      return ctrl.variational.grad_samples;
+    }
+    inline int get_ctrl_variational_elbo_samples() const {
+      return ctrl.variational.elbo_samples;
+    }
+    inline int get_ctrl_variational_output_samples() const {
+      return ctrl.variational.output_samples;
+    }
+    inline int get_ctrl_variational_eval_elbo() const {
+      return ctrl.variational.eval_elbo;
+    }
+    inline double get_ctrl_variational_eta_adagrad() const {
+      return ctrl.variational.eta_adagrad;
+    }
+    inline double get_ctrl_variational_tol_rel_obj() const {
+      return ctrl.variational.tol_rel_obj;
+    }
+    inline variational_algo_t get_ctrl_variational_algorithm() const {
+      return ctrl.variational.algorithm;
+    }
+
     inline int get_ctrl_sampling_refresh() const {
       return ctrl.sampling.refresh;
     }
@@ -521,6 +583,7 @@ namespace rstan {
       switch (method) {
         case SAMPLING: return ctrl.sampling.iter;
         case OPTIM: return ctrl.optim.iter;
+        case VARIATIONAL: return ctrl.variational.iter;
         case TEST_GRADIENT: return 0;
       }
       return 0;
@@ -619,7 +682,6 @@ namespace rstan {
       return init_list;
     }
 
-
     void write_args_as_comment(std::ostream& ostream) const {
       write_comment_property(ostream,"init",init);
       write_comment_property(ostream,"enable_random_init",enable_random_init);
@@ -627,6 +689,18 @@ namespace rstan {
       write_comment_property(ostream,"chain_id",chain_id);
       write_comment_property(ostream,"iter",get_iter());
       switch (method) {
+        case VARIATIONAL:
+          write_comment_property(ostream,"grad_samples", ctrl.variational.grad_samples);
+          write_comment_property(ostream,"elbo_samples", ctrl.variational.elbo_samples);
+          write_comment_property(ostream,"output_samples", ctrl.variational.output_samples);
+          write_comment_property(ostream,"eval_elbo", ctrl.variational.eval_elbo);
+          write_comment_property(ostream,"eta_adagrad", ctrl.variational.eta_adagrad);
+          write_comment_property(ostream,"tol_rel_obj", ctrl.variational.tol_rel_obj);
+          switch (ctrl.variational.algorithm) {
+            case MEANFIELD: write_comment_property(ostream,"algorithm", "meanfield"); break;
+            case FULLRANK: write_comment_property(ostream,"algorithm", "fullrank"); break;
+          }
+          break;
         case SAMPLING:
           write_comment_property(ostream,"warmup",ctrl.sampling.warmup);
           write_comment_property(ostream,"save_warmup",1);

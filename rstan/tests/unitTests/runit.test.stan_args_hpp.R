@@ -28,6 +28,17 @@ test_stan_args_hppb <- function() {
   checkEquals(b4$history_size, 6)
 }
 
+test_stan_args_hppvb <- function() {
+  b1 <- fx(list(iter = 100, seed = 12354, method = 'variational'))
+  checkEquals(b1$random_seed, "12354")
+  checkEquals(b1$algorithm, "meanfield")
+  b2 <- fx(list(iter = 100, seed = 12354, method = 'variational', algorithm = 'fullrank'))
+  checkEquals(b2$algorithm, "fullrank")
+  checkEquals(b2$iter, 100)
+  checkEquals(b2$grad_samples, 1)
+  checkEquals(b2$eta_adagrad, 0.1)
+}
+
 test_stan_args_hpp <- function() { 
 
   a1 <- fx(list(iter = 100, thin = 100)) 

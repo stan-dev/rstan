@@ -103,6 +103,7 @@ clean-all: clean
 # C++ tests of rstan
 
 STAN_SUBMODULE := ../StanHeaders/inst/include/upstream/
+STAN_MATH_SUBMODULE := ../StanHeaders/inst/include/mathlib/
 
 STANLIB := $(STAN_SUBMODULE)/lib
 STANSRC := $(STAN_SUBMODULE)/src
@@ -135,7 +136,7 @@ RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::LdFlags()
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)
 
-$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += $(RCPPFLAGS) $(RCPPINCL) $(RINSIDEINCL) $(shell $(R_HOME)/bin/R CMD config CXXFLAGS) -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include -ftemplate-depth=256 -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
+$(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CXXFLAGS += $(RCPPFLAGS) $(RCPPINCL) $(RINSIDEINCL) $(shell $(R_HOME)/bin/R CMD config CXXFLAGS) -I $(STAN_MATH_SUBMODULE) -I rstan/inst/include -I $(STANSRC) $(addprefix -isystem ,$(wildcard $(STANLIB)/*)) -isystem $(GTESTPATH)/include -ftemplate-depth=256 -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): LDFLAGS += $(RLDFLAGS) $(RCPPLIBS) $(RINSIDELIBS) $(LIBPTHREAD)
 
