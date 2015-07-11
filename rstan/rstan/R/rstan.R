@@ -50,14 +50,17 @@ stan_model <- function(file,
     }
     mtime <- file.info(file)$mtime
     file.rda <- gsub("stan$", "rda", file)
+    md5 <- tools::md5sum(file)
     if (!file.exists(file.rda)) {
-      file.rda <- file.path(tempdir(), paste0(tools::md5sum(file), ".rda"))
+      file.rda <- file.path(tempdir(), paste0(md5, ".rda"))
     }
     if( mtime < as.POSIXct(packageDescription("rstan")$Date) ||
        !file.exists(file.rda) ||
        file.info(file.rda)$mtime <  mtime ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
-       !is_sm_valid(obj)) {
+       !is_sm_valid(obj) ||
+       !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
+       md5 != tools::md5sum(tf)) {
          
           stanc_ret <- stanc(file = file, model_code = model_code, 
                              model_name = model_name, verbose, ...)
