@@ -22,12 +22,15 @@ pairs.stanfit <-
             lower.panel = NULL, upper.panel = NULL, diag.panel = NULL, 
             text.panel = NULL, label.pos = 0.5 + has.diag/3, 
             cex.labels = NULL, font.labels = 1, row1attop = TRUE, gap = 1, 
-            pars = NULL, condition = NULL) {
+            pars = NULL, condition = "accept_stat__") {
     
     if(is.null(pars)) pars <- dimnames(x)[[3]]
     arr <- extract(x, pars = pars, permuted = FALSE)
     sims <- nrow(arr)
     chains <- ncol(arr)
+    gsp <- get_sampler_params(x, inc_warmup = FALSE)
+    n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
+                            ncol = dim(arr)[3])
     
     if(is.list(condition)) {
       if(length(condition) != 2) stop("if a list, 'condition' must be of length 2")
@@ -43,7 +46,7 @@ pairs.stanfit <-
       condition <- match.arg(condition, several.ok = FALSE,
                              choices = c("accept_stat__", "stepsize__", "treedepth__", 
                                          "n_leapfrog__", "n_divergent__"))
-      mark <- sapply(get_sampler_params(x), FUN = function(y) {
+      mark <- sapply(gsp, FUN = function(y) {
         tail(y[,condition], sims)
       })
       if(condition == "n_divergent__") mark <- as.logical(mark)
@@ -75,7 +78,10 @@ pairs.stanfit <-
         dots <- list(...)
         dots$x <- x[!mark]
         dots$y <- y[!mark]
-        if(is.null(dots$nrpoints)) dots$nrpoints <- 0
+        if (is.null(mc$nrpoints) && !identical(condition, "accept_stat__")) {
+          dots$nrpoints <- Inf
+          dots$col <- ifelse(n_divergent__[!mark] == 1, "yellow", NA_character_)
+        }
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
       }
@@ -86,7 +92,10 @@ pairs.stanfit <-
         dots <- list(...)
         dots$x <- x[mark]
         dots$y <- y[mark]
-        if(is.null(dots$nrpoints)) dots$nrpoints <- 0
+        if (is.null(mc$nrpoints) && !identical(condition, "accept_stat__")) {
+          dots$nrpoints <- Inf
+          dots$col <- ifelse(n_divergent__[mark] == 1, "yellow", NA_character_)
+        }
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
       }

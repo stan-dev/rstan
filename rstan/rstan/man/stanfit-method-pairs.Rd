@@ -10,7 +10,7 @@
   \method{pairs}{stanfit}(x, labels = NULL, panel = NULL, \dots, lower.panel = NULL, 
     upper.panel = NULL, diag.panel = NULL, text.panel = NULL, 
     label.pos = 0.5 + has.diag/3, cex.labels = NULL, font.labels = 1, 
-    row1attop = TRUE, gap = 1, pars = NULL, condition = NULL) 
+    row1attop = TRUE, gap = 1, pars = NULL, condition = "accept_stat__") 
 } 
 
 \arguments{
@@ -24,7 +24,7 @@
     to include in the plots, which is passed to \code{\link{extract}}. Thus,
     by default, all unknown quantities are included, which may be far too many
     to visualize on a small computer screen.}
-  \item{condition}{By default, \code{NULL}, which will plot roughly half of the
+  \item{condition}{If \code{NULL}, it will plot roughly half of the
     chains in the lower panel and the rest in the upper panel. An
     integer vector can be passed to select some subset of the chains, of which
     roughly half will be plotted in the lower panel and the rest in the upper
@@ -45,7 +45,7 @@
     logical vector whose length is equal to the product of the number of iterations
     and the number of chains can be passed, in which case realizations
     corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 
-    and upper panel respectively.}
+    and upper panel respectively. The default is \code{"accept_stat__"}.}
 } 
 
 \details{
@@ -58,6 +58,11 @@
   by the \code{chain\_id} argument.
   
   The draws from the warmup phase are always discarded before plotting.
+  
+  By default, the lower (upper) triangle of the plot contains draws with below
+  (above) median acceptance probability. Also, if \code{condition} is not
+  \code{"n_divergent__"}, yellow points will be superimposed onto the smoothed
+  density plots indicating which iterations encountered a divergent transition.
 }
   
 \seealso{
@@ -67,5 +72,5 @@
 
 \examples{
 example(read_stan_csv)
-pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), condition = "acc")
+pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"))
 }
