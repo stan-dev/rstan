@@ -30,7 +30,7 @@ pairs.stanfit <-
     chains <- ncol(arr)
     gsp <- get_sampler_params(x, inc_warmup = FALSE)
     n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
-                            ncol = dim(arr)[3])
+                            nrow = sims * chains, ncol = dim(arr)[3])
     
     if(is.list(condition)) {
       if(length(condition) != 2) stop("if a list, 'condition' must be of length 2")
@@ -78,7 +78,7 @@ pairs.stanfit <-
         dots <- list(...)
         dots$x <- x[!mark]
         dots$y <- y[!mark]
-        if (is.null(mc$nrpoints) && !identical(condition, "accept_stat__")) {
+        if (is.null(mc$nrpoints) && !identical(condition, "n_divergent__")) {
           dots$nrpoints <- Inf
           dots$col <- ifelse(n_divergent__[!mark] == 1, "yellow", NA_character_)
         }
@@ -92,7 +92,7 @@ pairs.stanfit <-
         dots <- list(...)
         dots$x <- x[mark]
         dots$y <- y[mark]
-        if (is.null(mc$nrpoints) && !identical(condition, "accept_stat__")) {
+        if (is.null(mc$nrpoints) && !identical(condition, "n_divergent__")) {
           dots$nrpoints <- Inf
           dots$col <- ifelse(n_divergent__[mark] == 1, "yellow", NA_character_)
         }
