@@ -24,8 +24,8 @@ setMethod("show", "stanmodel",
 setGeneric(name = 'optimizing',
            def = function(object, ...) { standardGeneric("optimizing")})
 
-setGeneric(name = 'variational',
-           def = function(object, ...) { standardGeneric("variational")})
+setGeneric(name = 'vb',
+           def = function(object, ...) { standardGeneric("vb")})
 
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
@@ -71,12 +71,11 @@ prep_call_sampler <- function(object) {
   } 
 } 
 
-setMethod("variational", "stanmodel", 
+setMethod("vb", "stanmodel", 
           function(object, data = list(),
-                   seed = sample.int(.Machine$integer.max, 1), # check VB supports specifying seed
-                   check_data = TRUE, sample_file = NULL,
-                   algorithm = c("meanfield", "fullrank"),
-                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
+                   seed = sample.int(.Machine$integer.max, 1),
+                   check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
+                   algorithm = c("meanfield", "fullrank"), ...) {
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
@@ -138,6 +137,7 @@ setMethod("variational", "stanmodel",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             vbres <- sampler$call_sampler(c(args, dotlist))
+            vbres$samples <- read.csv(attr(vbres, "args")$sample_file, header = TRUE, comment.char = '#')
             vbres
           })
 

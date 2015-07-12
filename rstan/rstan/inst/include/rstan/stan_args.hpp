@@ -222,7 +222,14 @@ namespace rstan {
           }
           break;
         case TEST_GRADIENT: break;
-        case VARIATIONAL: break; // TODO: add more validation
+        case VARIATIONAL: 
+          if (ctrl.variational.eta_adagrad < 0 || ctrl.variational.eta_adagrad > 1) {
+            std::stringstream msg;
+            msg << "Invalid parameter eta_adagrad (found eta_adagrad="
+                << ctrl.variational.eta_adagrad << "; require 0 < eta_adagrad <= 1).";
+            throw std::invalid_argument(msg.str());
+          }
+          break; // TODO: add more validation
       }
     }
 
@@ -263,9 +270,9 @@ namespace rstan {
           get_rlist_element(in, "output_samples", ctrl.variational.output_samples, 1000);
           get_rlist_element(in, "eta_adagrad", ctrl.variational.eta_adagrad, 0.1);
           get_rlist_element(in, "tol_rel_obj", ctrl.variational.tol_rel_obj, 0.01);
+          ctrl.variational.algorithm = MEANFIELD;
           if (get_rlist_element(in, "algorithm", t_str)) {
             if (t_str == "fullrank") ctrl.variational.algorithm = FULLRANK;
-            else ctrl.variational.algorithm = MEANFIELD;
           }
           break;
         case SAMPLING:

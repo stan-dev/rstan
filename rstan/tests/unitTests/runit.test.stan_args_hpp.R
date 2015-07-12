@@ -37,6 +37,18 @@ test_stan_args_hppvb <- function() {
   checkEquals(b2$iter, 100)
   checkEquals(b2$grad_samples, 1)
   checkEquals(b2$eta_adagrad, 0.1)
+  b3 <- fx(list(iter = 101, seed = 12354, method = 'variational', 
+                algorithm = 'fullrank', grad_samples = 2,
+                elbo_samples = 50, eval_elbo = 48, output_samples = 500,
+                eta_adagrad = .05, tol_rel_obj = 0.001))
+  checkEquals(b3$iter, 101)
+  checkEquals(b3$random_seed, "12354")
+  checkEquals(b3$grad_samples, 2)
+  checkEquals(b3$eval_elbo, 48)
+  checkEquals(b3$tol_rel_obj, 0.001)
+  checkEquals(b3$eta_adagrad, 0.05)
+  checkEquals(b3$elbo_samples, 50)
+  checkEquals(b3$output_samples, 500)
 }
 
 test_stan_args_hpp <- function() { 

@@ -40,6 +40,7 @@
 \section{Methods}{
   \describe{
     \item{\code{show}}{\code{signature(object = "stanmodel")}: print the Stan model specification.}
+    \item{\code{vb}}{\code{signature(object = "stanmodel")}: use the variational Bayes algorithms.}
     \item{\code{sampling}}{\code{signature(object = "stanmodel")}: draw samples for
       the model (see \code{\link{sampling}}).}
     \item{\code{optimizing}}{\code{signature(object = "stanmodel")}: obtain a point 
