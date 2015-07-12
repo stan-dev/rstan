@@ -107,7 +107,7 @@ setMethod("optimizing", "stanmodel",
                   return(invisible(list(stanmodel = object)))
                 }
               } else data <- list()
-            } 
+            }
             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
             if (is(sampler, "try-error")) {
               message('failed to create the optimizer; optimization not done') 
@@ -225,7 +225,7 @@ setMethod("sampling", "stanmodel",
             dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
             
-            if (chains > 1 && cores > 1 && mode == "SAMPLING") {
+            if (cores > 1 && mode == "SAMPLING") {
               dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               dotlist$chains <- 1L

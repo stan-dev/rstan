@@ -48,6 +48,28 @@ stan_model <- function(file,
       file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
       if(!file.exists(file)) file.rename(from = tf, to = file)
     }
+    
+    stanc_ret <- stanc(file = file, model_code = model_code, 
+                       model_name = model_name, verbose, ...)
+    
+    # find possibly identical stanmodels
+    S4_objects <- apropos("^[[:alpha:]]+.*$", mode = "S4")
+    if (length(S4_objects) > 0) {
+      pf <- parent.frame()
+      stanfits <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
+                         FUN = is, class2 = "stanfit")
+      stanmodels <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
+                           FUN = is, class2 = "stanmodel")
+      if (any(stanfits)) for (i in names(which(stanfits))) {
+        obj <- get_stanmodel(get(i, envir = pf, inherits = TRUE))
+        if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
+      }
+      if (any(stanmodels)) for (i in names(which(stanmodels))) {
+        obj <- get(i, envir = pf, inherits = TRUE)
+        if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
+      }
+    }
+    
     mtime <- file.info(file)$mtime
     file.rda <- gsub("stan$", "rda", file)
     md5 <- tools::md5sum(file)
@@ -61,9 +83,7 @@ stan_model <- function(file,
        !is_sm_valid(obj) ||
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
        md5 != tools::md5sum(tf)) {
-         
-          stanc_ret <- stanc(file = file, model_code = model_code, 
-                             model_name = model_name, verbose, ...)
+         # do nothing
     }
     else return(invisible(obj))
   }
