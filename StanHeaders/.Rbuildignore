@@ -1,4 +1,5 @@
 inst/include/upstream
+inst/include/mathlib
 inst/include/src/test.*$
 inst/include/src/.*\.hpp\.d$
 inst/include/src/.*\..pp\.gch$
