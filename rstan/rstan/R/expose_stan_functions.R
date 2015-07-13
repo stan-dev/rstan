@@ -164,16 +164,8 @@ expose_stan_functions <- function(stanmodel) {
              "#include<Rcpp.h>",
              "#include<RcppEigen.h>",
              "#include<stan/math.hpp>",
-#              "#include <src/stan/io/cmd_line.hpp>",
-             # "#include <src/stan/io/dump.hpp>",
-#              "#include <src/stan/io/reader.hpp>",
-#              "#include <src/stan/io/writer.hpp>",
-#              "#include <src/stan/io/csv_writer.hpp>",
-             
              "#include <src/stan/lang/rethrow_located.hpp>",
-             # "#include <src/stan/model/prob_grad.hpp>",
-             # "#include <src/stan/services/command.hpp>",
-             
+
              "#include <boost/exception/all.hpp>",
              "#include <boost/random/linear_congruential.hpp>",
              
@@ -194,6 +186,9 @@ expose_stan_functions <- function(stanmodel) {
              lines)
   
   # try to compile
+  on.exit(message("Here is the C++ code that does not compile. Please report bug."))
+  on.exit(print(lines), add = TRUE)
   compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
+  on.exit(NULL)
   return(invisible(compiled$functions))
 }
