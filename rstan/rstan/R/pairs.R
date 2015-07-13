@@ -45,10 +45,11 @@ pairs.stanfit <-
     else if(is.character(condition)) {
       condition <- match.arg(condition, several.ok = FALSE,
                              choices = c("accept_stat__", "stepsize__", "treedepth__", 
-                                         "n_leapfrog__", "n_divergent__"))
-      mark <- sapply(gsp, FUN = function(y) {
-        tail(y[,condition], sims)
-      })
+                                         "n_leapfrog__", "n_divergent__", "lp__"))
+      if (condition == "lp__") 
+        mark <- simplify2array(get_logposterior(x, inc_warmup = FALSE))
+      else mark <- sapply(gsp, FUN = function(y) y[,condition])
+      
       if(condition == "n_divergent__") mark <- as.logical(mark)
       else mark <- c(mark) >= median(mark)
       if (length(unique(mark)) == 1) 
