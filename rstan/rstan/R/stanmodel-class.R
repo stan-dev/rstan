@@ -225,7 +225,7 @@ setMethod("sampling", "stanmodel",
             dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
             
-            if (cores > 1 && mode == "SAMPLING") {
+            if (cores > 1 && mode == "SAMPLING" && chains > 0) {
               dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               dotlist$chains <- 1L
