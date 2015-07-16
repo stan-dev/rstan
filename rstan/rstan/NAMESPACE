@@ -1,6 +1,11 @@
 useDynLib(rstan, .registration = TRUE)
 # exportPattern("^[[:alpha:]]+")
 
+importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
+importFrom("grDevices", "devAskNewPage", "rgb")
+importFrom("stats", "acf", "median", "optimHess", "quantile", "sd", "var")
+importFrom("utils", "apropos", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "unzip")
+
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
 import("methods")
