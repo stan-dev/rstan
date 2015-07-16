@@ -5,7 +5,11 @@ Version: 2.7.0
 Date: 2015-06-22
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
-             person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")))
+             person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
+             person("Joel", "de Guzman", role = "ctb"),
+             person("Eric", "Niebler", role = "ctb"),
+             person("Thomas", "Heller", role = "ctb"),
+             person("John", "Fletcher", role = "ctb"))
 Description: R interface to Stan (Stan is an open-source package for obtaining
         Bayesian inference using the No-U-Turn sampler, a variant of
         Hamiltonian Monte Carlo).
