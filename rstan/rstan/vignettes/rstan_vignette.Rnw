@@ -100,8 +100,8 @@ illustrate the features of \RStan through an example in \cite{GelmanCarlinSternR
 
 \section{Introduction}
 
-\Stan is a \Cpp program for Bayesian modeling and inference
-that uses the No-U-Turn sampler (NUTS) (\citealt{hoffman-gelman:2012})
+\Stan is a \Cpp library for Bayesian modeling and inference
+that primarily uses the No-U-Turn sampler (NUTS) (\citealt{hoffman-gelman:2012})
 to obtain posterior simulation given user-specified model and data. Alternatively,
 \Stan can utilize the LBFGS optimization algorithm to maximize an objective function,
 such as a log-likelihood. The \R package, \pkg{rstan} allows one to conveniently 
@@ -113,7 +113,7 @@ The website for \Stan and \RStan, \url{http://mc-stan.org},
 provides up-to-date information about how to operate \Stan and \RStan.
 For example, ``\RStan Getting Started'' (\citealt{rstangettingstarted2012})
 has a couple of examples.  The present article provides 
-a complete introduction to the functionality of package \pkg{rstan} and
+a concise introduction to the functionality of package \pkg{rstan} and
 provides pointers to many functions in \pkg{rstan} from the user's perspective.
 
 We start with the prerequisites for using \pkg{rstan} 
@@ -133,7 +133,8 @@ using the \Stan modeling language, which is detailed
 in the manual of \Stan (\citealt{StanManual}).
 We give an example below. To do so, a \Cpp compiler is required, such as
 \gpp\footnote{\url{http://gcc.gnu.org}} or \clangpp\footnote{\url{http://clang.llvm.org}}.
-There are instructions on how to install a \Cpp compiler at \url{http://mc-stan.org}.
+There are instructions on how to install a \Cpp compiler at 
+\url{https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started#prerequisites}.
 
 Package \pkg{rstan} depends on several other \R packages: 
 \begin{itemize}
@@ -144,6 +145,9 @@ Package \pkg{rstan} depends on several other \R packages:
  \item \cpkg{inline} which compiles \Cpp for use with \R
 \end{itemize}
 
+These package dependencies should be automatically installed if you
+install the \pkg{rstan} package via one of the conventional mechanisms.
+
 \subsection[Typical workflow of using RStan]{Typical workflow of using RStan}
 \label{subsec0workflow}
 
@@ -151,23 +155,26 @@ Package \pkg{rstan} depends on several other \R packages:
 but not identical to that of the Bayesian graphical modeling package 
 BUGS (\citealt{WinBUGS}). A parser translates the model expressed in the \Stan modeling 
 language to \Cpp code, whereupon it is compiled to an executable program and loaded as
-a Dynamic Shared Object (DSO) in the \R global environment and can be called by the user.
+a Dynamic Shared Object (DSO) in \R and can be called by the user.
 In summary, the following are typical steps of using \Stan for Bayesian inference. 
 \begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
 \item Represent a statistical model by writing its log posterior
       density (up to an arbitrary normalizing constant that does not 
-      depends on the unknown parameters in the model) using \Stan modeling language. 
+      depends on the unknown parameters in the model) using the \Stan modeling language.
+      We recommend a separate text file for this, although it can be done using a
+      character string within \R.
 \item Translate the model coded in \Stan modeling language to \Cpp code using the \stanc
-      function
+      function (which is called by the \code{stan} function)
 \item Compile the \Cpp code for the model using a \Cpp compiler to
-      create a DSO (also called a dynamic link library (DLL)) that can be loaded by \R.
-\item Run the DSO to sample from the posterior distribution using the \code{stan} or 
-      \code{sampling} functions
+      create a DSO (also called a dynamic link library (DLL)) that can be loaded by \R
+      (which is called by the \code{stan}).
+\item Run the DSO to sample from the posterior distribution using the 
+      \code{stan} or \code{sampling} functions.
 \item Diagnose non-convergence of the MCMC chains
 \item Conduct inference based on the samples from the posterior distribution
 \end{enumerate}
 
-Steps c, d, and e above are all performed implicitly by a single \code{stan} call.
+Steps c, d, and e above are all performed implicitly by a single call to \code{stan}.
 
 \section[An example of using rstan]{An example of using \pkg{rstan}}
 \label{sec0example} 
@@ -187,8 +194,8 @@ Monte Carlo sampler can be slow to converge in this example.
 For short, we call this example ``eight schools.'' 
 The statistical model is specified as 
 \begin{align}
-y_j &\sim \text{normal}(\theta_j, \sigma_j^2), \quad j=1,\ldots,8 \\ 
-\theta_1, \ldots, \theta_8 &\sim \text{normal}(\mu, \tau^2), 
+y_j &\sim \text{normal}(\theta_j, \sigma_j), \quad j=1,\ldots,8 \\ 
+\theta_1, \ldots, \theta_8 &\sim \text{normal}(\mu, \tau), 
 \end{align} 
 in which each $\sigma_j$'s assumed known and a uniform prior 
 density is used, $p(\mu, \tau) \propto 1$. 
@@ -219,7 +226,7 @@ between schools.}
 
 We first need to express this model in the \Stan modeling language. The \pkg{rstan} 
 package allows a model to be coded in a text file (typically with suffix \code{.stan}) 
-or in a \R character vector (perhaps of length one). 
+or in a \R character vector (of length one). 
 We put the following text into a file called schools.stan: 
 \begin{Schunk}
 \begin{Sinput}
@@ -284,6 +291,10 @@ tail(lookup("~")) # looks up all Stan sampling statements
 lookup(dwilcox)   # no corresponding Stan function
 @
 
+If the \code{lookup} function fails to find an R function that corresponds to a 
+Stan function, it will treat its argument as a regular expression and attempt to
+find matches with the names of Stan functions.
+
 \subsection{User-defined Stan functions}
 
 \Stan permits users to define their own functions in a functions block of a \Stan
@@ -294,7 +305,7 @@ user's function merely wraps calls to existing \Stan functions, the code in the 
 block can be much more readible if several lines of \Stan code that accomplish one
 (or perhaps two) task(s) are replaced by a call to a user-defined function.
 
-Another reason to utilize user-defined functions is that \pkg{rstan} provides a 
+Another reason to utilize user-defined functions is that \pkg{rstan} provides an \\ 
 \code{expose\_stan\_functions} function that exports such functions to the \R global environment so
 that they can be tested in \R to ensure that they are working properly. For example,
 
@@ -315,24 +326,15 @@ standard_normal_rng(seed = 1)
 
 \subsection{Preparing the data}
 
-The \code{stan} function in \pkg{rstan} accepts data as a \code{list} or an \code{environment}. 
+The \code{stan} function in \pkg{rstan} accepts data as a \code{list} or an \code{environment}.
+Alternatively the \code{data} argument can be omitted and \R will search for objects that
+have the same names as in the \code{data} block of a Stan program.
 To prepare the data in \R, we create a \code{list} as follows. 
 <<echo=TRUE>>=
 schools_data <- 
   list(J=8, 
   y=c(28,  8, -3,  7, -1,  1, 18, 12),
   sigma=c(15, 10, 16, 11,  9, 11, 10, 18))
-@
-
-Often we would already have the elements of the data for a model
-defined in our workspace. In \pkg{rstan}, a convenient way is to 
-provide just the names instead of creating a new list. The following
-\R code demonstrates this feature. 
-<<echo=TRUE>>=
-J <- 8
-y <- c(28,  8, -3,  7, -1,  1, 18, 12)
-sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
-schools_data_nms <- c("J", "y", "sigma") 
 @
 
 It would also be possible (indeed, encouraged) to read in the data
@@ -344,8 +346,13 @@ the numbers in the \R script.
 
 Next, we can call the \code{stan} function to draw posterior samples:
 <<callstan, echo=TRUE, results=hide, cache=TRUE>>=
-fit1 <- stan(file="schools.stan", data=schools_data, 
-             iter=2000, chains=4, cores = 2)
+J <- 8
+y <- c(28,  8, -3,  7, -1,  1, 18, 12)
+sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
+
+fit1 <- stan(file="schools.stan", 
+             # better to add explicitly include: data=schools_data, 
+             iter=2000, chains=4, cores=2)
 @
 
 Function \code{stan} wraps the following three steps: 
@@ -413,7 +420,7 @@ In particular, \code{warmup} specifies the number of iterations
 that are used by NUTS sampler for the adaptation phase before sampling begins.
 After the warmup, the sampler turns off adaptation and continues until a total of 
 \code{iter} iterations have been completed.
-There is no theoretical guarantee that the samples are drawn from the posterio distribution 
+There is no theoretical guarantee that the samples are drawn from the posterior distribution 
 during warmup, so the warmup samples should only be used for diagnosis and not for
 inference.  The summaries for the parameters shown by the \code{print} method
 are calculated using only the samples after warmup.
@@ -422,6 +429,8 @@ For function \code{stan}, argument \code{init} is used for specifying
 the initial values.  There are several options for \code{init} and the 
 details can be found in the documentation of the \code{stan} function. The vast majority
 of the time, it is adequate to allow \Stan to generate its own initial values randomly.
+However, sometimes it is better to specify the initial values for at least a subset
+of the objects declared in the \code{parameters} block of a Stan program.
 
 \Stan uses a random number generator (RNG) that supports parallelism.
 The initialization of the RNG is determined by arguments \code{seed}
@@ -437,12 +446,13 @@ First, \pkg{rstan} allows the user to specify more than what is declared in the 
 and anything beyond that is silently omitted. In general, an element in the input \R list should 
 be numeric data and its dimension should match the declaration in the data block of the model.
 So for example, \code{factor} type in \R is not supported as data element for \RStan and must
-be converted to integer codes. The \Stan modeling language differentiates between integers and doubles
-(type \code{int} and \code{real} in Stan modeling language, respectively). The \code{stan} function 
-will convert some R data (which is double-precision usually) to \code{integer}s if possible.
+be converted to integer codes via \code{as.integer()}. The \Stan modeling language 
+distinguishes between integers and doubles (type \code{int} and \code{real} in Stan modeling language, 
+respectively). The \code{stan} function will convert some R data (which is double-precision usually) to 
+\code{integer}s if possible.
 
 In \Stan, we have scalars and other types that are a set of scalars, such as vectors and matrices. 
-As \R does not have scalars, \pkg{rstan} treats vectors of length one to be scalars.
+As \R does not have scalars, \pkg{rstan} treats vectors of length one as scalars.
 However, we might have a model with data block defined as in Figure~\ref{fig0datablock}, 
 in which $N$ can be $1$ as a special case.
 So if we know that $N$ is always larger than $1$, we can use a vector of length $N$ in \R
@@ -474,8 +484,8 @@ y <- as.array(y)
 \end{figure}
 
 
-As Stan cannot handle missing values in data automatically, all elements of
-data cannot contain \code{NA} in \R. An important step in \pkg{rstan}'s data
+As Stan cannot handle missing values in data automatically, so no element of
+the data can contain \code{NA} in \R. An important step in \pkg{rstan}'s data
 preprocessing is to check missing values and issue an error if any. To model
 missing values using \Stan, you should create binary indicators of whether
 a data point is observed or missing and then change the \code{NA} values in \R
@@ -508,7 +518,8 @@ representing intervals, small colored areas are used to indicate which range the
 value of the split $\hat{R}$ statistic is in. Figure~\ref{fig0stanfittraceplot} shows the
 traceplot for the $\tau$ parameter, while Figure~\ref{fig0pairsplot} gives one example
 of a \code{pairs} plot, using the median acceptance probability to stratify the draws
-into the lower and upper triangles.
+into the lower and upper triangles. The few yellow points indicate divergent transitions
+in the Markov Chain.
 
 \begin{figure}[ht]
 \centering
@@ -531,7 +542,7 @@ traceplot(fit1, pars = "tau")
 \begin{figure}[ht]
 \centering
 <<echo=false, fig=TRUE, label=pairs_plot, height=4, width=6>>=
-pairs(fit1, pars = c("mu", "tau", "lp__"), condition = "accept")
+pairs(fit1, pars = c("mu", "tau", "lp__"))
 @
 \caption{Pairs plots of the hyperparameters in the eight schools model}
 \label{fig0pairsplot}
@@ -602,6 +613,37 @@ which returns the posterior mean of all parameters for each chain and all chains
 (excluding warmup samples). Another alternative is to write the samples to external files 
 using the \code{sample\_file} argument of the \code{stan} function and then conduct diagnostics
 with the external files.
+
+\subsection{Sampling difficulties} 
+
+The best way to visualize the output of a model is through the \pkg{shinyStan} package,
+which is currently only available from \url{https://github.com/stan-dev/shinystan}.
+The \pkg{shinyStan} package facilitates both the visualization of parameter distributions
+and diagnosing problems with a sampler. 
+
+However, it is also possible to diagnose problems with a sampler directly
+via the \code{get\_sampler\_params} function.
+<<echo=TRUE>>=
+# all chains combined
+summary(do.call(rbind, args = get_sampler_params(fit1, inc_warmup = TRUE)),
+        digits = 2)
+# each chain separately
+lapply(get_sampler_params(fit1, inc_warmup = TRUE), summary, digits = 2)
+@
+Here we see that there are a small number of divergent transitions, which are identified
+by \code{n\_divergent\_\_} being 1. Ideally, there should be no divergent transitions
+after the warmup phase. The best way to try to eliminate divergent transitions is by
+increasing the target acceptance probability, which by default is $0.8$. Here we see
+that the mean of \code{accept\_stat\_\_} is close to $0.8$ for all chains, but has
+a very skewed distribution because the median is near $0.95$. We could go back and
+call \code{stan} again and specify the optional argument 
+\code{control = list(adapt\_delta = 0.9)} to eliminate the divergent transitions.
+However, sometimes when the target acceptance rate is high, the stepsize is very
+small and the sampler hits its limit on the number of leapfrog steps it can take
+per iteration. In this case, it is a non-issue because each chain has a
+\code{treedepth\_\_} of at most $7$ and the default is $10$. But if any 
+\code{treedepth\_\_} were $11$, then it would be wise to increase the limit by
+passing \code{control = list(max\_treedepth = 12)} (for example) to \code{stan}.
 
 \subsection{The log posterior function and its gradient} 
 
@@ -724,7 +766,15 @@ are saved, for example, by \R function
 \code{save} and \code{save.image}, \pkg{rstan} is able to save the 
 DSO for models, so that they can be used across \R sessions. 
 To (not) save the DSO, specify the \code{save\_dso} argument, which
-is \code{TRUE} by default, in the \code{stan} function. 
+is \code{TRUE} by default, in the \code{stan} function.
+
+If the user executes \code{rstan\_options(auto\_write = TRUE)}, then
+a serialized version of the compiled model will be automatically
+saved to the hard disk in the same directory as the .stan file or
+in \R's temporary directory if the Stan program is expressed as 
+a character string. Although this option is not enabled by default
+due to CRAN policy, it should ordinarily be specified by users in
+order to eliminate redundant compilation.
 
 \Stan runs much faster when the code is compiled at the maximum level of
 optimization, which is \code{-O3} on most \Cpp compilers. However, the
@@ -740,18 +790,20 @@ cause adverse side effects for other \R packages.
 
 For function \code{stan}, we can specify the number of chains using the \code{chains} argument.
 By default, the chains are executed serially (i.e., one at a time) using the parent
-\R process. But \pkg{rstan} provides a function called
-\code{sflist2stanfit}\rstanfunidx{sflist2stanfit} that
-consolidates a list of multiple \code{stanfit} objects (sampled from one model with
-the same number of warmup and iteration) into one \code{stanfit} object. Thus, we can run 
-multiple chains in parallel using any approach provided by other \R packages on one computer 
-or a networked cluster. There is a \code{cores} argument to \code{stan} and \code{sampling}
+\R process. There is a \code{cores} argument to \code{stan} and \code{sampling}
 that can be set to the number of chains (if the hardware has sufficient processors and RAM),
-which is appropriate on most laptops.
+which is appropriate on most laptops. We ordinarily recommend first calling
+\code{options(mc.cores = parallel::detectCores())} once per R session so that
+\code{stan} and \code{sampling} can utilize all available cores.
 
-However one does parallel sampling, it is important to specify the same seed for all the chains
+If you are using another parallelization scheme (perhaps with a remote cluster)
+\pkg{rstan} provides a function called \code{sflist2stanfit}\rstanfunidx{sflist2stanfit} that
+consolidates a list of multiple \code{stanfit} objects (sampled from one model with
+the same number of warmup and iteration) into one \code{stanfit} object. 
+It is important to specify the same seed for all the chains
 and equally important to use a different chain ID (argument \code{chain\_id}). This ensures
 that the random numbers generated in \Stan for all chains are essentially independent. 
+This part is handled automatically by \pkg{rstan} if \code{cores > 1}.
 
 \section[Working with CmdStan]{Working with \CmdStan} 
 \label{sec0workwstan}
@@ -776,7 +828,8 @@ In this vignette, we have described the main functionality of RStan
 from a user's perspective. The help pages with the \pkg{rstan} package provide more details
 for all exposed \pkg{rstan} functions. The \Stan manual (\citealt{StanManual}) provides 
 many details and includes a variety of model examples, many of which are can be executed
-via function \code{stan\_demo} in this package.
+via function \code{stan\_demo} in the \pkg{rstan} package. Finally, the \pkg{loo} package,
+which is on CRAN, is very useful for model comparison using \code{stanfit} objects.
 
 \nocite{*} 
 \bibliography{rstan} 
