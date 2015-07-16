@@ -1,3 +1,17 @@
+Thu Jul 16 2015 (2.7.0)
+1. Bug fixes
+  * lots
+2. Changes
+  * initial CRAN release after many previous releases on GitHub and Google Code
+  * parallel execution of chains via cores argument or setting options(mc.cores = 4)
+  * serializing compiled models via auto_write argument or setting rstan_options(auto_write = TRUE)
+  * introduce the expose_stan_functions() function for testing and simulation
+  * introduce the lookup() function to find relevant Stan functions
+  * option to specify initial values of a subset of parameters
+  * include argument to stan, extract, etc. to allow pars to indicate which parameters to exclude
+  * pairs function is more useful by default and shows any divergent transitions
+  * stanfit objects waste less space on the hard disk
+  
 Tue Oct 21 2014 (2.5.0)
 1. Bug fixes
   * issue 100 
