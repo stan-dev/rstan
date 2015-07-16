@@ -176,7 +176,8 @@ setMethod("sampling", "stanmodel",
                    init = "random", check_data = TRUE, 
                    sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
-                   control = NULL, cores = getOption("mc.cores", 1L), 
+                   control = NULL, include = TRUE,
+                   cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), ...) {
 
@@ -301,11 +302,13 @@ setMethod("sampling", "stanmodel",
                                     "obfuscate_model_name",
                                     "enable_random_init",
                                     "append_samples", "refresh", "control", 
-                                    "cores", "open_progress"), 
+                                    "include", "cores", "open_progress"), 
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
 
+            if(!include) pars <- setdiff(m_pars, pars)
+            
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)

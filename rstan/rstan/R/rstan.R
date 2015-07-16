@@ -188,7 +188,7 @@ stan <- function(file, model_name = "anon_model",
                  sample_file = NULL, # the file to which the samples are written
                  diagnostic_file = NULL, # the file to which diagnostics are written 
                  save_dso = TRUE,
-                 verbose = FALSE, 
+                 verbose = FALSE, include = TRUE,
                  cores = getOption("mc.cores", 1L),
                  open_progress = interactive() && !isatty(stdout()) &&
                                  !identical(Sys.getenv("RSTUDIO"), "1"), 
