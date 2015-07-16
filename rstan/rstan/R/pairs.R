@@ -22,9 +22,10 @@ pairs.stanfit <-
             lower.panel = NULL, upper.panel = NULL, diag.panel = NULL, 
             text.panel = NULL, label.pos = 0.5 + has.diag/3, 
             cex.labels = NULL, font.labels = 1, row1attop = TRUE, gap = 1, 
-            pars = NULL, condition = "accept_stat__") {
+            pars = NULL, condition = "accept_stat__", include = TRUE) {
     
     if(is.null(pars)) pars <- dimnames(x)[[3]]
+    else if (!include) pars <- setdiff(x@sim$pars_oi, pars)
     arr <- extract(x, pars = pars, permuted = FALSE)
     sims <- nrow(arr)
     chains <- ncol(arr)
@@ -129,5 +130,6 @@ pairs.stanfit <-
     mc$text.panel <- textPanel
     mc$condition <- NULL
     mc$pars <- NULL
+    mc$include <- NULL
     eval(mc)
   }

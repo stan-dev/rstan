@@ -11,7 +11,7 @@
 \usage{
   %% traceplot(object, \dots)  
   \S4method{traceplot}{stanfit}(object, pars, inc_warmup = TRUE, ask = FALSE,
-    nrow = 4, ncol = 2, window = NULL, ...) 
+    nrow = 4, ncol = 2, window = NULL, include = TRUE, ...) 
 } 
 
 \section{Methods}{
@@ -23,7 +23,8 @@
 \arguments{
   \item{object}{An instance of class \code{\linkS4class{stanfit}}.}
   \item{pars}{A vector of character string specifying the  
-      parameters to be plotted.} 
+      parameters to be plotted if \code{include = TRUE}. If 
+      \code{include = FALSE}, the elements of \code{pars} are excluded.} 
   \item{inc_warmup}{\code{TRUE} or \code{FALSE}, indicating whether 
     the warmup sample are included in the trace plot; defaults to \code{TRUE}}
   \item{ask}{\code{TRUE} or \code{FALSE}, to control (for the current device)
@@ -42,7 +43,9 @@
     the starting iteration and the bigger one the last iteration. When there
     is only one integer, it just indicates the starting iteration. Examples
     of specifying window: \code{window=100} and \code{window=c(100,1500)}.
-  } 
+  }
+  \item{include}{Logical scalar indicating whether to include (the default)
+    or exclude the elements given by the \code{pars} argument.}
   \item{\dots}{Additional parameters passed to the underlying function
     \code{plot}.} 
 }

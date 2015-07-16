@@ -10,7 +10,8 @@
   \method{pairs}{stanfit}(x, labels = NULL, panel = NULL, \dots, lower.panel = NULL, 
     upper.panel = NULL, diag.panel = NULL, text.panel = NULL, 
     label.pos = 0.5 + has.diag/3, cex.labels = NULL, font.labels = 1, 
-    row1attop = TRUE, gap = 1, pars = NULL, condition = "accept_stat__") 
+    row1attop = TRUE, gap = 1, pars = NULL, condition = "accept_stat__", 
+    include = TRUE) 
 } 
 
 \arguments{
@@ -23,7 +24,8 @@
   \item{pars}{If not \code{NULL}, a character vector indicating which quantities
     to include in the plots, which is passed to \code{\link{extract}}. Thus,
     by default, all unknown quantities are included, which may be far too many
-    to visualize on a small computer screen.}
+    to visualize on a small computer screen. If \code{include = FALSE}, then
+    the named parameters are excluded from the plot.}
   \item{condition}{If \code{NULL}, it will plot roughly half of the
     chains in the lower panel and the rest in the upper panel. An
     integer vector can be passed to select some subset of the chains, of which
@@ -46,6 +48,8 @@
     of iterations and the number of chains can be passed, in which case realizations
     corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 
     and upper panel respectively. The default is \code{"accept_stat__"}.}
+  \item{include}{Logical scalar indicating whether to include (the default) or
+    excldue the parameters named in the \code{pars} argument from the plot.}
 } 
 
 \details{
