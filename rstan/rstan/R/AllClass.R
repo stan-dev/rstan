@@ -64,7 +64,7 @@ setClass(Class = "stanfit",
          ),  
          validity = function(object) {
            if(length(object@sim) > 0 && !is.null(object@sim$samples)) {
-             NAs <- rapply(object@sim$samples, anyNA)
+             NAs <- rapply(object@sim$samples, f = function(x) any(is.na(x)))
              if(any(NAs)) return(paste("The following variables have undefined values: ",
                                        unique(names(NAs[NAs])), collapse = ","))
            }
