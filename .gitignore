@@ -29,5 +29,3 @@ stan.kdev4
 
 # 
 *.swp
-
-rstan/rstan/R/git_rstan_head.R
