@@ -1,7 +1,7 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.7.0
+Version: 2.7.0-1
 Date: 2015-07-17
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
@@ -10,7 +10,7 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
              person("Eric", "Niebler", role = "ctb"),
              person("Thomas", "Heller", role = "ctb"),
              person("John", "Fletcher", role = "ctb"))
-Description: User-facing R functions are provided by this package to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the StanHeaders package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo and (optionally penalized) maximum likelihood estimation via optimization. In both cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
+Description: User-facing R functions are provided by this package to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the 'StanHeaders' package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo and (optionally penalized) maximum likelihood estimation via optimization. In both cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
 License: GPL (>=3)
 NeedsCompilation: yes
 Imports: stats4
