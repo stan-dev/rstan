@@ -65,9 +65,10 @@
   
   By default, the lower (upper) triangle of the plot contains draws with below
   (above) median acceptance probability. Also, if \code{condition} is not
-  \code{"n_divergent__"}, yellow points will be superimposed onto the smoothed
+  \code{"n_divergent__"}, red points will be superimposed onto the smoothed
   density plots indicating which (if any) iterations encountered a divergent 
-  transition.
+  transition. Otherwise, yellow points indicate a transition that hit the
+  maximum treedepth rather than terminated its evolution normally.
 }
   
 \seealso{

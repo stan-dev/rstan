@@ -32,6 +32,14 @@ pairs.stanfit <-
     gsp <- get_sampler_params(x, inc_warmup = FALSE)
     n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
                             nrow = sims * chains, ncol = dim(arr)[3])
+    max_td <- x@stan_args[[1]]$control
+    if (is.null(max_td)) max_td <- 11
+    else {
+      max_td <- max_td$max_treedepth
+      if (is.null(max_td)) max_td <- 11
+    }
+    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] == max_td)), 
+                    nrow = sims * chains, ncol = dim(arr)[3])
     
     if(is.list(condition)) {
       if(length(condition) != 2) stop("if a list, 'condition' must be of length 2")
@@ -82,7 +90,8 @@ pairs.stanfit <-
         dots$y <- y[!mark]
         if (is.null(mc$nrpoints) && !identical(condition, "n_divergent__")) {
           dots$nrpoints <- Inf
-          dots$col <- ifelse(n_divergent__[!mark] == 1, "yellow", NA_character_)
+          dots$col <- ifelse(n_divergent__[!mark] == 1, "red", 
+                      ifelse(hit[!mark] == 1, "yellow", NA_character_))
         }
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
@@ -96,7 +105,8 @@ pairs.stanfit <-
         dots$y <- y[mark]
         if (is.null(mc$nrpoints) && !identical(condition, "n_divergent__")) {
           dots$nrpoints <- Inf
-          dots$col <- ifelse(n_divergent__[mark] == 1, "yellow", NA_character_)
+          dots$col <- ifelse(n_divergent__[mark] == 1, "red", 
+                      ifelse(hit[mark] == 1, "yellow", NA_character_))
         }
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
