@@ -37,7 +37,7 @@
     in the lower panel starting with the first realization in each chain, 
     with the complement (from the end of each chain) plotted in the upper panel.
     A (possibly abbreviated) character vector of length one can be passed among 
-    \code{"accept_stat__", "stepsize__", "treedepth__", "n_leapfrog__"},
+    \code{"accept_stat__", "stepsize__"}, \code{"treedepth__", "n_leapfrog__"},
     \code{"n_divergent__"} or \code{"lp__"}, which are the variables produced by 
     \code{\link{get_sampler_params}} and \code{\link{get_logposterior}}. In that 
     case the lower panel will plot realizations that are below the median of the 

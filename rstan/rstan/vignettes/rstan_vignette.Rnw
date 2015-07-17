@@ -643,9 +643,10 @@ pairs(fit1, pars = c("eta", "theta"), include = FALSE, las = 1)
 \end{figure}
 
 Figure~\ref{fig0pairsplot} gives a graphical representation of the same information.
+The marginal distribution of each indicated parameter is included as a histogram.
 By default, draws with below-median \code{accept\_stat\_\_} are plotted below the
 diagonal and those with above-median \code{accept\_stat\_\_} are plotted above the
-diagonal. Each square represents a bivariate distribution of the draws for the 
+diagonal. Each off-diagonal square represents a bivariate distribution of the draws for the 
 intersection of the row-variable and the column-variable. Ideally, the below-diagonal
 intersection and the above-diagonal intersection of the same two variables should
 have distributions that are mirror images of each other. Any yellow points would indicate
