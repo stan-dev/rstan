@@ -516,17 +516,14 @@ as well as \code{lp\_\_} (the log of posterior density function up to an additiv
 constant), and the median of each chain are displayed. In addition, under the lines
 representing intervals, small colored areas are used to indicate which range the 
 value of the split $\hat{R}$ statistic is in. Figure~\ref{fig0stanfittraceplot} shows the
-traceplot for the $\tau$ parameter, while Figure~\ref{fig0pairsplot} gives one example
-of a \code{pairs} plot, using the median acceptance probability to stratify the draws
-into the lower and upper triangles. The few yellow points indicate divergent transitions
-in the Markov Chain.
+traceplot for the $\tau$ parameter.
 
 \begin{figure}[ht]
 \centering
 <<echo=false, fig=TRUE, label=stanfit_plot>>=
 plot(fit1)
 @
-\caption{An overview plot for the inference of eight schools example} 
+\caption{An overview plot for eight schools example} 
 \label{fig0stanfitplot}
 \end{figure}
 
@@ -537,15 +534,6 @@ traceplot(fit1, pars = "tau")
 @
 \caption{Trace plots of $\tau$ in the eight schools model} 
 \label{fig0stanfittraceplot}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-<<echo=false, fig=TRUE, label=pairs_plot, height=4, width=6>>=
-pairs(fit1, pars = c("mu", "tau", "lp__"))
-@
-\caption{Pairs plots of the hyperparameters in the eight schools model}
-\label{fig0pairsplot}
 \end{figure}
 
 The \code{stanfit} class has a set of methods to work with the samples drawn 
@@ -644,6 +632,27 @@ per iteration. In this case, it is a non-issue because each chain has a
 \code{treedepth\_\_} of at most $7$ and the default is $10$. But if any 
 \code{treedepth\_\_} were $11$, then it would be wise to increase the limit by
 passing \code{control = list(max\_treedepth = 12)} (for example) to \code{stan}.
+
+\begin{figure}[ht]
+\centering
+<<echo=false, fig=TRUE, label=pairs_plot, height=4, width=6>>=
+pairs(fit1, pars = c("eta", "theta"), include = FALSE, las = 1)
+@
+\caption{Pairs plots of the common parameters in the eight schools model}
+\label{fig0pairsplot}
+\end{figure}
+
+Figure~\ref{fig0pairsplot} gives a graphical representation of the same information.
+By default, draws with below-median \code{accept\_stat\_\_} are plotted below the
+diagonal and those with above-median \code{accept\_stat\_\_} are plotted above the
+diagonal. Each square represents a bivariate distribution of the draws for the 
+intersection of the row-variable and the column-variable. Ideally, the below-diagonal
+intersection and the above-diagonal intersection of the same two variables should
+have distributions that are mirror images of each other. Any yellow points would indicate
+transitions where the maximum \code{treedepth\_\_} was hit, and the red points indicate
+a transition where \code{n\_divergent\_\_ = 1}. Thus, the pairs plot should be used
+to get a sense of whether any sampling difficulties are occurring in the tails or
+near the mode.
 
 \subsection{The log posterior function and its gradient} 
 
