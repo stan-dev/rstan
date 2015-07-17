@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab rstan\cr
     Type: \tab Package\cr
-    Version: \tab 2.6.1\cr
-    Date: \tab Feb 23, 2015\cr
+    Version: \tab 2.7.0\cr
+    Date: \tab Jul 17, 2015\cr
     License: \tab GPL-3 \cr
   }
 
@@ -42,8 +42,6 @@
 }
 
 \examples{\dontrun{ 
-library(rstan) 
-cat("Stan version:", stan_version(), "\n")
 
 stanmodelcode <- "
 data {
