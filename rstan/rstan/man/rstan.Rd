@@ -32,7 +32,7 @@
   } 
 
   \tabular{ll}{
-  Maintainer:\tab Jiqiang Guo <benjamin.goodrich@columbia.edu>    \cr
+  Maintainer:\tab Ben Goodrich <benjamin.goodrich@columbia.edu>    \cr
   } 
 }
 \references{
