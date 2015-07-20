@@ -102,7 +102,7 @@ stan_model <- function(file,
   check <- system2(file.path(R.home(component = "bin"), "R"), 
                    args = "CMD config CXX", 
                    stdout = TRUE, stderr = FALSE)
-  if(identical(check, "")) {
+  if(nchar(check) == 0) {
     WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
     warning(paste("C++ compiler not found on system. If absent, see", WIKI))
   }
@@ -212,17 +212,15 @@ stan <- function(file, model_name = "anon_model",
                       pre_msg = "passing unknown arguments: ", 
                       call. = FALSE)
 
+  if (!is.list(data) && !is.environment(data) && !is.character(data))
+    stop("'data' must be a list, environment, or character vector")
+  
   if (is(fit, "stanfit")) sm <- get_stanmodel(fit)
   else { 
     attr(model_code, "model_name2") <- deparse(substitute(model_code))  
     if (missing(model_name)) model_name <- NULL
-    if (cores == 1) {
-      sr <- stanc(file, model_name = model_name, model_code = model_code,
-                  verbose = verbose)
-    }
-    else sr <- NULL
     sm <- stan_model(file, model_name = model_name, 
-                     model_code = model_code, stanc_ret = sr,
+                     model_code = model_code, stanc_ret = NULL,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
                      save_dso = save_dso, verbose = verbose, ...)
   }
