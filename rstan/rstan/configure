@@ -1,0 +1,17 @@
+#!/bin/bash
+
+COMPILER=`"${R_HOME}/bin/R" CMD config CXX | grep 'g\+\+'`
+if [ -n "${COMPILER}" ]
+then
+    # this also picks up clang++ 
+    # but clang++ -dumpversion is 4.2.1 
+    # and clang++ accepts the -s flag, as does g++ < 4.9.x
+    VERSION=`"${COMPILER}" -dumpversion | grep -e '^[5-9]' -e '^4\.9'`
+    if [ -n "${VERSION}" ]
+    then
+        echo "PKG_CXXFLAGS = -flto -ffat-lto-objects" >> src/Makevars
+    else
+        echo "PKG_LIBS = -s" >> src/Makevars
+    fi
+fi
+exit 0
