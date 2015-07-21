@@ -7,10 +7,11 @@
 \description{A \code{\link{pairs}} method that is customized for MCMC output} 
 
 \usage{
-  \method{pairs}{stanfit}(x, labels = NULL, panel = NULL, \dots, lower.panel = NULL, 
+  \method{pairs}{stanfit}(x, labels = NULL, panel = NULL, \dots, 
+    lower.panel = NULL, 
     upper.panel = NULL, diag.panel = NULL, text.panel = NULL, 
-    label.pos = 0.5 + has.diag/3, cex.labels = NULL, font.labels = 1, 
-    row1attop = TRUE, gap = 1, pars = NULL, condition = "accept_stat__", 
+    label.pos = 0.5 + 1/3, cex.labels = NULL, font.labels = 1, 
+    row1attop = TRUE, gap = 1, log = "", pars = NULL, condition = "accept_stat__", 
     include = TRUE) 
 } 
 
@@ -19,8 +20,10 @@
   \item{labels, panel, \dots, lower.panel, upper.panel, diag.panel}{Same as in 
     \code{\link{pairs}} syntactically but see the Details section for different
     default arguments}
-  \item{text.panel, label.pos, cex.labels, font.labels, row1attop, gap}{Same as in 
-    \code{\link{pairs}}}
+  \item{text.panel, label.pos, cex.labels, font.labels, row1attop, gap}{Same as in \code{\link{pairs.default}}}
+  \item{log}{Same as in \code{\link{pairs.default}}, which makes it possible to
+    utilize logarithmic axes. In addition, if \code{log = TRUE} all strictly
+    positive parameters will have logarithmic axes.}
   \item{pars}{If not \code{NULL}, a character vector indicating which quantities
     to include in the plots, which is passed to \code{\link{extract}}. Thus,
     by default, all unknown quantities are included, which may be far too many
@@ -69,6 +72,15 @@
   density plots indicating which (if any) iterations encountered a divergent 
   transition. Otherwise, yellow points indicate a transition that hit the
   maximum treedepth rather than terminated its evolution normally.
+  
+  You may very well want to specify the \code{log} argument for non-negative
+  parameters. However, the \code{pairs} function will drop (with a message)
+  parameters that are either constant or duplicative with previous parameters.
+  For example, if a correlation matrix is included among \code{pars}, then 
+  neither its diagonal elements (which are always 1) nor its upper triangular
+  elements (which are the same as the corresponding lower triangular elements)
+  will be included. Thus, if \code{log} is an integer vector, it needs to
+  pertain to the parameters after constant and duplicative ones are dropped.
 }
   
 \seealso{

@@ -18,10 +18,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 pairs.stanfit <-
-  function (x, labels = NULL, panel = NULL, ..., 
+  function (x, labels = NULL, panel = NULL, ...,
             lower.panel = NULL, upper.panel = NULL, diag.panel = NULL, 
-            text.panel = NULL, label.pos = 0.5 + has.diag/3, 
-            cex.labels = NULL, font.labels = 1, row1attop = TRUE, gap = 1, 
+            text.panel = NULL, label.pos = 0.5 + 1/3, 
+            cex.labels = NULL, font.labels = 1, 
+            row1attop = TRUE, gap = 1, log = "",
             pars = NULL, condition = "accept_stat__", include = TRUE) {
     
     if(is.null(pars)) pars <- dimnames(x)[[3]]
@@ -29,6 +30,18 @@ pairs.stanfit <-
     arr <- extract(x, pars = pars, permuted = FALSE)
     sims <- nrow(arr)
     chains <- ncol(arr)
+    varying <- apply(arr, 3, FUN = function(y) length(unique(y)) > 1)
+    if (any(!varying)) {
+      message("the following parameters were dropped because they are constant\n",
+              paste(names(varying)[!varying], collapse = " "))
+      arr <- arr[,,varying,drop = FALSE]
+    }
+    dupes <- duplicated(arr, MARGIN = 3)
+    if (any(dupes)) {
+      message("the following parameters were dropped because they are dupicative\n",
+              paste(dimnames(arr)[[3]][dupes], collapse = " "))
+      arr <- arr[,,!dupes,drop = FALSE]
+    }
     gsp <- get_sampler_params(x, inc_warmup = FALSE)
     n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
                             nrow = sims * chains, ncol = dim(arr)[3])
@@ -81,7 +94,19 @@ pairs.stanfit <-
     }
     
     x <- apply(arr, MARGIN = "parameters", FUN = function(y) y)
-    
+    nc <- ncol(x)
+    xl <- yl <- logical(nc)
+    if (isTRUE(log)) {
+      log <- which(apply(x > 0, 2, FUN = all))
+      names(log) <- NULL
+    }
+    if (is.numeric(log)) xl[log] <- yl[log] <- TRUE
+    else {
+      xl[] <- grepl("x", log)
+      yl[] <- grepl("y", log)
+    }
+    counter <- 1L
+    E <- environment()
     if(is.null(lower.panel)) {
       if(!is.null(panel)) lower.panel <- panel
       else lower.panel <- function(x,y, ...) {
@@ -115,10 +140,22 @@ pairs.stanfit <-
     if(is.null(diag.panel)) diag.panel <- function(x, ...) {
         usr <- par("usr"); on.exit(par(usr))
         par(usr = c(usr[1:2], 0, 1.5) )
-        h <- hist(x, plot = FALSE)
-        breaks <- h$breaks; nB <- length(breaks)
-        y <- h$counts; y <- y/max(y)
-        rect(breaks[-nB], 0, breaks[-1], y, col="cyan", ...)
+        LOG <- xl[counter]
+        assign("counter", counter + 1L, envir = E)
+        if (LOG) {
+          h <- hist(log(x), plot = FALSE)
+          breaks <- exp(h$breaks)
+          y <- h$counts / max(h$counts) * 10^label.pos
+          nB <- length(breaks)
+          rect(breaks[-nB], 1, breaks[-1], y, col="cyan", ...)
+        }
+        else {
+          h <- hist(x, plot = FALSE)
+          breaks <- h$breaks
+          y <- h$counts; y <- y/max(y)
+          nB <- length(breaks)
+          rect(breaks[-nB], 0, breaks[-1], y, col="cyan", ...)
+        }
     }
     if(is.null(panel)) panel <- points
     
@@ -138,6 +175,7 @@ pairs.stanfit <-
     mc$upper.panel <- upper.panel
     mc$diag.panel <- diag.panel
     mc$text.panel <- textPanel
+    mc$log <- log
     mc$condition <- NULL
     mc$pars <- NULL
     mc$include <- NULL
