@@ -259,7 +259,8 @@ setMethod("sampling", "stanmodel",
                 utils::browseURL(sinkfile, browser = browser)
               }
               else sinkfile <- ""
-              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = FALSE)
+              cl <- parallel::makeCluster(min(cores, chains), 
+                                          outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
               parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
               callFun <- function(i) {
