@@ -22,8 +22,8 @@
     default arguments}
   \item{text.panel, label.pos, cex.labels, font.labels, row1attop, gap}{Same as in \code{\link{pairs.default}}}
   \item{log}{Same as in \code{\link{pairs.default}}, which makes it possible to
-    utilize logarithmic axes. In addition, if \code{log = TRUE} all strictly
-    positive parameters will have logarithmic axes.}
+    utilize logarithmic axes and additionally accepts \code{log = TRUE}. See the
+    Details section.}
   \item{pars}{If not \code{NULL}, a character vector indicating which quantities
     to include in the plots, which is passed to \code{\link{extract}}. Thus,
     by default, all unknown quantities are included, which may be far too many
@@ -81,6 +81,9 @@
   elements (which are the same as the corresponding lower triangular elements)
   will be included. Thus, if \code{log} is an integer vector, it needs to
   pertain to the parameters after constant and duplicative ones are dropped.
+  It is perhaps easiest to specify \code{log = TRUE}, which will utilize
+  logarithmic axes for all non-negative parameters, except \code{lp__} and
+  any integer valued quantities.
 }
   
 \seealso{
@@ -91,5 +94,6 @@
 
 \examples{
 example(read_stan_csv)
-pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"))
+pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), log = TRUE, las = 1)
+# sigma and alpha will have logarithmic axes
 }

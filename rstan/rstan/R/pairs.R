@@ -27,7 +27,7 @@ pairs.stanfit <-
     
     if(is.null(pars)) pars <- dimnames(x)[[3]]
     else if (!include) pars <- setdiff(x@sim$pars_oi, pars)
-    arr <- extract(x, pars = pars, permuted = FALSE)
+    arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
     sims <- nrow(arr)
     chains <- ncol(arr)
     varying <- apply(arr, 3, FUN = function(y) length(unique(y)) > 1)
@@ -38,7 +38,7 @@ pairs.stanfit <-
     }
     dupes <- duplicated(arr, MARGIN = 3)
     if (any(dupes)) {
-      message("the following parameters were dropped because they are dupicative\n",
+      message("the following parameters were dropped because they are dupiclative\n",
               paste(dimnames(arr)[[3]][dupes], collapse = " "))
       arr <- arr[,,!dupes,drop = FALSE]
     }
@@ -97,7 +97,10 @@ pairs.stanfit <-
     nc <- ncol(x)
     xl <- yl <- logical(nc)
     if (isTRUE(log)) {
-      log <- which(apply(x > 0, 2, FUN = all))
+      log <- which(apply(x >= 0, 2, FUN = all))
+      log["lp__"] <- FALSE
+      integers <- apply(x, 2, FUN = function(y) all(y == as.integer(y)))
+      log[integers] <- FALSE
       names(log) <- NULL
     }
     if (is.numeric(log)) xl[log] <- yl[log] <- TRUE
