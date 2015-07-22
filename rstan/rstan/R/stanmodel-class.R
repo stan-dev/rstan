@@ -232,7 +232,6 @@ setMethod("sampling", "stanmodel",
                                   envir = environment()), list(...))
               dotlist$chains <- 1L
               dotlist$cores <- 1L
-              dotlist$data <- data
               if(open_progress && 
                  !identical(browser <- getOption("browser"), "false")) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
@@ -276,6 +275,8 @@ setMethod("sampling", "stanmodel",
                 do.call(rstan::sampling, args = dotlist)
               }
               parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
+              data_e <- as.environment(data)
+              parallel::clusterExport(cl, varlist = names(data_e), envir = data_e)
               nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
               valid <- sapply(nfits, is, class2 = "stanfit") &
                        sapply(nfits, FUN = function(x) x@mode == 0)
