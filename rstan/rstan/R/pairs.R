@@ -166,7 +166,6 @@ pairs.stanfit <-
       text(x,y, txt, cex = cex, font = font)
     }
     else textPanel <- text.panel
-    has.diag <- TRUE
     if(is.null(labels)) labels <- colnames(x)
 
     mc <- match.call(expand.dots = FALSE)
