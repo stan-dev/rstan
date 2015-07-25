@@ -32,18 +32,6 @@ lookup <- function(FUN, ReturnType = character()) {
   if(FUN == "ncol") FUN <- "NCOL"
   if(FUN == "~") {
     return(rosetta[rosetta$SamplingStatement, c("StanFunction", "Arguments", "Page")])
-#     statements <- paste(rosetta$StanFunction[rosetta$Arguments == "~"], "log", sep = "_")
-#     rosetta <- rosetta[rosetta$StanFunction %in% statements & rosetta$Arguments != "~",]
-#     rosetta$ReturnType <- NULL    
-#     colnames(rosetta) <- c("FirstArgument", "StanStatement", "Arguments", "Page")
-#     rosetta[,1] <- sapply(rosetta$Arguments, FUN = function(x) {
-#       arg <- scan(text = x, what = character(), sep = ",", quiet = TRUE)[1]
-#       arg <- sub("(", "", arg, fixed = TRUE)
-#       return(paste(arg, "~"))
-#     })
-#     rosetta$StanStatement <- gsub("_log$", "", rosetta$StanStatement)
-#     rosetta$Arguments <- gsub("^\\([^,]+, ", "\\(", rosetta$Arguments)
-#     return(rosetta)
   }
 
   if(exists(FUN)) {
