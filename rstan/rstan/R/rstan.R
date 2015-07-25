@@ -123,11 +123,18 @@ stan_model <- function(file,
     old.boost_lib <- rstan_options(boost_lib = boost_lib) 
     on.exit(rstan_options(boost_lib = old.boost_lib)) 
   } 
-
-  if (!is.null(eigen_lib)) { 
+  if (!dir.exists(rstan_options("boost_lib")))
+    stop("Boost not found; call install.packages('BH')")
+  
+  if (!is.null(eigen_lib)) {
     old.eigen_lib <- rstan_options(eigen_lib = eigen_lib) 
     on.exit(rstan_options(eigen_lib = old.eigen_lib), add = TRUE) 
   }
+  if (!dir.exists(rstan_options("eigen_lib")))
+    stop("Eigen not found; call install.packages('RcppEigen')")
+  
+  if (system.file("include", package = "StanHeaders") == "")
+    stop("Stan not found; call install.packages('StanHeaders')")
 
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
