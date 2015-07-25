@@ -180,6 +180,18 @@ rosetta$RFunction[rosetta$StanFunction == "weibull_rng"] <- "rweibull"
 rosetta$RFunction[grepl("^weibull_c", rosetta$StanFunction)] <- "pweibull"
 rosetta$RFunction[rosetta$StanFunction == "wishart_rng"] <- "rWishart"
 
+SS <- rosetta$Arguments == "~"
+SSnames <- rosetta$StanFunction[SS]
+matches <- rosetta[!SS & rosetta$StanFunction %in% paste(SSnames, "log", sep = "_"),]
+matches$Arguments <- sapply(strsplit(matches$Arguments, split = ", ", fixed = TRUE), 
+                            FUN = function(x) {
+                              paste0("(", paste(tail(x, -1), collapse = ", "))
+                              })
+matches$StanFunction <- gsub("_log$", "", matches$StanFunction)
+rosetta <- rbind(cbind(rosetta[!SS,], SamplingStatement = FALSE),
+                 cbind(matches, SamplingStatement = TRUE))
+rosetta <- rosetta[order(rosetta$StanFunction, !rosetta$SamplingStatement),]
+rownames(rosetta) <- NULL
+
 save(rosetta, file = "R/sysdata.rda")
 tools::resaveRdaFiles("R/sysdata.rda")
-
