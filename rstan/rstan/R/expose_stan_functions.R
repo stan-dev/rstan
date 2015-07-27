@@ -158,7 +158,11 @@ expose_stan_functions <- function(stanmodel) {
   
 
   # add dependencies
-  lines <- c("// [[Rcpp::depends(StanHeaders)]]", 
+  extras <- dir(rstan_options("boost_lib2"), pattern = "hpp$", 
+                full.names = TRUE, recursive = TRUE)
+  lines <- c(if (length(extras) > 0) sapply(extras, FUN = function(x)
+               paste0("#include<", x, ">")),
+             "// [[Rcpp::depends(StanHeaders)]]",
              "// [[Rcpp::depends(BH)]]",
              "// [[Rcpp::depends(RcppEigen)]]",
              "#include<Rcpp.h>",
