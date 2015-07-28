@@ -48,7 +48,9 @@ namespace boost { namespace fusion
         {
             return *this;
         }
-/*
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) && __GNUC__  == 4 && __GNUC_MINOR__ <= 6
+// nothing
+#else
         BOOST_CONSTEXPR BOOST_FUSION_GPU_ENABLED
         unused_type const&
         operator=(unused_type const&) const BOOST_NOEXCEPT
@@ -62,10 +64,14 @@ namespace boost { namespace fusion
         {
             return *this;
         }
-*/
+#endif
     };
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) && __GNUC__  == 4 && __GNUC_MINOR__ <= 6
     BOOST_CONSTEXPR unused_type /*const*/ unused = unused_type();
+#else
+    BOOST_CONSTEXPR unused_type const unused = unused_type();
+#endif
 
     namespace detail
     {
