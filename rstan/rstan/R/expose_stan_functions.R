@@ -58,12 +58,9 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("Eigen::Matrix<.*,Eigen::Dynamic>", "matrix_d", lines)
   
   # restore Stan's Eigen typedefs that were clobbered by the previous lines
-  lines <- gsub("typedef vector_d vector_d;", 
-                "typedef Eigen::Matrix<double,Eigen::Dynamic,1> vector_d;", lines)
-  lines <- gsub("typedef row_vector_d row_vector_d;", 
-                "typedef Eigen::Matrix<double,1,Eigen::Dynamic> row_vector_d;", lines)
-  lines <- gsub("typedef matrix_d matrix_d;",
-                "typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> matrix_d;", lines)
+  lines <- gsub("typedef vector_d vector_d;", "using stan::math::vector_d;", lines)
+  lines <- gsub("typedef row_vector_d row_vector_d;", "using stan::math::row_vector_d;", lines)
+  lines <- gsub("typedef matrix_d matrix_d;", "using stan::math::matrix_d;", lines)
 
   # kill foo_log<false> functions because of templating
   templated <- grep("_log<false>", lines, fixed = TRUE)
