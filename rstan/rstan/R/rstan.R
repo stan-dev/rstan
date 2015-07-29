@@ -117,7 +117,8 @@ stan_model <- function(file,
                get_Rcpp_module_def_code(model_cppname), 
                sep = '')  
 
-  cat("COMPILING THE C++ CODE FOR MODEL '", model_name, "' NOW.\n", sep = '') 
+  if (verbose && interactive())
+    cat("COMPILING THE C++ CODE FOR MODEL '", model_name, "' NOW.\n", sep = '')
   if (verbose) cat(system_info(), "\n")
   if (!is.null(boost_lib)) { 
     old.boost_lib <- rstan_options(boost_lib = boost_lib) 
@@ -133,8 +134,8 @@ stan_model <- function(file,
   if (!dir.exists(rstan_options("eigen_lib")))
     stop("Eigen not found; call install.packages('RcppEigen')")
   
-  if (system.file("include", package = "StanHeaders") == "")
-    stop("Stan not found; call install.packages('StanHeaders')")
+  if (inc_path_fun("StanHeaders") == "")
+    stop("StanHeaders not found; call install.packages('StanHeaders')")
 
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
