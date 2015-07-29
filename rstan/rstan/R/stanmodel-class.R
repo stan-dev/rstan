@@ -228,10 +228,10 @@ setMethod("sampling", "stanmodel",
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
             
             if (cores > 1 && mode == "SAMPLING" && chains > 0) {
-              dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
+              .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
-              dotlist$chains <- 1L
-              dotlist$cores <- 1L
+              .dotlist$chains <- 1L
+              .dotlist$cores <- 1L
               if(open_progress && 
                  !identical(browser <- getOption("browser"), "false")) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
@@ -261,20 +261,30 @@ setMethod("sampling", "stanmodel",
               cl <- parallel::makeCluster(min(cores, chains), 
                                           outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
+              dependencies <- read.dcf(file = system.file("DESCRIPTION", package = "rstan"), 
+                                       fields = "Imports")[1,]
+              dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
+                                   quiet = TRUE, text = dependencies)
+              dependencies <- c("rstan", "Rcpp", dependencies)
+              .paths <- unique(sapply(dependencies, FUN = function(d) {
+                sub(paste0("/", d, "$"), "", system.file(package = d))
+              }))
+              parallel::clusterExport(cl, varlist = ".paths", envir = environment())
+              parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
               parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
               callFun <- function(i) {
-                dotlist$chain_id <- i
-                if(is.list(dotlist$init)) dotlist$init <- dotlist$init[i]
-                if(is.character(dotlist$sample_file)) {
-                  dotlist$sample_file <- paste0(dotlist$sample_file, i)
+                .dotlist$chain_id <- i
+                if(is.list(.dotlist$init)) dotlist$init <- dotlist$init[i]
+                if(is.character(.dotlist$sample_file)) {
+                  .dotlist$sample_file <- paste0(.dotlist$sample_file, i)
                 }
-                if(is.character(dotlist$diagnostic_file)) {
-                  dotlist$diagnostic_file <- paste0(dotlist$diagnostic_file, i)
+                if(is.character(.dotlist$diagnostic_file)) {
+                  .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, i)
                 }
                 Sys.sleep(0.5 * i)
-                do.call(rstan::sampling, args = dotlist)
+                do.call(rstan::sampling, args = .dotlist)
               }
-              parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
+              parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
               data_e <- as.environment(data)
               parallel::clusterExport(cl, varlist = names(data_e), envir = data_e)
               nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
