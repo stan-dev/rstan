@@ -51,8 +51,8 @@ namespace rstan {
       sum_();
     }
 
-    bool is_recording() const {
-      return csv_.is_recording() || values_.is_recording() || sampler_values_.is_recording() || sum_.is_recording();
+    bool is_writing() const {
+      return csv_.is_writing() || values_.is_writing() || sampler_values_.is_writing() || sum_.is_writing();
     }
   };
 
