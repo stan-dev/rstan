@@ -149,20 +149,20 @@ expose_stan_functions <- function(stanmodel) {
                 "const static bool propto__ = false;", lines, fixed = TRUE)
   
   # restore Stan's Eigen typedefs that were clobbered by the previous lines
-  lines <- gsub("typedef vector_d vector_d;", "using stan::math::vector_d;", lines)
-  lines <- gsub("typedef row_vector_d row_vector_d;", "using stan::math::row_vector_d;", lines)
-  lines <- gsub("typedef matrix_d matrix_d;", "using stan::math::matrix_d;", lines)
+  lines <- sub("typedef vector_d vector_d;", "using stan::math::vector_d;", lines)
+  lines <- sub("typedef row_vector_d row_vector_d;", "using stan::math::row_vector_d;", lines)
+  lines <- sub("typedef matrix_d matrix_d;", "using stan::math::matrix_d;", lines)
   
   # add dependencies
   extras <- dir(rstan_options("boost_lib2"), pattern = "hpp$", 
                 full.names = TRUE, recursive = TRUE)
-  lines <- c(if (length(extras) > 0) sapply(extras, FUN = function(x)
-               paste0("#include<", x, ">")),
-             "// [[Rcpp::depends(StanHeaders)]]",
+  lines <- c("// [[Rcpp::depends(StanHeaders)]]",
              "// [[Rcpp::depends(BH)]]",
              "// [[Rcpp::depends(RcppEigen)]]",
              "#include<Rcpp.h>",
              "#include<RcppEigen.h>",
+             if (length(extras) > 0) sapply(extras, FUN = function(x)
+               paste0("#include<", x, ">")),             
              "#include<stan/math.hpp>",
              "#include <src/stan/lang/rethrow_located.hpp>",
 
