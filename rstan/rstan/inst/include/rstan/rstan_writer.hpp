@@ -1,25 +1,25 @@
-#ifndef RSTAN__RSTAN_RECORDER_HPP
-#define RSTAN__RSTAN_RECORDER_HPP
+#ifndef RSTAN__RSTAN_WRITER_HPP
+#define RSTAN__RSTAN_WRITER_HPP
 
 #include <Rcpp.h>
-#include <stan/interface/recorder/csv.hpp>
-#include <stan/interface/recorder/filtered_values.hpp>
-#include <stan/interface/recorder/sum_values.hpp>
+#include <stan/interface_callbacks/writer/csv.hpp>
+#include <stan/interface_callbacks/writer/filtered_values.hpp>
+#include <stan/interface_callbacks/writer/sum_values.hpp>
 
 namespace rstan {
 
-  class rstan_sample_recorder {
+  class rstan_sample_writer {
   public:
-    typedef stan::interface::recorder::csv CsvRecorder;
-    typedef stan::interface::recorder::filtered_values<Rcpp::NumericVector> FilteredValuesRecorder;
-    typedef stan::interface::recorder::sum_values SumValuesRecorder;
+    typedef stan:::interface_callbacks::writer::csv CsvWriter;
+    typedef stan:::interface_callbacks::writer::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
+    typedef stan:::interface_callbacks::writer::sum_values SumValuesWriter;
 
-    CsvRecorder csv_;
-    FilteredValuesRecorder values_;
-    FilteredValuesRecorder sampler_values_;
-    SumValuesRecorder sum_;
+    CsvWriter csv_;
+    FilteredValuesWriter values_;
+    FilteredValuesWriter sampler_values_;
+    SumValuesWriter sum_;
 
-    rstan_sample_recorder(CsvRecorder csv, FilteredValuesRecorder values, FilteredValuesRecorder sampler_values, SumValuesRecorder sum)
+    rstan_sample_writer(CsvWriter csv, FilteredValuesWriter values, FilteredValuesWriter sampler_values, SumValuesWriter sum)
       : csv_(csv), values_(values), sampler_values_(sampler_values), sum_(sum) { }
 
     void operator()(const std::vector<std::string>& x) {
@@ -62,8 +62,8 @@ namespace rstan {
     @param      warmup number of warmup iterations to be saved
    */
 
-  rstan_sample_recorder
-  sample_recorder_factory(std::ostream *o, const std::string prefix,
+  rstan_sample_writer
+  sample_writer_factory(std::ostream *o, const std::string prefix,
                           const size_t N, const size_t M, const size_t warmup,
                           const size_t offset,
                           const std::vector<size_t>& qoi_idx) {
@@ -81,16 +81,16 @@ namespace rstan {
     for (size_t n = 0; n < offset; n++)
       filter_sampler_values[n] = n;
 
-    rstan_sample_recorder::CsvRecorder csv(o, prefix);
-    rstan_sample_recorder::FilteredValuesRecorder values(N, M, filter);
-    rstan_sample_recorder::FilteredValuesRecorder sampler_values(N, M, filter_sampler_values);
-    rstan_sample_recorder::SumValuesRecorder sum(N, warmup);
+    rstan_sample_writer::CsvWriter csv(o, prefix);
+    rstan_sample_writer::FilteredValuesWriter values(N, M, filter);
+    rstan_sample_writer::FilteredValuesWriter sampler_values(N, M, filter_sampler_values);
+    rstan_sample_writer::SumValuesWriter sum(N, warmup);
 
-    return rstan_sample_recorder(csv, values, sampler_values, sum);
+    return rstan_sample_writer(csv, values, sampler_values, sum);
   }
 
-  rstan_sample_recorder::CsvRecorder diagnostic_recorder_factory(std::ostream *o, const std::string prefix) {
-    return rstan_sample_recorder::CsvRecorder(o, prefix);
+  rstan_sample_writer::CsvWriter diagnostic_writer_factory(std::ostream *o, const std::string prefix) {
+    return rstan_sample_writer::CsvWriter(o, prefix);
   }
 }
 
