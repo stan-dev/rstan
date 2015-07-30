@@ -100,12 +100,15 @@ stan_model <- function(file,
   }
   
   # check for compilers
-  check <- system2(file.path(R.home(component = "bin"), "R"), 
-                   args = "CMD config CXX", 
-                   stdout = TRUE, stderr = FALSE)
-  if(nchar(check) == 0) {
-    WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
-    warning(paste("C++ compiler not found on system. If absent, see", WIKI))
+  if (.Platform$OS.type == "windows") find_rtools()
+  else {
+    check <- system2(file.path(R.home(component = "bin"), "R"), 
+                     args = "CMD config CXX", 
+                     stdout = TRUE, stderr = FALSE)
+    if(nchar(check) == 0) {
+      WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
+      warning(paste("C++ compiler not found on system. If absent, see", WIKI))
+    }
   }
   
   model_cppname <- stanc_ret$model_cppname 
