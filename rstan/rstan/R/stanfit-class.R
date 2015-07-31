@@ -832,7 +832,7 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
 
   lst <- vector("list", object@sim$chains)
   for (ic in 1:object@sim$chains) { 
-    x <- do.call(cbind, object@sim$samples[[ic]])
+    x <- do.call(cbind, object@sim$samples[[ic]])[,tidx,drop=FALSE]
     warmup2 <- object@sim$warmup2[ic] 
     if (warmup2 > 0) x <- x[-(1:warmup2), ]
     x <- as.matrix(x)
@@ -849,9 +849,11 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
 
 setMethod("as.mcmc.list", "stanfit", as.mcmc.list.stanfit)
 
-As.mcmc.list <- function(object, pars, ...) {
-  pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
-  return(as.mcmc.list(object, pars))
+As.mcmc.list <- function(object, pars, include = TRUE, ...) {
+  if (missing(pars)) pars <- object@sim$pars_oi
+  else if (!include) pars <- setdiff(object@sim$pars_oi, pars)
+  pars <-  check_pars_second(object@sim, pars)
+  return(as.mcmc.list.stanfit(object, pars = pars))
 }
 
 dimnames.stanfit <- function(x) {
