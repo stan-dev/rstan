@@ -148,6 +148,7 @@ setMethod("optimizing", "stanmodel",
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
+            if (!verbose && is.null(dotlist$refresh)) dotlist$refresh <- 0L
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
@@ -394,7 +395,7 @@ setMethod("sampling", "stanmodel",
                        warmup = warmup, 
                        chains = chains,
                        n_save = rep(n_save, chains),
-                       warmup2 = rep(warmup2, chains), # number of warmpu iters in n_save
+                       warmup2 = rep(warmup2, chains), # number of warmup iters in n_save
                        permutation = perm_lst,
                        pars_oi = sampler$param_names_oi(),
                        dims_oi = sampler$param_dims_oi(),
