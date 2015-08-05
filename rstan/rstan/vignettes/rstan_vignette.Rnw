@@ -81,7 +81,7 @@ library(rstan)
 
 \title{\RStan: the \R interface to \Stan} 
 
-\author{The Stan Development Team \\ stan@mc-stan.org}
+\author{The Stan Development Team \\ mc.stanislaw@gmail.com}
 \makeindex
 
 \begin{document}
