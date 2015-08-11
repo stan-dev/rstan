@@ -282,8 +282,25 @@ setMethod("sampling", "stanmodel",
                 if(is.character(.dotlist$diagnostic_file)) {
                   .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, i)
                 }
+                messages <- tempfile()
+                sink(file(messages, open = "wt"), type = "message")
                 Sys.sleep(0.5 * i)
-                do.call(rstan::sampling, args = .dotlist)
+                out <- do.call(rstan::sampling, args = .dotlist)
+                sink(type = "message")
+                report <- scan(file = messages, what = character(), 
+                               sep = "\n", quiet = TRUE)
+                if (length(report) > 0) {
+                  end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
+                  report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
+                  tab <- sort(table(report), decreasing = TRUE)
+                  message("The following problems occured ",
+                          "the indicated number of times on chain ", i)
+                  mat <- as.matrix(tab)
+                  colnames(mat) <- "count"
+                  print(mat)
+                  message(end)
+                }
+                return(out)
               }
               parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
               data_e <- as.environment(data)
