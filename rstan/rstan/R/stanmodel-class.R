@@ -266,13 +266,14 @@ setMethod("sampling", "stanmodel",
                                        fields = "Imports")[1,]
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
-              dependencies <- c("rstan", "Rcpp", dependencies)
+              dependencies <- c("rstan", dependencies)
               .paths <- unique(sapply(dependencies, FUN = function(d) {
                 sub(paste0("/", d, "$"), "", system.file(package = d))
               }))
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
               parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
-              parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
+              parallel::clusterEvalQ(cl, expr = 
+                                    suppressPackageStartupMessages(require(rstan, quietly = TRUE)))
               callFun <- function(i) {
                 .dotlist$chain_id <- i
                 if(is.list(.dotlist$init)) dotlist$init <- dotlist$init[i]
