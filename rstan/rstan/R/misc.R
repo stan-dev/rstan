@@ -1544,7 +1544,10 @@ parse_data <- function(cppcode, e = parent.frame()) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
+  tdata <- grep("stan::math::fill(", cppcode, value = TRUE, fixed = TRUE)
+  tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
   # get them from the calling environment
+  objects <- setdiff(objects, tdata)
   mget(objects, envir = e, inherits = TRUE,
        ifnotfound = vector("list", length(objects)))
 }
