@@ -24,6 +24,9 @@ setMethod("show", "stanmodel",
 setGeneric(name = 'optimizing',
            def = function(object, ...) { standardGeneric("optimizing")})
 
+setGeneric(name = 'vb',
+           def = function(object, ...) { standardGeneric("vb")})
+
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
 
@@ -68,7 +71,77 @@ prep_call_sampler <- function(object) {
   } 
 } 
 
-setMethod("optimizing", "stanmodel", 
+setMethod("vb", "stanmodel", 
+          function(object, data = list(),
+                   seed = sample.int(.Machine$integer.max, 1),
+                   check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
+                   algorithm = c("meanfield", "fullrank"), ...) {
+            prep_call_sampler(object)
+            model_cppname <- object@model_cpp$model_cppname
+            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
+            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+
+            if (is.list(data) & !is.data.frame(data)) {
+              parsed_data <- parse_data(get_cppcode(object))
+              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
+              data <- parsed_data
+            } else if (is.character(data)) { # names of objects
+              data <- try(mklist(data))
+              if (is(data, "try-error")) {
+                message("failed to create the data; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+            }
+
+            if (check_data) {
+              data <- try(force(data))
+              if (is(data, "try-error")) {
+                message("failed to evaluate the data; sampling not done")
+                return(invisible(NULL))
+              }
+
+              if (!missing(data) && length(data) > 0) {
+                data <- try(data_preprocess(data))
+                if (is(data, "try-error")) {
+                  message("failed to preprocess the data; variational Bayes not done")
+                  return(invisible(list(stanmodel = object)))
+                }
+              } else data <- list()
+            }
+            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun))
+            if (is(sampler, "try-error")) {
+              message('failed to create the model; variational Bayes not done')
+              return(invisible(list(stanmodel = object)))
+            }
+            seed <- check_seed(seed, warn = 1)
+            if (is.null(seed))
+              return(invisible(list(stanmodel = object)))
+            args <- list(seed = seed,
+                         method = "variational",
+                         algorithm = match.arg(algorithm))
+
+            if (!is.null(sample_file) && !is.na(sample_file))
+              args$sample_file <- writable_sample_file(sample_file)
+            dotlist <- list(...)
+            is_arg_recognizable(names(dotlist),
+                                c("iter",
+                                  "append_samples",
+                                  "elbo_samples",
+                                  "eta_adagrad",
+                                  "eval_elbo",
+                                  "grad_samples",
+                                  "output_samples",
+                                  "tol_rel_obj"),
+                                 pre_msg = "passing unknown arguments: ",
+                                 call. = FALSE)
+            if (!is.null(dotlist$method))  dotlist$method <- NULL
+            vbres <- sampler$call_sampler(c(args, dotlist))
+            vbres$samples <- read.csv(attr(vbres, "args")$sample_file, header = TRUE, comment.char = '#')
+            vbres
+          })
+
+setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file = NULL, 
