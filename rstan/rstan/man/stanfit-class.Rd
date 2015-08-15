@@ -68,12 +68,14 @@
 }
 
 \usage{
-  As.mcmc.list(object, pars, ...)
+  As.mcmc.list(object, pars, include = TRUE, ...)
 }
 
 \arguments{
   \item{object}{object of class \code{"stanfit"}}
   \item{pars}{optional character vector of parameters to include}
+  \item{include}{logical scalar indicating whether to include (the default) or 
+    exclude theh parameters named in \code{pars}}
   \item{\dots}{unused}
 }
 \section{Slots}{

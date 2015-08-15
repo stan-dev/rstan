@@ -14,7 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-.onLoad <- function(libname, pkgname) { }
+
+rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
+
+.onLoad <- function(libname, pkgname) {
+  assignInMyNamespace("rstan_load_time", value = Sys.time())  
+}
 
 .onAttach <- function(...) {
   rstanLib <- dirname(system.file(package = "rstan"))

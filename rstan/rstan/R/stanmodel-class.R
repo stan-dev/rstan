@@ -180,7 +180,7 @@ setMethod("optimizing", "stanmodel",
                   return(invisible(list(stanmodel = object)))
                 }
               } else data <- list()
-            } 
+            }
             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
             if (is(sampler, "try-error")) {
               message('failed to create the optimizer; optimization not done') 
@@ -221,6 +221,7 @@ setMethod("optimizing", "stanmodel",
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
+            if (!verbose && is.null(dotlist$refresh)) dotlist$refresh <- 0L
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
@@ -249,12 +250,15 @@ setMethod("sampling", "stanmodel",
                    init = "random", check_data = TRUE, 
                    sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
                    algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
-                   control = NULL, cores = getOption("mc.cores", 1L), 
+                   control = NULL, include = TRUE,
+                   cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), ...) {
 
+            objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- parse_data(get_cppcode(object))
+              parsed_data <- try(parse_data(get_cppcode(object)))
+              if (!is.list(parsed_data)) return(invisible(new_empty_stanfit(object)))
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
@@ -281,7 +285,6 @@ setMethod("sampling", "stanmodel",
                 }
               } else data <- list()
             }
-            objects <- ls()
             prep_call_sampler(object)
             model_cppname <- object@model_cpp$model_cppname 
             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
@@ -298,12 +301,11 @@ setMethod("sampling", "stanmodel",
             dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
             
-            if (chains > 1 && cores > 1 && mode == "SAMPLING") {
-              dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
+            if (cores > 1 && mode == "SAMPLING" && chains > 0) {
+              .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
-              dotlist$chains <- 1L
-              dotlist$cores <- 1L
-              dotlist$data <- data
+              .dotlist$chains <- 1L
+              .dotlist$cores <- 1L
               if(open_progress && 
                  !identical(browser <- getOption("browser"), "false")) {
                 sinkfile <- paste0(tempfile(), "_StanProgress.txt")
@@ -330,22 +332,37 @@ setMethod("sampling", "stanmodel",
                 utils::browseURL(sinkfile, browser = browser)
               }
               else sinkfile <- ""
-              cl <- parallel::makeCluster(cores, outfile = sinkfile, useXDR = FALSE)
+              cl <- parallel::makeCluster(min(cores, chains), 
+                                          outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
-              parallel::clusterEvalQ(cl, expr = require(Rcpp, quietly = TRUE))
+              dependencies <- read.dcf(file = system.file("DESCRIPTION", package = "rstan"), 
+                                       fields = "Imports")[1,]
+              dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
+                                   quiet = TRUE, text = dependencies)
+              dependencies <- c("rstan", dependencies)
+              .paths <- unique(sapply(dependencies, FUN = function(d) {
+                sub(paste0("/", d, "$"), "", system.file(package = d))
+              }))
+              parallel::clusterExport(cl, varlist = ".paths", envir = environment())
+              parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
+              parallel::clusterEvalQ(cl, expr = 
+                                    suppressPackageStartupMessages(require(rstan, quietly = TRUE)))
               callFun <- function(i) {
-                dotlist$chain_id <- i
-                if(is.list(dotlist$init)) dotlist$init <- dotlist$init[i]
-                if(is.character(dotlist$sample_file)) {
-                  dotlist$sample_file <- paste0(dotlist$sample_file, i)
+                .dotlist$chain_id <- i
+                if(is.list(.dotlist$init)) dotlist$init <- dotlist$init[i]
+                if(is.character(.dotlist$sample_file)) {
+                  .dotlist$sample_file <- paste0(.dotlist$sample_file, i)
                 }
-                if(is.character(dotlist$diagnostic_file)) {
-                  dotlist$diagnostic_file <- paste0(dotlist$diagnostic_file, i)
+                if(is.character(.dotlist$diagnostic_file)) {
+                  .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, i)
                 }
                 Sys.sleep(0.5 * i)
-                do.call(rstan::sampling, args = dotlist)
+                out <- do.call(rstan::sampling, args = .dotlist)
+                return(out)
               }
-              parallel::clusterExport(cl, varlist = "dotlist", envir = environment())
+              parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
+              data_e <- as.environment(data)
+              parallel::clusterExport(cl, varlist = names(data_e), envir = data_e)
               nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
               valid <- sapply(nfits, is, class2 = "stanfit") &
                        sapply(nfits, FUN = function(x) x@mode == 0)
@@ -374,11 +391,13 @@ setMethod("sampling", "stanmodel",
                                     "obfuscate_model_name",
                                     "enable_random_init",
                                     "append_samples", "refresh", "control", 
-                                    "cores", "open_progress"), 
+                                    "include", "cores", "open_progress"), 
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
 
+            if(!include) pars <- setdiff(m_pars, pars)
+            
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)
@@ -415,11 +434,29 @@ setMethod("sampling", "stanmodel",
               if (is.null(dots$refresh) || dots$refresh > 0) 
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
-              samples_i <- try(sampler$call_sampler(args_list[[i]])) 
+              messages <- tempfile()
+              sink(file(messages, open = "wt"), type = "message")
+              samples_i <- try(sampler$call_sampler(args_list[[i]]))
+              sink(type = "message")
+              report <- scan(file = messages, what = character(),
+                             sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
+                print(tail(report, n = 10))
                 message("error occurred during calling the sampler; sampling not done") 
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
                                                    m_pars, p_dims, 2L))) 
+              }
+              if (length(report) > 0) {
+                end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
+                report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
+                tab <- sort(table(report), decreasing = TRUE)
+                if (length(tab) == 2) tab <- rev(tab)
+                message("The following problems occured ",
+                        "the indicated number of times on chain ", i)
+                mat <- as.matrix(tab)
+                colnames(mat) <- "count"
+                print(mat)
+                message(end)
               }
               samples[[i]] <- samples_i
             }
@@ -451,7 +488,7 @@ setMethod("sampling", "stanmodel",
                        warmup = warmup, 
                        chains = chains,
                        n_save = rep(n_save, chains),
-                       warmup2 = rep(warmup2, chains), # number of warmpu iters in n_save
+                       warmup2 = rep(warmup2, chains), # number of warmup iters in n_save
                        permutation = perm_lst,
                        pars_oi = sampler$param_names_oi(),
                        dims_oi = sampler$param_dims_oi(),

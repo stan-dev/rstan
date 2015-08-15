@@ -1,7 +1,7 @@
 #!/bin/bash
 # OLD_VER=[[:digit:]]\\+\\.[[:digit:]]\\+\\.[[:digit:]]
 
-OLD_VER=2.6.3
+OLD_VER=2.7.0
 NEW_VER=2.7.0
 SED=sed
 

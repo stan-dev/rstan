@@ -8,10 +8,9 @@
     return args.stan_args_to_rlist(); 
     END_RCPP
   ' 
-  fx <- cxxfunction(signature(x = "list"), 
-                    body = src, 
-                    includes = "#include <rstan/stan_args.hpp>", 
-                    plugin = "rstan", verbose = TRUE)
+  fx <- inline::cxxfunction(signature(x = "list"), body = src, 
+                                      includes = "#include <rstan/stan_args.hpp>", 
+                                      plugin = "rstan", verbose = TRUE)
   assign("fx", fx, envir = .GlobalEnv)
 }
 

@@ -742,7 +742,10 @@ seq_array_ind <- function(d, col_major = FALSE) {
   if (length(d) == 0L)
     return(numeric(0L)) 
 
-  total <- prod(d) 
+  total <- prod(d)
+  if (total == 0L)
+    return(array(0L, dim = 0L))
+  
   len <- length(d) 
   if (len == 1L)
     return(array(1:total, dim = c(total, 1)))
@@ -901,16 +904,20 @@ pars_total_indexes <- function(names, dims, fnames, pars) {
       attr(p, "row_major_idx") <- p 
       return(p) 
     } 
-    p <- match(par, names) 
-    idx <- starts[p] + seq(0, by = 1, length.out = num_pars(dims[[p]])) 
+    p <- match(par, names)
+    np <- num_pars(dims[[p]])
+    if (np == 0) return(NULL)
+    idx <- starts[p] + seq(0, by = 1, length.out = np) 
     names(idx) <- fnames[idx] 
     attr(idx, "row_major_idx") <- starts[p] + idx_col2rowm(dims[[p]]) - 1 
     idx
   } 
-  idx <- lapply(pars, FUN = par_total_indexes) 
-  names(idx) <- pars 
-  idx 
-} 
+  idx <- lapply(pars, FUN = par_total_indexes)
+  nulls <- sapply(idx, is.null)
+  idx <- idx[!nulls]
+  names(idx) <- pars[!nulls] 
+  idx
+}
 
 rstancolgrey <- rgb(matrix(c(247, 247, 247, 204, 204, 204, 150, 150, 150, 82, 82, 82),  
                            byrow = TRUE, ncol = 3), 
@@ -1541,7 +1548,10 @@ parse_data <- function(cppcode, e = parent.frame()) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
+  tdata <- grep("stan::math::fill(", cppcode, value = TRUE, fixed = TRUE)
+  tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
   # get them from the calling environment
+  objects <- setdiff(objects, tdata)
   mget(objects, envir = e, inherits = TRUE,
        ifnotfound = vector("list", length(objects)))
 }

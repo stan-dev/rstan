@@ -1,17 +1,20 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.7.0
-Date: 2015-06-22
+Version: 2.7.0-2
+Date: 2015-07-25
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
-             person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")))
-Description: R interface to Stan (Stan is an open-source package for obtaining
-        Bayesian inference using the No-U-Turn sampler, a variant of
-        Hamiltonian Monte Carlo).
+             person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
+             person("Joel", "de Guzman", role = "cph", comment = "Boost"),
+             person("Eric", "Niebler", role = "cph",   comment = "Boost"),
+             person("Thomas", "Heller", role = "cph",  comment = "Boost"),
+             person("John", "Fletcher", role = "cph",  comment = "Boost"))
+Description: User-facing R functions are provided by this package to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the 'StanHeaders' package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo and (optionally penalized) maximum likelihood estimation via optimization. In both cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
 License: GPL (>=3)
-Imports: stats4
-Depends: R (>= 3.0.2), Rcpp (>= 0.11.0), utils, inline, methods
+NeedsCompilation: yes
+Imports: stats4, inline, methods, Rcpp (>= 0.11.0)
+Depends: R (>= 3.0.2)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.0), parallel, KernSmooth, RCurl
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.0), parallel, KernSmooth, RCurl, loo
 URL: http://mc-stan.org

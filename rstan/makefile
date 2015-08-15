@@ -85,7 +85,6 @@ test-R:
 
 clean: 
 	rm -f $(STANPKG) 
-	rm -f rstan/R/git_*head.R
 	rm -rf $(shell find tests/cpp -type f -name '*.d')
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
 
@@ -107,6 +106,7 @@ STAN_MATH_SUBMODULE := ../StanHeaders/inst/include/mathlib/
 
 STANLIB := $(STAN_SUBMODULE)/lib
 STANSRC := $(STAN_SUBMODULE)/src
+STANMATH := ../StanHeaders/inst/include/mathlib
 GTEST_LIB := tests/cpp/gtest.o
 
 LIBPTHREAD = 

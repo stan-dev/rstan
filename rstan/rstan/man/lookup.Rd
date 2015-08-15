@@ -34,9 +34,8 @@ Look up the Stan function that corresponds to a \R function or name.
                       that Stan function is defined. 
   }
   If \code{FUN = "~"}, a data.frame with rows equal to the number of sampling statements
-  defined in Stan and four columns:
+  defined in Stan and three columns:
   \enumerate{
-    \item \code{FirstArgument} Character string for the first argument for that sampling statement.
     \item \code{StanStatement} Character string indicating the name of the distribution in Stan. 
     \item \code{Arguments} Character string indicating the remaining arguments to that Stan function. 
     \item \code{Page} Integer indicating the page of the Stan reference manual where  

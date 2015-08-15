@@ -60,7 +60,8 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 }  
 
 setMethod("plot", signature(x = "stanfit", y = "missing"), 
-          function(x, pars, display_parallel = FALSE, ask = TRUE, npars_per_page = 6) {
+          function(x, pars, display_parallel = FALSE, ask = TRUE, 
+                   npars_per_page = 6, include = TRUE) {
             if (x@mode == 1L) {
               cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
                   "sampling is not conducted.\n", sep = '')
@@ -76,6 +77,7 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
               return(invisible(NULL))
             }
 
+            if (!include) pars <- setdiff(x@sim$pars_oi, pars)
             pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
             pars <- remove_empty_pars(pars, x@sim$dims_oi)
             if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
@@ -351,7 +353,7 @@ setMethod("get_elapsed_time",
 setGeneric(name = 'get_posterior_mean', 
            def = function(object, ...) { standardGeneric("get_posterior_mean")}) 
 
-setMethod("get_posterior_mean", 
+setMethod("get_posterior_mean", signature = "stanfit",
           definition = function(object, pars) {
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
@@ -631,7 +633,7 @@ setMethod("grad_log_prob", signature = "stanfit",
 
 setMethod("traceplot", signature = "stanfit", 
           function(object, pars, inc_warmup = TRUE, ask = FALSE, 
-                   nrow = 4, ncol = 2, window = NULL, ...) { 
+                   nrow = 4, ncol = 2, window = NULL, include = TRUE, ...) { 
             # Args:
             #  nrow, defaults to 4
             #  ncol, defaults to 2 
@@ -639,6 +641,7 @@ setMethod("traceplot", signature = "stanfit",
             #  when there are many parameters. 
             #  window, for plotting only a window of the whole iterations
             #  default to NULL for all iterations
+            #  include the elements of pars (FALSE -> exclude)
 
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
@@ -649,6 +652,7 @@ setMethod("traceplot", signature = "stanfit",
               return(invisible(NULL)) 
             } 
 
+            if(!include) pars <- setdiff(object@sim$pars_oi, pars)
             pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
             pars <- remove_empty_pars(pars, object@sim$dims_oi)
             tidx <- pars_total_indexes(object@sim$pars_oi, 
@@ -828,7 +832,7 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
 
   lst <- vector("list", object@sim$chains)
   for (ic in 1:object@sim$chains) { 
-    x <- do.call(cbind, object@sim$samples[[ic]])
+    x <- do.call(cbind, object@sim$samples[[ic]])[,tidx,drop=FALSE]
     warmup2 <- object@sim$warmup2[ic] 
     if (warmup2 > 0) x <- x[-(1:warmup2), ]
     x <- as.matrix(x)
@@ -845,9 +849,11 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
 
 setMethod("as.mcmc.list", "stanfit", as.mcmc.list.stanfit)
 
-As.mcmc.list <- function(object, pars, ...) {
-  pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
-  return(as.mcmc.list(object, pars))
+As.mcmc.list <- function(object, pars, include = TRUE, ...) {
+  if (missing(pars)) pars <- object@sim$pars_oi
+  else if (!include) pars <- setdiff(object@sim$pars_oi, pars)
+  pars <-  check_pars_second(object@sim, pars)
+  return(as.mcmc.list.stanfit(object, pars = pars))
 }
 
 dimnames.stanfit <- function(x) {

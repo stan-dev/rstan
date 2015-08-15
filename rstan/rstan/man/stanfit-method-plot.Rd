@@ -13,7 +13,7 @@
 
 \usage{
   \S4method{plot}{stanfit,missing}(x, pars, display_parallel = FALSE, 
-  ask = TRUE, npars_per_page = 6)
+  ask = TRUE, npars_per_page = 6, include = TRUE)
 } 
 
 \section{Methods}{
@@ -27,7 +27,8 @@
   \item{x}{An instance of class \code{\linkS4class{stanfit}}.}
   \item{pars}{A vector of character string specifying the  
     parameters to be plotted. If not specified, all parameters
-    are used.} 
+    are used. If \code{include = FALSE}, then the parameters are
+    excluded from the plot.} 
   \item{display_parallel}{\code{TRUE} or \code{FALSE}, indicating 
     whether to plot the intervals with one line for each chain
     or one line for all chains. The default is \code{FALSE} so
@@ -37,6 +38,8 @@
     there are a lot of parameters (see \code{\link[grDevices]{devAskNewPage}}).}
   \item{npars_per_page}{An integer to specify the number of parameters 
     that would be plotted per page.}
+  \item{include}{Logical scalar indicating whether to include (the default)
+    or exclude the parameters given by the \code{pars} argument from the plot.}
 }
 \value{\code{NULL}} 
 \examples{\dontrun{

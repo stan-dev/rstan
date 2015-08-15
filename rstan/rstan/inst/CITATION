@@ -1,23 +1,23 @@
 citHeader("To cite Stan in publications use:")
 
 citEntry(entry = "Misc", 
-         title = "Stan: A C++ Library for Probability and Sampling, Version 2.6.1",
+         title = "Stan: A C++ Library for Probability and Sampling, Version 2.7.0",
          author = person(given = "Stan Development Team"),
-         year = "2014",
+         year = "2015",
          url = "http://mc-stan.org/",
          textVersion =
-           paste("Stan Development Team (2014).",
-                 title = "Stan: A C++ Library for Probability and Sampling, Version 2.6.1.",
+           paste("Stan Development Team (2015).",
+                 title = "Stan: A C++ Library for Probability and Sampling, Version 2.7.0.",
                  "URL http://mc-stan.org/.") 
 )
   
 citEntry(entry = "Manual", 
-         title = "Stan Modeling Language User's Guide and Reference Manual, Version 2.6.1",
+         title = "Stan Modeling Language User's Guide and Reference Manual, Version 2.7.0",
          author = person(given = "Stan Development Team"),
-         year = "2014", 
+         year = "2015", 
          url = "http://mc-stan.org/",
          textVersion  =
-           paste("Stan Development Team (2013).", 
+           paste("Stan Development Team (2015).", 
                  "Stan Modeling Language User's Guide and Reference Manual, Version 2.6.1.",
                  "URL http://mc-stan.org/.") 
 )
@@ -32,3 +32,13 @@ citEntry(entry = "Article",
                  "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo.",
                  "Journal of Machine Learning Research.")
 ) 
+
+citEntry(entry = "Article",
+         title = "Stan: A Probabilistic Programming Language",
+         author = person("Bob", "Carpenter"),
+         year = 2015,
+         journal = "Journal of Statistical Software",
+         textVersion = paste("Bob Carpenter, et al. In press.",
+                             "Stan: A Probabilistic Programming Language.",
+                             "Journal of Statistical Software")
+)

@@ -17,7 +17,7 @@
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
     algorithm = c("NUTS", "HMC", "Fixed_param"),%, "Metropolis")
-    control = NULL, cores = getOption("mc.cores", 1L),
+    control = NULL, include = TRUE, cores = getOption("mc.cores", 1L),
     open_progress = interactive() && !isatty(stdout()) &&
                     !identical(Sys.getenv("RSTUDIO"), "1"), \dots)
 } 
@@ -41,9 +41,11 @@
     for all the names of objects used as data. 
     See the notes in \code{\link{stan}}.} 
 
-  \item{pars}{A vector of character strings specifying parameters of interest; defaults
-    to \code{NA} indicating all parameters in the model. Only samples for parameters given 
-    in \code{pars} are stored in the fitted results.}
+  \item{pars}{A vector of character string specifying parameters of interest; defaults
+    to \code{NA} indicating all parameters in the model. If \code{include = TRUE}, only 
+    samples for parameters given in \code{pars} are stored in the fitted results.
+    Conversely, if \code{include = FALSE}, samples for all parameters except those
+    given in \code{pars} are stored in the fitted results.}
 
   \item{chains}{A positive integer specifying number of chains; defaults to 4.} 
  
@@ -107,6 +109,11 @@
 
   \item{control}{See the argument \code{control} of function
     \code{\link{stan}}.}
+
+  \item{include}{Logical scalar defaulting to \code{TRUE} indicating
+    whether to include or exclude the parameters given by the 
+    \code{pars} argument. If \code{FALSE}, only entire multidimensional
+    parameters can be excluded, rather than particular elements of them.}
     
   \item{cores}{Number of cores to use when executing the chains in parallel,
     which defaults to 1 but we recommend setting the \code{mc.cores} option 
