@@ -283,24 +283,8 @@ setMethod("sampling", "stanmodel",
                 if(is.character(.dotlist$diagnostic_file)) {
                   .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, i)
                 }
-                messages <- tempfile()
-                sink(file(messages, open = "wt"), type = "message")
                 Sys.sleep(0.5 * i)
                 out <- do.call(rstan::sampling, args = .dotlist)
-                sink(type = "message")
-                report <- scan(file = messages, what = character(), 
-                               sep = "\n", quiet = TRUE)
-                if (length(report) > 0) {
-                  end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
-                  report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
-                  tab <- sort(table(report), decreasing = TRUE)
-                  message("The following problems occured ",
-                          "the indicated number of times on chain ", i)
-                  mat <- as.matrix(tab)
-                  colnames(mat) <- "count"
-                  print(mat)
-                  message(end)
-                }
                 return(out)
               }
               parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
@@ -377,11 +361,29 @@ setMethod("sampling", "stanmodel",
               if (is.null(dots$refresh) || dots$refresh > 0) 
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
-              samples_i <- try(sampler$call_sampler(args_list[[i]])) 
+              messages <- tempfile()
+              sink(file(messages, open = "wt"), type = "message")
+              samples_i <- try(sampler$call_sampler(args_list[[i]]))
+              sink(type = "message")
+              report <- scan(file = messages, what = character(),
+                             sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
+                print(tail(report, n = 10))
                 message("error occurred during calling the sampler; sampling not done") 
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
                                                    m_pars, p_dims, 2L))) 
+              }
+              if (length(report) > 0) {
+                end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
+                report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
+                tab <- sort(table(report), decreasing = TRUE)
+                if (length(tab) == 2) tab <- rev(tab)
+                message("The following problems occured ",
+                        "the indicated number of times on chain ", i)
+                mat <- as.matrix(tab)
+                colnames(mat) <- "count"
+                print(mat)
+                message(end)
               }
               samples[[i]] <- samples_i
             }
