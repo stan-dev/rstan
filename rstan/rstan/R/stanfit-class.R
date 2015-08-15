@@ -353,7 +353,7 @@ setMethod("get_elapsed_time",
 setGeneric(name = 'get_posterior_mean', 
            def = function(object, ...) { standardGeneric("get_posterior_mean")}) 
 
-setMethod("get_posterior_mean", 
+setMethod("get_posterior_mean", signature = "stanfit",
           definition = function(object, pars) {
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",

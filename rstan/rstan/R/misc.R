@@ -904,16 +904,20 @@ pars_total_indexes <- function(names, dims, fnames, pars) {
       attr(p, "row_major_idx") <- p 
       return(p) 
     } 
-    p <- match(par, names) 
-    idx <- starts[p] + seq(0, by = 1, length.out = num_pars(dims[[p]])) 
+    p <- match(par, names)
+    np <- num_pars(dims[[p]])
+    if (np == 0) return(NULL)
+    idx <- starts[p] + seq(0, by = 1, length.out = np) 
     names(idx) <- fnames[idx] 
     attr(idx, "row_major_idx") <- starts[p] + idx_col2rowm(dims[[p]]) - 1 
     idx
   } 
-  idx <- lapply(pars, FUN = par_total_indexes) 
-  names(idx) <- pars 
-  idx 
-} 
+  idx <- lapply(pars, FUN = par_total_indexes)
+  nulls <- sapply(idx, is.null)
+  idx <- idx[!nulls]
+  names(idx) <- pars[!nulls] 
+  idx
+}
 
 rstancolgrey <- rgb(matrix(c(247, 247, 247, 204, 204, 204, 150, 150, 150, 82, 82, 82),  
                            byrow = TRUE, ncol = 3), 
