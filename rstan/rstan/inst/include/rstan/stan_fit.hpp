@@ -94,15 +94,15 @@
 // REF: cmdstan: src/cmdstan/command.hpp
 
 #include <stan/io/mcmc_writer.hpp>
-#include <stan/interface/recorder/csv.hpp>
-#include <stan/interface/recorder/filtered_values.hpp>
-#include <stan/interface/recorder/messages.hpp>
-#include <stan/interface/recorder/noop.hpp>
-#include <stan/interface/recorder/recorder.hpp>
-#include <stan/interface/recorder/sum_values.hpp>
-#include <stan/interface/recorder/values.hpp>
+#include <stan/interface_callbacks/writer/csv.hpp>
+#include <stan/interface_callbacks/writer/filtered_values.hpp>
+#include <stan/interface_callbacks/writer/messages.hpp>
+#include <stan/interface_callbacks/writer/noop.hpp>
+#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/interface_callbacks/writer/sum_values.hpp>
+#include <stan/interface_callbacks/writer/values.hpp>
 //#include <stan/services/mcmc.hpp>
-#include <rstan/rstan_recorder.hpp>
+#include <rstan/rstan_writer.hpp>
 
 namespace rstan {
 
@@ -467,13 +467,13 @@ namespace rstan {
     };
 
     // in:  model, s, sampler_ptr
-    // out: sample_recorder_size, diagnostic_recorder_size
+    // out: sample_writer_size, diagnostic_writer_size
     template <class Model>
     void calculate_sizes(Model& model,
                          stan::mcmc::sample& s,
                          stan::mcmc::base_mcmc* sampler_ptr,
-                         size_t& sample_recorder_size,
-                         size_t& sample_recorder_offset,
+                         size_t& sample_writer_size,
+                         size_t& sample_writer_offset,
                          std::vector<std::string>& sample_names,
                          std::vector<std::string>& sampler_names,
                          std::vector<std::string>& model_constrained_param_names,
@@ -490,9 +490,9 @@ namespace rstan {
       sampler_ptr->get_sampler_diagnostic_names(model_unconstrained_param_names,
                                                 sampler_diagnostic_names);
 
-      sample_recorder_size = sample_names.size() + sampler_names.size()
+      sample_writer_size = sample_names.size() + sampler_names.size()
         + model_constrained_param_names.size();
-      sample_recorder_offset = sample_names.size() + sampler_names.size();
+      sample_writer_offset = sample_names.size() + sampler_names.size();
     }
 
 
@@ -505,15 +505,15 @@ namespace rstan {
                           std::fstream& sample_stream,
                           std::fstream& diagnostic_stream,
                           const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
-      size_t sample_recorder_size, sample_recorder_offset;
+      size_t sample_writer_size, sample_writer_offset;
       std::vector<std::string> sample_names;
       std::vector<std::string> sampler_names;
       std::vector<std::string> model_constrained_param_names;
       std::vector<std::string> model_unconstrained_param_names;
       std::vector<std::string> sampler_diagnostic_names;
       rstan::calculate_sizes(model, s, sampler_ptr,
-                             sample_recorder_size,
-                             sample_recorder_offset,
+                             sample_writer_size,
+                             sample_writer_offset,
                              sample_names,
                              sampler_names,
                              model_constrained_param_names,
@@ -521,23 +521,23 @@ namespace rstan {
                              sampler_diagnostic_names);
 
 
-      rstan_sample_recorder sample_recorder
-        = sample_recorder_factory(&sample_stream, "# ",
-                                  sample_recorder_size,
+      rstan_sample_writer sample_writer
+        = sample_writer_factory(&sample_stream, "# ",
+                                  sample_writer_size,
                                   args.get_ctrl_sampling_iter_save(),
                                   args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
-                                  sample_recorder_offset,
+                                  sample_writer_offset,
                                   qoi_idx);
 
-      stan::interface::recorder::csv diagnostic_recorder
-        = diagnostic_recorder_factory(&diagnostic_stream, "# ");
+      stan::interface_callbacks::writer::csv diagnostic_writer
+        = diagnostic_writer_factory(&diagnostic_stream, "# ");
 
-      stan::interface::recorder::messages message_recorder(&Rcpp::Rcout, "# ");
+      stan::interface_callbacks::writer::messages message_writer(&Rcpp::Rcout, "# ");
 
       stan::io::mcmc_writer<Model,
-                            rstan_sample_recorder, stan::interface::recorder::csv,
-                            stan::interface::recorder::messages>
-        writer(sample_recorder, diagnostic_recorder, message_recorder, &Rcpp::Rcout);
+                            rstan_sample_writer, stan::interface_callbacks::writer::csv,
+                            stan::interface_callbacks::writer::messages>
+        writer(sample_writer, diagnostic_writer, message_writer, &Rcpp::Rcout);
 
       if (!args.get_append_samples()) {
         writer.write_sample_names(s, sampler_ptr, model);
@@ -571,7 +571,7 @@ namespace rstan {
         writer.write_adapt_finish(sampler_ptr);
 
         std::stringstream ss;
-        stan::interface::recorder::messages info(&ss, "# ");
+        stan::interface_callbacks::writer::messages info(&ss, "# ");
         writer.write_adapt_finish(sampler_ptr, info);
         adaptation_info = ss.str();
         adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
@@ -601,9 +601,9 @@ namespace rstan {
 
       if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
         double inverse_saved = 1.0 / args.get_ctrl_sampling_iter_save_wo_warmup();
-        mean_lp = sample_recorder.sum_.sum()[0] * inverse_saved;
+        mean_lp = sample_writer.sum_.sum()[0] * inverse_saved;
         for (size_t n = 0; n < mean_pars.size(); n++) {
-          mean_pars[n] = sample_recorder.sum_.sum()[sample_recorder_offset + n] * inverse_saved;
+          mean_pars[n] = sample_writer.sum_.sum()[sample_writer_offset + n] * inverse_saved;
         }
       }
 
@@ -617,8 +617,8 @@ namespace rstan {
       if (args.get_diagnostic_file_flag())
         diagnostic_stream.close();
 
-      holder = Rcpp::List(sample_recorder.values_.x().begin(),
-                          sample_recorder.values_.x().end());
+      holder = Rcpp::List(sample_writer.values_.x().begin(),
+                          sample_writer.values_.x().end());
       holder.attr("test_grad") = Rcpp::wrap(false);
       holder.attr("args") = args.stan_args_to_rlist();
       holder.attr("inits") = initv;
@@ -629,8 +629,8 @@ namespace rstan {
         Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
                                     Rcpp::_["sample"] = sampleDeltaT);
 
-      Rcpp::List slst(sample_recorder.sampler_values_.x().begin()+1,
-                      sample_recorder.sampler_values_.x().end());
+      Rcpp::List slst(sample_writer.sampler_values_.x().begin()+1,
+                      sample_writer.sampler_values_.x().end());
       std::vector<std::string> slst_names(sample_names.begin()+1, sample_names.end());
       slst_names.insert(slst_names.end(), sampler_names.begin(), sampler_names.end());
       slst.names() = slst_names;
