@@ -222,14 +222,50 @@ namespace rstan {
           }
           break;
         case TEST_GRADIENT: break;
-        case VARIATIONAL: 
+        case VARIATIONAL:
+          if (ctrl.variational.grad_samples <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter grad_samples (found grad_samples="
+                << ctrl.variational.grad_samples << "; require 0 < grad_samples).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.variational.elbo_samples <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter elbo_samples (found elbo_samples="
+                << ctrl.variational.elbo_samples << "; require 0 < elbo_samples).";
+            throw std::invalid_argument(msg.str());
+          }
           if (ctrl.variational.eta_adagrad < 0 || ctrl.variational.eta_adagrad > 1) {
             std::stringstream msg;
             msg << "Invalid parameter eta_adagrad (found eta_adagrad="
                 << ctrl.variational.eta_adagrad << "; require 0 < eta_adagrad <= 1).";
             throw std::invalid_argument(msg.str());
           }
-          break; // TODO: add more validation
+          if (ctrl.variational.iter <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter iter (found iter="
+                << ctrl.variational.iter << "; require 0 < iter).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.variational.tol_rel_obj <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter tol_rel_obj (found tol_rel_obj="
+                << ctrl.variational.tol_rel_obj << "; require 0 < tol_rel_obj).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.variational.eval_elbo <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter eval_elbo (found eval_elbo="
+                << ctrl.variational.eval_elbo << "; require 0 < eval_elbo).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.variational.output_samples <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter output_samples (found output_samples="
+                << ctrl.variational.output_samples << "; require 0 < output_samples).";
+            throw std::invalid_argument(msg.str());
+          }
+          break;
       }
     }
 

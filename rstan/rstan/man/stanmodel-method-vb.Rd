@@ -4,16 +4,17 @@
 \alias{vb-methods}
 \alias{vb,stanmodel-method}
 
-\title{\code{vb}: run the variational Bayes algorithm in Stan}
+\title{Run Stan's Variational Algorithm for Approximate Posterior Sampling}
 \description{
-  Obtain a point estimate by maximizing the joint posterior 
-  from the model defined by class \code{stanmodel}. 
-  This method is a generic function of the S4 class \code{stanmodel}. 
+  Approximately draw from a posterior distribution using variational inference.
+  We recommend calling \code{\link{stan}} or \code{\link{sampling}} for 
+  final inferences and only using \code{vb} to get a rough idea of the parameter
+  distributions.
 }
 
 \usage{
   %% vb(object, \dots)  
-  \S4method{vb}{stanmodel}(object, data = list(), 
+  \S4method{vb}{stanmodel}(object, data = list(), pars = NA, include = TRUE,
     seed = sample.int(.Machine$integer.max, 1),
     check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
     algorithm = c("meanfield", "fullrank"), \dots)
@@ -35,7 +36,12 @@
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the notes in \code{\link{stan}}.} 
+    See the notes in \code{\link{stan}}.}
+  \item{pars}{If not \code{NA}, then a character vector naming parameters,
+    which are included in the output if \code{include = TRUE} and excluded
+    if \code{include = FALSE}. By default, all parameters are included.}
+  \item{include}{Logical scalar indicating whether to include (the default)
+    or exclude the parameters named in \code{pars}}
   \item{seed}{The seed for random number generation. The default is generated
     from 1 to the maximum integer supported by \R on the machine. 
     When a seed is specified by a number, \code{as.integer} will be applied to
@@ -56,7 +62,7 @@
     CmdStan and Stan. 
     \enumerate{
       \item \code{iter} (positive \code{integer}), the maximum number of iterations,
-      defaults to 1000.
+      defaults to 10000.
       \item \code{grad_samples} (positive \code{integer}), the number of samples
       for Monte Carlo enumerate of gradients, defaults to 1.
       \item \code{elbo_samples} (positive \code{integer}), the number of samples
@@ -75,14 +81,7 @@
   }
 }
 \value{
-  A list with one component with name 'samples' and the list has an attribute
-  called 'args', which
-  is a list for all the arguments used for the variational Bayes algorithm. 
-  The component with name 'samples' is a data frame created from the output CSV file
-  from the variational Bayes algorithm. According to CmdStan's manual, the first 
-  line of the CSV file (hence the first observation of the data frame) is the mean
-  of the variational approximation and the rest of output contains a sample of size 
-  \code{output_samples} drawn from the variational approximation.
+  An object of \code{\link{stanfit-class}}
 } 
 
 \seealso{

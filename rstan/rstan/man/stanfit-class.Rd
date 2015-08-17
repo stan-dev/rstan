@@ -25,7 +25,7 @@
 \alias{get_elapsed_time,stanfit-method}
 \alias{get_inits,stanfit-method}
 \alias{get_logposterior} 
-\alias{get_logposterior,stanfit,logical-method}
+\alias{get_logposterior,stanfit-method}
 \alias{get_adaptation_info} 
 \alias{get_adaptation_info,stanfit-method}
 \alias{get_sampler_params}

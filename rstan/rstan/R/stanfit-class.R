@@ -45,6 +45,15 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
       "post-warmup draws per chain=", n_kept[1], ", ", 
       "total post-warmup draws=", sum(n_kept), ".\n\n", sep = '')
 
+  if (!is.null(x@stan_args[[1]]$method) && 
+               x@stan_args[[1]]$method == "variational") {
+    print(round(s$summary, digits_summary), ...) 
+    cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, ") at ", x@date, 
+        ".\n", sep = '')
+    message("We recommend genuine 'sampling' from the posterior distribution for final inferences!")
+    return(invisible(NULL))
+  }
+  
   # round n_eff to integers
   s$summary[, 'n_eff'] <- round(s$summary[, 'n_eff'], 0)
 
@@ -286,7 +295,7 @@ setGeneric(name = "get_logposterior",
            def = function(object, ...) { standardGeneric("get_logposterior")})
 
 
-setMethod("get_logposterior", 
+setMethod("get_logposterior", "stanfit",
           definition = function(object, inc_warmup = TRUE) {
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
@@ -298,7 +307,8 @@ setMethod("get_logposterior",
             } 
 
             llp <- lapply(object@sim$samples, function(x) x[['lp__']]) 
-            if (inc_warmup) return(invisible(llp)) 
+            if (inc_warmup) return(llp)
+            if (object@sim$warmup2 == 0) return(llp)
             return(mapply(function(x, w) x[-(1:w)], 
                              llp, object@sim$warmup2,
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
@@ -540,18 +550,28 @@ setMethod("summary", signature = "stanfit",
             tidx_len <- length(tidx)
 
             ss <- object@.MISC$summary 
-
-            s1 <- cbind(ss$msd[tidx, 1, drop = FALSE], 
-                        ss$sem[tidx, drop = FALSE], 
-                        ss$msd[tidx, 2, drop = FALSE], 
-                        ss$quan[tidx, m, drop = FALSE], 
-                        ss$ess[tidx, drop = FALSE],
-                        ss$rhat[tidx, drop = FALSE])  
+            qnames <- colnames(ss$quan)[m]
+            
+            if (!is.null(object@stan_args[[1]]$method) && 
+                         object@stan_args[[1]]$method == "variational") {
+              s1 <- cbind(ss$msd[tidx, 1, drop = FALSE],
+                          ss$msd[tidx, 2, drop = FALSE], 
+                          ss$quan[tidx, m, drop = FALSE])
+              dim(s1) <- c(length(tidx), length(m) + 2L)
+              colnames(s1) <- c("mean", "sd", qnames)
+            }
+            else {
+              s1 <- cbind(ss$msd[tidx, 1, drop = FALSE], 
+                          ss$sem[tidx, drop = FALSE], 
+                          ss$msd[tidx, 2, drop = FALSE], 
+                          ss$quan[tidx, m, drop = FALSE], 
+                          ss$ess[tidx, drop = FALSE],
+                          ss$rhat[tidx, drop = FALSE])
+              dim(s1) <- c(length(tidx), length(m) + 5L) 
+              colnames(s1) <- c("mean", "se_mean", "sd", qnames, 'n_eff', 'Rhat')
+            }
             pars_names <- rownames(ss$msd)[tidx] 
-            qnames <- colnames(ss$quan)[m] 
-            dim(s1) <- c(length(tidx), length(m) + 5) 
             rownames(s1) <- pars_names 
-            colnames(s1) <- c("mean", "se_mean", "sd", qnames, 'n_eff', 'Rhat')
             s2 <- combine_msd_quan(ss$c_msd[tidx, , , drop = FALSE], ss$c_quan[tidx, m, , drop = FALSE]) 
             # dim(s2) <- c(tidx_len, length(m) + 2, object@sim$chains)
             # dimnames(s2) <- list(parameter = pars_names, 
