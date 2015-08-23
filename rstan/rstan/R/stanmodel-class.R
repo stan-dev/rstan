@@ -164,12 +164,15 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
-
+            means <- sapply(samples, mean)
+            means <- as.matrix(c(means[-1], "lp__" = means[1]))
+            colnames(means) <- "chain:1"
+            assign("posterior_mean_4all", means, envir = sfmiscenv)
             idx_wo_lp <- which(m_pars != "lp__")
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
+
             samples <- cbind(samples[-1,,drop=FALSE], "lp__" = samples[-1,1])[,cC]
-            
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
