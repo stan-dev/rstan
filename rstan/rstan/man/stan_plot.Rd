@@ -58,7 +58,9 @@
   
   \item{...}{Additional named arguments to geoms (e.g. for \code{stan_trace}
   the geom is \code{\link[ggplot2]{geom_path}} and we could specify
-  \code{linetype}, \code{size}, \code{alpha}, etc.).}
+  \code{linetype}, \code{size}, \code{alpha}, etc.). For \code{stan_plot}
+  there are also additional arguments that can be specified in \code{...} (see
+  Details).}
   
   \item{separate_chains}{For \code{stan_dens}, should the density for each 
   chain be plotted? The default is \code{FALSE}, which means that for each 
@@ -77,11 +79,24 @@
   A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.
 }
+\details{
+For \code{stan_plot}, there are additional arguments 
+(listed below with their default values) that can be specified in \code{...}.
+
+\itemize{
+ \item \code{point_est = c("mean", "median")}
+ \item \code{ci_level = 0.5}
+ \item \code{outer_level = 0.95}
+ \item \code{show_density = FALSE}
+ \item \code{show_outer_line = TRUE}
+ \item \code{fill_color,outline_color,est_color} 
+}
+}
 \description{
   Visual posterior analysis and diagnostics using ggplot2.
 }
 \seealso{
- \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstanvis_options]{Plot options}}
+ \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{
 library(gridExtra)

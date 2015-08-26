@@ -48,7 +48,7 @@
   normally.
 }
 \seealso{
- \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstanvis_options]{Plot options}}
+ \code{\link[=stan_plot]{Plots}}, \code{\link[=rstanvis_options]{Plot options}}
 }
 \examples{
 fit <- stan_demo("eight_schools", iter = 200)
