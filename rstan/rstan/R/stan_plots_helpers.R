@@ -1,6 +1,7 @@
 .aesthetic <- function(which, ...) {
   dots <- list(...)
-  if (which %in% names(dots)) dots[[which]]
+  which2 <- gsub("pt_", "", which)
+  if (which2 %in% names(dots)) dots[[which2]]
   else .rstanvis_defaults[[which]]
 }
 .fill <- function(...) .aesthetic("fill", ...)
@@ -9,6 +10,7 @@
 .alpha <- function(...) .aesthetic("alpha", ...)
 .shape <- function(...) .aesthetic("shape", ...)
 .pt_color <- function(...) .aesthetic("pt_color", ...)
+.pt_size <- function(...) .aesthetic("pt_size", ...)
 
 `%ifNULL%` <- function(x, replacement) {
   if (!is.null(x)) x
@@ -136,13 +138,13 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 
 .upars <- function(object, permuted = FALSE, inc_warmup = TRUE) {
   if (is.stanreg(object)) object <- object$stanfit
-  pars <- rstan::extract(object, permuted = permuted, inc_warmup = inc_warmup)
+  pars <- extract(object, permuted = permuted, inc_warmup = inc_warmup)
   nchains <- ncol(pars)
   pn <- dimnames(pars)$parameters
   param_names <- if ("lp__" %in% pn) pn[-which(pn == "lp__")] else pn
-  skeleton <- rstan::get_inits(object)[[1L]]
+  skeleton <- get_inits(object)[[1L]]
   upars <- apply(pars, 1:2, FUN = function(theta) {
-    rstan::unconstrain_pars(object, relist(theta, skeleton))
+    unconstrain_pars(object, relist(theta, skeleton))
   })
   upars <- aperm(upars, c(3, 1, 2))
   out <- lapply(seq_len(nchains), function(chain) {
@@ -201,21 +203,17 @@ color_vector_chain <- function(n) {
 
 # rhat, ess, mcse ---------------------------------------------------------
 .rhat_neff_mcse_hist <- function(which = c("rhat", "n_eff_ratio", "mcse_ratio"),
-                                 object, pars=NULL, theme_elements = NULL, ...) {
-  
-  
+                                 object, pars=NULL, ...) {
   if (is.stanreg(object)) object <- object$stanfit
   thm <- .rstanvis_defaults$hist_theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  
+
   if (which == "n_eff_ratio") {
-    lp <- suppressWarnings(rstan::get_logposterior(object, inc_warmup = FALSE))
+    lp <- suppressWarnings(get_logposterior(object, inc_warmup = FALSE))
     SS <- prod(length(lp), length(lp[[1L]]))
   }
   
-  if (!is.null(pars)) smry <- rstan::summary(object, pars = pars)$summary
-  else smry <- rstan::summary(object)$summary
+  if (!is.null(pars)) smry <- summary(object, pars = pars)$summary
+  else smry <- summary(object)$summary
   
   xlab <- switch(which,
                  rhat = "Rhat statistic",
@@ -271,7 +269,7 @@ color_vector_chain <- function(n) {
 .sampler_params_post_warmup <- function(object, which = "stepsize__", as.df = FALSE) {
   if (is.stanreg(object))
     object <- object$stanfit
-  sampler_params <- rstan::get_sampler_params(object)
+  sampler_params <- get_sampler_params(object)
   warmup_val <- floor(object@sim$warmup / object@sim$thin)
   sp <-lapply(1:length(sampler_params), function(i) {
     out <- sampler_params[[i]]

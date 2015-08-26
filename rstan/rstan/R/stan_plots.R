@@ -4,12 +4,11 @@ quiet <- function(gg) {
   invisible(gg)
 }
 
-# traceplots ---------------------------------------------------------------
+# traceplot ---------------------------------------------------------------
 stan_trace <- function(object, pars, include = TRUE,
                        unconstrain = FALSE,
                        inc_warmup = FALSE, window = NULL,
                        nrow = NULL, ncol = NULL,
-                       theme_elements = NULL,
                        ...) {
   
   .check_object(object, unconstrain)
@@ -17,8 +16,6 @@ stan_trace <- function(object, pars, include = TRUE,
                                window, unconstrain)
   
   thm <- .rstanvis_defaults$theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   
   base <- ggplot(plot_data$samp,
@@ -40,12 +37,39 @@ stan_trace <- function(object, pars, include = TRUE,
 }
 
 
+# scatterplot -------------------------------------------------------------
+stan_scat <- function(object, pars, include = TRUE,
+                       unconstrain = FALSE,
+                       inc_warmup = FALSE, window = NULL,
+                       nrow = NULL, ncol = NULL,
+                       ...) {
+  
+  .check_object(object, unconstrain)
+  if (length(pars) != 2L) 
+    stop("'pars' must contain exactly two parameter names", call. = FALSE)
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
+                               window, unconstrain)
+  
+  p1 <- plot_data$samp$parameter == pars[1]
+  val1 <- plot_data$samp[p1, "value"]
+  val2 <- plot_data$samp[!p1, "value"]
+  thm <- .rstanvis_defaults$theme
+  base <- ggplot(data.frame(x = val1, y = val2), aes_string("x", "y"))
+  graph <-
+    base +
+    geom_point(size = .pt_size(...), color = .pt_color(...), 
+               alpha = .alpha(...), shape = .shape(...), ...) +
+    labs(x = pars[1], y = pars[2]) +
+    thm
+  graph
+}
+
+
 # histograms ---------------------------------------------------------------
 stan_hist <- function(object, pars, include = TRUE,
                       unconstrain = FALSE,
                       inc_warmup = FALSE, window = NULL,
                       nrow = NULL, ncol = NULL,
-                      theme_elements = NULL,
                       ...) {
   
   
@@ -53,9 +77,6 @@ stan_hist <- function(object, pars, include = TRUE,
   plot_data <- .make_plot_data(object, pars, include, inc_warmup,
                                window, unconstrain)
   thm <- .rstanvis_defaults$hist_theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  
   base <- ggplot(plot_data$samp, aes_string(x = "value", y = "..density.."))
   graph <-
     base +
@@ -75,7 +96,6 @@ stan_dens <- function(object, pars, include = TRUE,
                       unconstrain = FALSE,
                       inc_warmup = FALSE, window = NULL,
                       nrow = NULL, ncol = NULL,
-                      theme_elements = NULL,
                       ...,
                       separate_chains = FALSE) {
   
@@ -84,9 +104,6 @@ stan_dens <- function(object, pars, include = TRUE,
                                window, unconstrain)
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   thm <- .rstanvis_defaults$hist_theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  
   base <- ggplot(plot_data$samp, aes_string(x = "value"))
   
   if (!separate_chains) {
@@ -116,19 +133,15 @@ stan_ac <- function(object, pars, include = TRUE,
                     unconstrain = FALSE,
                     inc_warmup = FALSE, window = NULL,
                     nrow = NULL, ncol = NULL,
-                    theme_elements = NULL,
                     ...,
                     separate_chains = FALSE,
-                    lags = 25, partial = FALSE,
-                    flip_facets = FALSE) {
+                    lags = 25, partial = FALSE) {
   .check_object(object, unconstrain)
   plot_data <- .make_plot_data(object, pars, include, inc_warmup,
                                window, unconstrain)
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   thm <- .rstanvis_defaults$theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  
+
   ac_type <- if (partial) "partial" else "correlation"
   dat_args <- list(dat = plot_data$samp, lags = lags, partial = partial)
   dat_fn <- ifelse(plot_data$nparams == 1, ".ac_plot_data",".ac_plot_data_multi")
@@ -170,8 +183,7 @@ stan_ac <- function(object, pars, include = TRUE,
     graph <- graph + facet_wrap(~chains, nrow = nrow, ncol = ncol)
     return(graph)
   } else { # nParams > 1
-    if (flip_facets) graph <- graph + facet_grid(chains ~ parameters, scales = "free_x")
-    else graph <- graph + facet_grid(parameters ~ chains, scales = "free_x")
+    graph <- graph + facet_grid(parameters ~ chains, scales = "free_x")
     return(graph)
   }
 }
@@ -182,13 +194,10 @@ stan_ac <- function(object, pars, include = TRUE,
 stan_plot <- function(object, pars, include = TRUE,
                       unconstrain = FALSE,
                       inc_warmup = FALSE, window = NULL,
-                      theme_elements = NULL,
                       ...) {
   
   .check_object(object, unconstrain)
   thm <- .rstanvis_defaults$multiparam_theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
   plot_data <- .make_plot_data(object, pars, include, inc_warmup,
                                window, unconstrain)
   
@@ -311,39 +320,40 @@ stan_plot <- function(object, pars, include = TRUE,
 
 
 # rhat, ess, mcse ---------------------------------------------------------
-stan_rhat <- function(object, pars, theme_elements = NULL, ...) {
+stan_rhat <- function(object, pars, ...) {
   .check_object(object)
   if (missing(pars)) pars <- NULL
-  .rhat_neff_mcse_hist(which = "rhat", object = object, pars = pars,
-                       theme_elements = theme_elements, ...)
+  .rhat_neff_mcse_hist(which = "rhat", object = object, pars = pars, ...)
 }
 
-stan_ess <- function(object, pars, theme_elements = NULL, ...) {
+stan_ess <- function(object, pars, ...) {
   .check_object(object)
   if (missing(pars)) pars <- NULL
-  .rhat_neff_mcse_hist(which = "n_eff_ratio", object = object, pars = pars,
-                       theme_elements = theme_elements, ...)
+  .rhat_neff_mcse_hist(which = "n_eff_ratio", object = object, pars = pars, ...)
 }
 
-stan_mcse <- function(object, pars, theme_elements = NULL, ...) {
+stan_mcse <- function(object, pars, ...) {
   .check_object(object)
   if (missing(pars)) pars <- NULL
-  .rhat_neff_mcse_hist(which = "mcse_ratio", object = object, pars = pars,
-                       theme_elements = theme_elements, ...)
+  .rhat_neff_mcse_hist(which = "mcse_ratio", object = object, pars = pars, ...)
 }
 
 
 
 
 # NUTS --------------------------------------------------------------------
-stan_stepsize <- function(object, chain = 0, theme_elements = NULL, ...) {
+stan_diag <- function(object, 
+                      information = c("sample","stepsize","treedepth","divergence"),
+                      chain = 0, ...) {
+  info <- match.arg(information)
+  fn <- paste0("stan_", info)
+  do.call(fn, list(object, chain, ...))
+}
+stan_stepsize <- function(object, chain = 0, ...) {
   .nuts_args_check(...)
   thm <- .rstanvis_defaults$theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  
   stepsize <- .sampler_params_post_warmup(object, "stepsize__", as.df = TRUE)
-  lp <- rstan::extract(if (is.stanreg(object)) object$stanfit else object,
+  lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
   
   graphs <- list()
@@ -362,16 +372,11 @@ stan_stepsize <- function(object, chain = 0, theme_elements = NULL, ...) {
   .nuts_return(graphs, ...)
 }
 
-stan_sample <- function(object, chain = 0, theme_elements = NULL, ...) {
+stan_sample <- function(object, chain = 0, ...) {
   .nuts_args_check(...)
   thm <- .rstanvis_defaults$theme
   hist_thm <- .rstanvis_defaults$hist_theme
-  if (!is.null(theme_elements)) {
-    thm <- thm %+replace% theme_elements
-    hist_thm <- hist_thm %+replace% theme_elements
-  }
-  
-  lp <- rstan::extract(if (is.stanreg(object)) object$stanfit else object,
+  lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
   lp_df <- as.data.frame(cbind(iterations = 1:nrow(lp), lp))
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)
@@ -390,16 +395,11 @@ stan_sample <- function(object, chain = 0, theme_elements = NULL, ...) {
 }
 
 
-stan_treedepth <- function(object, chain = 0, theme_elements = NULL, ...) {
+stan_treedepth <- function(object, chain = 0, ...) {
   .nuts_args_check(...)
   thm <- .rstanvis_defaults$theme
   hist_thm <- .rstanvis_defaults$hist_theme
-  if (!is.null(theme_elements)) {
-    thm <- thm %+replace% theme_elements
-    hist_thm <- hist_thm %+replace% theme_elements
-  }
-  
-  lp <- rstan::extract(if (is.stanreg(object)) object$stanfit else object,
+  lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
   treedepth <- .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)
   ndivergent <- .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)
@@ -438,13 +438,10 @@ stan_treedepth <- function(object, chain = 0, theme_elements = NULL, ...) {
 }
 
 
-stan_divergence <- function(object, chain = 0, theme_elements = NULL, ...) {
+stan_divergence <- function(object, chain = 0, ...) {
   .nuts_args_check(...)
   thm <- .rstanvis_defaults$theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  
-  lp <- rstan::extract(if (is.stanreg(object)) object$stanfit else object,
+  lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
   ndivergent <- .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)
@@ -464,15 +461,13 @@ stan_divergence <- function(object, chain = 0, theme_elements = NULL, ...) {
 }
 
 
-stan_param <- function(object, chain = 0, theme_elements = NULL, ..., par) {
+stan_par <- function(object, par, chain = 0, ...) {
   if (missing(par))
     stop("'par' must be specified", call. = FALSE)
   if (is.stanreg(object))
     object <- object$stanfit
   thm <- .rstanvis_defaults$theme
-  if (!is.null(theme_elements))
-    thm <- thm %+replace% theme_elements
-  samp <- rstan::extract(object, pars = c("lp__", par), permuted = FALSE)
+  samp <- extract(object, pars = c("lp__", par), permuted = FALSE)
   par_sel <- which(dimnames(samp)$parameters == par)
   
   cntrl <- object@stan_args[[1L]]$control

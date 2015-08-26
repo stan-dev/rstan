@@ -14,11 +14,16 @@ rstanvis_options <- function(...) {
 }
 
 rstanvis_theme_options <- function(...) {
+  if (length(list(...)) == 0) {
+    print(.rstanvis_defaults$theme)
+    return(invisible(NULL))
+  }
   els <- theme(...)
   nms <- names(els)
   for (x in nms) {
     .rstanvis_defaults$theme[[x]] <- els[[x]]
     .rstanvis_defaults$hist_theme[[x]] <- els[[x]]
+    .rstanvis_defaults$multiparam_theme[[x]] <- els[[x]]
   }
 }
 
@@ -26,7 +31,6 @@ rstanvis_theme_options <- function(...) {
 
 # defaults ----------------------------------------------------------------
 .rstanvis_defaults <- new.env(parent = emptyenv())
-
 .rstanvis_defaults$theme <-
   theme_classic() +
   theme(axis.line = element_line(color = "#222222"),
@@ -36,7 +40,8 @@ rstanvis_theme_options <- function(...) {
         strip.background = element_rect(fill = "#222222"),
         strip.text = element_text(color = "white"),
         # legend.position = "bottom",
-        legend.title = element_text(size = 11))
+        legend.title = element_text(size = 11),
+        plot.title = element_text(size = 18))
 
 .rstanvis_defaults$hist_theme <-
   .rstanvis_defaults$theme +
@@ -58,6 +63,8 @@ rstanvis_theme_options <- function(...) {
 .rstanvis_defaults$fill <- "#B2001D"
 .rstanvis_defaults$color <- "#590815"
 .rstanvis_defaults$size <- 0.5
+.rstanvis_defaults$pt_size <- 3
+
 .rstanvis_defaults$chain_colors <- rgb(matrix(c(230, 97, 1,
                                                 153, 142, 195,
                                                 84, 39, 136,
