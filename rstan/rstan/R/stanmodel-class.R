@@ -316,7 +316,8 @@ setMethod("sampling", "stanmodel",
                    control = NULL, include = TRUE,
                    cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()) &&
-                     !identical(Sys.getenv("RSTUDIO"), "1"), ...) {
+                     !identical(Sys.getenv("RSTUDIO"), "1"), 
+                   show_messages = TRUE, ...) {
 
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
@@ -497,7 +498,9 @@ setMethod("sampling", "stanmodel",
               if (is.null(dots$refresh) || dots$refresh > 0) 
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
-              messages <- tempfile()
+              if (is.character(show_messages)) 
+                messages <- normalizePath(show_messages, mustWork = FALSE)
+              else messages <- tempfile()
               sink(file(messages, open = "wt"), type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(type = "message")
@@ -509,9 +512,13 @@ setMethod("sampling", "stanmodel",
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
                                                    m_pars, p_dims, 2L))) 
               }
-              if (length(report) > 0) {
+              if (length(report) > 0 && isTRUE(show_messages)) {
                 end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
                 report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
+                report <- gsub(" because of the following issue:", "", report, fixed = TRUE)
+                report <- gsub("stan::math::", "", report, fixed = TRUE)
+                report <- grep("^Informational", report, value = TRUE, invert = TRUE)
+                report <- strtrim(report, width = 75)
                 tab <- sort(table(report), decreasing = TRUE)
                 if (length(tab) == 2) tab <- rev(tab)
                 message("The following problems occured ",

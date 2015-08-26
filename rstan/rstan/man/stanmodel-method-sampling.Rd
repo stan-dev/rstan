@@ -19,7 +19,8 @@
     algorithm = c("NUTS", "HMC", "Fixed_param"),%, "Metropolis")
     control = NULL, include = TRUE, cores = getOption("mc.cores", 1L),
     open_progress = interactive() && !isatty(stdout()) &&
-                    !identical(Sys.getenv("RSTUDIO"), "1"), \dots)
+                    !identical(Sys.getenv("RSTUDIO"), "1"),
+    show_messages = TRUE, \dots)
 } 
 
 \section{Methods}{
@@ -125,6 +126,13 @@
     use so that the progress of the chains will be redirected to a file
     that is automatically opened for inspection. For very short runs, the
     user might prefer \code{FALSE}.}
+    
+  \item{show_messages}{Either a logical scalar (defaulting to \code{TRUE})
+    indicating whether to print the summary of Informational Messages to
+    the screen after a chain is finished or a character string naming a path
+    where the summary is stored. Setting to \code{FALSE} is not recommended
+    unless you are very sure that the model is correct up to numerical 
+    error.}
 
   \item{\dots}{Additional arguments can be \code{chain_id}, \code{init_r}, 
     \code{test_grad}, \code{append_samples}, \code{refresh},
