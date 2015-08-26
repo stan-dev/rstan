@@ -1,23 +1,34 @@
-\name{stan_trace}
+\name{Plots}
 \alias{stan_trace}
 \alias{stan_dens}
 \alias{stan_hist}
 \alias{stan_plot}
+\alias{stan_scat}
 \alias{stan_ac}
-\alias{stan_stepsize}
-\alias{stan_sample}
-\alias{stan_treedepth}
-\alias{stan_divergence}
-\alias{stan_param}
-\alias{stan_rhat}
-\alias{stan_ess}
-\alias{stan_mcse}
 
-\title{Visual Posterior Analysis}
+
+\title{ggplot2 for RStan}
 \usage{
+  stan_plot(object, pars, include = TRUE, unconstrain = FALSE,
+            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            ...)
   stan_trace(object, pars, include = TRUE, unconstrain = FALSE,
-             inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
-             theme_elements = NULL, ...)
+            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            ...)
+  stan_scat(object, pars, include = TRUE, unconstrain = FALSE,
+            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            ...)
+  stan_hist(object, pars, include = TRUE, unconstrain = FALSE,
+            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            ...)
+
+  stan_dens(object, pars, include = TRUE, unconstrain = FALSE,
+            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            ..., separate_chains = FALSE)
+            
+  stan_ac(object, pars, include = TRUE, unconstrain = FALSE,
+            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            ..., separate_chains = FALSE, lags = 25, partial = FALSE)
 }
 \arguments{
   \item{object}{A stanfit or stanreg object.}
@@ -43,18 +54,67 @@
   
   \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.}
   
-  \item{theme_elements}{Additional ggplot2 theme elements to use. This should
-    be an object created by \code{\link[ggplot2]{theme}}. For example:
-      \code{theme_elements = theme(panel.background = element_rect(fill =
-                                                                     "gray"), legend.position = "top")}.}
+  \item{...}{Additional named arguments to geoms (e.g. for \code{stan_trace}
+  the geom is \code{\link[ggplot2]{geom_path}} and we could specify
+  \code{linetype}, \code{size}, \code{alpha}, etc.).}
   
-  \item{...}{Additional named arguments to \code{\link[ggplot2]{geom_path}}
-    (e.g. \code{linetype}, \code{size}, \code{alpha}, etc.).}
+  \item{separate_chains}{For \code{stan_dens}, should the density for each 
+  chain be plotted? The default is \code{FALSE}, which means that for each 
+  parameter the draws from all chains are combined. For \code{stan_ac}, 
+  if \code{separate_chains=FALSE} (the default), the autocorrelation is
+  averaged over the chains. If \code{TRUE} each chain is plotted separately.}
+  
+  \item{lags}{For \code{stan_ac}, the maximum number of lags to show.}
+  
+  \item{partial}{For \code{stan_ac}, should partial autocorrelations be 
+  plotted instead? Defaults to \code{FALSE}.}
 }
 \value{
   A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.
 }
 \description{
-  ggplot2 for RStan
+  Visual posterior analysis and diagnostics using ggplot2.
+}
+\examples{
+library(gridExtra)
+fit <- stan_demo("eight_schools", iter = 200)
+
+stan_hist(fit)
+quiet(h <- stan_hist(fit))
+stan_hist(fit, pars = "theta", binwidth = 5)
+
+tau <- stan_hist(fit, pars = "tau")
+tau_unc <- stan_hist(fit, pars = "tau", unconstrain = TRUE) + xlab("tau unconstrained")
+grid.arrange(tau, tau_unc)
+
+stan_dens(fit)
+(dens <- stan_dens(fit, fill = "skyblue", ))
+dens <- dens + ggtitle("Kernel Density Estimates\\n") + xlab("")
+dens
+
+(dens_sep <- stan_dens(fit, separate_chains = TRUE, alpha = 0.3))
+dens_sep + scale_fill_manual(values = c("red", "blue", "green", "black"))
+(dens_sep_stack <- stan_dens(fit, pars = "theta", alpha = 0.5,
+                             separate_chains = TRUE, position = "stack"))
+
+trace <- stan_trace(fit)
+trace +
+  scale_x_continuous(breaks = seq(1000, 2000, 500)) +
+  scale_color_manual(values = c("red", "blue", "green", "black"))
+
+trace +
+  scale_color_brewer(type = "div") +
+  theme(legend.position = "none")
+
+facet_style <- theme(strip.background = element_rect(fill = "white"),
+                     strip.text = element_text(size = 13, color = "black"))
+trace <- trace + facet_style
+trace
+
+mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "orange", size = 4)
+(mu_vs_tau <- 
+    mu_vs_tau + 
+    coord_flip() + 
+    theme(panel.background = element_rect(fill = "black")))
 }
