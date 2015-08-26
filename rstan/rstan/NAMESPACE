@@ -44,9 +44,9 @@ export(
   stan_rhat,
   stan_ess,
   stan_mcse,
-  rstanvis_options,
-  rstanvis_theme_options,
-  quiet
+  rstan_gg_options,
+  rstan_ggtheme_options,
+  quietgg
 # get_rstan.options
 )
 

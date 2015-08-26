@@ -1,4 +1,4 @@
-rstanvis_options <- function(...) {
+rstan_gg_options <- function(...) {
   ops <- c("size", "fill", "color", "chain_colors")
   dots <- list(...)
   if (length(dots) == 0) {
@@ -13,7 +13,7 @@ rstanvis_options <- function(...) {
   }
 }
 
-rstanvis_theme_options <- function(...) {
+rstan_ggtheme_options <- function(...) {
   if (length(list(...)) == 0) {
     print(.rstanvis_defaults$theme)
     return(invisible(NULL))

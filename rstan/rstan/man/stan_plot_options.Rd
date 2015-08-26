@@ -1,24 +1,27 @@
-\name{rstanvis_options}
-\alias{rstanvis_options}
-\alias{rstanvis_theme_options}
-\title{Set default appearance options for ggplot graphics}
+\name{rstan_gg_options}
+\alias{rstan_gg_options}
+\alias{rstan_ggtheme_options}
+\title{Set default appearance options}
 \usage{
-  rstanvis_options(...)
+  rstan_gg_options(...)
   
-  rstanvis_theme_options(...)
+  rstan_ggtheme_options(...)
 }
 \arguments{
-  \item{...}{For \code{rstanvis_theme_options}, see
+  \item{...}{For \code{rstan_ggtheme_options}, see
     \code{\link[ggplot2]{theme}} for the theme elements that can be specified
-    in \code{...}. For \code{rstanvis_options}, \code{...} can be \code{fill},
+    in \code{...}. For \code{rstan_gg_options}, \code{...} can be \code{fill},
     \code{color}, \code{chain_colors}, or \code{size}. See Examples.}
 }
 \description{
-  Set Default Appearance Options
+  Set default appearance options
+}
+\seealso{
+ \code{\link[=stan_plot]{Plots}}, \code{\link[=stan_diag]{Diagnostic Plots}}
 }
 \examples{
-  rstanvis_theme_options(panel.background = element_rect(fill = "gray"),
+  rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),
                          legend.position = "top")
-  rstanvis_options(fill = "skyblue", color = "skyblue4")
+  rstan_gg_options(fill = "skyblue", color = "skyblue4")
 }
 

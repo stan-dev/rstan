@@ -1,5 +1,5 @@
 # suppress messages from ggplot2
-quiet <- function(gg) {
+quietgg <- function(gg) {
   suppressMessages(print(gg))
   invisible(gg)
 }

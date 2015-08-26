@@ -47,6 +47,9 @@
   that hit the maximum treedepth rather than terminated its evolution
   normally.
 }
+\seealso{
+ \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstanvis_options]{Plot options}}
+}
 \examples{
 fit <- stan_demo("eight_schools", iter = 200)
 stan_diag(fit, info = 'sample', chain = 1)

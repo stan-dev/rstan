@@ -5,7 +5,7 @@
 \alias{stan_plot}
 \alias{stan_scat}
 \alias{stan_ac}
-
+\alias{quietgg}
 
 \title{ggplot2 for RStan}
 \usage{
@@ -29,6 +29,8 @@
   stan_ac(object, pars, include = TRUE, unconstrain = FALSE,
             inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
             ..., separate_chains = FALSE, lags = 25, partial = FALSE)
+            
+  quietgg(gg)
 }
 \arguments{
   \item{object}{A stanfit or stanreg object.}
@@ -68,6 +70,8 @@
   
   \item{partial}{For \code{stan_ac}, should partial autocorrelations be 
   plotted instead? Defaults to \code{FALSE}.}
+  
+  \item{gg}{A ggplot object or a call to a plotting function that creates one.}
 }
 \value{
   A \code{\link[ggplot2]{ggplot}} object that can be further customized
@@ -76,12 +80,15 @@
 \description{
   Visual posterior analysis and diagnostics using ggplot2.
 }
+\seealso{
+ \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstanvis_options]{Plot options}}
+}
 \examples{
 library(gridExtra)
 fit <- stan_demo("eight_schools", iter = 200)
 
 stan_hist(fit)
-quiet(h <- stan_hist(fit))
+quietgg(h <- stan_hist(fit)) # suppresses messages about default bindwidth
 stan_hist(fit, pars = "theta", binwidth = 5)
 
 tau <- stan_hist(fit, pars = "tau")

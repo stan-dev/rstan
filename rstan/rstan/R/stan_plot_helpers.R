@@ -29,6 +29,9 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 
 .check_object <- function(object, unconstrain = FALSE) {
   if (is.stanreg(object)) {
+    if (object$algorithm != "sampling")
+      stop("Plots not yet available for estimation methods other than MCMC (algorithm='sampling')", 
+           call. = FALSE)
     if (unconstrain)
       stop("Option 'unconstrain' not yet available for stanreg objects.",
            call. = FALSE)
