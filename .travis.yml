@@ -32,7 +32,7 @@ before_install:
   - chmod 755 wait4.sh
 
 before_script: 
-  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit'), repos='http://cran.rstudio.com')"
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra'), repos='http://cran.rstudio.com')"
   - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
   - git submodule update --remote
   - R CMD build StanHeaders/
