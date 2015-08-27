@@ -1,13 +1,16 @@
 \name{Plots}
+\alias{stan_plot}
 \alias{stan_trace}
 \alias{stan_dens}
 \alias{stan_hist}
-\alias{stan_plot}
 \alias{stan_scat}
 \alias{stan_ac}
 \alias{quietgg}
 
 \title{ggplot2 for RStan}
+\description{
+  Visual posterior analysis using ggplot2.
+}
 \usage{
   stan_plot(object, pars, include = TRUE, unconstrain = FALSE,
             ...)
@@ -35,8 +38,9 @@
 \arguments{
   \item{object}{A stanfit or stanreg object.}
   
-  \item{pars}{A character vector of parameter names. If not specified, all
-    parameters are used.}
+  \item{pars}{A character vector of parameter names. Defaults to all parameters 
+  or the first 10 parameters (if there are more than 10). For \code{stan_scat}
+  only, \code{pars} should contain exactly two parameter names.}
   
   \item{include}{Should the parameters given by the \code{pars} argument be
     included (the default) or excluded from the plot?}
@@ -76,21 +80,23 @@
 For \code{stan_plot}, there are additional arguments 
 (listed below with their default values) that can be specified in \code{...}.
 
-\itemize{
- \item \code{point_est = c("mean", "median")}
- \item \code{show_density = FALSE}
- \item \code{ci_level = 0.5}
- \item \code{outer_level = 0.95}
- \item \code{show_outer_line = TRUE}
- \item \code{fill_color,outline_color,est_color} 
-}
-}
-\description{
-  Visual posterior analysis using ggplot2. 
-  For HMC/NUTS diagnostic plots see \code{\link[=stan_diag]{Diagnostic Plots}}.
+\describe{
+  \item{point_est}{The point estimate to show. Either "mean" or "median".}
+  \item{show_density}{Should kernel density estimates be plotted above 
+  the intervals? Defaults to \code{FALSE}.}
+  \item{ci_level}{The interval to highlight. Defaults to 0.5 (a 50 percent interval).}
+  \item{outer_level}{The outer interval also shown but not highlighted.
+  Defaults to 0.95.}
+  \item{show_outer_line}{Should the \code{outer_level} interval be shown or hidden? 
+  Defaults to = \code{TRUE} (to plot it).}
+  \item{fill_color,outline_color,est_color}{Colors to override the defaults for 
+  the highlighted interval, the outer interval (and density outline), and the 
+  point estimate.}
+  }
 }
 \seealso{
- \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstan_gg_options]{Plot options}}
+\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{
 example("read_stan_csv")

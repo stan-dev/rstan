@@ -44,7 +44,7 @@ stan_scat <- function(object, pars, include = TRUE,
                        ...) {
   
   .check_object(object, unconstrain)
-  if (length(pars) != 2L) 
+  if (missing(pars) || length(pars) != 2L)
     stop("'pars' must contain exactly two parameter names", call. = FALSE)
 #   ndivergent <- 
 #     .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)[, -1L]
@@ -64,10 +64,9 @@ stan_scat <- function(object, pars, include = TRUE,
 #   td <- df[hit_max_td[sel], ]
   thm <- .rstanvis_defaults$theme
   base <- ggplot(df, aes_string("x", "y"))
-  pt_color <- .pt_color(...)
   graph <-
     base +
-    geom_point(size = .pt_size(...), color = pt_color, 
+    geom_point(size = .pt_size(...), color = .pt_color(...), 
                alpha = .alpha(...), shape = .shape(...), ...) +
 #     geom_point(data = div, aes_string("x","y"), color = "red") +
 #     geom_point(data = td, aes_string("x","y"), color = "yellow") +
@@ -229,6 +228,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   if (dotenv[["ci_level"]] > dotenv[["outer_level"]])
     stop("'ci_level' should be less than 'outer_level'", call. = FALSE)
   ci_level <- dotenv[["ci_level"]]
+  message("Showing ", 100 * ci_level, "% intervals")
   outer_level <- dotenv[["outer_level"]]
   probs.use <- c(0.5 - outer_level / 2, 0.5 - ci_level / 2, 0.5,
                  0.5 + ci_level / 2, 0.5 + outer_level / 2)

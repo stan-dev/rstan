@@ -6,6 +6,9 @@
 \alias{stan_mcse}
 
 \title{Diagnostic plots}
+\description{
+  Diagnostic plots for HMC and NUTS using ggplot2. 
+}
 \usage{
   stan_diag(object, 
             information = c("sample","stepsize", "treedepth","divergence"), 
@@ -37,10 +40,6 @@
   each of the displayed plots. For \code{stan_rhat}, \code{stan_ess}, 
   and \code{stan_mcse}, a single ggplot object.
 }
-\description{
-  Diagnostic plots for HMC and NUTS using ggplot2. 
-  For other plots see \code{\link[=stan_plot]{Plots}}.
-}
 \note{
   For \code{stan_par} red points are superimposed onto the
   scatterplots indicating which (if any) iterations encountered a divergent
@@ -49,7 +48,8 @@
   normally.
 }
 \seealso{
- \code{\link[=stan_plot]{Plots}}, \code{\link[=rstanvis_options]{Plot options}}
+\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{
 \dontrun{

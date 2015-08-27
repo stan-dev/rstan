@@ -18,7 +18,7 @@
   Set default appearance options
 }
 \seealso{
- \code{\link[=stan_plot]{Plots}}, \code{\link[=stan_diag]{Diagnostic Plots}}
+\code{\link[=plotting-functions]{List of RStan plotting functions}}
 }
 \examples{
 rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),

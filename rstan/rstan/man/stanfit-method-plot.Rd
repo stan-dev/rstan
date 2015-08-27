@@ -5,7 +5,8 @@
 \docType{methods}
 
 \title{\code{plot}: parameter estimates} 
-\description{Plot posterior intervals for parameters and generated quantities.} 
+\description{Plot posterior intervals and point estimates for parameters and 
+generated quantities.} 
 
 \usage{
   \S4method{plot}{stanfit,missing}(x, ..., pars, include = TRUE, unconstrain = FALSE)
@@ -38,7 +39,7 @@ The following arguments can be specied in \code{...}:
   \item{ci_level}{The interval to highlight. Defaults to 0.5 (a 50 percent interval).}
   \item{outer_level}{The outer interval also shown but not highlighted.
   Defaults to 0.95.}
-  \item{show_outer_line}{Should the \code{outer_level} interval be shown or hidden. 
+  \item{show_outer_line}{Should the \code{outer_level} interval be shown or hidden? 
   Defaults to = \code{TRUE} (to plot it).}
   \item{fill_color,outline_color,est_color}{Colors to override the defaults for 
   the highlighted interval, the outer interval (and density outline), and the 
@@ -48,7 +49,8 @@ The following arguments can be specied in \code{...}:
 \value{A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.} 
 \seealso{
- \code{\link[=stan_plot]{Plots}}, \code{\link[=stan_diag]{Diagnostic Plots}}
+\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{\dontrun{
 library(rstan) 
