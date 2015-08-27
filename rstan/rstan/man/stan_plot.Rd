@@ -10,24 +10,24 @@
 \title{ggplot2 for RStan}
 \usage{
   stan_plot(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
   stan_trace(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
   stan_scat(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
   stan_hist(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
 
   stan_dens(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ..., separate_chains = FALSE)
             
   stan_ac(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ..., separate_chains = FALSE, lags = 25, partial = FALSE)
             
   quietgg(gg)
@@ -46,14 +46,7 @@
   
   \item{inc_warmup}{Should warmup iterations be included? Defaults to
     \code{FALSE}.}
-  
-  \item{window}{The window of iterations to plot. The default of \code{NULL}
-    means plotting all iterations. \code{window} needs to be an integer vector
-    of at least length 1. The smaller value specifies the starting iteration
-    and the larger value the last iteration. When there is only one value
-    provided, it is taken to be the starting iteration. Examples:
-      \code{window=100}, \code{window=c(1500,1600)}.}
-  
+
   \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.}
   
   \item{...}{Additional named arguments to geoms (e.g. for \code{stan_trace}
@@ -73,7 +66,7 @@
   \item{partial}{For \code{stan_ac}, should partial autocorrelations be 
   plotted instead? Defaults to \code{FALSE}.}
   
-  \item{gg}{A ggplot object or a call to a plotting function that creates one.}
+  \item{gg}{A ggplot object or an expression that creates one.}
 }
 \value{
   A \code{\link[ggplot2]{ggplot}} object that can be further customized
@@ -85,9 +78,9 @@ For \code{stan_plot}, there are additional arguments
 
 \itemize{
  \item \code{point_est = c("mean", "median")}
+ \item \code{show_density = FALSE}
  \item \code{ci_level = 0.5}
  \item \code{outer_level = 0.95}
- \item \code{show_density = FALSE}
  \item \code{show_outer_line = TRUE}
  \item \code{fill_color,outline_color,est_color} 
 }
@@ -99,17 +92,27 @@ For \code{stan_plot}, there are additional arguments
  \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{
+\dontrun{
 library(gridExtra)
-fit <- stan_demo("eight_schools", iter = 200)
+fit <- stan_demo("eight_schools")
 
+stan_plot(fit)
+stan_plot(fit, show_density = TRUE, fill_color = "maroon")
+
+
+# histograms
 stan_hist(fit)
-quietgg(h <- stan_hist(fit)) # suppresses messages about default bindwidth
-stan_hist(fit, pars = "theta", binwidth = 5)
+# suppress ggplot2 messages about default bindwidth
+quietgg(stan_hist(fit))
+quietgg(h <- stan_hist(fit, pars = "theta", binwidth = 5)) 
 
+# juxtapose histograms of tau and unconstrained tau 
 tau <- stan_hist(fit, pars = "tau")
-tau_unc <- stan_hist(fit, pars = "tau", unconstrain = TRUE) + xlab("tau unconstrained")
+tau_unc <- stan_hist(fit, pars = "tau", unconstrain = TRUE) + 
+            xlab("tau unconstrained")
 grid.arrange(tau, tau_unc)
 
+# kernel density estimates
 stan_dens(fit)
 (dens <- stan_dens(fit, fill = "skyblue", ))
 dens <- dens + ggtitle("Kernel Density Estimates\\n") + xlab("")
@@ -120,9 +123,12 @@ dens_sep + scale_fill_manual(values = c("red", "blue", "green", "black"))
 (dens_sep_stack <- stan_dens(fit, pars = "theta", alpha = 0.5,
                              separate_chains = TRUE, position = "stack"))
 
+# traceplot
 trace <- stan_trace(fit)
+window <- scale_x_continuous(limits = c(1500, 1600))
+quietgg(trace + window)
+
 trace +
-  scale_x_continuous(breaks = seq(1000, 2000, 500)) +
   scale_color_manual(values = c("red", "blue", "green", "black"))
 
 trace +
@@ -139,4 +145,5 @@ mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "orange", size = 4)
     mu_vs_tau + 
     coord_flip() + 
     theme(panel.background = element_rect(fill = "black")))
+}
 }

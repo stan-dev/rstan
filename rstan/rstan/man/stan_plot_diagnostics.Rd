@@ -51,8 +51,10 @@
  \code{\link[=stan_plot]{Plots}}, \code{\link[=rstanvis_options]{Plot options}}
 }
 \examples{
+\dontrun{
 fit <- stan_demo("eight_schools", iter = 200)
 stan_diag(fit, info = 'sample', chain = 1)
 samp_info <- stan_diag(fit, info = 'sample')
 samp_info[[3]]
+}
 }

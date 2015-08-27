@@ -37,8 +37,8 @@ rstan_ggtheme_options <- function(...) {
         axis.line.y = element_line(size = .5),
         axis.line.x = element_line(size = 3),
         axis.title = element_text(face = "bold", size = 13),
-        strip.background = element_rect(fill = "#222222"),
-        strip.text = element_text(color = "white"),
+        strip.background = element_blank(),
+        strip.text = element_text(color = "black", face = "bold"),
         # legend.position = "bottom",
         legend.title = element_text(size = 11),
         plot.title = element_text(size = 18))
@@ -60,8 +60,8 @@ rstan_ggtheme_options <- function(...) {
 .rstanvis_defaults$pt_color <- "#222222"
 .rstanvis_defaults$alpha <- 0.5
 .rstanvis_defaults$shape <- 19
-.rstanvis_defaults$fill <- "#B2001D"
-.rstanvis_defaults$color <- "#590815"
+.rstanvis_defaults$fill <-  "#B2001D"
+.rstanvis_defaults$color <- "black" #"#590815"
 .rstanvis_defaults$size <- 0.5
 .rstanvis_defaults$pt_size <- 3
 

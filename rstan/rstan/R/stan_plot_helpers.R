@@ -65,9 +65,9 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   res
 }
 .make_plot_data <- function(object, pars, include = TRUE,
-                            inc_warmup = FALSE, window = NULL,
-                            unconstrain = FALSE) {
+                            inc_warmup = FALSE, unconstrain = FALSE) {
   
+  window <- NULL
   if (is.stanreg(object)) {
     sim <- object$stanfit@sim
   }
@@ -267,6 +267,18 @@ color_vector_chain <- function(n) {
 .nuts_args_check <- function(...) {
   if ("par" %in% names(dots <- list(...)))
     stop("'par' argument should not be specified.", call. = FALSE)
+}
+
+.max_td <- function(x) {
+  if (is.stanreg(x)) 
+    x <- x$stanfit
+  cntrl <- x@stan_args[[1L]]$control
+  if (is.null(cntrl)) 11
+  else {
+    max_td <- cntrl$max_treedepth
+    if (is.null(max_td)) 11
+    else max_td  
+  }
 }
 
 .sampler_params_post_warmup <- function(object, which = "stepsize__", as.df = FALSE) {

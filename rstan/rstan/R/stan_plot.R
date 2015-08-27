@@ -1,19 +1,18 @@
 # suppress messages from ggplot2
 quietgg <- function(gg) {
-  suppressMessages(print(gg))
+  suppressMessages(suppressWarnings(print(gg)))
   invisible(gg)
 }
 
 # traceplot ---------------------------------------------------------------
 stan_trace <- function(object, pars, include = TRUE,
                        unconstrain = FALSE,
-                       inc_warmup = FALSE, window = NULL,
+                       inc_warmup = FALSE,
                        nrow = NULL, ncol = NULL,
                        ...) {
   
   .check_object(object, unconstrain)
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
-                               window, unconstrain)
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   
   thm <- .rstanvis_defaults$theme
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
@@ -28,6 +27,7 @@ stan_trace <- function(object, pars, include = TRUE,
     base +
     geom_path(...) +
     scale_color_manual(values = clrs) +
+    labs(x="",y="") +
     thm
   
   if (plot_data$nparams == 1)
@@ -39,48 +39,68 @@ stan_trace <- function(object, pars, include = TRUE,
 
 # scatterplot -------------------------------------------------------------
 stan_scat <- function(object, pars, include = TRUE,
-                       unconstrain = FALSE,
-                       inc_warmup = FALSE, window = NULL,
+                       unconstrain = FALSE, # inc_warmup = FALSE,
                        nrow = NULL, ncol = NULL,
                        ...) {
   
+  inc_warmup <- FALSE
   .check_object(object, unconstrain)
   if (length(pars) != 2L) 
     stop("'pars' must contain exactly two parameter names", call. = FALSE)
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
-                               window, unconstrain)
+  ndivergent <- 
+    .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)[, -1L]
+  treedepth <- 
+    .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)[, -1L]
+  max_td <- .max_td(object)
+  div <- unname(rowSums(ndivergent) == 1)
+  hit_max_td <- sapply(1:nrow(treedepth), function(i) any(treedepth[i,] == max_td))
+#   hit_max_td <- apply(treedepth, 2L, function(y) as.numeric(y == max_td))
+#   hit_max_td <- c(hit_max_td)
   
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   p1 <- plot_data$samp$parameter == pars[1]
   val1 <- plot_data$samp[p1, "value"]
   val2 <- plot_data$samp[!p1, "value"]
+  df <- data.frame(x = val1, y = val2)
+  nchains <- plot_data$nchains
+  sel <- seq_len(nrow(df) / nchains)
+  clr_data <- data.frame(x = val1[sel], y = val2[sel], 
+                         div = div[sel], td = hit_max_td[sel])
+
+  div <- df[div[sel], ]
+  td <- df[hit_max_td[sel], ]
   thm <- .rstanvis_defaults$theme
-  base <- ggplot(data.frame(x = val1, y = val2), aes_string("x", "y"))
+  base <- ggplot(df, aes_string("x", "y"))
+  pt_color <- .pt_color(...)
   graph <-
     base +
-    geom_point(size = .pt_size(...), color = .pt_color(...), 
+    geom_point(size = .pt_size(...), color = pt_color, 
                alpha = .alpha(...), shape = .shape(...), ...) +
     labs(x = pars[1], y = pars[2]) +
     thm
-  graph
+  
+  graph + 
+    geom_point(data = div, aes_string("x","y"), color = "red") +
+    geom_point(data = td, aes_string("x","y"), color = "yellow")
 }
 
 
 # histograms ---------------------------------------------------------------
 stan_hist <- function(object, pars, include = TRUE,
                       unconstrain = FALSE,
-                      inc_warmup = FALSE, window = NULL,
+                      inc_warmup = FALSE,
                       nrow = NULL, ncol = NULL,
                       ...) {
   
   
   .check_object(object, unconstrain)
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
-                               window, unconstrain)
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   thm <- .rstanvis_defaults$hist_theme
   base <- ggplot(plot_data$samp, aes_string(x = "value", y = "..density.."))
   graph <-
     base +
     geom_histogram(fill = .fill(...), color = .color(...), ...) +
+    xlab("") +
     thm
   
   if (plot_data$nparams == 1)
@@ -94,17 +114,16 @@ stan_hist <- function(object, pars, include = TRUE,
 # densities -----------------------------------------------------------
 stan_dens <- function(object, pars, include = TRUE,
                       unconstrain = FALSE,
-                      inc_warmup = FALSE, window = NULL,
+                      inc_warmup = FALSE,
                       nrow = NULL, ncol = NULL,
                       ...,
                       separate_chains = FALSE) {
   
   .check_object(object, unconstrain)
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
-                               window, unconstrain)
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   thm <- .rstanvis_defaults$hist_theme
-  base <- ggplot(plot_data$samp, aes_string(x = "value"))
+  base <- ggplot(plot_data$samp, aes_string(x = "value")) + xlab("")
   
   if (!separate_chains) {
     graph <-
@@ -131,14 +150,13 @@ stan_dens <- function(object, pars, include = TRUE,
 # autocorrelation ---------------------------------------------------------
 stan_ac <- function(object, pars, include = TRUE,
                     unconstrain = FALSE,
-                    inc_warmup = FALSE, window = NULL,
+                    inc_warmup = FALSE,
                     nrow = NULL, ncol = NULL,
                     ...,
                     separate_chains = FALSE,
                     lags = 25, partial = FALSE) {
   .check_object(object, unconstrain)
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
-                               window, unconstrain)
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   thm <- .rstanvis_defaults$theme
 
@@ -193,13 +211,12 @@ stan_ac <- function(object, pars, include = TRUE,
 # parameter estimates -----------------------------------------------------
 stan_plot <- function(object, pars, include = TRUE,
                       unconstrain = FALSE,
-                      inc_warmup = FALSE, window = NULL,
+                      inc_warmup = FALSE,
                       ...) {
   
   .check_object(object, unconstrain)
   thm <- .rstanvis_defaults$multiparam_theme
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup,
-                               window, unconstrain)
+  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   
   color_by_rhat <- FALSE
   dots <- list(...)
@@ -478,6 +495,7 @@ stan_par <- function(object, par, chain = 0, ...) {
     if (is.null(max_td))
       max_td <- 11
   }
+  max_td <- .max_td(object)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)[,-1L]
   stepsize <- .sampler_params_post_warmup(object, "stepsize__", as.df = TRUE)[,-1L]
   ndivergent <- .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)[,-1L]
