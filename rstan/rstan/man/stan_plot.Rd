@@ -87,7 +87,7 @@ For \code{stan_plot}, there are additional arguments
 }
 \description{
   Visual posterior analysis using ggplot2. 
-  For diagnostic plots see \code{\link[=stan_diag]{Diagnostic Plots}}.
+  For HMC/NUTS diagnostic plots see \code{\link[=stan_diag]{Diagnostic Plots}}.
 }
 \seealso{
  \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstan_gg_options]{Plot options}}
@@ -130,7 +130,7 @@ dens_sep + scale_fill_manual(values = c("red", "blue", "green", "black"))
 
 # traceplot
 trace <- stan_trace(fit)
-window <- scale_x_continuous(limits = c(1500, 1600))
+window <- coord_cartesian(xlim = c(1500,1600))
 quietgg(trace + window)
 
 trace +
@@ -146,10 +146,10 @@ trace <- trace + facet_style
 trace
 
 # scatterplot
-mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "orange", size = 4)
-(mu_vs_tau <- 
-    mu_vs_tau + 
-    coord_flip() + 
-    theme(panel.background = element_rect(fill = "black")))
+mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "blue", size = 4)
+mu_vs_tau + 
+  coord_flip() + 
+  theme(panel.background = element_rect(fill = "black")))
+  
 }
 }

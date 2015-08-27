@@ -57,7 +57,7 @@ rstan_ggtheme_options <- function(...) {
         legend.position = "none",
         panel.grid.major =  element_line(size = 0.1, color = "darkgray"))
 
-.rstanvis_defaults$pt_color <- "#222222"
+.rstanvis_defaults$pt_color <- "#B2001D" # "#222222"
 .rstanvis_defaults$alpha <- 0.5
 .rstanvis_defaults$shape <- 19
 .rstanvis_defaults$fill <-  "#B2001D"

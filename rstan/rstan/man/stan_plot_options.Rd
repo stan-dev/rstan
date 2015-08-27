@@ -11,7 +11,8 @@
   \item{...}{For \code{rstan_ggtheme_options}, see
     \code{\link[ggplot2]{theme}} for the theme elements that can be specified
     in \code{...}. For \code{rstan_gg_options}, \code{...} can be \code{fill},
-    \code{color}, \code{chain_colors}, or \code{size}. See Examples.}
+    \code{color}, \code{chain_colors}, \code{size}, \code{pt_color}, or
+    \code{pt_size}. See Examples.}
 }
 \description{
   Set default appearance options
@@ -20,9 +21,8 @@
  \code{\link[=stan_plot]{Plots}}, \code{\link[=stan_diag]{Diagnostic Plots}}
 }
 \examples{
-
 rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),
                       legend.position = "top")
-rstan_gg_options(fill = "skyblue", color = "skyblue4")
+rstan_gg_options(fill = "skyblue", color = "skyblue4", pt_color = "red")
 }
 

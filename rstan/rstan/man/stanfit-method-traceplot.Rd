@@ -46,7 +46,8 @@
 library(rstan) 
 fit <- stan(model_code = "parameters {real y;} model {y ~ normal(0,1);}") 
 traceplot(fit) 
-traceplot(fit, nrow = 2) 
+traceplot(fit, inc_warmup = TRUE, nrow = 2)
+traceplot(fit) + coord_cartesian(xlim = c(1500,1600))
 }
 
 
