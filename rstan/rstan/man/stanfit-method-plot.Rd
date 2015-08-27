@@ -21,10 +21,11 @@
 \arguments{
   \item{x}{An instance of class \code{\linkS4class{stanfit}}.}
   \item{...}{Optional arguments describing plot elements. See Details.}
-  \item{pars}{A character vector of parameter names. If not specified, all
-    parameters are used.}
+  \item{pars}{A character vector of parameter names. Defaults to all parameters 
+  or the first 10 parameters (if there are more than 10).}
   \item{include}{Should the parameters given by the \code{pars} argument be
-    included (the default) or excluded from the plot?}
+    included (the default) or excluded from the plot? Only relevant if 
+    \code{pars} is not missing.}
   \item{unconstrain}{Should parameters be plotted on the unconstrained space?
     Defaults to \code{FALSE}.}
 }
@@ -46,6 +47,9 @@ The following arguments can be specied in \code{...}:
 }
 \value{A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.} 
+\seealso{
+ \code{\link[=stan_plot]{Plots}}, \code{\link[=stan_diag]{Diagnostic Plots}}
+}
 \examples{\dontrun{
 library(rstan) 
 fit <- stan(model_code = "parameters {real y;} model {y ~ normal(0,1);}") 

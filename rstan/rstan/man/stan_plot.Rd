@@ -86,7 +86,8 @@ For \code{stan_plot}, there are additional arguments
 }
 }
 \description{
-  Visual posterior analysis and diagnostics using ggplot2.
+  Visual posterior analysis using ggplot2. 
+  For diagnostic plots see \code{\link[=stan_diag]{Diagnostic Plots}}.
 }
 \seealso{
  \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstan_gg_options]{Plot options}}

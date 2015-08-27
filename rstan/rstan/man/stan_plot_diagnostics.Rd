@@ -38,7 +38,8 @@
   and \code{stan_mcse}, a single ggplot object.
 }
 \description{
-  Diagnostic plots
+  Diagnostic plots for HMC and NUTS using ggplot2. 
+  For other plots see \code{\link[=stan_plot]{Plots}}.
 }
 \note{
   For \code{stan_par} red points are superimposed onto the
