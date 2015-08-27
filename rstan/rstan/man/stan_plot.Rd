@@ -140,6 +140,7 @@ facet_style <- theme(strip.background = element_rect(fill = "white"),
 trace <- trace + facet_style
 trace
 
+# scatterplot
 mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "orange", size = 4)
 (mu_vs_tau <- 
     mu_vs_tau + 
