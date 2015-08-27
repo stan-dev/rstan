@@ -10,8 +10,8 @@
 \title{ggplot2 for RStan}
 \usage{
   stan_plot(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
+            
   stan_trace(object, pars, include = TRUE, unconstrain = FALSE,
             inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
@@ -92,6 +92,10 @@ For \code{stan_plot}, there are additional arguments
  \code{\link[=stan_diag]{Diagnostic Plots}}, \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{
+example("read_stan_csv")
+stan_plot(fit)
+stan_trace(fit)
+
 \dontrun{
 library(gridExtra)
 fit <- stan_demo("eight_schools")

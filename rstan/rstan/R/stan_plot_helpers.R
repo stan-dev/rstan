@@ -72,12 +72,18 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     sim <- object$stanfit@sim
   }
   else sim <- object@sim
+  
+  nopars <- missing(pars)
+  if (is.stanfit(object) && !nopars) {
+    if ("log-posterior" %in% pars)
+      pars[which(pars == "log-posterior")] <- "lp__"
+  }
   if (!include) {
-    if (missing(pars))
+    if (nopars)
       stop("pars must be specified if include=FALSE.", call. = FALSE)
     pars <- setdiff(sim$pars_oi, pars)
   }
-  pars <- if (missing(pars)) sim$pars_oi else check_pars_second(sim, pars)
+  pars <- if (nopars) sim$pars_oi else check_pars_second(sim, pars)
   pars <- remove_empty_pars(pars, sim$dims_oi)
   if (unconstrain && "lp__" %in% pars) {
     if (length(pars) == 1L) stop("Can't unconstrain lp__", call. = FALSE)
@@ -90,6 +96,12 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
   tidx <- unlist(tidx, use.names = FALSE)
   num_plots <- length(tidx)
+  
+  if (nopars && num_plots > 10) {
+    # if pars is not specified then default to showing 10 of the parameters
+    tidx <- tidx[1:10]
+    message("'pars' not specified. Showing first 10 parameters by default.")
+  }
   
   if (!is.null(window)) {
     window <- sort(window)
@@ -128,11 +140,15 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   dat <- .reshape_sample(samp_use)
   dat$iteration <- idx
   dat$chain <- factor(dat$chain)
+  fnames <- sim$fnames_oi[tidx]
   lp <- which(dat$parameter == "lp__")
-  if (!identical(lp, integer(0)))
+  if (!identical(lp, integer(0))) {
     dat$parameter[lp] <- "log-posterior"
-  if (is.stanreg(object))
-    dat$parameter <- factor(dat$parameter, levels = sim$fnames_oi[tidx])
+    fnames[which(fnames == "lp__")] <- "log-posterior"
+  }
+  # if (is.stanreg(object))
+  dat$parameter <- factor(dat$parameter, levels = fnames)
+
   list(samp = dat,
        nchains = nchains,
        nparams = length(tidx),

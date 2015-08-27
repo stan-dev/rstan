@@ -20,10 +20,9 @@
  \code{\link[=stan_plot]{Plots}}, \code{\link[=stan_diag]{Diagnostic Plots}}
 }
 \examples{
-\dontrun{
-  rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),
-                         legend.position = "top")
-  rstan_gg_options(fill = "skyblue", color = "skyblue4")
-}
+
+rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),
+                      legend.position = "top")
+rstan_gg_options(fill = "skyblue", color = "skyblue4")
 }
 

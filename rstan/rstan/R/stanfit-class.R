@@ -69,8 +69,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 }  
 
 setMethod("plot", signature(x = "stanfit", y = "missing"), 
-          function(x, pars, display_parallel = FALSE, ask = TRUE, 
-                   npars_per_page = 6, include = TRUE) {
+          function(x, ..., pars, include = TRUE, unconstrain = FALSE) {
             if (x@mode == 1L) {
               cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
                   "sampling is not conducted.\n", sep = '')
@@ -85,24 +84,13 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
               cat("Stan model '", x@model_name, "' does not contain samples after warmup.\n", sep = '')
               return(invisible(NULL))
             }
-
-            if (!include) pars <- setdiff(x@sim$pars_oi, pars)
-            pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
-            pars <- remove_empty_pars(pars, x@sim$dims_oi)
-            if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
-              assign("summary", summary_sim(x@sim), envir = x@.MISC)
-            info <- list(model_name = x@model_name, model_date = x@date) 
-            npars <- length(pars) 
-            sidx <- seq.int(1, npars, npars_per_page)
-            eidx <- c(sidx[-1] - 1, npars)
-            stan_plot_inferences(x@sim, x@.MISC$summary, pars[sidx[1]:eidx[1]], info, display_parallel)
-            sidx_len <- length(sidx) 
-            if (sidx_len == 1)  return(invisible(NULL))
-            
-            ask_old <- devAskNewPage(ask = ask)
-            on.exit(devAskNewPage(ask = ask_old))
-            for (i in 2:sidx_len)
-              stan_plot_inferences(x@sim, x@.MISC$summary, pars[sidx[i]:eidx[i]], info, display_parallel)
+            args <- list(object = x, include = include, unconstrain = unconstrain, ...)
+            if (!missing(pars)) { 
+              if ("log-posterior" %in% pars)
+                pars[which(pars == "log-posterior")] <- "lp__"
+              args$pars <- pars
+            }
+            do.call("stan_plot", args)
           }) 
 
 setGeneric(name = "get_stancode",

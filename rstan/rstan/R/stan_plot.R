@@ -202,11 +202,10 @@ stan_ac <- function(object, pars, include = TRUE,
 
 
 # parameter estimates -----------------------------------------------------
-stan_plot <- function(object, pars, include = TRUE,
-                      unconstrain = FALSE,
-                      inc_warmup = FALSE,
+stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
                       ...) {
   
+  inc_warmup <- FALSE
   .check_object(object, unconstrain)
   thm <- .rstanvis_defaults$multiparam_theme
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
