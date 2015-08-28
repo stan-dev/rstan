@@ -95,21 +95,18 @@ pairs.stanfit <-
     
     x <- apply(arr, MARGIN = "parameters", FUN = function(y) y)
     nc <- ncol(x)
-    xl <- yl <- logical(nc)
+    
     if (isTRUE(log)) {
-      log <- which(apply(x >= 0, 2, FUN = all))
-      log["lp__"] <- FALSE
-      integers <- apply(x, 2, FUN = function(y) all(y == as.integer(y)))
-      log[integers] <- FALSE
-      names(log) <- NULL
+      xl <- apply(x >= 0, 2, FUN = all)
+      xl["lp__"] <- FALSE
     }
-    if (is.numeric(log)) xl[log] <- yl[log] <- TRUE
-    else {
-      xl[] <- grepl("x", log)
-      yl[] <- grepl("y", log)
+    else if (is.numeric(log)) xl <- log
+    else xl <- grepl("x", log)
+
+    if (is.numeric(xl) || any(xl)) {
+      x[,xl] <- log(x[,xl])
+      colnames(x)[xl] <- paste("log", colnames(x)[xl], sep = "-")
     }
-    counter <- 1L
-    E <- environment()
     if(is.null(lower.panel)) {
       if(!is.null(panel)) lower.panel <- panel
       else lower.panel <- function(x,y, ...) {
@@ -143,22 +140,11 @@ pairs.stanfit <-
     if(is.null(diag.panel)) diag.panel <- function(x, ...) {
         usr <- par("usr"); on.exit(par(usr))
         par(usr = c(usr[1:2], 0, 1.5) )
-        LOG <- xl[counter]
-        assign("counter", counter + 1L, envir = E)
-        if (LOG) {
-          h <- hist(log(x), plot = FALSE)
-          breaks <- exp(h$breaks)
-          y <- h$counts / max(h$counts) * 10^label.pos
-          nB <- length(breaks)
-          rect(breaks[-nB], 1, breaks[-1], y, col="cyan", ...)
-        }
-        else {
-          h <- hist(x, plot = FALSE)
-          breaks <- h$breaks
-          y <- h$counts; y <- y/max(y)
-          nB <- length(breaks)
-          rect(breaks[-nB], 0, breaks[-1], y, col="cyan", ...)
-        }
+        h <- hist(x, plot = FALSE)
+        breaks <- h$breaks
+        y <- h$counts; y <- y/max(y)
+        nB <- length(breaks)
+        rect(breaks[-nB], 0, breaks[-1], y, col="cyan", ...)
     }
     if(is.null(panel)) panel <- points
     
@@ -177,7 +163,7 @@ pairs.stanfit <-
     mc$upper.panel <- upper.panel
     mc$diag.panel <- diag.panel
     mc$text.panel <- textPanel
-    mc$log <- log
+    mc$log <- ""
     mc$condition <- NULL
     mc$pars <- NULL
     mc$include <- NULL
