@@ -365,7 +365,7 @@ setMethod("sampling", "stanmodel",
             dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
             
-            if (cores > 1 && mode == "SAMPLING" && chains > 0) {
+            if (cores > 1 && mode == "SAMPLING" && chains > 1) {
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
@@ -518,16 +518,33 @@ setMethod("sampling", "stanmodel",
                 report <- gsub(" because of the following issue:", "", report, fixed = TRUE)
                 report <- gsub("stan::math::", "", report, fixed = TRUE)
                 report <- grep("^Informational", report, value = TRUE, invert = TRUE)
-                report <- strtrim(report, width = 75)
+                report <- strtrim(report, width = 95)
                 tab <- sort(table(report), decreasing = TRUE)
-                if (length(tab) == 2) tab <- rev(tab)
-                message("The following problems occured ",
+                message("The following numerical problems occured ",
                         "the indicated number of times on chain ", i)
                 mat <- as.matrix(tab)
                 colnames(mat) <- "count"
                 print(mat)
                 message(end)
               }
+              sp <- attr(samples_i, "sampler_params")
+              if (warmup2 > 0) sp <- sapply(sp, FUN = function(x) x[-(1:warmup2)])
+              else sp <- simplify2array(sp)
+              n_d <- sum(sp[,"n_divergent__"])
+              cid <- args_list[[i]]$chain_id
+              if (is.null(cid)) cid <- i
+              if (n_d > 0) 
+                warning("There were ", n_d, " divergent transitions after warmup for chain ", 
+                        cid, call. = FALSE)
+              mtd <- args_list$max_treedepth
+              if (is.null(mtd)) mtd <- 10L
+              n_m <- sum(sp[,"treedepth__"] > mtd)
+              if (n_m > 0)
+                warning("There were ", n_m, 
+                        " transitions after warmup that exceeded the maximum treedepth for chain ", 
+                        cid, call. = FALSE)
+              if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n", 
+                                              call. = FALSE, noBreaks. = TRUE)
               samples[[i]] <- samples_i
             }
 
@@ -577,7 +594,8 @@ setMethod("sampling", "stanmodel",
                           # keep a ref to avoid garbage collection
                           # (see comments in fun stan_model)
                         date = date(),
-                        .MISC = sfmiscenv) 
+                        .MISC = sfmiscenv)
+            
              return(nfit)
           }) 
 
