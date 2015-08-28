@@ -48,6 +48,7 @@ stan_model <- function(file,
       file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
       if(!file.exists(file)) file.rename(from = tf, to = file)
     }
+    else file <- normalizePath(file)
     
     stanc_ret <- stanc(file = file, model_code = model_code, 
                        model_name = model_name, verbose, ...)
