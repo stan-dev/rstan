@@ -128,14 +128,14 @@ stan_model <- function(file,
     old.boost_lib <- rstan_options(boost_lib = boost_lib) 
     on.exit(rstan_options(boost_lib = old.boost_lib)) 
   } 
-  if (!dir.exists(rstan_options("boost_lib")))
+  if (!file.exists(rstan_options("boost_lib")))
     stop("Boost not found; call install.packages('BH')")
   
   if (!is.null(eigen_lib)) {
     old.eigen_lib <- rstan_options(eigen_lib = eigen_lib) 
     on.exit(rstan_options(eigen_lib = old.eigen_lib), add = TRUE) 
   }
-  if (!dir.exists(rstan_options("eigen_lib")))
+  if (!file.exists(rstan_options("eigen_lib")))
     stop("Eigen not found; call install.packages('RcppEigen')")
   
   if (inc_path_fun("StanHeaders") == "")
