@@ -530,6 +530,8 @@ setMethod("sampling", "stanmodel",
               sp <- attr(samples_i, "sampler_params")
               if (warmup2 > 0) sp <- sapply(sp, FUN = function(x) x[-(1:warmup2)])
               else sp <- simplify2array(sp)
+              n_d <- 0 
+              n_m <- 0
               if ("n_divergent__" %in% colnames(sp)) {
                 n_d <- sum(sp[, "n_divergent__"])
                 cid <- args_list[[i]]$chain_id
@@ -546,9 +548,9 @@ setMethod("sampling", "stanmodel",
                   warning("There were ", n_m,
                           " transitions after warmup that exceeded the maximum treedepth for chain ",
                           cid, call. = FALSE)
-                if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n",
-                                                call. = FALSE, noBreaks. = TRUE)
               }
+              if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n",
+                                              call. = FALSE, noBreaks. = TRUE)
               samples[[i]] <- samples_i
             }
 
