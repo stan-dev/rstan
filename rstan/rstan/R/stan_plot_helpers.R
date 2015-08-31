@@ -29,8 +29,8 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 
 .check_object <- function(object, unconstrain = FALSE) {
   if (is.stanreg(object)) {
-    if (object$algorithm != "sampling")
-      stop("Plots not yet available for estimation methods other than MCMC (algorithm='sampling')", 
+    if (object$algorithm == "optimizing")
+      stop("Plots not yet available for optimization (algorithm='optimizing')", 
            call. = FALSE)
     if (unconstrain)
       stop("Option 'unconstrain' not yet available for stanreg objects.",
@@ -53,6 +53,11 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   invisible(TRUE)
 }
 
+.vb_check <- function(x) {
+  if (is.stanreg(x)) x <- x$stanfit
+  if (x@stan_args[[1L]]$method == "variational")
+    stop("Plot only available for models estimated using MCMC", call. = FALSE)
+}
 
 .reshape_sample <- function(x) {
   res <- lapply(seq_along(x), function(i) {
@@ -225,12 +230,10 @@ color_vector_chain <- function(n) {
                                  object, pars=NULL, ...) {
   if (is.stanreg(object)) object <- object$stanfit
   thm <- .rstanvis_defaults$hist_theme
-
   if (which == "n_eff_ratio") {
     lp <- suppressWarnings(get_logposterior(object, inc_warmup = FALSE))
     SS <- prod(length(lp), length(lp[[1L]]))
   }
-  
   if (!is.null(pars)) smry <- summary(object, pars = pars)$summary
   else smry <- summary(object)$summary
   

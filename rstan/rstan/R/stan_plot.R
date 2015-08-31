@@ -209,13 +209,13 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   thm <- .rstanvis_defaults$multiparam_theme
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   
-  color_by_rhat <- FALSE
+  color_by_rhat <- FALSE # FIXME 
   dots <- list(...)
   defs <- list(point_est = "mean", show_density = FALSE,
                show_outer_line = TRUE, ci_level = 0.5, outer_level = 0.95,
                fill_color = NULL, outline_color = NULL, est_color = NULL)
   args <- names(defs)
-  dotenv <- list() #new.env(parent = emptyenv())
+  dotenv <- list()
   for (j in seq_along(args)) {
     if (args[j] %in% names(dots))
       dotenv[[args[j]]] <- dots[[args[j]]]
@@ -247,8 +247,6 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   colnames(xy.df) <- c("params", "y", "mean", "ll", "l", "m", "h", "hh")
   if (dotenv[["point_est"]] == "mean") xy.df$m <- xy.df$mean
   
-  #   .e <- environment()
-  #   p.base <- ggplot(xy.df, environment = .e)
   p.base <- ggplot(xy.df)
   p.name <- scale_y_continuous(breaks = y, labels = param_names,
                                limits = c(0.5, nparams + 1))
@@ -331,22 +329,24 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
 # rhat, ess, mcse ---------------------------------------------------------
 stan_rhat <- function(object, pars, ...) {
   .check_object(object)
+  .vb_check(object)
   if (missing(pars)) pars <- NULL
   .rhat_neff_mcse_hist(which = "rhat", object = object, pars = pars, ...)
 }
 
 stan_ess <- function(object, pars, ...) {
   .check_object(object)
+  .vb_check(object)
   if (missing(pars)) pars <- NULL
   .rhat_neff_mcse_hist(which = "n_eff_ratio", object = object, pars = pars, ...)
 }
 
 stan_mcse <- function(object, pars, ...) {
   .check_object(object)
+  .vb_check(object)
   if (missing(pars)) pars <- NULL
   .rhat_neff_mcse_hist(which = "mcse_ratio", object = object, pars = pars, ...)
 }
-
 
 
 
@@ -354,6 +354,7 @@ stan_mcse <- function(object, pars, ...) {
 stan_diag <- function(object, 
                       information = c("sample","stepsize","treedepth","divergence"),
                       chain = 0, ...) {
+  .vb_check(object)
   info <- match.arg(information)
   fn <- paste0("stan_", info)
   do.call(fn, list(object, chain, ...))
