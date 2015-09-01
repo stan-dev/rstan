@@ -164,12 +164,15 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
-
+            means <- sapply(samples, mean)
+            means <- as.matrix(c(means[-1], "lp__" = means[1]))
+            colnames(means) <- "chain:1"
+            assign("posterior_mean_4all", means, envir = sfmiscenv)
             idx_wo_lp <- which(m_pars != "lp__")
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
+
             samples <- cbind(samples[-1,,drop=FALSE], "lp__" = samples[-1,1])[,cC]
-            
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
@@ -313,7 +316,8 @@ setMethod("sampling", "stanmodel",
                    control = NULL, include = TRUE,
                    cores = getOption("mc.cores", 1L), 
                    open_progress = interactive() && !isatty(stdout()) &&
-                     !identical(Sys.getenv("RSTUDIO"), "1"), ...) {
+                     !identical(Sys.getenv("RSTUDIO"), "1"), 
+                   show_messages = TRUE, ...) {
 
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
@@ -361,7 +365,7 @@ setMethod("sampling", "stanmodel",
             dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
             
-            if (cores > 1 && mode == "SAMPLING" && chains > 0) {
+            if (cores > 1 && mode == "SAMPLING" && chains > 1) {
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
@@ -494,7 +498,9 @@ setMethod("sampling", "stanmodel",
               if (is.null(dots$refresh) || dots$refresh > 0) 
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
-              messages <- tempfile()
+              if (is.character(show_messages)) 
+                messages <- normalizePath(show_messages, mustWork = FALSE)
+              else messages <- tempfile()
               sink(file(messages, open = "wt"), type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(type = "message")
@@ -506,18 +512,45 @@ setMethod("sampling", "stanmodel",
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
                                                    m_pars, p_dims, 2L))) 
               }
-              if (length(report) > 0) {
+              if (length(report) > 0 && isTRUE(show_messages)) {
                 end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
                 report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
+                report <- gsub(" because of the following issue:", "", report, fixed = TRUE)
+                report <- gsub("stan::math::", "", report, fixed = TRUE)
+                report <- grep("^Informational", report, value = TRUE, invert = TRUE)
+                report <- strtrim(report, width = 95)
                 tab <- sort(table(report), decreasing = TRUE)
-                if (length(tab) == 2) tab <- rev(tab)
-                message("The following problems occured ",
+                message("The following numerical problems occured ",
                         "the indicated number of times on chain ", i)
                 mat <- as.matrix(tab)
                 colnames(mat) <- "count"
                 print(mat)
                 message(end)
               }
+              sp <- attr(samples_i, "sampler_params")
+              if (warmup2 > 0) sp <- sapply(sp, FUN = function(x) x[-(1:warmup2)])
+              else sp <- simplify2array(sp)
+              n_d <- 0 
+              n_m <- 0
+              if ("n_divergent__" %in% colnames(sp)) {
+                n_d <- sum(sp[, "n_divergent__"])
+                cid <- args_list[[i]]$chain_id
+                if (is.null(cid)) cid <- i
+                if (n_d > 0)
+                  warning("There were ", n_d, " divergent transitions after warmup for chain ",
+                          cid, call. = FALSE)
+              }
+              if ("treedepth__" %in% colnames(sp)) {
+                mtd <- args_list$max_treedepth
+                if (is.null(mtd)) mtd <- 10L
+                n_m <- sum(sp[,"treedepth__"] > mtd)
+                if (n_m > 0)
+                  warning("There were ", n_m,
+                          " transitions after warmup that exceeded the maximum treedepth for chain ",
+                          cid, call. = FALSE)
+              }
+              if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n",
+                                              call. = FALSE, noBreaks. = TRUE)
               samples[[i]] <- samples_i
             }
 
@@ -567,7 +600,8 @@ setMethod("sampling", "stanmodel",
                           # keep a ref to avoid garbage collection
                           # (see comments in fun stan_model)
                         date = date(),
-                        .MISC = sfmiscenv) 
+                        .MISC = sfmiscenv)
+            
              return(nfit)
           }) 
 
