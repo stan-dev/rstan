@@ -518,6 +518,7 @@ setMethod("sampling", "stanmodel",
                 report <- gsub(" because of the following issue:", "", report, fixed = TRUE)
                 report <- gsub("stan::math::", "", report, fixed = TRUE)
                 report <- grep("^Informational", report, value = TRUE, invert = TRUE)
+                report <- grep("^[[:digit:]]+", report, value = TRUE, invert = TRUE)
                 report <- strtrim(report, width = 95)
                 tab <- sort(table(report), decreasing = TRUE)
                 message("The following numerical problems occured ",
@@ -536,7 +537,7 @@ setMethod("sampling", "stanmodel",
               if (n_d > 0) 
                 warning("There were ", n_d, " divergent transitions after warmup for chain ", 
                         cid, call. = FALSE)
-              mtd <- args_list$max_treedepth
+              mtd <- args_list[[1]]$control$max_treedepth
               if (is.null(mtd)) mtd <- 10L
               n_m <- sum(sp[,"treedepth__"] > mtd)
               if (n_m > 0)
