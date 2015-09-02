@@ -95,12 +95,12 @@
 
 #include <stan/io/mcmc_writer.hpp>
 #include <stan/interface_callbacks/writer/csv.hpp>
-#include <rstan/filtered_values.hpp>
 #include <stan/interface_callbacks/writer/messages.hpp>
 #include <stan/interface_callbacks/writer/base_writer.hpp>
-#include <stan/interface_callbacks/writer/sum_values.hpp>
 #include <stan/interface_callbacks/writer/values.hpp>
 //#include <stan/services/mcmc.hpp>
+#include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
 #include <rstan/rstan_writer.hpp>
 
 namespace rstan {

@@ -3,8 +3,8 @@
 
 #include <Rcpp.h>
 #include <stan/interface_callbacks/writer/csv.hpp>
-#include <stan/interface_callbacks/writer/sum_values.hpp>
 #include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
 
 namespace rstan {
 
@@ -12,7 +12,7 @@ namespace rstan {
   public:
     typedef stan::interface_callbacks::writer::csv CsvWriter;
     typedef rstan::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
-    typedef stan::interface_callbacks::writer::sum_values SumValuesWriter;
+    typedef rstan::sum_values SumValuesWriter;
 
     CsvWriter csv_;
     FilteredValuesWriter values_;
