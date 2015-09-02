@@ -2,7 +2,7 @@
 #define RSTAN__FILTERED_VALUES_HPP
 
 #include <stan/interface_callbacks/writer/base_writer.hpp>
-#include <stan/interface_callbacks/writer/values.hpp>
+#include <rstan/values.hpp>
 #include <ostream>
 #include <stdexcept>
 #include <string>
@@ -14,7 +14,7 @@ namespace rstan {
   private:
     size_t N_, M_, N_filter_;
     std::vector<size_t> filter_;
-    stan::interface_callbacks::writer::values<InternalVector> values_;
+    rstan::values<InternalVector> values_;
     std::vector<double> tmp;
 
   public:
