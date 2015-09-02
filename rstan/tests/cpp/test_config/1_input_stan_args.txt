@@ -1,4 +1,5 @@
 # init=0
+# enable_random_init=1
 # seed=123
 # chain_id=1
 # iter=1
@@ -17,3 +18,4 @@
 # sampler_t=NUTS(diag_e)
 # append_samples=0
 #
+
