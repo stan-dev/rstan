@@ -145,8 +145,9 @@ namespace rstan {
         int elbo_samples; // default to 100
         int eval_elbo;    // default to 100
         int output_samples; // default to 1000
-        double eta_adagrad; // default to 0.1
+        std::string eta; // defaults to "automatically tuned" // FIXME
         double tol_rel_obj; // default to 0.01
+        int tuning_iter; // default to 50
       } variational;
       struct {
         double epsilon; // default to 1e-6, for test_grad
@@ -172,7 +173,7 @@ namespace rstan {
           }
           if (ctrl.sampling.adapt_delta <= 0 || ctrl.sampling.adapt_delta >= 1) {
             std::stringstream msg;
-            msg << "Invalid adaptation parameter (found detal="
+            msg << "Invalid adaptation parameter (found deltal="
                 << ctrl.sampling.adapt_delta << "; require 0<delta<1).";
             throw std::invalid_argument(msg.str());
           }
@@ -235,12 +236,6 @@ namespace rstan {
                 << ctrl.variational.elbo_samples << "; require 0 < elbo_samples).";
             throw std::invalid_argument(msg.str());
           }
-          if (ctrl.variational.eta_adagrad < 0 || ctrl.variational.eta_adagrad > 1) {
-            std::stringstream msg;
-            msg << "Invalid parameter eta_adagrad (found eta_adagrad="
-                << ctrl.variational.eta_adagrad << "; require 0 < eta_adagrad <= 1).";
-            throw std::invalid_argument(msg.str());
-          }
           if (ctrl.variational.iter <= 0) {
             std::stringstream msg;
             msg << "Invalid parameter iter (found iter="
@@ -263,6 +258,12 @@ namespace rstan {
             std::stringstream msg;
             msg << "Invalid parameter output_samples (found output_samples="
                 << ctrl.variational.output_samples << "; require 0 < output_samples).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.variational.tuning_iter <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter tuning_iter (found tuning_iter="
+                << ctrl.variational.tuning_iter << "; require 0 < tuning_iter).";
             throw std::invalid_argument(msg.str());
           }
           break;
@@ -304,7 +305,8 @@ namespace rstan {
           get_rlist_element(in, "elbo_samples", ctrl.variational.elbo_samples, 100);
           get_rlist_element(in, "eval_elbo", ctrl.variational.eval_elbo, 100);
           get_rlist_element(in, "output_samples", ctrl.variational.output_samples, 1000);
-          get_rlist_element(in, "eta_adagrad", ctrl.variational.eta_adagrad, 0.1);
+          get_rlist_element(in, "tuning_iter", ctrl.variational.tuning_iter, 50);
+          get_rlist_element(in, "eta", ctrl.variational.eta, "automatically tuned");
           get_rlist_element(in, "tol_rel_obj", ctrl.variational.tol_rel_obj, 0.01);
           ctrl.variational.algorithm = MEANFIELD;
           if (get_rlist_element(in, "algorithm", t_str)) {
@@ -459,8 +461,9 @@ namespace rstan {
           args["elbo_samples"] = Rcpp::wrap(ctrl.variational.elbo_samples);
           args["eval_elbo"] = Rcpp::wrap(ctrl.variational.eval_elbo);
           args["output_samples"] = Rcpp::wrap(ctrl.variational.output_samples);
-          args["eta_adagrad"] = Rcpp::wrap(ctrl.variational.eta_adagrad);
+          args["eta"] = Rcpp::wrap(ctrl.variational.eta);
           args["tol_rel_obj"] = Rcpp::wrap(ctrl.variational.tol_rel_obj);
+          args["tuning_iter"] = Rcpp::wrap(ctrl.variational.tuning_iter);
           switch (ctrl.variational.algorithm) {
             case MEANFIELD: args["algorithm"] = Rcpp::wrap("meanfield"); break;
             case FULLRANK: args["algorithm"] = Rcpp::wrap("fullrank"); break;
@@ -585,8 +588,8 @@ namespace rstan {
     inline int get_ctrl_variational_eval_elbo() const {
       return ctrl.variational.eval_elbo;
     }
-    inline double get_ctrl_variational_eta_adagrad() const {
-      return ctrl.variational.eta_adagrad;
+    inline std::string get_ctrl_variational_eta() const {
+      return ctrl.variational.eta;
     }
     inline double get_ctrl_variational_tol_rel_obj() const {
       return ctrl.variational.tol_rel_obj;
@@ -737,7 +740,7 @@ namespace rstan {
           write_comment_property(ostream,"elbo_samples", ctrl.variational.elbo_samples);
           write_comment_property(ostream,"output_samples", ctrl.variational.output_samples);
           write_comment_property(ostream,"eval_elbo", ctrl.variational.eval_elbo);
-          write_comment_property(ostream,"eta_adagrad", ctrl.variational.eta_adagrad);
+          write_comment_property(ostream,"eta", ctrl.variational.eta);
           write_comment_property(ostream,"tol_rel_obj", ctrl.variational.tol_rel_obj);
           switch (ctrl.variational.algorithm) {
             case MEANFIELD: write_comment_property(ostream,"algorithm", "meanfield"); break;

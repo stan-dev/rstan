@@ -128,14 +128,21 @@ setMethod("vb", "stanmodel",
                                 c("iter", "init_r",
                                   "append_samples",
                                   "elbo_samples",
-                                  "eta_adagrad",
+                                  "eta",
                                   "eval_elbo",
                                   "grad_samples",
                                   "output_samples",
+                                  "tuning_iter",
                                   "tol_rel_obj"),
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
+            if (is.null(dotlist$eta)) dotlist$eta <- "automatically tuned"
+            else {
+              if(dotlist$eta > 1) stop("'eta' must be <= 1")
+              if(dotlist$eta <= 0) stop("'eta' must be > 0")
+              dotlist$eta <- as.character(dotlist$eta)
+            }
 
             sfmiscenv <- new.env(parent = emptyenv())
             assign("stan_fit_instance", sampler, envir = sfmiscenv)

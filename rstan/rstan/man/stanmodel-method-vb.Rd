@@ -68,15 +68,17 @@
       \item \code{elbo_samples} (positive \code{integer}), the number of samples
       for Monte Carlo estimate of ELBO (objective function), defaults to 100.
       (ELBO stands for "the evidence lower bound".)
-      \item \code{eta_adagrad} (\code{double}), stepsize weighting parameters
-      for variational iteration (valid values: 0 < eta_adagrad <= 1.0), defaults
-      to 0.1. 
+      \item \code{eta} (\code{double}), stepsize weighting parameters
+      for variational iteration (valid values: 0 < eta <= 1.0), defaults
+      to \code{NULL}, which implies that the stepsize will be automatically tuned.
       \item \code{tol_rel_obj} (positive \code{double}), convergence tolerance on the 
       relative norm of the objective, defaults to 0.01. 
       \item \code{eval_elbo} (positive \code{integer}), evaluate ELBO every Nth iteration,
       defaults to 100.
       \item \code{output_samples} (positive \code{integer}), number of posterior
       samples to draw and save, defaults to 1000.
+      \item \code{tuning_iter} (positive \code{integer}), number of iterations to
+        tune the stepsize if \code{eta = NULL} and ignored otherwise 
     }
   }
 }
