@@ -3,15 +3,15 @@
 
 #include <Rcpp.h>
 #include <stan/interface_callbacks/writer/csv.hpp>
-#include <stan/interface_callbacks/writer/filtered_values.hpp>
 #include <stan/interface_callbacks/writer/sum_values.hpp>
+#include <rstan/filtered_values.hpp>
 
 namespace rstan {
 
   class rstan_sample_writer {
   public:
     typedef stan::interface_callbacks::writer::csv CsvWriter;
-    typedef stan::interface_callbacks::writer::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
+    typedef rstan::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
     typedef stan::interface_callbacks::writer::sum_values SumValuesWriter;
 
     CsvWriter csv_;
