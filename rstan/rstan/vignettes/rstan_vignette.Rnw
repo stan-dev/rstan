@@ -5,7 +5,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{xspace}
-\usepackage{titlesec}
+%\usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{url}
