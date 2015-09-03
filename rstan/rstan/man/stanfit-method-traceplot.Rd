@@ -10,55 +10,45 @@
 
 \usage{
   %% traceplot(object, \dots)  
-  \S4method{traceplot}{stanfit}(object, pars, inc_warmup = TRUE, ask = FALSE,
-    nrow = 4, ncol = 2, window = NULL, include = TRUE, ...) 
+  \S4method{traceplot}{stanfit}(object, pars, include = TRUE, unconstrain = FALSE, 
+          inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...) 
 } 
 
 \section{Methods}{
   \describe{
-    \item{traceplot}{\code{signature(object = "stanfit")}}{ Plot the traces of sample for all chains.}
+    \item{traceplot}{\code{signature(object = "stanfit")}}{Plot the sampling paths for all chains.}
   }
 }
 
 \arguments{
   \item{object}{An instance of class \code{\linkS4class{stanfit}}.}
-  \item{pars}{A vector of character string specifying the  
-      parameters to be plotted if \code{include = TRUE}. If 
-      \code{include = FALSE}, the elements of \code{pars} are excluded.} 
+  \item{pars}{A character vector of parameter names. Defaults to all parameters 
+  or the first 10 parameters (if there are more than 10).}
+  \item{include}{Should the parameters given by the \code{pars} argument be
+    included (the default) or excluded from the plot? Only relevant if 
+    \code{pars} is not missing.}
   \item{inc_warmup}{\code{TRUE} or \code{FALSE}, indicating whether 
-    the warmup sample are included in the trace plot; defaults to \code{TRUE}}
-  \item{ask}{\code{TRUE} or \code{FALSE}, to control (for the current device)
-    whether the user is prompted before starting a new page of output in the case
-    there are a lot of parameters (see \code{\link[grDevices]{devAskNewPage}}).}
-  \item{nrow}{To specify the layout for the traceplots for multiple quantities: 
-    number of rows on every page. Together with \code{ncol}, the layout would
-    be nrow * ncol. The layout by specifying \code{nrow} and \code{ncol} takes
-    effects only when the total number is larger than \code{nrow} times
-    \code{ncol}.} 
-  \item{ncol}{To specify the layout for the traceplots for multiple quantities: 
-    number of columns on every page.} 
-  \item{window}{To specify a window of all the iterations for plotting. 
-    Default of NULL means plotting all iterations. \code{window} needs 
-    to be an integer vector of at least length 1; smaller one specifies 
-    the starting iteration and the bigger one the last iteration. When there
-    is only one integer, it just indicates the starting iteration. Examples
-    of specifying window: \code{window=100} and \code{window=c(100,1500)}.
-  }
-  \item{include}{Logical scalar indicating whether to include (the default)
-    or exclude the elements given by the \code{pars} argument.}
-  \item{\dots}{Additional parameters passed to the underlying function
-    \code{plot}.} 
+    the warmup sample are included in the trace plot; defaults to \code{FALSE}.}
+  \item{unconstrain}{Should parameters be plotted on the unconstrained space?
+    Defaults to \code{FALSE}.}  
+  \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.} 
+  \item{\dots}{Optional arguments to pass to \code{\link[ggplot2]{geom_path}} 
+  (e.g. \code{size}, \code{linetype}, \code{alpha}, etc.).} 
 }
-\value{\code{NULL}} 
+\value{A \code{\link[ggplot2]{ggplot}} object that can be further customized
+  using the \pkg{ggplot2} package.} 
 
 \seealso{
-  \code{\link[grDevices]{devAskNewPage}} 
+\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan_gg_options]{Plot options}}
 }
 
 \examples{\dontrun{
 library(rstan) 
 fit <- stan(model_code = "parameters {real y;} model {y ~ normal(0,1);}") 
 traceplot(fit) 
+traceplot(fit, inc_warmup = TRUE, nrow = 2)
+traceplot(fit) + coord_cartesian(xlim = c(1500,1600))
 }
 
 
@@ -97,12 +87,11 @@ exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'),
                        full.names = TRUE))
 
 print(exfit)
-## only print some parameters
-print(exfit, pars = c("sigma", "alpha"))
 traceplot(exfit)
-traceplot(exfit, pars = "sigma")
+traceplot(exfit, size = 0.25)
+traceplot(exfit, pars = "sigma", inc_warmup = TRUE)
 
-## make traceplots of z[1,1], z[1,2], z[2,1], z[2,2]
-traceplot(exfit, pars = paste0("z[", c(1, 1, 2, 2), ",", c(1, 2, 1, 2), "]"))
+trace <- traceplot(exfit, pars = c("z[1,1]", "z[3,1]"))
+trace + scale_color_discrete() + theme(legend.position = "top")
 } 
 \keyword{methods}

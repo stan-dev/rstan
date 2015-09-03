@@ -12,6 +12,9 @@ importFrom("inline", cxxfunction, getDynLib, getPlugin)
 import("methods")
 import(Rcpp)
 
+importFrom("gridExtra","arrangeGrob","grid.arrange")
+import(ggplot2)
+
 export(
   stan_model,
   stanc, 
@@ -29,7 +32,21 @@ export(
   rstan_options,
   As.mcmc.list,
   set_cppo,
-  cpp_object_initializer
+  cpp_object_initializer,
+  stan_plot, 
+  stan_trace, 
+  stan_hist, 
+  stan_dens, 
+  stan_scat,
+  stan_ac, 
+  stan_diag,
+  stan_par,
+  stan_rhat,
+  stan_ess,
+  stan_mcse,
+  rstan_gg_options,
+  rstan_ggtheme_options,
+  quietgg
 # get_rstan.options
 )
 
