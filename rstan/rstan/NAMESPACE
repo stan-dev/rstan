@@ -32,7 +32,6 @@ export(
   rstan_options,
   As.mcmc.list,
   set_cppo,
-  cpp_object_initializer,
   stan_plot, 
   stan_trace, 
   stan_hist, 
