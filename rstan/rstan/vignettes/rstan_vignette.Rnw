@@ -5,14 +5,14 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{xspace}
-\usepackage{titlesec}
+%\usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{url}
 \usepackage{booktabs} 
 \usepackage{enumerate}
 \usepackage{alltt}
-\usepackage{multirow}
+%\usepackage{multirow}
 \usepackage{makeidx}
 \usepackage{verbatimbox}
 
@@ -705,9 +705,9 @@ Name  &    Function    \\
 \code{constrain\_pars}    & transform parameter from unconstrained space to its defined space \\
 \code{log\_prob}    & evaluate the log posterior for parameter on unconstrained space \\
 \code{grad\_log\_prob}    & evaluate the gradient of the log posterior for parameter on unconstrained space \\
-\code{as.array}        & \multirow{3}{\linewidth}{extract the samples excluding warmup to a three dimension array, matrix, data.frame}  \\
-\code{as.matrix}       & \\
-\code{as.data.frame}   & \\
+\code{as.array}        & extract the samples excluding warmup to a three dimension array,  \\
+\code{as.matrix}       & matrix, \\
+\code{as.data.frame}   & or data.frame \\
 \code{dimnames}        & obtain the dimension names of the object in its array representation\\
 \code{names}           & obtain the ``flattened'' parameter names\\
 \bottomrule 
