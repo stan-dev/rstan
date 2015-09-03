@@ -734,7 +734,7 @@ namespace rstan {
         int elbo_samples = args.get_ctrl_variational_elbo_samples();
         int max_iterations = args.get_iter();
         double tol_rel_obj = args.get_ctrl_variational_tol_rel_obj();
-        std::string eta = args.get_ctrl_variational_eta();
+        double eta = args.get_ctrl_variational_eta();
         int eval_elbo = args.get_ctrl_variational_eval_elbo();
         int output_samples = args.get_ctrl_variational_output_samples();
         int tuning_iter = args.get_ctrl_variational_tuning_iter();
@@ -801,7 +801,15 @@ namespace rstan {
                      &rstan::io::rcout,
                      &sample_stream,
                      &diagnostic_stream);
-          cmd_advi.run(eta, tol_rel_obj, max_iterations, tuning_iter);
+          if (eta == 0)
+            cmd_advi.run("automatically tuned", tol_rel_obj, 
+                         max_iterations, tuning_iter);
+          else {
+            std::ostringstream eta_string;
+            eta_string << eta;
+            cmd_advi.run(eta_string.str(), tol_rel_obj, 
+                         max_iterations, tuning_iter);
+          }
         }
 
         if (args.get_ctrl_variational_algorithm() == MEANFIELD) {
@@ -825,7 +833,15 @@ namespace rstan {
                      &rstan::io::rcout,
                      &sample_stream,
                      &diagnostic_stream);
-          cmd_advi.run(eta, tol_rel_obj, max_iterations, tuning_iter);
+            if (eta == 0)
+              cmd_advi.run("automatically tuned", tol_rel_obj, 
+                           max_iterations, tuning_iter);
+            else {
+              std::ostringstream eta_string;
+              eta_string << eta;
+              cmd_advi.run(eta_string.str(), tol_rel_obj, 
+                           max_iterations, tuning_iter);
+            }
         }
         holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
         holder.attr("args") = args.stan_args_to_rlist();

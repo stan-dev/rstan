@@ -145,7 +145,7 @@ namespace rstan {
         int elbo_samples; // default to 100
         int eval_elbo;    // default to 100
         int output_samples; // default to 1000
-        std::string eta; // defaults to "automatically tuned" // FIXME
+        double eta; // defaults to 0, implying "automatically tuned"
         double tol_rel_obj; // default to 0.01
         int tuning_iter; // default to 50
       } variational;
@@ -248,6 +248,12 @@ namespace rstan {
                 << ctrl.variational.tol_rel_obj << "; require 0 < tol_rel_obj).";
             throw std::invalid_argument(msg.str());
           }
+          if (ctrl.variational.eta < 0 || ctrl.variational.eta > 1) {
+            std::stringstream msg;
+            msg << "Invalid parameter eta (found eta="
+                << ctrl.variational.eta << "; require 0 <= eta <= 1).";
+            throw std::invalid_argument(msg.str());
+          }
           if (ctrl.variational.eval_elbo <= 0) {
             std::stringstream msg;
             msg << "Invalid parameter eval_elbo (found eval_elbo="
@@ -306,7 +312,7 @@ namespace rstan {
           get_rlist_element(in, "eval_elbo", ctrl.variational.eval_elbo, 100);
           get_rlist_element(in, "output_samples", ctrl.variational.output_samples, 1000);
           get_rlist_element(in, "tuning_iter", ctrl.variational.tuning_iter, 50);
-          get_rlist_element(in, "eta", ctrl.variational.eta, "automatically tuned");
+          get_rlist_element(in, "eta", ctrl.variational.eta, 0.0);
           get_rlist_element(in, "tol_rel_obj", ctrl.variational.tol_rel_obj, 0.01);
           ctrl.variational.algorithm = MEANFIELD;
           if (get_rlist_element(in, "algorithm", t_str)) {
@@ -588,7 +594,7 @@ namespace rstan {
     inline int get_ctrl_variational_eval_elbo() const {
       return ctrl.variational.eval_elbo;
     }
-    inline std::string get_ctrl_variational_eta() const {
+    inline double get_ctrl_variational_eta() const {
       return ctrl.variational.eta;
     }
     inline double get_ctrl_variational_tol_rel_obj() const {
@@ -597,7 +603,10 @@ namespace rstan {
     inline variational_algo_t get_ctrl_variational_algorithm() const {
       return ctrl.variational.algorithm;
     }
-
+    inline int get_ctrl_variational_tuning_iter() const {
+      return ctrl.variational.tuning_iter;
+    }
+    
     inline int get_ctrl_sampling_refresh() const {
       return ctrl.sampling.refresh;
     }

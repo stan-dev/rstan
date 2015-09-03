@@ -137,11 +137,10 @@ setMethod("vb", "stanmodel",
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
-            if (is.null(dotlist$eta)) dotlist$eta <- "automatically tuned"
+            if (is.null(dotlist$eta)) dotlist$eta <- 0.0
             else {
               if(dotlist$eta > 1) stop("'eta' must be <= 1")
               if(dotlist$eta <= 0) stop("'eta' must be > 0")
-              dotlist$eta <- as.character(dotlist$eta)
             }
 
             sfmiscenv <- new.env(parent = emptyenv())
