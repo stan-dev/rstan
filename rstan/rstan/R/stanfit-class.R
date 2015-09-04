@@ -66,8 +66,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 }  
 
 setMethod("plot", signature(x = "stanfit", y = "missing"), 
-          function(x, pars, display_parallel = FALSE, ask = TRUE, 
-                   npars_per_page = 6, include = TRUE) {
+          function(x, ..., pars, include = TRUE, unconstrain = FALSE) {
             if (x@mode == 1L) {
               cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
                   "sampling is not conducted.\n", sep = '')
@@ -82,24 +81,13 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
               cat("Stan model '", x@model_name, "' does not contain samples after warmup.\n", sep = '')
               return(invisible(NULL))
             }
-
-            if (!include) pars <- setdiff(x@sim$pars_oi, pars)
-            pars <- if (missing(pars)) x@sim$pars_oi else check_pars_second(x@sim, pars) 
-            pars <- remove_empty_pars(pars, x@sim$dims_oi)
-            if (!exists("summary", envir = x@.MISC, inherits = FALSE))  
-              assign("summary", summary_sim(x@sim), envir = x@.MISC)
-            info <- list(model_name = x@model_name, model_date = x@date) 
-            npars <- length(pars) 
-            sidx <- seq.int(1, npars, npars_per_page)
-            eidx <- c(sidx[-1] - 1, npars)
-            stan_plot_inferences(x@sim, x@.MISC$summary, pars[sidx[1]:eidx[1]], info, display_parallel)
-            sidx_len <- length(sidx) 
-            if (sidx_len == 1)  return(invisible(NULL))
-            
-            ask_old <- devAskNewPage(ask = ask)
-            on.exit(devAskNewPage(ask = ask_old))
-            for (i in 2:sidx_len)
-              stan_plot_inferences(x@sim, x@.MISC$summary, pars[sidx[i]:eidx[i]], info, display_parallel)
+            args <- list(object = x, include = include, unconstrain = unconstrain, ...)
+            if (!missing(pars)) { 
+              if ("log-posterior" %in% pars)
+                pars[which(pars == "log-posterior")] <- "lp__"
+              args$pars <- pars
+            }
+            do.call("stan_plot", args)
           }) 
 
 setGeneric(name = "get_stancode",
@@ -649,16 +637,9 @@ setMethod("grad_log_prob", signature = "stanfit",
           }) 
 
 setMethod("traceplot", signature = "stanfit", 
-          function(object, pars, inc_warmup = TRUE, ask = FALSE, 
-                   nrow = 4, ncol = 2, window = NULL, include = TRUE, ...) { 
-            # Args:
-            #  nrow, defaults to 4
-            #  ncol, defaults to 2 
-            #  nrow and ncol are used to define mfrow for the whole plot area
-            #  when there are many parameters. 
-            #  window, for plotting only a window of the whole iterations
-            #  default to NULL for all iterations
-            #  include the elements of pars (FALSE -> exclude)
+          function(object, pars, include = TRUE, unconstrain = FALSE,
+                   inc_warmup = FALSE, nrow = NULL, ncol = NULL,
+                   ...) { 
 
             if (object@mode == 1L) {
               cat("Stan model '", object@model_name, "' is of mode 'test_grad';\n",
@@ -668,53 +649,15 @@ setMethod("traceplot", signature = "stanfit",
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
-
-            if(!include) pars <- setdiff(object@sim$pars_oi, pars)
-            pars <- if (missing(pars)) object@sim$pars_oi else check_pars_second(object@sim, pars) 
-            pars <- remove_empty_pars(pars, object@sim$dims_oi)
-            tidx <- pars_total_indexes(object@sim$pars_oi, 
-                                       object@sim$dims_oi, 
-                                       object@sim$fnames_oi, 
-                                       pars) 
-            tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
-            tidx <- unlist(tidx, use.names = FALSE)
-            mfrow_old <- par('mfrow')
-            on.exit(par(mfrow = mfrow_old))
-            par(mgp = c(1.5, 0.5, 0), mar = c(2.5, 2, 2, 1) + 0.1, tck = -0.02)
-            num_plots <- length(tidx) 
-            if (num_plots %in% 2:nrow) par(mfrow = c(num_plots, 1)) 
-            if (num_plots > nrow) par(mfrow = c(nrow, ncol)) 
-    
-            if (!is.null(window)) { 
-              window <- sort(window)
-              if (window[1] < 1) window[1] <- 1
-              if (window[1] > object@sim$iter[1])
-                stop("wrong specification of argument window", call. = FALSE)
-              if (is.na(window[2]) || window[2] > object@sim$iter[1])
-                window[2] <- object@sim$iter[1]
-            } else { 
-              window <- c(1, object@sim$iter[1]) 
+            args <- list(object = object, include = include, 
+                         unconstrain = unconstrain, inc_warmup=inc_warmup,
+                         nrow = nrow, ncol = ncol, ...)
+            if (!missing(pars)) { 
+              if ("log-posterior" %in% pars)
+                pars[which(pars == "log-posterior")] <- "lp__"
+              args$pars <- pars
             }
-            if ((object@sim$warmup2 == 0 || !inc_warmup) && window[1] <= object@sim$warmup[1]) {
-              window[1] <- object@sim$warmup[1] + 1
-            }
-            if (window[1] > window[2]) {
-              stop("the given window does not include sample")
-            } 
-            if (window[1] > object@sim$warmup[1]) inc_warmup <- FALSE
-            
-            par_traceplot(object@sim, tidx[1], object@sim$fnames_oi[tidx[1]], 
-                          inc_warmup = inc_warmup, window = window, ...)
-            if (num_plots > nrow * ncol && ask) {
-              ask_old <- devAskNewPage(ask = TRUE)
-              on.exit(devAskNewPage(ask = ask_old), add = TRUE)
-            }
-            if (num_plots > 1) { 
-              for (n in 2:num_plots)
-                par_traceplot(object@sim, tidx[n], object@sim$fnames_oi[tidx[n]], 
-                              inc_warmup = inc_warmup, window = window, ...)
-            }
-            invisible(NULL) 
+            do.call("stan_trace", args)
           })  
 
 

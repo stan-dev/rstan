@@ -13,8 +13,8 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
 Description: User-facing R functions are provided by this package to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the 'StanHeaders' package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo and (optionally penalized) maximum likelihood estimation via optimization. In both cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
 License: GPL (>=3)
 NeedsCompilation: yes
-Imports: stats4, inline, Rcpp (>= 0.11.0)
-Depends: R (>= 3.0.2), methods
+Imports: stats4, inline, Rcpp (>= 0.11.0), gridExtra (>= 2.0.0)
+Depends: R (>= 3.0.2), methods, ggplot2 (>= 1.0.0)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1)
 Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1), parallel, KernSmooth, RCurl, loo
 URL: http://mc-stan.org
