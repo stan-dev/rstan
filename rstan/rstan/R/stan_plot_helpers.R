@@ -84,11 +84,12 @@ is.stanfit <- function(x) inherits(x, "stanfit")
       pars[which(pars == "log-posterior")] <- "lp__"
   }
   if (!include) {
-    if (nopars)
-      stop("pars must be specified if include=FALSE.", call. = FALSE)
-    pars <- setdiff(sim$pars_oi, pars)
+    if (nopars) stop("pars must be specified if include=FALSE.", call. = FALSE)
+    else pars <- setdiff(sim$pars_oi, pars)
   }
-  pars <- if (nopars) sim$pars_oi else check_pars_second(sim, pars)
+  if (nopars) pars <- setdiff(sim$pars_oi, c("lp__", "log-posterior"))
+  else pars <- check_pars_second(sim, pars)
+  
   pars <- remove_empty_pars(pars, sim$dims_oi)
   if (unconstrain && "lp__" %in% pars) {
     if (length(pars) == 1L) stop("Can't unconstrain lp__", call. = FALSE)
@@ -151,9 +152,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     dat$parameter[lp] <- "log-posterior"
     fnames[which(fnames == "lp__")] <- "log-posterior"
   }
-  # if (is.stanreg(object))
   dat$parameter <- factor(dat$parameter, levels = fnames)
-
   list(samp = dat,
        nchains = nchains,
        nparams = length(tidx),
