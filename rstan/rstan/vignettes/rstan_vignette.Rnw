@@ -350,7 +350,7 @@ J <- 8
 y <- c(28,  8, -3,  7, -1,  1, 18, 12)
 sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
 library(rstan)
-fit1 <- stan(file="schools.stan", 
+fit1 <- stan(file="schools.stan", verbose=TRUE,
              # better to add explicitly include: data=schools_data, 
              iter=2000, chains=4, cores=1)
 @

@@ -548,7 +548,7 @@ setMethod("sampling", "stanmodel",
                 if (n_m > 0)
                   warning("There were ", n_m,
                           " transitions after warmup that exceeded the maximum treedepth for chain ",
-                          cid, call. = FALSE)
+                          cid, ". Increase max_treedepth.", call. = FALSE)
               }
               if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n",
                                               call. = FALSE, noBreaks. = TRUE)
