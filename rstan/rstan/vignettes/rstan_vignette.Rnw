@@ -160,7 +160,7 @@ In summary, the following are typical steps of using \Stan for Bayesian inferenc
 \begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
 \item Represent a statistical model by writing its log posterior
       density (up to an arbitrary normalizing constant that does not 
-      depends on the unknown parameters in the model) using the \Stan modeling language.
+      depend on the unknown parameters in the model) using the \Stan modeling language.
       We recommend a separate text file for this, although it can be done using a
       character string within \R.
 \item Translate the model coded in \Stan modeling language to \Cpp code using the \stanc
