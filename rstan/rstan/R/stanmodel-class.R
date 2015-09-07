@@ -539,7 +539,7 @@ setMethod("sampling", "stanmodel",
                 if (is.null(cid)) cid <- i
                 if (n_d > 0)
                   warning("There were ", n_d, " divergent transitions after warmup for chain ",
-                          cid, call. = FALSE)
+                          cid, ". Increasing adapt_delta may help.", call. = FALSE)
               }
               if ("treedepth__" %in% colnames(sp)) {
                 mtd <- args_list[[1]]$control$max_treedepth
