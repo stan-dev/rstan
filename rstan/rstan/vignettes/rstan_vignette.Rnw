@@ -752,7 +752,9 @@ ocode <- "
 sm <- stan_model(model_code = ocode)
 y2 <- rnorm(20)
 mean(y2)
-op <- optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)
+op <- ifelse(grepl('SunOS',Sys.info()['sysname']),
+  "This may not work on Solaris",
+  optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE))
 print(op)
 @
  
