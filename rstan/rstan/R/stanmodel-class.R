@@ -376,7 +376,15 @@ setMethod("sampling", "stanmodel",
                 sinkfile_html <- paste0(tfile, "_StanProgress.html")
                 create_progress_html_file(sinkfile_html, sinkfile)
                 cat("Refresh to see progress\n", file = sinkfile)
-                utils::browseURL(sinkfile_html)
+                if (identical(Sys.getenv("RSTUDIO"), "1")) {
+                  if (.Platform$OS.type == "windows") browser0 <- NULL
+                  else if (Sys.info()["sysname"] == "Darwin") {
+                    browser0 <- "/usr/bin/open"
+                  }
+                  utils::browseURL(paste0("file://", sinkfile_html), browser = browser0)
+                } else {
+                  utils::browseURL(paste0("file://", sinkfile_html))
+                }
               }
               else sinkfile <- ""
               cl <- parallel::makeCluster(min(cores, chains), 
