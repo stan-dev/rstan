@@ -378,8 +378,11 @@ setMethod("sampling", "stanmodel",
                 cat("Refresh to see progress\n", file = sinkfile)
                 if (identical(Sys.getenv("RSTUDIO"), "1")) {
                   if (!requireNamespace("rstudioapi"))
-                    stop("must install the rstudioapi package when using RStudio in parallel")
-                  rstudioapi::viewer(sinkfile, height = "maximize")
+                    stop("must install the rstudioapi package when using RStan in parallel via RStudio")
+                  v <- rstudioapi::getVersion()
+                  if (v >= "0.99.1001") rstudioapi::viewer(sinkfile, height = "maximize")
+                  else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
+                  else stop("RStudio version ", v, " is too outdated for RStan to use in parallel")
                 } else {
                   utils::browseURL(paste0("file://", sinkfile_html))
                 }
