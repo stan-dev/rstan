@@ -379,7 +379,7 @@ setMethod("sampling", "stanmodel",
                 if (identical(Sys.getenv("RSTUDIO"), "1")) {
                   if (!requireNamespace("rstudioapi"))
                     stop("must install the rstudioapi package when using RStudio in parallel")
-                  rstudioapi::viewer(sinkfile_html, height = "maximize")
+                  rstudioapi::viewer(sinkfile, height = "maximize")
                 } else {
                   utils::browseURL(paste0("file://", sinkfile_html))
                 }
