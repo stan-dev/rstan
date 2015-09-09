@@ -377,11 +377,9 @@ setMethod("sampling", "stanmodel",
                 create_progress_html_file(sinkfile_html, sinkfile)
                 cat("Refresh to see progress\n", file = sinkfile)
                 if (identical(Sys.getenv("RSTUDIO"), "1")) {
-                  if (.Platform$OS.type == "windows") browser0 <- NULL
-                  else if (Sys.info()["sysname"] == "Darwin") {
-                    browser0 <- "/usr/bin/open"
-                  }
-                  utils::browseURL(paste0("file://", sinkfile_html), browser = browser0)
+                  if (!requireNamespace("rstudioapi"))
+                    stop("must install the rstudioapi package when using RStudio in parallel")
+                  rstudioapi::viewer(sinkfile_html, height = "maximize")
                 } else {
                   utils::browseURL(paste0("file://", sinkfile_html))
                 }

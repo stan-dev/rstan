@@ -16,5 +16,5 @@ NeedsCompilation: yes
 Imports: stats4, inline, Rcpp (>= 0.11.0), gridExtra (>= 2.0.0)
 Depends: R (>= 3.0.2), methods, ggplot2 (>= 1.0.0)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1), parallel, KernSmooth, RCurl, loo
-URL: http://mc-stan.org
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1), parallel, KernSmooth, RCurl, loo, rstudioapi
+URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
