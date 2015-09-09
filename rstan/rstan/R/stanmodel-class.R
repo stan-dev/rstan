@@ -395,7 +395,7 @@ setMethod("sampling", "stanmodel",
                                        fields = "Imports")[1,]
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
-              dependencies <- c("rstan", dependencies)
+              dependencies <- c("Rcpp", "rstan", dependencies)
               .paths <- unique(sapply(dependencies, FUN = function(d) {
                 sub(paste0("/", d, "$"), "", system.file(package = d))
               }))
@@ -531,7 +531,7 @@ setMethod("sampling", "stanmodel",
                 if (is.null(cid)) cid <- i
                 if (n_d > 0)
                   warning("There were ", n_d, " divergent transitions after warmup for chain ",
-                          cid, call. = FALSE)
+                          cid, ". Increasing adapt_delta may help.", call. = FALSE)
               }
               if ("treedepth__" %in% colnames(sp)) {
                 mtd <- args_list[[1]]$control$max_treedepth
@@ -540,7 +540,7 @@ setMethod("sampling", "stanmodel",
                 if (n_m > 0)
                   warning("There were ", n_m,
                           " transitions after warmup that exceeded the maximum treedepth for chain ",
-                          cid, call. = FALSE)
+                          cid, ". Increase max_treedepth.", call. = FALSE)
               }
               if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n",
                                               call. = FALSE, noBreaks. = TRUE)

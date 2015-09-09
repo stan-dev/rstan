@@ -160,7 +160,7 @@ In summary, the following are typical steps of using \Stan for Bayesian inferenc
 \begin{enumerate}[a.]\addtolength{\itemsep}{-0.6\baselineskip}
 \item Represent a statistical model by writing its log posterior
       density (up to an arbitrary normalizing constant that does not 
-      depends on the unknown parameters in the model) using the \Stan modeling language.
+      depend on the unknown parameters in the model) using the \Stan modeling language.
       We recommend a separate text file for this, although it can be done using a
       character string within \R.
 \item Translate the model coded in \Stan modeling language to \Cpp code using the \stanc
@@ -350,7 +350,7 @@ J <- 8
 y <- c(28,  8, -3,  7, -1,  1, 18, 12)
 sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
 library(rstan)
-fit1 <- stan(file="schools.stan", 
+fit1 <- stan(file="schools.stan",
              # better to add explicitly include: data=schools_data, 
              iter=2000, chains=4, cores=1)
 @
@@ -752,7 +752,9 @@ ocode <- "
 sm <- stan_model(model_code = ocode)
 y2 <- rnorm(20)
 mean(y2)
-op <- optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)
+op <- ifelse(grepl('SunOS',Sys.info()['sysname']),
+  "This may not work on Solaris",
+  optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE))
 print(op)
 @
  
