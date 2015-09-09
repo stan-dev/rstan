@@ -403,7 +403,7 @@ setMethod("sampling", "stanmodel",
                                        fields = "Imports")[1,]
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
-              dependencies <- c("rstan", dependencies)
+              dependencies <- c("Rcpp", "rstan", dependencies)
               .paths <- unique(sapply(dependencies, FUN = function(d) {
                 sub(paste0("/", d, "$"), "", system.file(package = d))
               }))
