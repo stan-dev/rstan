@@ -307,7 +307,9 @@ setMethod("optimizing", "stanmodel",
           }) 
 
 setMethod("sampling", "stanmodel",
-          function(object, data = list(), pars = NA, chains = 4, iter = 2000,
+          function(object, data = list(), pars = NA, 
+                   chains = rstan_options("chains"), 
+                   iter = rstan_options("iter"),
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
                    init = "random", check_data = TRUE, 

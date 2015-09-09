@@ -76,6 +76,8 @@ init_rstan_opt_env <- function(e) {
   assign('boost_lib2', ya_boost, e)
 
   assign('auto_write', FALSE, e)
+  assign("iter", 2000, e)
+  assign("chains", 4, e)
   
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
