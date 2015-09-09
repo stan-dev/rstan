@@ -48,10 +48,13 @@
     Conversely, if \code{include = FALSE}, samples for all parameters except those
     given in \code{pars} are stored in the fitted results.}
 
-  \item{chains}{A positive integer specifying number of chains; defaults to 4.} 
- 
-  \item{iter}{A positive integer specifying how many iterations for each chain
-    (including warmup). The default is 2000.}
+  \item{chains}{A positive integer specifying the number of chains. 
+    The default is 4 but can be changed on a per-session basis 
+    using \code{\link{rstan_options}}.} 
+    
+  \item{iter}{A positive integer specifying the number of iterations for each 
+    chain (including warmup). The default is 2000 but can be changed on 
+    a per-session basis using \code{\link{rstan_options}}.}
 
   \item{warmup}{A positive integer specifying the number of warmup (aka burnin)
     iterations.  If step-size adaptation is on (which it is by default), this 

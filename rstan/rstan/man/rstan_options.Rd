@@ -19,6 +19,9 @@ rstan_options(...)
 %%  ~~ If necessary, more details than the description above ~~
   The available options are:
   \enumerate{
+    \item \code{iter}: The number of iterations for each chain (including warmup) 
+    for MCMC. The default is 2000.
+    \item \code{chains}: The number of chains for MCMC. The default is 4.
     \item \code{plot_rhat_breaks}: The cut off points for Rhat for which we
       would indicate using a different color. This is a numeric vector,
       defaulting to \code{c(1.1, 1.2, 1.5, 2)}.

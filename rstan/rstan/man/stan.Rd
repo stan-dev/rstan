@@ -53,11 +53,14 @@ stan(file, model_name = "anon_model", model_code = "",
     samples for parameters given in \code{pars} are stored in the fitted results.
     Conversely, if \code{include = FALSE}, samples for all parameters except those
     given in \code{pars} are stored in the fitted results.}
-  \item{chains}{A positive integer specifying number of chains; defaults to 4.} 
-  \item{iter}{A positive integer specifying how many iterations for each 
-    chain (including warmup). The default is 2000.}
+  \item{chains}{A positive integer specifying the number of chains. 
+    The default is 4 but can be changed on a per-session basis 
+    using \code{\link{rstan_options}}.} 
+  \item{iter}{A positive integer specifying the number of iterations for each 
+    chain (including warmup). The default is 2000 but can be changed on 
+    a per-session basis using \code{\link{rstan_options}}.}
   \item{warmup}{A positive integer specifying number of warmup (aka burnin)
-     iterations.  This also specifies the number of iterations used for stepsize
+     iterations. This also specifies the number of iterations used for stepsize
      adaptation, so warmup samples should not be used for inference. The number
      of warmup should not be larger than \code{iter} and the default is \code{iter/2}.}
   \item{thin}{A positive integer specifying the period for saving sample; defaults to 1.} 
