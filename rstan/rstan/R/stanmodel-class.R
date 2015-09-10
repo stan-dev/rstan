@@ -520,13 +520,15 @@ setMethod("sampling", "stanmodel",
                 report <- grep("^Informational", report, value = TRUE, invert = TRUE)
                 report <- grep("^[[:digit:]]+", report, value = TRUE, invert = TRUE)
                 report <- strtrim(report, width = 95)
-                tab <- sort(table(report), decreasing = TRUE)
-                message("The following numerical problems occured ",
-                        "the indicated number of times on chain ", i)
-                mat <- as.matrix(tab)
-                colnames(mat) <- "count"
-                print(mat)
-                message(end)
+                if (length(report) > 0) {
+                  tab <- sort(table(report), decreasing = TRUE)
+                  message("The following numerical problems occured ",
+                          "the indicated number of times on chain ", i)
+                  mat <- as.matrix(tab)
+                  colnames(mat) <- "count"
+                  print(mat)
+                  message(end)
+                }
               }
               sp <- attr(samples_i, "sampler_params")
               if (warmup2 > 0) sp <- sapply(sp, FUN = function(x) x[-(1:warmup2)])
