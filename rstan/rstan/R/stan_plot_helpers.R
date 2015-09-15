@@ -93,8 +93,8 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     }
   }
   if (nopars) {
-    if (is.stanreg(object))
-      pars <- names(coef(object))
+    if (is.stanreg(object)) 
+      pars <- names(object$coefficients)
     else 
       pars <- setdiff(sim$pars_oi, c("lp__", "log-posterior"))
   }
