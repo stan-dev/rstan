@@ -45,7 +45,8 @@ export(
   stan_mcse,
   rstan_gg_options,
   rstan_ggtheme_options,
-  quietgg
+  quietgg,
+  extract_sparse_parts
 # get_rstan.options
 )
 
