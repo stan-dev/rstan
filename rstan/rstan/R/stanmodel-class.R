@@ -413,7 +413,7 @@ setMethod("sampling", "stanmodel",
                                     suppressPackageStartupMessages(require(rstan, quietly = TRUE)))
               callFun <- function(i) {
                 .dotlist$chain_id <- i
-                if(is.list(.dotlist$init)) dotlist$init <- dotlist$init[i]
+                if(is.list(.dotlist$init)) .dotlist$init <- .dotlist$init[i]
                 if(is.character(.dotlist$sample_file)) {
                   .dotlist$sample_file <- paste0(.dotlist$sample_file, i)
                 }
