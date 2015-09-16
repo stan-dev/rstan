@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.7.0-3
-Date: 2015-08-15
+Version: 2.8.0
+Date: 2015-09-16
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -15,6 +15,6 @@ License: GPL (>=3)
 NeedsCompilation: yes
 Imports: stats4, inline, gridExtra (>= 2.0.0)
 Depends: R (>= 3.0.2), Rcpp (>= 0.11.0), methods, ggplot2 (>= 1.0.0)
-LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.7.1), parallel, KernSmooth, RCurl, loo
+LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.8.0)
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.8.0), parallel, KernSmooth, RCurl, loo
 URL: http://mc-stan.org

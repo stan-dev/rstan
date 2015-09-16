@@ -2,8 +2,8 @@ useDynLib(rstan, .registration = TRUE)
 # exportPattern("^[[:alpha:]]+")
 
 importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
-importFrom("grDevices", "devAskNewPage", "rgb")
-importFrom("stats", "acf", "median", "optimHess", "quantile", "sd", "var")
+importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
+importFrom("stats", "acf", "aggregate", "density", "median", "optimHess", "pacf", "quantile", "reshape", "sd", "var")
 importFrom("utils", "apropos", "assignInMyNamespace", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
 
 importFrom("stats4", summary, plot)
