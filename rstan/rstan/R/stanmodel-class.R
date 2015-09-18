@@ -363,37 +363,33 @@ setMethod("sampling", "stanmodel",
             m_pars = sampler$param_names()
             p_dims = sampler$param_dims()
             dots <- list(...)
-            mode <- if (!is.null(dots$test_grad) && dots$test_grad) "TESTING GRADIENT" else "SAMPLING"
+            mode <- if (!is.null(dots$test_grad) && dots$test_grad) 
+              "TESTING GRADIENT" else "SAMPLING"
             
             if (cores > 1 && mode == "SAMPLING" && chains > 1) {
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
               .dotlist$cores <- 1L
-              if(open_progress && 
-                 !identical(browser <- getOption("browser"), "false")) {
-                sinkfile <- paste0(tempfile(), "_StanProgress.txt")
+              tfile <- tempfile()
+              sinkfile <- paste0(tfile, "_StanProgress.txt")
+              if (open_progress && 
+                  !identical(browser <- getOption("browser"), "false")) {
+                if (identical(Sys.getenv("RSTUDIO"), "1"))
+                  stop("you cannot specify 'open_progress = TRUE' when using RStudio")
+                sinkfile_html <- paste0(tfile, "_StanProgress.html")
+                create_progress_html_file(sinkfile_html, sinkfile)
                 cat("Refresh to see progress\n", file = sinkfile)
-                if(.Platform$OS.type == "windows" && is.null(browser)) {
-                  browser <- file.path(Sys.getenv("ProgramFiles(x86)"), 
-                                       "Internet Explorer", "iexplore.exe")
-                  if(!file.exists(browser)) {
-                    browser <- file.path(Sys.getenv("ProgramFiles"), 
-                                         "Internet Explorer", "iexplore.exe")
-                    if(!file.exists(browser)) {
-                      warning("Cannot find Internet Explorer; consider setting 'options(browser = )' explicitly")
-                      browser <- NULL
-                    }
-                  }
-                }
-                else if(Sys.info()["sysname"] == "Darwin" && grepl("open$", browser)) {
-                  browser <- "/Applications/Safari.app/Contents/MacOS/Safari"
-                  if(!file.exists(browser)) {
-                    warning("Cannot find Safari; consider setting 'options(browser = )' explicitly")
-                    browser <- "/usr/bin/open"
-                  }
-                }
-                utils::browseURL(sinkfile, browser = browser)
+                utils::browseURL(paste0("file://", sinkfile_html))
+              }
+              else if (identical(Sys.getenv("RSTUDIO"), "1") && 
+                       .Platform$OS.type == "windows") {
+                if (!requireNamespace("rstudioapi"))
+                  stop("must install the rstudioapi package when using RStan in parallel via RStudio")
+                v <- rstudioapi::getVersion()
+                if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
+                else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
+                else stop("RStudio version ", v, " is too outdated for RStan to use in parallel")
               }
               else sinkfile <- ""
               cl <- parallel::makeCluster(min(cores, chains), 

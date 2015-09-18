@@ -1574,3 +1574,13 @@ get_stan_param_names <- function(object) {
   stopifnot(length(params) > 0)
   return(params)
 }
+
+create_progress_html_file <- function(htmlfname, textfname) {
+  # Args:
+  #   htmlfname: the HTML file name
+  #   textfname: the text file name
+  template_file <- file.path(system.file('misc', package = 'rstan'), 'stan_progress.html')
+  src <- paste(readLines(template_file), collapse = '\n')
+  src2 <- sub("%filename%", textfname, sub("%title%", textfname, src, fixed = TRUE), fixed = TRUE) 
+  cat(src2, file = htmlfname)
+}
