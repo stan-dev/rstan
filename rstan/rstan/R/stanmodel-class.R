@@ -497,9 +497,11 @@ setMethod("sampling", "stanmodel",
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
-              sink(file(messages, open = "wt"), type = "message")
+              if (.Platform$OS.type != "windows" || cores == 1)
+                sink(file(messages, open = "wt"), type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
-              sink(type = "message")
+              if (.Platform$OS.type != "windows" || cores == 1)
+                sink(type = "message")
               report <- scan(file = messages, what = character(),
                              sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
@@ -515,7 +517,7 @@ setMethod("sampling", "stanmodel",
                 report <- gsub("stan::math::", "", report, fixed = TRUE)
                 report <- grep("^Informational", report, value = TRUE, invert = TRUE)
                 report <- grep("^[[:digit:]]+", report, value = TRUE, invert = TRUE)
-                report <- strtrim(report, width = 95)
+                report <- strtrim(report, width = 100)
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
                   message("The following numerical problems occured ",
