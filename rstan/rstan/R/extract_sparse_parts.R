@@ -20,7 +20,7 @@ extract_sparse_parts <- function(A, type=c("CSR", "CSC")) {
   if (class(A) == 'matrix') {
     A <- Matrix::Matrix(A, sparse=TRUE)
   }
-  if (type == 'CSC') {
+  if (type == 'CSR') {
     A <- Matrix::t(A)
   }
   if (class(A) == 'dgCMatrix') {
@@ -28,6 +28,9 @@ extract_sparse_parts <- function(A, type=c("CSR", "CSC")) {
   } else {
     stop("Argument 'x' must either be of class 'matrix' or 'dgCMatrix'.")
   }
-  o[['type']] <- type
   return(o)
 }
+
+
+
+
