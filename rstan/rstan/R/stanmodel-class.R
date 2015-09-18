@@ -429,6 +429,7 @@ setMethod("sampling", "stanmodel",
               if(all(valid)) {
                 nfits <- sflist2stanfit(nfits)
                 nfits@.MISC <- sfmiscenv
+                throw_sampler_warnings(nfits)
                 return(nfits)
               }
               else {
@@ -438,6 +439,7 @@ setMethod("sampling", "stanmodel",
                 if(any(valid)) {
                   nfits <- sflist2stanfit(nfits[valid])
                   nfits@.MISC <- sfmiscenv
+                  throw_sampler_warnings(nfits)
                   return(nfits)
                 }
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, 
@@ -497,16 +499,16 @@ setMethod("sampling", "stanmodel",
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
-              if (.Platform$OS.type != "windows" || cores == 1)
-                sink(file(messages, open = "wt"), type = "message")
+              sink(file(messages, open = "wt"), type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
-              if (.Platform$OS.type != "windows" || cores == 1)
-                sink(type = "message")
+              sink(NULL, type = "message")
               report <- scan(file = messages, what = character(),
                              sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 print(tail(report, n = 10))
-                message("error occurred during calling the sampler; sampling not done") 
+                msg <- "error occurred during calling the sampler; sampling not done"
+                if (.Platform$OS.type == "windows") print(msg)
+                else message(msg)
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
                                                    m_pars, p_dims, 2L))) 
               }
@@ -520,38 +522,17 @@ setMethod("sampling", "stanmodel",
                 report <- strtrim(report, width = 100)
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
-                  message("The following numerical problems occured ",
-                          "the indicated number of times on chain ", i)
+                  msg <- paste("The following numerical problems occured",
+                               "the indicated number of times on chain", i)
+                  if (.Platform$OS.type == "windows") print(msg)
+                  else message(msg)
                   mat <- as.matrix(tab)
                   colnames(mat) <- "count"
                   print(mat)
-                  message(end)
+                  if (.Platform$OS.type == "windows") print(end)
+                  else message(end)
                 }
               }
-              sp <- attr(samples_i, "sampler_params")
-              if (warmup2 > 0) sp <- sapply(sp, FUN = function(x) x[-(1:warmup2)])
-              else sp <- simplify2array(sp)
-              n_d <- 0 
-              n_m <- 0
-              if ("n_divergent__" %in% colnames(sp)) {
-                n_d <- sum(sp[, "n_divergent__"])
-                cid <- args_list[[i]]$chain_id
-                if (is.null(cid)) cid <- i
-                if (n_d > 0)
-                  warning("There were ", n_d, " divergent transitions after warmup for chain ",
-                          cid, ". Increasing adapt_delta may help.", call. = FALSE)
-              }
-              if ("treedepth__" %in% colnames(sp)) {
-                mtd <- args_list[[1]]$control$max_treedepth
-                if (is.null(mtd)) mtd <- 10L
-                n_m <- sum(sp[,"treedepth__"] > mtd)
-                if (n_m > 0)
-                  warning("There were ", n_m,
-                          " transitions after warmup that exceeded the maximum treedepth for chain ",
-                          cid, ". Increase max_treedepth.", call. = FALSE)
-              }
-              if (n_d > 0 || n_m > 0) warning("It is necessary to examine the pairs() plot\n",
-                                              call. = FALSE, noBreaks. = TRUE)
               samples[[i]] <- samples_i
             }
 
@@ -602,7 +583,7 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv)
-            
-             return(nfit)
+            if (interactive() && cores <= 1) throw_sampler_warnings(nfit)
+            return(nfit)
           }) 
 
