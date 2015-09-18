@@ -15,20 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-extract_sparse_parts <- function(A, type=c("CSR", "CSC")) {
-  type <- match.arg(type)
-  if (class(A) == 'matrix') {
+extract_sparse_parts <- function(A) {
+  if (class(A) == 'matrix') 
     A <- Matrix::Matrix(A, sparse=TRUE)
-  }
-  if (type == 'CSR') {
-    A <- Matrix::t(A)
-  }
-  if (class(A) == 'dgCMatrix') {
-    o <- .Call("extract_sparse_components", A)
-  } else {
+  A <- Matrix::t(A)
+  if (class(A) == 'dgCMatrix') 
+    return(.Call("extract_sparse_components", A))
+  else 
     stop("Argument 'x' must either be of class 'matrix' or 'dgCMatrix'.")
-  }
-  return(o)
 }
 
 
