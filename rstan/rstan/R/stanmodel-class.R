@@ -493,9 +493,10 @@ setMethod("sampling", "stanmodel",
             samples <- vector("list", chains)
 
             for (i in 1:chains) {
-              if (is.null(dots$refresh) || dots$refresh > 0) 
+              if (is.null(dots$refresh) || dots$refresh > 0)
+                cid <- args_list[[i]]$chain_id
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
-                    "' NOW (CHAIN ", args_list[[i]]$chain_id, ").\n", sep = '')
+                    "' NOW (CHAIN ", cid, ").\n", sep = '')
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
@@ -523,7 +524,7 @@ setMethod("sampling", "stanmodel",
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
                   msg <- paste("The following numerical problems occured",
-                               "the indicated number of times on chain", i)
+                               "the indicated number of times on chain", cid)
                   if (.Platform$OS.type == "windows") print(msg)
                   else message(msg)
                   mat <- as.matrix(tab)
