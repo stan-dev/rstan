@@ -38,15 +38,21 @@
 \arguments{
   \item{object}{A stanfit or stanreg object.}
   
-  \item{pars}{A character vector of parameter names. Defaults to all parameters 
-  or the first 10 parameters (if there are more than 10). For \code{stan_scat}
-  only, \code{pars} should contain exactly two parameter names.}
+  \item{pars}{Optional character vector of parameter names. 
+    If \code{object} is a stanfit object, the default is to show
+    all user-defined parameters or the first 10 (if there are more 
+    than 10). If \code{object} is a stanreg object, the default is 
+    to show all (or the first 10) regression coefficients 
+    (including the intercept). For \code{stan_scat} only, 
+    \code{pars} should not be missing and should contain exactly 
+    two parameter names.}
   
   \item{include}{Should the parameters given by the \code{pars} argument be
     included (the default) or excluded from the plot?}
   
   \item{unconstrain}{Should parameters be plotted on the unconstrained space?
-    Defaults to \code{FALSE}.}
+    Defaults to \code{FALSE}. Only available if \code{object} is a 
+    stanfit object.}
   
   \item{inc_warmup}{Should warmup iterations be included? Defaults to
     \code{FALSE}.}

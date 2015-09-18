@@ -1552,7 +1552,11 @@ parse_data <- function(cppcode, e = parent.frame()) {
   tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
   # get them from the calling environment
   objects <- setdiff(objects, tdata)
-  mget(objects, envir = e, inherits = TRUE,
+  modes <- rep("any", length(objects))
+  names(modes) <- objects
+  if ("T" %in% objects) modes["T"] <- "numeric"
+  if ("F" %in% objects) modes["F"] <- "numeric"
+  mget(objects, envir = e, inherits = TRUE, mode = modes,
        ifnotfound = vector("list", length(objects)))
 }
 

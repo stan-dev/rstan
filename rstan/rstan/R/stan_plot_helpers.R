@@ -85,9 +85,19 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   }
   if (!include) {
     if (nopars) stop("pars must be specified if include=FALSE.", call. = FALSE)
-    else pars <- setdiff(sim$pars_oi, pars)
+    else {
+      if (is.stanreg(object)) 
+        pars <- setdiff(sim$fnames_oi, pars)
+      else 
+        pars <- setdiff(sim$pars_oi, pars)
+    }
   }
-  if (nopars) pars <- setdiff(sim$pars_oi, c("lp__", "log-posterior"))
+  if (nopars) {
+    if (is.stanreg(object)) 
+      pars <- names(object$coefficients)
+    else 
+      pars <- setdiff(sim$pars_oi, c("lp__", "log-posterior"))
+  }
   else pars <- check_pars_second(sim, pars)
   
   pars <- remove_empty_pars(pars, sim$dims_oi)
