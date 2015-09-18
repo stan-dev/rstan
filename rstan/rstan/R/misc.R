@@ -1584,3 +1584,33 @@ create_progress_html_file <- function(htmlfname, textfname) {
   src2 <- sub("%filename%", textfname, sub("%title%", textfname, src, fixed = TRUE), fixed = TRUE) 
   cat(src2, file = htmlfname)
 }
+
+throw_sampler_warnings <- function(object) {
+  if (!is(object, "stanfit"))
+    stop("'object' must be of class 'stanfit'")
+  sp <- get_sampler_params(object, inc_warmup = FALSE)
+  n_d <- sum(sapply(sp, FUN = function(x) {
+    if ("n_divergent__" %in% colnames(x)) return(sum(x[,"n_divergent__"]))
+    else return(0)
+  }))
+  if (n_d > 0)
+    warning("There were ", n_d, " divergent transitions after warmup.",
+            " Increasing adapt_delta may help.", call. = FALSE)
+  max_td <- object@stan_args[[1]]$control
+  if (is.null(max_td)) max_td <- 10
+  else {
+    max_td <- max_td$max_treedepth
+    if (is.null(max_td)) max_td <- 10
+  }
+  n_m <- sum(sapply(sp, FUN = function(x) {
+    if ("treedepth__" %in% colnames(x)) return(sum(x[,"treedepth__"] > max_td))
+    else return(0)
+  }))
+  if (n_m > 0)
+    warning("There were ", n_m,
+            " transitions after warmup that exceeded the maximum treedepth.",
+            " Increase max_treedepth.", call. = FALSE)
+  if (n_d > 0 || n_m > 0) warning("Examine the pairs() plot to diagnose sampling problems\n",
+                                  call. = FALSE, noBreaks. = TRUE)
+  return(invisible(NULL))
+}
