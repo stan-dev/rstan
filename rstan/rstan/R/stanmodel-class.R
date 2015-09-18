@@ -373,13 +373,13 @@ setMethod("sampling", "stanmodel",
               .dotlist$cores <- 1L
               tfile <- tempfile()
               sinkfile <- paste0(tfile, "_StanProgress.txt")
+              cat("Click the Refresh button to see progress of the chains\n", file = sinkfile)
               if (open_progress && 
                   !identical(browser <- getOption("browser"), "false")) {
                 if (identical(Sys.getenv("RSTUDIO"), "1"))
                   stop("you cannot specify 'open_progress = TRUE' when using RStudio")
                 sinkfile_html <- paste0(tfile, "_StanProgress.html")
                 create_progress_html_file(sinkfile_html, sinkfile)
-                cat("Refresh to see progress\n", file = sinkfile)
                 utils::browseURL(paste0("file://", sinkfile_html))
               }
               else if (identical(Sys.getenv("RSTUDIO"), "1") && 
