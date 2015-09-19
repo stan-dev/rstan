@@ -1,3 +1,14 @@
+Sat Sep 19 2015 (2.8.0)
+1. Bug fixes
+  * lots, many of which were reported on stan-users or the rstan GitHub repository
+2. Changes
+  * informational messages are consolidated now
+  * progress is put into the Viewer on RStudio for Windows only
+  * open_progress = TRUE no longer hardcodes particular webbrowsers
+  * extract_sparse_parts() function facilitates using sparse matrix multiplication by a vector
+  * switch to ggplot2-based plots of stanfit objects
+  * added a log argument to pairs.stanfit()
+
 Thu Jul 16 2015 (2.7.0)
 1. Bug fixes
   * lots
