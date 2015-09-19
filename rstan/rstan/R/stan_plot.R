@@ -212,7 +212,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   color_by_rhat <- FALSE # FIXME 
   dots <- list(...)
   defs <- list(point_est = "mean", show_density = FALSE,
-               show_outer_line = TRUE, ci_level = 0.5, outer_level = 0.95,
+               show_outer_line = TRUE, ci_level = 0.8, outer_level = 0.95,
                fill_color = NULL, outline_color = NULL, est_color = NULL)
   args <- names(defs)
   dotenv <- list()
