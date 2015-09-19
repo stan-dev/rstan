@@ -41,6 +41,8 @@ SEXP stan_prob_autocovariance(SEXP v);
 SEXP is_Null_NS(SEXP ns);
 SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name);
 SEXP CPP_stan_version();
+SEXP extract_sparse_components(SEXP A);
+
 #ifdef __cplusplus
 }
 #endif
@@ -58,6 +60,7 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(is_Null_NS, 1),
   CALLDEF(CPP_stanc280, 2),
   CALLDEF(CPP_stan_version, 0),
+  CALLDEF(extract_sparse_components, 1),
   {NULL, NULL, 0}
 };
 

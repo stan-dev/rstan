@@ -5,6 +5,7 @@ Version: 2.8.0
 Date: 2015-09-16
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
+             person("Krzysztof", "Sakrejda", role = c("ctb")),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
              person("Joel", "de Guzman", role = "cph", comment = "Boost"),
              person("Eric", "Niebler", role = "cph",   comment = "Boost"),
@@ -16,5 +17,6 @@ NeedsCompilation: yes
 Imports: stats4, inline, gridExtra (>= 2.0.0)
 Depends: R (>= 3.0.2), Rcpp (>= 0.11.0), methods, ggplot2 (>= 1.0.0)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.8.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.8.0), parallel, KernSmooth, RCurl, loo, rstudioapi
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.8.0), parallel, KernSmooth, RCurl, loo, rstudioapi, Matrix
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
+
