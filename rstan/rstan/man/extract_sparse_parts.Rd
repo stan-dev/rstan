@@ -47,5 +47,5 @@ extract_sparse_parts(A, type = c("CSR", "CSC"))
     c( 0L,  0L,  0L, 52L),
     c(81L,  0L, 95L, 33L)
   )
-str(extract_sparse_parts(A, type = "CSC"))
+str(extract_sparse_parts(A))
 }
