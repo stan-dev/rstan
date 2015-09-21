@@ -81,5 +81,6 @@ function(model = character(0),
   if(is.null(dots$object)) dots$object <- stan_model(MODELS, model_name = model)
   dots$data <- STAN_ENV
   if(method == "sampling") return(do.call(sampling, args = dots))
-  else return(do.call(optimizing, args = dots))
+  else if (method == "optimizing") return(do.call(optimizing, args = dots))
+  # else return(do.call(vb, args = dots))
 }

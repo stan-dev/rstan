@@ -2,8 +2,8 @@ useDynLib(rstan, .registration = TRUE)
 # exportPattern("^[[:alpha:]]+")
 
 importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
-importFrom("grDevices", "devAskNewPage", "rgb")
-importFrom("stats", "acf", "median", "optimHess", "quantile", "sd", "var")
+importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
+importFrom("stats", "acf", "aggregate", "density", "median", "optimHess", "pacf", "quantile", "reshape", "sd", "var")
 importFrom("utils", "apropos", "assignInMyNamespace", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
 
 importFrom("stats4", summary, plot)
@@ -11,6 +11,9 @@ importFrom("inline", cxxfunction, getDynLib, getPlugin)
 #importFrom("Rcpp", cpp_object_initializer)
 import("methods")
 import(Rcpp)
+
+importFrom("gridExtra","arrangeGrob","grid.arrange")
+import(ggplot2)
 
 export(
   stan_model,
@@ -29,7 +32,21 @@ export(
   rstan_options,
   As.mcmc.list,
   set_cppo,
-  cpp_object_initializer
+  stan_plot, 
+  stan_trace, 
+  stan_hist, 
+  stan_dens, 
+  stan_scat,
+  stan_ac, 
+  stan_diag,
+  stan_par,
+  stan_rhat,
+  stan_ess,
+  stan_mcse,
+  rstan_gg_options,
+  rstan_ggtheme_options,
+  quietgg,
+  extract_sparse_parts
 # get_rstan.options
 )
 
@@ -39,7 +56,7 @@ exportClasses(
 exportMethods(
 #   print, plot, 
 #   extract, 
-  optimizing, vb,
+  optimizing, #vb,
   get_cppcode, get_cxxflags, # for stanmodel 
   show, sampling, summary, extract,
   traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,

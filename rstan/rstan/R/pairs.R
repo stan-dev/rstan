@@ -46,12 +46,12 @@ pairs.stanfit <-
     n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
                             nrow = sims * chains, ncol = dim(arr)[3])
     max_td <- x@stan_args[[1]]$control
-    if (is.null(max_td)) max_td <- 11
+    if (is.null(max_td)) max_td <- 10
     else {
       max_td <- max_td$max_treedepth
-      if (is.null(max_td)) max_td <- 11
+      if (is.null(max_td)) max_td <- 10
     }
-    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] == max_td)), 
+    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] > max_td)), 
                     nrow = sims * chains, ncol = dim(arr)[3])
     
     if(is.list(condition)) {

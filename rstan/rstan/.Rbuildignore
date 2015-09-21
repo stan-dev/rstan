@@ -21,3 +21,5 @@ Rbuildignore.*$
 .*\.out$
 .*\.backup$
 
+^.*\.Rproj$
+^\.Rproj\.user$
