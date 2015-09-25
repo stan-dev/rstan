@@ -493,10 +493,11 @@ setMethod("sampling", "stanmodel",
             samples <- vector("list", chains)
 
             for (i in 1:chains) {
-              if (is.null(dots$refresh) || dots$refresh > 0)
-                cid <- args_list[[i]]$chain_id
+              cid <- args_list[[i]]$chain_id
+              if (is.null(dots$refresh) || dots$refresh > 0) {
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", cid, ").\n", sep = '')
+              }
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
