@@ -246,5 +246,5 @@ stan <- function(file, model_name = "anon_model",
            diagnostic_file = diagnostic_file,
            verbose = verbose, algorithm = match.arg(algorithm), 
            control = control, check_unknown_args = FALSE, 
-           cores = cores, open_progress = open_progress, ...)
+           cores = cores, open_progress = open_progress, include = include, ...)
 } 

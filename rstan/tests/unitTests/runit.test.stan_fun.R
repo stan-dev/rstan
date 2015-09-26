@@ -30,6 +30,7 @@ test_stan_fun_args <- function() {
   model_code <- "
     parameters { 
       real y[2];
+      real alpha;
     } 
     transformed parameters {
       real y2[2, 2];
@@ -58,6 +59,16 @@ test_stan_fun_args <- function() {
   checkEquals(attr(fit3@sim$samples[[1]],"args")$control$adapt_delta, 0.8)
   checkEquals(attr(fit4@sim$samples[[1]],"args")$control$adapt_gamma, 0.7)
   checkEquals(attr(fit5@sim$samples[[1]],"inits")[1:2], y_ii)
+
+  fit6 <- stan(fit = fit, pars = "y", chains = 1, iter = 100)
+  checkEquals(fit6@sim$pars_oi, c("y", "lp__"))
+
+  fit6 <- stan(fit = fit, pars = c("y", "y2"), include = FALSE, chains = 1, iter = 100)
+  checkEquals(fit6@sim$pars_oi, c("alpha", "lp__"))
+
+  # just test if we can specify refresh
+  fit7 <- stan(fit = fit, refresh = 10, chains = 1, iter = 100)
+  fit8 <- stan(fit = fit, refresh = -1)
 } 
 
 .tearDown <- function() { 
