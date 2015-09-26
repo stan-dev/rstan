@@ -98,13 +98,14 @@ expose_stan_functions <- function(stanmodel) {
   lines <- grep("^using stan::io::", lines, value = TRUE, invert = TRUE)
   lines <- grep("^using stan::model::prob_grad", lines, value = TRUE, invert = TRUE)
   
-  # get rid of inline declarations
-  lines <- grep("^inline", lines, value = TRUE, invert = TRUE)
-  
+  # convert inline declarations to Rcpp export declarations
+  lines <- gsub("^inline$", "// \\[\\[Rcpp::export\\]\\]", lines)
+
   # declare attributes for Rcpp for non-functor user-defined Stan functions
   templates <- grep("^template .*$", lines)
-  for(i in rev(templates)) if(!grepl("functor__", lines[i - 1L])) {
-    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
+  for(i in rev(templates)) {
+    if(!grepl("functor__", lines[i - 1L]) && lines[i + 1L] != "// [[Rcpp::export]]")
+      lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
   }
   
   # do not export function declarations created by the user
