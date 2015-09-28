@@ -352,7 +352,7 @@ sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
 library(rstan)
 fit1 <- stan(file="schools.stan",
              # better to add explicitly include: data=schools_data, 
-             iter=2000, chains=4, cores=1)
+             iter=2000, chains=4, cores=2)
 @
 
 Function \code{stan} wraps the following three steps: 
