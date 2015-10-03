@@ -228,7 +228,9 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   if (dotenv[["ci_level"]] > dotenv[["outer_level"]])
     stop("'ci_level' should be less than 'outer_level'", call. = FALSE)
   ci_level <- dotenv[["ci_level"]]
-  message("Showing ", 100 * ci_level, "% intervals")
+  outer_level <- dotenv[["outer_level"]]
+  message("ci_level: ", ci_level," (",100 * ci_level, "% intervals)")
+  message("outer_level: ", outer_level," (",100 * outer_level, "% intervals)")
   outer_level <- dotenv[["outer_level"]]
   probs.use <- c(0.5 - outer_level / 2, 0.5 - ci_level / 2, 0.5,
                  0.5 + ci_level / 2, 0.5 + outer_level / 2)
