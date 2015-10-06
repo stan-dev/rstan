@@ -19,7 +19,7 @@ StanProgram$methods(initialize = function(file = file.choose(), code, auto_write
                                           rstan_options("auto_write"), ...) {
   "Initializes an object of the StanProgram class"
   if (!missing(code)) {
-    tf <- tempfile()
+    tf <- tempfile("stanprogram")
     writeLines(code, con = tf)
     md5 <- tools::md5sum(tf)
     file <- file.path(tempdir(), paste0(md5, ".stan"))
@@ -48,7 +48,7 @@ StanProgram$methods(show = function() {
 StanProgram$methods(expose = function() {
   "Brings user-defined Stan functions into the R environment
   Useful for unit-testing, posterior simulation, information criteria, etc."
-  rstan::testify(writeLines(.self$stan_code, con = tempfile()))
+  rstan::testify(writeLines(.self$stan_code, con = tempfile("testify")))
 })
 
 StanProgram$methods(instantiate = function(data = list()) {
