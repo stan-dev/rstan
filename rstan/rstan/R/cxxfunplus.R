@@ -76,7 +76,7 @@ cxxfun_from_dso_bin <- function(dso) {
 
   sig <- dso@sig 
   code <- dso@.CXXDSOMISC$cxxfun@code
-  tfile <- tempfile() 
+  tfile <- tempfile("cxxfunplus") 
   f <- basename(tfile) 
   libLFile <- paste(tfile, ".", filename_ext(dso@.CXXDSOMISC$dso_last_path), sep = '') 
   # write the raw vector containing the dso file to temporary file

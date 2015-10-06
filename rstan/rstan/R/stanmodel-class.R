@@ -371,7 +371,7 @@ setMethod("sampling", "stanmodel",
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
               .dotlist$cores <- 1L
-              tfile <- tempfile()
+              tfile <- tempfile("sampling")
               sinkfile <- paste0(tfile, "_StanProgress.txt")
               cat("Click the Refresh button to see progress of the chains\n", file = sinkfile)
               if (open_progress && 
@@ -500,10 +500,12 @@ setMethod("sampling", "stanmodel",
               }
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
-              else messages <- tempfile()
-              sink(file(messages, open = "wt"), type = "message")
+              else messages <- tempfile("messages")
+              con_messages <- file(messages, open = "wt")
+              sink(con_messages, type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(NULL, type = "message")
+              close(con_messages)
               report <- scan(file = messages, what = character(),
                              sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {

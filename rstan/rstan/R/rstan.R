@@ -43,7 +43,7 @@ stan_model <- function(file,
     if (missing(model_name)) model_name <- NULL 
     
     if(missing(file)) {
-      tf <- tempfile()
+      tf <- tempfile("stan_model")
       writeLines(model_code, con = tf)
       file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
       if(!file.exists(file)) file.rename(from = tf, to = file)
@@ -83,7 +83,7 @@ stan_model <- function(file,
        mtime.rda > rstan_load_time ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
-       !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
+       !is.null(writeLines(obj@model_code, con = tf <- tempfile("obj_model_code"))) ||
        md5 != tools::md5sum(tf)) {
          # do nothing
     }
@@ -153,7 +153,7 @@ stan_model <- function(file,
                               model_cppcode = stanc_ret$cppcode))
   
   if(missing(file) || (file.access(dirname(file), mode = 2) != 0) || !isTRUE(auto_write)) {
-    tf <- tempfile()
+    tf <- tempfile("model_code")
     writeLines(model_code, con = tf)
     file <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
     if(!file.exists(file)) file.rename(from = tf, to = file)
