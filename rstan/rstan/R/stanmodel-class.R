@@ -501,9 +501,11 @@ setMethod("sampling", "stanmodel",
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
-              sink(file(messages, open = "wt"), type = "message")
+              mfile <- file(messages, open = "wt")
+              sink(mfile, type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(NULL, type = "message")
+              close(mfile)
               report <- scan(file = messages, what = character(),
                              sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
