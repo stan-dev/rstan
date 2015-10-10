@@ -5,14 +5,11 @@
 } 
 
 \usage{
-extract_sparse_parts(A, type = c("CSR", "CSC"))
+extract_sparse_parts(A)
 }
 
 \arguments{
   \item{A}{A matrix or Matrix}
-  \item{type}{A character string among \code{"CSR"} (the default) or 
-    \code{"CSC"} indicating whether the \code{A} matrix is in compressed
-    row storage or compressed column storage respectively}
 }
 
 \details{
@@ -35,11 +32,6 @@ extract_sparse_parts(A, type = c("CSR", "CSC"))
   } 
   
 } 
-
-
-\seealso{
-  \code{\linkS4class{stanfit}} 
-} 
 \examples{
   A <- rbind(
     c(19L, 27L,  0L,  0L),
@@ -47,5 +39,5 @@ extract_sparse_parts(A, type = c("CSR", "CSC"))
     c( 0L,  0L,  0L, 52L),
     c(81L,  0L, 95L, 33L)
   )
-str(extract_sparse_parts(A))
+  str(extract_sparse_parts(A))
 }

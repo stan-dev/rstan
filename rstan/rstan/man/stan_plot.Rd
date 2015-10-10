@@ -90,7 +90,7 @@ For \code{stan_plot}, there are additional arguments
   \item{point_est}{The point estimate to show. Either "mean" or "median".}
   \item{show_density}{Should kernel density estimates be plotted above 
   the intervals? Defaults to \code{FALSE}.}
-  \item{ci_level}{The interval to highlight. Defaults to 0.5 (a 50 percent interval).}
+  \item{ci_level}{The interval to highlight. Defaults to 0.8 (an 80 percent interval).}
   \item{outer_level}{The outer interval also shown but not highlighted.
   Defaults to 0.95.}
   \item{show_outer_line}{Should the \code{outer_level} interval be shown or hidden? 

@@ -174,19 +174,25 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   pars <- extract(object, permuted = permuted, inc_warmup = inc_warmup)
   nchains <- ncol(pars)
   pn <- dimnames(pars)$parameters
-  param_names <- if ("lp__" %in% pn) pn[-which(pn == "lp__")] else pn
-  skeleton <- get_inits(object)[[1L]]
+  param_names <- pn[pn != "lp__"]
+  sel <- object@model_pars != "lp__"
+  skeleton <- create_skeleton(object@model_pars, object@par_dims)[sel]
   upars <- apply(pars, 1:2, FUN = function(theta) {
-    unconstrain_pars(object, relist(theta, skeleton))
+    unconstrain_pars(object, rstan_relist(theta, skeleton))
   })
-  upars <- aperm(upars, c(3, 1, 2))
-  out <- lapply(seq_len(nchains), function(chain) {
+  if (length(dim(upars)) == 2) {
+    upars <- array(upars, dim = c(dim(upars)[1], dim(upars)[2], 1))
+    upars <- aperm(upars, c(2, 3, 1))
+  }
+  else upars <- aperm(upars, c(3, 1, 2))
+  
+  lapply(seq_len(nchains), function(chain) {
     x <- upars[chain,, ]
+    if (NCOL(x) == 1) x <- rbind(x)
     plist <- lapply(seq_len(nrow(x)), function(param) x[param, ])
     names(plist) <- param_names
     plist
   })
-  out
 }
 
 color_vector <- function(n) {
