@@ -149,6 +149,7 @@ stan_model <- function(file,
   obj <- new("stanmodel", model_name = model_name, 
              model_code = model_code, 
              dso = dso, # keep a reference to dso
+             mk_cppmodule = mk_cppmodule,  # mk_cppmodule function is defined in file stanmodel-class.R
              model_cpp = list(model_cppname = model_cppname, 
                               model_cppcode = stanc_ret$cppcode))
   
@@ -174,11 +175,14 @@ is_sm_valid <- function(sm) {
   # save_dso when calling stan_model. So when the user
   # use the model created in another R session, the dso
   # is lost. 
+  #
+  # This function works only for a stanmodel that is
+  # created from function stan_model in package rstan.
   # 
   # Args:
   #   sm: the stanmodel object 
   # 
-  if (is_dso_loaded(sm@dso)) return(TRUE)
+  if (isS4(sm@dso) && is_dso_loaded(sm@dso)) return(TRUE)
   sm@dso@dso_saved && identical(sm@dso@system, R.version$system)
 } 
 
