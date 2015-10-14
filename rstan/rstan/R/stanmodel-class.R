@@ -322,7 +322,14 @@ setMethod("sampling", "stanmodel",
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- try(parse_data(get_cppcode(object)))
-              if (!is.list(parsed_data)) return(invisible(new_empty_stanfit(object)))
+              if (!is.list(parsed_data)) {
+                message("failed to get names of data from the model; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              if (is.null(names(data))) {
+                message("data should be a named list; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
