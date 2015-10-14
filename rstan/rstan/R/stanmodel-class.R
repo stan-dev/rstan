@@ -59,6 +59,7 @@ new_empty_stanfit <- function(stanmodel, miscenv = new.env(parent = emptyenv()),
       .MISC = miscenv) 
 } 
 
+
 prep_call_sampler <- function(object) {
   if (!is_sm_valid(object))
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
@@ -71,15 +72,21 @@ prep_call_sampler <- function(object) {
   } 
 } 
 
+# This function gets used when a stanmodel instance is created
+# in function stan_model.
+mk_cppmodule <- function(object) {
+  prep_call_sampler(object)
+  model_cppname <- object@model_cpp$model_cppname
+  mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
+  eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+}
+
 # setMethod("vb", "stanmodel", 
 #           function(object, data = list(), pars = NA, include = TRUE,
 #                    seed = sample.int(.Machine$integer.max, 1),
 #                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
 #                    algorithm = c("meanfield", "fullrank"), ...) {
-#             prep_call_sampler(object)
-#             model_cppname <- object@model_cpp$model_cppname
-#             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
-#             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+#             stan_fit_cpp_module <- object@mk_cppmodule(object)
 # 
 #             if (is.list(data) & !is.data.frame(data)) {
 #               parsed_data <- parse_data(get_cppcode(object))
@@ -109,7 +116,8 @@ prep_call_sampler <- function(object) {
 #                 }
 #               } else data <- list()
 #             }
-#             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun))
+#             cxxfun <- if (isS4(object@dso)) object@dso@.CXXDSOMISC$cxxfun else function() NULL
+#             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
 #             if (is(sampler, "try-error")) {
 #               message('failed to create the model; variational Bayes not done')
 #               return(invisible(new_empty_stanfit(object)))
@@ -210,13 +218,18 @@ setMethod("optimizing", "stanmodel",
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname 
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
             
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
+              if (!is.list(parsed_data)) {
+                message("failed to get names of data from the model; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              if (is.null(names(data))) {
+                message("data should be a named list; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
               for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
@@ -244,7 +257,8 @@ setMethod("optimizing", "stanmodel",
                 }
               } else data <- list()
             }
-            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
+            cxxfun <- if (isS4(object@dso)) object@dso@.CXXDSOMISC$cxxfun else function() NULL
+            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             if (is(sampler, "try-error")) {
               message('failed to create the optimizer; optimization not done') 
               return(invisible(list(stanmodel = object)))
@@ -356,11 +370,9 @@ setMethod("sampling", "stanmodel",
                 }
               } else data <- list()
             }
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname 
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            cxxfun <- if (isS4(object@dso)) object@dso@.CXXDSOMISC$cxxfun else function() NULL
+            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
             if (is(sampler, "try-error")) {
               message('failed to create the sampler; sampling not done') 
