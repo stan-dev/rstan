@@ -83,7 +83,7 @@
 }
 \note{
   For details about the individual diagnostics and sampler parameters and their
-  interpretations see the Stan Modeling Language User’s Guide and Reference 
+  interpretations see the Stan Modeling Language User's Guide and Reference 
   Manual at \url{http://mc-stan.org/documentation/}.
 }
 \seealso{
