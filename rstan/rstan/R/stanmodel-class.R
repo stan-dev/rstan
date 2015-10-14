@@ -220,7 +220,7 @@ setMethod("optimizing", "stanmodel",
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             
-            if (is.list(data) & !is.data.frame(data)) {
+            if (is.list(data) & !is.data.frame(data) & length(data) > 0) {
               parsed_data <- parse_data(get_cppcode(object))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
@@ -334,7 +334,7 @@ setMethod("sampling", "stanmodel",
                    show_messages = TRUE, ...) {
 
             objects <- ls()
-            if (is.list(data) & !is.data.frame(data)) {
+            if (is.list(data) & !is.data.frame(data) & length(data) > 0) {
               parsed_data <- try(parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
