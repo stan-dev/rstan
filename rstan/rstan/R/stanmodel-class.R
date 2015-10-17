@@ -116,7 +116,7 @@ mk_cppmodule <- function(object) {
 #                 }
 #               } else data <- list()
 #             }
-#             cxxfun <- if (isS4(object@dso)) object@dso@.CXXDSOMISC$cxxfun else function() NULL
+#             cxxfun <- grab_cxxfun(object@dso)
 #             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
 #             if (is(sampler, "try-error")) {
 #               message('failed to create the model; variational Bayes not done')
@@ -219,7 +219,6 @@ setMethod("optimizing", "stanmodel",
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
-            
             if (is.list(data) & !is.data.frame(data) & length(data) > 0) {
               parsed_data <- parse_data(get_cppcode(object))
               if (!is.list(parsed_data)) {
@@ -257,7 +256,7 @@ setMethod("optimizing", "stanmodel",
                 }
               } else data <- list()
             }
-            cxxfun <- if (isS4(object@dso)) object@dso@.CXXDSOMISC$cxxfun else function() NULL
+            cxxfun <- grab_cxxfun(object@dso)
             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             if (is(sampler, "try-error")) {
               message('failed to create the optimizer; optimization not done') 
@@ -332,7 +331,6 @@ setMethod("sampling", "stanmodel",
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), 
                    show_messages = TRUE, ...) {
-
             objects <- ls()
             if (is.list(data) & !is.data.frame(data) & length(data) > 0) {
               parsed_data <- try(parse_data(get_cppcode(object)))
@@ -371,7 +369,7 @@ setMethod("sampling", "stanmodel",
               } else data <- list()
             }
             stan_fit_cpp_module <- object@mk_cppmodule(object)
-            cxxfun <- if (isS4(object@dso)) object@dso@.CXXDSOMISC$cxxfun else function() NULL
+            cxxfun <- grab_cxxfun(object@dso)
             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
             if (is(sampler, "try-error")) {
