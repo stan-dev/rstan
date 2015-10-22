@@ -51,14 +51,9 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
     stop(paste("failed to parse Stan model '", model_name,
                "' and no error message provided"), sep = '')
   } else if (r$status == EXCEPTION_RC) {
+    lapply(r$msg, function(x) message(x))
     error_msg <- paste("failed to parse Stan model '", model_name,
-                       "' with error message:\n", r$msg, sep = '')
-    error_msg_len <- min(8170, nchar(error_msg))
-    warning.length <- getOption('warning.length')
-    if (error_msg_len > warning.length) {
-      options(warning.length = error_msg_len)
-      on.exit(options(warning.length = warning.length), add = TRUE)
-    }
+                       "' due to the above error.")
     stop(error_msg)
   } 
 
