@@ -407,10 +407,11 @@ setMethod("sampling", "stanmodel",
                                        fields = "Imports")[1,]
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
-              dependencies <- c("Rcpp", "rstan", dependencies)
+              dependencies <- c("Rcpp", "rstan", "rstanarm", dependencies)
               .paths <- unique(sapply(dependencies, FUN = function(d) {
                 sub(paste0("/", d, "$"), "", system.file(package = d))
               }))
+              .paths <- .paths[.paths != ""]
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
               parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
               parallel::clusterEvalQ(cl, expr = 
@@ -535,7 +536,8 @@ setMethod("sampling", "stanmodel",
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
                   msg <- paste("The following numerical problems occured",
-                               "the indicated number of times on chain", cid)
+                               "the indicated number of times after warmup on chain", 
+                               cid)
                   if (.Platform$OS.type == "windows") print(msg)
                   else message(msg)
                   mat <- as.matrix(tab)
