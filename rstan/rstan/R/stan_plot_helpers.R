@@ -471,13 +471,13 @@ color_vector_chain <- function(n) {
   if (nrow(plot_data) == 0) return(NULL)
   
   graph <- ggplot(plot_data, aes_q(x = quote(factor(value))), na.rm = TRUE) +
-    stat_bin(aes_q(y=quote(..count../sum(..count..))),
+    geom_bar(aes_q(y=quote(..count../sum(..count..))),
              width=1, fill = .NUTS_FILL, color = .NUTS_CLR, size = .size(...)) +
     plot_labs
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_td) - 1)[chain]
   chain_fill <- chain_clr
   chain_data <- plot_data[plot_data$variable == paste0("chain:",chain),, drop=FALSE]
-  graph + stat_bin(data = chain_data, aes_q(y=quote(..count../sum(..count..))),
+  graph + geom_bar(data = chain_data, aes_q(y=quote(..count../sum(..count..))),
                    fill = chain_fill, alpha = .alpha(...), width = 1)
 }

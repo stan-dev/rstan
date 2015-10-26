@@ -4,6 +4,6 @@ test_long_erromsg <- function() {
   checkException(r <- stanc(model_code = code))
   warning.length <- getOption("warning.length")
   emsg <- geterrmessage()
-  checkTrue(nchar(emsg) > 1000)
+  checkTrue(nchar(emsg) < 1000)
   checkEquals(warning.length, getOption("warning.length"))
 } 
