@@ -217,7 +217,8 @@ setMethod("optimizing", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
-                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
+                   verbose = FALSE, hessian = draws > 0, as_vector = TRUE, 
+                   draws = 0, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
@@ -297,7 +298,7 @@ setMethod("optimizing", "stanmodel",
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
-            if(hessian) {
+            if (hessian || draws) {
               fn <- function(theta) {
                 sampler$log_prob(theta, FALSE, FALSE)
               }
@@ -310,6 +311,19 @@ setMethod("optimizing", "stanmodel",
                                          control = list(fnscale = -1))
               colnames(optim$hessian) <- rownames(optim$hessian) <- 
                 sampler$unconstrained_param_names(FALSE, FALSE)
+              if (draws > 0 && is.matrix(R <- try(chol(-optim$hessian)))) {
+                K <- ncol(R)
+                R_inv <- backsolve(R, diag(K))
+                Z <- matrix(rnorm(K * draws), K, draws)
+                theta_tilde <- t(theta + R_inv %*% Z)
+                log_p <- apply(theta_tilde, 1, FUN = function(theta) {
+                  sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
+                })
+                log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
+                optim$theta_tilde <- theta_tilde
+                optim$log_p <- log_p
+                optim$log_g <- log_g
+              }
             }
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             return(optim)
