@@ -217,8 +217,8 @@ setMethod("optimizing", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
-                   verbose = FALSE, hessian = draws > 0, as_vector = TRUE, 
-                   draws = 0, ...) {
+                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
+                   draws = 0, constrained = TRUE, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
@@ -307,22 +307,32 @@ setMethod("optimizing", "stanmodel",
               }
               theta <- rstan_relist(optim$par, skeleton)
               theta <- sampler$unconstrain_pars(theta)
-              optim$hessian <- optimHess(theta, fn, gr,
-                                         control = list(fnscale = -1))
-              colnames(optim$hessian) <- rownames(optim$hessian) <- 
-                sampler$unconstrained_param_names(FALSE, FALSE)
-              if (draws > 0 && is.matrix(R <- try(chol(-optim$hessian)))) {
+              H <- optimHess(theta, fn, gr, control = list(fnscale = -1))
+              colnames(H) <- rownames(H) <- sampler$unconstrained_param_names(FALSE, FALSE)
+              if (hessian) optim$hessian <- H
+              if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
                 K <- ncol(R)
                 R_inv <- backsolve(R, diag(K))
                 Z <- matrix(rnorm(K * draws), K, draws)
                 theta_tilde <- t(theta + R_inv %*% Z)
-                log_p <- apply(theta_tilde, 1, FUN = function(theta) {
-                  sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
-                })
-                log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
+                if (constrained) {
+                  theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
+                    sampler$constrain_pars(theta)  
+                  }))
+                  colnames(theta_tilde) <- names(optim$par)
+                }
+                else {
+                  log_p <- apply(theta_tilde, 1, FUN = function(theta) {
+                    sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
+                  })
+                  log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
+                  optim$log_p <- log_p
+                  optim$log_g <- log_g
+                  colnames(theta_tilde) <- colnames(H)
+                  optim$log_prob <- sampler$log_prob
+                  optim$grad_log_prob <- sampler$grad_log_prob
+                }
                 optim$theta_tilde <- theta_tilde
-                optim$log_p <- log_p
-                optim$log_g <- log_g
               }
             }
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)

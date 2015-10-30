@@ -17,8 +17,8 @@
     seed = sample.int(.Machine$integer.max, 1), init = 'random', 
     check_data = TRUE, sample_file = NULL, 
     algorithm = c("LBFGS", "BFGS", "Newton"),
-    verbose = FALSE, hessian = draws > 0, as_vector = TRUE, 
-    draws = 0, \dots)   
+    verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
+    draws = 0, constrained = TRUE, \dots)   
 } 
 
 \section{Methods}{
@@ -74,6 +74,9 @@
      many times to draw from a multivariate normal distribution whose parameters
      are the mean vector and the inverse negative Hessian in the unconstrained
      space}
+  \item{constrained}{A logical scalar indicating, if \code{draws > 0}, whether
+     the draws should be transformed to the constrained space defined in the
+     parameters block of the Stan program. Defaults to \code{TRUE}.}
   \item{\dots}{Other optional parameters, refer to the manuals for both
     CmdStan and Stan. 
     \enumerate{
