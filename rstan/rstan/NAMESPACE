@@ -47,7 +47,8 @@ export(
   rstan_ggtheme_options,
   quietgg,
   extract_sparse_parts,
-  rstan.package.skeleton
+  rstan.package.skeleton,
+  cpp_object_initializer
 # get_rstan.options
 )
 
