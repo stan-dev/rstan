@@ -12,7 +12,8 @@ Translate Stan model specification to C++ code
 \usage{
   stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE,
         obfuscate_model_name = TRUE) 
-  stanc_builder(file, verbose = FALSE, obfuscate_model_name = FALSE)
+  stanc_builder(file, isystem = dirname(file), 
+                verbose = FALSE, obfuscate_model_name = FALSE)
 } 
 
 \arguments{
@@ -32,16 +33,27 @@ Translate Stan model specification to C++ code
     randomly-generated character string for the name of the C++ class. Setting
     this to \code{TRUE} prevents name clashes when compiling multiple models in
     the same R session.}
+  \item{isystem}{A character vector of length one naming a path to look for 
+    file paths in \code{file} that are to be included within the Stan program
+    named by \code{file}. See details.}
 } 
 
 \details{
   The \code{stanc_builder} function supports the standard C++ convention of
   specifying something like \code{#include "my_includes.txt"} on an entire line
   within the file named by the \code{file} argument. In other words, 
-  \code{stanc_builder} would look for \code{"my_includes.txt"} in the same
-  directory as \code{file} and insert its contents verbatim at that position 
-  before calling \code{stanc} on the resulting \code{model_code}. This mechanism
-  reduces the need to copy common chunks of code across Stan programs.
+  \code{stanc_builder} would look for \code{"my_includes.txt"} in (or under) the 
+  directory named by the \code{isystem} argument and insert its contents verbatim 
+  at that position  before calling \code{stanc} on the resulting \code{model_code}. 
+  This mechanism reduces the need to copy common chunks of code across Stan 
+  programs.
+  
+  Note that line numbers referred to in parser warnings or errors refer to the
+  postprocessed Stan program rather than \code{file}. In the case of a parser
+  error, the postprocessed Stan program will be printed after the error message.
+  Line numbers referred to in messages while Stan is executing also refer to
+  the postprocessed Stan program which can be obtained by calling
+  \code{\link{get_stancode}}.
 }
 
 \value{

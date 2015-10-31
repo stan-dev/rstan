@@ -68,20 +68,24 @@ rstudio_stanc <- function(filename) {
   return(invisible(output))
 }
 
-stanc_builder <- function(file, verbose = FALSE, obfuscate_model_name = FALSE) {
+stanc_builder <- function(file, isystem = dirname(file), 
+                          verbose = FALSE, obfuscate_model_name = FALSE) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_cppname <- sub("\\.stan$", "", basename(file))
   program <- readLines(file)
   includes <- grep("#include ", program, fixed = TRUE)
-  DIR <- dirname(file)
   for (i in rev(includes)) {
     header <- sub("^.*#include[[:blank:]]+", "", program[i])
     header <- gsub('\\"', '', header)
     header <- gsub("\\'", '', header)
-    program <- append(program, values = readLines(file.path(DIR, header)), 
+    header <- sub("[[:blank:]]*$", "", header)
+    program <- append(program, values = readLines(file.path(isystem, header)), 
                       after = i)
   }
-  program <- paste(program, collapse = "\n")
-  return(stanc(model_code = program, model_name = model_cppname, 
-               verbose = verbose, obfuscate_model_name = obfuscate_model_name))
+  on.exit(print(program))
+  out <- stanc(model_code = paste(program, collapse = "\n"), 
+               model_name = model_cppname, verbose = verbose, 
+               obfuscate_model_name = obfuscate_model_name)
+  on.exit(NULL)
+  return(out)
 }
