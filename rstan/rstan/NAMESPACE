@@ -17,7 +17,8 @@ import(ggplot2)
 
 export(
   stan_model,
-  stanc, 
+  stanc,
+  stanc_builder,
   stan_version, 
   stan,
   stan_rdump,

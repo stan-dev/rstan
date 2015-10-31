@@ -1,5 +1,6 @@
 \name{stanc}
-\alias{stanc} 
+\alias{stanc}
+\alias{stanc_builder}
 \docType{package}
 \title{
 Translate Stan model specification to C++ code
@@ -9,7 +10,9 @@ Translate Stan model specification to C++ code
   then be compiled and loaded for sampling. 
 }
 \usage{
-  stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE, ...) 
+  stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE,
+        obfuscate_model_name = TRUE) 
+  stanc_builder(file, verbose = FALSE, obfuscate_model_name = FALSE)
 } 
 
 \arguments{
@@ -24,19 +27,22 @@ Translate Stan model specification to C++ code
     from \code{file} or \code{model_code} (if \code{model_code} is the name of a
     character string object) if \code{model_name} is not specified.} 
   \item{verbose}{\code{TRUE} print out more intermediate information during the
-    translation procedure; \code{FALSE} otherwise. The default is \code{FALSE}.}             
-  \item{\dots}{optional parameters including  
-    \enumerate{ 
-      \item \code{obfuscate_model_name} (logical), \code{TRUE} if not specified. 
-      If \code{FALSE}, the model name in the generated C++ code would not 
-      contain randomly generated character string so that if model names
-      are given the same, the generated C++ code will have the same class
-      names defining the model, and the same Rcpp module names, which is used 
-      for R to execute the C++ code for sampling. Generally, it is recommended
-      not to specify this parameter or set it to \code{TRUE}. 
-    }
-  }
+    translation procedure; \code{FALSE} otherwise. The default is \code{FALSE}.}
+  \item{obfuscate_model_name}{A logical scalar indicating whether to use a
+    randomly-generated character string for the name of the C++ class. Setting
+    this to \code{TRUE} prevents name clashes when compiling multiple models in
+    the same R session.}
 } 
+
+\details{
+  The \code{stanc_builder} function supports the standard C++ convention of
+  specifying something like \code{#include "my_includes.txt"} on an entire line
+  within the file named by the \code{file} argument. In other words, 
+  \code{stanc_builder} would look for \code{"my_includes.txt"} in the same
+  directory as \code{file} and insert its contents verbatim at that position 
+  before calling \code{stanc} on the resulting \code{model_code}. This mechanism
+  reduces the need to copy common chunks of code across Stan programs.
+}
 
 \value{
   A list with named entries:
@@ -71,7 +77,7 @@ Translate Stan model specification to C++ code
   \code{\link{stan_model}} and \code{\link{stan}}
 } 
 
-\examples{\dontrun{
+\examples{
 stanmodelcode <- "
 data {
   int<lower=0> N;
@@ -89,6 +95,5 @@ model {
 "
 
 r <- stanc(model_code = stanmodelcode, model_name = "normal1") 
-names(r)
-cat(r$cppcode)
-}}
+str(r)
+}

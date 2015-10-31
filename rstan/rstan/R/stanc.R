@@ -15,11 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FALSE, ...) {
+stanc <- function(file, model_code = '', model_name = "anon_model",
+                  verbose = FALSE, obfuscate_model_name = TRUE) {
   # Call stanc, written in C++ 
-  # Args:
-  # ..., to pass argument obfuscate_model_name 
-  # 
   model_name2 <- deparse(substitute(model_code))  
   if (is.null(attr(model_code, "model_name2"))) 
     attr(model_code, "model_name2") <- model_name2 
@@ -32,13 +30,8 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   EXCEPTION_RC <- -1
   PARSE_FAIL_RC <- -2 
   
-  dotlst <- list(...) 
-  omn_con <- "obfuscate_model_name" %in% names(dotlst) 
-
-  obfuscate_name <- if (!omn_con) TRUE else as.logical(dotlst[["obfuscate_model_name"]]) 
-  if (is.na(obfuscate_name))  obfuscate_name <- FALSE
   # model_name in C++, to avoid names that would be problematic in C++. 
-  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_name) 
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
   r <- .Call("CPP_stanc280", model_code, model_cppname)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
@@ -73,4 +66,22 @@ rstudio_stanc <- function(filename) {
   output <- stanc(filename)
   message(filename, " is syntactically correct.")
   return(invisible(output))
+}
+
+stanc_builder <- function(file, verbose = FALSE, obfuscate_model_name = FALSE) {
+  stopifnot(is.character(file), length(file) == 1, file.exists(file))
+  model_cppname <- sub("\\.stan$", "", basename(file))
+  program <- readLines(file)
+  includes <- grep("#include ", program, fixed = TRUE)
+  DIR <- dirname(file)
+  for (i in rev(includes)) {
+    header <- sub("^.*#include[[:blank:]]+", "", program[i])
+    header <- gsub('\\"', '', header)
+    header <- gsub("\\'", '', header)
+    program <- append(program, values = readLines(file.path(DIR, header)), 
+                      after = i)
+  }
+  program <- paste(program, collapse = "\n")
+  return(stanc(model_code = program, model_name = model_cppname, 
+               verbose = verbose, obfuscate_model_name = obfuscate_model_name))
 }

@@ -51,7 +51,7 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
                 destfile = file.path(TOOLS, "make_cpp.R"), quiet = TRUE)
   EXEC <- file.path(DIR, "exec")
   dir.create(EXEC)
-  file.create(file.path(EXEC, "functions.txt"))
+  file.create(file.path(EXEC, "common_functions.txt"))
   file.copy(stan_files, EXEC)
   
   SRC <- file.path(DIR, "src")
@@ -68,8 +68,8 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
 
   if (length(stan_files) == 0) module_names <- "NAME"
   else module_names <- paste0("stan_fit4", sub("\\.stan$", "", basename(stan_files)), "_mod")
-  cat("Depends: R (>= 3.0.2), rstan (>= 2.8.1)", 
-      "Imports: Rcpp (>= 0.11.0)",
+  cat("Depends: R (>= 3.0.2), Rcpp (>= 0.11.0)", 
+      "Imports: rstan (>= 2.8.1)",
       "LinkingTo: StanHeaders (>= 2.8.0), rstan (>= 2.8.1), BH (>= 1.58.0), Rcpp (>= 0.11.0), RcppEigen",
       file = file.path(DIR, "DESCRIPTION"), sep = "\n", append = TRUE)
   cat("RcppModules: ", paste(module_names, collapse = ", "), "\n",

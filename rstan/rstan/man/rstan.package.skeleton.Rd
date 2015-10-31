@@ -14,9 +14,9 @@ rstan.package.skeleton(name = "anRpackage", list = character(),
 }
 
 \arguments{
-  \item{name, list, environment, path, force, code\_files}{Same is in 
+  \item{name, list, environment, path, force, code_files}{Same is in 
     \code{\link[utils]{package.skeleton}}}
-  \item{stan\_files}{A character vector with paths to .stan files
+  \item{stan_files}{A character vector with paths to .stan files
     to include in the package. Otherwise similar to \code{code_files}.}
 }
 
