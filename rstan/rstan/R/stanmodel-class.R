@@ -423,7 +423,7 @@ setMethod("sampling", "stanmodel",
                                    quiet = TRUE, text = dependencies)
               dependencies <- c("Rcpp", "rstan", "rstanarm", dependencies)
               .paths <- unique(sapply(dependencies, FUN = function(d) {
-                sub(paste0("/", d, "$"), "", system.file(package = d))
+                dirname(system.file(package = d))
               }))
               .paths <- .paths[.paths != ""]
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
