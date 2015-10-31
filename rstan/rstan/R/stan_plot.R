@@ -264,7 +264,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   }
   if (show_density) { # plot kernel density estimate
     npoint.den <- 512
-    y.den <- x.den <- matrix(0, nr = npoint.den, nc = nparams)
+    y.den <- x.den <- matrix(0, nrow = npoint.den, ncol = nparams)
     for(i in 1:nparams){
       d.temp <- density(samp[samp$parameter == param_names[i], "value"],
                         from = statmat[i,2L],
