@@ -44,6 +44,8 @@ stan_scat <- function(object, pars, include = TRUE,
                        ...) {
   
   .check_object(object, unconstrain)
+  thm <- .rstanvis_defaults$theme
+  dots <- .add_aesthetics(list(...), c("fill", "pt_color", "pt_size", "alpha", "shape"))
   if (missing(pars) || length(pars) != 2L)
     stop("'pars' must contain exactly two parameter names", call. = FALSE)
 #   ndivergent <- 
@@ -62,12 +64,10 @@ stan_scat <- function(object, pars, include = TRUE,
 #   sel <- seq_len(nrow(df) / nchains)
 #   div <- df[div[sel], ]
 #   td <- df[hit_max_td[sel], ]
-  thm <- .rstanvis_defaults$theme
   base <- ggplot(df, aes_string("x", "y"))
   graph <-
     base +
-    geom_point(size = .pt_size(...), color = .pt_color(...), 
-               alpha = .alpha(...), shape = .shape(...), ...) +
+    do.call(geom_point, dots) +
 #     geom_point(data = div, aes_string("x","y"), color = "red") +
 #     geom_point(data = td, aes_string("x","y"), color = "yellow") +
     labs(x = pars[1], y = pars[2]) +
@@ -83,15 +83,15 @@ stan_hist <- function(object, pars, include = TRUE,
                       inc_warmup = FALSE,
                       nrow = NULL, ncol = NULL,
                       ...) {
-  
-  
+
   .check_object(object, unconstrain)
+  dots <- .add_aesthetics(list(...), c("fill", "color"))
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   thm <- .rstanvis_defaults$hist_theme
   base <- ggplot(plot_data$samp, aes_string(x = "value", y = "..density.."))
   graph <-
     base +
-    geom_histogram(fill = .fill(...), color = .color(...), ...) +
+    do.call(geom_histogram, dots) + 
     xlab("") +
     thm
   
@@ -116,21 +116,21 @@ stan_dens <- function(object, pars, include = TRUE,
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   thm <- .rstanvis_defaults$hist_theme
   base <- ggplot(plot_data$samp, aes_string(x = "value")) + xlab("")
-  
   if (!separate_chains) {
+    dots <- .add_aesthetics(list(...), c("fill", "color"))
     graph <-
       base +
-      geom_density(fill = .fill(...), color = .color(...), ...) +
+      do.call(geom_density, dots) + 
       thm
-  }
-  else {
+  } else {
+    dots <- .add_aesthetics(list(...), c("color", "alpha"))
+    dots$mapping <- aes_string(fill = "chain")
     graph <-
       base +
-      geom_density(aes_string(fill = "chain"), ...) +
+      do.call(geom_density, dots) + 
       scale_fill_manual(values = clrs) +
       thm
   }
-  
   if (plot_data$nparams == 1)
     graph + xlab(unique(plot_data$samp$parameter))
   else
@@ -151,20 +151,21 @@ stan_ac <- function(object, pars, include = TRUE,
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   clrs <- rep_len(.rstanvis_defaults$chain_colors, plot_data$nchains)
   thm <- .rstanvis_defaults$theme
+  dots <- .add_aesthetics(list(...), c("size", "color", "fill"))
 
-  ac_type <- if (partial) "partial" else "correlation"
   dat_args <- list(dat = plot_data$samp, lags = lags, partial = partial)
   dat_fn <- ifelse(plot_data$nparams == 1, ".ac_plot_data",".ac_plot_data_multi")
   ac_dat <- do.call(dat_fn, dat_args)
   if (!separate_chains) {
+    dots$position <- "dodge"
+    dots$stat <- "summary"
+    dots$fun.y <- "mean"
     y_lab <- paste("Avg.", if (partial) "partial", "autocorrelation")
     ac_labs <- labs(x = "Lag", y = y_lab)
     y_scale <- scale_y_continuous(breaks = seq(0, 1, 0.25))
     base <- ggplot(ac_dat, aes_string(x = "lag", y = "ac"))
     graph <- base +
-      geom_bar(position = "dodge", stat = "summary", fun.y = "mean",
-               size = .size(...), color = .color(...),
-               fill = .fill(...), ...) +
+      do.call(geom_bar, dots) + 
       y_scale +
       ac_labs +
       thm
@@ -176,6 +177,8 @@ stan_ac <- function(object, pars, include = TRUE,
     else return(graph + facet_wrap(~parameters, nrow = nrow, ncol = ncol,
                                    scales = "free_x"))
   }
+  dots$position <- "identity"
+  dots$stat <- "identity"
   ac_labs <- labs(x = "Lag", y = if (partial)
     "Partial autocorrelation" else "Autocorrelation")
   y_scale <- scale_y_continuous(breaks = seq(0, 1, 0.25),
@@ -183,8 +186,7 @@ stan_ac <- function(object, pars, include = TRUE,
   
   base <- ggplot(ac_dat, aes_string(x = "lag", y = "ac"))
   graph <- base +
-    geom_bar(position = "identity", stat = "identity",
-             size = .size(...), fill = .fill(...), color = .color(...)) +
+    do.call(geom_bar, dots) +
     y_scale +
     ac_labs +
     thm
@@ -213,7 +215,9 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   dots <- list(...)
   defs <- list(point_est = "mean", show_density = FALSE,
                show_outer_line = TRUE, ci_level = 0.8, outer_level = 0.95,
-               fill_color = NULL, outline_color = NULL, est_color = NULL)
+               fill_color = .rstanvis_defaults[["fill"]], 
+               outline_color = .rstanvis_defaults[["color"]], 
+               est_color = .rstanvis_defaults[["color"]])
   args <- names(defs)
   dotenv <- list()
   for (j in seq_along(args)) {
@@ -254,12 +258,12 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
                                limits = c(0.5, nparams + 1))
   p.all <- p.base + xlim(xlim.use) + p.name + thm
   show_density <- dotenv[["show_density"]]
-  outline_color <- dotenv[["outline_color"]]
+  outline_color <- dotenv[["outline_color"]] %ifNULL% .rstanvis_defaults[["color"]]
   fill_color <- dotenv[["fill_color"]]
   est_color <- dotenv[["est_color"]]
   if (dotenv[["show_outer_line"]] || show_density) {
     p.ci <- geom_segment(aes_string(x = "ll", xend = "hh", y = "y", yend = "y"),
-                         colour = outline_color %ifNULL% .color(...))
+                         color = outline_color)
     p.all <- p.all + p.ci
   }
   if (show_density) { # plot kernel density estimate
@@ -277,7 +281,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
     df.den <- data.frame(x = as.vector(x.den), y = as.vector(y.den),
                          name = rep(param_names, each = npoint.den))
     p.den <- geom_line(data = df.den, aes_string("x", "y", group = "name"),
-                       color = outline_color %ifNULL% .color(...))
+                       color = outline_color)
     
     #shaded interval
     y.poly <- x.poly <- matrix(0, nrow = npoint.den + 2, ncol = nparams)
@@ -293,9 +297,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
     df.poly <- data.frame(x = as.vector(x.poly), y = as.vector(y.poly),
                           name = rep(param_names, each = npoint.den + 2))
     p.poly <- geom_polygon(data = df.poly, aes_string("x", "y", group = "name", fill = "y"))
-    p.col <- scale_fill_gradient(low = fill_color %ifNULL% .fill(...),
-                                 high = fill_color %ifNULL% .fill(...),
-                                 guide = "none")
+    p.col <- scale_fill_gradient(low = fill_color, high = fill_color, guide = "none")
     
     #point estimate
     if (color_by_rhat) {
@@ -305,22 +307,19 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
       p.all + p.poly + p.den + p.col + p.point + rhat_colors #+ rhat_lgnd
     } else {
       p.point <- geom_segment(aes_string(x = "m", xend = "m", y = "y", yend = "y + 0.25"),
-                              colour = est_color %ifNULL% .color(...), size = 1.5)
+                              colour = est_color, size = 1.5)
       p.all + p.poly + p.den + p.col + p.point
     }
   } else {
     p.ci.2 <- geom_segment(aes_string(x = "l", xend = "h", y = "y", yend = "y"),
-                           colour = fill_color %ifNULL% .fill(...), size = 2)
+                           colour = fill_color, size = 2)
     if (color_by_rhat) {
       p.point <- geom_point(aes_string(x = "m", y = "y", fill = "rhat_id"),
-                            color = "black",
-                            shape = 21, size = 4)
+                            color = "black", shape = 21, size = 4)
       p.all + p.ci.2 + p.point + rhat_colors # + rhat_lgnd
     } else {
       p.point <- geom_point(aes_string(x = "m", y = "y"), size = 4,
-                            color = fill_color %ifNULL% .fill(...),
-                            fill = est_color %ifNULL% .color(...),
-                            shape = 21)
+                            color = fill_color, fill = est_color, shape = 21)
       p.all + p.ci.2 + p.point
     }
   }
@@ -520,5 +519,3 @@ stan_par <- function(object, par, chain = 0, ...) {
   graphs <- lapply(graphs, function(x) x + thm)
   .nuts_return(graphs, ...)
 }
-
-

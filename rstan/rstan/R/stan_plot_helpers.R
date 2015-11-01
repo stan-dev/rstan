@@ -1,16 +1,14 @@
-.aesthetic <- function(which, ...) {
-  dots <- list(...)
-  which2 <- gsub("pt_", "", which)
-  if (which2 %in% names(dots)) dots[[which2]]
-  else .rstanvis_defaults[[which]]
+.add_aesthetics <- function(dots, to_add) { 
+  # Add some default aesthetics if not included in ...
+  # @param dots list(...)
+  # @param to_add = character vector 
+  add_names <- gsub("pt_", "", to_add)
+  for (j in seq_along(to_add)) {
+    if (!add_names[j] %in% names(dots)) 
+      dots[[add_names[j]]] <- .rstanvis_defaults[[to_add[j]]]
+  }
+  dots
 }
-.fill <- function(...) .aesthetic("fill", ...)
-.color <- function(...) .aesthetic("color", ...)
-.size <- function(...) .aesthetic("size", ...)
-.alpha <- function(...) .aesthetic("alpha", ...)
-.shape <- function(...) .aesthetic("shape", ...)
-.pt_color <- function(...) .aesthetic("pt_color", ...)
-.pt_size <- function(...) .aesthetic("pt_size", ...)
 
 `%ifNULL%` <- function(x, replacement) {
   if (!is.null(x)) x
@@ -245,6 +243,7 @@ color_vector_chain <- function(n) {
                                  object, pars=NULL, ...) {
   if (is.stanreg(object)) object <- object$stanfit
   thm <- .rstanvis_defaults$hist_theme
+  dots <- .add_aesthetics(list(...), c("fill", "color"))
   if (which == "n_eff_ratio") {
     lp <- suppressWarnings(get_logposterior(object, inc_warmup = FALSE))
     SS <- prod(length(lp), length(lp[[1L]]))
@@ -266,7 +265,7 @@ color_vector_chain <- function(n) {
   plot_labs <- labs(y = "", x = xlab)
   base <- ggplot(df, aes(x = stat))
   base +
-    geom_histogram(fill = .fill(...), color = .color(...), ...) +
+    do.call(geom_histogram, dots) + 
     plot_labs +
     thm
 }
@@ -354,6 +353,10 @@ color_vector_chain <- function(n) {
 .sampler_param_vs_param <- function(p, sp, divergent = NULL, hit_max_td = NULL,
                                     p_lab, sp_lab, chain = 0, violin = FALSE,
                                     smoother = FALSE, ...) {
+  dots <- .add_aesthetics(list(...), c("alpha", "shape"))
+  dots$alpha <- 0.5 * dots$alpha
+  dots$color <- .NUTS_PT_CLR
+  dots$fill <- .NUTS_FILL
   xy_labs <- labs(y = if (missing(p_lab)) NULL else p_lab,
                   x = if (missing(sp_lab)) NULL else sp_lab)
   df <- data.frame(sp = do.call("c", sp), p = c(p))
@@ -366,8 +369,7 @@ color_vector_chain <- function(n) {
     if (violin)
       graph <- base + geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
     else {
-      graph <- base + geom_point(alpha = 0.5 * .alpha(...), color = .NUTS_PT_CLR,
-                                 fill = .NUTS_FILL, shape = .shape(...), ...)
+      graph <- base + do.call(geom_point, dots)
       if (smoother) graph <- graph + stat_smooth(se = FALSE)
       if (!is.null(divergent))
         graph <- graph + geom_point(data = subset(df, divergent == 1),
@@ -392,16 +394,14 @@ color_vector_chain <- function(n) {
     graph <- base +
       geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL, ...) +
       geom_violin(data = chain_data, aes_string(x = "sp", y = "p"),
-                  color = chain_clr, fill = chain_fill,
-                  alpha = .alpha(...), ...)
+                  color = chain_clr, fill = chain_fill, ...)
     return(graph)
   }
-  graph <- base + geom_point(alpha = 0.5 * .alpha(...), color = .NUTS_PT_CLR,
-                             fill = .NUTS_FILL, shape = .shape(...), ...)
+  graph <- base + do.call(geom_point, dots)
   if (smoother) graph <- graph + stat_smooth(se = FALSE)
   graph <- graph +
     geom_point(data = chain_data, aes_string(x = "sp", y = "p"),
-               color = chain_fill, alpha = .alpha(...))
+               color = chain_fill, ...)
   if (smoother) graph <- graph +
     stat_smooth(data = chain_data, aes_string(x = "sp", y = "p"),
                 color = chain_fill, se = FALSE)
@@ -437,9 +437,12 @@ color_vector_chain <- function(n) {
 
 .p_hist <- function(df, lab, chain = 0, ...) {
   mdf <- .reshape_df(df) # reshape2::melt(df, id.vars = grep("iteration", colnames(df), value = TRUE))
+  dots <- .add_aesthetics(list(...), "size")
+  dots$binwidth <- diff(range(mdf$value))/30
+  dots$fill <- .NUTS_FILL
+  dots$color <- .NUTS_CLR
   base <- ggplot(mdf, aes_string(x = "value")) +
-    geom_histogram(binwidth = diff(range(mdf$value))/30, fill = .NUTS_FILL,
-                   color = .NUTS_CLR, size = .size(...), ...) +
+    do.call(geom_histogram, dots) + 
     labs(x = if (missing(lab)) NULL else lab, y = "")
   if (chain == 0) {
     graph <- base +
@@ -472,12 +475,13 @@ color_vector_chain <- function(n) {
   
   graph <- ggplot(plot_data, aes_q(x = quote(factor(value))), na.rm = TRUE) +
     geom_bar(aes_q(y=quote(..count../sum(..count..))),
-             width=1, fill = .NUTS_FILL, color = .NUTS_CLR, size = .size(...)) +
+             width=1, fill = .NUTS_FILL, color = .NUTS_CLR) +
     plot_labs
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_td) - 1)[chain]
   chain_fill <- chain_clr
   chain_data <- plot_data[plot_data$variable == paste0("chain:",chain),, drop=FALSE]
   graph + geom_bar(data = chain_data, aes_q(y=quote(..count../sum(..count..))),
-                   fill = chain_fill, alpha = .alpha(...), width = 1)
+                   fill = chain_fill, width = 1)
 }
+
