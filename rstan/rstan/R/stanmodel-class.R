@@ -418,10 +418,12 @@ setMethod("sampling", "stanmodel",
                        .Platform$OS.type == "windows") {
                 if (!requireNamespace("rstudioapi"))
                   stop("must install the rstudioapi package when using RStan in parallel via RStudio")
-                v <- rstudioapi::getVersion()
-                if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
-                else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
-                else stop("RStudio version ", v, " is too outdated for RStan to use in parallel")
+                if (rstudioapi::isAvailable("0.98.423")) {
+                  v <- rstudioapi::getVersion()
+                  if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
+                  else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
+                }
+                else sinkfile <- ""
               }
               else sinkfile <- ""
               cl <- parallel::makeCluster(min(cores, chains), 
