@@ -154,14 +154,13 @@ trace +
 
 facet_style <- theme(strip.background = element_rect(fill = "white"),
                      strip.text = element_text(size = 13, color = "black"))
-trace <- trace + facet_style
-trace
+(trace <- trace + facet_style)
 
 # scatterplot
-mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "blue", size = 4)
+(mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "blue", size = 4))
 mu_vs_tau + 
   coord_flip() + 
-  theme(panel.background = element_rect(fill = "black")))
+  theme(panel.background = element_rect(fill = "black"))
   
 }
 }
