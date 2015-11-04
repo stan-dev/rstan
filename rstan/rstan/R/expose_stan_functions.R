@@ -80,16 +80,19 @@ expose_stan_functions <- function(stanmodel) {
     if(grepl("_rng", lines[i], fixed = TRUE)) {
       lines[i] <- gsub("RNG\\&.*\\{$", "const int& seed = 0) {", lines[i])
       lines <- append(lines, c("static boost::ecuyer1988 base_rng__(seed);", 
-                               "std::ostream* pstream__ = &Rcpp::Rcout;"), i)
+                               "std::ostream* pstream__ = &Rcpp::Rcout;", 
+                               "(void) pstream__;"), i)
     }
     else if(grepl("_lp", lines[i], fixed = TRUE)) {
       lines[i] <- gsub(", T_lp_accum__\\&.*\\{$", ") {", lines[i])
       lines <- append(lines, c("stan::math::accumulator<double> lp_accum__;",
-                               "std::ostream* pstream__ = &Rcpp::Rcout;"), i)
+                               "std::ostream* pstream__ = &Rcpp::Rcout;", 
+                               "(void) pstream__;"), i)
     }
     else {
       lines[i] <- gsub(", std::ostream* pstream__) {", ") {", lines[i], fixed = TRUE)
-      lines <- append(lines, "std::ostream* pstream__ = &Rcpp::Rcout;", i)
+      lines <- append(lines, c("std::ostream* pstream__ = &Rcpp::Rcout;", 
+                               "(void) pstream__;"), i)
     }
     lines <- append(lines, usings, i) # make the usings:: local to the function
   }
@@ -132,6 +135,10 @@ expose_stan_functions <- function(stanmodel) {
                 "\\1);", lines)
   lines <- gsub("([[:space:]]+return .*_rng)\\(base_rng__\\);",
                 "\\1();", lines)
+  
+  # remove line numbering things
+  lines <- grep("current_statement_begin__", lines, 
+                fixed = TRUE, value = TRUE, invert = TRUE)
                   
   # replace more templating with doubles
   lines <- gsub("const T[0-9]+__&", "const double&", lines)
