@@ -124,7 +124,9 @@ expose_stan_functions <- function(stanmodel) {
   # remove more pstream__ arguments
   lines <- gsub(", std::ostream* pstream__) const {", ") const {", 
                 lines, fixed = TRUE)
+  lines <- gsub("(std::ostream* pstream__)", "()", lines, fixed = TRUE)
   lines <- gsub(", pstream__)", ")", lines, fixed = TRUE)
+  lines <- gsub("(pstream__)", "()", lines, fixed = TRUE)
   
   # remove more base_rng__ arguments
   lines <- gsub(", RNG& base_rng__", "", 
