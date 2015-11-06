@@ -49,7 +49,7 @@ expose_stan_functions <- function(stanmodel) {
     
   # get rid of templating and just use double because that is about all R can pass
   lines <- gsub("typename boost::math::tools::promote_args.*type ", "double ", lines)
-  lines <- gsub("^((std::vector<)+)typename boost::math::tools::promote_args.*(>::type)+", "\\1double", lines)
+  lines <- gsub("((std::vector<)+)typename boost::math::tools::promote_args.*(>::type)+", "\\1double", lines)
   lines <- gsub("vector<Eigen::Matrix<.*Eigen::Dynamic,1> >", "vector<vector_d>", lines)
   lines <- gsub("Eigen::Matrix<.*Eigen::Dynamic,1>", "vector_d", lines)
   lines <- gsub("vector<Eigen::Matrix<.*1,Eigen::Dynamic> >", "vector<row_vector_d>", lines)
@@ -89,6 +89,11 @@ expose_stan_functions <- function(stanmodel) {
                                "std::ostream* pstream__ = &Rcpp::Rcout;", 
                                "(void) pstream__;"), i)
     }
+    else if(grepl("(std::ostream* pstream__) {", lines[i], fixed = TRUE)) {
+      lines[i] <- gsub("(std::ostream* pstream__) {", "() {", lines[i], fixed = TRUE)
+      lines <- append(lines, c("std::ostream* pstream__ = &Rcpp::Rcout;", 
+                               "(void) pstream__;"), i)
+    }
     else {
       lines[i] <- gsub(", std::ostream* pstream__) {", ") {", lines[i], fixed = TRUE)
       lines <- append(lines, c("std::ostream* pstream__ = &Rcpp::Rcout;", 
@@ -120,13 +125,20 @@ expose_stan_functions <- function(stanmodel) {
     while(lines[j] != "// [[Rcpp::export]]") j <- j - 1L
     lines <- lines[-j]
   }
+
+  # special case for integrate_ode()
+  ODE_lines <- grep("integrate_ode(", lines, fixed = TRUE)
+  ODE_statements <- grep("integrate_ode(", lines, fixed = TRUE, value = TRUE)
   
-  # remove more pstream__ arguments
-  lines <- gsub(", std::ostream* pstream__) const {", ") const {", 
-                lines, fixed = TRUE)
-  lines <- gsub("(std::ostream* pstream__)", "()", lines, fixed = TRUE)
+  # remove more pstream__ arguments but not from functor signatures
+  # lines <- gsub(", std::ostream* pstream__) const {", ") const {", 
+  #               lines, fixed = TRUE)
+  # lines <- gsub("(std::ostream* pstream__)", "()", lines, fixed = TRUE)
   lines <- gsub(", pstream__)", ")", lines, fixed = TRUE)
   lines <- gsub("(pstream__)", "()", lines, fixed = TRUE)
+  
+  # put back pstream__ arguments in the case of ODEs
+  if (length(ODE_lines) > 0) lines[ODE_lines] <- ODE_statements
   
   # remove more base_rng__ arguments
   lines <- gsub(", RNG& base_rng__", "", 
@@ -146,7 +158,7 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("const T[0-9]+__&", "const double&", lines)
   lines <- gsub("T_lp__& lp__", "double lp__ = 0.0", lines)
   lines <- gsub("^typename.*$", "double", lines)
-  lines <- grep("^template", lines, invert = TRUE, value = TRUE)
+  lines <- grep("^[[:space:]]*template", lines, invert = TRUE, value = TRUE)
   lines <- gsub("<T[0-9]+__>", "<double>", lines)
   
   # deal with accumulators
