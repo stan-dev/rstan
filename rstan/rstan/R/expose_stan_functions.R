@@ -139,6 +139,8 @@ expose_stan_functions <- function(stanmodel) {
   
   # put back pstream__ arguments in the case of ODEs
   if (length(ODE_lines) > 0) lines[ODE_lines] <- ODE_statements
+
+  lines <- gsub("typename boost::math::tools::promote_args.*(>::type)+", "double", lines)
   
   # remove more base_rng__ arguments
   lines <- gsub(", RNG& base_rng__", "", 
@@ -162,7 +164,7 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("<T[0-9]+__>", "<double>", lines)
   
   # deal with accumulators
-  lines <- gsub(", T_lp_accum__& lp_accum__)", ")", lines, fixed = TRUE)
+  lines <- gsub(", T_lp_accum__& lp_accum__", "", lines, fixed = TRUE)
   lines <- gsub(", lp_accum__", "", lines, fixed = TRUE)
   lines <- gsub("get_lp(lp__)", "get_lp(lp__, lp_accum__)", lines, fixed = TRUE)
   
