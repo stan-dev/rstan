@@ -130,12 +130,15 @@ expose_stan_functions <- function(stanmodel) {
   ODE_lines <- grep("integrate_ode(", lines, fixed = TRUE)
   ODE_statements <- grep("integrate_ode(", lines, fixed = TRUE, value = TRUE)
   
-  # remove more pstream__ arguments but not from functor signatures
-  # lines <- gsub(", std::ostream* pstream__) const {", ") const {", 
-  #               lines, fixed = TRUE)
-  # lines <- gsub("(std::ostream* pstream__)", "()", lines, fixed = TRUE)
+  # handle more pstream__ arguments
   lines <- gsub(", pstream__)", ")", lines, fixed = TRUE)
   lines <- gsub("(pstream__)", "()", lines, fixed = TRUE)
+  lines <- gsub(", std::ostream* pstream__) const {",
+                ", std::ostream* pstream__ = &Rcpp::Rcout) const {",
+                lines, fixed = TRUE)
+  lines <- gsub("(std::ostream* pstream__)", 
+                "(std::ostream* pstream__ = &Rcpp::Rcout)", 
+                lines, fixed = TRUE)
   
   # put back pstream__ arguments in the case of ODEs
   if (length(ODE_lines) > 0) lines[ODE_lines] <- ODE_statements
