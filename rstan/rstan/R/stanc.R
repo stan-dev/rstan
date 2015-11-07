@@ -73,15 +73,19 @@ stanc_builder <- function(file, isystem = dirname(file),
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_cppname <- sub("\\.stan$", "", basename(file))
   program <- readLines(file)
-  includes <- grep("#include ", program, fixed = TRUE)
+  includes <- grep("^[[:blank:]]*#include ", program)
   for (i in rev(includes)) {
-    header <- sub("^.*#include[[:blank:]]+", "", program[i])
+    header <- sub("^[[:blank:]]*#include[[:blank:]]+", "", program[i])
     header <- gsub('\\"', '', header)
     header <- gsub("\\'", '', header)
     header <- sub("[[:blank:]]*$", "", header)
     program <- append(program, values = readLines(file.path(isystem, header)), 
                       after = i)
   }
+  check <- grep("^[[:blank:]]*#include ", program)
+  if (length(check) != length(includes))
+    stop("'stanc_builder' does not support recursive #include statements")
+  if (length(check) > 0) program <- program[-check]
   on.exit(print(program))
   out <- stanc(model_code = paste(program, collapse = "\n"), 
                model_name = model_cppname, verbose = verbose, 
