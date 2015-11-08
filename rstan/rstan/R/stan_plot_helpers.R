@@ -96,7 +96,10 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     else 
       pars <- setdiff(sim$pars_oi, c("lp__", "log-posterior"))
   }
-  else pars <- check_pars_second(sim, pars)
+  else {
+    if (!is.stanreg(object)) 
+      pars <- check_pars_second(sim, pars)
+  }
   
   pars <- remove_empty_pars(pars, sim$dims_oi)
   if (unconstrain && "lp__" %in% pars) {
