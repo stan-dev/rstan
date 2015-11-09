@@ -148,6 +148,8 @@ expose_stan_functions <- function(stanmodel) {
   # remove more base_rng__ arguments
   lines <- gsub(", RNG& base_rng__", "", 
                 lines, fixed = TRUE)
+  lines <- gsub("(RNG& base_rng__,", "(",
+                lines, fixed = TRUE)
   lines <- gsub("(RNG& base_rng__", "(",
                 lines, fixed = TRUE)
   lines <- gsub("([[:space:]]+return .*_rng.*), base_rng__\\);",
