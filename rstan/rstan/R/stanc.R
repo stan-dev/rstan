@@ -46,7 +46,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   } else if (r$status == EXCEPTION_RC) {
     lapply(r$msg, function(x) message(x))
     error_msg <- paste("failed to parse Stan model '", model_name,
-                       "' due to the above error.")
+                       "' due to the above error.", sep = '')
     stop(error_msg)
   } 
 
