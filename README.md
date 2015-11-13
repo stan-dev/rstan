@@ -1,5 +1,6 @@
 
-[![Stan logo](https://github.com/stan-dev/stan/blob/master/logos/stanlogo-main.png?raw=true)](http://mc-stan.org)
+[![Stan logo](https://raw.githubusercontent.com/stan-dev/logos/master/logo.png)](http://mc-stan.org)
+
 
 [![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
 
