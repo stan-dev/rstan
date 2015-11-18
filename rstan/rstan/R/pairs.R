@@ -38,7 +38,7 @@ pairs.stanfit <-
     }
     dupes <- duplicated(arr, MARGIN = 3)
     if (any(dupes)) {
-      message("the following parameters were dropped because they are dupiclative\n",
+      message("the following parameters were dropped because they are duplicative\n",
               paste(dimnames(arr)[[3]][dupes], collapse = " "))
       arr <- arr[,,!dupes,drop = FALSE]
     }
