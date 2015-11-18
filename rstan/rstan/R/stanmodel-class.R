@@ -568,9 +568,10 @@ setMethod("sampling", "stanmodel",
                   else message(msg)
                   mat <- as.matrix(tab)
                   colnames(mat) <- "count"
-                  print(mat)
-                  if (.Platform$OS.type == "windows") print(end)
-                  else message(end)
+                  # print(mat)
+                  message(paste(capture.output(print(mat)), collapse = "\n"))
+                  message("If the number in the 'count' column is small, ",
+                          "do not ask about this message on stan-users.")
                 }
               }
               samples[[i]] <- samples_i
