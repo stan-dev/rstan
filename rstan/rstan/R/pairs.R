@@ -98,7 +98,7 @@ pairs.stanfit <-
     
     if (isTRUE(log)) {
       xl <- apply(x >= 0, 2, FUN = all)
-      xl["lp__"] <- FALSE
+      if("lp__" %in% names(xl)) xl["lp__"] <- FALSE
     }
     else if (is.numeric(log)) xl <- log
     else xl <- grepl("x", log)
