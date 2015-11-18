@@ -570,7 +570,10 @@ setMethod("sampling", "stanmodel",
                   colnames(mat) <- "count"
                   # print(mat)
                   message(paste(capture.output(print(mat)), collapse = "\n"))
-                  message("If the number in the 'count' column is small, ",
+                  message("When a numerical problem occurs, the Metropolis proposal gets rejected.")
+                  message("However, by design Metropolis proposals sometimes get rejected ", 
+                          "even when there are no numerical problems.")
+                  message("Thus, if the number in the 'count' column is small, ",
                           "do not ask about this message on stan-users.")
                 }
               }
