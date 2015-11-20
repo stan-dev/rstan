@@ -28,7 +28,10 @@
 }
 
 \note{
-  The best practice is to use \code{sflist2stanfit} on a list of \code{stanfit}
+  This function should be called in rare circumstances because 
+  \code{\link{sampling}} has a \code{cores} argument that allows multiple
+  chains to be executed in parallel. However, if you need to depart from that,
+  the best practice is to use \code{sflist2stanfit} on a list of \code{stanfit}
   objects created with the same \code{seed} but different \code{chain_id} (see
   example below). Using the same seed but different chain_id can make sure 
   the random number generations for all chains are not correlated. 
@@ -87,16 +90,15 @@ f12 <- sflist2stanfit(list(f1, f2))
 ## parallel stan call for unix-like OS
 library(parallel)
 
-## this may not work on Windows 
+if (.Platfrom$OS.type == "unix") {
 sflist1 <- 
   mclapply(1:4, mc.cores = 4, 
            function(i) stan(fit = foo, data = foo_data, seed = seed, 
 	                    chains = 1, chain_id = i, refresh = -1))
 f3 <- sflist2stanfit(sflist1)
-
-## for Windows (this works on Unix-like OS as well)
-
-CL = makeCluster(4)
+}
+if (.Platform$OS.type == "windows") { # also works on non-Windows
+CL <- makeCluster(4)
 clusterExport(cl = CL, c("foo_data", "foo", "seed")) 
 sflist1 <- parLapply(CL, 1:4, fun = function(cid) {  
   require(rstan)
@@ -107,6 +109,5 @@ sflist1 <- parLapply(CL, 1:4, fun = function(cid) {
 fit <- sflist2stanfit(sflist1)
 print(fit)
 stopCluster(CL)
-
-## end example for Windows 
+} # end example for Windows 
 }} 

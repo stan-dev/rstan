@@ -568,9 +568,13 @@ setMethod("sampling", "stanmodel",
                   else message(msg)
                   mat <- as.matrix(tab)
                   colnames(mat) <- "count"
-                  print(mat)
-                  if (.Platform$OS.type == "windows") print(end)
-                  else message(end)
+                  # print(mat)
+                  message(paste(capture.output(print(mat)), collapse = "\n"))
+                  message("When a numerical problem occurs, the Metropolis proposal gets rejected.")
+                  message("However, by design Metropolis proposals sometimes get rejected ", 
+                          "even when there are no numerical problems.")
+                  message("Thus, if the number in the 'count' column is small, ",
+                          "do not ask about this message on stan-users.")
                 }
               }
               samples[[i]] <- samples_i

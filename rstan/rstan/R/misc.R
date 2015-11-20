@@ -1593,9 +1593,16 @@ throw_sampler_warnings <- function(object) {
     if ("n_divergent__" %in% colnames(x)) return(sum(x[,"n_divergent__"]))
     else return(0)
   }))
-  if (n_d > 0)
+  if (n_d > 0) {
+    ad <- object@stan_args[[1]]$control
+    if (is.null(ad)) ad <- 0.8
+    else {
+      ad <- ad$adapt_delta
+      if (is.null(ad)) ad <- 0.8
+    }
     warning("There were ", n_d, " divergent transitions after warmup.",
-            " Increasing adapt_delta may help.", call. = FALSE)
+            " Increasing adapt_delta above ", ad, " may help.", call. = FALSE)
+  }
   max_td <- object@stan_args[[1]]$control
   if (is.null(max_td)) max_td <- 10
   else {
@@ -1609,7 +1616,7 @@ throw_sampler_warnings <- function(object) {
   if (n_m > 0)
     warning("There were ", n_m,
             " transitions after warmup that exceeded the maximum treedepth.",
-            " Increase max_treedepth.", call. = FALSE)
+            " Increase max_treedepth above ", max_td, ".", call. = FALSE)
   if (n_d > 0 || n_m > 0) warning("Examine the pairs() plot to diagnose sampling problems\n",
                                   call. = FALSE, noBreaks. = TRUE)
   return(invisible(NULL))
