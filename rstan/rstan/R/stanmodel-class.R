@@ -415,7 +415,7 @@ setMethod("sampling", "stanmodel",
                 utils::browseURL(paste0("file://", sinkfile_html))
               }
               else if (identical(Sys.getenv("RSTUDIO"), "1") && 
-                       .Platform$OS.type == "windows") {
+                       .Platform$OS.type == "windows" && interactive()) {
                 if (!requireNamespace("rstudioapi"))
                   stop("must install the rstudioapi package when using RStan in parallel via RStudio")
                 if (rstudioapi::isAvailable("0.98.423")) {
