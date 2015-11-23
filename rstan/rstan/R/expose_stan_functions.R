@@ -126,9 +126,12 @@ expose_stan_functions <- function(stanmodel) {
     lines <- lines[-j]
   }
 
-  # special case for integrate_ode()
+  # special cases
   ODE_lines <- grep("integrate_ode(", lines, fixed = TRUE)
   ODE_statements <- grep("integrate_ode(", lines, fixed = TRUE, value = TRUE)
+
+  print_lines <- grep("if (pstream__)", lines, fixed = TRUE)
+  print_statements <- grep("if (pstream__)", lines, fixed = TRUE, value = TRUE)
   
   # handle more pstream__ arguments
   lines <- gsub(", pstream__)", ")", lines, fixed = TRUE)
@@ -140,9 +143,10 @@ expose_stan_functions <- function(stanmodel) {
                 "(std::ostream* pstream__ = &Rcpp::Rcout)", 
                 lines, fixed = TRUE)
   
-  # put back pstream__ arguments in the case of ODEs
+  # put back pstream__ arguments
   if (length(ODE_lines) > 0) lines[ODE_lines] <- ODE_statements
-
+  if (length(print_lines) > 0) lines[print_lines] <- print_statements
+  
   lines <- gsub("typename boost::math::tools::promote_args.*(>::type)+", "double", lines)
   
   # remove more base_rng__ arguments
