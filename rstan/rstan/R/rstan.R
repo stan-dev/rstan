@@ -239,7 +239,7 @@ stan <- function(file, model_name = "anon_model",
     sm <- stan_model(file, model_name = model_name, 
                      model_code = model_code, stanc_ret = NULL,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
-                     save_dso = save_dso, verbose = verbose, ...)
+                     save_dso = save_dso, verbose = verbose)
   }
 
   if (is.null(sample_file))  sample_file <- NA 
