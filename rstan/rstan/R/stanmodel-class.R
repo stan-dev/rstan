@@ -571,10 +571,10 @@ setMethod("sampling", "stanmodel",
                   if (.Platform$OS.type == "windows") {
                     print(mat)
                     print("When a numerical problem occurs, the Metropolis proposal gets rejected.")
-                    print("However, by design Metropolis proposals sometimes get rejected ", 
-                            "even when there are no numerical problems.")
-                    print("Thus, if the number in the 'count' column is small, ",
-                            "do not ask about this message on stan-users.")
+                    print(paste("However, by design Metropolis proposals sometimes get rejected ", 
+                                "even when there are no numerical problems."))
+                    print(paste("Thus, if the number in the 'count' column is small, ",
+                                "do not ask about this message on stan-users."))
                   }
                   else {
                     message(paste(capture.output(print(mat)), collapse = "\n"))
