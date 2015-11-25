@@ -80,8 +80,8 @@ stan_model <- function(file,
       file.rda <- file.path(tempdir(), paste0(md5, ".rda"))
     }
     if(!file.exists(file.rda) ||
-       (mtime.rda <- file.info(file.rda)$mtime) <  mtime ||
-       mtime.rda < as.POSIXct(packageDescription("rstan")$Date) ||
+       (mtime.rda <- file.info(file.rda)$mtime) < 
+       as.POSIXct(packageDescription("rstan")$Date) ||
        mtime.rda > rstan_load_time ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
