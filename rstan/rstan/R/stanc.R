@@ -63,7 +63,7 @@ stan_version <- function() {
 }
 
 rstudio_stanc <- function(filename) {
-  output <- stanc(filename)
+  output <- stanc_builder(filename)
   message(filename, " is syntactically correct.")
   return(invisible(output))
 }
@@ -86,10 +86,8 @@ stanc_builder <- function(file, isystem = dirname(file),
   if (length(check) != length(includes))
     stop("'stanc_builder' does not support recursive #include statements")
   if (length(check) > 0) program <- program[-check]
-  on.exit(print(program))
   out <- stanc(model_code = paste(program, collapse = "\n"), 
                model_name = model_cppname, verbose = verbose, 
                obfuscate_model_name = obfuscate_model_name)
-  on.exit(NULL)
   return(out)
 }
