@@ -24,7 +24,8 @@ stan_model <- function(file,
                        eigen_lib = NULL, 
                        save_dso = TRUE,
                        verbose = FALSE, 
-                       auto_write = rstan_options("auto_write"), ...) { 
+                       auto_write = rstan_options("auto_write"), 
+                       obfuscate_model_name = TRUE) { 
 
   # Construct a stan model from stan code 
   # 
@@ -51,7 +52,8 @@ stan_model <- function(file,
     else file <- normalizePath(file)
     
     stanc_ret <- stanc(file = file, model_code = model_code, 
-                       model_name = model_name, verbose, ...)
+                       model_name = model_name, verbose = verbose,
+                       obfuscate_model_name = obfuscate_model_name)
     
     # find possibly identical stanmodels
     S4_objects <- apropos("^[[:alpha:]]+.*$", mode = "S4")
