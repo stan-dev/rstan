@@ -1,3 +1,17 @@
+Thu Nov 26 2015 (2.8.1)
+1. Bug fixes
+  * Fix vignette build for R 3.1.x on Windows
+  * Fix accidentally passing stan() arguments to stanc()
+  * Fix output of numerical problems under Windows / RStudio
+  * Have check button in RStudio call stanc_builder() rather than stanc()
+
+Thu Nov 19 2015 (2.8.1)
+1. Bug fixes
+  * several but nothing that would affect the draws from any posterior distribution
+2. Changes
+  * introduce stanc_builder() with C++-style #include statements
+  * introduce rstan.package.skeleton to create a package that depends on rstan like rstanarm
+
 Sat Sep 19 2015 (2.8.0)
 1. Bug fixes
   * lots, many of which were reported on stan-users or the rstan GitHub repository

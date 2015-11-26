@@ -2,7 +2,7 @@ Package: rstan
 Type: Package
 Title: R Interface to Stan
 Version: 2.8.2
-Date: 2015-11-25
+Date: 2015-11-26
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
              person("Krzysztof", "Sakrejda", role = "ctb"),
