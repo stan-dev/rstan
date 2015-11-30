@@ -30,7 +30,7 @@ pairs.stanfit <-
     arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
     sims <- nrow(arr)
     chains <- ncol(arr)
-    varying <- apply(arr, 3, FUN = function(y) length(unique(y)) > 1)
+    varying <- apply(arr, 3, FUN = function(y) length(unique(c(y))) > 1)
     if (any(!varying)) {
       message("the following parameters were dropped because they are constant\n",
               paste(names(varying)[!varying], collapse = " "))
