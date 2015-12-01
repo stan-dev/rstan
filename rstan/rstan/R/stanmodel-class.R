@@ -371,6 +371,8 @@ setMethod("sampling", "stanmodel",
               }
             }
             # check data and preprocess
+            cat('\n', "CHECKING DATA AND PREPROCESSING FOR MODEL '", object@model_name, 
+                    "' NOW.\n", sep = '')
             if (check_data) {
               data <- try(force(data))
               if (is(data, "try-error")) {
@@ -385,8 +387,12 @@ setMethod("sampling", "stanmodel",
                 }
               } else data <- list()
             }
+            cat('\n', "COMPILING MODEL '", object@model_name, 
+                    "' NOW.\n", sep = '')
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             cxxfun <- grab_cxxfun(object@dso)
+            cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
+                    "' NOW.\n", sep = '')
             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
             if (is(sampler, "try-error")) {
