@@ -32,11 +32,27 @@ namespace rstan {
       if (N_ > 0)
         M_ = x_[0].size();
     }
+    
+    void operator()(const std::string& key,
+                    double value) { }
 
-    void operator()(const std::vector<std::string>& x) { }
+    void operator()(const std::string& key,
+                    int value) { }
 
-    template <class T>
-    void operator()(const std::vector<T>& x) {
+    void operator()(const std::string& key,
+                    const std::string& value) { }
+
+    void operator()(const std::string& key,
+                    const double* values,
+                    int n_values) { }
+
+    void operator()(const std::string& key,
+                    const double* values,
+                    int n_rows, int n_cols) { } 
+        
+    void operator()(const std::vector<std::string>& names) { }
+
+    void operator()(const std::vector<double>& x) {
       if (N_ != x.size())
         throw std::length_error("vector provided does not "
                                 "match the parameter length");
@@ -46,16 +62,10 @@ namespace rstan {
         x_[n][m_] = x[n];
       m_++;
     }
-
-    void operator()(const std::string x) { }
-
+    
     void operator()() { }
 
-    bool is_writing() const {
-      if (m_ < M_)
-        return true;
-      return false;
-    }
+    void operator()(const std::string& message) { }
 
     const std::vector<InternalVector>& x() const {
       return x_;

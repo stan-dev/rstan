@@ -45,31 +45,38 @@ namespace rstan {
                                   "elements out of range");
     }
 
-    void operator()(const std::vector<std::string>& x) {
-      values_(x);
-    }
+    void operator()(const std::string& key,
+                    double value) { }
 
-    template <class T>
-    void operator()(const std::vector<T>& x) {
-      if (x.size() != N_)
+    void operator()(const std::string& key,
+                    int value) { }
+
+    void operator()(const std::string& key,
+                    const std::string& value) { }
+
+    void operator()(const std::string& key,
+                    const double* values,
+                    int n_values) { }
+
+    void operator()(const std::string& key,
+                    const double* values,
+                    int n_rows, int n_cols) { } 
+
+    void operator()(const std::vector<std::string>& names) {
+    }
+    
+    void operator()(const std::vector<double>& state) {
+      if (state.size() != N_)
         throw std::length_error("vector provided does not "
                                 "match the parameter length");
       for (size_t n = 0; n < N_filter_; n++)
-        tmp[n] = x[filter_[n]];
+        tmp[n] = state[filter_[n]];
       values_(tmp);
     }
 
-    void operator()(const std::string x) {
-      values_(x);
-    }
+    void operator()(const std::string& message) { }
 
-    void operator()() {
-      values_();
-    }
-
-    bool is_writing() const {
-      return values_.is_writing();
-    }
+    void operator()() { }
 
     const std::vector<InternalVector>& x() {
       return values_.x();

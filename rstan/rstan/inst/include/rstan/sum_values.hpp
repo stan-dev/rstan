@@ -15,29 +15,45 @@ namespace rstan {
     sum_values(const size_t N, const size_t skip)
       : N_(N), m_(0), skip_(skip), sum_(N_, 0.0) { }
 
+
+
+    void operator()(const std::string& key,
+                    double value) { }
+    
+    void operator()(const std::string& key,
+                    int value) { }
+
+    void operator()(const std::string& key,
+                    const std::string& value) { }
+
+    void operator()(const std::string& key,
+                    const double* values,
+                    int n_values) { }
+
+    void operator()(const std::string& key,
+                    const double* values,
+                    int n_rows, int n_cols) { } 
+        
     /**
      * Do nothing with std::string vector
      *
-     * @tparam T type of element
-     * @param x vector of type T
+     * @param names
      */
-    void operator()(const std::vector<std::string>& x) {
-    }
+    void operator()(const std::vector<std::string>& names) { }
+
 
     /**
      * Add values to cumulative sum
      *
-     * @tparam T type of element
      * @param x vector of type T
      */
-    template <class T>
-    void operator()(const std::vector<T>& x) {
-      if (N_ != x.size())
+    void operator()(const std::vector<double>& state) {
+      if (N_ != state.size())
         throw std::length_error("vector provided does not "
                                 "match the parameter length");
       if (m_ >= skip_) {
         for (size_t n = 0; n < N_; n++)
-          sum_[n] += x[n];
+          sum_[n] += state[n];
       }
       m_++;
     }
@@ -48,20 +64,13 @@ namespace rstan {
      *
      * @param x string to print with prefix in front
      */
-    void operator()(const std::string x) { }
+    void operator()(const std::string& message) { }
 
     /**
      * Do nothing
      *
      */
     void operator()() { }
-
-    /**
-     * Indicator function for whether the instance is recording.
-     */
-    bool is_writing() const {
-      return true;
-    }
 
     const std::vector<double>& sum() const {
       return sum_;
@@ -77,7 +86,6 @@ namespace rstan {
       else
         return 0;
     }
-
 
   private:
     size_t N_;
