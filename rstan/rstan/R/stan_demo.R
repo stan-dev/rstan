@@ -22,7 +22,7 @@ delete_stan_demo_folder <- function() {
 
 stan_demo <-
 function(model = character(0), 
-         method = c("sampling", "optimizing"), ...) {
+         method = c("sampling", "optimizing", "meanfield", "fullrank"), ...) {
   if(is.numeric(model)) {
     MODEL_NUM <- as.integer(model)
     model <- character(0)
@@ -82,5 +82,5 @@ function(model = character(0),
   dots$data <- STAN_ENV
   if(method == "sampling") return(do.call(sampling, args = dots))
   else if (method == "optimizing") return(do.call(optimizing, args = dots))
-  # else return(do.call(vb, args = dots))
+  else return(do.call(vb, args = dots))
 }
