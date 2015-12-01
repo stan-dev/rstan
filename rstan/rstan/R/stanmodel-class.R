@@ -213,7 +213,6 @@ setMethod("vb", "stanmodel",
                         .MISC = sfmiscenv) 
             return(nfit)
           })
->>>>>>> parent of 54c2d62... disable vb
 
 setMethod("optimizing", "stanmodel",
           function(object, data = list(), 
