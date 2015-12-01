@@ -11,7 +11,7 @@
 \alias{grad_log_prob,ANY-method}
 \alias{unconstrain_pars,ANY-method}
 \alias{constrain_pars,ANY-method}
-
+\alias{cpp_object_initializer}
 \alias{cxxdso-class}
 \alias{show,cxxdso-method}
 \alias{grab_cxxfun,cxxdso-method}

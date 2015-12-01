@@ -16,15 +16,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 extract_sparse_parts <- function(A) {
+  if (!requireNamespace("Matrix")) 
+    stop("You have to install the Matrix package to call 'extract_sparse_parts'")
   if (class(A) == 'matrix') 
     A <- Matrix::Matrix(A, sparse=TRUE)
   A <- Matrix::t(A)
-  if (class(A) == 'dgCMatrix') 
-    return(.Call("extract_sparse_components", A))
-  else 
-    stop("Argument 'x' must either be of class 'matrix' or 'dgCMatrix'.")
+  A <- as(A, "dgCMatrix")
+  return(.Call("extract_sparse_components", A))
 }
-
-
-
-

@@ -66,28 +66,32 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 }  
 
 setMethod("plot", signature(x = "stanfit", y = "missing"), 
-          function(x, ..., pars, include = TRUE, unconstrain = FALSE) {
+          function(x, ..., plotfun) {
             if (x@mode == 1L) {
               cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
                   "sampling is not conducted.\n", sep = '')
               return(invisible(NULL)) 
             } else if (x@mode == 2L) {
-              cat("Stan model '", x@model_name, "' does not contain samples.\n", sep = '') 
+              cat("Stan model '", x@model_name, 
+                  "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
             } 
-
             if (isTRUE(all.equal(x@sim$n_save, x@sim$warmup2,
-                check.attributes = FALSE, check.names = FALSE))) {
-              cat("Stan model '", x@model_name, "' does not contain samples after warmup.\n", sep = '')
+                                 check.attributes = FALSE, check.names = FALSE))) {
+              cat("Stan model '", x@model_name, 
+                  "' does not contain samples after warmup.\n", sep = '')
               return(invisible(NULL))
             }
-            args <- list(object = x, include = include, unconstrain = unconstrain, ...)
-            if (!missing(pars)) { 
-              if ("log-posterior" %in% pars)
-                pars[which(pars == "log-posterior")] <- "lp__"
-              args$pars <- pars
+            
+            if (missing(plotfun)) fun <- "stan_plot" 
+            else {
+              plotters <- paste0("stan_", c("plot", "trace", "scat", "hist", "dens", "ac",
+                                            "diag", "rhat", "ess", "mcse", "par"))
+              fun <- grep(plotfun, plotters, value = TRUE)
+              if (!length(fun)) stop("Plotting function not found.")
+              else fun <- match.fun(fun)
             }
-            do.call("stan_plot", args)
+            do.call(fun, list(object = x, ...))
           }) 
 
 setGeneric(name = "get_stancode",

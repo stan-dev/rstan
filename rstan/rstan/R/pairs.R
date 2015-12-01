@@ -30,7 +30,7 @@ pairs.stanfit <-
     arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
     sims <- nrow(arr)
     chains <- ncol(arr)
-    varying <- apply(arr, 3, FUN = function(y) length(unique(y)) > 1)
+    varying <- apply(arr, 3, FUN = function(y) length(unique(c(y))) > 1)
     if (any(!varying)) {
       message("the following parameters were dropped because they are constant\n",
               paste(names(varying)[!varying], collapse = " "))
@@ -38,7 +38,7 @@ pairs.stanfit <-
     }
     dupes <- duplicated(arr, MARGIN = 3)
     if (any(dupes)) {
-      message("the following parameters were dropped because they are dupiclative\n",
+      message("the following parameters were dropped because they are duplicative\n",
               paste(dimnames(arr)[[3]][dupes], collapse = " "))
       arr <- arr[,,!dupes,drop = FALSE]
     }
@@ -98,7 +98,7 @@ pairs.stanfit <-
     
     if (isTRUE(log)) {
       xl <- apply(x >= 0, 2, FUN = all)
-      xl["lp__"] <- FALSE
+      if("lp__" %in% names(xl)) xl["lp__"] <- FALSE
     }
     else if (is.numeric(log)) xl <- log
     else xl <- grepl("x", log)

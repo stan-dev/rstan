@@ -59,6 +59,7 @@ new_empty_stanfit <- function(stanmodel, miscenv = new.env(parent = emptyenv()),
       .MISC = miscenv) 
 } 
 
+
 prep_call_sampler <- function(object) {
   if (!is_sm_valid(object))
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
@@ -71,15 +72,21 @@ prep_call_sampler <- function(object) {
   } 
 } 
 
+# This function gets used when a stanmodel instance is created
+# in function stan_model.
+mk_cppmodule <- function(object) {
+  prep_call_sampler(object)
+  model_cppname <- object@model_cpp$model_cppname
+  mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
+  eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+}
+
 # setMethod("vb", "stanmodel", 
 #           function(object, data = list(), pars = NA, include = TRUE,
 #                    seed = sample.int(.Machine$integer.max, 1),
 #                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
 #                    algorithm = c("meanfield", "fullrank"), ...) {
-#             prep_call_sampler(object)
-#             model_cppname <- object@model_cpp$model_cppname
-#             mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
-#             stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+#             stan_fit_cpp_module <- object@mk_cppmodule(object)
 # 
 #             if (is.list(data) & !is.data.frame(data)) {
 #               parsed_data <- parse_data(get_cppcode(object))
@@ -109,7 +116,8 @@ prep_call_sampler <- function(object) {
 #                 }
 #               } else data <- list()
 #             }
-#             sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun))
+#             cxxfun <- grab_cxxfun(object@dso)
+#             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
 #             if (is(sampler, "try-error")) {
 #               message('failed to create the model; variational Bayes not done')
 #               return(invisible(new_empty_stanfit(object)))
@@ -209,19 +217,20 @@ setMethod("optimizing", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
-                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, ...) {
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname 
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
-            
+                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
+                   draws = 0, constrained = TRUE, ...) {
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
-              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              if (!is.list(parsed_data)) {
+                message("failed to get names of data from the model; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
-            }
-            else if (is.character(data)) { # names of objects
+            } else if (is.character(data)) { # names of objects
               data <- try(mklist(data))
               if (is(data, "try-error")) {
                 message("failed to create the data; sampling not done")
@@ -244,7 +253,8 @@ setMethod("optimizing", "stanmodel",
                 }
               } else data <- list()
             }
-            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
+            cxxfun <- grab_cxxfun(object@dso)
+            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             if (is(sampler, "try-error")) {
               message('failed to create the optimizer; optimization not done') 
               return(invisible(list(stanmodel = object)))
@@ -288,7 +298,7 @@ setMethod("optimizing", "stanmodel",
             optim <- sampler$call_sampler(c(args, dotlist))
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
-            if(hessian) {
+            if (hessian || draws) {
               fn <- function(theta) {
                 sampler$log_prob(theta, FALSE, FALSE)
               }
@@ -297,10 +307,33 @@ setMethod("optimizing", "stanmodel",
               }
               theta <- rstan_relist(optim$par, skeleton)
               theta <- sampler$unconstrain_pars(theta)
-              optim$hessian <- optimHess(theta, fn, gr,
-                                         control = list(fnscale = -1))
-              colnames(optim$hessian) <- rownames(optim$hessian) <- 
-                sampler$unconstrained_param_names(FALSE, FALSE)
+              H <- optimHess(theta, fn, gr, control = list(fnscale = -1))
+              colnames(H) <- rownames(H) <- sampler$unconstrained_param_names(FALSE, FALSE)
+              if (hessian) optim$hessian <- H
+              if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
+                K <- ncol(R)
+                R_inv <- backsolve(R, diag(K))
+                Z <- matrix(rnorm(K * draws), K, draws)
+                theta_tilde <- t(theta + R_inv %*% Z)
+                if (constrained) {
+                  theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
+                    sampler$constrain_pars(theta)  
+                  }))
+                  colnames(theta_tilde) <- names(optim$par)
+                }
+                else {
+                  log_p <- apply(theta_tilde, 1, FUN = function(theta) {
+                    sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
+                  })
+                  log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
+                  optim$log_p <- log_p
+                  optim$log_g <- log_g
+                  colnames(theta_tilde) <- colnames(H)
+                  optim$log_prob <- sampler$log_prob
+                  optim$grad_log_prob <- sampler$grad_log_prob
+                }
+                optim$theta_tilde <- theta_tilde
+              }
             }
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             return(optim)
@@ -318,16 +351,17 @@ setMethod("sampling", "stanmodel",
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), 
                    show_messages = TRUE, ...) {
-
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- try(parse_data(get_cppcode(object)))
-              if (!is.list(parsed_data)) return(invisible(new_empty_stanfit(object)))
-              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              if (!is.list(parsed_data)) {
+                message("failed to get names of data from the model; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
-            }
-            else if (is.character(data)) { # names of objects
+            } else if (is.character(data)) { # names of objects
               data <- try(mklist(data))
               if (is(data, "try-error")) {
                 message("failed to create the data; sampling not done")
@@ -349,11 +383,9 @@ setMethod("sampling", "stanmodel",
                 }
               } else data <- list()
             }
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname 
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE) 
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = ''))) 
-            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun)) 
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            cxxfun <- grab_cxxfun(object@dso)
+            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
             if (is(sampler, "try-error")) {
               message('failed to create the sampler; sampling not done') 
@@ -383,13 +415,15 @@ setMethod("sampling", "stanmodel",
                 utils::browseURL(paste0("file://", sinkfile_html))
               }
               else if (identical(Sys.getenv("RSTUDIO"), "1") && 
-                       .Platform$OS.type == "windows") {
+                       .Platform$OS.type == "windows" && interactive()) {
                 if (!requireNamespace("rstudioapi"))
                   stop("must install the rstudioapi package when using RStan in parallel via RStudio")
-                v <- rstudioapi::getVersion()
-                if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
-                else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
-                else stop("RStudio version ", v, " is too outdated for RStan to use in parallel")
+                if (rstudioapi::isAvailable("0.98.423")) {
+                  v <- rstudioapi::getVersion()
+                  if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
+                  else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
+                }
+                else sinkfile <- ""
               }
               else sinkfile <- ""
               cl <- parallel::makeCluster(min(cores, chains), 
@@ -399,10 +433,11 @@ setMethod("sampling", "stanmodel",
                                        fields = "Imports")[1,]
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
-              dependencies <- c("Rcpp", "rstan", dependencies)
+              dependencies <- c("Rcpp", "rstan", "rstanarm", dependencies)
               .paths <- unique(sapply(dependencies, FUN = function(d) {
-                sub(paste0("/", d, "$"), "", system.file(package = d))
+                dirname(system.file(package = d))
               }))
+              .paths <- .paths[.paths != ""]
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
               parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
               parallel::clusterEvalQ(cl, expr = 
@@ -493,16 +528,19 @@ setMethod("sampling", "stanmodel",
             samples <- vector("list", chains)
 
             for (i in 1:chains) {
-              if (is.null(dots$refresh) || dots$refresh > 0)
-                cid <- args_list[[i]]$chain_id
+              cid <- args_list[[i]]$chain_id
+              if (is.null(dots$refresh) || dots$refresh > 0) {
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", cid, ").\n", sep = '')
+              }
               if (is.character(show_messages)) 
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
-              sink(file(messages, open = "wt"), type = "message")
+              mfile <- file(messages, open = "wt")
+              sink(mfile, type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(NULL, type = "message")
+              close(mfile)
               report <- scan(file = messages, what = character(),
                              sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
@@ -524,14 +562,28 @@ setMethod("sampling", "stanmodel",
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
                   msg <- paste("The following numerical problems occured",
-                               "the indicated number of times on chain", cid)
+                               "the indicated number of times after warmup on chain", 
+                               cid)
                   if (.Platform$OS.type == "windows") print(msg)
                   else message(msg)
                   mat <- as.matrix(tab)
                   colnames(mat) <- "count"
-                  print(mat)
-                  if (.Platform$OS.type == "windows") print(end)
-                  else message(end)
+                  if (.Platform$OS.type == "windows") {
+                    print(mat)
+                    print("When a numerical problem occurs, the Metropolis proposal gets rejected.")
+                    print(paste("However, by design Metropolis proposals sometimes get rejected ", 
+                                "even when there are no numerical problems."))
+                    print(paste("Thus, if the number in the 'count' column is small, ",
+                                "do not ask about this message on stan-users."))
+                  }
+                  else {
+                    message(paste(capture.output(print(mat)), collapse = "\n"))
+                    message("When a numerical problem occurs, the Metropolis proposal gets rejected.")
+                    message("However, by design Metropolis proposals sometimes get rejected ", 
+                            "even when there are no numerical problems.")
+                    message("Thus, if the number in the 'count' column is small, ",
+                            "do not ask about this message on stan-users.")
+                  }
                 }
               }
               samples[[i]] <- samples_i

@@ -15,11 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FALSE, ...) {
+stanc <- function(file, model_code = '', model_name = "anon_model",
+                  verbose = FALSE, obfuscate_model_name = TRUE) {
   # Call stanc, written in C++ 
-  # Args:
-  # ..., to pass argument obfuscate_model_name 
-  # 
   model_name2 <- deparse(substitute(model_code))  
   if (is.null(attr(model_code, "model_name2"))) 
     attr(model_code, "model_name2") <- model_name2 
@@ -32,13 +30,8 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
   EXCEPTION_RC <- -1
   PARSE_FAIL_RC <- -2 
   
-  dotlst <- list(...) 
-  omn_con <- "obfuscate_model_name" %in% names(dotlst) 
-
-  obfuscate_name <- if (!omn_con) TRUE else as.logical(dotlst[["obfuscate_model_name"]]) 
-  if (is.na(obfuscate_name))  obfuscate_name <- FALSE
   # model_name in C++, to avoid names that would be problematic in C++. 
-  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_name) 
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
   r <- .Call("CPP_stanc280", model_code, model_cppname)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
@@ -51,14 +44,9 @@ stanc <- function(file, model_code = '', model_name = "anon_model", verbose = FA
     stop(paste("failed to parse Stan model '", model_name,
                "' and no error message provided"), sep = '')
   } else if (r$status == EXCEPTION_RC) {
+    lapply(r$msg, function(x) message(x))
     error_msg <- paste("failed to parse Stan model '", model_name,
-                       "' with error message:\n", r$msg, sep = '')
-    error_msg_len <- min(8170, nchar(error_msg))
-    warning.length <- getOption('warning.length')
-    if (error_msg_len > warning.length) {
-      options(warning.length = error_msg_len)
-      on.exit(options(warning.length = warning.length), add = TRUE)
-    }
+                       "' due to the above error.", sep = '')
     stop(error_msg)
   } 
 
@@ -75,7 +63,31 @@ stan_version <- function() {
 }
 
 rstudio_stanc <- function(filename) {
-  output <- stanc(filename)
+  output <- stanc_builder(filename)
   message(filename, " is syntactically correct.")
   return(invisible(output))
+}
+
+stanc_builder <- function(file, isystem = dirname(file), 
+                          verbose = FALSE, obfuscate_model_name = FALSE) {
+  stopifnot(is.character(file), length(file) == 1, file.exists(file))
+  model_cppname <- sub("\\.stan$", "", basename(file))
+  program <- readLines(file)
+  includes <- grep("^[[:blank:]]*#include ", program)
+  for (i in rev(includes)) {
+    header <- sub("^[[:blank:]]*#include[[:blank:]]+", "", program[i])
+    header <- gsub('\\"', '', header)
+    header <- gsub("\\'", '', header)
+    header <- sub("[[:blank:]]*$", "", header)
+    program <- append(program, values = readLines(file.path(isystem, header)), 
+                      after = i)
+  }
+  check <- grep("^[[:blank:]]*#include ", program)
+  if (length(check) != length(includes))
+    stop("'stanc_builder' does not support recursive #include statements")
+  if (length(check) > 0) program <- program[-check]
+  out <- stanc(model_code = paste(program, collapse = "\n"), 
+               model_name = model_cppname, verbose = verbose, 
+               obfuscate_model_name = obfuscate_model_name)
+  return(out)
 }

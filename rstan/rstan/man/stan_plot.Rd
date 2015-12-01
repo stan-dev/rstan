@@ -90,7 +90,7 @@ For \code{stan_plot}, there are additional arguments
   \item{point_est}{The point estimate to show. Either "mean" or "median".}
   \item{show_density}{Should kernel density estimates be plotted above 
   the intervals? Defaults to \code{FALSE}.}
-  \item{ci_level}{The interval to highlight. Defaults to 0.5 (a 50 percent interval).}
+  \item{ci_level}{The interval to highlight. Defaults to 0.8 (an 80 percent interval).}
   \item{outer_level}{The outer interval also shown but not highlighted.
   Defaults to 0.95.}
   \item{show_outer_line}{Should the \code{outer_level} interval be shown or hidden? 
@@ -154,14 +154,13 @@ trace +
 
 facet_style <- theme(strip.background = element_rect(fill = "white"),
                      strip.text = element_text(size = 13, color = "black"))
-trace <- trace + facet_style
-trace
+(trace <- trace + facet_style)
 
 # scatterplot
-mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "blue", size = 4)
+(mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "blue", size = 4))
 mu_vs_tau + 
   coord_flip() + 
-  theme(panel.background = element_rect(fill = "black")))
+  theme(panel.background = element_rect(fill = "black"))
   
 }
 }

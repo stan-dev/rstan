@@ -43,6 +43,7 @@ setClass(Class = "stanmodel",
            model_cpp = "list", 
              # model_cppname (used to define Rcpp module)  & 
              # model_cppcode (just the C++ code for the model) 
+           mk_cppmodule = "function", # use a function to create the cpp module
            dso = 'cxxdso'), 
          validity = function(object) {
            return(TRUE)
