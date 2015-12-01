@@ -66,16 +66,16 @@
 #include <stan/services/io/write_iteration_csv.hpp>
 #include <stan/services/io/write_model.hpp>
 #include <stan/services/io/write_stan.hpp>
-#include <stan/services/init/init_adapt.hpp>
-#include <stan/services/init/init_nuts.hpp>
-#include <stan/services/init/init_static_hmc.hpp>
-#include <stan/services/init/init_windowed_adapt.hpp>
+#include <stan/services/sample/init_adapt.hpp>
+#include <stan/services/sample/init_nuts.hpp>
+#include <stan/services/sample/init_static_hmc.hpp>
+#include <stan/services/sample/init_windowed_adapt.hpp>
 #include <stan/services/init/initialize_state.hpp>
-#include <stan/services/mcmc/print_progress.hpp>
-#include <stan/services/mcmc/run_markov_chain.hpp>
+#include <stan/services/sample/progress.hpp>
+//#include <stan/services/mcmc/run_markov_chain.hpp>
 #include <stan/services/mcmc/sample.hpp>
 #include <stan/services/mcmc/warmup.hpp>
-#include <stan/services/optimization/do_bfgs_optimize.hpp>
+#include <stan/services/optimize/do_bfgs_optimize.hpp>
 
 
 #include <rstan/io/rlist_ref_var_context.hpp>
@@ -93,9 +93,9 @@
 
 // REF: cmdstan: src/cmdstan/command.hpp
 
-#include <stan/io/mcmc_writer.hpp>
-#include <stan/interface_callbacks/writer/csv.hpp>
-#include <stan/interface_callbacks/writer/messages.hpp>
+#include <stan/services/sample/mcmc_writer.hpp>
+//#include <stan/interface_callbacks/writer/csv.hpp>
+//#include <stan/interface_callbacks/writer/messages.hpp>
 #include <stan/interface_callbacks/writer/base_writer.hpp>
 //#include <stan/services/mcmc.hpp>
 #include <rstan/filtered_values.hpp>
