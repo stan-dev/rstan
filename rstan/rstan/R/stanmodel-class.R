@@ -139,15 +139,16 @@ setMethod("vb", "stanmodel",
                                   "append_samples",
                                   "elbo_samples",
                                   "eta",
+                                  "adapt_engaged",
                                   "eval_elbo",
                                   "grad_samples",
                                   "output_samples",
-                                  "tuning_iter",
+                                  "adapt_iter",
                                   "tol_rel_obj"),
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
-            if (is.null(dotlist$eta)) dotlist$eta <- 0.0
+            if (is.null(dotlist$eta)) dotlist$eta <- 1.0
             else {
               if(dotlist$eta > 1) stop("'eta' must be <= 1")
               if(dotlist$eta <= 0) stop("'eta' must be > 0")
@@ -187,8 +188,8 @@ setMethod("vb", "stanmodel",
             idx_wo_lp <- which(m_pars != "lp__")
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
-
-            samples <- cbind(samples[-1,,drop=FALSE], "lp__" = samples[-1,1])[,cC]
+            samples <- cbind(samples[,-1,drop=FALSE], "lp__" = samples[,1])[,cC]
+            
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
