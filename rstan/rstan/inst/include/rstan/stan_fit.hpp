@@ -16,7 +16,7 @@
 #include <boost/random/uniform_real_distribution.hpp>
 
 #include <stan/model/util.hpp>
-//#include <stan/mcmc.hpp>
+
 #include <stan/mcmc/base_adaptation.hpp>
 #include <stan/mcmc/base_adapter.hpp>
 #include <stan/mcmc/base_mcmc.hpp>
@@ -55,10 +55,9 @@
 #include <stan/mcmc/stepsize_var_adapter.hpp>
 #include <stan/mcmc/var_adaptation.hpp>
 #include <stan/mcmc/windowed_adaptation.hpp>
+
 #include <stan/optimization/newton.hpp>
 #include <stan/optimization/bfgs.hpp>
-
-#include <stan/variational/advi.hpp>
 
 #include <stan/services/io/do_print.hpp>
 #include <stan/services/io/write_error_msg.hpp>
@@ -66,17 +65,22 @@
 #include <stan/services/io/write_iteration_csv.hpp>
 #include <stan/services/io/write_model.hpp>
 #include <stan/services/io/write_stan.hpp>
-#include <stan/services/init/init_adapt.hpp>
-#include <stan/services/init/init_nuts.hpp>
-#include <stan/services/init/init_static_hmc.hpp>
-#include <stan/services/init/init_windowed_adapt.hpp>
 #include <stan/services/init/initialize_state.hpp>
-#include <stan/services/mcmc/print_progress.hpp>
-#include <stan/services/mcmc/run_markov_chain.hpp>
 #include <stan/services/mcmc/sample.hpp>
 #include <stan/services/mcmc/warmup.hpp>
-#include <stan/services/optimization/do_bfgs_optimize.hpp>
+#include <stan/services/optimize/do_bfgs_optimize.hpp>
+#include <stan/services/sample/init_adapt.hpp>
+#include <stan/services/sample/init_nuts.hpp>
+#include <stan/services/sample/init_static_hmc.hpp>
+#include <stan/services/sample/init_windowed_adapt.hpp>
+#include <stan/services/sample/mcmc_writer.hpp>
+#include <stan/services/sample/progress.hpp>
 
+#include <stan/interface_callbacks/writer/noop_writer.hpp>
+#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/interface_callbacks/writer/stream_writer.hpp>
+
+#include <stan/variational/advi.hpp>
 
 #include <rstan/io/rlist_ref_var_context.hpp>
 #include <rstan/io/rlist_ref_var_context_factory.hpp>
@@ -93,15 +97,9 @@
 
 // REF: cmdstan: src/cmdstan/command.hpp
 
-#include <stan/io/mcmc_writer.hpp>
-#include <stan/interface_callbacks/writer/csv.hpp>
-#include <stan/interface_callbacks/writer/filtered_values.hpp>
-#include <stan/interface_callbacks/writer/messages.hpp>
-#include <stan/interface_callbacks/writer/noop.hpp>
-#include <stan/interface_callbacks/writer/base_writer.hpp>
-#include <stan/interface_callbacks/writer/sum_values.hpp>
-#include <stan/interface_callbacks/writer/values.hpp>
-//#include <stan/services/mcmc.hpp>
+#include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
+#include <rstan/values.hpp>
 #include <rstan/rstan_writer.hpp>
 
 namespace rstan {
@@ -529,14 +527,15 @@ namespace rstan {
                                   sample_writer_offset,
                                   qoi_idx);
 
-      stan::interface_callbacks::writer::csv diagnostic_writer
+      stan::interface_callbacks::writer::stream_writer diagnostic_writer
         = diagnostic_writer_factory(&diagnostic_stream, "# ");
 
-      stan::interface_callbacks::writer::messages message_writer(&Rcpp::Rcout, "# ");
+      stan::interface_callbacks::writer::stream_writer message_writer(Rcpp::Rcout, "# ");
 
-      stan::io::mcmc_writer<Model,
-                            rstan_sample_writer, stan::interface_callbacks::writer::csv,
-                            stan::interface_callbacks::writer::messages>
+      stan::services::sample::mcmc_writer<Model,
+                                          rstan_sample_writer,
+                                          stan::interface_callbacks::writer::stream_writer,
+                                          stan::interface_callbacks::writer::stream_writer>
         writer(sample_writer, diagnostic_writer, message_writer, &Rcpp::Rcout);
 
       if (!args.get_append_samples()) {
@@ -571,7 +570,7 @@ namespace rstan {
         writer.write_adapt_finish(sampler_ptr);
 
         std::stringstream ss;
-        stan::interface_callbacks::writer::messages info(&ss, "# ");
+        stan::interface_callbacks::writer::stream_writer info(ss, "# ");
         writer.write_adapt_finish(sampler_ptr, info);
         adaptation_info = ss.str();
         adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
@@ -654,7 +653,9 @@ namespace rstan {
     int sampler_command(stan_args& args, Model& model, Rcpp::List& holder,
                         const std::vector<size_t>& qoi_idx,
                         const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
-
+      std::stringstream ss;
+      stan::interface_callbacks::writer::stream_writer info(ss);
+      
       base_rng.seed(args.get_random_seed());
       // (2**50 = 1T samples, 1000 chains)
       static boost::uintmax_t DISCARD_STRIDE =
@@ -690,7 +691,7 @@ namespace rstan {
                                                     cont_params,
                                                     model,
                                                     base_rng,
-                                                    &ss,
+                                                    info,
                                                     context_factory,
                                                     args.get_enable_random_init(),
                                                     args.get_init_radius())) {
@@ -705,10 +706,10 @@ namespace rstan {
       model.write_array(base_rng,cont_vector,disc_vector,initv);
 
       if (TEST_GRADIENT == args.get_method()) {
-        rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
-        std::stringstream ss;
+        rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;       
         double epsilon = args.get_ctrl_test_grad_epsilon();
         double error = args.get_ctrl_test_grad_error();
+        ss.str("");
         int num_failed =
           stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,
                                                  epsilon,error,ss,&rstan::io::rcout);
@@ -793,9 +794,10 @@ namespace rstan {
                                   RNG_t>
             cmd_advi(model,
                      cont_params,
+                     base_rng,
                      grad_samples,
                      elbo_samples,
-                     base_rng,
+                     eta,
                      eval_elbo,
                      output_samples,
                      &rstan::io::rcout,
@@ -825,9 +827,10 @@ namespace rstan {
                                   RNG_t>
             cmd_advi(model,
                      cont_params,
+                     base_rng,
                      grad_samples,
                      elbo_samples,
-                     base_rng,
+                     eta,
                      eval_elbo,
                      output_samples,
                      &rstan::io::rcout,
@@ -905,10 +908,10 @@ namespace rstan {
           lbfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           lbfgs._conv_opts.maxIts     = args.get_iter();
 
-          stan::services::optimization::do_bfgs_optimize(model, lbfgs, base_rng,
-                                                         lp, cont_vector, disc_vector,
-                                                         &sample_stream, &rstan::io::rcout,
-                                                         save_iterations, refresh, interruptCallback);
+          stan::services::optimize::do_bfgs_optimize(model, lbfgs, base_rng,
+                                                     lp, cont_vector, disc_vector,
+                                                     &sample_stream, &rstan::io::rcout,
+                                                     save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::services::io::write_iteration(sample_stream, model, base_rng,
@@ -970,10 +973,10 @@ namespace rstan {
           bfgs._conv_opts.tolAbsX    = args.get_ctrl_optim_tol_param();
           bfgs._conv_opts.maxIts     = args.get_iter();
 
-          stan::services::optimization::do_bfgs_optimize(model, bfgs, base_rng,
-                                                         lp, cont_vector, disc_vector,
-                                                         &sample_stream, &rstan::io::rcout,
-                                                         save_iterations, refresh, interruptCallback);
+          stan::services::optimize::do_bfgs_optimize(model, bfgs, base_rng,
+                                                     lp, cont_vector, disc_vector,
+                                                     &sample_stream, &rstan::io::rcout,
+                                                     save_iterations, refresh, interruptCallback);
 
           if (args.get_sample_file_flag()) {
             stan::services::io::write_iteration(sample_stream, model, base_rng,

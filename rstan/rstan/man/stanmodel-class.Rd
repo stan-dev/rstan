@@ -31,6 +31,9 @@
     \item{\code{model_code}:}{The Stan model specification, an object of type \code{character}.} 
     \item{\code{model_cpp}:}{Object of type \code{list}
       that includes the C++ code for the model.} 
+    \item{\code{mk_cppmodule}:}{A function to return a RCpp module. This function will be
+      called in function \code{sampling} and \code{optimzing} with one
+      argument (the instance of \code{stanmodel} itself).} 
     \item{\code{dso}:}{Object of S4 class \code{cxxdso}. The container for the dynamic 
       shared objects compiled from the C++ code of the model, returned from function
       \code{cxxfunction} in package \pkg{inline}.}

@@ -29,7 +29,7 @@
 #include <Rcpp.h>
 #include <rstan/io/r_ostream.hpp>
 
-RcppExport SEXP CPP_stanc261(SEXP model_stancode, SEXP model_name);
+RcppExport SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name);
 RcppExport SEXP CPP_stan_version();
 
 SEXP CPP_stan_version() {
@@ -45,7 +45,26 @@ SEXP CPP_stan_version() {
   END_RCPP
 }
 
-SEXP CPP_stanc261(SEXP model_stancode, SEXP model_name) {
+/*
+ * Split a string by the new line and put each line into a vector.
+ */
+void split_str_by_newline(const std::string& str,  std::vector<std::string>& v) {
+  std::string delim = "\n";
+  std::string::size_type start = 0;
+  std::string::size_type end = str.find_first_of(delim, start);
+  while (start < str.size()) {
+      if (end != std::string::npos) {
+         v.push_back(str.substr(start, end - start));
+      } else {
+         v.push_back(str.substr(start));
+         break;
+      }
+     start = end + delim.size();
+     end = str.find_first_of(delim, start);
+  }
+}
+
+SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name) {
   BEGIN_RCPP;
   static const int SUCCESS_RC = 0;
   static const int EXCEPTION_RC = -1;
@@ -72,8 +91,11 @@ SEXP CPP_stanc261(SEXP model_stancode, SEXP model_name) {
     }
   } catch(const std::exception& e) {
     // REprintf("\nERROR PARSING\n %s\n", e.what());
+    std::string msgstr = e.what();
+    std::vector<std::string> msgv; 
+    split_str_by_newline(msgstr, msgv);
     return Rcpp::List::create(Rcpp::Named("status") = EXCEPTION_RC,
-                              Rcpp::Named("msg") = Rcpp::wrap(e.what()));
+                              Rcpp::Named("msg") = Rcpp::List(msgv.begin(), msgv.end()));
   }
 
   Rcpp::List lst =

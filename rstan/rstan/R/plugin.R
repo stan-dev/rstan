@@ -46,7 +46,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
-         ' -O3 -DEIGEN_NO_DEBUG -Wno-unused-function -Wno-uninitialized',
+         ' -DEIGEN_NO_DEBUG ',
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG', sep = '')
 }
 

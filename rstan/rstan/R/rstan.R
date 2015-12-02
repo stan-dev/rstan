@@ -24,7 +24,8 @@ stan_model <- function(file,
                        eigen_lib = NULL, 
                        save_dso = TRUE,
                        verbose = FALSE, 
-                       auto_write = rstan_options("auto_write"), ...) { 
+                       auto_write = rstan_options("auto_write"), 
+                       obfuscate_model_name = TRUE) { 
 
   # Construct a stan model from stan code 
   # 
@@ -51,7 +52,8 @@ stan_model <- function(file,
     else file <- normalizePath(file)
     
     stanc_ret <- stanc(file = file, model_code = model_code, 
-                       model_name = model_name, verbose, ...)
+                       model_name = model_name, verbose = verbose,
+                       obfuscate_model_name = obfuscate_model_name)
     
     # find possibly identical stanmodels
     S4_objects <- apropos("^[[:alpha:]]+.*$", mode = "S4")
@@ -78,8 +80,8 @@ stan_model <- function(file,
       file.rda <- file.path(tempdir(), paste0(md5, ".rda"))
     }
     if(!file.exists(file.rda) ||
-       (mtime.rda <- file.info(file.rda)$mtime) <  mtime ||
-       mtime.rda < as.POSIXct(packageDescription("rstan")$Date) ||
+       (mtime.rda <- file.info(file.rda)$mtime) < 
+       as.POSIXct(packageDescription("rstan")$Date) ||
        mtime.rda > rstan_load_time ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
@@ -149,6 +151,7 @@ stan_model <- function(file,
   obj <- new("stanmodel", model_name = model_name, 
              model_code = model_code, 
              dso = dso, # keep a reference to dso
+             mk_cppmodule = mk_cppmodule,  # mk_cppmodule function is defined in file stanmodel-class.R
              model_cpp = list(model_cppname = model_cppname, 
                               model_cppcode = stanc_ret$cppcode))
   
@@ -174,11 +177,14 @@ is_sm_valid <- function(sm) {
   # save_dso when calling stan_model. So when the user
   # use the model created in another R session, the dso
   # is lost. 
+  #
+  # This function works only for a stanmodel that is
+  # created from function stan_model in package rstan.
   # 
   # Args:
   #   sm: the stanmodel object 
   # 
-  if (is_dso_loaded(sm@dso)) return(TRUE)
+  if (isS4(sm@dso) && is_dso_loaded(sm@dso)) return(TRUE)
   sm@dso@dso_saved && identical(sm@dso@system, R.version$system)
 } 
 
@@ -235,7 +241,7 @@ stan <- function(file, model_name = "anon_model",
     sm <- stan_model(file, model_name = model_name, 
                      model_code = model_code, stanc_ret = NULL,
                      boost_lib = boost_lib, eigen_lib = eigen_lib, 
-                     save_dso = save_dso, verbose = verbose, ...)
+                     save_dso = save_dso, verbose = verbose)
   }
 
   if (is.null(sample_file))  sample_file <- NA 
@@ -246,5 +252,5 @@ stan <- function(file, model_name = "anon_model",
            diagnostic_file = diagnostic_file,
            verbose = verbose, algorithm = match.arg(algorithm), 
            control = control, check_unknown_args = FALSE, 
-           cores = cores, open_progress = open_progress, ...)
+           cores = cores, open_progress = open_progress, include = include, ...)
 } 

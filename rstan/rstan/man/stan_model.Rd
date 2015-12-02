@@ -17,7 +17,8 @@
              model_code = "", stanc_ret = NULL, 
              boost_lib = NULL, eigen_lib = NULL, 
              save_dso = TRUE, verbose = FALSE, 
-             auto_write = rstan_options("auto_write"), ...)
+             auto_write = rstan_options("auto_write"), 
+             obfuscate_model_name = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 
@@ -60,7 +61,8 @@
     will be written to that same directory, substituting a \code{.rda} extension for the 
     \code{.stan} extension. Otherwise, the object will be written to the 
     \code{\link{tempdir}}}.
-  \item{\dots}{passed to \code{stanc}.}
+  \item{obfuscate_model_name}{A logical scalar that is \code{TRUE} by default and
+    passed to \code{\link{stanc}}}
 }
 
 \details{

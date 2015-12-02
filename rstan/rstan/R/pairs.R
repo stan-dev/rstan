@@ -30,7 +30,7 @@ pairs.stanfit <-
     arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
     sims <- nrow(arr)
     chains <- ncol(arr)
-    varying <- apply(arr, 3, FUN = function(y) length(unique(y)) > 1)
+    varying <- apply(arr, 3, FUN = function(y) length(unique(c(y))) > 1)
     if (any(!varying)) {
       message("the following parameters were dropped because they are constant\n",
               paste(names(varying)[!varying], collapse = " "))
@@ -38,7 +38,7 @@ pairs.stanfit <-
     }
     dupes <- duplicated(arr, MARGIN = 3)
     if (any(dupes)) {
-      message("the following parameters were dropped because they are dupiclative\n",
+      message("the following parameters were dropped because they are duplicative\n",
               paste(dimnames(arr)[[3]][dupes], collapse = " "))
       arr <- arr[,,!dupes,drop = FALSE]
     }
@@ -46,12 +46,12 @@ pairs.stanfit <-
     n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
                             nrow = sims * chains, ncol = dim(arr)[3])
     max_td <- x@stan_args[[1]]$control
-    if (is.null(max_td)) max_td <- 11
+    if (is.null(max_td)) max_td <- 10
     else {
       max_td <- max_td$max_treedepth
-      if (is.null(max_td)) max_td <- 11
+      if (is.null(max_td)) max_td <- 10
     }
-    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] == max_td)), 
+    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] > max_td)), 
                     nrow = sims * chains, ncol = dim(arr)[3])
     
     if(is.list(condition)) {
@@ -98,7 +98,7 @@ pairs.stanfit <-
     
     if (isTRUE(log)) {
       xl <- apply(x >= 0, 2, FUN = all)
-      xl["lp__"] <- FALSE
+      if("lp__" %in% names(xl)) xl["lp__"] <- FALSE
     }
     else if (is.numeric(log)) xl <- log
     else xl <- grepl("x", log)

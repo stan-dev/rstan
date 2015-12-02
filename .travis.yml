@@ -1,3 +1,8 @@
+sudo: required
+dist: trusty
+services:
+  - docker
+
 cache: 
   apt: true
   ccache: true
@@ -14,7 +19,7 @@ os:
 
 env:
   global:
-    - STAN_BRANCH=develop
+    - STAN_BRANCH=master
   matrix: 
     - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
@@ -32,18 +37,23 @@ before_install:
   - chmod 755 wait4.sh
 
 before_script: 
-  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit'), repos='http://cran.rstudio.com')"
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra'), repos='http://cran.rstudio.com')"
   - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
   - git submodule update --remote
   - R CMD build StanHeaders/
   - R CMD INSTALL `find StanHeaders*.tar.gz`
-  - echo "CXX = ccache `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo sudo /usr/texbin/tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
+  - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
+  - echo "CXX = `which ccache` `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
   - if [[ $RCPP_VER = 'github' ]]; then R -q -e "options(repos = getCRANmirrors()[1,'URL']); library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
-  - sed -i "s/g++/${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
-  - sed -i "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
+  - echo ${CXX}
+  - echo ${CLANG_EXTRA_ARG}
+  - sed -i.bak "s/ g++/ ${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
+  - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
+  - rm ./rstan/R_Makevars.bak
   - more ./rstan/R_Makevars
   - mkdir -p ~/.R/; cat ./rstan/R_Makevars > ~/.R/Makevars
   - more ~/.R/Makevars

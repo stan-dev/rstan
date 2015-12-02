@@ -2,17 +2,17 @@
 #define RSTAN__RSTAN_WRITER_HPP
 
 #include <Rcpp.h>
-#include <stan/interface_callbacks/writer/csv.hpp>
-#include <stan/interface_callbacks/writer/filtered_values.hpp>
-#include <stan/interface_callbacks/writer/sum_values.hpp>
+#include <stan/interface_callbacks/writer/stream_writer.hpp>
+#include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
 
 namespace rstan {
 
   class rstan_sample_writer {
   public:
-    typedef stan::interface_callbacks::writer::csv CsvWriter;
-    typedef stan::interface_callbacks::writer::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
-    typedef stan::interface_callbacks::writer::sum_values SumValuesWriter;
+    typedef stan::interface_callbacks::writer::stream_writer CsvWriter;
+    typedef rstan::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
+    typedef rstan::sum_values SumValuesWriter;
 
     CsvWriter csv_;
     FilteredValuesWriter values_;
@@ -51,9 +51,6 @@ namespace rstan {
       sum_();
     }
 
-    bool is_writing() const {
-      return csv_.is_writing() || values_.is_writing() || sampler_values_.is_writing() || sum_.is_writing();
-    }
   };
 
   /**
@@ -81,7 +78,7 @@ namespace rstan {
     for (size_t n = 0; n < offset; n++)
       filter_sampler_values[n] = n;
 
-    rstan_sample_writer::CsvWriter csv(o, prefix);
+    rstan_sample_writer::CsvWriter csv(*o, prefix);
     rstan_sample_writer::FilteredValuesWriter values(N, M, filter);
     rstan_sample_writer::FilteredValuesWriter sampler_values(N, M, filter_sampler_values);
     rstan_sample_writer::SumValuesWriter sum(N, warmup);
@@ -90,7 +87,7 @@ namespace rstan {
   }
 
   rstan_sample_writer::CsvWriter diagnostic_writer_factory(std::ostream *o, const std::string prefix) {
-    return rstan_sample_writer::CsvWriter(o, prefix);
+    return rstan_sample_writer::CsvWriter(*o, prefix);
   }
 }
 
