@@ -69,8 +69,8 @@
       for Monte Carlo estimate of ELBO (objective function), defaults to 100.
       (ELBO stands for "the evidence lower bound".)
       \item \code{eta} (\code{double}), positive stepsize weighting parameters
-      for variational iteration but is ignored if adaptation is engaged, which
-      is the case by default
+      for variational inference but is ignored if adaptation is engaged, which
+      is the case by default.
       \item \code{adapt_engaged} (\code{logical}), flag indicating whether to
       automatically adapt the stepsize and defaults to \code{TRUE}
       \item \code{tol_rel_obj} (positive \code{double}), convergence tolerance on the 
