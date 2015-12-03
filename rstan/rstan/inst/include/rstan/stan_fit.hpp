@@ -654,7 +654,6 @@ namespace rstan {
                         const std::vector<size_t>& qoi_idx,
                         const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
       std::stringstream ss;
-      stan::interface_callbacks::writer::stream_writer info(ss);
       
       base_rng.seed(args.get_random_seed());
       // (2**50 = 1T samples, 1000 chains)
@@ -673,7 +672,6 @@ namespace rstan {
       R_CheckUserInterrupt_Functor interruptCallback;
       // parameter initialization
       {
-        std::stringstream ss;
         std::string init;
         rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
         
@@ -686,7 +684,7 @@ namespace rstan {
           R << args.get_init_radius();
           init = R.str();
         }
-        
+        stan::interface_callbacks::writer::stream_writer info(ss);
         if (!stan::services::init::initialize_state(init,
                                                     cont_params,
                                                     model,
