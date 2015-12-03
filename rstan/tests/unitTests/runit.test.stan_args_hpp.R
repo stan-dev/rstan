@@ -31,21 +31,24 @@ test_stan_args_hppvb <- function() {
   b1 <- fx(list(iter = 100, seed = 12354, method = 'variational'))
   checkEquals(b1$random_seed, "12354")
   checkEquals(b1$algorithm, "meanfield")
+  checkTrue(b1$adapt_engaged)
   b2 <- fx(list(iter = 100, seed = 12354, method = 'variational', algorithm = 'fullrank'))
   checkEquals(b2$algorithm, "fullrank")
   checkEquals(b2$iter, 100)
   checkEquals(b2$grad_samples, 1)
-  checkEquals(b2$eta_adagrad, 0.1)
+  checkEquals(b2$eta, 1)
   b3 <- fx(list(iter = 101, seed = 12354, method = 'variational', 
                 algorithm = 'fullrank', grad_samples = 2,
+                adapt_iter = 102, 
                 elbo_samples = 50, eval_elbo = 48, output_samples = 500,
-                eta_adagrad = .05, tol_rel_obj = 0.001))
+                eta = .5, tol_rel_obj = 0.001))
   checkEquals(b3$iter, 101)
+  checkEquals(b3$adapt_iter, 102)
   checkEquals(b3$random_seed, "12354")
   checkEquals(b3$grad_samples, 2)
   checkEquals(b3$eval_elbo, 48)
   checkEquals(b3$tol_rel_obj, 0.001)
-  checkEquals(b3$eta_adagrad, 0.05)
+  checkEquals(b3$eta, 0.5)
   checkEquals(b3$elbo_samples, 50)
   checkEquals(b3$output_samples, 500)
 }
