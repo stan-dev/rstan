@@ -8,7 +8,8 @@
   created from matching user input and gets fitted in the demonstration.} 
  
 \usage{
-  stan_demo(model = character(0), method = c("sampling", "optimizing"), ...)
+  stan_demo(model = character(0), 
+            method = c("sampling", "optimizing", "meanfield", "fullrank"), ...)
 } 
  
 \arguments{
@@ -18,8 +19,9 @@
     a character vector of all models is returned without any user intervention.
     If \code{model = i} where \code{i > 0}, then the ith available model is
     chosen without user intervention, which is useful for testing.}
-  \item{method}{Whether to call \code{\link{sampling}} (the default) or call
-    \code{\link{optimizing}} for the demonstration}
+  \item{method}{Whether to call \code{\link{sampling}} (the default),
+    \code{\link{optimizing}}, or one of the variants of \code{\link{vb}}
+    for the demonstration}
   \item{\dots}{Further arguments passed to \code{method}.}
 } 
 

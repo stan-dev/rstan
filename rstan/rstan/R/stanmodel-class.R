@@ -86,14 +86,14 @@ setMethod("vb", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
                    algorithm = c("meanfield", "fullrank"), ...) {
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
-
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
-              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              if (!is.list(parsed_data)) {
+                message("failed to get names of data from the model; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             } else if (is.character(data)) { # names of objects
@@ -138,14 +138,20 @@ setMethod("vb", "stanmodel",
                                 c("iter", "init_r",
                                   "append_samples",
                                   "elbo_samples",
-                                  "eta_adagrad",
+                                  "eta",
+                                  "adapt_engaged",
                                   "eval_elbo",
                                   "grad_samples",
                                   "output_samples",
+                                  "adapt_iter",
                                   "tol_rel_obj"),
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
+            if (is.null(dotlist$eta)) dotlist$eta <- 1.0
+            else {
+              if (dotlist$eta <= 0) stop("'eta' must be > 0")
+            }
 
             sfmiscenv <- new.env(parent = emptyenv())
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
@@ -181,8 +187,8 @@ setMethod("vb", "stanmodel",
             idx_wo_lp <- which(m_pars != "lp__")
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
-
-            samples <- cbind(samples[-1,,drop=FALSE], "lp__" = samples[-1,1])[,cC]
+            samples <- cbind(samples[,-1,drop=FALSE], "lp__" = samples[,1])[,cC]
+            
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)

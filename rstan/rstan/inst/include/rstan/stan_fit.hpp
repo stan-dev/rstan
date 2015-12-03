@@ -728,13 +728,14 @@ namespace rstan {
         sample_stream.open(args.get_sample_file().c_str(), samples_append_mode);
       }
 
-      /*
       if (VARIATIONAL == args.get_method()) {
         int grad_samples = args.get_ctrl_variational_grad_samples();
         int elbo_samples = args.get_ctrl_variational_elbo_samples();
         int max_iterations = args.get_iter();
         double tol_rel_obj = args.get_ctrl_variational_tol_rel_obj();
-        double eta_adagrad = args.get_ctrl_variational_eta_adagrad();
+        double eta = args.get_ctrl_variational_eta();
+        bool adapt_engaged = args.get_ctrl_variational_adapt_engaged();
+        int adapt_iterations = args.get_ctrl_variational_adapt_iter();
         int eval_elbo = args.get_ctrl_variational_eval_elbo();
         int output_samples = args.get_ctrl_variational_output_samples();
         if (args.get_sample_file_flag()) {
@@ -795,13 +796,13 @@ namespace rstan {
                      base_rng,
                      grad_samples,
                      elbo_samples,
-                     eta_adagrad,
                      eval_elbo,
                      output_samples,
                      &rstan::io::rcout,
                      &sample_stream,
                      &diagnostic_stream);
-          cmd_advi.run(tol_rel_obj, max_iterations);
+            cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj, 
+                         max_iterations);
         }
 
         if (args.get_ctrl_variational_algorithm() == MEANFIELD) {
@@ -820,20 +821,19 @@ namespace rstan {
                      base_rng,
                      grad_samples,
                      elbo_samples,
-                     eta_adagrad,
                      eval_elbo,
                      output_samples,
                      &rstan::io::rcout,
                      &sample_stream,
                      &diagnostic_stream);
-          cmd_advi.run(tol_rel_obj, max_iterations);
+              cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj, 
+                           max_iterations);
         }
         holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
         holder.attr("args") = args.stan_args_to_rlist();
         return 0;
       }
-      */
-      
+
       if (OPTIM == args.get_method()) { // point estimation
         if (LBFGS == args.get_ctrl_optim_algorithm()) {
           rstan::io::rcout << "STAN OPTIMIZATION COMMAND (LBFGS)" << std::endl;

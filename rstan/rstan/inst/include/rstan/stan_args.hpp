@@ -145,7 +145,9 @@ namespace rstan {
         int elbo_samples; // default to 100
         int eval_elbo;    // default to 100
         int output_samples; // default to 1000
-        double eta_adagrad; // default to 0.1
+        double eta; // defaults to 1.0
+        bool adapt_engaged; // defaults to 1
+        int adapt_iter; // defaults to 50
         double tol_rel_obj; // default to 0.01
       } variational;
       struct {
@@ -172,7 +174,7 @@ namespace rstan {
           }
           if (ctrl.sampling.adapt_delta <= 0 || ctrl.sampling.adapt_delta >= 1) {
             std::stringstream msg;
-            msg << "Invalid adaptation parameter (found detal="
+            msg << "Invalid adaptation parameter (found delta="
                 << ctrl.sampling.adapt_delta << "; require 0<delta<1).";
             throw std::invalid_argument(msg.str());
           }
@@ -235,12 +237,6 @@ namespace rstan {
                 << ctrl.variational.elbo_samples << "; require 0 < elbo_samples).";
             throw std::invalid_argument(msg.str());
           }
-          if (ctrl.variational.eta_adagrad < 0 || ctrl.variational.eta_adagrad > 1) {
-            std::stringstream msg;
-            msg << "Invalid parameter eta_adagrad (found eta_adagrad="
-                << ctrl.variational.eta_adagrad << "; require 0 < eta_adagrad <= 1).";
-            throw std::invalid_argument(msg.str());
-          }
           if (ctrl.variational.iter <= 0) {
             std::stringstream msg;
             msg << "Invalid parameter iter (found iter="
@@ -253,6 +249,12 @@ namespace rstan {
                 << ctrl.variational.tol_rel_obj << "; require 0 < tol_rel_obj).";
             throw std::invalid_argument(msg.str());
           }
+          if (ctrl.variational.eta <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter eta (found eta="
+                << ctrl.variational.eta << "; require 0 < eta).";
+            throw std::invalid_argument(msg.str());
+          }
           if (ctrl.variational.eval_elbo <= 0) {
             std::stringstream msg;
             msg << "Invalid parameter eval_elbo (found eval_elbo="
@@ -263,6 +265,12 @@ namespace rstan {
             std::stringstream msg;
             msg << "Invalid parameter output_samples (found output_samples="
                 << ctrl.variational.output_samples << "; require 0 < output_samples).";
+            throw std::invalid_argument(msg.str());
+          }
+          if (ctrl.variational.adapt_iter <= 0) {
+            std::stringstream msg;
+            msg << "Invalid parameter adapt_iter (found adapt_iter="
+                << ctrl.variational.adapt_iter << "; require 0 < adapt_iter).";
             throw std::invalid_argument(msg.str());
           }
           break;
@@ -304,7 +312,9 @@ namespace rstan {
           get_rlist_element(in, "elbo_samples", ctrl.variational.elbo_samples, 100);
           get_rlist_element(in, "eval_elbo", ctrl.variational.eval_elbo, 100);
           get_rlist_element(in, "output_samples", ctrl.variational.output_samples, 1000);
-          get_rlist_element(in, "eta_adagrad", ctrl.variational.eta_adagrad, 0.1);
+          get_rlist_element(in, "adapt_iter", ctrl.variational.adapt_iter, 50);
+          get_rlist_element(in, "eta", ctrl.variational.eta, 1.0);
+          get_rlist_element(in, "adapt_engaged", ctrl.variational.adapt_engaged, true);
           get_rlist_element(in, "tol_rel_obj", ctrl.variational.tol_rel_obj, 0.01);
           ctrl.variational.algorithm = MEANFIELD;
           if (get_rlist_element(in, "algorithm", t_str)) {
@@ -459,8 +469,10 @@ namespace rstan {
           args["elbo_samples"] = Rcpp::wrap(ctrl.variational.elbo_samples);
           args["eval_elbo"] = Rcpp::wrap(ctrl.variational.eval_elbo);
           args["output_samples"] = Rcpp::wrap(ctrl.variational.output_samples);
-          args["eta_adagrad"] = Rcpp::wrap(ctrl.variational.eta_adagrad);
+          args["eta"] = Rcpp::wrap(ctrl.variational.eta);
+          args["adapt_engaged"] = Rcpp::wrap(ctrl.variational.adapt_engaged);
           args["tol_rel_obj"] = Rcpp::wrap(ctrl.variational.tol_rel_obj);
+          args["adapt_iter"] = Rcpp::wrap(ctrl.variational.adapt_iter);
           switch (ctrl.variational.algorithm) {
             case MEANFIELD: args["algorithm"] = Rcpp::wrap("meanfield"); break;
             case FULLRANK: args["algorithm"] = Rcpp::wrap("fullrank"); break;
@@ -585,8 +597,11 @@ namespace rstan {
     inline int get_ctrl_variational_eval_elbo() const {
       return ctrl.variational.eval_elbo;
     }
-    inline double get_ctrl_variational_eta_adagrad() const {
-      return ctrl.variational.eta_adagrad;
+    inline double get_ctrl_variational_eta() const {
+      return ctrl.variational.eta;
+    }
+    inline bool get_ctrl_variational_adapt_engaged() const {
+      return ctrl.variational.adapt_engaged;
     }
     inline double get_ctrl_variational_tol_rel_obj() const {
       return ctrl.variational.tol_rel_obj;
@@ -594,7 +609,10 @@ namespace rstan {
     inline variational_algo_t get_ctrl_variational_algorithm() const {
       return ctrl.variational.algorithm;
     }
-
+    inline int get_ctrl_variational_adapt_iter() const {
+      return ctrl.variational.adapt_iter;
+    }
+    
     inline int get_ctrl_sampling_refresh() const {
       return ctrl.sampling.refresh;
     }
@@ -737,7 +755,7 @@ namespace rstan {
           write_comment_property(ostream,"elbo_samples", ctrl.variational.elbo_samples);
           write_comment_property(ostream,"output_samples", ctrl.variational.output_samples);
           write_comment_property(ostream,"eval_elbo", ctrl.variational.eval_elbo);
-          write_comment_property(ostream,"eta_adagrad", ctrl.variational.eta_adagrad);
+          write_comment_property(ostream,"eta", ctrl.variational.eta);
           write_comment_property(ostream,"tol_rel_obj", ctrl.variational.tol_rel_obj);
           switch (ctrl.variational.algorithm) {
             case MEANFIELD: write_comment_property(ostream,"algorithm", "meanfield"); break;

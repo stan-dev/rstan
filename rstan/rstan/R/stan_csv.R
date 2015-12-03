@@ -281,7 +281,7 @@ read_one_stan_csv <- function(csvfile) {
   }
   
   comments <- scan(csvfile, what = character(), sep = "\n", comment.char = "", 
-                   nlines = mark - 1L, quiet = TRUE)
+                   nlines = mark + 2L, quiet = TRUE)
   comments <- gsub("#", "", comments, fixed = TRUE)
   comments <- gsub("(Default)", "", comments, fixed = TRUE)
   comments <- grep("=", comments, fixed = TRUE, value = TRUE)
@@ -296,8 +296,8 @@ read_one_stan_csv <- function(csvfile) {
   method <- comments["algorithm"]
   if (method %in% c("meanfield", "fullrank")) {
     draws <- scan(csvfile, what = double(), sep = ",", comment.char = "", 
-                  quiet = TRUE, skip = mark, 
-                  nlines = mark + as.integer(comments["output_samples"]) + 1L)
+                  quiet = TRUE, skip = mark + 2L, 
+                  nlines = mark + as.integer(comments["output_samples"]) + 3L)
     timings <- NULL
   }
   else { # sampling
