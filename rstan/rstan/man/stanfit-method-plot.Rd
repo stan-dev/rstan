@@ -23,8 +23,16 @@ to call the other \strong{rstan} plotting functions via the \code{plotfun} argum
   descriptions of the other plotting functions.}
   \item{...}{Optional arguments to \code{plotfun}.}
 }
-\value{A \code{\link[ggplot2]{ggplot}} object that can be further customized
-  using the \pkg{ggplot2} package.} 
+\value{
+A \code{\link[ggplot2]{ggplot}} object that can be further customized
+using the \pkg{ggplot2} package.
+}
+\note{
+When assigning a plot (ggplot object) to a name (e.g., 
+\code{graph <- stan_rhat(fit)}) or calling the plotting function within a loop, 
+if you also want the side effect of the plot being displayed you must explicity 
+print it (e.g., \code{(graph <- stan_rhat(fit))}, \code{print(stan_rhat(fit))}).
+}
 \seealso{
 \code{\link[=plotting-functions]{List of RStan plotting functions}},
 \code{\link[=rstan_gg_options]{Plot options}}

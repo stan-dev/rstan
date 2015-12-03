@@ -174,7 +174,7 @@ namespace rstan {
           }
           if (ctrl.sampling.adapt_delta <= 0 || ctrl.sampling.adapt_delta >= 1) {
             std::stringstream msg;
-            msg << "Invalid adaptation parameter (found deltal="
+            msg << "Invalid adaptation parameter (found delta="
                 << ctrl.sampling.adapt_delta << "; require 0<delta<1).";
             throw std::invalid_argument(msg.str());
           }

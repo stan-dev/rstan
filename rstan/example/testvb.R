@@ -38,6 +38,5 @@ vbf4 <- rstan:::vb(sm, data = dat, iter = 10001, seed = 12354,
                    algorithm = 'fullrank', grad_samples = 2,
                    elbo_samples = 50, eval_elbo = 48, 
                    output_samples = 500, adapt_iter = 50,
-                   adapt_engaged = FALSE, eta = 0.5, tol_rel_obj = 0.001)
-
+                   adapt_engaged = FALSE, eta = 1.0, tol_rel_obj = 0.001)
 vbf4
