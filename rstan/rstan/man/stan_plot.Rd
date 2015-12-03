@@ -82,6 +82,12 @@
   A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.
 }
+\note{
+When assigning a plot (ggplot object) to a name (e.g., 
+\code{graph <- stan_rhat(fit)}) or calling the plotting function within a loop, 
+if you also want the side effect of the plot being displayed you must explicity 
+print it (e.g., \code{(graph <- stan_rhat(fit))}, \code{print(stan_rhat(fit))}).
+}
 \details{
 For \code{stan_plot}, there are additional arguments 
 (listed below with their default values) that can be specified in \code{...}.
