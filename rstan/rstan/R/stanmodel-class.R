@@ -150,8 +150,7 @@ setMethod("vb", "stanmodel",
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             if (is.null(dotlist$eta)) dotlist$eta <- 1.0
             else {
-              if(dotlist$eta > 1) stop("'eta' must be <= 1")
-              if(dotlist$eta <= 0) stop("'eta' must be > 0")
+              if (dotlist$eta <= 0) stop("'eta' must be > 0")
             }
 
             sfmiscenv <- new.env(parent = emptyenv())
