@@ -86,14 +86,14 @@ setMethod("vb", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
                    algorithm = c("meanfield", "fullrank"), ...) {
-            prep_call_sampler(object)
-            model_cppname <- object@model_cpp$model_cppname
-            mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
-            stan_fit_cpp_module <- eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
-
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- parse_data(get_cppcode(object))
-              for (i in seq_along(data)) parsed_data[[names(data)[i]]] <- data[[i]]
+              if (!is.list(parsed_data)) {
+                message("failed to get names of data from the model; sampling not done")
+                return(invisible(new_empty_stanfit(object)))
+              }
+              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
               parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             } else if (is.character(data)) { # names of objects
