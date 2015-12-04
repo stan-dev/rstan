@@ -439,6 +439,8 @@ setMethod("sampling", "stanmodel",
               on.exit(parallel::stopCluster(cl))
               dependencies <- read.dcf(file = system.file("DESCRIPTION", package = "rstan"), 
                                        fields = "Imports")[1,]
+              dependencies <- gsub("\\(.*\\),", "", dependencies)
+              dependencies <- gsub("\\(.*\\)", "", dependencies)
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
               dependencies <- c("Rcpp", "rstan", "rstanarm", dependencies)
