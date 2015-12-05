@@ -119,7 +119,8 @@ setMethod("vb", "stanmodel",
                 }
               } else data <- list()
             }
-            sampler <- try(new(stan_fit_cpp_module, data, object@dso@.CXXDSOMISC$cxxfun))
+            cxxfun <- grab_cxxfun(object@dso)
+            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             if (is(sampler, "try-error")) {
               message('failed to create the model; variational Bayes not done')
               return(invisible(new_empty_stanfit(object)))
@@ -171,7 +172,7 @@ setMethod("vb", "stanmodel",
             else pars <- m_pars
 
             skeleton <- create_skeleton(m_pars, p_dims)
-            cC <- unlist(lapply(names(skeleton), FUN = function(x) {
+            cC <- unlist(sapply(names(skeleton), simplify = FALSE, FUN = function(x) {
               param <- skeleton[[x]]
               if (x == "lp__") TRUE
               else if (x %in% pars) rep(TRUE, length(param))
@@ -188,7 +189,7 @@ setMethod("vb", "stanmodel",
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
             samples <- cbind(samples[,-1,drop=FALSE], "lp__" = samples[,1])[,cC]
-            
+
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
