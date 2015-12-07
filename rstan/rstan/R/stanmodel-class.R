@@ -188,8 +188,11 @@ setMethod("vb", "stanmodel",
             idx_wo_lp <- which(m_pars != "lp__")
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
             inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
-            samples <- cbind(samples[,-1,drop=FALSE], "lp__" = samples[,1])[,cC]
-
+            samples <- cbind(samples[-1,-1,drop=FALSE], "lp__" = samples[-1,1])[,cC]
+            ord <- unlist(sapply(pars, simplify = FALSE, FUN = function(p) {
+              grep(paste0("^", p), colnames(samples))
+            }))
+            samples <- samples[,c(ord, ncol(samples))]
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
