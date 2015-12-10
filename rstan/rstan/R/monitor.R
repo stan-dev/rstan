@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 # stan_prob_autocovariance <- function(v) { 
-#   .Call("stan_prob_autocovariance", v)
+#   .Call(stan_prob_autocovariance, v)
 # }
 
 ess_rfun <- function(sims) {
