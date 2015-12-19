@@ -1,5 +1,8 @@
 #!/bin/sh
 
+rm inst/include/stan
+rm inst/include/src
+
 mv inst/include/mathlib/stan inst/include/stan
 mv inst/include/upstream/src inst/include/src
 
