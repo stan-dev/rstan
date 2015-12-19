@@ -1,0 +1,7 @@
+#!/bin/sh
+
+mv inst/include/mathlib/stan inst/include/stan
+mv inst/include/upstream/src inst/include/src
+
+exit $?
+
