@@ -19,5 +19,6 @@ _inst/include/src/stan/gm/.*\.cpp$
 _inst/include/src/stan/gm/grammars/.*\.cpp$
 _inst/include/src/stan/agrad/.*\.cpp$
 _inst/include/src/stan/math/.*\.cpp$
+cleanup.win
 \.gitignore$
 Rbuildignore.*$
