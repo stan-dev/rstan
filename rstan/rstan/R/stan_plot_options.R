@@ -35,13 +35,20 @@ rstan_ggtheme_options <- function(...) {
   theme_classic() +
   theme(axis.line = element_line(color = "#222222"),
         axis.line.y = element_line(size = .5),
-        axis.line.x = element_line(size = 3),
+        axis.line.x = element_line(size = 2),
         axis.title = element_text(face = "bold", size = 13),
         strip.background = element_blank(),
         strip.text = element_text(color = "black", face = "bold"),
-        # legend.position = "bottom",
         legend.title = element_text(size = 11),
         plot.title = element_text(size = 18))
+
+for (j in seq_along(.rstanvis_defaults$theme)) {
+  if ("element_text" %in% class(.rstanvis_defaults$theme[[j]])) {
+    .rstanvis_defaults$theme[[j]][["debug"]] <- FALSE
+    if (!"margin" %in% names(.rstanvis_defaults$theme[[j]]))
+      .rstanvis_defaults$theme[[j]][["margin"]] <- margin()
+  }
+}
 
 .rstanvis_defaults$hist_theme <-
   .rstanvis_defaults$theme +
@@ -53,11 +60,11 @@ rstan_ggtheme_options <- function(...) {
 .rstanvis_defaults$multiparam_theme <-
   .rstanvis_defaults$theme +
   theme(axis.title= element_blank(),
-        axis.text.y = element_text(face = "bold", size = 13),
+        axis.text.y = element_text(face = "bold", size = 13, debug = FALSE),
         legend.position = "none",
         panel.grid.major =  element_line(size = 0.1, color = "darkgray"))
 
-.rstanvis_defaults$pt_color <- "#B2001D" # "#222222"
+.rstanvis_defaults$pt_color <- "#B2001D"
 .rstanvis_defaults$alpha <- 0.5
 .rstanvis_defaults$shape <- 19
 .rstanvis_defaults$fill <-  "#B2001D"
