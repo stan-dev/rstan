@@ -15,12 +15,15 @@ to call the other \strong{rstan} plotting functions via the \code{plotfun} argum
 
 \arguments{
   \item{x}{An instance of class \code{\linkS4class{stanfit}}.}
-  \item{plotfun}{A character string (possibly abbreviated) naming the plotting   
+  \item{plotfun}{A character string naming the plotting   
   function to apply to the stanfit object. If \code{plotfun} is missing, 
   the default is to call \code{\link{stan_plot}}, 
   which generates a plot of credible intervals and
   point estimates. See \code{\link{plotting-functions}} for the names and
-  descriptions of the other plotting functions.}
+  descriptions of the other plotting functions. \code{plotfun} can be 
+  either the full name of the plotting function (e.g. "stan_hist") or 
+  can be abbreviated to the part of the name following the underscore 
+  (e.g. "hist").}
   \item{...}{Optional arguments to \code{plotfun}.}
 }
 \value{

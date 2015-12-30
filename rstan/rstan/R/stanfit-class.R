@@ -87,7 +87,7 @@ setMethod("plot", signature(x = "stanfit", y = "missing"),
             else {
               plotters <- paste0("stan_", c("plot", "trace", "scat", "hist", "dens", "ac",
                                             "diag", "rhat", "ess", "mcse", "par"))
-              fun <- grep(plotfun, plotters, value = TRUE)
+              fun <- grep(paste0(plotfun, "$"), plotters, value = TRUE)
               if (!length(fun)) stop("Plotting function not found.")
               else fun <- match.fun(fun)
             }
