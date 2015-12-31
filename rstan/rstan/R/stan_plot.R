@@ -213,7 +213,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   
   color_by_rhat <- FALSE # FIXME 
   dots <- list(...)
-  defs <- list(point_est = "mean", show_density = FALSE,
+  defs <- list(point_est = "median", show_density = FALSE,
                show_outer_line = TRUE, ci_level = 0.8, outer_level = 0.95,
                fill_color = .rstanvis_defaults[["fill"]], 
                outline_color = .rstanvis_defaults[["color"]], 

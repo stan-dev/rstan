@@ -89,11 +89,10 @@ if you also want the side effect of the plot being displayed you must explicity
 print it (e.g., \code{(graph <- stan_rhat(fit))}, \code{print(stan_rhat(fit))}).
 }
 \details{
-For \code{stan_plot}, there are additional arguments 
-(listed below with their default values) that can be specified in \code{...}.
+For \code{stan_plot}, there are additional arguments that can be specified in \code{...}:
 
 \describe{
-  \item{point_est}{The point estimate to show. Either "mean" or "median".}
+  \item{point_est}{The point estimate to show. Either "median" (the default) or "mean".}
   \item{show_density}{Should kernel density estimates be plotted above 
   the intervals? Defaults to \code{FALSE}.}
   \item{ci_level}{The interval to highlight. Defaults to 0.8 (an 80 percent interval).}
@@ -120,7 +119,7 @@ library(gridExtra)
 fit <- stan_demo("eight_schools")
 
 stan_plot(fit)
-stan_plot(fit, show_density = TRUE, fill_color = "maroon")
+stan_plot(fit, point_est = "mean", show_density = TRUE, fill_color = "maroon")
 
 
 # histograms
