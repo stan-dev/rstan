@@ -14,8 +14,8 @@
 \tabular{ll}{
 Package: \tab StanHeaders\cr
 Type: \tab Package\cr
-Version: \tab 2.7.0\cr
-Date: \tab 2015-07-16\cr
+Version: \tab 2.9.0\cr
+Date: \tab 2016-01-03\cr
 License: \tab BSD 3 clause\cr
 }
   There are no R functions, only C++ headers. To use the Stan Math Library,
