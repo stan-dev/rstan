@@ -108,7 +108,7 @@ namespace rstan {
         sampling_algo_t algorithm;
         int warmup; // number of warmup
         int thin;
-        bool save_warmup; // weather to save warmup samples (always true now)
+        bool save_warmup; // weather to save warmup samples (true by default)
         int iter_save; // number of iterations saved
         int iter_save_wo_warmup; // number of iterations saved wo warmup
         bool adapt_engaged;
@@ -324,6 +324,7 @@ namespace rstan {
         case SAMPLING:
           get_rlist_element(in, "iter", ctrl.sampling.iter, 2000);
           get_rlist_element(in, "warmup", ctrl.sampling.warmup, ctrl.sampling.iter / 2);
+          get_rlist_element(in, "save_warmup", ctrl.sampling.save_warmup, true);
 
           calculated_thin = (ctrl.sampling.iter - ctrl.sampling.warmup) / 1000;
           if (calculated_thin < 1) calculated_thin = 1;
@@ -332,8 +333,10 @@ namespace rstan {
           ctrl.sampling.iter_save_wo_warmup
             = 1 + (ctrl.sampling.iter - ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
           ctrl.sampling.iter_save
-            = ctrl.sampling.iter_save_wo_warmup
-              + 1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
+            = ctrl.sampling.iter_save_wo_warmup;
+          if (ctrl.sampling.save_warmup)
+            ctrl.sampling.iter_save += 
+              1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
 
           ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ?
                                   ctrl.sampling.iter / 10 : 1;
@@ -485,6 +488,7 @@ namespace rstan {
           args["thin"] = Rcpp::wrap(ctrl.sampling.thin);
           args["refresh"] = Rcpp::wrap(ctrl.sampling.refresh);
           args["test_grad"] = Rcpp::wrap(false);
+          args["save_warmup"] = Rcpp::wrap(ctrl.sampling.save_warmup);
           ctrl_args["adapt_engaged"] = Rcpp::wrap(ctrl.sampling.adapt_engaged);
           ctrl_args["adapt_gamma"] = Rcpp::wrap(ctrl.sampling.adapt_gamma);
           ctrl_args["adapt_delta"] = Rcpp::wrap(ctrl.sampling.adapt_delta);
@@ -689,7 +693,7 @@ namespace rstan {
        return ctrl.sampling.iter_save;
     }
     inline bool get_ctrl_sampling_save_warmup() const {
-       return true;
+       return ctrl.sampling.save_warmup; // was true
     }
     inline optim_algo_t get_ctrl_optim_algorithm() const {
       return ctrl.optim.algorithm;
@@ -764,7 +768,7 @@ namespace rstan {
           break;
         case SAMPLING:
           write_comment_property(ostream,"warmup",ctrl.sampling.warmup);
-          write_comment_property(ostream,"save_warmup",1);
+          write_comment_property(ostream,"save_warmup",ctrl.sampling.save_warmup);
           write_comment_property(ostream,"thin",ctrl.sampling.thin);
           write_comment_property(ostream,"refresh",ctrl.sampling.refresh);
           write_comment_property(ostream,"stepsize",ctrl.sampling.stepsize);

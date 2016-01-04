@@ -194,6 +194,7 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{append_samples} (\code{logical})
       \item \code{refresh}(\code{integer})
       \item \code{enable_random_init}(\code{logical})
+      \item \code{save_warmup}(\code{logical})
     }
 
     \code{chain_id} can be a vector to specify the chain_id for all 
@@ -221,7 +222,13 @@ stan(file, model_name = "anon_model", model_code = "",
     If \code{test_grad=TRUE}, Stan will not do any sampling. Instead,
     the gradient calculation is tested and printed out and the fitted
     \code{stanfit} object is in test gradient mode.  By default, it is
-    \code{FALSE}. 
+    \code{FALSE}.
+    
+    Argument \code{save_warmup} (\code{logical}) indicates whether to 
+    save draws during the warmup phase and defaults to \code{FALSE}. Some
+    memory related problems can be avoided by setting it to \code{TRUE},
+    but some diagnostics are more limited if the warmup draws are not
+    stored.
   } 
 
   \item{boost_lib}{The path for an alternative version of the Boost C++ 

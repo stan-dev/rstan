@@ -511,7 +511,8 @@ setMethod("sampling", "stanmodel",
                                     "obfuscate_model_name",
                                     "enable_random_init",
                                     "append_samples", "refresh", "control", 
-                                    "include", "cores", "open_progress"), 
+                                    "include", "cores", "open_progress",
+                                    "save_warmup"), 
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
@@ -544,7 +545,9 @@ setMethod("sampling", "stanmodel",
             }
 
             # number of samples saved after thinning
-            warmup2 <- 1 + (warmup - 1) %/% thin 
+            warmup2 <- 1 + (warmup - 1) %/% thin
+            if (!is.null(dots$save_warmup) && !dots$save_warmup)
+              warmup2 <- 0L
             n_kept <- 1 + (iter - warmup - 1) %/% thin
             n_save <- n_kept + warmup2 
 
