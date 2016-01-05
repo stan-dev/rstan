@@ -1,3 +1,13 @@
+Tue Jan 04 2016 (2.9.0)
+1. Bug fixes
+  * Should build from GitHub on Windows now
+  * Fix regexes when doing chains in parallel
+  * Fix handling of constant margins in pairs
+2. Changes
+  * Supports ADVI (both meanfield and fullrank)
+  * Introduces save_warmup flag (default TRUE)
+  * Uses ggplot2 2.0.0 now
+
 Thu Nov 26 2015 (2.8.1)
 1. Bug fixes
   * Fix vignette build for R 3.1.x on Windows
