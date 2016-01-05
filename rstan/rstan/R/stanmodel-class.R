@@ -570,7 +570,7 @@ setMethod("sampling", "stanmodel",
               report <- scan(file = messages, what = character(),
                              sep = "\n", quiet = TRUE)
               if (is(samples_i, "try-error") || is.null(samples_i)) {
-                print(tail(report, n = 10))
+                print(report)
                 msg <- "error occurred during calling the sampler; sampling not done"
                 if (.Platform$OS.type == "windows") print(msg)
                 else message(msg)
