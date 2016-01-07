@@ -189,6 +189,8 @@ expose_stan_functions <- function(stanmodel) {
   # add dependencies
   extras <- dir(rstan_options("boost_lib2"), pattern = "hpp$", 
                 full.names = TRUE, recursive = TRUE)
+  indexing <- dir(system.file("include", "src", "stan", "model", "indexing", 
+                              package = "StanHeaders"), full.names = TRUE)
   lines <- c("// [[Rcpp::depends(StanHeaders)]]",
              "// [[Rcpp::depends(BH)]]",
              "// [[Rcpp::depends(RcppEigen)]]",
@@ -198,6 +200,8 @@ expose_stan_functions <- function(stanmodel) {
                paste0("#include<", x, ">")),             
              "#include<stan/math.hpp>",
              "#include <src/stan/lang/rethrow_located.hpp>",
+             sapply(indexing, FUN = function(x)
+               paste0("#include<", x, ">")),
 
              "#include <boost/exception/all.hpp>",
              "#include <boost/random/linear_congruential.hpp>",
