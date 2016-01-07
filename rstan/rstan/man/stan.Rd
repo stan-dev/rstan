@@ -225,8 +225,8 @@ stan(file, model_name = "anon_model", model_code = "",
     \code{FALSE}.
     
     Argument \code{save_warmup} (\code{logical}) indicates whether to 
-    save draws during the warmup phase and defaults to \code{FALSE}. Some
-    memory related problems can be avoided by setting it to \code{TRUE},
+    save draws during the warmup phase and defaults to \code{TRUE}. Some
+    memory related problems can be avoided by setting it to \code{FALSE},
     but some diagnostics are more limited if the warmup draws are not
     stored.
   } 
