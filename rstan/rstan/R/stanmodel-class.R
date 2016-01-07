@@ -172,31 +172,35 @@ setMethod("vb", "stanmodel",
             else pars <- m_pars
 
             skeleton <- create_skeleton(m_pars, p_dims)
-            cC <- unlist(sapply(names(skeleton), simplify = FALSE, FUN = function(x) {
+            cC <- sapply(names(skeleton), simplify = FALSE, FUN = function(x) {
               param <- skeleton[[x]]
               if (x == "lp__") TRUE
               else if (x %in% pars) rep(TRUE, length(param))
               else rep(FALSE, length(param))
-            }))
+            })
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
             means <- sapply(samples, mean)
-            means <- as.matrix(c(means[-1], "lp__" = means[1]))
+            means <- as.matrix(c(means[-1], means[1]))
             colnames(means) <- "chain:1"
             assign("posterior_mean_4all", means, envir = sfmiscenv)
-            idx_wo_lp <- which(m_pars != "lp__")
-            skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
-            inits_used <- rstan_relist(as.numeric(samples[1,]), skeleton)
-            samples <- cbind(samples[-1,-1,drop=FALSE], "lp__" = samples[-1,1])[,cC]
-            ord <- unlist(sapply(pars, simplify = FALSE, FUN = function(p) {
-              grep(paste0("^", p), colnames(samples))
-            }))
-            samples <- samples[,c(ord, ncol(samples))]
+            inits_used <- rstan_relist(as.numeric(samples[1,]), 
+                                       skeleton[-length(skeleton)])
+            samples <- cbind(samples[-1,-1,drop=FALSE], 
+                             "lp__" = samples[-1,1])[,unlist(cC)]
+            cC <- cC[sapply(cC, all)]
+            count <- 1L
+            for (i in seq_along(cC)) {
+              len <- length(cC[[i]])
+              cC[[i]] <- count:(count + len - 1L)
+              count <- count + len
+            }
+            samples <- samples[,unlist(cC[c(pars, "lp__")]), drop = FALSE]
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
-            sim = list(samples = list(as.list(samples)),
+            sim <- list(samples = list(as.list(samples)),
                        iter = iter, thin = 1L,
                        warmup = 0L,
                        chains = 1L,
