@@ -320,8 +320,12 @@ color_vector_chain <- function(n) {
 .sampler_params_post_warmup <- function(object, which = "stepsize__", as.df = FALSE) {
   if (is.stanreg(object))
     object <- object$stanfit
-  sampler_params <- get_sampler_params(object)
+  sampler_params <- suppressWarnings(get_sampler_params(object))
   warmup_val <- floor(object@sim$warmup / object@sim$thin)
+  warmup_saved <- object@stan_args[[1L]][["save_warmup"]]
+  if (!is.null(warmup_saved)) {
+    if (!warmup_saved) warmup_val <- 0
+  }
   sp <-lapply(1:length(sampler_params), function(i) {
     out <- sampler_params[[i]]
     out <- if (warmup_val == 0) out[, which] else out[-(1:warmup_val), which]
