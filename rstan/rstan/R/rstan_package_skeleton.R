@@ -27,7 +27,7 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
   
   mc <- match.call()
   mc$stan_files <- NULL
-  mc[[1]] <- as.name("utils::package.skeleton")
+  mc[[1]] <- getFromNamespace("package.skeleton", "utils")
   eval(mc)
   
   if (R.version$major < 3 || 
