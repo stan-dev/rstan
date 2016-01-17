@@ -16,6 +16,7 @@
   %% vb(object, \dots)  
   \S4method{vb}{stanmodel}(object, data = list(), pars = NA, include = TRUE,
     seed = sample.int(.Machine$integer.max, 1),
+    init = 'random',
     check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
     algorithm = c("meanfield", "fullrank"), \dots)
 } 
@@ -48,6 +49,14 @@
     it. If \code{as.integer} produces \code{NA}, the seed is generated
     randomly.  We can also specify a seed using a character string of digits,
     such as \code{"12345"}, which will be converted to integer.}
+  \item{init}{One of digit \code{0}, string \code{"0"} or \code{"random"}, 
+    a function that returns a list, or a named list of initial parameter
+    values.
+    \code{"0"}: initialize all to be zero on the unconstrained support; 
+    \code{"random"}: randomly generated;
+    \code{list}: a list specifying the initial values of parameters by name.
+    \code{function}: a function that returns a list for specifying 
+      the initial values of parameters.}
   \item{check_data}{Logical: if \code{TRUE}, the data would be preprocessed; 
     otherwise not. If the data is not checked and preprocessed, it is safe 
     to leave it to be the default \code{TRUE}. See the notes in

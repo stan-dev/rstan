@@ -84,6 +84,7 @@ mk_cppmodule <- function(object) {
 setMethod("vb", "stanmodel", 
           function(object, data = list(), pars = NA, include = TRUE,
                    seed = sample.int(.Machine$integer.max, 1),
+                   init = 'random',
                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
                    algorithm = c("meanfield", "fullrank"), ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
@@ -125,10 +126,16 @@ setMethod("vb", "stanmodel",
               message('failed to create the model; variational Bayes not done')
               return(invisible(new_empty_stanfit(object)))
             }
+            if (is.numeric(init)) init <- as.character(init)
+            if (is.function(init)) init <- init()
+            if (!is.list(init) && !is.character(init)) {
+              message("wrong specification of initial values")
+              return(invisible(new_empty_stanfit(object)))
+            }
             seed <- check_seed(seed, warn = 1)
             if (is.null(seed))
               return(invisible(list(stanmodel = object)))
-            args <- list(seed = seed, chain_id = 1L,
+            args <- list(init = init, seed = seed, chain_id = 1L,
                          method = "variational",
                          algorithm = match.arg(algorithm))
 

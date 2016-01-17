@@ -51,7 +51,7 @@
     \code{"random"}: randomly generated;
     \code{list}: a list specifying the initial values of parameters by name.
     \code{function}: a function that returns a list for specifying 
-      the initial values of parameters for a chain.}
+      the initial values of parameters.}
   \item{check_data}{Logical: if \code{TRUE}, the data would be preprocessed; 
     otherwise not. If the data is not checked and preprocessed, it is safe 
     to leave it to be the default \code{TRUE}. See the notes in
