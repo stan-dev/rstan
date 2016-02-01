@@ -181,6 +181,10 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("const static bool propto__ = true;",
                 "const static bool propto__ = false;", lines, fixed = TRUE)
   
+  # avoid catch messages that say to report a bug
+  lines <- gsub('"*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"', "e.what()",
+                lines, fixed = TRUE)
+
   # restore Stan's Eigen typedefs that were clobbered by the previous lines
   lines <- sub("typedef vector_d vector_d;", "using stan::math::vector_d;", lines)
   lines <- sub("typedef row_vector_d row_vector_d;", "using stan::math::row_vector_d;", lines)
@@ -190,10 +194,7 @@ expose_stan_functions <- function(stanmodel) {
   extras <- dir(rstan_options("boost_lib2"), pattern = "hpp$", 
                 full.names = TRUE, recursive = TRUE)
   has_model <- any(grepl("stan::model", lines, fixed = TRUE))
-  lines <- c("// [[Rcpp::depends(StanHeaders)]]",
-             "// [[Rcpp::depends(BH)]]",
-             "// [[Rcpp::depends(RcppEigen)]]",
-             "// [[Rcpp::depends(rstan)]]",
+  lines <- c("// [[Rcpp::depends(rstan)]]",
              "#include <Rcpp.h>",
              "#include <RcppEigen.h>",
              if (length(extras) > 0) sapply(extras, FUN = function(x)
