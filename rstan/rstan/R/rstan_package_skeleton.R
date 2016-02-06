@@ -27,7 +27,7 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
   
   mc <- match.call()
   mc$stan_files <- NULL
-  mc[[1]] <- getFromNamespace("package.skeleton", "utils")
+  mc[[1]] <- quote(utils::package.skeleton)
   eval(mc)
   
   if (R.version$major < 3 || 
@@ -51,8 +51,13 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
                 destfile = file.path(TOOLS, "make_cpp.R"), quiet = TRUE)
   EXEC <- file.path(DIR, "exec")
   dir.create(EXEC)
-  file.create(file.path(EXEC, "common_functions.txt"))
   file.copy(stan_files, EXEC)
+  
+  INST <- file.path(DIR, "inst")
+  dir.create(INST)
+  CHUNKS <- file.path(DIR, "inst", "chunks")
+  dir.create(CHUNKS)
+  file.create(file.path(CHUNKS, "common_functions.txt"))
   
   SRC <- file.path(DIR, "src")
   dir.create(SRC, showWarnings = FALSE)
@@ -77,8 +82,8 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
   cat("\n Stan specific notes:",
       "If you add any additional .stan files to the exec/ directory, ",
       "be sure to add an entry in the RcppModules: line of DESCRIPTION.",
-      "You can put into exec/functions.txt any function that is needed by any .stan file, ",
-      "and in that case no .stan file should have its own functions{} block.",
+      "You can put into inst/chunks/common_functions.txt any function that is needed by any .stan file, ",
+      "in which case any .stan file can have #include 'common_functions.txt' in its functions block.",
       "The precompiled stanmodel objects will appear in a named list called 'stanmodels'.",
       "The 'cleanup' and 'cleanup.win' scripts in the root of the directory must be made executable.",
       file = file.path(DIR, "Read-and-delete-me"), sep = "\n", append = TRUE)
