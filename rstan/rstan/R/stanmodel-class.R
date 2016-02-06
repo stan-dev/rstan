@@ -430,6 +430,19 @@ setMethod("sampling", "stanmodel",
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) 
               "TESTING GRADIENT" else "SAMPLING"
             
+            if (is.numeric(init)) init <- as.character(init)
+            if (is.function(init)) {
+              if ("chain_id" %in% names(formals(init)))
+                init <- lapply(1:chains, FUN = init)
+              else
+                init <- lapply(1:chains, function(id) init())
+            }
+            if (!is.list(init) && !is.character(init)) {
+              message("wrong specification of initial values")
+              return(invisible(new_empty_stanfit(object)))
+            }
+            init <- lapply(init, function(x) x)
+
             if (cores > 1 && mode == "SAMPLING" && chains > 1) {
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
