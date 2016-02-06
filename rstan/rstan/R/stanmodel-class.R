@@ -441,7 +441,7 @@ setMethod("sampling", "stanmodel",
               message("wrong specification of initial values")
               return(invisible(new_empty_stanfit(object)))
             }
-            init <- lapply(init, function(x) x)
+            if (is.list(list)) init <- lapply(init, function(x) x)
 
             if (cores > 1 && mode == "SAMPLING" && chains > 1) {
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
