@@ -1621,3 +1621,15 @@ throw_sampler_warnings <- function(object) {
                                   call. = FALSE, noBreaks. = TRUE)
   return(invisible(NULL))
 }
+
+get_CXX <- function(CXX11 = FALSE) {
+  system2(file.path(R.home(component = "bin"), "R"), 
+          args = paste("CMD config", ifelse(CXX11, "CXX11", "CXX")), 
+          stdout = TRUE, stderr = FALSE)
+}
+
+is.sunstudio <- function() {
+  grepl('SunOS',Sys.info()['sysname']) && 
+  grepl("solarisstudio", get_CXX())
+}
+             

@@ -105,12 +105,18 @@ stan_model <- function(file,
   # check for compilers
   if (.Platform$OS.type == "windows") find_rtools()
   else {
-    check <- system2(file.path(R.home(component = "bin"), "R"), 
-                     args = "CMD config CXX", 
-                     stdout = TRUE, stderr = FALSE)
-    if(nchar(check) == 0) {
+    CXX <- get_CXX()
+    if (nchar(CXX) == 0) {
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
       warning(paste("C++ compiler not found on system. If absent, see", WIKI))
+    }
+    if (is.sunstudio() && Sys.getenv("USE_CXX1X") == "") {
+      Sys.setenv(USE_CXX1X = "1")
+      CXX11 <- get_CXX(CXX11 = TRUE)
+      if (!grepl(grepl("g\\+\\+", basename(CXX11)))) {
+        message("compilation will likely fail on Oracle hardware unless a recent g++ is used")
+      }
+      on.exit(Sys.unsetenv("USE_CXX1X"))
     }
   }
   
