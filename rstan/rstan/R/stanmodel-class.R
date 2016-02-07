@@ -505,7 +505,7 @@ setMethod("sampling", "stanmodel",
               parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
               data_e <- as.environment(data)
               parallel::clusterExport(cl, varlist = names(data_e), envir = data_e)
-              nfits <- parallel::parLapply(cl, X = 1:chains, fun = callFun)
+              nfits <- parallel::parLapplyLB(cl, X = 1:chains, fun = callFun)
               valid <- sapply(nfits, is, class2 = "stanfit") &
                        sapply(nfits, FUN = function(x) x@mode == 0)
               if(all(valid)) {
