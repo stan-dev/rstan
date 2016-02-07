@@ -108,15 +108,15 @@ stan_model <- function(file,
     CXX <- get_CXX()
     if (nchar(CXX) == 0) {
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
-      warning(paste("C++ compiler not found on system. If absent, see", WIKI))
+      warning(paste("C++ compiler not found on system. If absent, see\n", WIKI))
     }
     if (is.sunstudio() && Sys.getenv("USE_CXX1X") == "") {
       Sys.setenv(USE_CXX1X = "1")
+      on.exit(Sys.unsetenv("USE_CXX1X"))
       CXX11 <- get_CXX(CXX11 = TRUE)
       if (!grepl(grepl("g\\+\\+", basename(CXX11)))) {
-        message("compilation will likely fail on Oracle hardware unless a recent g++ is used")
+        message("compilation will likely fail on Solaris unless a recent [clan]g++ is used")
       }
-      on.exit(Sys.unsetenv("USE_CXX1X"))
     }
   }
   
