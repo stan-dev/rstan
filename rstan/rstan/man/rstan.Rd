@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab rstan\cr
     Type: \tab Package\cr
-    Version: \tab 2.9.0\cr
-    Date: \tab Jan 03, 2016\cr
+    Version: \tab 2.9.2\cr
+    Date: \tab Feb 07, 2016\cr
     License: \tab GPL-3 \cr
   }
 

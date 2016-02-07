@@ -1,3 +1,16 @@
+Sun Feb 07 2016 (2.9.0-2)
+1. Bug fixes
+  * expose_stan_functions() now works with Stan's slicing syntax
+  * expose_stan_functions() now handles exceptions correctly
+  * stan() and sampling() will evaluate initial values in the parent process
+  * rstan.package.skeleton() correctly calls package.skeleton() now thanks to Jonathon Steinhart
+  * vb() works when one parameter is a prefix of another thanks to Paul Buerkner
+  * checks its version number against that of StanHeaders to ease transitions
+2. Changes
+  * vb() now supports initial values for the parameters
+  * parallel sampling() now uses parallel::parLapplyLB thanks to David Manheim
+  * possibly works on Solaris
+
 Tue Jan 04 2016 (2.9.0)
 1. Bug fixes
   * Should build from GitHub on Windows now
