@@ -297,7 +297,7 @@ setMethod("get_logposterior", "stanfit",
 
             llp <- lapply(object@sim$samples, function(x) x[['lp__']]) 
             if (inc_warmup) return(llp)
-            if (object@sim$warmup2 == 0) return(llp)
+            if (all(object@sim$warmup2 == 0)) return(llp)
             return(mapply(function(x, w) x[-(1:w)], 
                              llp, object@sim$warmup2,
                              SIMPLIFY = FALSE, USE.NAMES = FALSE)) 
@@ -321,7 +321,7 @@ setMethod("get_sampler_params",
                           function(x) do.call(cbind, attr(x, "sampler_params")))   
             if (all(sapply(ldf, is.null))) return(invisible(NULL))  
             if (inc_warmup) {
-              if (object@sim$warmup2 == 0)
+              if (all(object@sim$warmup2 == 0))
                 warning("warmup samples not saved")
               return(invisible(ldf))
             }
