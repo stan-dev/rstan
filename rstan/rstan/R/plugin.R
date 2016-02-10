@@ -78,6 +78,12 @@ rstanplugin <- function() {
   if (grepl('[^\\\\]\\s', rcpp_pkg_libs, perl = TRUE))
     rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE) 
 
+  # get more info about bus error on SPARC
+  if (is.sparc() && grepl("^g\\+\\+", basename(get_CXX()))) {
+    cat("PKG_LIBS += -lSegFault\n", file = file.path(tempdir(), "Makevars"), append = TRUE)
+    Sys.setenv(SEGFAULT_SIGNALS = "bus abrt")
+  }
+
   list(includes = '',
        body = function(x) x,
        env = list(PKG_LIBS = paste(rcpp_pkg_libs),

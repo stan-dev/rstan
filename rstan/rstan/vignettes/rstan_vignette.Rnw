@@ -752,6 +752,7 @@ ocode <- "
 sm <- stan_model(model_code = ocode)
 y2 <- rnorm(20)
 mean(y2)
+message("This will crash on SPARC")
 optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)
 @
  

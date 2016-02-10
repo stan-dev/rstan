@@ -110,14 +110,6 @@ stan_model <- function(file,
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
       warning(paste("C++ compiler not found on system. If absent, see\n", WIKI))
     }
-    if (is.sunstudio() && Sys.getenv("USE_CXX1X") == "") {
-      Sys.setenv(USE_CXX1X = "1")
-      on.exit(Sys.unsetenv("USE_CXX1X"))
-      CXX11 <- get_CXX(CXX11 = TRUE)
-      if (!grepl(grepl("g\\+\\+", basename(CXX11)))) {
-        message("compilation will likely fail on Solaris unless a recent [clan]g++ is used")
-      }
-    }
   }
   
   model_cppname <- stanc_ret$model_cppname 
@@ -154,6 +146,7 @@ stan_model <- function(file,
          "see https://github.com/stan-dev/rstan/wiki/RStan-Transition-Periods")
     
 
+  
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 

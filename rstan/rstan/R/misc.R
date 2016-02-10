@@ -1628,8 +1628,7 @@ get_CXX <- function(CXX11 = FALSE) {
           stdout = TRUE, stderr = FALSE)
 }
 
-is.sunstudio <- function() {
-  grepl('SunOS',Sys.info()['sysname']) && 
-  grepl("solarisstudio", get_CXX())
+is.sparc <- function() {
+  grepl("^sparc",  R.version$platform)
 }
              

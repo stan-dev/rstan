@@ -22,10 +22,26 @@ setMethod("show", "stanmodel",
           }) 
 
 setGeneric(name = 'optimizing',
-           def = function(object, ...) { standardGeneric("optimizing")})
+           def = function(object, ...) {
+             
+             if (is.sparc()) {
+               msg <- "optimizing() will likely crash on SPARC."
+               if (interactive()) stop(msg, " Run in batch mode to test.")
+               else message(msg)
+             }
+             standardGeneric("optimizing")
+})
 
 setGeneric(name = 'vb',
-           def = function(object, ...) { standardGeneric("vb")})
+           def = function(object, ...) { 
+             
+             if (is.sparc()) {
+               msg <- "vb() will likely crash on SPARC."
+               if (interactive()) stop(msg, " Run in batch mode to test.")
+               else message(msg)
+             }
+             standardGeneric("vb")
+})
 
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
