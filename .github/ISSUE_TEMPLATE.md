@@ -1,5 +1,5 @@
 #### Summary:
-Please provide a short couple sentence summary.
+Please provide a short summary (no more than a sentence or two).
 
 
 #### Description:
@@ -13,15 +13,18 @@ If you have a reproducible example, please include it.
 
 
 #### Current Output:
-The current output. Knowing what is the current behavior is useful.
+If applicable, any relevant output from RStan.
 
 
 #### Expected Output:
-Describe what you expect the output to be. Knowing the correct behavior is also very useful.
+If applicable, the output you expected from RStan.
 
 
 #### RStan Version:
+The version of RStan you are running (e.g., from `packageVersion("rstan")`)
 
 #### R Version:
+The version of R you are running (e.g., from `R.version.string`)
 
 #### Operating System:
+Your operating system (e.g., OS X 10.11.3)
