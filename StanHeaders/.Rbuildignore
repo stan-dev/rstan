@@ -1,5 +1,9 @@
 inst/include/upstream
 inst/include/mathlib
+inst/include/lib/boost_.*$
+inst/include/lib/cpplint_.*$
+inst/include/lib/eigen_.*$
+inst/include/lib/gtest_.*$
 inst/include/src/test.*$
 inst/include/src/.*\.hpp\.d$
 inst/include/src/.*\..pp\.gch$
