@@ -36,6 +36,7 @@ before_install:
   - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
+  - tlmgr install verbatimbox
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra'), repos='http://cran.rstudio.com')"
