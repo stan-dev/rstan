@@ -2,9 +2,11 @@
 
 rm inst/include/stan
 rm inst/include/src
+rm inst/include/cvode
 
 mv inst/include/mathlib/stan inst/include/stan
 mv inst/include/upstream/src inst/include/src
+mv inst/include/mathlib/lib/cvode_* inst/include/cvode
 
 exit $?
 

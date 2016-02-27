@@ -1,5 +1,5 @@
 STANHEADERS_SRC = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'src', package = 'StanHeaders'))"`
-STANHEADERS_CVODE = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'lib', 'cvode_2.8.2', package = 'StanHeaders'))"`
+STANHEADERS_CVODE = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'lib', 'cvode', package = 'StanHeaders'))"`
 
 PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"$(STANHEADERS_SRC)" -I"$(STANHEADERS_CVODE)" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)

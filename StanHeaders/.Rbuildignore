@@ -3,6 +3,7 @@ inst/include/mathlib
 src/lib/cvode/src/nvec_openmp
 src/lib/cvode/src/nvec_par
 src/lib/cvode/src/nvec_pthreads
+src/lib/cvode/include
 inst/include/src/test.*$
 inst/include/src/.*\.hpp\.d$
 inst/include/src/.*\..pp\.gch$
