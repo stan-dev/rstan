@@ -1,0 +1,30 @@
+CVODE=cvode
+
+SUNDIALS_CVODE := $(patsubst %.c,%.o,\
+  $(addprefix $(CVODE)/src/cvode/, cvode.c cvode_io.c cvode_direct.c cvode_band.c cvode_dense.c cvode_diag.c cvode_spils.c cvode_spbcgs.c cvode_spgmr.c cvode_sptfqmr.c cvode_sparse.c cvode_bandpre.c cvode_bbdpre.c) \
+  $(wildcard $(CVODE)/src/sundials/*.c))
+
+SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
+  $(addprefix $(CVODE)/src/, nvec_ser/nvector_serial.c sundials/sundials_math.c))
+
+SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
+  $(addprefix $(CVODE)/src/, nvec_ser/nvector_serial.c sundials/sundials_math.c))
+
+$(sort $(SUNDIALS_CVODE) $(SUNDIALS_NVECSERIAL)) : %.o : %.c
+	@mkdir -p $(dir $@)
+	$(COMPILE.c) -x c -I $(CVODE)/include $< -o $@
+
+$(CVODE)/lib/libsundials_cvode.a: $(SUNDIALS_CVODE)
+	@mkdir -p $(dir $@)
+	$(AR) -rs $@ $^
+
+$(CVODE)/lib/libsundials_cvode.a: $(SUNDIALS_CVODE)
+	@mkdir -p $(dir $@)
+	$(AR) -rs $@ $^
+
+$(CVODE)/lib/libsundials_nvecserial.a: $(SUNDIALS_NVECSERIAL)
+	@mkdir -p $(dir $@)
+	$(AR) -rs $@ $^
+
+OBJECTS = $(CVODE)/lib/libsundials_nvecserial.a $(CVODE)/lib/libsundials_cvode.a
+
