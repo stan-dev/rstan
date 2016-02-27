@@ -41,7 +41,7 @@ help:
 help: 
 	@echo '--------------------------------------------------------------------------------'
 	@echo 'main targets:'
-	@echo ' build: to build rstan source package in a gzip form using R CMD build'
+	@echo ' build: to build rstan source package using R CMD build'
 	@echo ' install: to install rstan using R CMD INSTALL' 
 	@echo ' uninstall: to install rstan using R CMD REMOVE rstan'
 	@echo ' clean: to remove the gzip package file'
