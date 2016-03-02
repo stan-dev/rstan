@@ -11,7 +11,7 @@
 \usage{
   %% traceplot(object, \dots)  
   \S4method{traceplot}{stanfit}(object, pars, include = TRUE, unconstrain = FALSE, 
-          inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...) 
+          inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL, ...) 
 } 
 
 \section{Methods}{
@@ -29,6 +29,12 @@
     \code{pars} is not missing.}
   \item{inc_warmup}{\code{TRUE} or \code{FALSE}, indicating whether 
     the warmup sample are included in the trace plot; defaults to \code{FALSE}.}
+  \item{window}{A vector of length 2. Iterations between \code{window[1]}
+    and \code{window[2]} will be shown in the plot. The default is to 
+    show all iterations if \code{inc_warmup} is \code{TRUE} and all iterations
+    from the sampling period only if \code{inc_warmup} is \code{FALSE}. If 
+    \code{inc_warmup} is \code{FALSE} the iterations specified in \code{window}
+    should not include iterations from the warmup period.}
   \item{unconstrain}{Should parameters be plotted on the unconstrained space?
     Defaults to \code{FALSE}.}  
   \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.} 
@@ -48,7 +54,7 @@ library(rstan)
 fit <- stan(model_code = "parameters {real y;} model {y ~ normal(0,1);}") 
 traceplot(fit) 
 traceplot(fit, inc_warmup = TRUE, nrow = 2)
-traceplot(fit) + coord_cartesian(xlim = c(1500,1600))
+traceplot(fit, window = c(1500, 1600))
 }
 
 
