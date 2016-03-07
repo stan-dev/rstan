@@ -17,6 +17,8 @@
 
 #include <stan/model/util.hpp>
 
+#include <stan/interface_callbacks/writer/base_writer.hpp>
+
 #include <stan/mcmc/base_adaptation.hpp>
 #include <stan/mcmc/base_adapter.hpp>
 #include <stan/mcmc/base_mcmc.hpp>
@@ -424,7 +426,8 @@ namespace rstan {
 
     template<class Sampler>
     void init_adapt(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args,
-                    const Eigen::VectorXd& cont_params) {
+                    const Eigen::VectorXd& cont_params,
+                    stan::interface_callbacks::writer::base_writer& info) {
 
       if (!args.get_ctrl_sampling_adapt_engaged()) return;
 
@@ -442,19 +445,21 @@ namespace rstan {
       sampler_ptr2->get_stepsize_adaptation().set_t0(t0);
       sampler_ptr2->engage_adaptation();
       sampler_ptr2->z().q = cont_params;
-      sampler_ptr2->init_stepsize();
+      sampler_ptr2->init_stepsize(info);
     }
 
     template<class Sampler>
     bool init_windowed_adapt(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args,
-                             const Eigen::VectorXd& cont_params) {
+                             const Eigen::VectorXd& cont_params,
+                             stan::interface_callbacks::writer::base_writer& info) {
 
-      init_adapt<Sampler>(sampler_ptr, args, cont_params);
+      init_adapt<Sampler>(sampler_ptr, args, cont_params, info);
       Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr);
       sampler_ptr2->set_window_params(args.get_ctrl_sampling_warmup(),
                                       args.get_ctrl_sampling_adapt_init_buffer(),
                                       args.get_ctrl_sampling_adapt_term_buffer(),
-                                      args.get_ctrl_sampling_adapt_window());
+                                      args.get_ctrl_sampling_adapt_window(),
+                                      info);
       return true;
     }
 
@@ -521,22 +526,22 @@ namespace rstan {
 
       rstan_sample_writer sample_writer
         = sample_writer_factory(&sample_stream, "# ",
-                                  sample_writer_size,
-                                  args.get_ctrl_sampling_iter_save(),
-                                  args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
-                                  sample_writer_offset,
-                                  qoi_idx);
+                                sample_writer_size,
+                                args.get_ctrl_sampling_iter_save(),
+                                args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
+                                sample_writer_offset,
+                                qoi_idx);
 
       stan::interface_callbacks::writer::stream_writer diagnostic_writer
         = diagnostic_writer_factory(&diagnostic_stream, "# ");
 
-      stan::interface_callbacks::writer::stream_writer message_writer(Rcpp::Rcout, "# ");
+      stan::interface_callbacks::writer::stream_writer message_writer(Rcpp::Rcout);
 
       stan::services::sample::mcmc_writer<Model,
                                           rstan_sample_writer,
                                           stan::interface_callbacks::writer::stream_writer,
                                           stan::interface_callbacks::writer::stream_writer>
-        writer(sample_writer, diagnostic_writer, message_writer, &Rcpp::Rcout);
+        writer(sample_writer, diagnostic_writer, message_writer);
 
       if (!args.get_append_samples()) {
         writer.write_sample_names(s, sampler_ptr, model);
@@ -560,7 +565,8 @@ namespace rstan {
          writer,
          s, model, base_rng,
          prefix, suffix, Rcpp::Rcout,
-         interruptCallback);
+         interruptCallback,
+         message_writer);
 
       clock_t end = clock();
       double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -571,7 +577,7 @@ namespace rstan {
 
         std::stringstream ss;
         stan::interface_callbacks::writer::stream_writer info(ss, "# ");
-        writer.write_adapt_finish(sampler_ptr, info);
+        writer.write_adapt_finish(sampler_ptr);
         adaptation_info = ss.str();
         adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
       }
@@ -587,7 +593,8 @@ namespace rstan {
          writer,
          s, model, base_rng,
          prefix, suffix, Rcpp::Rcout,
-         interruptCallback);
+         interruptCallback,
+         message_writer);
 
       end = clock();
       double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
@@ -654,7 +661,7 @@ namespace rstan {
                         const std::vector<size_t>& qoi_idx,
                         const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
       std::stringstream ss;
-      
+
       base_rng.seed(args.get_random_seed());
       // (2**50 = 1T samples, 1000 chains)
       static boost::uintmax_t DISCARD_STRIDE =
@@ -674,8 +681,8 @@ namespace rstan {
       {
         std::string init;
         rstan::io::rlist_ref_var_context_factory context_factory(args.get_init_list());
-        
-        if (init_val == "0") 
+
+        if (init_val == "0")
           init = "0";
         else if (init_val == "user")
           init = "user";
@@ -698,20 +705,19 @@ namespace rstan {
         for (int n = 0; n < cont_params.size(); n++)
           cont_vector[n] = cont_params[n];
       }
-      
+
       // keep a record of the initial values
       std::vector<double> initv;
       model.write_array(base_rng,cont_vector,disc_vector,initv);
 
       if (TEST_GRADIENT == args.get_method()) {
-        rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;       
+        rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
         double epsilon = args.get_ctrl_test_grad_epsilon();
         double error = args.get_ctrl_test_grad_error();
-        ss.str("");
+        stan::interface_callbacks::writer::stream_writer info(Rcpp::Rcout);
         int num_failed =
           stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,
-                                                 epsilon,error,ss,&rstan::io::rcout);
-        rstan::io::rcout << ss.str() << std::endl;
+                                                 epsilon,error,info);
         holder = Rcpp::List::create(Rcpp::_["num_failed"] = num_failed);
         holder.attr("test_grad") = Rcpp::wrap(true);
         holder.attr("inits") = initv;
@@ -727,6 +733,9 @@ namespace rstan {
                            : std::fstream::out;
         sample_stream.open(args.get_sample_file().c_str(), samples_append_mode);
       }
+
+      stan::interface_callbacks::writer::stream_writer sample_writer(sample_stream, "# ");
+      stan::interface_callbacks::writer::stream_writer info(rstan::io::rcout);
 
       if (VARIATIONAL == args.get_method()) {
         int grad_samples = args.get_ctrl_variational_grad_samples();
@@ -787,7 +796,7 @@ namespace rstan {
             model.constrained_param_names(names, true, true);
             print_vector(names, sample_stream);
           }
-
+          
           stan::variational::advi<Model,
                                   stan::variational::normal_fullrank,
                                   RNG_t>
@@ -797,12 +806,14 @@ namespace rstan {
                      grad_samples,
                      elbo_samples,
                      eval_elbo,
-                     output_samples,
-                     &rstan::io::rcout,
-                     &sample_stream,
-                     &diagnostic_stream);
-            cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj, 
-                         max_iterations);
+                     output_samples);
+
+          stan::interface_callbacks::writer::stream_writer diagnostic_writer
+            = diagnostic_writer_factory(&diagnostic_stream, "# ");
+
+          cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj,
+                       max_iterations,
+                       info, sample_writer, diagnostic_writer);        
         }
 
         if (args.get_ctrl_variational_algorithm() == MEANFIELD) {
@@ -822,12 +833,14 @@ namespace rstan {
                      grad_samples,
                      elbo_samples,
                      eval_elbo,
-                     output_samples,
-                     &rstan::io::rcout,
-                     &sample_stream,
-                     &diagnostic_stream);
-              cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj, 
-                           max_iterations);
+                     output_samples);
+
+          stan::interface_callbacks::writer::stream_writer diagnostic_writer
+            = diagnostic_writer_factory(&diagnostic_stream, "# ");
+
+          cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj,
+                       max_iterations,
+                       info, sample_writer, diagnostic_writer);
         }
         holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
         holder.attr("args") = args.stan_args_to_rlist();
@@ -893,13 +906,14 @@ namespace rstan {
 
           stan::services::optimize::do_bfgs_optimize(model, lbfgs, base_rng,
                                                      lp, cont_vector, disc_vector,
-                                                     &sample_stream, &rstan::io::rcout,
-                                                     save_iterations, refresh, interruptCallback);
+                                                     sample_writer, info,
+                                                     save_iterations, refresh,
+                                                     interruptCallback);
 
           if (args.get_sample_file_flag()) {
-            stan::services::io::write_iteration(sample_stream, model, base_rng,
+            stan::services::io::write_iteration(model, base_rng,
                                                 lp, cont_vector, disc_vector,
-                                                &rstan::io::rcout);
+                                                info, sample_writer);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
@@ -958,13 +972,14 @@ namespace rstan {
 
           stan::services::optimize::do_bfgs_optimize(model, bfgs, base_rng,
                                                      lp, cont_vector, disc_vector,
-                                                     &sample_stream, &rstan::io::rcout,
-                                                     save_iterations, refresh, interruptCallback);
+                                                     sample_writer, info,
+                                                     save_iterations, refresh,
+                                                     interruptCallback);
 
           if (args.get_sample_file_flag()) {
-            stan::services::io::write_iteration(sample_stream, model, base_rng,
+            stan::services::io::write_iteration(model, base_rng,
                                                 lp, cont_vector, disc_vector,
-                                                &rstan::io::rcout);
+                                                info, sample_writer);
             sample_stream.close();
           }
           model.write_array(base_rng,cont_vector,disc_vector, params_inr_etc);
@@ -1024,7 +1039,7 @@ namespace rstan {
         }
         return 0;
       }
-      
+
       for (size_t i = 0; i < cont_vector.size(); i++) cont_params(i) = cont_vector[i];
 
       // method = 3 //sampling
@@ -1057,7 +1072,7 @@ namespace rstan {
       stan::mcmc::sample s(cont_params, 0, 0);
 
       if (algorithm == Fixed_param) {
-        stan::mcmc::fixed_param_sampler sampler(&rstan::io::rcout, &rstan::io::rcerr);
+        stan::mcmc::fixed_param_sampler sampler;
         if (args.get_ctrl_sampling_warmup() != 0) {
           rstan::io::rcout << "Warning: warmup will be skipped for the fixed parameter sampler!" << std::endl;
           args.set_ctrl_sampling_warmup(0);
@@ -1080,7 +1095,7 @@ namespace rstan {
       switch (sampler_select) {
         case 0: {
           typedef stan::mcmc::unit_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_static_hmc<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1089,7 +1104,7 @@ namespace rstan {
         }
         case 1: {
           typedef stan::mcmc::unit_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_nuts<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1098,7 +1113,7 @@ namespace rstan {
         }
         case 10: {
           typedef stan::mcmc::diag_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_static_hmc<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1107,7 +1122,7 @@ namespace rstan {
         }
         case 11: {
           typedef stan::mcmc::diag_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_nuts<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1116,7 +1131,7 @@ namespace rstan {
         }
         case 20: {
           typedef stan::mcmc::dense_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_static_hmc<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1125,7 +1140,7 @@ namespace rstan {
         }
         case 21: {
           typedef stan::mcmc::dense_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_nuts<sampler_t>(&sampler, args);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
@@ -1134,9 +1149,9 @@ namespace rstan {
         }
         case 100: {
           typedef stan::mcmc::adapt_unit_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_static_hmc<sampler_t>(&sampler, args);
-          init_adapt<sampler_t>(&sampler, args, cont_params);
+          init_adapt<sampler_t>(&sampler, args, cont_params, info);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1144,9 +1159,9 @@ namespace rstan {
         }
         case 101: {
           typedef stan::mcmc::adapt_unit_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_nuts<sampler_t>(&sampler, args);
-          init_adapt<sampler_t>(&sampler, args, cont_params);
+          init_adapt<sampler_t>(&sampler, args, cont_params, info);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1154,9 +1169,9 @@ namespace rstan {
         }
         case 110: {
           typedef stan::mcmc::adapt_diag_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_static_hmc<sampler_t>(&sampler, args);
-          init_windowed_adapt<sampler_t>(&sampler, args, cont_params);
+          init_windowed_adapt<sampler_t>(&sampler, args, cont_params, info);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1164,9 +1179,9 @@ namespace rstan {
         }
         case 111: {
           typedef stan::mcmc::adapt_diag_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_nuts<sampler_t>(&sampler, args);
-          init_windowed_adapt<sampler_t>(&sampler, args, cont_params);
+          init_windowed_adapt<sampler_t>(&sampler, args, cont_params, info);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1174,9 +1189,9 @@ namespace rstan {
         }
         case 120: {
           typedef stan::mcmc::adapt_dense_e_static_hmc<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_static_hmc<sampler_t>(&sampler, args);
-          init_windowed_adapt<sampler_t>(&sampler, args, cont_params);
+          init_windowed_adapt<sampler_t>(&sampler, args, cont_params, info);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1184,9 +1199,9 @@ namespace rstan {
         }
         case 121: {
           typedef stan::mcmc::adapt_dense_e_nuts<Model, RNG_t> sampler_t;
-          sampler_t sampler(model, base_rng, &rstan::io::rcout, &rstan::io::rcerr);
+          sampler_t sampler(model, base_rng);
           init_nuts<sampler_t>(&sampler, args);
-          init_windowed_adapt<sampler_t>(&sampler, args, cont_params);
+          init_windowed_adapt<sampler_t>(&sampler, args, cont_params, info);
           execute_sampling(args, model, holder, &sampler, s, qoi_idx, initv,
                            sample_stream, diagnostic_stream, fnames_oi,
                            base_rng);
@@ -1595,4 +1610,3 @@ RCPPINC=`Rscript -e "cat(system.file('include', package='Rcpp'))"`
 RINC=`Rscript -e "cat(R.home('include'))"`
 g++ -Wall -I${RINC} -I"${STAN}/lib/boost_1.51.0" -I"${STAN}/lib/eigen_3.1.1"  -I"${STAN}/src" -I"${RCPPINC}" -I"../" stan_fit.hpp
 */
-
