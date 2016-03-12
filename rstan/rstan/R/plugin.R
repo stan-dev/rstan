@@ -71,7 +71,9 @@ rstanplugin <- function() {
   rcpp_pkg_path <- system.file(package = 'Rcpp')
   rcpp_pkg_path2 <- legitimate_space_in_path(rcpp_pkg_path) 
  
-  # In case  we have space (typicall on windows though not necessarily)
+  StanHeaders_pkg_libs <- system.file("lib", package = "StanHeaders")
+  
+  # In case  we have space (typical on windows though not necessarily)
   # in the file path of Rcpp's library. 
   
   # If rcpp_PKG_LIBS contains space without preceding '\\', add `\\'; 
@@ -87,7 +89,9 @@ rstanplugin <- function() {
 
   list(includes = '',
        body = function(x) x,
-       env = list(PKG_LIBS = paste(rcpp_pkg_libs),
+       env = list(PKG_LIBS = paste(rcpp_pkg_libs,  
+                                   paste0("-L", StanHeaders_pkg_libs),
+                                   "-lStanHeaders"),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }
