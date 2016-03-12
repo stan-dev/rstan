@@ -1,15 +1,5 @@
-.PHONY: static
-
 PKG_CPPFLAGS="-I../inst/include/cvode"
 SOURCES1 = $(addprefix cvode/src/cvode/, cvode.c cvode_io.c cvode_direct.c cvode_band.c cvode_dense.c cvode_diag.c cvode_spils.c cvode_spbcgs.c cvode_spgmr.c cvode_sptfqmr.c cvode_sparse.c cvode_bandpre.c cvode_bbdpre.c)
 SOURCES2 =  $(SOURCES1) $(wildcard cvode/src/sundials/*.c)
 SOURCES = $(SOURCES2) cvode/src/nvec_ser/nvector_serial.c
 OBJECTS = $(SOURCES:.c=.o)
-
-static: $(OBJECTS)
-				@mkdir -p ../lib
-				$(AR) -rs ../lib/libStanHeaders.a $(OBJECTS)
-				
-clean:
-				rm -rf ../lib
-				rm $(OBJECTS)
