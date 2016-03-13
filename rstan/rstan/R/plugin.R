@@ -71,7 +71,9 @@ rstanplugin <- function() {
   rcpp_pkg_path <- system.file(package = 'Rcpp')
   rcpp_pkg_path2 <- legitimate_space_in_path(rcpp_pkg_path) 
  
-  StanHeaders_pkg_libs <- system.file("lib", package = "StanHeaders")
+  if (.Platform$OS.type == "windows")
+    StanHeaders_pkg_libs <- system.file("libs", Sys.getenv("R_ARCH"), package = "StanHeaders")
+  else StanHeaders_pkg_libs <- system.file("lib", package = "StanHeaders")
   
   # In case  we have space (typical on windows though not necessarily)
   # in the file path of Rcpp's library. 
