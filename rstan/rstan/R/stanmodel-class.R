@@ -208,7 +208,7 @@ setMethod("vb", "stanmodel",
             means <- as.matrix(c(means[-1], means[1]))
             colnames(means) <- "chain:1"
             assign("posterior_mean_4all", means, envir = sfmiscenv)
-            inits_used <- rstan_relist(as.numeric(samples[1,]), 
+            inits_used <- rstan_relist(as.numeric(samples[1,-1]), 
                                        skeleton[-length(skeleton)])
             samples <- cbind(samples[-1,-1,drop=FALSE], 
                              "lp__" = samples[-1,1])[,unlist(cC)]
