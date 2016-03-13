@@ -17,7 +17,7 @@
             
   stan_trace(object, pars, include = TRUE, unconstrain = FALSE,
             inc_warmup = FALSE, nrow = NULL, ncol = NULL,
-            ...)
+            ..., window = NULL)
   stan_scat(object, pars, include = TRUE, unconstrain = FALSE,
             inc_warmup = FALSE, nrow = NULL, ncol = NULL,
             ...)
@@ -64,6 +64,9 @@
   \code{linetype}, \code{size}, \code{alpha}, etc.). For \code{stan_plot}
   there are also additional arguments that can be specified in \code{...} (see
   Details).}
+  
+  \item{window}{For \code{stan_trace} \code{window} is used to control
+  which iterations are shown in the plot. See \code{\link{traceplot}}.}
   
   \item{separate_chains}{For \code{stan_dens}, should the density for each 
   chain be plotted? The default is \code{FALSE}, which means that for each 
@@ -147,12 +150,8 @@ dens_sep + scale_fill_manual(values = c("red", "blue", "green", "black"))
 
 # traceplot
 trace <- stan_trace(fit)
-window <- coord_cartesian(xlim = c(1500,1600))
-quietgg(trace + window)
-
 trace +
   scale_color_manual(values = c("red", "blue", "green", "black"))
-
 trace +
   scale_color_brewer(type = "div") +
   theme(legend.position = "none")

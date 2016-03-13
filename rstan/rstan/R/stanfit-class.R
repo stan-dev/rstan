@@ -648,7 +648,7 @@ setMethod("grad_log_prob", signature = "stanfit",
 
 setMethod("traceplot", signature = "stanfit", 
           function(object, pars, include = TRUE, unconstrain = FALSE,
-                   inc_warmup = FALSE, nrow = NULL, ncol = NULL,
+                   inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
                    ...) { 
 
             if (object@mode == 1L) {
@@ -660,8 +660,8 @@ setMethod("traceplot", signature = "stanfit",
               return(invisible(NULL)) 
             } 
             args <- list(object = object, include = include, 
-                         unconstrain = unconstrain, inc_warmup=inc_warmup,
-                         nrow = nrow, ncol = ncol, ...)
+                         unconstrain = unconstrain, inc_warmup = inc_warmup,
+                         nrow = nrow, ncol = ncol, window = window, ...)
             if (!missing(pars)) { 
               if ("log-posterior" %in% pars)
                 pars[which(pars == "log-posterior")] <- "lp__"

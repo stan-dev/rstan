@@ -9,7 +9,7 @@ stan_trace <- function(object, pars, include = TRUE,
                        unconstrain = FALSE,
                        inc_warmup = FALSE,
                        nrow = NULL, ncol = NULL,
-                       ...) {
+                       ..., window = NULL) {
   
   .check_object(object, unconstrain)
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
@@ -31,9 +31,16 @@ stan_trace <- function(object, pars, include = TRUE,
     thm
   
   if (plot_data$nparams == 1)
-    graph + ylab(unique(plot_data$samp$parameter))
+    graph <- graph + ylab(unique(plot_data$samp$parameter))
   else
-    graph + facet_wrap(~parameter, nrow = nrow, ncol = ncol, scales = "free")
+    graph <- graph + facet_wrap(~parameter, nrow = nrow, ncol = ncol, scales = "free")
+  
+  if (!is.null(window)) {
+    if (!is.numeric(window) || length(window) != 2)
+      stop("'window' should be a numeric vector of length 2.")
+    graph <- graph + coord_cartesian(xlim = window)
+  }
+  graph
 }
 
 
