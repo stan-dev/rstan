@@ -260,5 +260,5 @@ attr(,"sampler_params")$treedepth__
 attr(,"sampler_params")$n_leapfrog__
 [1] 1
 
-attr(,"sampler_params")$n_divergent__
+attr(,"sampler_params")$divergent__
 [1] 1

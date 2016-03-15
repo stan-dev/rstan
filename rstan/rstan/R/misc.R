@@ -1590,7 +1590,7 @@ throw_sampler_warnings <- function(object) {
     stop("'object' must be of class 'stanfit'")
   sp <- get_sampler_params(object, inc_warmup = FALSE)
   n_d <- sum(sapply(sp, FUN = function(x) {
-    if ("n_divergent__" %in% colnames(x)) return(sum(x[,"n_divergent__"]))
+    if ("divergent__" %in% colnames(x)) return(sum(x[,"divergent__"]))
     else return(0)
   }))
   if (n_d > 0) {
