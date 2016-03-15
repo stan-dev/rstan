@@ -204,12 +204,13 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
+            pest <- rstan_relist(as.numeric(samples[1,-1]), skeleton[-length(skeleton)])
             means <- sapply(samples, mean)
             means <- as.matrix(c(means[-1], means[1]))
             colnames(means) <- "chain:1"
             assign("posterior_mean_4all", means, envir = sfmiscenv)
-            inits_used <- rstan_relist(as.numeric(samples[1,-1]), 
-                                       skeleton[-length(skeleton)])
+            inits_used <- rstan_relist(attr(vbres, "inits"), skeleton)
+            if ("lp__" %in% names(inits_used))  inits_used$lp__ <- NULL
             samples <- cbind(samples[-1,-1,drop=FALSE], 
                              "lp__" = samples[-1,1])[,unlist(cC)]
             cC <- cC[sapply(cC, all)]
@@ -224,21 +225,22 @@ setMethod("vb", "stanmodel",
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
             sim <- list(samples = list(as.list(samples)),
-                       iter = iter, thin = 1L,
-                       warmup = 0L,
-                       chains = 1L,
-                       n_save = iter,
-                       warmup2 = 0L, # number of warmup iters in n_save
-                       permutation = list(1:iter),
-                       pars_oi = sampler$param_names_oi(),
-                       dims_oi = sampler$param_dims_oi(),
-                       fnames_oi = fnames_oi,
-                       n_flatnames = n_flatnames) 
+                        iter = iter, thin = 1L,
+                        warmup = 0L,
+                        chains = 1L,
+                        n_save = iter,
+                        est = pest, # point estimate
+                        warmup2 = 0L, # number of warmup iters in n_save
+                        permutation = list(1:iter),
+                        pars_oi = sampler$param_names_oi(),
+                        dims_oi = sampler$param_dims_oi(),
+                        fnames_oi = fnames_oi,
+                        n_flatnames = n_flatnames)
             nfit <- new("stanfit",
                         model_name = object@model_name,
                         model_pars = m_pars,
                         par_dims = p_dims,
-                        mode = 0L, 
+                        mode = 0L,
                         sim = sim,
                         # keep a record of the initial values 
                         inits = inits_used,
@@ -247,7 +249,7 @@ setMethod("vb", "stanmodel",
                         # keep a ref to avoid garbage collection
                         # (see comments in fun stan_model)
                         date = date(),
-                        .MISC = sfmiscenv) 
+                        .MISC = sfmiscenv)
             return(nfit)
           })
 

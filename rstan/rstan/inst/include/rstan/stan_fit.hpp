@@ -831,6 +831,7 @@ namespace rstan {
         }
         holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
         holder.attr("args") = args.stan_args_to_rlist();
+        holder.attr("inits") = initv;
         return 0;
       }
 
