@@ -18,6 +18,9 @@
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
 
 .onLoad <- function(libname, pkgname) {
+  if (.Platform$OS.type == "windows")
+    dyn.load(system.file("libs", .Platform$r_arch, "StanHeaders.dll",
+                         package = "StanHeaders"))
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
 }
 
