@@ -1550,6 +1550,9 @@ parse_data <- function(cppcode, e = parent.frame()) {
                   cppcode[private:public])
   tdata <- grep("stan::math::fill(", cppcode, value = TRUE, fixed = TRUE)
   tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
+  tdata <- gsub("^.*stan::math::fill\\((.*), std::numeric_limits<int>::min\\(\\)\\);$",
+                "\\1", tdata)
+  
   # get them from the calling environment
   objects <- setdiff(objects, tdata)
   modes <- rep("any", length(objects))
