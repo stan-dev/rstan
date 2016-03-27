@@ -38,6 +38,7 @@ before_install:
   - chmod 755 wait4.sh
   - tlmgr install verbatimbox
   - tlmgr install readarray
+  - tlmgr install ifnextok
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra'), repos='http://cran.rstudio.com')"
