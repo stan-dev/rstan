@@ -778,6 +778,7 @@ as.matrix.stanfit <- function(x, ...) {
   if (x@mode != 0) return(numeric(0)) 
   e <- extract(x, permuted = FALSE, inc_warmup = FALSE, ...) 
   out <- apply(e, 3, FUN = function(y) y)
+  if (length(dim(out)) < 2L) out <- t(as.matrix(out))
   dimnames(out) <- dimnames(e)[-2]
   return(out)
 }
