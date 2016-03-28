@@ -1513,10 +1513,9 @@ is_arg_recognizable <- function(x, y, pre_msg = '', post_msg = '', ...) {
   idx <- match(x, y)
   na_idx <- which(is.na(idx))
   if (length(na_idx) > 0) {
-    warning(pre_msg, paste(x[na_idx], collapse = ', '), ".", post_msg, ...)
-    return(FALSE)
+    stop(pre_msg, paste(x[na_idx], collapse = ', '), ".", post_msg, ...)
   }
-  TRUE
+  return(TRUE)
 }
 
 get_time_from_csv <- function(tlines) {
