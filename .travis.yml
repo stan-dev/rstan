@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 dist: trusty
 services:
   - docker
@@ -36,9 +36,6 @@ before_install:
   - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
-  - tlmgr install verbatimbox
-  - tlmgr install readarray
-  - tlmgr install ifnextok
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra'), repos='http://cran.rstudio.com')"
@@ -47,7 +44,8 @@ before_script:
   - git submodule update --remote
   - R CMD build StanHeaders/
   - R CMD INSTALL `find StanHeaders*.tar.gz`
-  - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo sudo /usr/texbin/tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
+  - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo /usr/texbin/tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
+  - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
   - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
   - echo "CXX = `which ccache` `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
