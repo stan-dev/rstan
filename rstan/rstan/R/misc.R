@@ -1377,7 +1377,8 @@ is_null_ptr <- function(ns) {
 
 is_null_cxxfun <- function(cx) {
   # Tell if the returned object from cxxfunction in package inline
-  # contains null pointer 
+  # contains null pointer
+  if (!is.function(cx@.Data)) return(FALSE)
   add <- body(cx@.Data)[[2]]
   # add is of class NativeSymbol
   .Call("is_Null_NS", add)
