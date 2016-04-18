@@ -363,10 +363,15 @@ stan_diag <- function(object,
                       information = c("sample","stepsize","treedepth","divergence"),
                       chain = 0, ...) {
   .vb_check(object)
+  nchains <- if (is.stanreg(object)) 
+    ncol(object$stanfit) else ncol(object)
+  if (!isTRUE(nchains > 1))
+    stop("'stan_diag' requires more than one chain.", call. = FALSE)
   info <- match.arg(information)
   fn <- paste0("stan_", info)
   do.call(fn, list(object, chain, ...))
 }
+
 stan_stepsize <- function(object, chain = 0, ...) {
   .nuts_args_check(...)
   thm <- .rstanvis_defaults$theme
@@ -484,6 +489,8 @@ stan_par <- function(object, par, chain = 0, ...) {
     stop("'par' must be specified", call. = FALSE)
   if (is.stanreg(object))
     object <- object$stanfit
+  if (!isTRUE(ncol(object) > 1))
+    stop("'stan_par' requires more than one chain.", call. = FALSE)
   thm <- .rstanvis_defaults$theme
   samp <- extract(object, pars = c("lp__", par), permuted = FALSE)
   par_sel <- which(dimnames(samp)$parameters == par)
