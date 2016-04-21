@@ -620,10 +620,10 @@ namespace rstan {
     inline int get_ctrl_sampling_refresh() const {
       return ctrl.sampling.refresh;
     }
-    const inline sampling_metric_t get_ctrl_sampling_metric() const {
+    inline sampling_metric_t get_ctrl_sampling_metric() const {
       return ctrl.sampling.metric;
     }
-    const inline sampling_algo_t get_ctrl_sampling_algorithm() const {
+    inline sampling_algo_t get_ctrl_sampling_algorithm() const {
       return ctrl.sampling.algorithm;
     }
     inline int get_ctrl_sampling_warmup() const {
