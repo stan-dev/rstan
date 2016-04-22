@@ -44,7 +44,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
-         ' -isystem"', file.path(inc_path_fun("StanHeaders"), "cvode", '" '),
+         ' -isystem"', file.path(inc_path_fun("StanHeaders"), "cvodes", '" '),
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',

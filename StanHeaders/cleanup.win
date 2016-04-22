@@ -7,8 +7,8 @@ rm -rf src/cvode
 
 cp -r inst/include/mathlib/stan inst/include/stan
 cp -r inst/include/upstream/src inst/include/src
-cp -r inst/include/mathlib/lib/cvode_*/include inst/include/cvode
-cp -r inst/include/mathlib/lib/cvode_* src/cvode
+cp -r inst/include/mathlib/lib/cvode*/include inst/include/cvodes
+cp -r inst/include/mathlib/lib/cvode* src/cvodes
 
 exit $?
 
