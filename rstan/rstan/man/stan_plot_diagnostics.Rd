@@ -75,8 +75,8 @@
       \code{accept_stat} for each value of \code{treedepth}.}
     \item{\code{information='divergence'}}{Violin plots showing the 
       distributions of \code{lp__} and \code{accept_stat} for iterations that
-      encountered divergent transitions (\code{n_divergent=1}) and those that
-      did not (\code{n_divergent=0}).}
+      encountered divergent transitions (\code{divergent=1}) and those that
+      did not (\code{divergent=0}).}
     }
   }
 }

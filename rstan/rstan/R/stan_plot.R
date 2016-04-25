@@ -56,7 +56,7 @@ stan_scat <- function(object, pars, include = TRUE,
   if (missing(pars) || length(pars) != 2L)
     stop("'pars' must contain exactly two parameter names", call. = FALSE)
 #   ndivergent <- 
-#     .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)[, -1L]
+#     .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)[, -1L]
 #   treedepth <- 
 #     .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)[, -1L]
 #   max_td <- .max_td(object)
@@ -425,7 +425,7 @@ stan_treedepth <- function(object, chain = 0, ...) {
   lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
   treedepth <- .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)
-  ndivergent <- .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)
+  ndivergent <- .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)
   
   graphs <- graphs_nd <- list()
@@ -466,7 +466,7 @@ stan_divergence <- function(object, chain = 0, ...) {
   thm <- .rstanvis_defaults$theme
   lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
-  ndivergent <- .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)
+  ndivergent <- .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)
   graphs <- list()
   graphs$ndivergent_vs_lp <-
@@ -506,7 +506,7 @@ stan_par <- function(object, par, chain = 0, ...) {
   max_td <- .max_td(object)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)[,-1L]
   stepsize <- .sampler_params_post_warmup(object, "stepsize__", as.df = TRUE)[,-1L]
-  ndivergent <- .sampler_params_post_warmup(object, "n_divergent__", as.df = TRUE)[,-1L]
+  ndivergent <- .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)[,-1L]
   treedepth <- .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)[,-1L]
   hit_max_td <- apply(treedepth, 2L, function(y) as.numeric(y == max_td))
   graphs <- list()

@@ -282,7 +282,7 @@ color_vector_chain <- function(n) {
 .METROP_LAB <- "Mean Metrop. Acceptance"
 .STEPSIZE_LAB <- "Sampled Step Size"
 .TREEDEPTH_LAB <- "Treedepth"
-.NDIVERGENT_LAB <- "N Divergent"
+.NDIVERGENT_LAB <- "Divergent"
 
 .NUTS_VLINE_CLR <- "#222222"
 .NUTS_FILL <- "#66a7e0"
@@ -318,6 +318,8 @@ color_vector_chain <- function(n) {
 }
 
 .sampler_params_post_warmup <- function(object, which = "stepsize__", as.df = FALSE) {
+  if (which == "divergent__" && utils::packageVersion("rstan") < "2.10")
+    which <- "n_divergent__"
   if (is.stanreg(object))
     object <- object$stanfit
   sampler_params <- suppressWarnings(get_sampler_params(object))
@@ -471,7 +473,7 @@ color_vector_chain <- function(n) {
 .treedepth_ndivergent_hist <- function(df_td, df_nd, chain = 0,
                                        divergent = c("All", 0, 1), ...) {
   x_lab <- if (divergent == "All")
-    "Treedepth" else paste0("Treedepth (N Divergent = ", divergent,")")
+    "Treedepth" else paste0("Treedepth (Divergent = ", divergent,")")
   plot_labs <- labs(x = x_lab, y = "")
   
   mdf_td <- .reshape_df(df_td) #reshape2::melt(df_td, id.vars = grep("iteration", colnames(df_td), value = TRUE))
