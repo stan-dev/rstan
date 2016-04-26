@@ -30,37 +30,50 @@ stan(file, model_name = "anon_model", model_code = "",
     as a character string using parameter \code{model_code} or through
     a previous fit using parameter \code{fit}. 
     When \code{fit} is specified, parameter \code{file} is ignored.}
+    
   \item{model_name}{A character string naming the model; defaults 
     to \code{"anon_model"}. However, the model name would be derived from 
     \code{file} or \code{model_code} (if \code{model_code} is the name
     of a character string object) if \code{model_name} is not specified.}
+    
   \item{model_code}{A character string either containing the model definition
     or the name of a character string object in the workspace. This 
     parameter is used only if parameter \code{file} is not specified. 
     When \code{fit} is specified, the model compiled previously
     is used so specifying \code{model_code} is ignored.}
-  \item{fit}{An instance of S4 class \code{stanfit} derived from
-             a previous fit;  defaults to \code{NA}. 
-    If \code{fit} is not \code{NA}, the compiled model associated with the fitted result 
-    is re-used; thus the time that would otherwise be spent 
-    recompiling the C++ code for the model can be saved.}
-  \item{data}{A named \code{list} or \code{environment}
-    providing the data for the model or a character vector 
-    for all the names of objects used as data. 
-    See the notes below.}    
-  \item{pars}{A vector of character string specifying parameters of interest; defaults
-    to \code{NA} indicating all parameters in the model. If \code{include = TRUE}, only 
-    samples for parameters given in \code{pars} are stored in the fitted results.
-    Conversely, if \code{include = FALSE}, samples for all parameters except those
-    given in \code{pars} are stored in the fitted results.}
-  \item{chains}{A positive integer specifying number of chains; defaults to 4.} 
-  \item{iter}{A positive integer specifying how many iterations for each 
+    
+  \item{fit}{An instance of S4 class \code{stanfit} derived from a previous fit;
+    defaults to \code{NA}. If \code{fit} is not \code{NA}, the compiled model 
+    associated with the fitted result is re-used; thus the time that would 
+    otherwise be spent recompiling the C++ code for the model can be saved.}
+    
+  \item{data}{A named \code{list} or \code{environment} providing the data for 
+    the model, or a character vector for all the names of objects used as data. 
+    See the Note section below.}    
+    
+  \item{pars}{A vector of character strings specifying parameters of interest. 
+    The default is \code{NA} indicating all parameters in the model. 
+    If \code{include = TRUE}, only samples for parameters named in \code{pars} 
+    are stored in the fitted results. Conversely, if \code{include = FALSE}, 
+    samples for all parameters \emph{except} those named in \code{pars} are 
+    stored in the fitted results.}
+    
+  \item{chains}{A positive integer specifying the number of Markov chains. 
+    The default is 4.} 
+ 
+  \item{iter}{A positive integer specifying the number of iterations for each 
     chain (including warmup). The default is 2000.}
-  \item{warmup}{A positive integer specifying number of warmup (aka burnin)
-     iterations.  This also specifies the number of iterations used for stepsize
-     adaptation, so warmup samples should not be used for inference. The number
-     of warmup should not be larger than \code{iter} and the default is \code{iter/2}.}
-  \item{thin}{A positive integer specifying the period for saving sample; defaults to 1.} 
+
+  \item{warmup}{A positive integer specifying the number of warmup (aka burnin)
+    iterations per chain. If step-size adaptation is on (which it is by default), 
+    this also controls the number of iterations for which adaptation is run (and
+    hence these warmup samples should not be used for inference). The number of 
+    warmup iterations should not be larger than \code{iter} and the default is 
+    \code{iter/2}.}
+
+  \item{thin}{A positive integer specifying the period for saving samples. 
+    The default is 1, which is usually the recommended value.}
+    
   \item{init}{Can be the digit \code{0}, the strings \code{"0"} or \code{"random"}, 
     a function that returns a named list, or a list of named lists.
     \describe{
@@ -91,20 +104,19 @@ stan(file, model_name = "anon_model", model_code = "",
     parameters for which values are not specified will receive initial values
     generated as described in the \code{init="random"} description above.
   }
-  \item{seed}{The seed, a positive integer, for random number generation of Stan. The
-    default is generated from 1 to the maximum integer supported by \R so 
-    fixing the seed of \R's random number generator can essentially
-    fix the seed of Stan.
-    When multiple chains are used, only one seed is needed, as the seed for
-    the other chains will be generated from the first chain's seed to prevent
-    dependency among the random number streams for the chains. The seed can 
-    be provided either as a character string of digits (e.g., \code{"12345"}), 
-    which be converted to an integer, or as a numeric value. The \code{as.integer} 
-    function is applied to any value provided for \code{seed} and if the result 
-    is \code{NA} then the seed will be generated randomly.
-    }
+  
+  \item{seed}{The seed for random number generation. The default is generated 
+    from 1 to the maximum integer supported by \R on the machine. Even if 
+    multiple chains are used, only one seed is needed, with other chains having 
+    seeds derived from that of the first chain to avoid dependent samples.
+    When a seed is specified by a number, \code{as.integer} will be applied to it. 
+    If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
+    The seed can also be specified as a character string of digits, such as
+    \code{"12345"}, which is converted to integer.}
+    
   \item{algorithm}{One of algorithms that are implemented in Stan such 
-    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011) and static HMC.}
+    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC,
+    or Fixed_param.}
 
   \item{sample_file}{An optional character string providing the name of a file.
     If specified the draws for \emph{all} parameters and other saved quantities
@@ -129,8 +141,7 @@ stan(file, model_name = "anon_model", model_code = "",
     When \code{save_dso=TRUE}, the fitted object can be loaded from 
     what is saved previously and used for sampling, if the compiling is
     done on the same platform, that is, same operating system and same 
-    architecture (32bits or 64bits). 
-  }
+    architecture (32bits or 64bits).}
 
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
     to print intermediate output from Stan on the console, which might

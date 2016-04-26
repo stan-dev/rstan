@@ -21,7 +21,8 @@
 } 
 
 \section{Objects from the Class}{
-  Instances of \code{stanmodel} are usually created by calling function \code{stan_model} or function \code{stan}.
+  Instances of \code{stanmodel} are usually created by calling 
+  function \code{stan_model} or function \code{stan}.
 }
 
 
@@ -68,7 +69,8 @@
 }
 
 \seealso{
-\code{\link{stanc}} 
+\code{\link{stan_model}}, \code{\link{stanc}}
+\code{\link{sampling}}, \code{\link{optimizing}}, \code{\link{vb}}
 }
 \examples{
 showClass("stanmodel")

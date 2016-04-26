@@ -3,10 +3,10 @@
 \title{Construct a Stan model} 
 \description{
   Construct an instance of S4 class \code{stanmodel} from a model 
-  specified in Stan's modeling language. A \code{stanmodel} 
-  can be used to draw samples from the model.  If the model is
-  supplied in the Stan modeling language, it is first translated to
-  C++ code.  The C++ code for the model plus other auxiliary 
+  specified in Stan's modeling language. A \code{stanmodel} object 
+  can then be used to draw samples from the model. The Stan program
+  (the model expressed in the Stan modeling language) is first translated to
+  C++ code and then the C++ code for the model plus other auxiliary 
   code is compiled into a dynamic shared object (DSO) and then loaded. 
   The loaded DSO for the model can be executed to draw samples, allowing
   inference to be performed for the model and data.
@@ -28,65 +28,64 @@
   }
 
   \item{model_name}{A character string naming the model; defaults 
-    to \code{"anon_model"}. However, the model name would be derived from 
+    to \code{"anon_model"}. However, the model name will be derived from 
     \code{file} or \code{model_code} (if \code{model_code} is the name of a
     character string object) if \code{model_name} is not specified.}
 
-  \item{model_code}{A character string either containing the model 
-    specification or the name of a character string object in the workspace;
-    an alternative is to specify the model with parameters \code{file}
-    or \code{stanc_ret}. 
+  \item{model_code}{Either a character string containing the model 
+    specification or the name of a character string object in the workspace.
+    This is an alternative to specifying the model via the \code{file}
+    or \code{stanc_ret} arguments. 
   }
   \item{stanc_ret}{A named list returned from a previous call to 
-    function \code{stanc}. The list can be used to specify the model  
-    instead of using parameter \code{file} or \code{model_code}. 
+    the \code{\link{stanc}} function. The list can be used to specify the model  
+    instead of using the \code{file} or \code{model_code} arguments. 
   }
   \item{boost_lib}{The path to a version of the Boost C++ library to
     use instead of the one in the \pkg{BH} package.}
   \item{eigen_lib}{The path to a version of the Eigen C++ library to
     use instead of the one in the \pkg{RcppEigen} package.} 
-  \item{save_dso}{Logical with the default of \code{TRUE}: indication of whether the 
-    dynamic shared object (DSO) compiled from the C++ code for the model 
-    will be saved or not. If \code{TRUE}, we can draw samples from
-    the same model in another \R session using the saved DSO (i.e., without compiling 
-    the C++ code again).}
-  \item{verbose}{\code{TRUE} or \code{FALSE}: indication of whether
-    to report intermediate output to the console, 
+  \item{save_dso}{Logical, defaulting to \code{TRUE}, indicating 
+    whether the  dynamic shared object (DSO) compiled from the C++ code for the 
+    model will be saved or not. If \code{TRUE}, we can draw samples from
+    the same model in another \R session using the saved DSO (i.e., 
+    without compiling the C++ code again).}
+  \item{verbose}{Logical, defaulting to \code{FALSE}, indicating whether
+    to report additional intermediate output to the console, 
     which might be helpful for debugging.}
-  \item{auto_write}{\code{TRUE} or \code{FALSE}: indication of whether to write the
-    object to the hard disk using \code{\link{saveRDS}}. By default, this argument
-    is \code{FALSE}, but we recommend to always avoid the default behavior by calling 
-    \code{rstan_options("auto_write" = TRUE)} in order to avoid unnecessary recompilations.
-    If \code{file} is supplied and its \code{\link{dirname}} is writable, then the object
-    will be written to that same directory, substituting a \code{.rda} extension for the 
-    \code{.stan} extension. Otherwise, the object will be written to the 
-    \code{\link{tempdir}}}.
+  \item{auto_write}{Logical, defaulting to the value of 
+    \code{rstan_options("auto_write")}, indicating whether to write the
+    object to the hard disk using \code{\link{saveRDS}}. Although this argument
+    is \code{FALSE} by default, we recommend calling 
+    \code{rstan_options("auto_write" = TRUE)} in order to avoid unnecessary 
+    recompilations. If \code{file} is supplied and its \code{\link{dirname}} 
+    is writable, then the object will be written to that same directory, 
+    substituting a \code{.rda} extension for the \code{.stan} extension. 
+    Otherwise, the object will be written to the \code{\link{tempdir}}.}
   \item{obfuscate_model_name}{A logical scalar that is \code{TRUE} by default and
-    passed to \code{\link{stanc}}}
+    passed to \code{\link{stanc}}.}
 }
 
 \details{
-  If a previously compiled \code{stan_model} exists on the hard drive, its validity
+  If a previously compiled \code{stanmodel} exists on the hard drive, its validity
   is checked and then returned without recompiling. To avoid reading previously 
-  compiled \code{stan_model}s from the hard drive, supply the \code{stanc_ret}
+  compiled \code{stanmodel}s from the hard drive, supply the \code{stanc_ret}
   argument rather than the \code{file} or \code{model_code} arguments.
   
-  More details of Stan, including the full user's guide and reference 
-  manual can be found at \url{http://mc-stan.org/}. 
-
-  There are three ways to specify the model's code for \code{stan_model}. 
+  There are three ways to specify the model's code for \code{stan_model}: 
   \enumerate{ 
-  \item parameter \code{model_code}, containing character string to 
-       whose value is the Stan model specification,
-  \item parameter \code{file}, indicating a file (or a connection) from
+  \item parameter \code{model_code}: a character string containing the 
+        Stan model specification,
+  \item parameter \code{file}: a file name (or a connection) from
        which to read the Stan model specification, or 
-  \item parameter \code{stanc_ret}, indicating the re-use of a model
-       generated in a previous call to \code{stanc}.
+  \item parameter \code{stanc_ret}: a list returned by \code{stanc}
+        to be reused.
   } 
 }
 \value{
-  An instance of S4 class \code{\linkS4class{stanmodel}}, which can be
-  used later for drawing samples by calling its \code{sampling} function.
+  An instance of S4 class \code{\linkS4class{stanmodel}} that can be
+  passed to the \code{\link{sampling}}, \code{\link{optimizing}}, and 
+  \code{\link{vb}} functions.
 }
 \references{
   The Stan Development Team 
@@ -94,9 +93,19 @@
   \url{http://mc-stan.org/}. 
 }
 \seealso{
-  \code{\linkS4class{stanmodel}} and \code{\link{stan}} 
+  \code{\linkS4class{stanmodel}} for details on the class. 
+  
+  \code{\link{sampling}}, \code{\link{optimizing}}, and \code{\link{vb}}, 
+  which take a \code{stanmodel} object as input, for estimating the model 
+  parameters.
+  
+  More details on Stan, including the full user's guide and reference 
+  manual, can be found at \url{http://mc-stan.org/}. 
 }
 \examples{\dontrun{
-stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
+stancode <- 'data {real y_mean;} parameters {real y;} model {y ~ normal(y_mean,1);}'
+mod <- stan_model(model_code = stancode)
+fit <- sampling(mod, data = list(y_mean = 0))
+fit2 <- sampling(mod, data = list(y_mean = 5))
 }}
 \keyword{rstan}
