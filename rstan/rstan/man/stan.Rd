@@ -270,7 +270,7 @@ stan(file, model_name = "anon_model", model_code = "",
   In this case, the compiled C++ code for the model is reused. 
 }
 \value{
-  An object of S4 class \code{stanfit}. However, if \code{cores > 1}
+  An object of S4 class \code{\link{stanfit}}. However, if \code{cores > 1}
   and there is an error for any of the chains, then the error(s) are printed. If 
   all chains have errors and an error occurs before or during sampling, the returned
   object does not contain samples. But the compiled binary object for the 

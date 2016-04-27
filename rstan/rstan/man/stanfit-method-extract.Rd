@@ -5,21 +5,21 @@
 \alias{extract,stanfit-method}
 %\alias{extract,stanfit,character-method}
 
-\title{\code{extract}: extract samples from fitted Stan model}
+\title{Extract samples from fitted Stan model}
 \description{
   Extract samples from a fitted model represented by an 
-  instance of class \code{stanfit}.
+  instance of class \code{\linkS4class{stanfit}}.
 }
 
 \usage{
   %% extract(object, \dots)  
-  \S4method{extract}{stanfit}(object, pars, permuted = TRUE, 
-                              inc_warmup = FALSE, include = TRUE) 
+  \S4method{extract}{stanfit}(object, pars, permuted = TRUE, inc_warmup = FALSE, 
+  include = TRUE) 
 } 
 
 \section{Methods}{
   \describe{
-    \item{extract}{\code{signature(object = "stanfit")}}{ Extract samples for a
+    \item{extract}{\code{signature(object = "stanfit")}}{Extract samples for a
       fitted model defined by class \code{stanfit}.  
     }
   }
@@ -30,30 +30,28 @@
   \item{pars}{An object of class \code{"character"} providing the parameter
     names (or other quantity names) of interest. If not specified,
     all parameters and other quantities are used. The log-posterior with
-    name \code{lp__} is also included in the samples. 
+    name \code{lp__} is also included by default. 
   } 
-  \item{permuted}{\code{TRUE} of \code{FALSE}. If \code{TRUE}, draws
+  \item{permuted}{\code{TRUE} or \code{FALSE}. If \code{TRUE}, draws
     after the \emph{warmup} period in each chain are \emph{permuted} and \emph{merged}. 
-    If \code{FALSE}, the original order are kept. For each \code{stanfit}
+    If \code{FALSE}, the original order is kept. For each \code{stanfit}
     object, the permutation is fixed (that is, extracting samples a second
-    time will give the same sequence of iterations as the previous).}
-  \item{inc_warmup}{\code{TRUE} of \code{FALSE}. The argument matters
-    only if \code{permuted} is \code{FALSE}. If \code{TRUE}, warmup
-    draws are included; otherwise excluded.}
-  \item{include}{Logical scalar (\code{TRUE} by default) that if set to
-    \code{FALSE} implies that the named \code{pars} are interpreted as
-    the parameters to not extract from the \code{object}}
+    time will give the same sequence of iterations).}
+  \item{inc_warmup}{\code{TRUE} or \code{FALSE} indicating whether to include
+    the warmup draws. This argument matters only if \code{permuted} is \code{FALSE}.}
+  \item{include}{\code{TRUE} or \code{FALSE} indicating whether the parameters
+    named in \code{pars} should be included (\code{TRUE}) or excluded (\code{FALSE}).}
 }
 \value{
   When \code{permuted = TRUE}, this function returns a named list,  
   every element of which is an array representing samples for a parameter
-  merged from all chains. 
+  with all chains merged together. 
   When \code{permuted = FALSE}, an array is returned; the first
-  dimension is for the iterations; the second for the number of chains; the 
+  dimension is for the iterations, the second for the number of chains, the 
   third for the parameters. Vectors and arrays are expanded to one 
   parameter (a scalar) per cell, with names indicating the third dimension.
-  See examples below and comments in the code. Function \code{monitor} can 
-  be applied to the returned array to obtain a summary of model inference 
+  See examples below and comments in the code. Function \code{\link{monitor}} 
+  can be applied to the returned array to obtain a summary of model inference 
   (similar to method \code{print} for \code{\linkS4class{stanfit}}).
 }
 

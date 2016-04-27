@@ -19,8 +19,8 @@
 \title{Internal Functions and Methods}
 \description{
 These functions are not intended to be called directly. In the case of
-methods, they documented elsewhere, either with the associated generic
-function or with the class of the object that the method is defined for.
+methods, they are documented elsewhere, either with the associated generic
+function or with the class of the object for which the method is defined.
 }
 \keyword{internal}
 
