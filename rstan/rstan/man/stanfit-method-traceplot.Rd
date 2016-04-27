@@ -45,7 +45,7 @@
   using the \pkg{ggplot2} package.} 
 
 \seealso{
-\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan-plotting-functions]{List of RStan plotting functions}},
 \code{\link[=rstan_gg_options]{Plot options}}
 }
 

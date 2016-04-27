@@ -87,7 +87,7 @@
   Manual at \url{http://mc-stan.org/documentation/}.
 }
 \seealso{
-\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan-plotting-functions]{List of RStan plotting functions}},
 \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{

@@ -47,5 +47,6 @@
 
 \seealso{
   S4 class \code{\linkS4class{stanfit}} and particularly its method
-  \code{summary}, which is used to obtain the values that are printed.
+  \code{\link[=summary,stanfit-method]{summary}}, which is used to obtain the 
+  values that are printed.
 } 
