@@ -1,43 +1,40 @@
 \name{monitor}
 \alias{monitor}
-\title{Compute the summary for MCMC simulation samples and monitor the convergence} 
-\description{For a 3-d array (the number of iterations * the number of chains *
-  the number of parameters) of MCMC simulation samples, this function computes 
-  the summaries such as mean, standard deviation, standard error of the mean,
-  and quantiles.  And for monitoring the convergence, split Rhat and the
-  effective sample size are also computed.  By default, half of the iterations
-  are considered to be warmup samples and thus excluded.}
+\title{Compute summaries of MCMC draws and monitor convergence} 
+\description{
+  Similar to the \code{print} method for \code{stanfit} objects, but \code{monitor}
+  takes an array of simulations as its argument rather than a \code{stanfit}
+  object. For a 3-D array (iterations * chains * parameters) of MCMC draws, 
+  \code{monitor} computes means, standard deviations, quantiles, Monte Carlo 
+  standard errors, split Rhats, and effective sample sizes. By default, half of 
+  the iterations are considered warmup and are excluded.
+}
 
 \usage{
 monitor(sims, warmup = floor(dim(sims)[1]/2), 
-          probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
-          digits_summary = 1, print = TRUE, ...)
+        probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
+        digits_summary = 1, print = TRUE, ...)
 }
 \arguments{
-  \item{sims}{A 3-dimension array of samples simulated from any MCMC algorithm. 
-    The first dimension is for the number of iterations; the second for the 
-    number of chains; the third for the parameters.}
-  \item{warmup}{The number of warmup iterations that would be excluded 
-    for computing the summaries; default to half of the total number 
-    of iterations.}
-  \item{probs}{Quantiles of interest; defaults to \code{"c(0.025,0.25,0.5,0.75,0.975)"}}
-  \item{digits_summary}{The number of significant digits for printing out
-    the summary; defaults to 1. The effective sample size is always rounded to
-    integers.} 
-  \item{\dots}{Additional arguments for the underlying \code{print} method.} 
-  \item{print}{Logical; indicating whether to print the summary.} 
-}
-\details{
-  Similar to the \code{print} function for \code{stanfit} object, 
-  the function prints out a summary for the simulated samples. 
-  In particular, for monitoring the convergence, the printout 
-  includes the split Rhat and the effective sample size. 
+  \item{sims}{A 3-D array (iterations * chains * parameters) of MCMC 
+    simulations from any MCMC algorithm.}
+  \item{warmup}{The number of warmup iterations to be excluded 
+    when computing the summaries. The default is half of the total number 
+    of iterations. If \code{sims} doesn't include the warmup iterations then 
+    \code{warmup} should be set to zero.}
+  \item{probs}{A numeric vector specifying quantiles of interest. The 
+    defaults is \code{c(0.025,0.25,0.5,0.75,0.975)}.}
+  \item{digits_summary}{The number of significant digits to use when printing
+    the summary, defaulting to 1. Applies to the quantities other than 
+    the effective sample size, which is always rounded to the nearest integer.}
+  \item{print}{Logical, indicating whether to print the summary after the 
+    computations are performed.} 
+  \item{\dots}{Additional arguments passed to the underlying \code{print} method.}
 }
 
 \value{
-  A summary given as a 2 dimension array for the input samples: each row is
-  for one parameter; the columns are the mean, standard deviation, quantiles,
-  split Rhat, the effective sample size, etc.  
+  A 2-D array with rows corresponding to parameters and columns to the 
+  summary statistics.
 }
 
 \references{
@@ -47,8 +44,8 @@ monitor(sims, warmup = floor(dim(sims)[1]/2),
 }
 
 \seealso{
-  S4 class \code{\linkS4class{stanfit}} and particularly its method
-  \code{print}.  
+  S4 class \code{\linkS4class{stanfit}} and particularly its
+  \code{\link[=print.stanfit]{print}} method.
 }
 
 \examples{
