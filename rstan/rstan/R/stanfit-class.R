@@ -315,7 +315,12 @@ setMethod("get_sampler_params",
             } else if (object@mode == 2L) {
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
-            } 
+            }
+            
+            if (isTRUE(object@stan_args[[1L]]$method == "variational")) {
+              stop("'get_sampler_params' not available for ",
+                   "meanfield or fullrank algorithms.") 
+            }
 
             ldf <- lapply(object@sim$samples, 
                           function(x) do.call(cbind, attr(x, "sampler_params")))   
