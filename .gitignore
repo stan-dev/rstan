@@ -31,3 +31,5 @@ stan.kdev4
 *.swp
 
 rstan/rstan/rstan.Rproj
+
+rstan/rstan/.Rhistory
