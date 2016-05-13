@@ -754,16 +754,11 @@ seq_array_ind <- function(d, col_major = FALSE) {
     return(res)
   
   jidx <- if (col_major) 1L:len else len:1L
-  for (i in 2L:total) {
-    res[i, ] <- res[i - 1, ]
-    for (j in jidx) { 
-      if (res[i - 1, j] < d[j]) {
-        res[i, j] <- res[i - 1, j] + 1
-        break
-      } 
-      res[i, j] <- 1
-    } 
-  } 
+  neach <- 1L
+  for (j in jidx) {
+    res[, j] <- rep(1L:d[j], each=neach, times=total%/%neach%/%d[j])
+    neach <- neach * d[j]
+  }
   res 
 } 
 
