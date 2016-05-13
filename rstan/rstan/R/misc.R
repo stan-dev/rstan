@@ -743,11 +743,8 @@ seq_array_ind <- function(d, col_major = FALSE) {
     return(numeric(0L)) 
 
   total <- prod(d)
-  if (total == 0L)
-    return(array(0L, dim = 0L))
-  
   len <- length(d) 
-  if (len == 1L)
+  if (len == 1L) # 1d array
     return(array(1:total, dim = c(total, 1)))
 
   res <- array(1L, dim = c(total, len)) 
