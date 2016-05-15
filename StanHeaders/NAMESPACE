@@ -1,1 +1,2 @@
-exportPattern("^[[:alpha:]]+")
+useDynLib(StanHeaders, .registration = TRUE)
+

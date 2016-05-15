@@ -11,6 +11,7 @@ importFrom("inline", cxxfunction, getDynLib, getPlugin)
 #importFrom("Rcpp", cpp_object_initializer)
 import("methods")
 import(Rcpp)
+import(StanHeaders)
 
 importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)

@@ -16,8 +16,8 @@ Description: User-facing R functions are provided by this package to parse, comp
 License: GPL (>=3)
 NeedsCompilation: yes
 Imports: methods, stats4, inline, gridExtra (>= 2.0.0), Rcpp (>= 0.11.0)
-Depends: R (>= 3.0.2), ggplot2 (>= 2.0.0)
+Depends: R (>= 3.0.2), ggplot2 (>= 2.0.0), StanHeaders (>= 2.9.10)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.10)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.10), parallel, KernSmooth, RCurl, loo, rstudioapi, Matrix
+Suggests: RUnit, RcppEigen, BH (>= 1.58), parallel, KernSmooth, RCurl, loo, rstudioapi, Matrix
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
 
