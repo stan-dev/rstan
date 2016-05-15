@@ -4,20 +4,28 @@ Title: R Interface to Stan
 Version: 2.9.1
 Date: 2016-04-09
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
-             person("Daniel", "Lee", role = "ctb"),
-             person("Krzysztof", "Sakrejda", role = "ctb"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
+             person("Daniel", "Lee", role = "ctb"),
+             person("Krzysztof", "Sakrejda", role = "ctb"),
              person("Joel", "de Guzman", role = "cph", comment = "Boost"),
-             person("Eric", "Niebler", role = "cph",   comment = "Boost"),
+             person("John", "Fletcher", role = "cph",  comment = "Boost"),
              person("Thomas", "Heller", role = "cph",  comment = "Boost"),
-             person("John", "Fletcher", role = "cph",  comment = "Boost"))
-Description: User-facing R functions are provided by this package to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the 'StanHeaders' package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo, rough Bayesian inference via variational approximation, and (optionally penalized) maximum likelihood estimation via optimization. In all three cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
+             person("Eric", "Niebler", role = "cph",   comment = "Boost"))
+Description: User-facing R functions are provided to parse, compile, test, 
+    estimate, and analyze Stan models by accessing the header-only Stan library 
+    provided by the 'StanHeaders' package. The Stan project develops a
+    probabilistic programming language that implements full Bayesian statistical 
+    inference via Markov Chain Monte Carlo, rough Bayesian inference via variational 
+    approximation, and (optionally penalized) maximum likelihood estimation via 
+    optimization. In all three cases, automatic differentiation is used to quickly 
+    and accurately evaluate gradients without burdening the user with the need 
+    to derive the partial derivatives.
 License: GPL (>=3)
 NeedsCompilation: yes
 Imports: methods, stats4, inline, gridExtra (>= 2.0.0), Rcpp (>= 0.11.0)
 Depends: R (>= 3.0.2), ggplot2 (>= 2.0.0)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.0), parallel, KernSmooth, RCurl, loo, shinystan (>= 2.1.0), rstudioapi, Matrix
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.0), parallel, KernSmooth, RCurl, loo (>= 0.1.6), shinystan (>= 2.1.0), rstudioapi, Matrix
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
-
+BugReports: https://github.com/stan-dev/rstan/issues/

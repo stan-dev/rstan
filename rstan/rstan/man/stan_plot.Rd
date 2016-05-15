@@ -109,7 +109,7 @@ For \code{stan_plot}, there are additional arguments that can be specified in \c
   }
 }
 \seealso{
-\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan-plotting-functions]{List of RStan plotting functions}},
 \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{

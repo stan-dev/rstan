@@ -12,15 +12,16 @@
 \alias{get_num_upars}
 \alias{get_num_upars,stanfit-method}
 
-\title{model's \code{log_prob} and \code{grad_log_prob} functions} 
+\title{Model's \code{log_prob} and \code{grad_log_prob} functions} 
 
 \description{
   Using model's \code{log_prob} and \code{grad_log_prob} functions  
-  on the unconstrained space of model parameters. So sometimes we   
-  need convert the values of parameters from their support defined 
-  in parameter block (which might be constrained, and for simplicity, 
-  we call it constrained space) to unconstrained space and vice versa. 
-  \code{constrained_pars} and \code{unconstrain_pars} can be used then.
+  on the unconstrained space of model parameters. Sometimes we   
+  need to convert the values of parameters from their support defined 
+  in the parameters block (which might be constrained, and for simplicity, 
+  we call it the constrained space) to the unconstrained space and vice versa. 
+  The \code{constrain_pars} and \code{unconstrain_pars} functions are used 
+  for this purpose.
 } 
 \usage{
   %% log_prob(object, upars, adjust_transform = TRUE, gradient = FALSE) 

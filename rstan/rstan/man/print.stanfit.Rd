@@ -16,36 +16,37 @@
 
 \arguments{
   \item{x}{An object of S4 class \code{stanfit}.}
-  \item{pars}{Parameters in which the summaries are interest; defaults to all parameters
+  \item{pars}{A character vector of parameter names. The default is all parameters
     for which samples are saved. If \code{include = FALSE}, then the specified parameters
     are excluded from the printed summary.}
-  \item{probs}{Quantiles of interest; defaults to \code{"c(0.025,0.25,0.5,0.75,0.975)"}}
-  \item{digits_summary}{The number of significant digits for printing out
-    the summary; defaults to 1. The effective sample size is always rounded to
-    integers.}
-  \item{include}{Logical scalar (defaulting to \code{TRUE}) that indicates whether to
-    include or exclude the parameters named by the \code{pars} argument}
-  \item{\dots}{Additional arguments that would be passed to method
-    \code{summary} of \code{stanfit}.}
+  \item{probs}{A numeric vector of quantiles of interest. The default is
+    \code{c(0.025,0.25,0.5,0.75,0.975)}.}
+  \item{digits_summary}{The number of significant digits to use when printing
+    the summary, defaulting to 1. Applies to the quantities other than 
+    the effective sample size, which is always rounded to the nearest integer.}
+  \item{include}{Logical scalar (defaulting to \code{TRUE}) indicating whether to
+    include or exclude the parameters named by the \code{pars} argument.}
+  \item{\dots}{Additional arguments passed to the \code{summary} method 
+    for \code{stanfit} objects.}
 }
 
 \details{
   The information regarding the fitted model includes the number of iterations,
-  the number of chains, the number of iterations that are saved in the
-  \code{stanfit} object (including warmup); which sampler of NUTS1, NUTS2, HMC is
-  used; and when the sampling is finished. 
+  the number of chains, the total number of saved iterations, 
+  the estimation algorithm used, and the timestamp indicating when 
+  sampling finished.
 
-  The summary about parameters includes the mean, the standard error of the
-  mean (se_mean), the standard deviation (sd), quantiles, the effective sample
-  size (n_eff), and the split Rhat. The summary is computed based on merging 
-  samples without warmup iterations from all chains.  
+  The parameter summaries computed include means, standard deviations (sd), 
+  quantiles, Monte Carlo standard errors (se_mean), split Rhats, and 
+  effective sample sizes (n_eff). The summaries are computed after dropping 
+  the warmup iterations and merging together the draws from all chains.
 
-  In addition to parameters, the log-posterior (\code{lp__}) is also treated
-  like a parameter in the printout. 
+  In addition to the model parameters, summaries for the 
+  log-posterior (\code{lp__}) are also reported. 
 }
 
 \seealso{
   S4 class \code{\linkS4class{stanfit}} and particularly its method
-  \code{summary}, which is used to obtain the values that are printed out.
+  \code{\link[=summary,stanfit-method]{summary}}, which is used to obtain the 
+  values that are printed.
 } 
-
