@@ -45,10 +45,8 @@ stan_trace <- function(object, pars, include = TRUE,
 
 
 # scatterplot -------------------------------------------------------------
-stan_scat <- function(object, pars, include = TRUE,
-                       unconstrain = FALSE, inc_warmup = FALSE,
-                       nrow = NULL, ncol = NULL,
-                       ...) {
+stan_scat <- function(object, pars, unconstrain = FALSE, inc_warmup = FALSE,
+                      nrow = NULL, ncol = NULL, ...) {
   
   .check_object(object, unconstrain)
   thm <- .rstanvis_defaults$theme
@@ -62,7 +60,13 @@ stan_scat <- function(object, pars, include = TRUE,
 #   max_td <- .max_td(object)
 #   div <- unname(rowSums(ndivergent) == 1)
 #   hit_max_td <- sapply(1:nrow(treedepth), function(i) any(treedepth[i,] == max_td))
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
+  plot_data <- .make_plot_data(
+    object, 
+    pars = pars, 
+    include = TRUE, 
+    inc_warmup = inc_warmup, 
+    unconstrain = unconstrain
+  )
   p1 <- plot_data$samp$parameter == pars[1]
   val1 <- plot_data$samp[p1, "value"]
   val2 <- plot_data$samp[!p1, "value"]

@@ -4,47 +4,57 @@
 Expose user-defined Stan functions to \R for testing and simulation
 }
 \description{
-  Stan's language allows users to define their own functions in a 
-  functions block at the top of a Stan program. This utility uses
+  The Stan modeling language allows users to define their own functions in a 
+  \code{functions} block at the top of a Stan program. The 
+  \code{expose_stan_functions} utility function uses
   \code{\link[Rcpp]{sourceCpp}} to export those user-defined functions
-  to the \code{\link{.GlobalEnv}} for testing inside \R or for doing
-  posterior predictive simulations outside of the 
-  \code{generated quantities} block of a .stan program
+  to the user's workspace (\code{\link{.GlobalEnv}}) for 
+  testing inside \R or for doing posterior predictive simulations in \R rather 
+  than in the \code{generated quantities} block of a Stan program.
 }
 \usage{
   expose_stan_functions(stanmodel)
 } 
 
 \arguments{
-  \item{stanmodel}{An object of \code{\link{stanmodel-class}},
-    \code{\link{stanfit-class}}, a list produced by \code{\link{stanc}} 
-    or a path to a .stan file. In any of these cases, the underlying 
-    Stan program should contain a non-empty \code{functions} block}
+  \item{stanmodel}{
+    A \code{\linkS4class{stanmodel}} object, a \code{\linkS4class{stanfit}} 
+    object, a list produced by \code{\link{stanc}} or the path to a Stan 
+    program (\code{.stan} file). In any of these cases, the underlying Stan 
+    program should contain a non-empty \code{functions} block.
+  }
 }
 
 \details{
-  If a user-defined Stan function ends in \code{_rng}, then it can
-  use the Boost pseudo-random number generator used by Stan. Note
-  that a \code{seed} argument will be added to the \code{\link{formals}}
-  on the R side that defaults to 0L but any non-negative integer
-  can be passed as the \code{seed} the \strong{first} time \strong{any}
-  user-defined function ending in \code{_rng} is called. In other words,
-  the Boost pseudo-random number generator is initialized with the given
-  \code{seed} but is declared with the \code{static} C++ keyword, meaning
-  that it will not be reinitialized by subsequent calls to user-defined
-  functions ending in \code{_rng}.
+  There are a few special types of user-defined Stan functions for which some 
+  additional details are relevant:
   
+  \subsection{(P)RNG functions}{
+  If a user-defined Stan function ends in \code{_rng}, then it can
+  use the Boost pseudo-random number generator used by Stan. When exposing
+  such functions to \R, a \code{seed} argument will be added to the 
+  \code{\link{formals}}. This \code{seed} argument defaults to \code{0L}, 
+  but any non-negative integer can be passed as the \code{seed} the 
+  \strong{first} time \strong{any} user-defined function ending in \code{_rng} 
+  is called. In other words, the Boost pseudo-random number generator is 
+  initialized with the given \code{seed} but is declared with the \code{static} 
+  C++ keyword, meaning that it will not be reinitialized by subsequent calls 
+  to user-defined functions ending in \code{_rng}.
+  }
+  \subsection{LP functions}{
   If a user-defined Stan function ends in \code{_lp}, then it can
   modify the log-probability used by Stan to evaluate Metropolis
-  proposals or as an objective function for optimization. Note that a
-  \code{lp__} argument will be added to the \code{\link{formals}} 
-  on the R side that defaults to zero. A \code{\link{double}} precision 
-  scalar may be  passed to this argument when the function is called from R. 
-  Such a user-defined Stan function can terminate with \code{return get_lp();} or 
-  can execute \code{print(lp__);} to verify that the calculation is correct.
+  proposals or as an objective function for optimization. When exposing
+  such functions to \R, a \code{lp__} argument will be added to the 
+  \code{\link{formals}}. This \code{lp__} argument defaults to zero, but a 
+  \code{\link{double}} precision scalar may be  passed to this argument when the 
+  function is called from \R. Such a user-defined Stan function can terminate 
+  with \code{return get_lp();} or can execute \code{print(lp__);} to verify that 
+  the calculation is correct.
+  }
 }
 \value{
-  The names of the new functions in \code{\link{.GlobalEnv}} are returned invisibly
+  The names of the new functions in \code{\link{.GlobalEnv}} are returned invisibly.
 }
 \seealso{
   \code{\link[Rcpp]{sourceCpp}}

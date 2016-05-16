@@ -12,27 +12,20 @@
   Visual posterior analysis using ggplot2.
 }
 \usage{
-  stan_plot(object, pars, include = TRUE, unconstrain = FALSE,
-            ...)
-            
+  stan_plot(object, pars, include = TRUE, unconstrain = FALSE, ...)
   stan_trace(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
-            ..., window = NULL)
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL, ..., 
+            window = NULL)
   stan_scat(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
-            ...)
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...)
   stan_hist(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
-            ...)
-
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...)
   stan_dens(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
-            ..., separate_chains = FALSE)
-            
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL, ..., 
+            separate_chains = FALSE)
   stan_ac(object, pars, include = TRUE, unconstrain = FALSE,
-            inc_warmup = FALSE, nrow = NULL, ncol = NULL,
-            ..., separate_chains = FALSE, lags = 25, partial = FALSE)
-            
+            inc_warmup = FALSE, nrow = NULL, ncol = NULL, ..., 
+            separate_chains = FALSE, lags = 25, partial = FALSE)
   quietgg(gg)
 }
 \arguments{
@@ -59,11 +52,11 @@
 
   \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.}
   
-  \item{...}{Additional named arguments to geoms (e.g. for \code{stan_trace}
-  the geom is \code{\link[ggplot2]{geom_path}} and we could specify
-  \code{linetype}, \code{size}, \code{alpha}, etc.). For \code{stan_plot}
-  there are also additional arguments that can be specified in \code{...} (see
-  Details).}
+  \item{...}{Optional additional named arguments passed to geoms 
+  (e.g. for \code{stan_trace} the geom is \code{\link[ggplot2]{geom_path}} 
+  and we could specify \code{linetype}, \code{size}, \code{alpha}, etc.). 
+  For \code{stan_plot} there are also additional arguments that can be specified 
+  in \code{...} (see Details).}
   
   \item{window}{For \code{stan_trace} \code{window} is used to control
   which iterations are shown in the plot. See \code{\link{traceplot}}.}
@@ -86,26 +79,37 @@
   using the \pkg{ggplot2} package.
 }
 \note{
-When assigning a plot (ggplot object) to a name (e.g., 
-\code{graph <- stan_rhat(fit)}) or calling the plotting function within a loop, 
-if you also want the side effect of the plot being displayed you must explicity 
-print it (e.g., \code{(graph <- stan_rhat(fit))}, \code{print(stan_rhat(fit))}).
+Because the \pkg{rstan} plotting functions use \pkg{ggplot2} (and thus the 
+resulting plots behave like \code{ggplot} objects), when calling a plotting 
+function within a loop or when assigning a plot to a name 
+(e.g., \code{graph <- plot(fit, plotfun = "rhat")}),
+if you also want the side effect of the plot being displayed you 
+must explicity print it (e.g., \code{(graph <- plot(fit, plotfun = "rhat"))}, 
+\code{print(graph <- plot(fit, plotfun = "rhat"))}).
 }
 \details{
-For \code{stan_plot}, there are additional arguments that can be specified in \code{...}:
-
+For \code{stan_plot}, there are additional arguments that can be specified in 
+\code{...}. The optional arguments and their default values are:
 \describe{
-  \item{point_est}{The point estimate to show. Either "median" (the default) or "mean".}
-  \item{show_density}{Should kernel density estimates be plotted above 
-  the intervals? Defaults to \code{FALSE}.}
-  \item{ci_level}{The interval to highlight. Defaults to 0.8 (an 80 percent interval).}
-  \item{outer_level}{The outer interval also shown but not highlighted.
-  Defaults to 0.95.}
-  \item{show_outer_line}{Should the \code{outer_level} interval be shown or hidden? 
-  Defaults to = \code{TRUE} (to plot it).}
-  \item{fill_color,outline_color,est_color}{Colors to override the defaults for 
-  the highlighted interval, the outer interval (and density outline), and the 
-  point estimate.}
+  \item{\code{point_est = "median"}}{The point estimate to show. 
+    Either "median" or "mean".
+    }
+  \item{\code{show_density = FALSE}}{Should kernel density estimates be plotted 
+    above the intervals?
+    }
+  \item{\code{ci_level = 0.8}}{The posterior uncertainty interval to highlight.
+    Central \code{100*ci_level}\% intervals are computed from the quantiles of 
+    the posterior draws.}
+  \item{\code{outer_level = 0.95}}{An outer interval to also draw as a line 
+    (if \code{show_outer_line} is \code{TRUE}) but not highlight.
+    }
+  \item{\code{show_outer_line = TRUE}}{Should the \code{outer_level} interval 
+    be shown or hidden? Defaults to = \code{TRUE} (to plot it).
+    }
+  \item{\code{fill_color}, \code{outline_color}, \code{est_color}}{Colors to 
+    override the defaults for the highlighted interval, the outer interval 
+    (and density outline), and the point estimate.
+    }
   }
 }
 \seealso{

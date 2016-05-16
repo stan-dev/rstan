@@ -1,7 +1,6 @@
-\name{optimizing-methods}
 \docType{methods}
+\name{optimizing}
 \alias{optimizing} 
-\alias{optimizing-methods}
 \alias{optimizing,stanmodel-method}
 
 \title{Obtain a point estimate by maximizing the joint posterior}

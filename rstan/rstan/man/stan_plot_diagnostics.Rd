@@ -5,7 +5,7 @@
 \alias{stan_ess}
 \alias{stan_mcse}
 
-\title{Diagnostic plots}
+\title{RStan Diagnostic plots}
 \description{
   Diagnostic plots for HMC and NUTS using ggplot2. 
 }

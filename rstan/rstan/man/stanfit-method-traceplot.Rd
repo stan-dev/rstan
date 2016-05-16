@@ -1,9 +1,9 @@
-\name{traceplot-methods}
 \docType{methods}
+\name{traceplot}
 \alias{traceplot} 
 \alias{traceplot,stanfit-method}
 
-\title{\code{traceplot}: draw the traces of the sample}
+\title{Markov chain traceplots}
 \description{Draw the traceplot corresponding to one or more
  Markov chains, providing a visual way to inspect sampling behavior
  and assess mixing across chains and convergence.}
@@ -23,7 +23,7 @@
 \arguments{
   \item{object}{An instance of class \code{\linkS4class{stanfit}}.}
   \item{pars}{A character vector of parameter names. Defaults to all parameters 
-  or the first 10 parameters (if there are more than 10).}
+    or the first 10 parameters (if there are more than 10).}
   \item{include}{Should the parameters given by the \code{pars} argument be
     included (the default) or excluded from the plot? Only relevant if 
     \code{pars} is not missing.}
@@ -39,7 +39,7 @@
     Defaults to \code{FALSE}.}  
   \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.} 
   \item{\dots}{Optional arguments to pass to \code{\link[ggplot2]{geom_path}} 
-  (e.g. \code{size}, \code{linetype}, \code{alpha}, etc.).} 
+    (e.g. \code{size}, \code{linetype}, \code{alpha}, etc.).} 
 }
 \value{A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.} 
