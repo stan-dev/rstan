@@ -83,9 +83,9 @@ cxxfun_from_dso_bin <- function(dso) {
   writeBin(dso@.CXXDSOMISC$dso_bin, libLFile) 
   cleanup <- function(env) {
     if (f %in% names(getLoadedDLLs())) dyn.unload(libLFile)
-      unlink(libLFile)
+    unlink(libLFile)
   }
-  reg.finalizer(environment(), cleanup, onexit = TRUE)
+  reg.finalizer(environment(), cleanup, onexit = FALSE)
   DLL <- dyn.load(libLFile) 
   assign('dso_last_path', libLFile, dso@.CXXDSOMISC) 
   res <- vector("list", length(sig))
