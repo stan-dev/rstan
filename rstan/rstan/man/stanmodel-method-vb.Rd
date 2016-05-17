@@ -1,7 +1,6 @@
-\name{vb-methods}
 \docType{methods}
+\name{vb}
 \alias{vb} 
-\alias{vb-methods}
 \alias{vb,stanmodel-method}
 
 \title{Run Stan's variational algorithm for approximate posterior sampling}

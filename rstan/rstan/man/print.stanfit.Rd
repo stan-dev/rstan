@@ -1,4 +1,3 @@
-
 \name{print}
 \alias{print.stanfit}
 

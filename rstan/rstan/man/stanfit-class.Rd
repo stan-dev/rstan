@@ -17,11 +17,11 @@
 \alias{get_seeds}
 \alias{get_seeds,stanfit-method}
 \alias{get_inits}
+\alias{get_inits,stanfit-method}
 \alias{get_posterior_mean}
 \alias{get_posterior_mean,stanfit-method}
 \alias{get_elapsed_time}
 \alias{get_elapsed_time,stanfit-method}
-\alias{get_inits,stanfit-method}
 \alias{get_logposterior} 
 \alias{get_logposterior,stanfit-method}
 \alias{get_adaptation_info} 
@@ -42,9 +42,9 @@ An object of class \code{stanfit} contains the
 output derived from fitting a Stan model as returned by the top-level function
 \code{\link{stan}} or the lower-level methods \code{\link{sampling}} and
 \code{\link{vb}} (which are defined on class \code{\linkS4class{stanmodel}}).
-Many methods (e.g.\code{print}, \code{plot}, \code{summary}) are provided for 
+Many methods (e.g., \code{print}, \code{plot}, \code{summary}) are provided for 
 summarizing results and various access methods also allow the underlying data 
-(draws, diagnostics, etc.) contained in the object to be retrieved.
+(e.g., simulations, diagnostics) contained in the object to be retrieved.
 }
 
 \section{Slots}{
@@ -55,7 +55,7 @@ summarizing results and various access methods also allow the underlying data
     \item{\code{par_dims}:}{A named list giving the dimensions for all 
       parameters. The dimension for a scalar parameter is given as 
       \code{numeric(0)}.}
-    \item{\code{mode}:}{The mode of the fitted model, an \code{integer}. 
+    \item{\code{mode}:}{An integer indicating the mode of the fitted model.
        \code{0} indicates sampling mode, \code{1} indicates test gradient mode 
        (no sampling is done), and \code{2} indicates error mode (an error occurred
        before sampling). Most methods for \code{stanfit} objects are useful only 

@@ -1,4 +1,3 @@
-
 \name{pairs.stanfit}
 \alias{pairs.stanfit}
 

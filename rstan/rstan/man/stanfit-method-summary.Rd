@@ -1,5 +1,5 @@
-\name{summary-methods}
 \docType{methods}
+\name{summary-methods}
 \alias{summary,stanfit-method}
 
 \title{Summary method for stanfit objects}

@@ -1,7 +1,6 @@
-\name{sampling-methods}
 \docType{methods}
+\name{sampling}
 \alias{sampling} 
-\alias{sampling-methods}
 \alias{sampling,stanmodel-method}
 
 \title{Draw samples from a Stan model}
