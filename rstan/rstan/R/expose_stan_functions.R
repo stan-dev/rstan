@@ -160,6 +160,12 @@ expose_stan_functions <- function(stanmodel) {
                 "\\1);", lines)
   lines <- gsub("([[:space:]]+return .*_rng)\\(base_rng__\\);",
                 "\\1();", lines)
+  lines <- gsub("_rng\\(base_rng__\\)", "_rng\\(seed, base_rng__\\)", lines)
+  # lines <- gsub(", base_rng__\\)\\);", ", seed\\)\\);", lines)
+  # lines <- gsub("stan::math::promote_scalar<fun_return_scalar_t__>\\((.*)_rng\\((.*), base_rng__",
+  #               "stan::math::promote_scalar<fun_return_scalar_t__>\\(\\1_rng\\(\\2, seed", 
+  #               lines)
+
   
   # remove line numbering things
   lines <- grep("current_statement_begin__", lines, 
