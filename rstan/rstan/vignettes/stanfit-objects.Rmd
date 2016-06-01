@@ -1,6 +1,6 @@
 ---
 title: "Accessing the contents of a stanfit object"
-author: "The Stan Development Team"
+author: "Stan Development Team"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
