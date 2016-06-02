@@ -6,33 +6,46 @@ output:
   rmarkdown::html_vignette:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{stanfit-objects}
+  %\VignetteIndexEntry{stanfit objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 library(rstan)
-knitr::opts_chunk$set(echo = TRUE, comment = NA)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  comment = NA,
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 7
+  )
 ```
 
 This vignette demonstrates how to access most of data stored in a stanfit 
-object. A stanfit object (an object of class "stanfit") contains the output 
+object. A stanfit object (an object of class `"stanfit"`) contains the output 
 derived from fitting a Stan model using Markov chain Monte Carlo or one of
 Stan's variational approximations (meanfield or full-rank). Throughout the
 document we'll use the stanfit object obtained from fitting the Eight Schools
 example model:
 
-```{r, fit, results="hide", echo=FALSE}
+```{r, example-model, eval=FALSE}
+library(rstan)
+fit <- stan_demo("eight_schools", refresh = 0)
+```
+```{r, fit, echo=FALSE, cache=TRUE}
 J <- 8
 y <- c(28,  8, -3,  7, -1,  1, 18, 12)
 sigma <- c(15, 10, 16, 11,  9, 11, 10, 18)
-fit <- stan(file="schools.stan",
-             data = c("y", "J", "sigma"),
-             iter=2000, chains=4, cores=1)
+fit <- stan(
+  file= "schools.stan", 
+  model_name = "eight_schools",
+  data = c("y", "J", "sigma"), 
+  refresh = 0
+  )
 ```
-```{r, example-model, eval=FALSE}
-fit <- stan_demo("eight_schools")
+```{r, stanfit-class}
+class(fit)
 ```
 
 ## Posterior draws
