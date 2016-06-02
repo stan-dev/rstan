@@ -44,9 +44,12 @@ function(model = character(0),
                           "example-models-master.zip")
       }
       else FILE <- file.path(tempdir(), "example-models-master.zip")
-      writeBin(RCurl::getBinaryURL("https://github.com/stan-dev/example-models/archive/master.zip",
-                                   .opts = RCurl::curlOptions(followlocation = TRUE,
-                                                              ssl.verifypeer = FALSE)), FILE)
+      URL <- "https://github.com/stan-dev/example-models/archive/master.zip"
+      on.exit(cat(paste("Download of example-models failed. Try unziping\n", 
+                        URL, "\nin", dirname(FILE))))
+      code <- download.file(URL, FILE)
+      if (code != 0) stop()
+      else on.exit(NULL)
       unzip(FILE, exdir = dirname(FILE))
       MODELS_HOME <- file.path(dirname(FILE), "example-models-master")
     }

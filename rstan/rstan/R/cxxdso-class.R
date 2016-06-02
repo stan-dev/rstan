@@ -44,11 +44,11 @@ setMethod('is_dso_loaded', signature(object = 'cxxdso'),
           }) 
 
 setMethod('grab_cxxfun', signature(object = "cxxdso"), 
-          function(object) { 
-            if (!is_null_cxxfun(object@.CXXDSOMISC$cxxfun)) 
-              return(object@.CXXDSOMISC$cxxfun)
+          function(object) {
             if (length(object@dso_saved) == 0)
               return(function(...) stop("this function should not be called"))
+            if (!is_null_cxxfun(object@.CXXDSOMISC$cxxfun)) 
+              return(object@.CXXDSOMISC$cxxfun)
             if (!object@dso_saved) 
               stop("the cxx fun is NULL now and this cxxdso is not saved")
 
