@@ -90,7 +90,7 @@ summarizing results and various access methods also allow the underlying data
       See \code{\link{summary,stanfit-method}}.}
     \item{\code{get_posterior_mean}}{
       Get the posterior mean for parameters of interest (using \code{pars}
-      to specify) among \emph{all} parameters. Returned is a matrix with 
+      to specify a subset of parameters). Returned is a matrix with 
       one column per chain and an additional column for all chains combined.}
   }
   \strong{Extracting posterior draws:}
@@ -163,7 +163,7 @@ summarizing results and various access methods also allow the underlying data
     \item{\code{get_stanmodel}}{
       Get the object of S4 class \code{\linkS4class{stanmodel}} of the fitted 
       model.}
-    \item{\code{get_elapsed_time}}{:
+    \item{\code{get_elapsed_time}}{
       Get the warmup time and sample time in seconds.
       A matrix of two columns is returned with each row containing the warmup
       and sample times for one chain.}
