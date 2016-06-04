@@ -26,6 +26,7 @@ NeedsCompilation: yes
 Imports: methods, stats4, inline, gridExtra (>= 2.0.0), Rcpp (>= 0.11.0)
 Depends: R (>= 3.0.2), ggplot2 (>= 2.0.0)
 LinkingTo: Rcpp, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.0), parallel, KernSmooth, loo (>= 0.1.6), shinystan (>= 2.1.0), rstudioapi, Matrix
+Suggests: RUnit, RcppEigen, BH (>= 1.58), StanHeaders (>= 2.9.0), parallel, KernSmooth, loo (>= 0.1.6), shinystan (>= 2.1.0), rstudioapi, Matrix, knitr, rmarkdown
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
+VignetteBuilder: knitr
