@@ -4,6 +4,8 @@
 </a>
 
 [![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
+[![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=brightgreen)](http://cran.rstudio.com/package=rstan)
+
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 
 
