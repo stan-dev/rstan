@@ -1,2 +1,2 @@
-useDynLib(StanHeaders, .registration = TRUE)
+if(.Platform$OS.type == "windows") useDynLib(StanHeaders, .registration = TRUE)
 
