@@ -651,11 +651,11 @@ contents of stanfit objects.
 * The very thorough [Stan manual](http://mc-stan.org/documentation/) [@StanManual].
 * The `stan_demo` function, which can be used to fit many of the example models
 in the manual.
-* The [__shinystan__](https://cran.r-project.org/web/packages/loo/index.html) R
+* The [__shinystan__](https://cran.r-project.org/package=shinystan) R
 package, which provides the ShinyStan GUI for exploring MCMC output.
-* The [__loo__](https://cran.r-project.org/web/packages/loo/index.html) R
+* The [__loo__](https://cran.r-project.org/package=loo) R
 package, which is very useful for model comparison using stanfit objects.
-* The [__rstanarm__](https://cran.r-project.org/web/packages/rstanarm/index.html) R
+* The [__rstanarm__](https://cran.r-project.org/package=rstanarm) R
 package, which provides a `glmer`-style interface to Stan.
 
 
