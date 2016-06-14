@@ -1,26 +1,26 @@
-\name{log_prob-methods}
 \docType{methods}
+\name{log_prob-methods}
 \alias{log_prob}
-\alias{log_prob-methods}
 \alias{log_prob,stanfit-method}
 \alias{grad_log_prob}
 \alias{grad_log_prob,stanfit-method}
 \alias{constrain_pars}
-\alias{unconstrain_pars,stanfit-method}
-\alias{unconstrain_pars}
 \alias{constrain_pars,stanfit-method}
+\alias{unconstrain_pars}
+\alias{unconstrain_pars,stanfit-method}
 \alias{get_num_upars}
 \alias{get_num_upars,stanfit-method}
 
-\title{model's \code{log_prob} and \code{grad_log_prob} functions} 
+\title{Model's \code{log_prob} and \code{grad_log_prob} functions} 
 
 \description{
   Using model's \code{log_prob} and \code{grad_log_prob} functions  
-  on the unconstrained space of model parameters. So sometimes we   
-  need convert the values of parameters from their support defined 
-  in parameter block (which might be constrained, and for simplicity, 
-  we call it constrained space) to unconstrained space and vice versa. 
-  \code{constrained_pars} and \code{unconstrain_pars} can be used then.
+  on the unconstrained space of model parameters. Sometimes we   
+  need to convert the values of parameters from their support defined 
+  in the parameters block (which might be constrained, and for simplicity, 
+  we call it the constrained space) to the unconstrained space and vice versa. 
+  The \code{constrain_pars} and \code{unconstrain_pars} functions are used 
+  for this purpose.
 } 
 \usage{
   %% log_prob(object, upars, adjust_transform = TRUE, gradient = FALSE) 
@@ -72,21 +72,21 @@
 } 
 
 \details{
-  In Stan, the parameters need be defined with their supports.
+  Stan requires that parameters be defined along with their support.
   For example, for a variance parameter, we must define it 
-  on the positive real line.  But inside Stan's sampler, all parameters
+  on the positive real line. But inside Stan's samplers, all parameters
   defined on the constrained space are transformed to unconstrained
   space, so the log density function need be adjusted (i.e., adding
   the log of the absolute value of the Jacobian determinant).
   With the transformation, Stan's samplers work on the unconstrained space and 
   once a new iteration is drawn, Stan transforms the parameters
-  back to their supports. All the transformation are done inside Stan without
+  back to their supports. All the transformation are done by Stan without
   interference from the users.  However, when using the log density function
   for a model exposed to R, we need to be careful.
   For example, if we are interested in finding the mode of parameters 
   on the constrained space, we then do not need the adjustment. 
-  For this reason, there is an argument named \code{adjust_transform} 
-  for functions \code{log_prob} and \code{grad_log_prob}.
+  For this reason, the \code{log_prob} and \code{grad_log_prob} functions 
+  accept an \code{adjust_transform} argument.
 } 
 
 \value{

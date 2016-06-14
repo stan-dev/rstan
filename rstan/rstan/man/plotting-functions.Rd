@@ -1,5 +1,5 @@
-\name{plotting-functions}
-\alias{plotting-functions}
+\name{rstan-plotting-functions}
+\alias{rstan-plotting-functions}
 
 \title{RStan Plotting Functions}
 \description{

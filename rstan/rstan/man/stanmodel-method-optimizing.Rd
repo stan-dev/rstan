@@ -1,10 +1,9 @@
-\name{optimizing-methods}
 \docType{methods}
+\name{optimizing}
 \alias{optimizing} 
-\alias{optimizing-methods}
 \alias{optimizing,stanmodel-method}
 
-\title{\code{optimizing}: obtain a point estimate by maximizing the joint posterior}
+\title{Obtain a point estimate by maximizing the joint posterior}
 \description{
   Obtain a point estimate by maximizing the joint posterior 
   from the model defined by class \code{stanmodel}. 
@@ -34,81 +33,105 @@
 
 \arguments{
   \item{object}{An object of class \code{\linkS4class{stanmodel}}.}
+  
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the notes in \code{\link{stan}}.} 
-  \item{seed}{The seed for random number generation. The default is generated
-    from 1 to the maximum integer supported by \R on the machine. 
-    When a seed is specified by a number, \code{as.integer} will be applied to
-    it. If \code{as.integer} produces \code{NA}, the seed is generated
-    randomly.  We can also specify a seed using a character string of digits,
-    such as \code{"12345"}, which will be converted to integer.}
-  \item{init}{One of digit \code{0}, string \code{"0"} or \code{"random"}, 
-    a function that returns a list, or a named list of initial parameter
-    values.
-    \code{"0"}: initialize all to be zero on the unconstrained support; 
-    \code{"random"}: randomly generated;
-    \code{list}: a list specifying the initial values of parameters by name.
-    \code{function}: a function that returns a list for specifying 
-      the initial values of parameters.}
-  \item{check_data}{Logical: if \code{TRUE}, the data would be preprocessed; 
-    otherwise not. If the data is not checked and preprocessed, it is safe 
-    to leave it to be the default \code{TRUE}. See the notes in
-    \code{\link{stan}}.}
+    See the Note section in \code{\link{stan}}.}
+    
+  \item{seed}{The seed for random number generation. The default is generated 
+    from 1 to the maximum integer supported by \R on the machine. Even if 
+    multiple chains are used, only one seed is needed, with other chains having 
+    seeds derived from that of the first chain to avoid dependent samples.
+    When a seed is specified by a number, \code{as.integer} will be applied to it. 
+    If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
+    The seed can also be specified as a character string of digits, such as
+    \code{"12345"}, which is converted to integer.}
+    
+  \item{init}{Initial values specification. See the detailed documentation for 
+    the init argument in \code{\link{stan}}.}
+    
+  \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
+    the data will be preprocessed; otherwise not.
+    See the Note section in \code{\link{stan}}.}
+    
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
     If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used.}
-  \item{algorithm}{One of "Newton", "BFGS", and "LBFGS" indicating which
-    optimization algorithm is used. The default is LBFGS.}
-  \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
-     to print intermediate output from Stan on the console.}
+    
+  \item{algorithm}{One of \code{"Newton"}, \code{"BFGS"}, 
+    and \code{"LBFGS"} (the default) indicating which optimization algorithm 
+    to use.}
+    
+  \item{verbose}{\code{TRUE} or \code{FALSE} (the default): flag indicating 
+    whether to print intermediate output from Stan on the console, which might
+    be helpful for model debugging.}
+     
   \item{hessian}{\code{TRUE} or \code{FALSE} (the default): flag indicating
      whether to calculate the Hessian (via numeric differentiation of the
-     gradient function in the unconstrained parameter space)}   
+     gradient function in the unconstrained parameter space).}
+     
   \item{as_vector}{\code{TRUE} (the default) or \code{FALSE}: flag indicating
-     whether a vector is used to for the point estimate found. A list can be used
-     instead by specifying it to be \code{FALSE}}
-  \item{draws}{a non-negative integer (that defaults to zero) indicating how
+     whether a vector is used to store the point estimate found. A list can be 
+     used instead by specifying it to be \code{FALSE}.}
+     
+  \item{draws}{A non-negative integer (that defaults to zero) indicating how
      many times to draw from a multivariate normal distribution whose parameters
      are the mean vector and the inverse negative Hessian in the unconstrained
-     space}
+     space.}
+     
   \item{constrained}{A logical scalar indicating, if \code{draws > 0}, whether
      the draws should be transformed to the constrained space defined in the
      parameters block of the Stan program. Defaults to \code{TRUE}.}
-  \item{\dots}{Other optional parameters, refer to the manuals for both
-    CmdStan and Stan. 
-    \enumerate{
-      \item \code{iter} (\code{integer}), the maximum number of iterations
-      \item \code{save_iterations} (logical), whether to save the iterations 
-      \item \code{refresh} (\code{integer})
-      \item \code{init_alpha} (\code{double}, default to 0.001), for BFGS and LBFGS, see manual of (Cmd)Stan
-      \item \code{tol_obj} (\code{double}, default to 1e-12), for BFGS and LBFGS, see the manual of (Cmd)Stan
-      \item \code{tol_grad} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of (Cmd)Stan
-      \item \code{tol_param} (\code{double}, default to 1e-8), for BFGS and LBFGS, see the manual of (Cmd)Stan
-      \item \code{tol_rel_obj} (\code{double}, default to 1e4), for BFGS and LBFGS, see the manual of (Cmd)Stan
-      \item \code{tol_rel_grad} (\code{double}, default to 1e7), for BFGS and LBFGS, see the manual of (Cmd)Stan
-      \item \code{history_size} (\code{integer}, default to 5), for LBFGS, see the manual of (Cmd)Stan
+     
+  \item{\dots}{Other optional parameters:
+    \itemize{
+      \item \code{iter} (\code{integer}), the maximum number of iterations, 
+      defaulting to 2000.
+      \item \code{save_iterations} (logical), a flag indicating whether to save 
+      the iterations, defaulting to \code{FALSE}.
+      \item \code{refresh} (\code{integer}), the number of interations between 
+      screen updates, defaulting to 100.
+      \item \code{init_alpha} (\code{double}), for BFGS and LBFGS, 
+      the line search step size for first iteration, defaulting to 0.001.
+      \item \code{tol_obj} (\code{double}), for BFGS and LBFGS, 
+      the convergence tolerance on changes in objective function value, 
+      defaulting to 1e-12.
+      \item \code{tol_rel_obj} (\code{double}), for BFGS and LBFGS, 
+      the convergence tolerance on relative changes in objective function value,
+      defaulting to 1e4.
+      \item \code{tol_grad} (\code{double}), for BFGS and LBFGS, 
+      the convergence tolerance on the norm of the gradient, defaulting to 1e-8.
+      \item \code{tol_rel_grad} (\code{double}), for BFGS and LBFGS, 
+      the convergence tolerance on the relative norm of the gradient, defaulting
+      to 1e7.
+      \item \code{tol_param} (\code{double}), for BFGS and LBFGS, 
+      the convergence tolerance on changes in parameter value, defaulting to 1e-8.
+      \item \code{history_size} (\code{integer}), for LBFGS, 
+      the number of update vectors to use in Hessian approximations, 
+      defaulting to 5.
     }
+    Refer to the manuals for both CmdStan and Stan for more details.
   }
 }
 \value{
-   A list with components if the optimization is done successfully:
+   If the optimization is done successfully, a list with named components:
    \item{par}{The point estimate found. Its form (vector or list) 
-     is determined by argument \code{as_vector}.}
+     is determined by the \code{as_vector} argument.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
-   the \code{"lp__"} in Stan) corresponding to \code{par}.}
+     the \code{"lp__"} in Stan) corresponding to \code{par}.}
    \item{hessian}{The Hessian matrix if \code{hessian} is \code{TRUE}}
-   \item{theta_tilde}{The matrix of parameter draws in the unconstrained space, 
-     if \code{draws > 0}}
+   \item{theta_tilde}{If \code{draws > 0}, the matrix of parameter draws
+    in the constrained or unconstrained space, depending on the value of 
+    the \code{constrained} argument.}
    \item{log_p}{If \code{draws > 0}, a vector of length draws that contains
-     the value of the log-posterior evaluated at each row of \code{theta_tilde}}
+     the value of the log-posterior evaluated at each row of \code{theta_tilde}.}
    \item{log_g}{If \code{draws > 0}, a vector of length draws that contains
      the value of the logarithm of the multivariate normal density evaluated
-     at each row of \code{theta_tilde}}
+     at each row of \code{theta_tilde}.}
 
-  If the optimization is not finished for reasons such as feeding wrong data,
+  If the optimization is not completed for reasons such as feeding wrong data,
   it returns \code{NULL}. 
 } 
 
@@ -120,4 +143,3 @@
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
 f <- optimizing(m, hessian = TRUE)
 }} 
-

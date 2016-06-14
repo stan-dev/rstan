@@ -79,8 +79,10 @@ stanc_builder <- function(file, isystem = dirname(file),
     header <- gsub('\\"', '', header)
     header <- gsub("\\'", '', header)
     header <- sub("[[:blank:]]*$", "", header)
-    program <- append(program, values = readLines(file.path(isystem, header)), 
-                      after = i)
+    if (file.exists(file.path(isystem, header)))
+      program <- append(program, values = readLines(file.path(isystem, header)), 
+                        after = i)
+    else program <- append(program, values = readLines(header), after = 1)
   }
   check <- grep("^[[:blank:]]*#include ", program)
   if (length(check) != length(includes))

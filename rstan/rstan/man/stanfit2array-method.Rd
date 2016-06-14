@@ -1,4 +1,3 @@
-
 \name{as.array}
 \alias{is.array.stanfit}
 \alias{as.array.stanfit}
@@ -12,8 +11,9 @@
 \title{Create array, matrix, or data.frame objects from samples in a \code{stanfit} object} 
 
 
-\description{The samples without warmup included in a \code{\linkS4class{stanfit}} 
-  object can be coerced to \code{array}, \code{matrix}, or \code{data.frame}} 
+\description{The samples (without warmup) included in a \code{\linkS4class{stanfit}} 
+  object can be coerced to an \code{array}, \code{matrix}, or \code{data.frame}.
+  Methods are also provided for checking and setting names and dimnames.} 
 
 \usage{
   \method{as.array}{stanfit}(x, \dots) 
@@ -27,13 +27,13 @@
 } 
 
 \arguments{
-  \item{x}{An object of S4 class \code{stanfit}} 
-  \item{\dots}{Additional parameters that can be passed to \code{extract} 
-    for extracting samples from \code{stanfit} object. For now, \code{pars}
-    is the only additional parameter.  
-  } 
-  \item{value}{A character vector to set/replace the parameter names
-    in the \code{stanfit} object.}
+  \item{x}{An object of S4 class \code{\linkS4class{stanfit}}.}
+  \item{\dots}{Additional parameters that can be passed to \code{\link{extract}} 
+    for extracting samples from \code{x}. For now, \code{pars}
+    is the only additional parameter supported.
+  }
+  \item{value}{For the \code{names} replacement method, a character vector to 
+    set/replace the parameter names in \code{x}.}
 } 
 
 \details{
@@ -48,13 +48,13 @@
 }
 \value{
   \code{as.array}, \code{as.matrix}, and \code{as.data.frame} return an array,
-  matrix, or data.frame of samples respectively.
+  matrix, and data.frame, respectively.
 
   \code{dim} and \code{dimnames} return the dim and dimnames of the 
   array object that could be created, while \code{names} returns the third
   element of the \code{dimnames}, which are the names of the margins of the
-  posterior distribution. The \code{names} assignment method allows for assigning
-  more interpretable names to them.
+  posterior distribution. The \code{names} assignment method allows for 
+  assigning more interpretable names to them.
 
   \code{is.array} returns \code{TRUE} for \code{stanfit} objects that include
   samples; otherwise \code{FALSE}. 
@@ -65,7 +65,7 @@
 }
   
 \seealso{
-  S4 class \code{\linkS4class{stanfit}} and its method \code{\link{extract}} 
+  S4 class \code{\linkS4class{stanfit}} and its method \code{\link{extract}}
 } 
 
 \examples{\dontrun{

@@ -323,7 +323,12 @@ setMethod("get_sampler_params",
             } else if (object@mode == 2L) {
               cat("Stan model '", object@model_name, "' does not contain samples.\n", sep = '') 
               return(invisible(NULL)) 
-            } 
+            }
+            
+            if (isTRUE(object@stan_args[[1L]]$method == "variational")) {
+              stop("'get_sampler_params' not available for ",
+                   "meanfield or fullrank algorithms.") 
+            }
 
             ldf <- lapply(object@sim$samples, 
                           function(x) do.call(cbind, attr(x, "sampler_params")))   
@@ -656,7 +661,7 @@ setMethod("grad_log_prob", signature = "stanfit",
 
 setMethod("traceplot", signature = "stanfit", 
           function(object, pars, include = TRUE, unconstrain = FALSE,
-                   inc_warmup = FALSE, nrow = NULL, ncol = NULL,
+                   inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,
                    ...) { 
 
             if (object@mode == 1L) {
@@ -668,8 +673,8 @@ setMethod("traceplot", signature = "stanfit",
               return(invisible(NULL)) 
             } 
             args <- list(object = object, include = include, 
-                         unconstrain = unconstrain, inc_warmup=inc_warmup,
-                         nrow = nrow, ncol = ncol, ...)
+                         unconstrain = unconstrain, inc_warmup = inc_warmup,
+                         nrow = nrow, ncol = ncol, window = window, ...)
             if (!missing(pars)) { 
               if ("log-posterior" %in% pars)
                 pars[which(pars == "log-posterior")] <- "lp__"
@@ -786,6 +791,7 @@ as.matrix.stanfit <- function(x, ...) {
   if (x@mode != 0) return(numeric(0)) 
   e <- extract(x, permuted = FALSE, inc_warmup = FALSE, ...) 
   out <- apply(e, 3, FUN = function(y) y)
+  if (length(dim(out)) < 2L) out <- t(as.matrix(out))
   dimnames(out) <- dimnames(e)[-2]
   return(out)
 }

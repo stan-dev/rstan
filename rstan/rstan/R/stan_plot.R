@@ -9,7 +9,7 @@ stan_trace <- function(object, pars, include = TRUE,
                        unconstrain = FALSE,
                        inc_warmup = FALSE,
                        nrow = NULL, ncol = NULL,
-                       ...) {
+                       ..., window = NULL) {
   
   .check_object(object, unconstrain)
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
@@ -31,17 +31,22 @@ stan_trace <- function(object, pars, include = TRUE,
     thm
   
   if (plot_data$nparams == 1)
-    graph + ylab(unique(plot_data$samp$parameter))
+    graph <- graph + ylab(unique(plot_data$samp$parameter))
   else
-    graph + facet_wrap(~parameter, nrow = nrow, ncol = ncol, scales = "free")
+    graph <- graph + facet_wrap(~parameter, nrow = nrow, ncol = ncol, scales = "free")
+  
+  if (!is.null(window)) {
+    if (!is.numeric(window) || length(window) != 2)
+      stop("'window' should be a numeric vector of length 2.")
+    graph <- graph + coord_cartesian(xlim = window)
+  }
+  graph
 }
 
 
 # scatterplot -------------------------------------------------------------
-stan_scat <- function(object, pars, include = TRUE,
-                       unconstrain = FALSE, inc_warmup = FALSE,
-                       nrow = NULL, ncol = NULL,
-                       ...) {
+stan_scat <- function(object, pars, unconstrain = FALSE, inc_warmup = FALSE,
+                      nrow = NULL, ncol = NULL, ...) {
   
   .check_object(object, unconstrain)
   thm <- .rstanvis_defaults$theme
@@ -55,7 +60,13 @@ stan_scat <- function(object, pars, include = TRUE,
 #   max_td <- .max_td(object)
 #   div <- unname(rowSums(ndivergent) == 1)
 #   hit_max_td <- sapply(1:nrow(treedepth), function(i) any(treedepth[i,] == max_td))
-  plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
+  plot_data <- .make_plot_data(
+    object, 
+    pars = pars, 
+    include = TRUE, 
+    inc_warmup = inc_warmup, 
+    unconstrain = unconstrain
+  )
   p1 <- plot_data$samp$parameter == pars[1]
   val1 <- plot_data$samp[p1, "value"]
   val2 <- plot_data$samp[!p1, "value"]
@@ -356,10 +367,15 @@ stan_diag <- function(object,
                       information = c("sample","stepsize","treedepth","divergence"),
                       chain = 0, ...) {
   .vb_check(object)
+  nchains <- if (is.stanreg(object)) 
+    ncol(object$stanfit) else ncol(object)
+  if (!isTRUE(nchains > 1))
+    stop("'stan_diag' requires more than one chain.", call. = FALSE)
   info <- match.arg(information)
   fn <- paste0("stan_", info)
   do.call(fn, list(object, chain, ...))
 }
+
 stan_stepsize <- function(object, chain = 0, ...) {
   .nuts_args_check(...)
   thm <- .rstanvis_defaults$theme
@@ -477,6 +493,8 @@ stan_par <- function(object, par, chain = 0, ...) {
     stop("'par' must be specified", call. = FALSE)
   if (is.stanreg(object))
     object <- object$stanfit
+  if (!isTRUE(ncol(object) > 1))
+    stop("'stan_par' requires more than one chain.", call. = FALSE)
   thm <- .rstanvis_defaults$theme
   samp <- extract(object, pars = c("lp__", par), permuted = FALSE)
   par_sel <- which(dimnames(samp)$parameters == par)

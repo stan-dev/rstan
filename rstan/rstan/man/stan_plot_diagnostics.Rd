@@ -5,7 +5,7 @@
 \alias{stan_ess}
 \alias{stan_mcse}
 
-\title{Diagnostic plots}
+\title{RStan Diagnostic plots}
 \description{
   Diagnostic plots for HMC and NUTS using ggplot2. 
 }
@@ -75,8 +75,8 @@
       \code{accept_stat} for each value of \code{treedepth}.}
     \item{\code{information='divergence'}}{Violin plots showing the 
       distributions of \code{lp__} and \code{accept_stat} for iterations that
-      encountered divergent transitions (\code{n_divergent=1}) and those that
-      did not (\code{n_divergent=0}).}
+      encountered divergent transitions (\code{divergent=1}) and those that
+      did not (\code{divergent=0}).}
     }
   }
 }
@@ -87,7 +87,7 @@
   Manual at \url{http://mc-stan.org/documentation/}.
 }
 \seealso{
-\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan-plotting-functions]{List of RStan plotting functions}},
 \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{

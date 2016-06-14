@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2015, 2016 Jiqiang Guo and Benjamin Goodrich
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -57,7 +57,8 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
   dir.create(INST)
   CHUNKS <- file.path(DIR, "inst", "chunks")
   dir.create(CHUNKS)
-  file.create(file.path(CHUNKS, "common_functions.txt"))
+  file.create(file.path(CHUNKS, "common_functions.stan"))
+  file.create(file.path(CHUNKS, "license.stan"))
   
   SRC <- file.path(DIR, "src")
   dir.create(SRC, showWarnings = FALSE)
@@ -68,22 +69,23 @@ rstan.package.skeleton <- function(name = "anRpackage", list = character(),
   dir.create(R, showWarnings = FALSE)
   download.file("https://raw.githubusercontent.com/stan-dev/rstanarm/master/R/stanmodels.R",
                 destfile = file.path(R, "stanmodels.R"), quiet = TRUE)
-  cat('.onLoad <- function(libname, pkgname) { Rcpp::loadRcppModules() }', 
+  cat('.onLoad <- function(libname, pkgname) {',
+      'if (!("methods" %in% .packages())) attachNamespace("methods")',
+      'modules <- paste0("stan_fit4", names(stanmodels), "_mod")',
+      'for (m in modules) loadModule(m, what = TRUE)',
+      '}',
       file = file.path(R, "zzz.R"), sep = "\n", append = TRUE)
 
   if (length(stan_files) == 0) module_names <- "NAME"
   else module_names <- paste0("stan_fit4", sub("\\.stan$", "", basename(stan_files)), "_mod")
   cat("Depends: R (>= 3.0.2), Rcpp (>= 0.11.0)", 
       "Imports: rstan (>= 2.8.1)",
-      "LinkingTo: StanHeaders (>= 2.8.0), rstan (>= 2.8.1), BH (>= 1.58.0), Rcpp (>= 0.11.0), RcppEigen",
+      "LinkingTo: StanHeaders (>= 2.9.0), rstan (>= 2.9.0), BH (>= 1.60.0), Rcpp (>= 0.12.0), RcppEigen",
       file = file.path(DIR, "DESCRIPTION"), sep = "\n", append = TRUE)
-  cat("RcppModules: ", paste(module_names, collapse = ", "), "\n",
-      file = file.path(DIR, "DESCRIPTION"), append = TRUE)
   cat("\n Stan specific notes:",
-      "If you add any additional .stan files to the exec/ directory, ",
-      "be sure to add an entry in the RcppModules: line of DESCRIPTION.",
-      "You can put into inst/chunks/common_functions.txt any function that is needed by any .stan file, ",
-      "in which case any .stan file can have #include 'common_functions.txt' in its functions block.",
+      "Be sure to add useDynLib(mypackage, .registration = TRUE) to NAMESPACE.",
+      "You can put into inst/chunks/common_functions.stan any function that is needed by any .stan file, ",
+      "in which case any .stan file can have #include 'common_functions.stan' in its functions block.",
       "The precompiled stanmodel objects will appear in a named list called 'stanmodels'.",
       "The 'cleanup' and 'cleanup.win' scripts in the root of the directory must be made executable.",
       file = file.path(DIR, "Read-and-delete-me"), sep = "\n", append = TRUE)

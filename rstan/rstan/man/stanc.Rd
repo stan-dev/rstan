@@ -6,7 +6,7 @@
 Translate Stan model specification to C++ code
 }
 \description{
-  Translate Stan model specification to C++ code, which can 
+  Translate a model specification in Stan code to C++ code, which can 
   then be compiled and loaded for sampling. 
 }
 \usage{
@@ -19,23 +19,23 @@ Translate Stan model specification to C++ code
 \arguments{
   \item{file}{A character string or a connection that \R supports 
     specifying the Stan model specification in Stan's modeling language.}
-  \item{model_code}{A character string either containing a Stan model specification 
-    or the name of a character string object in the workspace. 
-    This parameter is used only if parameter \code{file} is 
-    not specified, so it defaults to empty string.} 
+  \item{model_code}{Either a character string containing a Stan model 
+    specification or the name of a character string object in the workspace. 
+    This parameter is used only if parameter \code{file} is not specified, 
+    so it defaults to the empty string.} 
   \item{model_name}{A character string naming the model. The 
-    default is \code{"anon_model"}. However, the model name would be derived
+    default is \code{"anon_model"}. However, the model name will be derived
     from \code{file} or \code{model_code} (if \code{model_code} is the name of a
     character string object) if \code{model_name} is not specified.} 
-  \item{verbose}{\code{TRUE} print out more intermediate information during the
-    translation procedure; \code{FALSE} otherwise. The default is \code{FALSE}.}
-  \item{obfuscate_model_name}{A logical scalar indicating whether to use a
-    randomly-generated character string for the name of the C++ class. Setting
-    this to \code{TRUE} prevents name clashes when compiling multiple models in
-    the same R session.}
+  \item{verbose}{Logical, defaulting to \code{FALSE}. If \code{TRUE} 
+    more intermediate information is printed during the translation procedure.}
+  \item{obfuscate_model_name}{Logical, defaulting to \code{TRUE}, 
+    indicating whether to use a randomly-generated character string for the 
+    name of the C++ class. This prevents name clashes when compiling multiple 
+    models in the same R session.}
   \item{isystem}{A character vector of length one naming a path to look for 
     file paths in \code{file} that are to be included within the Stan program
-    named by \code{file}. See details.}
+    named by \code{file}. See the Details section below.}
 } 
 
 \details{
@@ -69,10 +69,9 @@ Translate Stan model specification to C++ code
 
 \note{
   Unlike \R, in which variable identifiers may contain dots (e.g. \code{a.1}),
-  Stan prohibits dots from occurring in variable identifiers.
-  Further, C++ reserved words and
-  Stan reserved words may not be used for variable names; see the
-  Stan User's Guide for a complete list.  
+  Stan prohibits dots from occurring in variable identifiers. Furthermore, 
+  C++ reserved words and Stan reserved words may not be used for variable names; 
+  see the Stan User's Guide for a complete list.  
 } 
 
 \references{

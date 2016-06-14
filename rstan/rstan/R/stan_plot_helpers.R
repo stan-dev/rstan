@@ -154,6 +154,19 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     out
   })
   nchains <- length(samp_use)
+  
+  if (unconstrain) {
+    if (is.stanreg(object)) 
+      object <- object$stanfit
+    pblock <- .get_stan_params(object)
+    pars2 <- unlist(lapply(strsplit(pars, "\\["), "[[", 1))
+    not_pblock <- length(setdiff(unique(pars2), pblock))
+    if (not_pblock)
+      stop("If 'unconstrain' is TRUE only variables declared in the ",
+           "'parameters' block can be included in 'pars'.", 
+           call. = FALSE)
+  }
+  
   dat <- .reshape_sample(samp_use)
   dat$iteration <- idx
   dat$chain <- factor(dat$chain)
@@ -170,8 +183,19 @@ is.stanfit <- function(x) inherits(x, "stanfit")
        warmup = warmup)
 }
 
+# get parameter names for parameters block only
+.get_stan_params <- function(object) {
+  stopifnot(is.stanfit(object))
+  params <- grep("context__.vals_r", fixed = TRUE, value = TRUE, 
+                 x = strsplit(get_cppcode(get_stanmodel(object)), "\n")[[1]])
+  params <- sapply(strsplit(params, "\""), FUN = function(x) x[[2]])
+  intersect(params, object@model_pars)
+}
+
+# unconstrain
 .upars <- function(object, permuted = FALSE, inc_warmup = TRUE) {
-  if (is.stanreg(object)) object <- object$stanfit
+  if (is.stanreg(object)) 
+    object <- object$stanfit
   pars <- extract(object, permuted = permuted, inc_warmup = inc_warmup)
   nchains <- ncol(pars)
   pn <- dimnames(pars)$parameters
@@ -186,6 +210,16 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     upars <- aperm(upars, c(2, 3, 1))
   }
   else upars <- aperm(upars, c(3, 1, 2))
+  
+  pblock <- .get_stan_params(object)
+  mark <- c()
+  for (p in pblock) {
+    patt <- paste0("^", p, "|^", p, "\\[")
+    sel <- grep(patt, param_names)  
+    if (length(sel))
+      mark <- c(mark, sel)
+  }
+  param_names <- param_names[sort(mark)]
   
   lapply(seq_len(nchains), function(chain) {
     x <- upars[chain,, ]
@@ -282,7 +316,7 @@ color_vector_chain <- function(n) {
 .METROP_LAB <- "Mean Metrop. Acceptance"
 .STEPSIZE_LAB <- "Sampled Step Size"
 .TREEDEPTH_LAB <- "Treedepth"
-.NDIVERGENT_LAB <- "N Divergent"
+.NDIVERGENT_LAB <- "Divergent"
 
 .NUTS_VLINE_CLR <- "#222222"
 .NUTS_FILL <- "#66a7e0"
@@ -318,6 +352,8 @@ color_vector_chain <- function(n) {
 }
 
 .sampler_params_post_warmup <- function(object, which = "stepsize__", as.df = FALSE) {
+  if (which == "divergent__" && utils::packageVersion("rstan") < "2.10")
+    which <- "n_divergent__"
   if (is.stanreg(object))
     object <- object$stanfit
   sampler_params <- suppressWarnings(get_sampler_params(object))
@@ -471,7 +507,7 @@ color_vector_chain <- function(n) {
 .treedepth_ndivergent_hist <- function(df_td, df_nd, chain = 0,
                                        divergent = c("All", 0, 1), ...) {
   x_lab <- if (divergent == "All")
-    "Treedepth" else paste0("Treedepth (N Divergent = ", divergent,")")
+    "Treedepth" else paste0("Treedepth (Divergent = ", divergent,")")
   plot_labs <- labs(x = x_lab, y = "")
   
   mdf_td <- .reshape_df(df_td) #reshape2::melt(df_td, id.vars = grep("iteration", colnames(df_td), value = TRUE))

@@ -4,10 +4,8 @@
 
 \docType{class}
 \alias{stanfit-class}
-\alias{summary,stanfit-method}
-%% \alias{extract,stanfit-method}
+\alias{stanfit}
 \alias{show,stanfit-method}
-% \alias{plot,stanfit-method}
 \alias{get_cppo_mode} 
 \alias{get_cppo_mode,stanfit-method} 
 \alias{get_stancode}
@@ -19,209 +17,173 @@
 \alias{get_seeds}
 \alias{get_seeds,stanfit-method}
 \alias{get_inits}
+\alias{get_inits,stanfit-method}
 \alias{get_posterior_mean}
 \alias{get_posterior_mean,stanfit-method}
 \alias{get_elapsed_time}
 \alias{get_elapsed_time,stanfit-method}
-\alias{get_inits,stanfit-method}
 \alias{get_logposterior} 
 \alias{get_logposterior,stanfit-method}
 \alias{get_adaptation_info} 
 \alias{get_adaptation_info,stanfit-method}
 \alias{get_sampler_params}
 \alias{get_sampler_params,stanfit,logical-method}
-%% \alias{get_num_upars}
-%% \alias{get_num_upars,stanfit-method}
-%% \alias{unconstrain_pars}
-%% \alias{unconstrain_pars,stanfit-method}
-%%\alias{unconstrain_pars,stanfit,list-method}
-%% \alias{constrain_pars}
-%% \alias{constrain_pars,stanfit-method}
-%%\alias{constrain_pars,stanfit,numeric-method}
-%%\alias{log_prob}
-%%\alias{log_prob,stanfit-method}
-%% \alias{log_prob,stanfit,numeric-method}
-%%\alias{grad_log_prob}
-%%\alias{grad_log_prob,stanfit-method}
-%% \alias{grad_log_prob,stanfit,numeric-method}
-%% \alias{traceplot,stanfit-method}
-\alias{As.mcmc.list}
+
 \title{Class \code{stanfit}: fitted Stan model}
 
 \description{
-  The output derived from fitting a Stan model, including the samples, 
-  as returned 
-  by the top-level function \code{stan} or the lower-level
-  sampling method \code{sampling} defined on class \code{stanmodel}.
-  \code{print} and \code{plot} and other methods are provided
-  for the summaries of the fitted results.  
-  Access methods allow the underlying data making up a fit
-  to be retrieved. There are three modes; sampling mode, 
-  test gradient mode, error mode (no samples included). 
-  The model's functions for computing the log probability density \code{lp__} 
-  and the gradient are also exposed for a stanfit object. 
+The components (slots) of a \code{stanfit} object and the various available
+methods are described below. When methods have their own more detailed 
+documentation pages links are provided. 
 } 
 
 \section{Objects from the Class}{
-  Objects should be created by either calling function \code{stan} or
-  \code{sampling} method in S4 class \code{stan_model}.
+An object of class \code{stanfit} contains the
+output derived from fitting a Stan model as returned by the top-level function
+\code{\link{stan}} or the lower-level methods \code{\link{sampling}} and
+\code{\link{vb}} (which are defined on class \code{\linkS4class{stanmodel}}).
+Many methods (e.g., \code{print}, \code{plot}, \code{summary}) are provided for 
+summarizing results and various access methods also allow the underlying data 
+(e.g., simulations, diagnostics) contained in the object to be retrieved.
 }
 
-\usage{
-  As.mcmc.list(object, pars, include = TRUE, ...)
-}
-
-\arguments{
-  \item{object}{object of class \code{"stanfit"}}
-  \item{pars}{optional character vector of parameters to include}
-  \item{include}{logical scalar indicating whether to include (the default) or 
-    exclude theh parameters named in \code{pars}}
-  \item{\dots}{unused}
-}
 \section{Slots}{
   \describe{
-    \item{\code{model_name}:}{The model name, object of type \code{character}} 
-    \item{\code{model_pars}:}{The names of parameters (or transformed
-      parameters, derived quantities), object of type \code{character}} 
-    \item{\code{par_dims}:}{The dimensions for all parameters, 
-       object of type \code{list}}
-    \item{\code{mode}:}{The mode of the fitted model, object of type 
-       \code{integer}. \code{0} indicates sampling mode; \code{1}
-       indicates test gradient mode for which no sampling is done;
-       \code{2}; error occurred before sampling. Most methods for 
-       \code{stanfit} are useful only for \code{mode=0}}
-    \item{\code{sim}:}{Simulation results including samples for the model,
-       object of type \code{list}} 
-    \item{\code{inits}:}{The initial values either specified or generated
-      randomly for all chains, object of type \code{list} 
-      containing named lists corresponding to initial values in the chains.}
-    \item{\code{stan_args}:}{The arguments used for sampling all chains,
-       object of type \code{list}}
-    \item{\code{stanmodel}:}{The instance of S4 class \code{stanmodel}} 
-    \item{\code{date}:}{The date the object is created} 
-    \item{\code{.MISC}:}{Miscellaneous helper information used for the fitted model, 
-      object of type \code{environment}}
+    \item{\code{model_name}:}{The model name as a string.} 
+    \item{\code{model_pars}:}{A character vector of names of parameters
+      (including transformed parameters and derived quantities).}
+    \item{\code{par_dims}:}{A named list giving the dimensions for all 
+      parameters. The dimension for a scalar parameter is given as 
+      \code{numeric(0)}.}
+    \item{\code{mode}:}{An integer indicating the mode of the fitted model.
+       \code{0} indicates sampling mode, \code{1} indicates test gradient mode 
+       (no sampling is done), and \code{2} indicates error mode (an error occurred
+       before sampling). Most methods for \code{stanfit} objects are useful only 
+       if \code{mode=0}.}
+    \item{\code{sim}:}{A list containing simulation results including the 
+      posterior draws as well as various pieces of metadata used by many of the 
+      methods for \code{stanfit} objects.} 
+    \item{\code{inits}:}{The initial values (either user-specified or generated
+      randomly) for all chains. This is a list with one component per chain. Each
+      component is a named list containing the initial values for each parameter
+      for the corresponding chain.}
+    \item{\code{stan_args}:}{A list with one component per chain containing the 
+      arguments used for sampling (e.g. \code{iter}, \code{seed}, etc.).}
+    \item{\code{stanmodel}:}{The instance of S4 class \code{\linkS4class{stanmodel}}.} 
+    \item{\code{date}:}{A string containing the date and time the object was created.}
+    \item{\code{.MISC}:}{Miscellaneous helper information used for the fitted model. 
+      This is an object of type \code{environment}. Users rarely (if ever)
+      need to access the contents of \code{.MISC}.}
   }
 }
 
 \section{Methods}{
+  \strong{Printing, plotting, and summarizing:}
   \describe{
-    \item{\code{show}}{\code{signature(object = "stanfit")}: print the default summary
-      for the model.}
-    \item{\code{plot}}{\code{signature(x = "stanfit", y = "missing")}: plot an overview of summaries 
-      for all parameters (see \code{\link{plot}}).
-    }
-    \item{\code{summary}}{\code{signature(object = "stanfit")}: summarizes the 
-      distributions of quantities using the samples: the quantiles 
-      (for example, 2.5\%, 50\%, 97.5\%, which can be specified by 
-      using parameter \code{probs}), 
-      the mean, the standard deviation (sd), the effective sample size (n_eff),
-      and the split Rhat (i.e., potential scale reduction derived from all
-      chains after splitting each chain in half and treating the halves as chains).
-      Returned is a named list with elements such as \code{summary} and \code{c_summary}, 
-      summaries for all chains merged without warmup and individual chains.
-      For the summary of all chains merged, we also have \code{se_mean},
-      the standard error of the mean. In addition to parameters, the log-posterior
-      (\code{lp__}) is also a quantity of interest in the summary.  
-      To specify parameters of interest, use parameter \code{pars}. The 
-      default for \code{pars} is all the parameters saved in the fitted
-      results as well as the log-posterior. 
-      Another argument for \code{summary} is \code{use_cache}, which defaults
-      to \code{TRUE}. When \code{use_cache=TRUE}, the summary quantities for
-      all parameters are computed and cached for future use. 
-      So \code{use_cache=FALSE} can be used to avoid the computing of all
-      parameters if \code{pars} is given as some specific parameters. 
-    }
-    \item{\code{extract}}{\code{signature(object = "stanfit")}: 
-      get the samples for all chains for all (or specified) parameters. 
-      (see \code{\link{extract}}). Also see \link{as.array.stanfit} 
-      for coercing samples without warmup to arrays or matrices. 
-    }
-    \item{\code{as.mcmc.list}}{\code{signature(object = "stanfit")}:
-      return a list of all the chains that can be treated as an
+    \item{\code{show}}{Print the default summary for the model.}
+    \item{\code{print}}{Print a customizable summary for the model. 
+      See \code{\link{print.stanfit}}.}
+    \item{\code{plot}}{Create various plots summarizing the fitted model. 
+      See \code{\link{plot,stanfit-method}}.}
+    \item{\code{summary}}{Summarize the distributions of estimated 
+      parameters and derived quantities using the posterior draws. 
+      See \code{\link{summary,stanfit-method}}.}
+    \item{\code{get_posterior_mean}}{
+      Get the posterior mean for parameters of interest (using \code{pars}
+      to specify a subset of parameters). Returned is a matrix with 
+      one column per chain and an additional column for all chains combined.}
+  }
+  \strong{Extracting posterior draws:}
+  \describe{
+    \item{\code{extract}}{Extract the draws for all chains for all 
+      (or specified) parameters. See \code{\link{extract}}.}
+    \item{\code{as.array}, \code{as.matrix}, \code{as.data.frame}}{
+      Coerce the draws (without warmup) to an array, 
+      matrix or data frame. See \code{\link{as.array.stanfit}}.}
+    \item{\code{As.mcmc.list}}{Convert a \code{stanfit} object to an
       \code{\link[coda]{mcmc.list}} as in package \pkg{coda}. 
-      Parameter of interest can be specified using \code{pars}. 
-      The warmup samples are discarded. This method is not exported but
-      \code{As.mcmc.list} is.
-    }
-    \item{\code{traceplot}}{\code{signature(object = "stanfit")}:
-      plot the trace of chains (see \code{\link{traceplot}}). 
-    } 
-    \item{\code{get_posterior_mean}}{\code{signature(object = "stanfit")}:
-      get the posterior mean for parameters of interest (using \code{pars}
-      to specify) among \emph{all} parameters.} 
-    \item{\code{get_elapsed_time}}{\code{signature(object = "stanfit")}:
-      get the warmup time and sample time in seconds spent to draw the samples.
-      A matrix of two columns is returned: each row has the time information
-      for one chain.}
-    \item{\code{get_stancode}}{\code{signature(object = "stanfit")}:
-      get the Stan code for the fitted model.}
-    \item{\code{get_cppo_mode}}{\code{signature(object = "stanfit")}:
-      get the optimization mode used for compiling the model associated 
-      with this fitted results. The returned string is 
-      one of \code{"fast"}, \code{"presentation2"}, 
-      \code{"presentation1"}, and \code{"debug"}.} 
-    \item{\code{get_stanmodel}}{\code{signature(object = "stanfit")}: 
-      get the object of S4 class \code{stanmodel} of the fitted 
-      model.} 
-    \item{\code{get_inits}}{\code{signature(object = "stanfit")}:
-      get the initial values for parameters used in sampling all chains.
-      For \code{mode=2}, it returns an empty list.} 
-    \item{\code{get_seed}}{\code{signature(object = "stanfit")}: 
-      get the seed that used for sampling. When the fitted object 
-      is empty (\code{mode=2}), \code{NULL} might be returned.
-      In the case the seeds for all chains are different, use 
-      \code{get_seeds}.} 
-    \item{\code{get_seeds}}{\code{signature(object = "stanfit")}: 
-      get the seeds that used for all chains. When the fitted object 
-      is empty (\code{mode=2}), \code{NULL} might be returned.} 
-    \item{\code{get_logposterior}}{\code{signature(object = "stanfit")}: 
-      get the log-posterior (up to an additive constant, which is up to
-      a multiplicative constant on the linear scale) for all chains. 
-      Each element of the returned \code{list} is the log-posterior 
-      for a chain. Optional parameter \code{inc_warmup} indicates whether to include
-      the warmup period.} 
-    \item{\code{get_adaptation_info}}{\code{signature(object = "stanfit")}:
-      obtain the adaptation information for 
-      sampler, which now only NUTS2 has. The results are returned 
-      as a list, each element of which is a character string
-      for a chain.} 
-    \item{\code{get_sampler_params}}{\code{signature(object = "stanfit")}: 
-      obtain the parameters used for the sampler such as 
+      See \code{\link{As.mcmc.list}}.}
+    \item{\code{get_logposterior}}{
+      Get the log-posterior at each iteration.
+      Each element of the returned \code{list} is the vector of log-posterior
+      values (up to an additive constant, i.e. up to a multiplicative constant 
+      on the linear scale) for a single chain.
+      The optional argument \code{inc_warmup} (defaulting to \code{TRUE}) 
+      indicates whether to include the warmup period.}
+  }
+  \strong{Diagnostics, log probability, and gradients:}
+  \describe{
+    \item{\code{get_sampler_params}}{
+      Obtain the parameters used for the sampler such as 
       \code{stepsize} and \code{treedepth}. The results are returned
-      as a list, each element of which is an array for a chain.
+      as a list with one component (an array) per chain.
       The array has number of columns corresponding to the number
       of parameters used in the sampler and its column names 
-      provide the parameter names. Optional parameter \code{inc_warmup}
-      indicates whether to include the warmup period.} 
-    \item{\code{log_prob}}{\code{signature(object = "stanfit", "numeric")}: compute
-      the log probability density (\code{lp__}) for a set of parameter 
+      provide the parameter names. Optional argument \code{inc_warmup} 
+      (defaulting to \code{TRUE}) indicates whether to include the warmup period.}
+    \item{\code{get_adaptation_info}}{
+      Obtain the adaptation information for the sampler if NUTS was used. 
+      The results are returned as a list, each element of which is a character 
+      string with the info for a single chain.} 
+    \item{\code{log_prob}}{
+      Compute the log probability density (\code{lp__}) for a set of parameter 
       values (on the \emph{unconstrained} space) up to an additive constant. 
       The unconstrained parameters are specified using a numeric vector.
       The number of parameters on the unconstrained space can be obtained 
-      using method \code{get_num_upars}.
-      A numeric value is returned.} 
-    \item{\code{grad_log_prob}}{\code{signature(object = "stanfit", "numeric")}: compute
-      the gradient of log probability density function for a set of parameter 
+      using method \code{get_num_upars}. A numeric value is returned. See also
+      the documentation in \code{\link{log_prob}}.} 
+    \item{\code{grad_log_prob}}{
+      Compute the gradient of log probability density function for a set of parameter 
       values (on the \emph{unconstrained} space) up to an additive constant.
       The unconstrained parameters are specified using a numeric vector
       with the length being the number of unconstrained parameters.
       A numeric vector is returned with the length of the number of 
       unconstrained parameters and an attribute named \code{log_prob} being
-      the \code{lp__}.}
-    \item{\code{get_num_upars}}{\code{signature(object = "stanfit")}: get the 
-      number of unconstrained parameters of the model. The number of parameters 
+      the \code{lp__}. See also the documentation in \code{\link{grad_log_prob}}.}
+    \item{\code{get_num_upars}}{
+      Get the number of unconstrained parameters of the model. The number of parameters 
       for a model is not necessarily equal to this number of unconstrained 
       parameters. For example, when a parameter is specified as a simplex of 
       length K, the number of unconstrained parameters is K-1.} 
-    \item{\code{unconstrain_pars}}{\code{signature(object = "stanfit", "list")}: transform
-      the parameter to unconstrained space. The input is a named list as
-      for specifying initial values for each parameter. A numeric vector is
-      returned.}
-    \item{\code{constrain_pars}}{\code{signature(object = "stanfit", "numeric")}: get the
-      parameter values from their unconstrained space. The input is a numeric 
-      vector. A list is returned.  This function is contrary to
-      \code{unconstrain_pars}.}
+    \item{\code{unconstrain_pars}}{
+      Transform the parameters to unconstrained space. The input is a named list 
+      as for specifying initial values for each parameter. A numeric vector is
+      returned. See also the documentation in \code{\link{unconstrain_pars}}.}
+    \item{\code{constrain_pars}}{
+      Get the parameter values from their unconstrained space. The input is a 
+      numeric vector. A list is returned.  This function is contrary to
+      \code{unconstrain_pars}. See also the documentation in 
+      \code{\link{constrain_pars}}.}
+  }
+  \strong{Metadata and miscellaneous:}
+  \describe{
+    \item{\code{get_stancode}}{
+      Get the Stan code for the fitted model as a string. The result can 
+      be printed in a readable format using \code{\link{cat}}.}
+    \item{\code{get_stanmodel}}{
+      Get the object of S4 class \code{\linkS4class{stanmodel}} of the fitted 
+      model.}
+    \item{\code{get_elapsed_time}}{
+      Get the warmup time and sample time in seconds.
+      A matrix of two columns is returned with each row containing the warmup
+      and sample times for one chain.}
+    \item{\code{get_inits}}{
+      Get the initial values for parameters used in sampling all chains. The 
+      returned object is a list with the same structure as the \code{inits} 
+      slot described above. If \code{object@mode=2} (error mode) an empty list 
+      is returned.}
+    \item{\code{get_cppo_mode}}{
+      Get the optimization mode used for compilation. The returned string is 
+      one of \code{"fast"}, \code{"presentation2"}, \code{"presentation1"},
+      and \code{"debug"}.}
+    \item{\code{get_seed}}{
+      Get the (P)RNG seed used. When the fitted object 
+      is empty (\code{mode=2}), \code{NULL} might be returned.
+      In the case that the seeds for all chains are different, use 
+      \code{get_seeds}.} 
+    \item{\code{get_seeds}}{
+      Get the seeds used for all chains. When the fitted object 
+      is empty (\code{mode=2}), \code{NULL} might be returned.} 
   }
 }
 
@@ -316,6 +278,7 @@ adaptinfo <- get_adaptation_info(exfit)
 seed <- get_seed(exfit)
 sp <- get_sampler_params(exfit)
 ml <- As.mcmc.list(exfit)
+cat(get_stancode(exfit))
 }
 
 \keyword{classes}

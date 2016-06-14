@@ -1,9 +1,9 @@
-\name{traceplot-methods}
 \docType{methods}
+\name{traceplot}
 \alias{traceplot} 
 \alias{traceplot,stanfit-method}
 
-\title{\code{traceplot}: draw the traces of the sample}
+\title{Markov chain traceplots}
 \description{Draw the traceplot corresponding to one or more
  Markov chains, providing a visual way to inspect sampling behavior
  and assess mixing across chains and convergence.}
@@ -11,7 +11,7 @@
 \usage{
   %% traceplot(object, \dots)  
   \S4method{traceplot}{stanfit}(object, pars, include = TRUE, unconstrain = FALSE, 
-          inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...) 
+          inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL, ...) 
 } 
 
 \section{Methods}{
@@ -23,23 +23,29 @@
 \arguments{
   \item{object}{An instance of class \code{\linkS4class{stanfit}}.}
   \item{pars}{A character vector of parameter names. Defaults to all parameters 
-  or the first 10 parameters (if there are more than 10).}
+    or the first 10 parameters (if there are more than 10).}
   \item{include}{Should the parameters given by the \code{pars} argument be
     included (the default) or excluded from the plot? Only relevant if 
     \code{pars} is not missing.}
   \item{inc_warmup}{\code{TRUE} or \code{FALSE}, indicating whether 
     the warmup sample are included in the trace plot; defaults to \code{FALSE}.}
+  \item{window}{A vector of length 2. Iterations between \code{window[1]}
+    and \code{window[2]} will be shown in the plot. The default is to 
+    show all iterations if \code{inc_warmup} is \code{TRUE} and all iterations
+    from the sampling period only if \code{inc_warmup} is \code{FALSE}. If 
+    \code{inc_warmup} is \code{FALSE} the iterations specified in \code{window}
+    should not include iterations from the warmup period.}
   \item{unconstrain}{Should parameters be plotted on the unconstrained space?
     Defaults to \code{FALSE}.}  
   \item{nrow,ncol}{Passed to \code{\link[ggplot2]{facet_wrap}}.} 
   \item{\dots}{Optional arguments to pass to \code{\link[ggplot2]{geom_path}} 
-  (e.g. \code{size}, \code{linetype}, \code{alpha}, etc.).} 
+    (e.g. \code{size}, \code{linetype}, \code{alpha}, etc.).} 
 }
 \value{A \code{\link[ggplot2]{ggplot}} object that can be further customized
   using the \pkg{ggplot2} package.} 
 
 \seealso{
-\code{\link[=plotting-functions]{List of RStan plotting functions}},
+\code{\link[=rstan-plotting-functions]{List of RStan plotting functions}},
 \code{\link[=rstan_gg_options]{Plot options}}
 }
 
@@ -48,7 +54,7 @@ library(rstan)
 fit <- stan(model_code = "parameters {real y;} model {y ~ normal(0,1);}") 
 traceplot(fit) 
 traceplot(fit, inc_warmup = TRUE, nrow = 2)
-traceplot(fit) + coord_cartesian(xlim = c(1500,1600))
+traceplot(fit, window = c(1500, 1600))
 }
 
 
