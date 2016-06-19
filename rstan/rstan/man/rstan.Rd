@@ -20,8 +20,8 @@
 \details{
   \tabular{ll}{
     Package: \tab rstan\cr
-    Version: \tab 2.9.0-3\cr
-    Date: \tab Feb 07, 2016\cr
+    Version: \tab 2.10.0\cr
+    Date: \tab June 20, 2016\cr
     License: \tab GPL-3 \cr
   }
   
@@ -60,8 +60,8 @@ parameters {
 } 
 
 model {
-  mu ~ normal(0, 10);
-  y ~ normal(mu, 1); 
+  target += normal_lpdf(mu | 0, 10);
+  target += normal_lpdf(y  | mu, 1);
 } 
 "
 
