@@ -10,9 +10,9 @@ parameters {
 }
 transformed parameters {
   vector[J] theta;
-  theta <- mu + tau * eta;
+  theta = mu + tau * eta;
 }
 model {
-  eta ~ normal(0, 1);
-  y ~ normal(theta, sigma);
+  target += normal_lpdf(eta | 0, 1);
+  target += normal_lpdf(y | theta, sigma);
 }

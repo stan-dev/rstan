@@ -143,25 +143,8 @@ RStan allows a Stan program to be coded in a text file
 (typically with suffix `.stan`) or in a R character vector (of length one). We
 put the following code for the Eight Schools model into the file `schools.stan`:
 
-```
-data {
-  int<lower=1> J;          // number of schools 
-  real y[J];               // estimated treatment effects
-  real<lower=0> sigma[J];  // s.e. of effect estimates 
-}
-parameters {
-  real mu; 
-  real<lower=0> tau;
-  vector[J] eta;
-}
-transformed parameters {
-  vector[J] theta;
-  theta <- mu + tau * eta;
-}
-model {
-  eta ~ normal(0, 1);
-  y ~ normal(theta, sigma);
-}
+```{r, echo=FALSE, comment=""}
+cat(readLines("schools.stan"), sep = "\n")
 ```
 
 The first section of the Stan program above, the `data` block, specifies the 
@@ -189,11 +172,11 @@ distribution is the standard deviation, not the variance as is usual in
 statistical notation.) We have written the model in vector notation, which
 allows Stan to make use of more efficient algorithmic differentiation (AD). It
 would also be possible --- but less efficient --- to write the model by
-replacing `y ~ normal(theta,sigma)` with a loop over the $J$ schools,
+replacing `normal_lpdf(y | theta,sigma)` with a loop over the $J$ schools,
 
 ```
 for (j in 1:J) 
-  y[j] ~ normal(theta[j],sigma[j]);
+  target += normal_lpdf(y[j] | theta[j],sigma[j]);
 ```
 
 Stan has versions of many of the most useful R functions for statistical 
@@ -208,7 +191,6 @@ corresponding Stan function, display its arguments, and give the page number in
 
 ```{r, lookup}
 lookup("dnorm")
-tail(lookup("~")) # looks up all Stan sampling statements
 lookup(dwilcox)   # no corresponding Stan function
 ```
 
@@ -558,7 +540,7 @@ ocode <- "
     real mu;
   } 
   model {
-    y ~ normal(mu, 1);
+    target += normal_lpdf(y | mu, 1);
   } 
 "
 
@@ -659,4 +641,3 @@ package, which is very useful for model comparison using stanfit objects.
 package, which provides a `glmer`-style interface to Stan.
 
 
-# References
