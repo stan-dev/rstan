@@ -30,10 +30,6 @@ lookup <- function(FUN, ReturnType = character()) {
   
   if(FUN == "nrow") FUN <- "NROW"
   if(FUN == "ncol") FUN <- "NCOL"
-  if(FUN == "~") {
-    return(rosetta[rosetta$SamplingStatement, c("StanFunction", "Arguments", "Page")])
-  }
-
   if(exists(FUN)) {
     matches <- as.logical(charmatch(rosetta$RFunction, FUN, nomatch = 0L))
     if(any(matches)) return(rosetta[matches,-1,drop=FALSE])

@@ -14,8 +14,7 @@ Look up the Stan function that corresponds to a \R function or name.
   \item{FUN}{A character string naming a \R function or a \R function for
     which the (near) equivalent Stan function is sought. If no matching
     \R function is found, \code{FUN} is reinterpreted as a \code{\link{regexp}} 
-    and matches are sought. If \code{"~"}, all Stan sampling statements are 
-    returned.}
+    and matches are sought.}
   \item{ReturnType}{A character string of positive length naming a valid
     return type for a Stan function: \code{int}, \code{int[]}, \code{matrix},
     \code{real}, \code{real[,]}, \code{real[]}, \code{row_vector}, 
@@ -33,14 +32,6 @@ Look up the Stan function that corresponds to a \R function or name.
     \item \code{Page} Integer indicating the page of the Stan reference manual where  
                       that Stan function is defined. 
   }
-  If \code{FUN = "~"}, a data.frame with rows equal to the number of sampling statements
-  defined in Stan and three columns:
-  \enumerate{
-    \item \code{StanStatement} Character string indicating the name of the distribution in Stan. 
-    \item \code{Arguments} Character string indicating the remaining arguments to that Stan function. 
-    \item \code{Page} Integer indicating the page of the Stan reference manual where  
-                      that Stan sampling statement is defined. 
-  }
   If there are no matching Stan functions, a character string indicating so is returned.
 }
 
@@ -56,7 +47,6 @@ Look up the Stan function that corresponds to a \R function or name.
 
 \examples{
 lookup(dnorm)      # Stan equivalents for the normal PDF (in log form)
-nrow(lookup("~"))  # number of sampling statements available
 lookup("foo")      # fails
 lookup("Student")  # succeeds even though there is no such R function
 lookup("^poisson") # every Stan function that starts with poisson
