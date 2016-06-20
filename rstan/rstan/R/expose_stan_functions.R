@@ -57,8 +57,8 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("vector<Eigen::Matrix<.*,Eigen::Dynamic> >", "vector<matrix_d>", lines)
   lines <- gsub("Eigen::Matrix<.*,Eigen::Dynamic>", "matrix_d", lines)
   
-  # kill foo_log<false> functions because of templating
-  templated <- grep("_log<false>", lines, fixed = TRUE)
+  # kill foo_lpdf<false> functions because of templating
+  templated <- grep("_lp[dm]f<false>", lines)
   if(length(templated) > 0) for(i in rev(templated)) {
     end <- i + 1L
     while(!grepl("^}$", lines[end])) end <- end + 1L
