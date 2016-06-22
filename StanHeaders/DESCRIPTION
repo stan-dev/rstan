@@ -1,5 +1,5 @@
 Package: StanHeaders
-Date: 2016-06-18
+Date: 2016-06-21
 Title: C++ Header Files for Stan
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),
@@ -24,6 +24,7 @@ Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.e
              person("Dustin", "Tran", role = "aut"),
              person("Michael", "Malecki", role = "aut"),
              person("Yuanjun", "Gao", role = "aut"),
+             person("Trustees of", "Columbia University", role = "cph"),
              person("Lawrence Livermore", "National Security", role = "cph", comment = "CVODES"),
              person("The Regents of the", "University of California", role = "cph", comment = "CVODES"),
              person("Southern Methodist", "University", role = "cph", comment = "CVODES"))
