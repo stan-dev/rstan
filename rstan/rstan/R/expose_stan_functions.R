@@ -161,11 +161,13 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub("([[:space:]]+return .*_rng)\\(base_rng__\\);",
                 "\\1();", lines)
   lines <- gsub("_rng\\(base_rng__\\)", "_rng\\(seed, base_rng__\\)", lines)
-  # lines <- gsub(", base_rng__\\)\\);", ", seed\\)\\);", lines)
-  # lines <- gsub("stan::math::promote_scalar<fun_return_scalar_t__>\\((.*)_rng\\((.*), base_rng__",
-  #               "stan::math::promote_scalar<fun_return_scalar_t__>\\(\\1_rng\\(\\2, seed", 
-  #               lines)
-
+  RNGs <- grep("_rng\\(.*base_rng__", lines)
+  if (length(RNGs)) {
+    known_RNGs <- lookup("_rng$")[,1]
+    for (i in RNGs) if (!any(sapply(known_RNGs, FUN = grepl, x = lines[i])))
+      lines[i] <- gsub("base_rng__", "seed", lines[i], fixed = TRUE)
+  }
+  
   
   # remove line numbering things
   lines <- grep("current_statement_begin__", lines, 
@@ -182,6 +184,7 @@ expose_stan_functions <- function(stanmodel) {
   lines <- gsub(", T_lp_accum__& lp_accum__", "", lines, fixed = TRUE)
   lines <- gsub(", lp_accum__", "", lines, fixed = TRUE)
   lines <- gsub("get_lp(lp__)", "get_lp(lp__, lp_accum__)", lines, fixed = TRUE)
+
   
   # make propto__ false to not skip anything that is double
   lines <- gsub("const static bool propto__ = true;",
