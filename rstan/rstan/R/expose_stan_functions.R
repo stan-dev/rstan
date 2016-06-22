@@ -66,6 +66,14 @@ expose_stan_functions <- function(stanmodel) {
     while(!grepl("^template", lines[start])) start <- start - 1L
     lines <- lines[-c(start:end)]
   }
+  templated <- grep("_log<false>", lines)
+  if(length(templated) > 0) for(i in rev(templated)) {
+    end <- i + 1L
+    while(!grepl("^}$", lines[end])) end <- end + 1L
+    start <- i - 1L
+    while(!grepl("^template", lines[start])) start <- start - 1L
+    lines <- lines[-c(start:end)]
+  }
   
   # stick using:: inside user-defined functions
   usings <- grep("^using", lines, value = TRUE)
