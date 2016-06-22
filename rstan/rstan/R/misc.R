@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015, 2016 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -1513,10 +1513,9 @@ is_arg_recognizable <- function(x, y, pre_msg = '', post_msg = '', ...) {
   idx <- match(x, y)
   na_idx <- which(is.na(idx))
   if (length(na_idx) > 0) {
-    warning(pre_msg, paste(x[na_idx], collapse = ', '), ".", post_msg, ...)
-    return(FALSE)
+    stop(pre_msg, paste(x[na_idx], collapse = ', '), ".", post_msg, ...)
   }
-  TRUE
+  return(TRUE)
 }
 
 get_time_from_csv <- function(tlines) {
@@ -1550,6 +1549,9 @@ parse_data <- function(cppcode, e = parent.frame()) {
                   cppcode[private:public])
   tdata <- grep("stan::math::fill(", cppcode, value = TRUE, fixed = TRUE)
   tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
+  tdata <- gsub("^.*stan::math::fill\\((.*), std::numeric_limits<int>::min\\(\\)\\);$",
+                "\\1", tdata)
+  
   # get them from the calling environment
   objects <- setdiff(objects, tdata)
   modes <- rep("any", length(objects))
@@ -1590,7 +1592,7 @@ throw_sampler_warnings <- function(object) {
     stop("'object' must be of class 'stanfit'")
   sp <- get_sampler_params(object, inc_warmup = FALSE)
   n_d <- sum(sapply(sp, FUN = function(x) {
-    if ("n_divergent__" %in% colnames(x)) return(sum(x[,"n_divergent__"]))
+    if ("divergent__" %in% colnames(x)) return(sum(x[,"divergent__"]))
     else return(0)
   }))
   if (n_d > 0) {

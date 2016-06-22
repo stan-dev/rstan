@@ -1,5 +1,5 @@
 Package: StanHeaders
-Date: 2016-01-03
+Date: 2016-06-21
 Title: C++ Header Files for Stan
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),
@@ -23,9 +23,13 @@ Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.e
              person("Robert", "Grant", role = "aut"),
              person("Dustin", "Tran", role = "aut"),
              person("Michael", "Malecki", role = "aut"),
-             person("Yuanjun", "Gao", role = "aut"))
+             person("Yuanjun", "Gao", role = "aut"),
+             person("Trustees of", "Columbia University", role = "cph"),
+             person("Lawrence Livermore", "National Security", role = "cph", comment = "CVODES"),
+             person("The Regents of the", "University of California", role = "cph", comment = "CVODES"),
+             person("Southern Methodist", "University", role = "cph", comment = "CVODES"))
 URL: http://mc-stan.org/
-Description: The C++ header files of the Stan project are provided by this package, but it contains no R code, shared objects, vignettes, or function documentation. It is only useful for developers who want to utilize the LinkingTo directive of their package's DESCRIPTION file to build on the Stan library without incurring unnecessary dependencies. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo and (optionally penalized) maximum likelihood estimation via optimization. The Stan library includes an advanced automatic differentiation scheme, templated statistical and linear algebra functions that can handle the automatically differentiable scalar types (and doubles, ints, etc.), and a parser for the Stan language. The 'rstan' package provides user-facing R functions to parse, compile, test, estimate, and analyze Stan models.
+Description: The C++ header files of the Stan project are provided by this package, but it contains no R code, vignettes, or function documentation. There is a shared object containing part of the CVODES library, but it is not accessible from R. StanHeaders is only useful for developers who want to utilize the LinkingTo directive of their package's DESCRIPTION file to build on the Stan library without incurring unnecessary dependencies. The Stan project develops a probabilistic programming language that implements full or approximate Bayesian statistical inference via Markov Chain Monte Carlo or variational methods and implements (optionally penalized) maximum likelihood estimation via optimization. The Stan library includes an advanced automatic differentiation scheme, templated statistical and linear algebra functions that can handle the automatically differentiable scalar types (and doubles, ints, etc.), and a parser for the Stan language. The 'rstan' package provides user-facing R functions to parse, compile, test, estimate, and analyze Stan models.
 Suggests: RcppEigen, BH
-Version: 2.9.0
+Version: 2.10.0
 License: BSD_3_clause + file LICENSE

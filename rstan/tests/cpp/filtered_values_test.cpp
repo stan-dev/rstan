@@ -120,7 +120,7 @@ TEST_F(RStan, filtered_values_noargs) {
   EXPECT_NO_THROW(writer());
   EXPECT_NO_THROW(writer());
 }
-
+/*
 TEST_F(RStan, filtered_values_is_writing) {
   rstan::filtered_values<std::vector<double> > 
     writer = *writer_ptr;
@@ -135,3 +135,4 @@ TEST_F(RStan, filtered_values_is_writing) {
   }
   EXPECT_FALSE(writer.is_writing());
 }
+*/

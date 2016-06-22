@@ -1,0 +1,5 @@
+PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -isystem cvodes/include/
+SOURCES1 = $(addprefix cvodes/src/cvodes/, cvodes.c cvodes_io.c cvodea.c cvodea_io.c cvodes_direct.c cvodes_band.c cvodes_dense.c cvodes_diag.c cvodes_spils.c cvodes_spbcgs.c cvodes_spgmr.c cvodes_sptfqmr.c cvodes_sparse.c cvodes_bandpre.c cvodes_bbdpre.c)
+SOURCES2 =  $(SOURCES1) $(addprefix cvodes/src/sundials/, sundials_band.c sundials_direct.c sundials_math.c sundials_pcg.c sundials_spbcgs.c  sundials_spgmr.c sundials_dense.c sundials_iterative.c sundials_nvector.c sundials_sparse.c sundials_spfgmr.c sundials_sptfqmr.c)
+SOURCES = $(SOURCES2) cvodes/src/nvec_ser/nvector_serial.c
+OBJECTS = $(SOURCES:.c=.o)

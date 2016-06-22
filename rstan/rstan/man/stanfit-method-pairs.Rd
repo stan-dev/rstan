@@ -40,12 +40,12 @@
     with the complement (from the end of each chain) plotted in the upper panel.
     A (possibly abbreviated) character vector of length one can be passed among 
     \code{"accept_stat__", "stepsize__"}, \code{"treedepth__", "n_leapfrog__"},
-    \code{"n_divergent__"} or \code{"lp__"}, which are the variables produced by 
+    \code{"divergent__"} or \code{"lp__"}, which are the variables produced by 
     \code{\link{get_sampler_params}} and \code{\link{get_logposterior}}. In that 
     case the lower panel will plot realizations that are below the median of the 
-    indicated variable (or are zero in the case of \code{"n_divergent__"}) and 
+    indicated variable (or are zero in the case of \code{"divergent__"}) and 
     the upper panel will plot realizations that are greater than or equal to the 
-    median of the indicated variable (or are one in the case of \code{"n_divergent__"}). 
+    median of the indicated variable (or are one in the case of \code{"divergent__"}). 
     Finally, any logical vector whose length is equal to the product of the number 
     of iterations and the number of chains can be passed, in which case realizations
     corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 
@@ -67,7 +67,7 @@
   
   By default, the lower (upper) triangle of the plot contains draws with below
   (above) median acceptance probability. Also, if \code{condition} is not
-  \code{"n_divergent__"}, red points will be superimposed onto the smoothed
+  \code{"divergent__"}, red points will be superimposed onto the smoothed
   density plots indicating which (if any) iterations encountered a divergent 
   transition. Otherwise, yellow points indicate a transition that hit the
   maximum treedepth rather than terminated its evolution normally.

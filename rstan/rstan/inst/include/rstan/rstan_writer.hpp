@@ -2,13 +2,15 @@
 #define RSTAN__RSTAN_WRITER_HPP
 
 #include <Rcpp.h>
+#include <stan/interface_callbacks/writer/base_writer.hpp>
 #include <stan/interface_callbacks/writer/stream_writer.hpp>
 #include <rstan/filtered_values.hpp>
 #include <rstan/sum_values.hpp>
 
 namespace rstan {
 
-  class rstan_sample_writer {
+  class rstan_sample_writer
+    : public stan::interface_callbacks::writer::base_writer {
   public:
     typedef stan::interface_callbacks::writer::stream_writer CsvWriter;
     typedef rstan::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
@@ -22,28 +24,111 @@ namespace rstan {
     rstan_sample_writer(CsvWriter csv, FilteredValuesWriter values, FilteredValuesWriter sampler_values, SumValuesWriter sum)
       : csv_(csv), values_(values), sampler_values_(sampler_values), sum_(sum) { }
 
-    void operator()(const std::vector<std::string>& x) {
-      csv_(x);
-      values_(x);
-      sampler_values_(x);
-      sum_(x);
+    /**
+     * Writes a key, value pair.
+     *
+     * @param[in] key A string
+     * @param[in] value A double value
+     */
+    void operator()(const std::string& key,
+                    double value) {
+      csv_(key, value);
+      values_(key, value);
+      sampler_values_(key, value);
+      sum_(key, value);
     }
 
-    template <class T>
-    void operator()(const std::vector<T>& x) {
-      csv_(x);
-      values_(x);
-      sampler_values_(x);
-      sum_(x);
+    /**
+     * Writes a key, value pair.
+     *
+     * @param[in] key A string
+     * @param[in] value An integer value
+     */
+    void operator()(const std::string& key,
+                    int value) {
+      csv_(key, value);
+      values_(key, value);
+      sampler_values_(key, value);
+      sum_(key, value);
     }
 
-    void operator()(const std::string x) {
-      csv_(x);
-      values_(x);
-      sampler_values_(x);
-      sum_(x);
+    /**
+     * Writes a key, value pair.
+     *
+     * @param[in] key A string
+     * @param[in] value A string
+     */
+    void operator()(const std::string& key,
+                    const std::string& value) {
+      csv_(key, value);
+      values_(key, value);
+      sampler_values_(key, value);
+      sum_(key, value);
     }
 
+    /**
+     * Writes a key, value pair.
+     *
+     * @param[in] key A string
+     * @param[in] values A double array, typically used with
+     *   contiguous Eigen vectors
+     * @param[in] n_values Length of the array
+     */
+    void operator()(const std::string& key,
+                            const double* values,
+                            int n_values)  {
+      csv_(key, values, n_values);
+      values_(key, values, n_values);
+      sampler_values_(key, values, n_values);
+      sum_(key, values, n_values);
+    }
+
+    /**
+     * Writes a key, value pair.
+     *
+     * @param[in] key A string
+     * @param[in] values A double array assumed to represent a 2d
+     *   matrix stored in column major order, typically used with
+     *   contiguous Eigen matrices
+     * @param[in] n_rows Rows
+     * @param[in] n_cols Columns
+     */
+    void operator()(const std::string& key,
+                            const double* values,
+                            int n_rows, int n_cols) {
+      csv_(key, values, n_rows, n_cols);
+      values_(key, values, n_rows, n_cols);
+      sampler_values_(key, values, n_rows, n_cols);
+      sum_(key, values, n_rows, n_cols);
+    }
+
+    /**
+     * Writes a set of names.
+     *
+     * @param[in] names Names in a std::vector
+     */
+    void operator()(const std::vector<std::string>& names) {
+      csv_(names);
+      values_(names);
+      sampler_values_(names);
+      sum_(names);
+    }
+
+    /**
+     * Writes a set of values.
+     *
+     * @param[in] state Values in a std::vector
+     */
+    void operator()(const std::vector<double>& state) {
+      csv_(state);
+      values_(state);
+      sampler_values_(state);
+      sum_(state);
+    }
+
+    /**
+     * Writes blank input.
+     */
     void operator()() {
       csv_();
       values_();
@@ -51,6 +136,17 @@ namespace rstan {
       sum_();
     }
 
+    /**
+     * Writes a string.
+     *
+     * @param[in] message A string
+     */
+    void operator()(const std::string& message) {
+      csv_(message);
+      values_(message);
+      sampler_values_(message);
+      sum_(message);
+    }
   };
 
   /**

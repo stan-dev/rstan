@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -44,10 +44,11 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -isystem"', boost_path_fun(), '"',  # before BH/include
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
+         ' -isystem"', file.path(inc_path_fun("StanHeaders"), "cvodes", '" '),
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
-         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG', sep = '')
+         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
 }
 
 legitimate_space_in_path <- function(path) {
@@ -70,7 +71,11 @@ rstanplugin <- function() {
   rcpp_pkg_path <- system.file(package = 'Rcpp')
   rcpp_pkg_path2 <- legitimate_space_in_path(rcpp_pkg_path) 
  
-  # In case  we have space (typicall on windows though not necessarily)
+  if (.Platform$OS.type == "windows")
+    StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
+  else StanHeaders_pkg_libs <- system.file("lib", package = "StanHeaders")
+  
+  # In case  we have space (typical on windows though not necessarily)
   # in the file path of Rcpp's library. 
   
   # If rcpp_PKG_LIBS contains space without preceding '\\', add `\\'; 
@@ -78,15 +83,11 @@ rstanplugin <- function() {
   if (grepl('[^\\\\]\\s', rcpp_pkg_libs, perl = TRUE))
     rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE) 
 
-  # get more info about bus error on SPARC
-  if (is.sparc() && grepl("^g\\+\\+", basename(get_CXX()))) {
-    cat("PKG_LIBS += -lSegFault\n", file = file.path(tempdir(), "Makevars"), append = TRUE)
-    Sys.setenv(SEGFAULT_SIGNALS = "bus abrt")
-  }
-
   list(includes = '',
        body = function(x) x,
-       env = list(PKG_LIBS = paste(rcpp_pkg_libs),
+       env = list(PKG_LIBS = paste(rcpp_pkg_libs,  
+                                   paste0("-L", StanHeaders_pkg_libs),
+                                   "-lStanHeaders"),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }
