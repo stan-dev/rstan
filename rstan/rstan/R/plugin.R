@@ -48,7 +48,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -isystem"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
-         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG', sep = '')
+         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
 }
 
 legitimate_space_in_path <- function(path) {
@@ -82,12 +82,6 @@ rstanplugin <- function() {
   # otherwise keept it intact
   if (grepl('[^\\\\]\\s', rcpp_pkg_libs, perl = TRUE))
     rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE) 
-
-  # get more info about bus error on SPARC
-  if (is.sparc() && grepl("^g\\+\\+", basename(get_CXX()))) {
-    cat("PKG_LIBS += -lSegFault\n", file = file.path(tempdir(), "Makevars"), append = TRUE)
-    Sys.setenv(SEGFAULT_SIGNALS = "bus abrt")
-  }
 
   list(includes = '',
        body = function(x) x,
