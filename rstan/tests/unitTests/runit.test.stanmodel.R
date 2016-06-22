@@ -12,7 +12,7 @@ test_optimizing <- function() {
     } 
     model {
       y ~ normal(0,1); 
-      increment_log_prob(-square(a[1]) - square(a[2]));
+      target += -square(a[1]) - square(a[2]);
     }
   ' 
   m2 <- stan_model(model_code = mc)
