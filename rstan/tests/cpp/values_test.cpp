@@ -102,7 +102,7 @@ TEST_F(RStan, values_noargs) {
   EXPECT_NO_THROW(writer());
   EXPECT_NO_THROW(writer());
 }
-
+/*
 TEST_F(RStan, values_is_writing) {
   std::vector<double> x(N);
   for (int n = 0; n < N; n++) 
@@ -114,7 +114,7 @@ TEST_F(RStan, values_is_writing) {
   }
   EXPECT_FALSE(writer.is_writing());
 }
-
+*/
 TEST_F(RStan, values_preallocated_vector_double) {
   rstan::values<std::vector<double> > 
     writer_preallocated(preallocated_values);
@@ -202,7 +202,7 @@ TEST_F(RStan, values_preallocated_noargs) {
   EXPECT_NO_THROW(writer_preallocated());
   EXPECT_NO_THROW(writer_preallocated());
 }
-
+/*
 TEST_F(RStan, values_preallocated_is_writing) {
   rstan::values<std::vector<double> > 
     writer_preallocated(preallocated_values);
@@ -217,3 +217,4 @@ TEST_F(RStan, values_preallocated_is_writing) {
   }
   EXPECT_FALSE(writer_preallocated.is_writing());
 }
+*/
