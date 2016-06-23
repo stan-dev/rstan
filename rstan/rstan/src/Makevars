@@ -1,7 +1,5 @@
 STANHEADERS_SRC = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'src', package = 'StanHeaders'))"`
-STANHEADERS_CVODES = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'cvodes', package = 'StanHeaders'))"`
-
-PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"$(STANHEADERS_SRC)" -I"$(STANHEADERS_CVODES)" -DBOOST_DISABLE_ASSERTS -DFUSION_MAX_VECTOR_SIZE=12 -DBOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK
+PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERTS -DFUSION_MAX_VECTOR_SIZE=12 -DBOOST_RESULT_OF_USE_TR1_WITH_DECLTYPE_FALLBACK
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
 CXX_STD = CXX11
