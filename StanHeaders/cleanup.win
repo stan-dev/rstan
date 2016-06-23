@@ -1,10 +1,14 @@
 #!/bin/sh
 
-rm inst/include/stan
-rm inst/include/src
+rm -rf inst/include/stan
+rm -rf inst/include/src
+rm -rf inst/include/cvode
+rm -rf src/cvode
 
-mv inst/include/mathlib/stan inst/include/stan
-mv inst/include/upstream/src inst/include/src
+cp -r inst/include/mathlib/stan inst/include/stan
+cp -r inst/include/upstream/src inst/include/src
+cp -r inst/include/mathlib/lib/cvode*/include inst/include/cvodes
+cp -r inst/include/mathlib/lib/cvode* src/cvodes
 
 exit $?
 

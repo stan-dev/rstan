@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
 # Copyright (C) 1995-2012 The R Core Team
 # Some parts  Copyright (C) 1999 Dr. Jens Oehlschlaegel-Akiyoshi
 #
@@ -43,7 +43,7 @@ pairs.stanfit <-
       arr <- arr[,,!dupes,drop = FALSE]
     }
     gsp <- get_sampler_params(x, inc_warmup = FALSE)
-    n_divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"n_divergent__"])), 
+    divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"divergent__"])), 
                             nrow = sims * chains, ncol = dim(arr)[3])
     max_td <- x@stan_args[[1]]$control
     if (is.null(max_td)) max_td <- 10
@@ -67,12 +67,12 @@ pairs.stanfit <-
     else if(is.character(condition)) {
       condition <- match.arg(condition, several.ok = FALSE,
                              choices = c("accept_stat__", "stepsize__", "treedepth__", 
-                                         "n_leapfrog__", "n_divergent__", "lp__"))
+                                         "n_leapfrog__", "divergent__", "lp__"))
       if (condition == "lp__") 
         mark <- simplify2array(get_logposterior(x, inc_warmup = FALSE))
       else mark <- sapply(gsp, FUN = function(y) y[,condition])
       
-      if(condition == "n_divergent__") mark <- as.logical(mark)
+      if(condition == "divergent__") mark <- as.logical(mark)
       else mark <- c(mark) >= median(mark)
       if (length(unique(mark)) == 1) 
         stop(paste(condition, "is constant so it cannot be used as a condition"))
@@ -113,9 +113,9 @@ pairs.stanfit <-
         dots <- list(...)
         dots$x <- x[!mark]
         dots$y <- y[!mark]
-        if (is.null(mc$nrpoints) && !identical(condition, "n_divergent__")) {
+        if (is.null(mc$nrpoints) && !identical(condition, "divergent__")) {
           dots$nrpoints <- Inf
-          dots$col <- ifelse(n_divergent__[!mark] == 1, "red", 
+          dots$col <- ifelse(divergent__[!mark] == 1, "red", 
                       ifelse(hit[!mark] == 1, "yellow", NA_character_))
         }
         dots$add <- TRUE
@@ -128,9 +128,9 @@ pairs.stanfit <-
         dots <- list(...)
         dots$x <- x[mark]
         dots$y <- y[mark]
-        if (is.null(mc$nrpoints) && !identical(condition, "n_divergent__")) {
+        if (is.null(mc$nrpoints) && !identical(condition, "divergent__")) {
           dots$nrpoints <- Inf
-          dots$col <- ifelse(n_divergent__[mark] == 1, "red", 
+          dots$col <- ifelse(divergent__[mark] == 1, "red", 
                       ifelse(hit[mark] == 1, "yellow", NA_character_))
         }
         dots$add <- TRUE

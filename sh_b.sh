@@ -3,14 +3,14 @@
 red='\033[0;31m'
 NC='\033[0m' # no color
 
-STAN_REPO_BRANCH=master
+STAN_REPO_BRANCH=develop
 grepstanbranch=`git ls-remote --heads https://github.com/stan-dev/stan.git | grep "/${STAN_REPO_BRANCH}"`
 if [ -z "$grepstanbranch" ]; then
     echo -e "${red}ERROR:${NC} stan repo does not have {STAN_REPO_BRANCH}"
     exit 20
 fi
 
-STAN_MATH_REPO_BRANCH=master
+STAN_MATH_REPO_BRANCH=develop
 grepstanmathbranch=`git ls-remote --heads https://github.com/stan-dev/math.git | grep "/${STAN_MATH_REPO_BRANCH}"`
 if [ -z "$grepstanmathbranch" ]; then
     echo -e "${red}ERROR:${NC} stan math repo does not have {STAN_MATH_REPO_BRANCH}"

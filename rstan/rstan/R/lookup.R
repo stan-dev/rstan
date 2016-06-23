@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,10 +30,6 @@ lookup <- function(FUN, ReturnType = character()) {
   
   if(FUN == "nrow") FUN <- "NROW"
   if(FUN == "ncol") FUN <- "NCOL"
-  if(FUN == "~") {
-    return(rosetta[rosetta$SamplingStatement, c("StanFunction", "Arguments", "Page")])
-  }
-
   if(exists(FUN)) {
     matches <- as.logical(charmatch(rosetta$RFunction, FUN, nomatch = 0L))
     if(any(matches)) return(rosetta[matches,-1,drop=FALSE])

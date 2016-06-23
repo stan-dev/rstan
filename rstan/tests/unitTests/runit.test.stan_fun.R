@@ -34,10 +34,10 @@ test_stan_fun_args <- function() {
     } 
     transformed parameters {
       real y2[2, 2];
-      y2[1, 1] <- y[1]; 
-      y2[1, 2] <- -y[1]; 
-      y2[2, 1] <- -y[2]; 
-      y2[2, 2] <- y[2]; 
+      y2[1, 1] = y[1]; 
+      y2[1, 2] = -y[1]; 
+      y2[2, 1] = -y[2]; 
+      y2[2, 2] = y[2]; 
     } 
     model {
       y ~ normal(0, 1);

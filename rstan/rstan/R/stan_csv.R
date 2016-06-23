@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@ paridx_fun <- function(names) {
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
-  sampler_param_names <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__', 'n_divergent__', 'n_leapfrog__')
+  sampler_param_names <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__', 'divergent__', 'n_leapfrog__')
   metaidx <- match(sampler_param_names, names)
   names(metaidx) <- sampler_param_names
   paridx <- setdiff(seq_along(names), metaidx)

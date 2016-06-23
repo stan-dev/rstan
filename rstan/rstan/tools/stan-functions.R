@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015, 2016 Jiqiang Guo and Benjamin Goodrich
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,175 +24,152 @@ rosetta$RFunction <- ifelse(rosetta$StanFunction %in% unlist(sapply(search(), ls
 
 rosetta$RFunction <- ifelse(grepl("^operator", rosetta$StanFunction), 
                             gsub("operator", "", rosetta$StanFunction), rosetta$RFunction)
-  
-rosetta$RFunction[rosetta$StanFunction == "append_col"] <- "cbind"
-rosetta$RFunction[rosetta$StanFunction == "append_row"] <- "rbind"
-rosetta$RFunction[grepl("^bernoulli_c", rosetta$StanFunction)] <- "pbinom"
-rosetta$RFunction[rosetta$StanFunction == "bernoulli"] <- "dbinom"
-rosetta$RFunction[rosetta$StanFunction == "bernoulli_log"] <- "dbinom"
-rosetta$RFunction[rosetta$StanFunction == "bernoulli_rng"] <- "rbinom"
-rosetta$RFunction[rosetta$StanFunction == "bessel_first_kind"] <- "besselJ"
-rosetta$RFunction[rosetta$StanFunction == "bessel_second_kind"] <- "besselY"
-rosetta$RFunction[rosetta$StanFunction == "beta"] <- "dbeta"
-rosetta$RFunction[grepl("^beta_c", rosetta$StanFunction)] <- "pbeta"
-rosetta$RFunction[rosetta$StanFunction == "beta_log"] <- "dbeta"
-rosetta$RFunction[rosetta$StanFunction == "beta_rng"] <- "rbeta"
-rosetta$RFunction[rosetta$StanFunction == "binomial"] <- "dbinom"
-rosetta$RFunction[grepl("^binomial_c", rosetta$StanFunction)] <- "pbinomial"
-rosetta$RFunction[rosetta$StanFunction == "binomial_coefficient_log"] <- "choose"
-rosetta$RFunction[rosetta$StanFunction == "binomial_log"] <- "dbinom"
-rosetta$RFunction[rosetta$StanFunction == "binomial_rng"] <- "rbinom"
-rosetta$RFunction[rosetta$StanFunction == "block"] <- "subset"
-rosetta$RFunction[rosetta$StanFunction == "categorical"] <- "dmultinom"
-rosetta$RFunction[rosetta$StanFunction == "categorical_log"] <- "dmultinom"
-rosetta$RFunction[rosetta$StanFunction == "categorical_rng"] <- "rmultinom"
-rosetta$RFunction[rosetta$StanFunction == "cauchy"] <- "dcauchy"
-rosetta$RFunction[rosetta$StanFunction == "cauchy_log"] <- "dcauchy"
-rosetta$RFunction[rosetta$StanFunction == "cauchy_rng"] <- "rcauchy"
-rosetta$RFunction[grepl("^cauchy_c", rosetta$StanFunction)] <- "pcauchy"
-rosetta$RFunction[rosetta$StanFunction == "ceil"] <- "ceiling"
-rosetta$RFunction[rosetta$StanFunction == "chi_square"] <- "dchisq"
-rosetta$RFunction[rosetta$StanFunction == "chi_square_log"] <- "dchisq"
-rosetta$RFunction[rosetta$StanFunction == "chi_square_rng"] <- "rchisq"
-rosetta$RFunction[grepl("^chi_square_c", rosetta$StanFunction)] <- "pchisq"
-rosetta$RFunction[rosetta$StanFunction == "cholesky_decompose"] <- "chol"
-rosetta$RFunction[rosetta$StanFunction == "col"] <- "subset"
-rosetta$RFunction[rosetta$StanFunction == "cols"] <- "NCOL"
-rosetta$RFunction[rosetta$StanFunction == "cumulative_sum"] <- "cumsum"
-rosetta$RFunction[rosetta$StanFunction == "diag_matrix"] <- "diag"
-rosetta$RFunction[rosetta$StanFunction == "diagonal"] <- "diag"
-rosetta$RFunction[rosetta$StanFunction == "dims"] <- "dim"
-rosetta$RFunction[rosetta$StanFunction == "distance"] <- "dist"
-rosetta$RFunction[rosetta$StanFunction == "dot_self"] <- "crossprod"
-rosetta$RFunction[rosetta$StanFunction == "e"] <- "exp"
-rosetta$RFunction[grepl("^eigenv", rosetta$StanFunction)] <- "eigen"
-rosetta$RFunction[grepl("^erf", rosetta$StanFunction)] <- "pnorm"
-rosetta$RFunction[rosetta$StanFunction == "exponential"] <- "dexp"
-rosetta$RFunction[rosetta$StanFunction == "exponential_log"] <- "dexp"
-rosetta$RFunction[rosetta$StanFunction == "exponential_rng"] <- "rexp"
-rosetta$RFunction[grepl("^exponetial_c", rosetta$StanFunction)] <- "pexp"
-rosetta$RFunction[rosetta$StanFunction == "fabs"] <- "abs"
-rosetta$RFunction[rosetta$StanFunction == "fmax"] <- "max"
-rosetta$RFunction[rosetta$StanFunction == "fmin"] <- "min"
-rosetta$RFunction[rosetta$StanFunction == "fmod"] <- "%%"
-rosetta$RFunction[rosetta$StanFunction == "gamma"] <- "dgamma"
-rosetta$RFunction[rosetta$StanFunction == "gamma_log"] <- "dgamma"
-rosetta$RFunction[rosetta$StanFunction == "gamma_rng"] <- "rgamma"
-rosetta$RFunction[grepl("^gamma_c", rosetta$StanFunction)] <- "pgamma"
-rosetta$RFunction[rosetta$StanFunction == "gamma_p"] <- "pgamma"
-rosetta$RFunction[rosetta$StanFunction == "gamma_q"] <- "pgamma"
-rosetta$RFunction[rosetta$StanFunction == "hypergeometric"] <- "dhyper"
-rosetta$RFunction[rosetta$StanFunction == "hypergeometric_log"] <- "dhyper"
-rosetta$RFunction[rosetta$StanFunction == "hypergeometric_rng"] <- "rhyper"
-rosetta$RFunction[grepl("^hypergeometric_c", rosetta$StanFunction)] <- "phyper"
-rosetta$RFunction[rosetta$StanFunction == "if_else"] <- "ifelse"
-rosetta$RFunction[rosetta$StanFunction == "inverse"] <- "solve"
-rosetta$RFunction[rosetta$StanFunction == "inverse_spd"] <- "solve"
-rosetta$RFunction[rosetta$StanFunction == "inv_logit"] <- "plogis"
-rosetta$RFunction[rosetta$StanFunction == "inv_Phi"] <- "qnorm"
-rosetta$RFunction[rosetta$StanFunction == "is_inf"] <- "is.finite"
-rosetta$RFunction[rosetta$StanFunction == "is_nan"] <- "is.nan"
-rosetta$RFunction[rosetta$StanFunction == "log_determinant"] <- "determinant"
-rosetta$RFunction[rosetta$StanFunction == "logistic"] <- "dlogis"
-rosetta$RFunction[rosetta$StanFunction == "logistic_log"] <- "dlogis"
-rosetta$RFunction[rosetta$StanFunction == "logistic_rng"] <- "rlogis"
-rosetta$RFunction[grepl("^logistic_c", rosetta$StanFunction)] <- "plogis"
-rosetta$RFunction[rosetta$StanFunction == "logit"] <- "plogis"
-rosetta$RFunction[rosetta$StanFunction == "lognormal"] <- "dlnorm"
-rosetta$RFunction[rosetta$StanFunction == "lognormal_log"] <- "dlnorm"
-rosetta$RFunction[rosetta$StanFunction == "lognormal_rng"] <- "rlnorm"
-rosetta$RFunction[grepl("^lognormal_c", rosetta$StanFunction)] <- "plnorm"
-rosetta$RFunction[rosetta$StanFunction == "machine_precision"] <- ".Machine"
-rosetta$RFunction[rosetta$StanFunction == "modified_bessel_first_kind"] <- "besselI"
-rosetta$RFunction[rosetta$StanFunction == "multinomial"] <- "dmultinom"
-rosetta$RFunction[rosetta$StanFunction == "multinomial_log"] <- "dmultinom"
-rosetta$RFunction[rosetta$StanFunction == "multinomial_rng"] <- "rmultinom"
-rosetta$RFunction[rosetta$StanFunction == "multi_normal"] <- "mvtnorm::dmvnorm"
-rosetta$RFunction[rosetta$StanFunction == "multi_normal_log"] <- "mvtnorm::dmvnorm"
-rosetta$RFunction[rosetta$StanFunction == "multi_normal_rng"] <- "mvtnorm::rmvnorm"
-rosetta$RFunction[rosetta$StanFunction == "multi_student_t"] <- "mvtnorm::dmvt"
-rosetta$RFunction[rosetta$StanFunction == "multi_student_t_log"] <- "mvtnorm::dmvt"
-rosetta$RFunction[rosetta$StanFunction == "multi_student_t_rng"] <- "mvtnorm::rmvt"
-rosetta$RFunction[rosetta$StanFunction == "negative_infinity"] <- "Inf"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial"] <- "dnbinom"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial_log"] <- "dnbinom"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial_rng"] <- "rnbinom"
-rosetta$RFunction[grepl("^neg_binomial_c", rosetta$StanFunction)] <- "pnbinom"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial_2"] <- "dnbinom"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial_2_log"] <- "dnbinom"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial_2_log_log"] <- "dnbinom"
-rosetta$RFunction[rosetta$StanFunction == "neg_binomial_2_rng"] <- "rnbinom"
-rosetta$RFunction[grepl("^neg_binomial_2_c", rosetta$StanFunction)] <- "pnbinom"
-rosetta$RFunction[rosetta$StanFunction == "normal"] <- "dnorm"
-rosetta$RFunction[rosetta$StanFunction == "normal_log"] <- "dnorm"
-rosetta$RFunction[rosetta$StanFunction == "normal_rng"] <- "rnorm"
-rosetta$RFunction[grepl("^normal_c", rosetta$StanFunction)] <- "pnorm"
-rosetta$RFunction[rosetta$StanFunction == "not_a_number"] <- "NaN"
-rosetta$RFunction[rosetta$StanFunction == "num_elements"] <- "length"
-rosetta$RFunction[rosetta$StanFunction == "operator./"] <- "/"
-rosetta$RFunction[rosetta$StanFunction == "operator.*"] <- "*"
-rosetta$RFunction[rosetta$StanFunction == "operator*" &
-                  grepl("[matrix|vector]", rosetta$Arguments) &
-                  !grepl("[real|int]", rosetta$Arguments)] <- "%*%"
-rosetta$RFunction[rosetta$StanFunction == "operator\\"] <- NA_character_
-rosetta$RFunction[rosetta$StanFunction == "operator\'"] <- "t"
-rosetta$RFunction[rosetta$StanFunction == "phi"] <- "pnorm"
-rosetta$RFunction[rosetta$StanFunction == "phi_approx"] <- "pnorm"
-rosetta$RFunction[rosetta$StanFunction == "pi"] <- "pi"
-rosetta$RFunction[rosetta$StanFunction == "poisson"] <- "dpois"
-rosetta$RFunction[rosetta$StanFunction == "poisson_log"] <- "dpois"
-rosetta$RFunction[rosetta$StanFunction == "poisson_log_log"] <- "dpois"
-rosetta$RFunction[rosetta$StanFunction == "poisson_rng"] <- "rpois"
-rosetta$RFunction[rosetta$StanFunction == "poisson_log_rng"] <- "rpois"
-rosetta$RFunction[grepl("^poisson_c", rosetta$StanFunction)] <- "ppois"
-rosetta$RFunction[rosetta$StanFunction == "positive_infinity"] <- "Inf"
-rosetta$RFunction[rosetta$StanFunction == "pow"] <- "^"
-rosetta$RFunction[rosetta$StanFunction == "qr_Q"] <- "qr.Q"
-rosetta$RFunction[rosetta$StanFunction == "qr_Q"] <- "qr.R"
-rosetta$RFunction[grepl("^rep_c", rosetta$StanFunction)] <- "rep"
-rosetta$RFunction[rosetta$StanFunction == "row"] <- "subset"
-rosetta$RFunction[rosetta$StanFunction == "rows"] <- "NROW"
-rosetta$RFunction[rosetta$StanFunction == "segment"] <- "subset"
-rosetta$RFunction[rosetta$StanFunction == "singular_values"] <- "svd"
-rosetta$RFunction[rosetta$StanFunction == "size"] <- "dim"
-rosetta$RFunction[grepl("^sort_c", rosetta$StanFunction)] <- "sort"
-rosetta$RFunction[rosetta$StanFunction == "square"] <- "pow"
-rosetta$RFunction[rosetta$StanFunction == "squared_distance"] <- "dist"
-rosetta$RFunction[rosetta$StanFunction == "step"] <- NA_character_
-rosetta$RFunction[rosetta$StanFunction == "student_t"] <- "dt"
-rosetta$RFunction[rosetta$StanFunction == "student_t_log"] <- "dt"
-rosetta$RFunction[rosetta$StanFunction == "student_t_rng"] <- "rt"
-rosetta$RFunction[grepl("^student_t_c", rosetta$StanFunction)] <- "pt"
-rosetta$RFunction[grepl("^sub_c", rosetta$StanFunction)] <- "subset"
-rosetta$RFunction[rosetta$StanFunction == "tgamma"] <- "gamma"
-rosetta$RFunction[rosetta$StanFunction == "to_array_1d"] <- "as.vector"
-rosetta$RFunction[rosetta$StanFunction == "to_matrix"] <- "as.matrix"
-rosetta$RFunction[rosetta$StanFunction == "to_row_vector"] <- "as.vector"
-rosetta$RFunction[rosetta$StanFunction == "to_vector"] <- "as.vector"
-rosetta$RFunction[rosetta$StanFunction == "trace"] <- NA_character_
-rosetta$RFunction[rosetta$StanFunction == "uniform"] <- "dunif"
-rosetta$RFunction[rosetta$StanFunction == "uniform_log"] <- "dunif"
-rosetta$RFunction[rosetta$StanFunction == "uniform_rng"] <- "runif"
-rosetta$RFunction[grepl("^uniform_c", rosetta$StanFunction)] <- "punif"
-rosetta$RFunction[rosetta$StanFunction == "variance"] <- "var"
-rosetta$RFunction[rosetta$StanFunction == "weibull"] <- "dweibull"
-rosetta$RFunction[rosetta$StanFunction == "weibull_log"] <- "dweibull"
-rosetta$RFunction[rosetta$StanFunction == "weibull_rng"] <- "rweibull"
-rosetta$RFunction[grepl("^weibull_c", rosetta$StanFunction)] <- "pweibull"
-rosetta$RFunction[rosetta$StanFunction == "wishart_rng"] <- "rWishart"
 
-SS <- rosetta$Arguments == "~"
-SSnames <- rosetta$StanFunction[SS]
-matches <- rosetta[!SS & rosetta$StanFunction %in% paste(SSnames, "log", sep = "_"),]
-matches$Arguments <- sapply(strsplit(matches$Arguments, split = ", ", fixed = TRUE), 
-                            FUN = function(x) {
-                              paste0("(", paste(tail(x, -1), collapse = ", "))
-                              })
-matches$StanFunction <- gsub("_log$", "", matches$StanFunction)
-rosetta <- rbind(cbind(rosetta[!SS,], SamplingStatement = FALSE),
-                 cbind(matches, SamplingStatement = TRUE))
-rosetta <- rosetta[order(rosetta$StanFunction, !rosetta$SamplingStatement),]
-rownames(rosetta) <- NULL
+rosetta <- within(rosetta, RFunction[StanFunction == "append_col"] <- "cbind")  
+rosetta <- within(rosetta, RFunction[StanFunction == "append_row"] <- "rbind")
+rosetta <- within(rosetta, RFunction[grepl("^bernoulli_.*cdf", StanFunction)] <- "pbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "bernoulli"] <- "dbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "bernoulli_logit"] <- "dbinom")
+rosetta <- within(rosetta, RFunction[grepl("^bernoulli_.*pmf", StanFunction)] <- "dbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "bernoulli_rng"] <- "rbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "bessel_first_kind"] <- "besselJ")
+rosetta <- within(rosetta, RFunction[StanFunction == "bessel_second_kind"] <- "besselY")
+rosetta <- within(rosetta, RFunction[StanFunction == "beta"] <- "dbeta")
+rosetta <- within(rosetta, RFunction[grepl("^beta_[lc]*cdf", StanFunction)] <- "pbeta")
+rosetta <- within(rosetta, RFunction[StanFunction == "beta_lpdf"] <- "dbeta")
+rosetta <- within(rosetta, RFunction[StanFunction == "beta_rng"] <- "rbeta")
+rosetta <- within(rosetta, RFunction[grepl("^binomial_[lc]*cdf", StanFunction)] <- "pbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "binomial_coefficient_log"] <- "lchoose")
+rosetta <- within(rosetta, RFunction[grepl("^binomial_logit", StanFunction)] <- "binomial")
+rosetta <- within(rosetta, RFunction[StanFunction == "binomial"] <- "dbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "binomial_lpmf"] <- "dbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "binomial_rng"] <- "rbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "block"] <- "subset")
+rosetta <- within(rosetta, RFunction[grepl("^categorical", StanFunction)] <- "dmultinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "categorical_rng"] <- "rmultinom")
+rosetta <- within(rosetta, RFunction[grepl("^cauchy[_lpdf]*", StanFunction)] <- "dcauchy")
+rosetta <- within(rosetta, RFunction[grepl("^cauchy_[lc]*cdf", StanFunction)] <- "pcauchy")
+rosetta <- within(rosetta, RFunction[StanFunction == "cauchy_rng"] <- "rcauchy")
+rosetta <- within(rosetta, RFunction[StanFunction == "ceil"] <- "ceiling")
+rosetta <- within(rosetta, RFunction[grepl("^chi_square[_lpdf]*", StanFunction)] <- "dchisq")
+rosetta <- within(rosetta, RFunction[grepl("^chi_square_[lc]*cdf", StanFunction)] <- "pchisq")
+rosetta <- within(rosetta, RFunction[StanFunction == "chi_square_rng"] <- "rchisq")
+rosetta <- within(rosetta, RFunction[StanFunction == "cholesky_decompose"] <- "chol")
+rosetta <- within(rosetta, RFunction[StanFunction == "col"] <- "subset")
+rosetta <- within(rosetta, RFunction[StanFunction == "cols"] <- "NCOL")
+rosetta <- within(rosetta, RFunction[grepl("^columns_", StanFunction)] <- "apply")
+rosetta <- within(rosetta, RFunction[StanFunction == "cumulative_sum"] <- "cumsum")
+rosetta <- within(rosetta, RFunction[StanFunction == "determinant"] <- "det")
+rosetta <- within(rosetta, RFunction[StanFunction == "diag_matrix"] <- "diag")
+rosetta <- within(rosetta, RFunction[StanFunction == "diagonal"] <- "diag")
+rosetta <- within(rosetta, RFunction[StanFunction == "dims"] <- "dim")
+rosetta <- within(rosetta, RFunction[StanFunction == "distance"] <- "dist")
+rosetta <- within(rosetta, RFunction[StanFunction == "dot_self"] <- "crossprod")
+rosetta <- within(rosetta, RFunction[StanFunction == "e"] <- "exp")
+rosetta <- within(rosetta, RFunction[StanFunction == "dot_product"] <- "%*%")
+rosetta <- within(rosetta, RFunction[grepl("^eigenv", StanFunction)] <- "eigen")
+rosetta <- within(rosetta, RFunction[grepl("^erf", StanFunction)] <- "pnorm")
+rosetta <- within(rosetta, RFunction[grepl("^exponential[_lpdf]*", StanFunction)] <- "dexp")
+rosetta <- within(rosetta, RFunction[grepl("^exponential_[lc]*cdf", StanFunction)] <- "pexp")
+rosetta <- within(rosetta, RFunction[StanFunction == "exponential_rng"] <- "rexp")
+rosetta <- within(rosetta, RFunction[StanFunction == "fabs"] <- "abs")
+rosetta <- within(rosetta, RFunction[StanFunction == "fmax"] <- "max")
+rosetta <- within(rosetta, RFunction[StanFunction == "fmin"] <- "min")
+rosetta <- within(rosetta, RFunction[StanFunction == "fmod"] <- "%%")
+rosetta <- within(rosetta, RFunction[grepl("^gamma[_lpdf]*", StanFunction)] <- "dgamma")
+rosetta <- within(rosetta, RFunction[grepl("^gamma_[lc]*cdf", StanFunction)] <- "pgamma")
+rosetta <- within(rosetta, RFunction[StanFunction == "gamma_rng"] <- "rgamma")
+rosetta <- within(rosetta, RFunction[grepl("^gamma_[pq]$", StanFunction)] <- "pgamma")
+rosetta <- within(rosetta, RFunction[grepl("^hypergeometric[_lpmf]*", StanFunction)] <- "dhyper")
+rosetta <- within(rosetta, RFunction[grepl("^hypergeometric_[lc]*cdf", StanFunction)] <- "phyper")
+rosetta <- within(rosetta, RFunction[StanFunction == "hypergeometric_rng"] <- "rhyper")
+rosetta <- within(rosetta, RFunction[StanFunction == "if_else"] <- "ifelse")
+rosetta <- within(rosetta, RFunction[StanFunction == "inverse"] <- "solve")
+rosetta <- within(rosetta, RFunction[StanFunction == "inverse_spd"] <- "solve")
+rosetta <- within(rosetta, RFunction[StanFunction == "inv_logit"] <- "plogis")
+rosetta <- within(rosetta, RFunction[StanFunction == "inv_Phi"] <- "qnorm")
+rosetta <- within(rosetta, RFunction[StanFunction == "is_inf"] <- "is.finite")
+rosetta <- within(rosetta, RFunction[StanFunction == "is_nan"] <- "is.nan")
+rosetta <- within(rosetta, RFunction[StanFunction == "log1m"] <- "log1p")
+rosetta <- within(rosetta, RFunction[StanFunction == "log_determinant"] <- "determinant")
+rosetta <- within(rosetta, RFunction[StanFunction == "log_inv_logit"] <- "plogis")
+rosetta <- within(rosetta, RFunction[grepl("^logistic[_lpdf]*", StanFunction)] <- "dlogis")
+rosetta <- within(rosetta, RFunction[grepl("^logistic_[lc]*cdf", StanFunction)] <- "plogis")
+rosetta <- within(rosetta, RFunction[StanFunction == "logistic_rng"] <- "rlogis")
+rosetta <- within(rosetta, RFunction[StanFunction == "logit"] <- "qlogis")
+rosetta <- within(rosetta, RFunction[grepl("^lognormal[_lpdf]*", StanFunction)] <- "dlnorm")
+rosetta <- within(rosetta, RFunction[grepl("^lognormal_[lc]*cdf", StanFunction)] <- "plnorm")
+rosetta <- within(rosetta, RFunction[StanFunction == "lognormal_rng"] <- "rlnorm")
+rosetta <- within(rosetta, RFunction[StanFunction == "machine_precision"] <- ".Machine")
+rosetta <- within(rosetta, RFunction[grepl("^mdivide_left_tri_low", StanFunction)] <- "forwardsolve")
+rosetta <- within(rosetta, RFunction[StanFunction == "modified_bessel_first_kind"] <- "besselI")
+rosetta <- within(rosetta, RFunction[StanFunction == "modified_bessel_second_kind"] <- "besselK")
+rosetta <- within(rosetta, RFunction[grepl("^multinomial[_lpmf]*", StanFunction)] <- "dmultinom")
+rosetta <- within(rosetta, RFunction[grepl("^multinomial_[lc]*cdf", StanFunction)] <- "pmultinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "multinomial_rng"] <- "rmultinom")
+rosetta <- within(rosetta, RFunction[grepl("^multi_normal", StanFunction)] <- "mvtnorm::dmvnorm")
+rosetta <- within(rosetta, RFunction[grepl("^multi_normal.*_rng$", StanFunction)] <- "mvtnorm::rmvnorm")
+rosetta <- within(rosetta, RFunction[grepl("^multi_student", StanFunction)] <- "mvtnorm::dmvt")
+rosetta <- within(rosetta, RFunction[grepl("^multi_student.*_rng$", StanFunction)] <- "mvtnorm::rmvt")
+rosetta <- within(rosetta, RFunction[StanFunction == "multiply_lower_tri_self_transpose"] <- "crossprod")
+rosetta <- within(rosetta, RFunction[StanFunction == "negative_infinity"] <- "Inf")
+rosetta <- within(rosetta, RFunction[grepl("^neg_binomial[_lpmf]*", StanFunction)] <- "dnbinom")
+rosetta <- within(rosetta, RFunction[grepl("^neg_binomial_[lc]*cdf", StanFunction)] <- "pnbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "neg_binomial_rng"] <- "rnbinom")
+rosetta <- within(rosetta, RFunction[grepl("^neg_binomial_2[_lpmf]*", StanFunction)] <- "dnbinom")
+rosetta <- within(rosetta, RFunction[grepl("^neg_binomial_2_[lc]*cdf", StanFunction)] <- "pnbinom")
+rosetta <- within(rosetta, RFunction[StanFunction == "neg_binomial_2_rng"] <- "rnbinom")
+rosetta <- within(rosetta, RFunction[grepl("^normal[_lpdf]*", StanFunction)] <- "dnorm")
+rosetta <- within(rosetta, RFunction[grepl("^normal_[lc]*cdf", StanFunction)] <- "pnorm")
+rosetta <- within(rosetta, RFunction[StanFunction == "normal_rng"] <- "rnorm")
+rosetta <- within(rosetta, RFunction[StanFunction == "not_a_number"] <- "NaN")
+rosetta <- within(rosetta, RFunction[StanFunction == "num_elements"] <- "length")
+rosetta <- within(rosetta, RFunction[StanFunction == "operator./"] <- "/")
+rosetta <- within(rosetta, RFunction[StanFunction == "operator.*"] <- "*")
+rosetta <- within(rosetta, RFunction[StanFunction == "operator*" & 
+                                       grepl("[matrix|vector]", Arguments) &
+                                      !grepl("[real|int]", Arguments)] <- "%*%")
+rosetta <- within(rosetta, RFunction[StanFunction == "operator\\"] <- NA_character_)
+rosetta <- within(rosetta, RFunction[StanFunction == "operator\'"] <- "t")
+rosetta <- within(rosetta, RFunction[StanFunction == "Phi"] <- "pnorm")
+rosetta <- within(rosetta, RFunction[StanFunction == "Phi_approx"] <- "pnorm")
+rosetta <- within(rosetta, RFunction[grepl("^poisson[_lpmf]*", StanFunction)] <- "dpois")
+rosetta <- within(rosetta, RFunction[grepl("^poisson_[lc]*cdf", StanFunction)] <- "ppois")
+rosetta <- within(rosetta, RFunction[StanFunction == "poisson_rng"] <- "rpois")
+rosetta <- within(rosetta, RFunction[StanFunction == "positive_infinity"] <- "Inf")
+rosetta <- within(rosetta, RFunction[StanFunction == "pow"] <- "^")
+rosetta <- within(rosetta, RFunction[StanFunction == "qr_Q"] <- "qr.Q")
+rosetta <- within(rosetta, RFunction[StanFunction == "qr_R"] <- "qr.R")
+rosetta <- within(rosetta, RFunction[grepl("^rep_.*vector", StanFunction)] <- "rep")
+rosetta <- within(rosetta, RFunction[StanFunction == "row"] <- "subset")
+rosetta <- within(rosetta, RFunction[grepl("^rows_", StanFunction)] <- "apply")
+rosetta <- within(rosetta, RFunction[StanFunction == "rows"] <- "NROW")
+rosetta <- within(rosetta, RFunction[StanFunction == "segment"] <- "subset")
+rosetta <- within(rosetta, RFunction[StanFunction == "singular_values"] <- "svd")
+rosetta <- within(rosetta, RFunction[StanFunction == "size"] <- "dim")
+rosetta <- within(rosetta, RFunction[grepl("^sort_", StanFunction)] <- "sort")
+rosetta <- within(rosetta, RFunction[StanFunction == "square"] <- "^")
+rosetta <- within(rosetta, RFunction[StanFunction == "squared_distance"] <- "dist")
+rosetta <- within(rosetta, RFunction[StanFunction == "step"] <- NA_character_)
+rosetta <- within(rosetta, RFunction[grepl("^student_t[_lpdf]*", StanFunction)] <- "dt")
+rosetta <- within(rosetta, RFunction[grepl("^student_t_[lc]*cdf", StanFunction)] <- "pt")
+rosetta <- within(rosetta, RFunction[StanFunction == "student_t_rng"] <- "rt")
+rosetta <- within(rosetta, RFunction[grepl("^sub_", StanFunction)] <- "subset")
+rosetta <- within(rosetta, RFunction[StanFunction == "tgamma"] <- "gamma")
+rosetta <- within(rosetta, RFunction[StanFunction == "to_array_1d"] <- "as.vector")
+rosetta <- within(rosetta, RFunction[StanFunction == "to_matrix"] <- "as.matrix")
+rosetta <- within(rosetta, RFunction[StanFunction == "to_row_vector"] <- "as.vector")
+rosetta <- within(rosetta, RFunction[StanFunction == "to_vector"] <- "as.vector")
+rosetta <- within(rosetta, RFunction[StanFunction == "trace"] <- NA_character_)
+rosetta <- within(rosetta, RFunction[grepl("^uniform[_lpdf]*", StanFunction)] <- "dunif")
+rosetta <- within(rosetta, RFunction[grepl("^uniform_[lc]*cdf", StanFunction)] <- "punif")
+rosetta <- within(rosetta, RFunction[StanFunction == "uniform_rng"] <- "runif")
+rosetta <- within(rosetta, RFunction[StanFunction == "variance"] <- "var")
+rosetta <- within(rosetta, RFunction[grepl("^weibull[_lpdf]*", StanFunction)] <- "dweibull")
+rosetta <- within(rosetta, RFunction[grepl("^weibull_[lc]*cdf", StanFunction)] <- "pweibull")
+rosetta <- within(rosetta, RFunction[StanFunction == "weibull_rng"] <- "rweibull")
+rosetta <- within(rosetta, RFunction[StanFunction == "weibull_rng"] <- "rweibull")
+rosetta <- within(rosetta, RFunction[StanFunction == "wishart_rng"] <- "rWishart")
 
 save(rosetta, file = "R/sysdata.rda")
 tools::resaveRdaFiles("R/sysdata.rda")

@@ -16,7 +16,7 @@
   stan_trace(object, pars, include = TRUE, unconstrain = FALSE,
             inc_warmup = FALSE, nrow = NULL, ncol = NULL, ..., 
             window = NULL)
-  stan_scat(object, pars, include = TRUE, unconstrain = FALSE,
+  stan_scat(object, pars, unconstrain = FALSE,
             inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...)
   stan_hist(object, pars, include = TRUE, unconstrain = FALSE,
             inc_warmup = FALSE, nrow = NULL, ncol = NULL, ...)
