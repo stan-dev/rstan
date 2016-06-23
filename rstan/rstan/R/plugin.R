@@ -38,14 +38,13 @@ boost_path_fun2 <- function() {
 }
 
 PKG_CPPFLAGS_env_fun <- function() {
-   paste(' -isystem"', file.path(inc_path_fun("Rcpp"), '" '),
-         ' -isystem"', file.path(eigen_path_fun(), '" '),
-         ' -isystem"', file.path(eigen_path_fun(), 'unsupported" '),
-         ' -isystem"', boost_path_fun2(), '"', # boost_not_in_BH should come 
-         ' -isystem"', boost_path_fun(), '"',  # before BH/include
-         ' -isystem"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
-         ' -isystem"', file.path(inc_path_fun("StanHeaders"), "cvodes", '" '),
-         ' -isystem"', file.path(inc_path_fun("StanHeaders"), '" '),
+   paste(' -I"', file.path(inc_path_fun("Rcpp"), '" '),
+         ' -I"', file.path(eigen_path_fun(), '" '),
+         ' -I"', file.path(eigen_path_fun(), 'unsupported" '),
+         ' -I"', boost_path_fun2(), '"', # boost_not_in_BH should come 
+         ' -I"', boost_path_fun(), '"',  # before BH/include
+         ' -I"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
+         ' -I"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
          ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
