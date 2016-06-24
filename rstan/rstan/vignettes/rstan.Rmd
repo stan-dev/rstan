@@ -222,7 +222,7 @@ rather than to directly enter the numbers in the R script.
 
 Next, we can call the `stan` function to draw posterior samples:
 
-```{r, callstan, cache=TRUE}
+```{r, callstan, results="hide"}
 library(rstan)
 fit1 <- stan(
   file = "schools.stan",  # Stan program
@@ -530,7 +530,7 @@ $\mu$, as $p(\mu) \propto 1$ is the default if no prior is specified.
 We first create an object of class `"stanmodel"` and then use the `optimizing`
 method, to which data and other arguments can be fed.
 
-```{r, optimizer, cache=TRUE}
+```{r, optimizer, results="hide"}
 ocode <- "
   data {
     int<lower=1> N;
@@ -546,6 +546,9 @@ ocode <- "
 
 sm <- stan_model(model_code = ocode)
 y2 <- rnorm(20)
+```
+
+```{r}
 mean(y2)
 optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)
 ```
