@@ -1,3 +1,13 @@
+Fri June 24 2016 (2.10.1)
+1. Bug fixes
+  * Fix for expose_stan_functions() that use random-number generation
+  * Fix crash on some platforms when R is closed
+2. Changes
+  * Vignettes now use RMarkdown instead of Sweave
+  * Error rather than a warning when an unknown argument is passed
+  * stanc_builder() can handle #included URLs
+  * expose_stan_functions() and lookup() can deal with the new Stan language syntax
+  
 Sun Feb 07 2016 (2.9.0-2)
 1. Bug fixes
   * expose_stan_functions() now works with Stan's slicing syntax
