@@ -367,6 +367,8 @@ stan_diag <- function(object,
                       information = c("sample","stepsize","treedepth","divergence"),
                       chain = 0, ...) {
   .vb_check(object)
+  if ("pars" %in% names(list(...)))
+    stop("'stan_diag' does not accept a 'pars' argument.")
   nchains <- if (is.stanreg(object)) 
     ncol(object$stanfit) else ncol(object)
   if (!isTRUE(nchains > 1))
