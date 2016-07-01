@@ -90,7 +90,7 @@ f12 <- sflist2stanfit(list(f1, f2))
 ## parallel stan call for unix-like OS
 library(parallel)
 
-if (.Platfrom$OS.type == "unix") {
+if (.Platform$OS.type == "unix") {
 sflist1 <- 
   mclapply(1:4, mc.cores = 4, 
            function(i) stan(fit = foo, data = foo_data, seed = seed, 

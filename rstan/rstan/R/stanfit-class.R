@@ -63,7 +63,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
       "and Rhat is the potential scale reduction factor on split chains (at \n",
       "convergence, Rhat=1).\n", sep = '')
   gsp <- get_sampler_params(x, inc_warmup = FALSE)
-  if (!is.null(gsp) && "energy__" %in% colnames(gsp[[1]])) {
+  if (!is.null(gsp) && "energy__" %in% colnames(gsp[[1]]) && is_sfinstance_valid(x)) {
     E <- sapply(gsp, FUN = function(x) x[,"energy__"])
     EBFMI <- get_num_upars(x) / apply(E, 2, var)
     cat(" The estimated Bayesian Fraction of Missing Information is a measure of\n",
@@ -71,7 +71,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
         "For each chain, these estimates are\n", round(EBFMI, 1), sep = " ")
   }
   return(invisible(NULL)) 
-}  
+}
 
 setMethod("plot", signature(x = "stanfit", y = "missing"), 
           function(x, ..., plotfun) {
