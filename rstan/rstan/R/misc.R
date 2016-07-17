@@ -1625,16 +1625,19 @@ throw_sampler_warnings <- function(object) {
 }
 
 get_CXX <- function(CXX11 = FALSE) {
-  # system2(file.path(R.home(component = "bin"), "R"), 
-  #         args = paste("CMD config", ifelse(CXX11, "CXX1X", "CXX")), 
-  #         stdout = TRUE, stderr = FALSE)
+  if (.Platform$OS.type != "windows")
+    return (system2(file.path(R.home(component = "bin"), "R"),
+            args = paste("CMD config", ifelse(CXX11, "CXX1X", "CXX")),
+            stdout = TRUE, stderr = FALSE))
     
     ls_path <- Sys.which("ls")
     if (ls_path == "") 
         return(NULL)
     
     install_path <- dirname(dirname(ls_path))
-    file.path(install_path, 'mingw_64', 'bin', 'g++')
+    file.path(install_path, 
+              if (getRversion() >= "3.3.0") paste0('mingw_', Sys.getenv('WIN')), 
+              'bin', 'g++')
 }
 
 is.sparc <- function() {
