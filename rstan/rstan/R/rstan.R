@@ -56,7 +56,11 @@ stan_model <- function(file,
                        obfuscate_model_name = obfuscate_model_name)
     
     # find possibly identical stanmodels
-    S4_objects <- apropos("^[[:alpha:]]+.*$", mode = "S4")
+    model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
+    if(!is.null(model_name))
+      if(!grepl(model_re, model_name))
+        stop("model name must match ", model_re)
+    S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
     if (length(S4_objects) > 0) {
       pf <- parent.frame()
       stanfits <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
