@@ -1,3 +1,4 @@
+s
 # This file is part of RStan
 # Copyright (C) 2012, 2013, 2014, 2015, 2016 Trustees of Columbia University
 #
@@ -36,9 +37,6 @@ stan_model <- function(file,
   #     by using returned results from stanc. 
   #   model_code: if file is not specified, we can used 
   #     a character to specify the model.   
-  model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-Z,a-z].*$)|(^F.+)"
-  if(!grepl(model_re, model_name))
-    stop("model name must match ", model_re)
   if (is.null(stanc_ret)) {
     model_name2 <- deparse(substitute(model_code))
     if (is.null(attr(model_code, "model_name2")))
@@ -58,7 +56,11 @@ stan_model <- function(file,
                        obfuscate_model_name = obfuscate_model_name)
     
     # find possibly identical stanmodels
-    S4_objects <- apropos(model_re, mode = "S4")
+    model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
+    if(!is.null(model_name))
+      if(!grepl(model_re, model_name))
+        stop("model name must match ", model_re)
+    S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
     if (length(S4_objects) > 0) {
       pf <- parent.frame()
       stanfits <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
