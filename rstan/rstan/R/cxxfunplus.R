@@ -48,7 +48,7 @@ cxxfun_from_dll <- function(sig, code, DLL, check_dll = TRUE) {
 
     ## create .Call function call that will be added to 'fn'
     body <- quote(CALL_PLACEHOLDER(EXTERNALNAME, ARG))[c(1:2, rep(3, length(sig[[i]])))]
-    for (j in seq(along = sig[[i]])) body[[j + 2]] <- as.name(names(sig[[i]])[j])
+    for (j in seq_along(sig[[i]])) body[[j + 2]] <- as.name(names(sig[[i]])[j])
 
     body[[1L]] <- .Call
     body[[2L]] <- getNativeSymbolInfo(names(sig)[[i]], DLL)$address
@@ -102,7 +102,7 @@ cxxfun_from_dso_bin <- function(dso) {
 
     ## create .Call function call that will be added to 'fn'
     body <- quote(CALL_PLACEHOLDER(EXTERNALNAME, ARG))[c(1:2, rep(3, length(sig[[i]])))]
-    for (j in seq(along = sig[[i]])) body[[j + 2]] <- as.name(names(sig[[i]])[j])
+    for (j in seq_along(sig[[i]])) body[[j + 2]] <- as.name(names(sig[[i]])[j])
 
     body[[1L]] <- .Call
     body[[2L]] <- getNativeSymbolInfo(names(sig)[[i]], DLL)$address
