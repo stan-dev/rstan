@@ -639,18 +639,14 @@ setMethod("sampling", "stanmodel",
                   colnames(mat) <- "count"
                   if (.Platform$OS.type == "windows") {
                     print(mat)
-                    print("When a numerical problem occurs, the Metropolis proposal gets rejected.")
-                    print(paste("However, by design Metropolis proposals sometimes get rejected ", 
-                                "even when there are no numerical problems."))
-                    print(paste("Thus, if the number in the 'count' column is small, ",
+                    print("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
+                    print(paste("If the number in the 'count' column is small, ",
                                 "do not ask about this message on stan-users."))
                   }
                   else {
                     message(paste(capture.output(print(mat)), collapse = "\n"))
-                    message("When a numerical problem occurs, the Metropolis proposal gets rejected.")
-                    message("However, by design Metropolis proposals sometimes get rejected ", 
-                            "even when there are no numerical problems.")
-                    message("Thus, if the number in the 'count' column is small, ",
+                    message("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
+                    message("If the number in the 'count' column is small, ",
                             "do not ask about this message on stan-users.")
                   }
                 }
