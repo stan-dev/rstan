@@ -597,6 +597,7 @@ setMethod("sampling", "stanmodel",
 
             for (i in 1:chains) {
               cid <- args_list[[i]]$chain_id
+              args_list[[i]]$data$CHAIN_ID <- cid
               if (is.null(dots$refresh) || dots$refresh > 0) {
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", cid, ").\n", sep = '')
