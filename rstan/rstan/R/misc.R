@@ -273,7 +273,7 @@ get_model_strcode <- function(file, model_code = '') {
     } else if (!inherits(file, "connection")) {
       stop("file must be a character string or connection")
     }
-    model_code <- paste(readLines(file, warn = FALSE), collapse = '\n') 
+    model_code <- paste(readLines(file, warn = TRUE), collapse = '\n') 
     # the model name implied from file name, which
     # will be used if model_name is not specified later
     attr(model_code, "model_name2") <- model_name2 

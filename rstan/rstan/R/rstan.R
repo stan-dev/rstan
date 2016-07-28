@@ -90,7 +90,8 @@ stan_model <- function(file,
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
-       md5 != tools::md5sum(tf)) {
+       (md5 != tools::md5sum(tf) && is.null(
+        message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
          # do nothing
     }
     else return(invisible(obj))
