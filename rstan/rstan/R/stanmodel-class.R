@@ -432,6 +432,8 @@ setMethod("sampling", "stanmodel",
                   "' NOW.\n", sep = '')
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             cxxfun <- grab_cxxfun(object@dso)
+            dots <- list(...)
+            data$CHAIN_ID <- dots$chain_id            
             if (verbose)
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
@@ -444,7 +446,6 @@ setMethod("sampling", "stanmodel",
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
             m_pars = sampler$param_names()
             p_dims = sampler$param_dims()
-            dots <- list(...)
             mode <- if (!is.null(dots$test_grad) && dots$test_grad) 
               "TESTING GRADIENT" else "SAMPLING"
             
@@ -597,7 +598,6 @@ setMethod("sampling", "stanmodel",
 
             for (i in 1:chains) {
               cid <- args_list[[i]]$chain_id
-              args_list[[i]]$data$CHAIN_ID <- cid
               if (is.null(dots$refresh) || dots$refresh > 0) {
                 cat('\n', mode, " FOR MODEL '", object@model_name, 
                     "' NOW (CHAIN ", cid, ").\n", sep = '')
