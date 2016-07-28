@@ -114,6 +114,8 @@ stan_model <- function(file,
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
       warning(paste("C++ compiler not found on system. If absent, see\n", WIKI))
     }
+    else if (grepl("69", CXX, fixed = TRUE))
+      warning("You may need to launch Xcode once to accept its license")
   }
   
   model_cppname <- stanc_ret$model_cppname 
@@ -141,9 +143,6 @@ stan_model <- function(file,
   }
   if (!file.exists(rstan_options("eigen_lib")))
     stop("Eigen not found; call install.packages('RcppEigen')")
-  
-  if (inc_path_fun("StanHeaders") == "")
-    stop("StanHeaders not found; call install.packages('StanHeaders')")
   
   if (packageVersion("StanHeaders") > packageVersion("rstan"))
     stop("StanHeaders version is ahead of rstan version; ",
