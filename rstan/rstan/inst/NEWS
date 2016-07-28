@@ -1,3 +1,18 @@
+Thu July 28 2016 (2.11.1)
+1. Bug fixes
+  * Warn if Stan program has an incomplete final line, which requires recompilation. Thanks to Chris Black.
+  * Fix warning in use of seq. Thanks to Watal Iwasaki and Avraham Adler.
+  * Fix refererence to T and F. Thanks to Henning Redestig.
+  * Fix finding RTools33. Thanks to Jared Lander.
+  * Fix for space in path to StanHeaders
+  * Fix compilation error by suggesting BH >= 1.60.0
+2. Changes
+  * Estimated Bayesian Fraction of Missing Information is no longer printed automatically. There will be a
+    warning if it is less than 0.3 for any chain
+  * The chain identification number is passed to the data block as a non-negative integer called CHAIN_ID so
+    it can (optionally) be utilized
+
+
 Fri June 24 2016 (2.10.1)
 1. Bug fixes
   * Fix for expose_stan_functions() that use random-number generation
