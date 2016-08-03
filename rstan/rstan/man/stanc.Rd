@@ -12,7 +12,7 @@ Translate Stan model specification to C++ code
 \usage{
   stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE,
         obfuscate_model_name = TRUE) 
-  stanc_builder(file, isystem = dirname(file), 
+  stanc_builder(file, isystem = c(dirname(file), getwd()),
                 verbose = FALSE, obfuscate_model_name = FALSE)
 } 
 
@@ -33,7 +33,7 @@ Translate Stan model specification to C++ code
     indicating whether to use a randomly-generated character string for the 
     name of the C++ class. This prevents name clashes when compiling multiple 
     models in the same R session.}
-  \item{isystem}{A character vector of length one naming a path to look for 
+  \item{isystem}{A character vector naming a path to look for 
     file paths in \code{file} that are to be included within the Stan program
     named by \code{file}. See the Details section below.}
 } 
@@ -43,10 +43,10 @@ Translate Stan model specification to C++ code
   specifying something like \code{#include "my_includes.txt"} on an entire line
   within the file named by the \code{file} argument. In other words, 
   \code{stanc_builder} would look for \code{"my_includes.txt"} in (or under) the 
-  directory named by the \code{isystem} argument and insert its contents verbatim 
-  at that position  before calling \code{stanc} on the resulting \code{model_code}. 
-  This mechanism reduces the need to copy common chunks of code across Stan 
-  programs.
+  directories named by the \code{isystem} argument and --- if found --- insert its 
+  contents verbatim at that position before calling \code{stanc} on the resulting 
+  \code{model_code}. This mechanism reduces the need to copy common chunks of code
+  across Stan programs. It is possible to include such files recursively.
   
   Note that line numbers referred to in parser warnings or errors refer to the
   postprocessed Stan program rather than \code{file}. In the case of a parser
