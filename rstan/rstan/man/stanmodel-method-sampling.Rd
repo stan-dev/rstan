@@ -6,7 +6,6 @@
 \title{Draw samples from a Stan model}
 \description{
   Draw samples from the model defined by class \code{stanmodel}. 
-  This method is a generic function of the S4 class \code{stanmodel}. 
 }
 
 \usage{
