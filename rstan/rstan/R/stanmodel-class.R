@@ -202,7 +202,9 @@ setMethod("vb", "stanmodel",
               else rep(FALSE, length(param))
             })
 
+            ##**********************************************************************
             vbres <- sampler$call_sampler(c(args, dotlist))
+            ##**********************************************************************
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
             pest <- rstan_relist(as.numeric(samples[1,-1]), skeleton[-length(skeleton)])
             means <- sapply(samples, mean)
@@ -336,7 +338,9 @@ setMethod("optimizing", "stanmodel",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             if (!verbose && is.null(dotlist$refresh)) dotlist$refresh <- 0L
+            ##**********************************************************************
             optim <- sampler$call_sampler(c(args, dotlist))
+            ##**********************************************************************
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
             if (hessian || draws) {
@@ -606,7 +610,9 @@ setMethod("sampling", "stanmodel",
               else messages <- tempfile()
               mfile <- file(messages, open = "wt")
               sink(mfile, type = "message")
+              ##**********************************************************************
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
+              ##**********************************************************************
               sink(NULL, type = "message")
               close(mfile)
               report <- scan(file = messages, what = character(),
