@@ -499,7 +499,7 @@ setMethod("sampling", "stanmodel",
               dependencies <- gsub("\\(.*\\)", "", dependencies)
               dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
                                    quiet = TRUE, text = dependencies)
-              dependencies <- c("Rcpp", "rstan", "rstanarm", dependencies)
+              dependencies <- c("rstan", "rstanarm", dependencies, "Rcpp", "ggplot2")
               .paths <- unique(sapply(dependencies, FUN = function(d) {
                 dirname(system.file(package = d))
               }))
