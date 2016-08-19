@@ -597,7 +597,7 @@ to the `stan` or `sampling` functions. By default, the chains are executed
 serially (i.e., one at a time) using the parent R process. There is also an 
 optional `cores` argument that can be set to the number of chains (if the 
 hardware has sufficient processors and RAM), which is appropriate on most 
-laptops. We typicalyl recommend first calling 
+laptops. We typically recommend first calling 
 `options(mc.cores=parallel::detectCores())` once per R session so that all
 available cores can be used without needing to manually specify the `cores`
 argument.
