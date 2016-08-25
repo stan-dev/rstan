@@ -7,3 +7,11 @@ test_get_elapsed_time <- function() {
   fit2 <- stan(fit = fit, chains = nchains, iter = 30)
   checkEquals(dim(get_elapsed_time(fit2)), c(nchains, 2L))
 }
+
+test_get_adaptation_info <- function() {
+  code <- 'parameters { real y; } model {y ~ normal(0,1); }'
+  fit <- stan(model_code = code, chains = 5L, iter = 30L)
+  info <- get_adaptation_info(fit)
+  checkTrue(!is.na(info))
+  checkEquals(length(info), 5L)
+}
