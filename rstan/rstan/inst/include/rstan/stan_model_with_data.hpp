@@ -22,7 +22,7 @@ namespace rstan {
         model_(data_, &rstan::io::rcout) {
     }
     
-    SEXP diagnose(SEXP args_) {
+    int diagnose() {
       // set up call
       // call
       stan::io::empty_var_context init;
