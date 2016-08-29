@@ -20,6 +20,10 @@ namespace rstan {
       model_(data_, &rstan::io::rcout),
       cxxfunction(cxxf) {
     }
+
+    SEXP diagnose(SEXP args_) {
+    }
+    
   };
 
 }

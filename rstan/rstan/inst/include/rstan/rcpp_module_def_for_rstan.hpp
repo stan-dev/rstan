@@ -5,7 +5,9 @@
  */
 RCPP_MODULE(stan_fit4%model_name%_mod){
   Rcpp::class_<rstan::stan_fit<%model_name%_namespace::%model_name%> >("stan_fit4%model_name%")
-               .constructor<SEXP, SEXP>();
+               .constructor<SEXP, SEXP>()
+    .method("diagnose",
+            &rstan::stan_fit<%model_name%_namespace::%model_name%>::diagnose);
   // .constructor<Rcpp::List>()
   // // .constructor<SEXP, SEXP>()
   // .method("call_sampler",
