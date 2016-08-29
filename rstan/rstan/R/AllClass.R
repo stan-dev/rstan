@@ -49,7 +49,25 @@ setClass(Class = "stanmodel",
            return(TRUE)
          })
 
+setClass(Class = "stanmodel_with_data", 
+         representation = representation(model = "ANY", # FIXME
+                                         data = "list"),
+         validity = function(object) return(TRUE) )
 
+setMethod("initialize", "stanmodel_with_data", 
+          function(.Object, model, data) {
+            
+            stan_fit_cpp_module <- model@mk_cppmodule(model)
+            cxxfun <- rstan:::grab_cxxfun(model@dso)
+            smwd <- try(new(stan_fit_cpp_module, data, cxxfun))
+            if (is(smwd, "try-error")) {
+              stop("something went horribly wrong")
+            }
+            .Object@model <- smwd
+            .Object@data <- data
+            return(.Object)
+})
+         
 setClass(Class = "stanfit",
          representation = representation(
            model_name = "character", 

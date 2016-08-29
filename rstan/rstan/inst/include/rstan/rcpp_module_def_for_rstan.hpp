@@ -41,3 +41,8 @@ RCPP_MODULE(stan_fit4%model_name%_mod){
   // .method("constrained_param_names",
   //         &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::constrained_param_names)
 }
+
+RCPP_MODULE(stan_model4%model_name%_mod){
+  Rcpp::class_<rstan::stan_model<%model_name%_namespace::%model_name%> >("stan_model4%model_name%")
+  .constructor<SEXP, SEXP>()
+}

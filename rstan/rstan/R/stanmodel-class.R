@@ -442,7 +442,7 @@ setMethod("sampling", "stanmodel",
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
             sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-            sfmiscenv <- new.env(parent = emptyenv())
+            sfmiscenv <- new.env(parent = emptyenv()) # WTF?
             if (is(sampler, "try-error")) {
               message('failed to create the sampler; sampling not done') 
               return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
@@ -711,3 +711,15 @@ setMethod("sampling", "stanmodel",
             return(nfit)
           }) 
 
+
+setGeneric(name = "test_gradient",
+           def = function(object, ...) { standardGeneric("test_gradient")})
+
+setMethod("test_gradient", "stanmodel",
+          function(object, data = list(), ...) {
+
+            
+            return(invisible(NULL))
+})
+
+            
