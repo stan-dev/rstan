@@ -1,7 +1,7 @@
 #ifndef RSTAN_VALUES_HPP
 #define RSTAN_VALUES_HPP
 
-#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 #include <ostream>
 #include <stdexcept>
 #include <string>
@@ -10,7 +10,7 @@
 namespace rstan {
 
   template <class InternalVector>
-  class values: public stan::interface_callbacks::writer::base_writer {
+  class values: public stan::callbacks::writer {
   private:
     size_t m_;
     size_t N_;

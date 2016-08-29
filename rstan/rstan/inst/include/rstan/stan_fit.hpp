@@ -17,7 +17,7 @@
 
 #include <stan/model/util.hpp>
 
-#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 
 #include <stan/mcmc/base_adaptation.hpp>
 #include <stan/mcmc/base_adapter.hpp>
@@ -78,9 +78,9 @@
 #include <stan/services/sample/mcmc_writer.hpp>
 #include <stan/services/sample/progress.hpp>
 
-#include <stan/interface_callbacks/writer/noop_writer.hpp>
-#include <stan/interface_callbacks/writer/base_writer.hpp>
-#include <stan/interface_callbacks/writer/stream_writer.hpp>
+#include <stan/callbacks/noop_writer.hpp>
+#include <stan/callbacks/writer.hpp>
+#include <stan/callbacks/stream_writer.hpp>
 
 #include <stan/variational/advi.hpp>
 
@@ -427,8 +427,8 @@ namespace rstan {
     template<class Sampler>
     void init_adapt(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args,
                     const Eigen::VectorXd& cont_params,
-                    stan::interface_callbacks::writer::base_writer& info,
-                    stan::interface_callbacks::writer::base_writer& err) {
+                    stan::callbacks::writer& info,
+                    stan::callbacks::writer& err) {
 
       if (!args.get_ctrl_sampling_adapt_engaged()) return;
 
@@ -452,8 +452,8 @@ namespace rstan {
     template<class Sampler>
     bool init_windowed_adapt(stan::mcmc::base_mcmc* sampler_ptr, const stan_args& args,
                              const Eigen::VectorXd& cont_params,
-                             stan::interface_callbacks::writer::base_writer& info,
-                             stan::interface_callbacks::writer::base_writer& err) {
+                             stan::callbacks::writer& info,
+                             stan::callbacks::writer& err) {
 
       init_adapt<Sampler>(sampler_ptr, args, cont_params, info, err);
       Sampler* sampler_ptr2 = dynamic_cast<Sampler*>(sampler_ptr);
@@ -534,16 +534,16 @@ namespace rstan {
                                 sample_writer_offset,
                                 qoi_idx);
 
-      stan::interface_callbacks::writer::stream_writer diagnostic_writer
+      stan::callbacks::stream_writer diagnostic_writer
         = diagnostic_writer_factory(&diagnostic_stream, "# ");
 
-      stan::interface_callbacks::writer::stream_writer message_writer(Rcpp::Rcout);
-      stan::interface_callbacks::writer::stream_writer error_writer(rstan::io::rcerr);      
+      stan::callbacks::stream_writer message_writer(Rcpp::Rcout);
+      stan::callbacks::stream_writer error_writer(rstan::io::rcerr);      
 
       stan::services::sample::mcmc_writer<Model,
                                           rstan_sample_writer,
-                                          stan::interface_callbacks::writer::stream_writer,
-                                          stan::interface_callbacks::writer::stream_writer>
+                                          stan::callbacks::stream_writer,
+                                          stan::callbacks::stream_writer>
         writer(sample_writer, diagnostic_writer, message_writer);
 
       if (!args.get_append_samples()) {
@@ -580,7 +580,7 @@ namespace rstan {
         writer.write_adapt_finish(sampler_ptr);
 
         std::stringstream ss;
-        stan::interface_callbacks::writer::stream_writer info(ss, "# ");
+        stan::callbacks::stream_writer info(ss, "# ");
         writer.write_adapt_finish(sampler_ptr);
         adaptation_info = ss.str();
         adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
@@ -696,7 +696,7 @@ namespace rstan {
           R << args.get_init_radius();
           init = R.str();
         }
-        stan::interface_callbacks::writer::stream_writer error_writer(rstan::io::rcerr);
+        stan::callbacks::stream_writer error_writer(rstan::io::rcerr);
         if (!stan::services::init::initialize_state(init,
                                                     cont_params,
                                                     model,
@@ -719,7 +719,7 @@ namespace rstan {
         rstan::io::rcout << std::endl << "TEST GRADIENT MODE" << std::endl;
         double epsilon = args.get_ctrl_test_grad_epsilon();
         double error = args.get_ctrl_test_grad_error();
-        stan::interface_callbacks::writer::stream_writer info(Rcpp::Rcout);
+        stan::callbacks::stream_writer info(Rcpp::Rcout);
         int num_failed =
           stan::model::test_gradients<true,true>(model,cont_vector,disc_vector,
                                                  epsilon,error,info);
@@ -739,9 +739,9 @@ namespace rstan {
         sample_stream.open(args.get_sample_file().c_str(), samples_append_mode);
       }
 
-      stan::interface_callbacks::writer::stream_writer sample_writer(sample_stream, "# ");
-      stan::interface_callbacks::writer::stream_writer info(rstan::io::rcout);
-      stan::interface_callbacks::writer::stream_writer error(rstan::io::rcerr);
+      stan::callbacks::stream_writer sample_writer(sample_stream, "# ");
+      stan::callbacks::stream_writer info(rstan::io::rcout);
+      stan::callbacks::stream_writer error(rstan::io::rcerr);
 
       if (VARIATIONAL == args.get_method()) {
         int grad_samples = args.get_ctrl_variational_grad_samples();
@@ -814,7 +814,7 @@ namespace rstan {
                      eval_elbo,
                      output_samples);
 
-          stan::interface_callbacks::writer::stream_writer diagnostic_writer
+          stan::callbacks::stream_writer diagnostic_writer
             = diagnostic_writer_factory(&diagnostic_stream, "# ");
 
           cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj,
@@ -841,7 +841,7 @@ namespace rstan {
                      eval_elbo,
                      output_samples);
 
-          stan::interface_callbacks::writer::stream_writer diagnostic_writer
+          stan::callbacks::stream_writer diagnostic_writer
             = diagnostic_writer_factory(&diagnostic_stream, "# ");
 
           cmd_advi.run(eta, adapt_engaged, adapt_iterations, tol_rel_obj,
@@ -1229,9 +1229,9 @@ namespace rstan {
                  Rcpp::List& holder,
                  const std::vector<size_t>& qoi_idx,
                  const std::vector<std::string>& fnames_oi) {
-      stan::interface_callbacks::writer::stream_writer info(rstan::io::rcout);
-      stan::interface_callbacks::writer::stream_writer error(rstan::io::rcerr);
-      stan::interface_callbacks::writer::noop_writer init_writer;
+      stan::callbacks::stream_writer info(rstan::io::rcout);
+      stan::callbacks::stream_writer error(rstan::io::rcerr);
+      stan::callbacks::noop_writer init_writer;
       R_CheckUserInterrupt_Functor interrupt;
 
       std::fstream sample_stream;
@@ -1242,7 +1242,7 @@ namespace rstan {
           : std::fstream::out;
         sample_stream.open(args.get_sample_file().c_str(), open_mode);
       }
-      stan::interface_callbacks::writer::stream_writer sample_writer(sample_stream, "# ");
+      stan::callbacks::stream_writer sample_writer(sample_stream, "# ");
 
       std::fstream diagnostic_stream;
       if (args.get_diagnostic_file_flag()) {
@@ -1252,7 +1252,7 @@ namespace rstan {
           : std::fstream::out;
         diagnostic_stream.open(args.get_diagnostic_file().c_str(), open_mode);
       }
-      stan::interface_callbacks::writer::stream_writer diagnostic_writer(sample_stream, "# ");
+      stan::callbacks::stream_writer diagnostic_writer(sample_stream, "# ");
 
       //////////////////////////////////////////////////
       //                Initialize Model              //
@@ -1300,7 +1300,7 @@ namespace rstan {
         int num_iterations = args.get_iter();
         bool save_iterations = args.get_ctrl_optim_save_iterations();
         pystan::single_set_of_values optimum_writer;
-        stan::interface_callbacks::writer::chained_writer
+        stan::callbacks::chained_writer
           chained_sample_writer(sample_writer, optimum_writer);
         if (args.get_ctrl_optim_algorithm() == Newton) {
           return_code = stan::services::optimize::newton(model_,

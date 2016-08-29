@@ -1,13 +1,13 @@
 #ifndef RSTAN_SUM_VALUES_HPP
 #define RSTAN_SUM_VALUES_HPP
 
-#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 namespace rstan {
-  class sum_values: public stan::interface_callbacks::writer::base_writer {
+  class sum_values: public stan::callbacks::writer {
   public:
     explicit sum_values(const size_t N)
       : N_(N), m_(0), skip_(0), sum_(N_, 0.0) { }

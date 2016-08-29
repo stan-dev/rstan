@@ -2,17 +2,17 @@
 #define RSTAN__RSTAN_WRITER_HPP
 
 #include <Rcpp.h>
-#include <stan/interface_callbacks/writer/base_writer.hpp>
-#include <stan/interface_callbacks/writer/stream_writer.hpp>
+#include <stan/callbacks/writer.hpp>
+#include <stan/callbacks/stream_writer.hpp>
 #include <rstan/filtered_values.hpp>
 #include <rstan/sum_values.hpp>
 
 namespace rstan {
 
   class rstan_sample_writer
-    : public stan::interface_callbacks::writer::base_writer {
+    : public stan::callbacks::writer {
   public:
-    typedef stan::interface_callbacks::writer::stream_writer CsvWriter;
+    typedef stan::callbacks::stream_writer CsvWriter;
     typedef rstan::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
     typedef rstan::sum_values SumValuesWriter;
 

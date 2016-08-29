@@ -1,7 +1,7 @@
 #ifndef RSTAN__FILTERED_VALUES_HPP
 #define RSTAN__FILTERED_VALUES_HPP
 
-#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 #include <rstan/values.hpp>
 #include <ostream>
 #include <stdexcept>
@@ -10,7 +10,7 @@
 
 namespace rstan {
   template <class InternalVector>
-  class filtered_values: public stan::interface_callbacks::writer::base_writer {
+  class filtered_values: public stan::callbacks::writer {
   private:
     size_t N_, M_, N_filter_;
     std::vector<size_t> filter_;
