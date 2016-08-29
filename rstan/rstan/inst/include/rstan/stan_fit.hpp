@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 #include <rstan/io/rlist_ref_var_context.hpp>
+#include <rstan/io/r_ostream.hpp>
 
 namespace rstan {
 
