@@ -16,7 +16,9 @@ namespace rstan {
     Model model_;
     
   public:
-    stan_model_with_data() = 0;
+    stan_model_with_data(Model& model)
+      : model_(model) {
+    }
     
     SEXP diagnose(SEXP args_) {
       // set up call
