@@ -108,6 +108,9 @@
 \examples{\dontrun{
 stancode <- 'data {real y_mean;} parameters {real y;} model {y ~ normal(y_mean,1);}'
 mod <- stan_model(model_code = stancode)
+smwd <- new("stanmodel_with_data", model = mod, data = list(y_mean = 2))
+
+## FIXME: remove above smwd line
 fit <- sampling(mod, data = list(y_mean = 0))
 fit2 <- sampling(mod, data = list(y_mean = 5))
 }}
