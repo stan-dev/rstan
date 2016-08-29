@@ -33,17 +33,17 @@ namespace rstan {
       stan::callbacks::noop_writer init_writer;
       stan::callbacks::noop_writer parameter_writer;
       
-      return stan::services::diagnose(model_,
-                                      init,
-                                      random_seed,
-                                      chain,
-                                      init_radius,
-                                      epsilon,
-                                      error,
-                                      interrupt,
-                                      message_writer,
-                                      init_writer,
-                                      parameter_writer);
+      return stan::services::diagnose::diagnose(model_,
+                                                init,
+                                                random_seed,
+                                                chain,
+                                                init_radius,
+                                                epsilon,
+                                                error,
+                                                interrupt,
+                                                message_writer,
+                                                init_writer,
+                                                parameter_writer);
     }
     
   };
