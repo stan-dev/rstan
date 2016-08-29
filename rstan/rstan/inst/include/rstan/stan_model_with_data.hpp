@@ -4,6 +4,7 @@
 #include <stan/services/diagnose/diagnose.hpp>
 #include <stan/io/empty_var_context.hpp>
 #include <stan/callbacks/noop_writer.hpp>
+#include <stan/callbacks/stream_writer.hpp>
 #include <stan/callbacks/noop_interrupt.hpp>
 #include <rstan/io/rlist_ref_var_context.hpp>
 
