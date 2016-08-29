@@ -24,7 +24,6 @@ namespace rstan {
     SEXP diagnose(SEXP args_) {
       // set up call
       // call
-
       stan::io::empty_var_context init;
       unsigned int random_seed = 0;
       unsigned int chain = 1;
@@ -34,7 +33,7 @@ namespace rstan {
       stan::callbacks::noop_interrupt interrupt;
       stan::callbacks::noop_writer message_writer;
       stan::callbacks::noop_writer init_writer;
-      stan::callbacks::noop_writer parameter_writer;
+      stan::callbacks::stream_writer parameter_writer(rstan::io::rcout);
       
       return stan::services::diagnose::diagnose(model_,
                                                 init,
