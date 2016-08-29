@@ -273,7 +273,7 @@ get_model_strcode <- function(file, model_code = '') {
     } else if (!inherits(file, "connection")) {
       stop("file must be a character string or connection")
     }
-    model_code <- paste(readLines(file, warn = FALSE), collapse = '\n') 
+    model_code <- paste(readLines(file, warn = TRUE), collapse = '\n') 
     # the model name implied from file name, which
     # will be used if model_name is not specified later
     attr(model_code, "model_name2") <- model_name2 
@@ -1625,9 +1625,19 @@ throw_sampler_warnings <- function(object) {
 }
 
 get_CXX <- function(CXX11 = FALSE) {
-  system2(file.path(R.home(component = "bin"), "R"), 
-          args = paste("CMD config", ifelse(CXX11, "CXX11", "CXX")), 
-          stdout = TRUE, stderr = FALSE)
+  if (.Platform$OS.type != "windows")
+    return (system2(file.path(R.home(component = "bin"), "R"),
+            args = paste("CMD config", ifelse(CXX11, "CXX1X", "CXX")),
+            stdout = TRUE, stderr = FALSE))
+    
+    ls_path <- Sys.which("ls")
+    if (ls_path == "") 
+        return(NULL)
+    
+    install_path <- dirname(dirname(ls_path))
+    file.path(install_path, 
+              if (getRversion() >= "3.3.0") paste0('mingw_', Sys.getenv('WIN')), 
+              'bin', 'g++')
 }
 
 is.sparc <- function() {

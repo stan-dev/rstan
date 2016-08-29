@@ -56,7 +56,11 @@ stan_model <- function(file,
                        obfuscate_model_name = obfuscate_model_name)
     
     # find possibly identical stanmodels
-    S4_objects <- apropos("^[[:alpha:]]+.*$", mode = "S4")
+    model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
+    if(!is.null(model_name))
+      if(!grepl(model_re, model_name))
+        stop("model name must match ", model_re)
+    S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
     if (length(S4_objects) > 0) {
       pf <- parent.frame()
       stanfits <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
@@ -86,7 +90,8 @@ stan_model <- function(file,
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
-       md5 != tools::md5sum(tf)) {
+       (md5 != tools::md5sum(tf) && is.null(
+        message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
          # do nothing
     }
     else return(invisible(obj))
@@ -110,6 +115,8 @@ stan_model <- function(file,
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
       warning(paste("C++ compiler not found on system. If absent, see\n", WIKI))
     }
+    else if (grepl("69", CXX, fixed = TRUE))
+      warning("You may need to launch Xcode once to accept its license")
   }
   
   model_cppname <- stanc_ret$model_cppname 
@@ -137,9 +144,6 @@ stan_model <- function(file,
   }
   if (!file.exists(rstan_options("eigen_lib")))
     stop("Eigen not found; call install.packages('RcppEigen')")
-  
-  if (inc_path_fun("StanHeaders") == "")
-    stop("StanHeaders not found; call install.packages('StanHeaders')")
   
   if (packageVersion("StanHeaders") > packageVersion("rstan"))
     stop("StanHeaders version is ahead of rstan version; ",

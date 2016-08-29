@@ -68,26 +68,33 @@ rstudio_stanc <- function(filename) {
   return(invisible(output))
 }
 
-stanc_builder <- function(file, isystem = dirname(file), 
+stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
                           verbose = FALSE, obfuscate_model_name = FALSE) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_cppname <- sub("\\.stan$", "", basename(file))
   program <- readLines(file)
   includes <- grep("^[[:blank:]]*#include ", program)
-  for (i in rev(includes)) {
-    header <- sub("^[[:blank:]]*#include[[:blank:]]+", "", program[i])
-    header <- gsub('\\"', '', header)
-    header <- gsub("\\'", '', header)
-    header <- sub("[[:blank:]]*$", "", header)
-    if (file.exists(file.path(isystem, header)))
-      program <- append(program, values = readLines(file.path(isystem, header)), 
-                        after = i)
-    else program <- append(program, values = readLines(header), after = 1)
-  }
-  check <- grep("^[[:blank:]]*#include ", program)
-  if (length(check) != length(includes))
-    stop("'stanc_builder' does not support recursive #include statements")
-  if (length(check) > 0) program <- program[-check]
+  while(length(includes) > 0) {
+    for (i in rev(includes)) {
+      header <- sub("^[[:blank:]]*#include[[:blank:]]+", "", program[i])
+      header <- gsub('\\"', '', header)
+      header <- gsub("\\'", '', header)
+      header <- sub("<", "", header, fixed = TRUE)
+      header <- sub(">", "", header, fixed = TRUE)
+      header <- sub("//.*$", "", header)
+      header <- sub("/\\*.*$", "", header)
+      header <- sub("#.*$", "", header)
+      header <- sub("[[:blank:]]*$", "", header)
+      files <- file.path(isystem, header)
+      existent <- file.exists(files)
+      if (any(existent))
+        program <- append(program, values = readLines(files[which(existent)[1]]), 
+                          after = i)
+      else program <- append(program, values = readLines(header), after = 1)
+      program[i] <- ""
+    }
+    includes <- grep("^[[:blank:]]*#include ", program)
+  }    
   out <- stanc(model_code = paste(program, collapse = "\n"), 
                model_name = model_cppname, verbose = verbose, 
                obfuscate_model_name = obfuscate_model_name)

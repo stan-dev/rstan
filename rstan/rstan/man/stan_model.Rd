@@ -68,7 +68,10 @@
 
 \details{
   If a previously compiled \code{stanmodel} exists on the hard drive, its validity
-  is checked and then returned without recompiling. To avoid reading previously 
+  is checked and then returned without recompiling. The most common form of 
+  invalidity seems to be Stan code that ends with a \code{\}} rather than a blank
+  line, which causes the hash checker to think that the current model is different
+  than the one saved on the hard drive. To avoid reading previously 
   compiled \code{stanmodel}s from the hard drive, supply the \code{stanc_ret}
   argument rather than the \code{file} or \code{model_code} arguments.
   

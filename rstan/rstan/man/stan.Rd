@@ -229,6 +229,12 @@ stan(file, model_name = "anon_model", model_code = "",
     the gradient calculation is tested and printed out and the fitted
     \code{stanfit} object is in test gradient mode.  By default, it is
     \code{FALSE}.
+    
+    \code{append_samples} (\code{logical}). 
+    Only relevant if \code{sample_file} is specified \emph{and} is an 
+    existing file. In that case, setting \code{append_samples=TRUE} will append 
+    the samples to the existing file rather than overwriting the contents of 
+    the file.
 
     \code{refresh} (\code{integer}) can be used to
     control how to indicate the progress during sampling (i.e. 

@@ -7,7 +7,6 @@
 \description{
   Obtain a point estimate by maximizing the joint posterior 
   from the model defined by class \code{stanmodel}. 
-  This method is a generic function of the S4 class \code{stanmodel}. 
 }
 
 \usage{
