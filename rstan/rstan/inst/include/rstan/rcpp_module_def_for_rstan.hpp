@@ -4,7 +4,7 @@
  * Define Rcpp Module to expose stan_fit's functions to R.
  */
 RCPP_MODULE(stan_fit4%model_name%_mod){
-  Rcpp::class_<rstan::stan_fit<%model_name%_namespace::%model_name%>("stan_fit4%model_name%")
+  Rcpp::class_<rstan::stan_fit<%model_name%_namespace::%model_name%> >("stan_fit4%model_name%")
                .constructor<SEXP, SEXP>();
   // .constructor<Rcpp::List>()
   // // .constructor<SEXP, SEXP>()

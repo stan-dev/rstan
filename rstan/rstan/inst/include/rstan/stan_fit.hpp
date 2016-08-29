@@ -14,6 +14,7 @@ namespace rstan {
     Model model_;
     Rcpp::Function cxxfunction; // keep a reference to the cxxfun, no functional purpose.
 
+  public:
     stan_fit(SEXP data, SEXP cxxf) :
       data_(data),
       model_(data_, &rstan::io::rcout),
