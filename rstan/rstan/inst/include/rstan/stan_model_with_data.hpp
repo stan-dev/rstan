@@ -9,8 +9,9 @@
 
 namespace rstan {
 
+  
   template <class Model>
-  class stan_model {
+  class stan_model_with_data {
   private:
     Model model_;
     
