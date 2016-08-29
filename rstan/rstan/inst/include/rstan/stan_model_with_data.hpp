@@ -5,19 +5,20 @@
 #include <stan/io/empty_var_context.hpp>
 #include <stan/callbacks/noop_writer.hpp>
 #include <stan/callbacks/noop_interrupt.hpp>
-
+#include <rstan/io/rlist_ref_var_context.hpp>
 
 namespace rstan {
-
   
   template <class Model>
   class stan_model_with_data {
   private:
+    io::rlist_ref_var_context data_;    
     Model model_;
     
   public:
-    stan_model_with_data(stan::io::var_context& data)
-      : model_(data, &rstan::io::rcout) {
+    stan_model_with_data(SEXP data)
+      : data_(data),
+        model_(data, &rstan::io::rcout) {
     }
     
     SEXP diagnose(SEXP args_) {
