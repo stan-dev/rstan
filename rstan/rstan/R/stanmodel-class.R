@@ -94,7 +94,7 @@ mk_cppmodule <- function(object) {
   prep_call_sampler(object)
   model_cppname <- object@model_cpp$model_cppname
   mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
-  eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
+  eval(call("$", mod, paste('stan_model4', model_cppname, sep = '')))
 }
 
 setMethod("vb", "stanmodel", 

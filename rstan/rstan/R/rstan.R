@@ -153,7 +153,8 @@ stan_model <- function(file,
   
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
-                         module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
+                         # module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''),
+                         module_name = paste('stan_model4', model_cppname, '_mod', sep = ''),
                          verbose = verbose) 
                
   obj <- new("stanmodel", model_name = model_name, 
