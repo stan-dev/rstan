@@ -55,7 +55,7 @@ export(
 )
 
 exportClasses(
-  stanmodel, stanfit 
+  stanmodel, stanmodel_with_data, stanfit 
 ) 
 exportMethods(
 #   print, plot, 
