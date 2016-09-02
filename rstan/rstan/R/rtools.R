@@ -1,6 +1,6 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013 Hadley Wickham
-# Copyright (C) 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016 Hadley Wickham
+# Copyright (C) 2015, 2016 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,15 +16,77 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-find_rtools <- function(debug = FALSE) {
+using_gcc49 <- function() {
+  isTRUE(sub("^gcc[^[:digit:]]+", "", Sys.getenv("R_COMPILED_BY")) >= "4.9.3")
+}
+
+gcc_arch <- function() if (Sys.getenv("R_ARCH") == "/i386") "32" else "64"
+
+# Need to check for existence so load_all doesn't override known rtools location
+if (!exists("set_rtools_path")) {
+  set_rtools_path <- NULL
+  get_rtools_path <- NULL
+  local({
+    rtools_paths <- NULL
+    set_rtools_path <<- function(rtools) {
+      if (is.null(rtools)) {
+        rtools_paths <<- NULL
+        return()
+      }
+      
+      stopifnot(is.rtools(rtools))
+      path <- file.path(rtools$path, version_info[[rtools$version]]$path)
+      
+      # If using gcc49 and _without_ a valid BINPREF already set
+      if (using_gcc49() && is.null(rtools$valid_binpref)) {
+        Sys.setenv(BINPREF = file.path(rtools$path, "mingw_$(WIN)", "bin", "/"))
+      }
+      rtools_paths <<- path
+    }
+    
+    get_rtools_path <<- function() {
+      rtools_paths
+    }
+  })
+}
+
+#' Find rtools.
+#'
+#' To build binary packages on windows, Rtools (found at
+#' \url{http://cran.r-project.org/bin/windows/Rtools/}) needs to be on
+#' the path. The default installation process does not add it, so this
+#' script finds it (looking first on the path, then in the registry).
+#' It also checks that the version of rtools matches the version of R.
+#'
+#' @section Acknowledgements:
+#'   This code borrows heavily from RStudio's code for finding rtools.
+#'   Thanks JJ!
+#' @param cache if \code{TRUE} will used cached version of RTools.
+#' @param debug if \code{TRUE} prints a lot of additional information to
+#'   help in debugging.
+#' @return Either a visible \code{TRUE} if rtools is found, or an invisible
+#'   \code{FALSE} with a diagnostic \code{\link{message}}.
+#'   As a side-effect the internal package variable \code{rtools_path} is
+#'   updated to the paths to rtools binaries.
+#' @keywords internal
+#' @export
+setup_rtools <- function(cache = TRUE, debug = FALSE) {
   # Non-windows users don't need rtools
   if (.Platform$OS.type != "windows") return(TRUE)
+  # Don't look again, if we've already found it
   
+  if (!cache) {
+    set_rtools_path(NULL)
+  }
+  if (!is.null(get_rtools_path())) return(TRUE)
   
   # First try the path
   from_path <- scan_path_for_rtools(debug)
-  if (is_compatible(from_path)) return(TRUE)
-
+  if (is_compatible(from_path)) {
+    set_rtools_path(from_path)
+    return(TRUE)
+  }
+  
   if (!is.null(from_path)) {
     # Installed
     if (is.null(from_path$version)) {
@@ -33,10 +95,10 @@ find_rtools <- function(debug = FALSE) {
       return(TRUE)
     } else {
       # Installed, but not compatible
-      warning("WARNING: Rtools ", from_path$version, " found on the path",
+      message("WARNING: Rtools ", from_path$version, " found on the path",
               " at ", from_path$path, " is not compatible with R ", getRversion(), ".\n\n",
               "Please download and install ", rtools_needed(), " from ", rtools_url,
-              ", remove the incompatible version from your PATH, then run find_rtools().")
+              ", remove the incompatible version from your PATH.")
       return(invisible(FALSE))
     }
   }
@@ -46,7 +108,7 @@ find_rtools <- function(debug = FALSE) {
   
   if (length(registry_candidates) == 0) {
     # Not on path or in registry, so not installled
-    warning("WARNING: Rtools is required to build Stan programs, but is not ",
+    message("WARNING: Rtools is required to build R packages, but is not ",
             "currently installed.\n\n",
             "Please download and install ", rtools_needed(), " from ", rtools_url, ".")
     return(invisible(FALSE))
@@ -56,7 +118,7 @@ find_rtools <- function(debug = FALSE) {
   if (is.null(from_registry)) {
     # In registry, but not compatible.
     versions <- vapply(registry_candidates, function(x) x$version, character(1))
-    warning("WARNING: Rtools is required to build Stan programs, but no version ",
+    message("WARNING: Rtools is required to build R packages, but no version ",
             "of Rtools compatible with R ", getRversion(), " was found. ",
             "(Only the following incompatible version(s) of Rtools were found:",
             paste(versions, collapse = ","), ")\n\n",
@@ -67,7 +129,7 @@ find_rtools <- function(debug = FALSE) {
   installed_ver <- installed_version(from_registry$path, debug = debug)
   if (is.null(installed_ver)) {
     # Previously installed version now deleted
-    warning("WARNING: Rtools is required to build Stan programs, but the ",
+    message("WARNING: Rtools is required to build R packages, but the ",
             "version of Rtools previously installed in ", from_registry$path,
             " has been deleted.\n\n",
             "Please download and install ", rtools_needed(), " from ", rtools_url, ".")
@@ -76,7 +138,7 @@ find_rtools <- function(debug = FALSE) {
   
   if (installed_ver != from_registry$version) {
     # Installed version doesn't match registry version
-    warning("WARNING: Rtools is required to build Stan programs, but no version ",
+    message("WARNING: Rtools is required to build R packages, but no version ",
             "of Rtools compatible with R ", getRversion(), " was found. ",
             "Rtools ", from_registry$version, " was previously installed in ",
             from_registry$path, " but now that directory contains Rtools ",
@@ -85,10 +147,14 @@ find_rtools <- function(debug = FALSE) {
     return(invisible(FALSE))
   }
   
+  # Otherwise it must be ok :)
+  set_rtools_path(from_registry)
   TRUE
 }
 
-scan_path_for_rtools <- function(debug = FALSE) {
+scan_path_for_rtools <- function(debug = FALSE,
+                                 gcc49 = using_gcc49(),
+                                 arch = gcc_arch()) {
   if (debug) cat("Scanning path...\n")
   
   # First look for ls and gcc
@@ -96,13 +162,50 @@ scan_path_for_rtools <- function(debug = FALSE) {
   if (ls_path == "") return(NULL)
   if (debug) cat("ls :", ls_path, "\n")
   
-  gcc_path <- Sys.which("gcc")
-  if (gcc_path == "") return(NULL)
-  if (debug) cat("gcc:", gcc_path, "\n")
-  
   # We have a candidate installPath
   install_path <- dirname(dirname(ls_path))
+  
+  if (gcc49) {
+    find_gcc49 <- function(path) {
+      if (!file.exists(path)) {
+        path <- paste0(path, ".exe")
+      }
+      file_info <- file.info(path)
+      
+      # file_info$exe should be win32 or win64 respectively
+      if (!file.exists(path) || file_info$exe != paste0("win", arch)) {
+        return(character(1))
+      }
+      path
+    }
+    
+    
+    # First check if gcc set by BINPREF/CC is valid and use that is so
+    cc_path <- system2(file.path(Sys.getenv("R_HOME"), "bin", "R"),
+                       args = "CMD config CC", stdout = TRUE)
+    
+    # remove '-m64' from tail if it exists
+    cc_path <- sub("[[:space:]]+-m[[:digit:]]+$", "", cc_path)
+    
+    gcc_path <- find_gcc49(cc_path)
+    if (nzchar(gcc_path)) {
+      return(rtools(install_path, NULL, valid_binpref = TRUE))
+    }
+    
+    # if not check default location Rtools/mingw_{32,64}/bin/gcc.exe
+    gcc_path <- find_gcc49(file.path(install_path, paste0("mingw_", arch), "bin", "gcc.exe"))
+    if (!nzchar(gcc_path)) {
+      return(NULL)
+    }
+  } else {
+    gcc_path <- Sys.which("gcc")
+    if (gcc_path == "") return(NULL)
+  }
+  if (debug) cat("gcc:", gcc_path, "\n")
+  
   install_path2 <- dirname(dirname(dirname(gcc_path)))
+  
+  # If both install_paths are not equal
   if (tolower(install_path2) != tolower(install_path)) return(NULL)
   
   version <- installed_version(install_path, debug = debug)
@@ -124,7 +227,7 @@ scan_registry_for_rtools <- function(debug = FALSE) {
   
   rts <- vector("list", length(keys))
   
-  for(i in seq_along(keys)) {
+  for (i in seq_along(keys)) {
     version <- names(keys)[[i]]
     key <- keys[[version]]
     if (!is.list(key) || is.null(key$InstallPath)) next;
@@ -176,8 +279,8 @@ is_compatible <- function(rtools) {
   r_version >= info$version_min && r_version <= info$version_max
 }
 
-rtools <- function(path, version) {
-  structure(list(version = version, path = path), class = "rtools")
+rtools <- function(path, version, ...) {
+  structure(list(version = version, path = path, ...), class = "rtools")
 }
 is.rtools <- function(x) inherits(x, "rtools")
 
@@ -232,7 +335,20 @@ version_info <- list(
   "3.3" = list(
     version_min = "3.2.0",
     version_max = "3.3.99",
-    path = c("bin", "gcc-4.6.3/bin")
+    path = if (using_gcc49()) {
+      "bin"
+    } else {
+      c("bin", "gcc-4.6.3/bin")
+    }
+  ),
+  "3.4" = list(
+    version_min = "3.3.0",
+    version_max = "3.4.99",
+    path = if (using_gcc49()) {
+      "bin"
+    } else {
+      c("bin", "gcc-4.6.3/bin")
+    }
   )
 )
 
@@ -247,3 +363,9 @@ rtools_needed <- function() {
   }
   "the appropriate version of Rtools"
 }
+
+#' @rdname setup_rtools
+#' @usage NULL
+#' @export
+find_rtools <- setup_rtools
+
