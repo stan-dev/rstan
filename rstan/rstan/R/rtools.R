@@ -181,7 +181,8 @@ scan_path_for_rtools <- function(debug = FALSE,
     
     
     # First check if gcc set by BINPREF/CC is valid and use that is so
-    cc_path <- system2(file.path(Sys.getenv("R_HOME"), "bin", "R"),
+    cc_path <- system2(file.path(Sys.getenv("R_HOME"), "bin",
+                                 Sys.getenv("R_ARCH_BIN"), "R"),
                        args = "CMD config CC", stdout = TRUE)
     
     # remove '-m64' from tail if it exists
