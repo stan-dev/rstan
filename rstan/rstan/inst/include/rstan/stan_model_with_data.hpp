@@ -15,20 +15,23 @@ namespace rstan {
   private:
     io::rlist_ref_var_context data_;    
     Model model_;
+    stan::callbacks::noop_interrupt interrupt_;
+    stan::callbacks::noop_writer message_writer_;
+    stan::callbacks::noop_writer init_writer_;
+    stan::callbacks::stream_writer parameter_writer_;
     
   public:
     stan_model_with_data(SEXP data)
       : data_(data),
-        model_(data_, &rstan::io::rcout) {
+        model_(data_, &rstan::io::rcout),
+        interrupt_,
+        message_writer_,
+        init_writer_,
+        parameter_writer_(rstan::io::rcout) {
     }
     
     int diagnose(const Rcpp::List& init_list, int random_seed, int chain, double init_radius, double epsilon, double error) {
       io::rlist_ref_var_context init(init_list);
-      stan::callbacks::noop_interrupt interrupt;
-      stan::callbacks::noop_writer message_writer;
-      stan::callbacks::noop_writer init_writer;
-      stan::callbacks::stream_writer parameter_writer(rstan::io::rcout);
-      rstan::io::rcout << "init contains y: " << init.contains_r("y") << std::endl;
       return stan::services::diagnose::diagnose(model_,
                                                 init,
                                                 random_seed,
