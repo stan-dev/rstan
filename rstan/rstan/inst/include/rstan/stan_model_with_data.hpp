@@ -36,8 +36,10 @@ namespace rstan {
     Model model_;
     stan::callbacks::noop_interrupt interrupt_;
     stan::callbacks::noop_writer message_writer_;
+    stan::callbacks::noop_writer error_writer_;
     stan::callbacks::noop_writer init_writer_;
     stan::callbacks::stream_writer parameter_writer_;
+    stan::callbacks::noop_writer diagnostic_writer_;
     
   public:
     stan_model_with_data(SEXP data)
@@ -45,8 +47,10 @@ namespace rstan {
         model_(data_, &rstan::io::rcout),
         interrupt_(),
         message_writer_(),
+        error_writer_(),
         init_writer_(),
-        parameter_writer_(rstan::io::rcout) {
+        parameter_writer_(rstan::io::rcout),
+        diagnostic_writer_() {
     }
     
     int diagnose(const Rcpp::List& init_list, int random_seed, int id, double init_radius, double epsilon, double error) {
@@ -130,6 +134,28 @@ namespace rstan {
                                               message_writer_,
                                               init_writer_,
                                               parameter_writer_);
+    }
+
+
+    int sample_fixed_param(const Rcpp::List& init_list, int random_seed, int id, double init_radius,
+                           int num_samples,
+                           int num_thin,
+                           int refresh) {
+      io::rlist_ref_var_context init_context(init_list);
+      return stan::services::sample::fixed_param(model_,
+                                                 init_context,
+                                                 random_seed,
+                                                 id,
+                                                 init_radius,
+                                                 num_samples,
+                                                 num_thin,
+                                                 refresh,
+                                                 interrupt_,
+                                                 message_writer_,
+                                                 error_writer_,
+                                                 init_writer_,
+                                                 parameter_writer_,
+                                                 diagnostic_writer_);      
     }
     
   };

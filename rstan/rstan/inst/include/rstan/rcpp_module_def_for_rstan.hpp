@@ -53,5 +53,8 @@ RCPP_MODULE(stan_model4%model_name%_mod){
   .method("optimize_lbfgs",
     &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_lbfgs)
   .method("optimize_newton",
-    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_newton);  
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_newton)
+  .method("sample_fixed_param",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_fixed_param);  
+  
 }
