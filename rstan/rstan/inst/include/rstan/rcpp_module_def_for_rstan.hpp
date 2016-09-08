@@ -47,5 +47,11 @@ RCPP_MODULE(stan_model4%model_name%_mod){
   Rcpp::class_<rstan::stan_model_with_data<%model_name%_namespace::%model_name%> >("stan_model4%model_name%")
   .constructor<SEXP>()
   .method("diagnose",
-    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::diagnose);
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::diagnose)
+  .method("optimize_bfgs",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_bfgs)
+  .method("optimize_lbfgs",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_lbfgs)
+  .method("optimize_newton",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_newton);  
 }

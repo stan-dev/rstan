@@ -24,7 +24,7 @@ namespace rstan {
     SEXP diagnose(SEXP args_) {
       return 0;
     }
-    
+
   };
 
 }
