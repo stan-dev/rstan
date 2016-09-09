@@ -79,5 +79,10 @@ RCPP_MODULE(stan_model4%model_name%_mod){
   .method("sample_hmc_static_unit_e",
     &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_unit_e)
   .method("sample_hmc_static_unit_e_adapt",
-    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_unit_e_adapt);
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_unit_e_adapt)
+  .method("experimental_advi_fullrank",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::experimental_advi_fullrank)
+  .method("experimental_advi_meanfield",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::experimental_advi_meanfield);
+
 }

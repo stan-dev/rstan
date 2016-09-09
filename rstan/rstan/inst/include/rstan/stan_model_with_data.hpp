@@ -602,8 +602,70 @@ namespace rstan {
                                                              diagnostic_writer_);
     }
 
+    int experimental_advi_fullrank(const Rcpp::List& init_list, int random_seed, int id, double init_radius,
+                                   int grad_samples,
+                                   int elbo_samples,
+                                   int max_iterations,
+                                   double tol_rel_obj,
+                                   double eta,
+                                   bool adapt_engaged,
+                                   int adapt_iterations,
+                                   int eval_elbo,
+                                   int output_samples) {
+      io::rlist_ref_var_context init_context(init_list);
+      return stan::services::experimental::advi::fullrank(model_,
+                                                          init_context,
+                                                          random_seed,
+                                                          id,
+                                                          init_radius,
+                                                          grad_samples,
+                                                          elbo_samples,
+                                                          max_iterations,
+                                                          tol_rel_obj,
+                                                          eta,
+                                                          adapt_engaged,
+                                                          adapt_iterations,
+                                                          eval_elbo,
+                                                          output_samples,
+                                                          interrupt_,
+                                                          message_writer_,
+                                                          init_writer_,
+                                                          parameter_writer_,
+                                                          diagnostic_writer_);
+    }
 
-
+    int experimental_advi_meanfield(const Rcpp::List& init_list, int random_seed, int id, double init_radius,
+                                    int grad_samples,
+                                    int elbo_samples,
+                                    int max_iterations,
+                                    double tol_rel_obj,
+                                    double eta,
+                                    bool adapt_engaged,
+                                    int adapt_iterations,
+                                    int eval_elbo,
+                                    int output_samples) {
+      io::rlist_ref_var_context init_context(init_list);
+      return stan::services::experimental::advi::meanfield(model_,
+                                                           init_context,
+                                                           random_seed,
+                                                           id,
+                                                           init_radius,
+                                                           grad_samples,
+                                                           elbo_samples,
+                                                           max_iterations,
+                                                           tol_rel_obj,
+                                                           eta,
+                                                           adapt_engaged,
+                                                           adapt_iterations,
+                                                           eval_elbo,
+                                                           output_samples,
+                                                           interrupt_,
+                                                           message_writer_,
+                                                           init_writer_,
+                                                           parameter_writer_,
+                                                           diagnostic_writer_);
+    }
+    
   };
 }
 #endif
