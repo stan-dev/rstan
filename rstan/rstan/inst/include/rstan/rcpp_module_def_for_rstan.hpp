@@ -55,6 +55,29 @@ RCPP_MODULE(stan_model4%model_name%_mod){
   .method("optimize_newton",
     &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::optimize_newton)
   .method("sample_fixed_param",
-    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_fixed_param);  
-  
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_fixed_param)
+  .method("sample_hmc_nuts_dense_e",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_nuts_dense_e)
+  .method("sample_hmc_nuts_dense_e_adapt",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_nuts_dense_e_adapt)
+  .method("sample_hmc_nuts_diag_e",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_nuts_diag_e)
+  .method("sample_hmc_nuts_diag_e_adapt",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_nuts_diag_e_adapt)
+  .method("sample_hmc_nuts_unit_e",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_nuts_unit_e)
+  .method("sample_hmc_nuts_unit_e_adapt",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_nuts_unit_e_adapt)
+  .method("sample_hmc_static_dense_e",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_dense_e)
+  .method("sample_hmc_static_dense_e_adapt",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_dense_e_adapt)
+  .method("sample_hmc_static_diag_e",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_diag_e)
+  .method("sample_hmc_static_diag_e_adapt",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_diag_e_adapt)
+  .method("sample_hmc_static_unit_e",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_unit_e)
+  .method("sample_hmc_static_unit_e_adapt",
+    &rstan::stan_model_with_data<%model_name%_namespace::%model_name%>::sample_hmc_static_unit_e_adapt);
 }
