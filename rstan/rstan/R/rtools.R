@@ -374,7 +374,7 @@ find_rtools <- function(...) {
   if (.Platform$OS.type == "unix") return(TRUE)
   CXX <- system2(file.path(Sys.getenv("R_HOME"), "bin",
                            Sys.getenv("R_ARCH_BIN"), "R"),
-                args = "CMD config CC", stdout = TRUE)
+                args = "CMD config CXX", stdout = TRUE)
   if (nchar(CXX) > 0) return(TRUE)
   CXX <- Sys.which("g++")
   if (nchar(CXX) > 0) return(TRUE)
