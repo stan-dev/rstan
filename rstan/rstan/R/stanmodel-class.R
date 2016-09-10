@@ -695,7 +695,7 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv)
-            if (cores <= 1) throw_sampler_warnings(nfit)
+            if (interactive() && cores <= 1) throw_sampler_warnings(nfit)
             return(nfit)
           }) 
 
