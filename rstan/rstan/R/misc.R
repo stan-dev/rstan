@@ -1603,7 +1603,8 @@ throw_sampler_warnings <- function(object) {
       if (is.null(ad)) ad <- 0.8
     }
     warning("There were ", n_d, " divergent transitions after warmup.",
-            " Increasing adapt_delta above ", ad, " may help.", call. = FALSE)
+            " Increasing adapt_delta above ", ad, " may help. See\n", 
+            "http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup", call. = FALSE)
   }
   max_td <- object@stan_args[[1]]$control
   if (is.null(max_td)) max_td <- 10
@@ -1618,7 +1619,8 @@ throw_sampler_warnings <- function(object) {
   if (n_m > 0)
     warning("There were ", n_m,
             " transitions after warmup that exceeded the maximum treedepth.",
-            " Increase max_treedepth above ", max_td, ".", call. = FALSE)
+            " Increase max_treedepth above ", max_td, ". See\n", 
+            "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
   if (n_d > 0 || n_m > 0) warning("Examine the pairs() plot to diagnose sampling problems\n",
                                   call. = FALSE, noBreaks. = TRUE)
   return(invisible(NULL))
