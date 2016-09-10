@@ -619,9 +619,8 @@ setMethod("sampling", "stanmodel",
                 end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
                 report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
                 report <- gsub(" because of the following issue:", "", report, fixed = TRUE)
+                report <- grep("^Exception thrown at line", report, value = TRUE)
                 report <- gsub("stan::math::", "", report, fixed = TRUE)
-                report <- grep("^Informational", report, value = TRUE, invert = TRUE)
-                report <- grep("^[[:digit:]]+", report, value = TRUE, invert = TRUE)
                 report <- strtrim(report, width = 100)
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
