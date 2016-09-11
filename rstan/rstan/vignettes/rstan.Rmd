@@ -583,7 +583,7 @@ optimization, which is `-O3` on most C++ compilers. However, the default value
 is `-O2` in R, which is appropriate for most R packages but entails a slight 
 slowdown for Stan. You can change this default locally by following the 
 instructions at 
-[CRAN - Customizing-package-compilation](http://cran.r-project.org/doc/manuals/r-release/R-admin.html#Customizing-package-compilation).
+[CRAN - Customizing-package-compilation](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Customizing-package-compilation).
 However, you should be advised that setting `CXXFLAGS = -O3` may cause adverse 
 side effects for other R packages.
 
