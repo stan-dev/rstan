@@ -4,6 +4,8 @@
 \description{Create a \code{stanfit} object from the saved CSV files that are
   created by Stan or RStan and that include the samples drawn from the
   distribution of interest to facilitate analysis of samples using RStan.  
+  These csv files may be plain text or---if the file name ends in 
+  .gz, .bz2, .xz, or .zip---they can also be compressed files.
 } 
 
 \usage{
@@ -34,6 +36,7 @@ read_stan_csv(csvfiles, col_major = TRUE)
 
 \seealso{
   \code{\linkS4class{stanfit}} 
+  \code{\link[readr]{read_csv}}
 } 
 \examples{
 csvfiles <- dir(system.file('misc', package = 'rstan'),
