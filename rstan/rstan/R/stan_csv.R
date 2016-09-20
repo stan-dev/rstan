@@ -138,12 +138,14 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     header <- read_csv_header(csvfiles[i])
     lineno <- attr(header, 'lineno')
     vnames <- strsplit(header, ",")[[1]]
-    m <- matrix(scan(csvfiles[i], skip = lineno, comment.char = '#', sep = ',', quiet = TRUE),
-                ncol = length(vnames), byrow = TRUE)
+    m <- as.matrix(
+      readr::read_csv(csvfiles[i], 
+                      comment = "#", 
+                      col_types = readr::cols(.default = readr::col_double())))
     ss_lst[[i]] <- as.data.frame(m)
     colnames(ss_lst[[i]]) <- vnames 
   } 
-
+  
   ## read.csv is slow for large files 
   ##ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   # use the first CSV file name as model name
