@@ -20,8 +20,6 @@
 \details{
   \tabular{ll}{
     Package: \tab rstan\cr
-    Version: \tab 2.10.0\cr
-    Date: \tab June 20, 2016\cr
     License: \tab GPL-3 \cr
   }
   
@@ -34,7 +32,7 @@
   \tabular{ll}{
   Authors:\tab Jiqiang Guo <guojq28@gmail.com>   \cr 
           \tab Ben Goodrich <benjamin.goodrich@columbia.edu> \cr
-          \tab Jonah Gabry >jsg2201@columbia.edu> \cr
+          \tab Jonah Gabry <jsg2201@columbia.edu> \cr
   }
 
   \tabular{ll}{
