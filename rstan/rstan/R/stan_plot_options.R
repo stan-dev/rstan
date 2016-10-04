@@ -45,8 +45,6 @@ rstan_ggtheme_options <- function(...) {
 for (j in seq_along(.rstanvis_defaults$theme)) {
   if ("element_text" %in% class(.rstanvis_defaults$theme[[j]])) {
     .rstanvis_defaults$theme[[j]][["debug"]] <- FALSE
-    if (!"margin" %in% names(.rstanvis_defaults$theme[[j]]))
-      .rstanvis_defaults$theme[[j]][["margin"]] <- margin()
   }
 }
 
@@ -59,7 +57,7 @@ for (j in seq_along(.rstanvis_defaults$theme)) {
 
 .rstanvis_defaults$multiparam_theme <-
   .rstanvis_defaults$theme +
-  theme(axis.title= element_blank(),
+  theme(axis.title = element_blank(),
         axis.text.y = element_text(face = "bold", size = 13, debug = FALSE),
         legend.position = "none",
         panel.grid.major =  element_line(size = 0.1, color = "darkgray"))
