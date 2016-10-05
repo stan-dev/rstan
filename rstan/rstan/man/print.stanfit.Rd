@@ -21,7 +21,7 @@
   \item{probs}{A numeric vector of quantiles of interest. The default is
     \code{c(0.025,0.25,0.5,0.75,0.975)}.}
   \item{digits_summary}{The number of significant digits to use when printing
-    the summary, defaulting to 1. Applies to the quantities other than 
+    the summary, defaulting to 2. Applies to the quantities other than 
     the effective sample size, which is always rounded to the nearest integer.}
   \item{include}{Logical scalar (defaulting to \code{TRUE}) indicating whether to
     include or exclude the parameters named by the \code{pars} argument.}

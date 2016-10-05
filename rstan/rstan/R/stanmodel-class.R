@@ -497,17 +497,12 @@ setMethod("sampling", "stanmodel",
               cl <- parallel::makeCluster(min(cores, chains), 
                                           outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
-              dependencies <- read.dcf(file = system.file("DESCRIPTION", package = "rstan"), 
-                                       fields = "Imports")[1,]
-              dependencies <- gsub("\\(.*\\),", "", dependencies)
-              dependencies <- gsub("\\(.*\\)", "", dependencies)
-              dependencies <- scan(what = character(), sep = ",", strip.white = TRUE, 
-                                   quiet = TRUE, text = dependencies)
-              dependencies <- c("rstan", "rstanarm", dependencies, "Rcpp", "ggplot2")
+              dependencies <- c("rstan", "rstanarm", "Rcpp", "ggplot2")
               .paths <- unique(sapply(dependencies, FUN = function(d) {
                 dirname(system.file(package = d))
               }))
               .paths <- .paths[.paths != ""]
+              .paths <- unique(c(.paths, .libPaths()))
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
               parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
               parallel::clusterEvalQ(cl, expr = 
@@ -630,9 +625,8 @@ setMethod("sampling", "stanmodel",
                 end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
                 report <- grep("if ", report, ignore.case = TRUE, value = TRUE, invert = TRUE)
                 report <- gsub(" because of the following issue:", "", report, fixed = TRUE)
+                report <- grep("^Exception thrown at line", report, value = TRUE)
                 report <- gsub("stan::math::", "", report, fixed = TRUE)
-                report <- grep("^Informational", report, value = TRUE, invert = TRUE)
-                report <- grep("^[[:digit:]]+", report, value = TRUE, invert = TRUE)
                 report <- strtrim(report, width = 100)
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
@@ -646,12 +640,14 @@ setMethod("sampling", "stanmodel",
                   if (.Platform$OS.type == "windows") {
                     print(mat)
                     print("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
+                    print("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     print(paste("If the number in the 'count' column is small, ",
                                 "do not ask about this message on stan-users."))
                   }
                   else {
                     message(paste(capture.output(print(mat)), collapse = "\n"))
                     message("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
+                    message("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     message("If the number in the 'count' column is small, ",
                             "do not ask about this message on stan-users.")
                   }
@@ -707,7 +703,7 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv)
-            if (interactive() && cores <= 1) throw_sampler_warnings(nfit)
+            if (chains > 1 && cores <= 1) throw_sampler_warnings(nfit)
             return(nfit)
           }) 
 

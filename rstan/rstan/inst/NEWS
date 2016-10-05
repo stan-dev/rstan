@@ -1,3 +1,14 @@
+Sat September 10 2016 (2.12.1)
+1. Bug fixes
+  * Now throws warnings even if not in interactive() mode
+  * Now does not treat print statements as numerical problems
+  * Update rtools.R to detect recent RTools correctly
+  * Fix .libPaths() on child processes when multiple cores are used
+  * Correct monitor() when a stanfit object is passed to it, which would yield wrong results otherwise
+2. Changes
+  * stanc_builder() now correctly handles comments and recursive #include statements
+  
+
 Thu July 28 2016 (2.11.1)
 1. Bug fixes
   * Warn if Stan program has an incomplete final line, which requires recompilation. Thanks to Chris Black.
