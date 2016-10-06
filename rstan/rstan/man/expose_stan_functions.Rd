@@ -23,7 +23,7 @@ Expose user-defined Stan functions to \R for testing and simulation
     program (\code{.stan} file). In any of these cases, the underlying Stan 
     program should contain a non-empty \code{functions} block.
   }
- \item{environment}{
+ \item{env}{
    an \code{\link[base]{environment}}. By default, the global environment
    is used.
 }
