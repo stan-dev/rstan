@@ -8,9 +8,9 @@ Expose user-defined Stan functions to \R for testing and simulation
   \code{functions} block at the top of a Stan program. The 
   \code{expose_stan_functions} utility function uses
   \code{\link[Rcpp]{sourceCpp}} to export those user-defined functions
-  to the user's workspace (\code{\link{.GlobalEnv}}) for 
-  testing inside \R or for doing posterior predictive simulations in \R rather 
-  than in the \code{generated quantities} block of a Stan program.
+  to the specified environment for testing inside \R or for doing posterior
+  predictive simulations in \R rather than in the \code{generated 
+  quantities} block of a Stan program.
 }
 \usage{
   expose_stan_functions(stanmodel)
@@ -23,6 +23,9 @@ Expose user-defined Stan functions to \R for testing and simulation
     program (\code{.stan} file). In any of these cases, the underlying Stan 
     program should contain a non-empty \code{functions} block.
   }
+ \item{environment}{
+   an \code{\link[base]{environment}}. By default, the global environment
+   is used.
 }
 
 \details{
