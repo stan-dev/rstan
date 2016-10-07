@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-expose_stan_functions <- function(stanmodel) {
+expose_stan_functions <- function(stanmodel, env = globalenv()) {
   if(is(stanmodel, "stanfit")) {
     stanmodel <- get_stanmodel(stanmodel)
     stanmodel <- get_cppcode(stanmodel)
@@ -241,7 +241,7 @@ expose_stan_functions <- function(stanmodel) {
   # try to compile
   on.exit(message("Here is the C++ code that does not compile. Please report bug."))
   on.exit(print(lines), add = TRUE)
-  compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"))
+  compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"), env = env)
   on.exit(NULL)
   return(invisible(compiled$functions))
 }
