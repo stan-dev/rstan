@@ -1,7 +1,7 @@
-#ifndef RSTAN__FILTERED_VALUES_HPP
-#define RSTAN__FILTERED_VALUES_HPP
+#ifndef RSTAN_FILTERED_VALUES_HPP
+#define RSTAN_FILTERED_VALUES_HPP
 
-#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 #include <rstan/values.hpp>
 #include <ostream>
 #include <stdexcept>
@@ -10,7 +10,7 @@
 
 namespace rstan {
   template <class InternalVector>
-  class filtered_values: public stan::interface_callbacks::writer::base_writer {
+  class filtered_values : public stan::callbacks::writer {
   private:
     size_t N_, M_, N_filter_;
     std::vector<size_t> filter_;
@@ -45,26 +45,20 @@ namespace rstan {
                                   "elements out of range");
     }
 
-    void operator()(const std::string& key,
-                    double value) { }
+    void operator()(const std::string& key, double value) { }
 
-    void operator()(const std::string& key,
-                    int value) { }
+    void operator()(const std::string& key, int value) { }
 
-    void operator()(const std::string& key,
-                    const std::string& value) { }
+    void operator()(const std::string& key, const std::string& value) { }
 
-    void operator()(const std::string& key,
-                    const double* values,
+    void operator()(const std::string& key, const double* values,
                     int n_values) { }
 
-    void operator()(const std::string& key,
-                    const double* values,
-                    int n_rows, int n_cols) { } 
+    void operator()(const std::string& key, const double* values,
+                    int n_rows, int n_cols) { }
 
-    void operator()(const std::vector<std::string>& names) {
-    }
-    
+    void operator()(const std::vector<std::string>& names) { }
+
     void operator()(const std::vector<double>& state) {
       if (state.size() != N_)
         throw std::length_error("vector provided does not "
@@ -74,9 +68,9 @@ namespace rstan {
       values_(tmp);
     }
 
-    void operator()(const std::string& message) { }
-
     void operator()() { }
+
+    void operator()(const std::string& message) { }
 
     const std::vector<InternalVector>& x() {
       return values_.x();
@@ -84,5 +78,4 @@ namespace rstan {
   };
 
 }
-
 #endif
