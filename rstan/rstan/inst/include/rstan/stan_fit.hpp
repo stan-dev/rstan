@@ -749,26 +749,24 @@ namespace rstan {
         std::vector<std::string> sampler_names;
 
         rstan_sample_writer *sample_writer_ptr;
-        size_t sample_writer_size;
         size_t sample_writer_offset;
+
+        int num_warmup = args.get_ctrl_sampling_warmup();
+        int num_samples = args.get_ctrl_sampling_iter_save_wo_warmup();
+        int num_thin = args.get_ctrl_sampling_thin();
+        bool save_warmup = args.get_ctrl_sampling_save_warmup();
+        int refresh = args.get_ctrl_sampling_refresh();
+        int num_iter_save = args.get_ctrl_sampling_iter_save();
         
         if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
           sampler_names.resize(0);
-          sample_writer_size = sample_names.size() + sampler_names.size() + constrained_param_names.size();
-          sample_writer_offset = sample_names.size() + sampler_names.size();
-          
           sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
                                                     sample_names.size(),
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
-                                                    args.get_ctrl_sampling_iter_save(),
-                                                    args.get_ctrl_sampling_warmup(),
+                                                    num_iter_save,
+                                                    num_warmup,
                                                     qoi_idx);
-
-          int num_samples = args.get_ctrl_sampling_iter_save_wo_warmup();
-          int num_thin = args.get_ctrl_sampling_thin();
-          int refresh = args.get_ctrl_sampling_refresh();
-
           return_code
             = stan::services::sample::fixed_param(model, init_context,
                                                   random_seed, id, init_radius,
@@ -785,43 +783,71 @@ namespace rstan {
           sampler_names[2] = "n_leapfrog__";
           sampler_names[3] = "divergent__";
           sampler_names[4] = "energy__";
-          sample_writer_size = sample_names.size() + sampler_names.size() + constrained_param_names.size();
           sample_writer_offset = sample_names.size() + sampler_names.size();
                     
           sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
                                                     sample_names.size(),
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
-                                                    args.get_ctrl_sampling_iter_save(),
-                                                    args.get_ctrl_sampling_warmup(),
+                                                    num_iter_save,
+                                                    num_warmup,
                                                     qoi_idx);
 
-          
+          double stepsize = args.get_ctrl_sampling_stepsize();
+          double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
+          int max_depth = args.get_ctrl_sampling_max_treedepth();
 
           Rcpp::Rcout << "  algorithm = NUTS" << std::endl;
           if (args.get_ctrl_sampling_metric() == DENSE_E) {
             Rcpp::Rcout << "    metric = DENSE_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
-              Rcpp::Rcout << "      adapt disengaged" << std::endl;
-            } else 
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
+              return_code = stan::services::sample
+                ::hmc_nuts_dense_e(model, init_context,
+                                   random_seed, id, init_radius,
+                                   num_warmup, num_samples,
+                                   num_thin, save_warmup, refresh,
+                                   stepsize, stepsize_jitter, max_depth,
+                                   interrupt, info, err, init_writer,
+                                   *sample_writer_ptr, diagnostic_writer);
             // 6: sample nuts dense_e adapt_false
-            // 7: sample nuts dense_e adapt_true
+            } else {
+              double delta = args.get_ctrl_sampling_adapt_delta();
+              double gamma = args.get_ctrl_sampling_adapt_gamma();
+              double kappa = args.get_ctrl_sampling_adapt_kappa();
+              double t0 = args.get_ctrl_sampling_adapt_t0();
+              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
+              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
+              unsigned int window = args.get_ctrl_sampling_adapt_window();
+              
+              Rcpp::Rcout << "      adapt engaged" << std::endl;
+              return_code = stan::services::sample
+                ::hmc_nuts_dense_e_adapt(model, init_context,
+                                         random_seed, id, init_radius,
+                                         num_warmup, num_samples,
+                                         num_thin, save_warmup, refresh,
+                                         stepsize, stepsize_jitter, max_depth,
+                                         delta, gamma, kappa,
+                                         t0, init_buffer, term_buffer, window,
+                                         interrupt, info, err, init_writer,
+                                         *sample_writer_ptr, diagnostic_writer);
+              // 7: sample nuts dense_e adapt_true
+            }
           } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
+            
             Rcpp::Rcout << "    metric = DIAG_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               Rcpp::Rcout << "      adapt disengaged" << std::endl;
+              return_code = stan::services::sample
+                ::hmc_nuts_diag_e(model, init_context,
+                                  random_seed, id, init_radius,
+                                  num_warmup, num_samples,
+                                  num_thin, save_warmup, refresh,
+                                  stepsize, stepsize_jitter, max_depth,
+                                  interrupt, info, err, init_writer,
+                                  *sample_writer_ptr, diagnostic_writer);
               // 8: sample nuts diag_e adapt_false
             } else {
               Rcpp::Rcout << "      adapt engaged" << std::endl;
-              int num_warmup = args.get_ctrl_sampling_warmup();
-              int num_samples = args.get_ctrl_sampling_iter_save_wo_warmup();
-              int num_thin = args.get_ctrl_sampling_thin();
-              bool save_warmup = args.get_ctrl_sampling_save_warmup();
-              int refresh = args.get_ctrl_sampling_refresh();
-              double stepsize = args.get_ctrl_sampling_stepsize();
-              double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
-              int max_depth = args.get_ctrl_sampling_max_treedepth();
               double delta = args.get_ctrl_sampling_adapt_delta();
               double gamma = args.get_ctrl_sampling_adapt_gamma();
               double kappa = args.get_ctrl_sampling_adapt_kappa();
@@ -835,8 +861,8 @@ namespace rstan {
                                         random_seed, id, init_radius,
                                         num_warmup, num_samples,
                                         num_thin, save_warmup, refresh,
-                                        stepsize, stepsize_jitter,
-                                        max_depth, delta, gamma, kappa,
+                                        stepsize, stepsize_jitter, max_depth,
+                                        delta, gamma, kappa,
                                         t0, init_buffer, term_buffer, window,
                                         interrupt, info, err, init_writer,
                                         *sample_writer_ptr, diagnostic_writer);
@@ -844,9 +870,37 @@ namespace rstan {
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
             Rcpp::Rcout << "    metric = UNIT_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
+              return_code = stan::services::sample
+                ::hmc_nuts_unit_e(model, init_context,
+                                  random_seed, id, init_radius,
+                                  num_warmup, num_samples,
+                                  num_thin, save_warmup, refresh,
+                                  stepsize, stepsize_jitter, max_depth,
+                                  interrupt, info, err, init_writer,
+                                  *sample_writer_ptr, diagnostic_writer);
+              
               Rcpp::Rcout << "      adapt disengaged" << std::endl;
-            } else 
+            } else {
+              double delta = args.get_ctrl_sampling_adapt_delta();
+              double gamma = args.get_ctrl_sampling_adapt_gamma();
+              double kappa = args.get_ctrl_sampling_adapt_kappa();
+              double t0 = args.get_ctrl_sampling_adapt_t0();
+              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
+              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
+              unsigned int window = args.get_ctrl_sampling_adapt_window();
+              
+              return_code = stan::services::sample
+                ::hmc_nuts_unit_e_adapt(model, init_context,
+                                        random_seed, id, init_radius,
+                                        num_warmup, num_samples,
+                                        num_thin, save_warmup, refresh,
+                                        stepsize, stepsize_jitter, max_depth,
+                                        delta, gamma, kappa, t0,
+                                        interrupt, info, err, init_writer,
+                                        *sample_writer_ptr, diagnostic_writer);
               Rcpp::Rcout << "      adapt engaged" << std::endl;
+              
+            }
             // 10: sample nuts unit_e adapt_false
             // 11: sample nuts unit_e adapt_true
           }
@@ -855,41 +909,127 @@ namespace rstan {
           sampler_names[0] = "stepsize__";
           sampler_names[1] = "int_time__";
           sampler_names[2] = "energy__";
-          sample_writer_size = sample_names.size() + sampler_names.size() + constrained_param_names.size();
           sample_writer_offset = sample_names.size() + sampler_names.size();
           
           sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
                                                     sample_names.size(),
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
-                                                    args.get_ctrl_sampling_iter_save(),
-                                                    args.get_ctrl_sampling_warmup(),
+                                                    num_iter_save,
+                                                    num_warmup,
                                                     qoi_idx);
 
+          double stepsize = args.get_ctrl_sampling_stepsize();
+          double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
+          double int_time = args.get_ctrl_sampling_int_time();
           
           Rcpp::Rcout << "  algorithm = HMC" << std::endl;
           if (args.get_ctrl_sampling_metric() == DENSE_E) {
             Rcpp::Rcout << "    metric = DENSE_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               Rcpp::Rcout << "      adapt disengaged" << std::endl;
-            } else 
+              return_code = stan::services::sample
+                ::hmc_static_dense_e(model, init_context,
+                                     random_seed, id, init_radius,
+                                     num_warmup, num_samples,
+                                     num_thin, save_warmup, refresh,
+                                     stepsize, stepsize_jitter, int_time,
+                                     interrupt, info, err, init_writer,
+                                     *sample_writer_ptr, diagnostic_writer);
+            } else {
               Rcpp::Rcout << "      adapt engaged" << std::endl;
+              double delta = args.get_ctrl_sampling_adapt_delta();
+              double gamma = args.get_ctrl_sampling_adapt_gamma();
+              double kappa = args.get_ctrl_sampling_adapt_kappa();
+              double t0 = args.get_ctrl_sampling_adapt_t0();
+              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
+              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
+              unsigned int window = args.get_ctrl_sampling_adapt_window();
+
+              return_code = stan::services::sample
+                ::hmc_static_dense_e_adapt(model, init_context,
+                                           random_seed, id, init_radius,
+                                           num_warmup, num_samples,
+                                           num_thin, save_warmup, refresh,
+                                           stepsize, stepsize_jitter, int_time,
+                                           delta, gamma, kappa, t0,
+                                           init_buffer, term_buffer, window,
+                                           interrupt, info, err, init_writer,
+                                           *sample_writer_ptr, diagnostic_writer);
+              
+            }
             // 12: sample static dense_e adapt_false
             // 13: sample static dense_e adapt_true
           } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
             Rcpp::Rcout << "    metric = DIAG_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               Rcpp::Rcout << "      adapt disengaged" << std::endl;
-            } else 
+              return_code = stan::services::sample
+                ::hmc_static_diag_e(model, init_context,
+                                    random_seed, id, init_radius,
+                                    num_warmup, num_samples,
+                                    num_thin, save_warmup, refresh,
+                                    stepsize, stepsize_jitter, int_time,
+                                    interrupt, info, err, init_writer,
+                                    *sample_writer_ptr, diagnostic_writer);
+
+            } else {
               Rcpp::Rcout << "      adapt engaged" << std::endl;
+              double delta = args.get_ctrl_sampling_adapt_delta();
+              double gamma = args.get_ctrl_sampling_adapt_gamma();
+              double kappa = args.get_ctrl_sampling_adapt_kappa();
+              double t0 = args.get_ctrl_sampling_adapt_t0();
+              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
+              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
+              unsigned int window = args.get_ctrl_sampling_adapt_window();
+
+              return_code = stan::services::sample
+                ::hmc_static_diag_e_adapt(model, init_context,
+                                          random_seed, id, init_radius,
+                                          num_warmup, num_samples,
+                                          num_thin, save_warmup, refresh,
+                                          stepsize, stepsize_jitter, int_time,
+                                          delta, gamma, kappa, t0,
+                                          init_buffer, term_buffer, window,
+                                          interrupt, info, err, init_writer,
+                                          *sample_writer_ptr, diagnostic_writer);
+            }
             // 14: sample static diag_e adapt_false
             // 15: sample static diag_e adapt_true
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
             Rcpp::Rcout << "    metric = UNIT_E" << std::endl;
-            if (args.get_ctrl_sampling_adapt_engaged())
+            if (args.get_ctrl_sampling_adapt_engaged()) {
               Rcpp::Rcout << "      adapt engaged" << std::endl;
-            else 
+              return_code = stan::services::sample
+                ::hmc_static_unit_e(model, init_context,
+                                    random_seed, id, init_radius,
+                                    num_warmup, num_samples,
+                                    num_thin, save_warmup, refresh,
+                                    stepsize, stepsize_jitter, int_time,
+                                    interrupt, info, err, init_writer,
+                                    *sample_writer_ptr, diagnostic_writer);
+
+            } else  {
+              double delta = args.get_ctrl_sampling_adapt_delta();
+              double gamma = args.get_ctrl_sampling_adapt_gamma();
+              double kappa = args.get_ctrl_sampling_adapt_kappa();
+              double t0 = args.get_ctrl_sampling_adapt_t0();
+              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
+              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
+              unsigned int window = args.get_ctrl_sampling_adapt_window();
+
+              return_code = stan::services::sample
+                ::hmc_static_unit_e_adapt(model, init_context,
+                            random_seed, id, init_radius,
+                            num_warmup, num_samples,
+                            num_thin, save_warmup, refresh,
+                            stepsize, stepsize_jitter, int_time,
+                            delta, gamma, kappa, t0,
+                            interrupt, info, err, init_writer,
+                            *sample_writer_ptr, diagnostic_writer);
+
               Rcpp::Rcout << "      adapt disengaged" << std::endl;
+            }
             // 16: sample static unit_e adapt_false
             // 17: sample static unit_e adapt_true
           }
@@ -897,7 +1037,8 @@ namespace rstan {
         double mean_lp(0);
         std::vector<double> mean_pars;
         mean_pars.resize(constrained_param_names.size(), 0);
-        
+
+        sample_writer_offset = sample_names.size() + sampler_names.size();
         if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
           double inverse_saved = 1.0 / args.get_ctrl_sampling_iter_save_wo_warmup();
           mean_lp = sample_writer_ptr->sum_.sum()[0] * inverse_saved;
@@ -905,22 +1046,22 @@ namespace rstan {
             mean_pars[n] = sample_writer_ptr->sum_.sum()[sample_writer_offset + n] * inverse_saved;
           }
         }
-
-        Rcpp::Rcout << "sample_writer_size =   " << sample_writer_size << std::endl
-                    << "sample_writer_offset = " << sample_writer_offset << std::endl
-                    << "constrained size =     " << constrained_param_names.size() << std::endl
-                    << "values_.size() =       " << sample_writer_ptr->values_.x().size() << std::endl
-                    << "values_[0].size() =    " << sample_writer_ptr->values_.x()[0].size() << std::endl;
         
-        Rcpp::Rcout << "qoi_idx(" << qoi_idx.size() << "): ";
-        for (size_t n = 0; n < qoi_idx.size(); n++)
-          Rcpp::Rcout << qoi_idx[n] << " ";
-        Rcpp::Rcout << std::endl;
+        // Rcpp::Rcout << "sample_writer_size =   " << sample_writer_size << std::endl
+        //             << "sample_writer_offset = " << sample_writer_offset << std::endl
+        //             << "constrained size =     " << constrained_param_names.size() << std::endl
+        //             << "values_.size() =       " << sample_writer_ptr->values_.x().size() << std::endl
+        //             << "values_[0].size() =    " << sample_writer_ptr->values_.x()[0].size() << std::endl;
+        
+        // Rcpp::Rcout << "qoi_idx(" << qoi_idx.size() << "): ";
+        // for (size_t n = 0; n < qoi_idx.size(); n++)
+        //   Rcpp::Rcout << qoi_idx[n] << " ";
+        // Rcpp::Rcout << std::endl;
 
-        Rcpp::Rcout << "init_writer.x()(" << init_writer.x().size() << "): ";
-        for (size_t n = 0; n < init_writer.x().size(); n++)
-          Rcpp::Rcout << init_writer.x()[n] << " ";
-        Rcpp::Rcout << std::endl;
+        // Rcpp::Rcout << "init_writer.x()(" << init_writer.x().size() << "): ";
+        // for (size_t n = 0; n < init_writer.x().size(); n++)
+        //   Rcpp::Rcout << init_writer.x()[n] << " ";
+        // Rcpp::Rcout << std::endl;
 
 
         holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
@@ -1926,7 +2067,7 @@ namespace rstan {
  * compile to check syntax error
  */
 /*
-  STAN= ../../../../../
+  STAN=../../../../../
   RCPPINC=`Rscript -e "cat(system.file('include', package='Rcpp'))"`
   RINC=`Rscript -e "cat(R.home('include'))"`
   g++ -Wall -I${RINC} -I"${STAN}/lib/boost_1.51.0" -I"${STAN}/lib/eigen_3.1.1"  -I"${STAN}/src" -I"${RCPPINC}" -I"../" stan_fit.hpp
