@@ -604,9 +604,14 @@ setMethod("sampling", "stanmodel",
               sink(mfile, type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(NULL, type = "message")
-              close(mfile)
-              report <- scan(file = messages, what = character(),
-                             sep = "\n", quiet = TRUE)
+              if (!file.exists(messages)) {
+                report <- "log file disappeared"
+              }
+              else {
+                close(mfile)
+                report <- scan(file = messages, what = character(),
+                               sep = "\n", quiet = TRUE)
+              }
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 print(report)
                 msg <- "error occurred during calling the sampler; sampling not done"
