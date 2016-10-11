@@ -752,9 +752,7 @@ namespace rstan {
         size_t sample_writer_size;
         size_t sample_writer_offset;
         
-        Rcpp::Rcout << "method is SAMPLING" << std::endl;
         if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
-          Rcpp::Rcout << "  algorithm = Fixed_param" << std::endl;
           sampler_names.resize(0);
           sample_writer_size = sample_names.size() + sampler_names.size() + constrained_param_names.size();
           sample_writer_offset = sample_names.size() + sampler_names.size();
@@ -765,9 +763,21 @@ namespace rstan {
                                                     constrained_param_names.size(),
                                                     args.get_ctrl_sampling_iter_save(),
                                                     args.get_ctrl_sampling_warmup(),
-                                                    sample_writer_offset,
                                                     qoi_idx);
-          // 5: sample fixed_param
+
+          int num_samples = args.get_ctrl_sampling_iter_save_wo_warmup();
+          int num_thin = args.get_ctrl_sampling_thin();
+          int refresh = args.get_ctrl_sampling_refresh();
+
+          return_code
+            = stan::services::sample::fixed_param(model, init_context,
+                                                  random_seed, id, init_radius,
+                                                  num_samples,
+                                                  num_thin,
+                                                  refresh,
+                                                  interrupt,
+                                                  info, err, init_writer,
+                                                  *sample_writer_ptr, diagnostic_writer);
         } else if (args.get_ctrl_sampling_algorithm() == NUTS) {
           sampler_names.resize(5);
           sampler_names[0] = "stepsize__";
@@ -784,7 +794,6 @@ namespace rstan {
                                                     constrained_param_names.size(),
                                                     args.get_ctrl_sampling_iter_save(),
                                                     args.get_ctrl_sampling_warmup(),
-                                                    sample_writer_offset,
                                                     qoi_idx);
 
           
@@ -855,7 +864,6 @@ namespace rstan {
                                                     constrained_param_names.size(),
                                                     args.get_ctrl_sampling_iter_save(),
                                                     args.get_ctrl_sampling_warmup(),
-                                                    sample_writer_offset,
                                                     qoi_idx);
 
           
@@ -897,6 +905,24 @@ namespace rstan {
             mean_pars[n] = sample_writer_ptr->sum_.sum()[sample_writer_offset + n] * inverse_saved;
           }
         }
+
+        Rcpp::Rcout << "sample_writer_size =   " << sample_writer_size << std::endl
+                    << "sample_writer_offset = " << sample_writer_offset << std::endl
+                    << "constrained size =     " << constrained_param_names.size() << std::endl
+                    << "values_.size() =       " << sample_writer_ptr->values_.x().size() << std::endl
+                    << "values_[0].size() =    " << sample_writer_ptr->values_.x()[0].size() << std::endl;
+        
+        Rcpp::Rcout << "qoi_idx(" << qoi_idx.size() << "): ";
+        for (size_t n = 0; n < qoi_idx.size(); n++)
+          Rcpp::Rcout << qoi_idx[n] << " ";
+        Rcpp::Rcout << std::endl;
+
+        Rcpp::Rcout << "init_writer.x()(" << init_writer.x().size() << "): ";
+        for (size_t n = 0; n < init_writer.x().size(); n++)
+          Rcpp::Rcout << init_writer.x()[n] << " ";
+        Rcpp::Rcout << std::endl;
+
+
         holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
                             sample_writer_ptr->values_.x().end());
         holder.attr("test_grad") = Rcpp::wrap(false);

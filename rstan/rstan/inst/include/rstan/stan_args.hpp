@@ -360,8 +360,11 @@ namespace rstan {
             else if (t_str == "Fixed_param") {
               ctrl.sampling.algorithm = Fixed_param;
               ctrl.sampling.adapt_engaged = false;
-            }
-            else {
+              ctrl.sampling.warmup = 0;
+              ctrl.sampling.iter_save_wo_warmup = 1 + (ctrl.sampling.iter - 1) / ctrl.sampling.thin;
+              ctrl.sampling.iter_save = ctrl.sampling.iter_save_wo_warmup;
+              ctrl.sampling.save_warmup = false;
+            } else {
               std::stringstream msg;
               msg << "Invalid value for parameter algorithm (found "
                   << t_str << "; require HMC, Metropolis, Fixed_param, or NUTS).";
