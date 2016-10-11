@@ -26,6 +26,7 @@ Expose user-defined Stan functions to \R for testing and simulation
  \item{env}{
    an \code{\link[base]{environment}}. By default, the global environment
    is used.
+  }
 }
 
 \details{
@@ -52,12 +53,12 @@ Expose user-defined Stan functions to \R for testing and simulation
   \code{\link{formals}}. This \code{lp__} argument defaults to zero, but a 
   \code{\link{double}} precision scalar may be  passed to this argument when the 
   function is called from \R. Such a user-defined Stan function can terminate 
-  with \code{return get_lp();} or can execute \code{print(lp__);} to verify that 
+  with \code{return target();} or can execute \code{print(target());} to verify that 
   the calculation is correct.
   }
 }
 \value{
-  The names of the new functions in \code{\link{.GlobalEnv}} are returned invisibly.
+  The names of the new functions in \code{env} are returned invisibly.
 }
 \seealso{
   \code{\link[Rcpp]{sourceCpp}}
