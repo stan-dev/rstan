@@ -54,6 +54,7 @@
 
 #include <rstan/filtered_values.hpp>
 #include <rstan/sum_values.hpp>
+#include <rstan/value.hpp>
 #include <rstan/values.hpp>
 #include <rstan/rstan_writer.hpp>
 
@@ -427,182 +428,182 @@ namespace rstan {
       }
     };
 
-    // in:  model, s, sampler_ptr
-    // out: sample_writer_size, diagnostic_writer_size
-    template <class Model>
-    void calculate_sizes(Model& model,
-                         stan::mcmc::sample& s,
-                         stan::mcmc::base_mcmc* sampler_ptr,
-                         size_t& sample_writer_size,
-                         size_t& sample_writer_offset,
-                         std::vector<std::string>& sample_names,
-                         std::vector<std::string>& sampler_names,
-                         std::vector<std::string>& model_constrained_param_names,
-                         std::vector<std::string>& model_unconstrained_param_names,
-                         std::vector<std::string>& sampler_diagnostic_names) {
-      s.get_sample_param_names(sample_names);
+    // // in:  model, s, sampler_ptr
+    // // out: sample_writer_size, diagnostic_writer_size
+    // template <class Model>
+    // void calculate_sizes(Model& model,
+    //                      stan::mcmc::sample& s,
+    //                      stan::mcmc::base_mcmc* sampler_ptr,
+    //                      size_t& sample_writer_size,
+    //                      size_t& sample_writer_offset,
+    //                      std::vector<std::string>& sample_names,
+    //                      std::vector<std::string>& sampler_names,
+    //                      std::vector<std::string>& model_constrained_param_names,
+    //                      std::vector<std::string>& model_unconstrained_param_names,
+    //                      std::vector<std::string>& sampler_diagnostic_names) {
+    //   s.get_sample_param_names(sample_names);
 
-      sampler_ptr->get_sampler_param_names(sampler_names);
+    //   sampler_ptr->get_sampler_param_names(sampler_names);
 
-      model.constrained_param_names(model_constrained_param_names, true, true);
+    //   model.constrained_param_names(model_constrained_param_names, true, true);
 
-      model.unconstrained_param_names(model_unconstrained_param_names, false, false);
+    //   model.unconstrained_param_names(model_unconstrained_param_names, false, false);
 
-      sampler_ptr->get_sampler_diagnostic_names(model_unconstrained_param_names,
-                                                sampler_diagnostic_names);
+    //   sampler_ptr->get_sampler_diagnostic_names(model_unconstrained_param_names,
+    //                                             sampler_diagnostic_names);
 
-      sample_writer_size = sample_names.size() + sampler_names.size()
-        + model_constrained_param_names.size();
-      sample_writer_offset = sample_names.size() + sampler_names.size();
-    }
+    //   sample_writer_size = sample_names.size() + sampler_names.size()
+    //     + model_constrained_param_names.size();
+    //   sample_writer_offset = sample_names.size() + sampler_names.size();
+    // }
 
 
-    template <class Model, class RNG_t>
-    void execute_sampling(stan_args& args, Model& model, Rcpp::List& holder,
-                          stan::mcmc::base_mcmc* sampler_ptr,
-                          stan::mcmc::sample& s,
-                          const std::vector<size_t>& qoi_idx,
-                          std::vector<double>& initv,
-                          std::fstream& sample_stream,
-                          std::fstream& diagnostic_stream,
-                          const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
-      // size_t sample_writer_size, sample_writer_offset;
-      // std::vector<std::string> sample_names;
-      // std::vector<std::string> sampler_names;
-      // std::vector<std::string> model_constrained_param_names;
-      // std::vector<std::string> model_unconstrained_param_names;
-      // std::vector<std::string> sampler_diagnostic_names;
-      // rstan::calculate_sizes(model, s, sampler_ptr,
-      //                        sample_writer_size,
-      //                        sample_writer_offset,
-      //                        sample_names,
-      //                        sampler_names,
-      //                        model_constrained_param_names,
-      //                        model_unconstrained_param_names,
-      //                        sampler_diagnostic_names);
+    // template <class Model, class RNG_t>
+    // void execute_sampling(stan_args& args, Model& model, Rcpp::List& holder,
+    //                       stan::mcmc::base_mcmc* sampler_ptr,
+    //                       stan::mcmc::sample& s,
+    //                       const std::vector<size_t>& qoi_idx,
+    //                       std::vector<double>& initv,
+    //                       std::fstream& sample_stream,
+    //                       std::fstream& diagnostic_stream,
+    //                       const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
+    //   // size_t sample_writer_size, sample_writer_offset;
+    //   // std::vector<std::string> sample_names;
+    //   // std::vector<std::string> sampler_names;
+    //   // std::vector<std::string> model_constrained_param_names;
+    //   // std::vector<std::string> model_unconstrained_param_names;
+    //   // std::vector<std::string> sampler_diagnostic_names;
+    //   // rstan::calculate_sizes(model, s, sampler_ptr,
+    //   //                        sample_writer_size,
+    //   //                        sample_writer_offset,
+    //   //                        sample_names,
+    //   //                        sampler_names,
+    //   //                        model_constrained_param_names,
+    //   //                        model_unconstrained_param_names,
+    //   //                        sampler_diagnostic_names);
 
-      // rstan_sample_writer sample_writer
-      //   = sample_writer_factory(&sample_stream, "# ",
-      //                           sample_writer_size,
-      //                           args.get_ctrl_sampling_iter_save(),
-      //                           args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
-      //                           sample_writer_offset,
-      //                           qoi_idx);
+    //   // rstan_sample_writer sample_writer
+    //   //   = sample_writer_factory(&sample_stream, "# ",
+    //   //                           sample_writer_size,
+    //   //                           args.get_ctrl_sampling_iter_save(),
+    //   //                           args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
+    //   //                           sample_writer_offset,
+    //   //                           qoi_idx);
 
-      // stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
+    //   // stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
 
-      // stan::callbacks::stream_writer message_writer(Rcpp::Rcout);
-      // stan::callbacks::stream_writer error_writer(rstan::io::rcerr);      
+    //   // stan::callbacks::stream_writer message_writer(Rcpp::Rcout);
+    //   // stan::callbacks::stream_writer error_writer(rstan::io::rcerr);      
 
-      // stan::services::sample::mcmc_writer<Model,
-      //                                     rstan_sample_writer,
-      //                                     stan::callbacks::stream_writer,
-      //                                     stan::callbacks::stream_writer>
-      //   writer(sample_writer, diagnostic_writer, message_writer);
+    //   // stan::services::sample::mcmc_writer<Model,
+    //   //                                     rstan_sample_writer,
+    //   //                                     stan::callbacks::stream_writer,
+    //   //                                     stan::callbacks::stream_writer>
+    //   //   writer(sample_writer, diagnostic_writer, message_writer);
 
-      // if (!args.get_append_samples()) {
-      //   writer.write_sample_names(s, sampler_ptr, model);
-      //   writer.write_diagnostic_names(s, sampler_ptr, model);
-      // }
+    //   // if (!args.get_append_samples()) {
+    //   //   writer.write_sample_names(s, sampler_ptr, model);
+    //   //   writer.write_diagnostic_names(s, sampler_ptr, model);
+    //   // }
 
-      // // Warm-Up
-      // clock_t start = clock();
+    //   // // Warm-Up
+    //   // clock_t start = clock();
 
-      // std::stringstream prefix_stream;
-      // prefix_stream << "\nChain " << args.get_chain_id() << ", ";
-      // std::string prefix = prefix_stream.str();
-      // std::string suffix = "";
-      // R_CheckUserInterrupt_Functor interruptCallback;
+    //   // std::stringstream prefix_stream;
+    //   // prefix_stream << "\nChain " << args.get_chain_id() << ", ";
+    //   // std::string prefix = prefix_stream.str();
+    //   // std::string suffix = "";
+    //   // R_CheckUserInterrupt_Functor interruptCallback;
 
-      // stan::services::mcmc::warmup<Model, RNG_t,
-      //                              R_CheckUserInterrupt_Functor>
-      //   (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(),
-      //    args.get_ctrl_sampling_thin(),
-      //    args.get_ctrl_sampling_refresh(), args.get_ctrl_sampling_save_warmup(),
-      //    writer,
-      //    s, model, base_rng,
-      //    prefix, suffix, Rcpp::Rcout,
-      //    interruptCallback,
-      //    message_writer,
-      //    error_writer);
+    //   // stan::services::mcmc::warmup<Model, RNG_t,
+    //   //                              R_CheckUserInterrupt_Functor>
+    //   //   (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(),
+    //   //    args.get_ctrl_sampling_thin(),
+    //   //    args.get_ctrl_sampling_refresh(), args.get_ctrl_sampling_save_warmup(),
+    //   //    writer,
+    //   //    s, model, base_rng,
+    //   //    prefix, suffix, Rcpp::Rcout,
+    //   //    interruptCallback,
+    //   //    message_writer,
+    //   //    error_writer);
 
-      // clock_t end = clock();
-      // double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
-      // std::string adaptation_info;
-      // if (args.get_ctrl_sampling_adapt_engaged()) {
-      //   dynamic_cast<stan::mcmc::base_adapter*>(sampler_ptr)->disengage_adaptation();
-      //   writer.write_adapt_finish(sampler_ptr);
+    //   // clock_t end = clock();
+    //   // double warmDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
+    //   // std::string adaptation_info;
+    //   // if (args.get_ctrl_sampling_adapt_engaged()) {
+    //   //   dynamic_cast<stan::mcmc::base_adapter*>(sampler_ptr)->disengage_adaptation();
+    //   //   writer.write_adapt_finish(sampler_ptr);
 
-      //   std::stringstream ss;
-      //   stan::callbacks::stream_writer info(ss, "# ");
-      //   writer.write_adapt_finish(sampler_ptr);
-      //   adaptation_info = ss.str();
-      //   adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
-      // }
+    //   //   std::stringstream ss;
+    //   //   stan::callbacks::stream_writer info(ss, "# ");
+    //   //   writer.write_adapt_finish(sampler_ptr);
+    //   //   adaptation_info = ss.str();
+    //   //   adaptation_info = adaptation_info.substr(0, adaptation_info.length()-1);
+    //   // }
 
-      // // Sampling
-      // start = clock();
+    //   // // Sampling
+    //   // start = clock();
 
-      // stan::services::mcmc::sample<Model, RNG_t,
-      //                              R_CheckUserInterrupt_Functor>
-      //   (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(),
-      //    args.get_ctrl_sampling_thin(),
-      //    args.get_ctrl_sampling_refresh(), true,
-      //    writer,
-      //    s, model, base_rng,
-      //    prefix, suffix, Rcpp::Rcout,
-      //    interruptCallback,
-      //    message_writer,
-      //    error_writer);
+    //   // stan::services::mcmc::sample<Model, RNG_t,
+    //   //                              R_CheckUserInterrupt_Functor>
+    //   //   (sampler_ptr, args.get_ctrl_sampling_warmup(), args.get_iter() - args.get_ctrl_sampling_warmup(),
+    //   //    args.get_ctrl_sampling_thin(),
+    //   //    args.get_ctrl_sampling_refresh(), true,
+    //   //    writer,
+    //   //    s, model, base_rng,
+    //   //    prefix, suffix, Rcpp::Rcout,
+    //   //    interruptCallback,
+    //   //    message_writer,
+    //   //    error_writer);
 
-      // end = clock();
-      // double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
+    //   // end = clock();
+    //   // double sampleDeltaT = (double)(end - start) / CLOCKS_PER_SEC;
 
-      // writer.write_timing(warmDeltaT, sampleDeltaT);
+    //   // writer.write_timing(warmDeltaT, sampleDeltaT);
 
-      // double mean_lp(0);
-      // std::vector<double> mean_pars;
-      // mean_pars.resize(initv.size(), 0);
+    //   // double mean_lp(0);
+    //   // std::vector<double> mean_pars;
+    //   // mean_pars.resize(initv.size(), 0);
 
-      // if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
-      //   double inverse_saved = 1.0 / args.get_ctrl_sampling_iter_save_wo_warmup();
-      //   mean_lp = sample_writer.sum_.sum()[0] * inverse_saved;
-      //   for (size_t n = 0; n < mean_pars.size(); n++) {
-      //     mean_pars[n] = sample_writer.sum_.sum()[sample_writer_offset + n] * inverse_saved;
-      //   }
-      // }
+    //   // if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
+    //   //   double inverse_saved = 1.0 / args.get_ctrl_sampling_iter_save_wo_warmup();
+    //   //   mean_lp = sample_writer.sum_.sum()[0] * inverse_saved;
+    //   //   for (size_t n = 0; n < mean_pars.size(); n++) {
+    //   //     mean_pars[n] = sample_writer.sum_.sum()[sample_writer_offset + n] * inverse_saved;
+    //   //   }
+    //   // }
 
-      // if (args.get_sample_file_flag()) {
-      //   rstan::io::rcout << "Sample of chain "
-      //                    << args.get_chain_id()
-      //                    << " is written to file " << args.get_sample_file() << "."
-      //                    << std::endl;
-      //   sample_stream.close();
-      // }
-      // if (args.get_diagnostic_file_flag())
-      //   diagnostic_stream.close();
+    //   // if (args.get_sample_file_flag()) {
+    //   //   rstan::io::rcout << "Sample of chain "
+    //   //                    << args.get_chain_id()
+    //   //                    << " is written to file " << args.get_sample_file() << "."
+    //   //                    << std::endl;
+    //   //   sample_stream.close();
+    //   // }
+    //   // if (args.get_diagnostic_file_flag())
+    //   //   diagnostic_stream.close();
 
-      // holder = Rcpp::List(sample_writer.values_.x().begin(),
-      //                     sample_writer.values_.x().end());
-      // holder.attr("test_grad") = Rcpp::wrap(false);
-      // holder.attr("args") = args.stan_args_to_rlist();
-      // holder.attr("inits") = initv;
-      // holder.attr("mean_pars") = mean_pars;
-      // holder.attr("mean_lp__") = mean_lp;
-      // holder.attr("adaptation_info") = adaptation_info;
-      // holder.attr("elapsed_time") =
-      //   Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
-      //                               Rcpp::_["sample"] = sampleDeltaT);
+    //   // holder = Rcpp::List(sample_writer.values_.x().begin(),
+    //   //                     sample_writer.values_.x().end());
+    //   // holder.attr("test_grad") = Rcpp::wrap(false);
+    //   // holder.attr("args") = args.stan_args_to_rlist();
+    //   // holder.attr("inits") = initv;
+    //   // holder.attr("mean_pars") = mean_pars;
+    //   // holder.attr("mean_lp__") = mean_lp;
+    //   // holder.attr("adaptation_info") = adaptation_info;
+    //   // holder.attr("elapsed_time") =
+    //   //   Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
+    //   //                               Rcpp::_["sample"] = sampleDeltaT);
 
-      // Rcpp::List slst(sample_writer.sampler_values_.x().begin()+1,
-      //                 sample_writer.sampler_values_.x().end());
-      // std::vector<std::string> slst_names(sample_names.begin()+1, sample_names.end());
-      // slst_names.insert(slst_names.end(), sampler_names.begin(), sampler_names.end());
-      // slst.names() = slst_names;
-      // holder.attr("sampler_params") = slst;
+    //   // Rcpp::List slst(sample_writer.sampler_values_.x().begin()+1,
+    //   //                 sample_writer.sampler_values_.x().end());
+    //   // std::vector<std::string> slst_names(sample_names.begin()+1, sample_names.end());
+    //   // slst_names.insert(slst_names.end(), sampler_names.begin(), sampler_names.end());
+    //   // slst.names() = slst_names;
+    //   // holder.attr("sampler_params") = slst;
 
-      // holder.names() = fnames_oi;
-    }
+    //   // holder.names() = fnames_oi;
+    // }
 
 
     /**
@@ -643,65 +644,129 @@ namespace rstan {
         diagnostic_stream.open(args.get_diagnostic_file().c_str(), std::fstream::out);
 
       stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
-
-
-      
-      // stan::callbacks::stream_writer sample_writer(Rcpp::Rcout);
-      // {
-      //   // size_t sample_writer_size, sample_writer_offset;
-      //   // std::vector<std::string> sample_names;
-      //   // std::vector<std::string> sampler_names;
-      //   // std::vector<std::string> model_constrained_param_names;
-      //   // std::vector<std::string> model_unconstrained_param_names;
-      //   // std::vector<std::string> sampler_diagnostic_names;
-      //   // rstan::calculate_sizes(model, s, sampler_ptr,
-      //   //                        sample_writer_size,
-      //   //                        sample_writer_offset,
-      //   //                        sample_names,
-      //   //                        sampler_names,
-      //   //                        model_constrained_param_names,
-      //   //                        model_unconstrained_param_names,
-      //   //                        sampler_diagnostic_names);
-
-      //   // rstan_sample_writer sample_writer
-      //   //   = sample_writer_factory(&sample_stream, "# ",
-      //   //                           sample_writer_size,
-      //   //                           args.get_ctrl_sampling_iter_save(),
-      //   //                           args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
-      //   //                           sample_writer_offset,
-      //   //                           qoi_idx);
-      // }
+      // FIXME(dl): fix init_context
       stan::io::empty_var_context init_context;
+      
+      std::vector<std::string> constrained_param_names;
+      model.constrained_param_names(constrained_param_names);
+      rstan::value init_writer;
+        
       int return_code = stan::services::error_codes::CONFIG;
 
+
+      unsigned int random_seed = args.get_random_seed();
+      unsigned int id = args.get_chain_id();
+      double init_radius = args.get_init_radius();
       
-      Rcpp::Rcout << "args.get_method(): " << args.get_method() << std::endl;
-      if (args.get_method() == TEST_GRADIENT)
-        Rcpp::Rcout << "method is TEST_GRADIENT" << std::endl;
-      if (args.get_method() == VARIATIONAL) 
-        Rcpp::Rcout << "method is VARIATIONAL" << std::endl;
-      if (args.get_method() == OPTIM) 
-        Rcpp::Rcout << "method is OPTIM" << std::endl;
-        
-      // 1. diagnose
-      // 2: optimize newton
-      // 3: optimize bfgs
-      // 4: optimize lbfgs
+      if (args.get_method() == TEST_GRADIENT) {
+        double epsilon = args.get_ctrl_test_grad_epsilon();
+        double error = args.get_ctrl_test_grad_error();
+        stan::callbacks::noop_writer sample_writer;
+        return_code = stan::services::diagnose::diagnose(model,
+                                                         init_context,
+                                                         random_seed, id,
+                                                         init_radius,
+                                                         epsilon, error,
+                                                         interrupt,
+                                                         info,
+                                                         init_writer,
+                                                         sample_writer);
+        holder = Rcpp::List::create(Rcpp::_["num_failed"] = return_code);
+        holder.attr("test_grad") = Rcpp::wrap(true);
+        holder.attr("inits") = init_writer.x();
+      }
+      if (args.get_method() == OPTIM) {
+        rstan::value sample_writer;
+        bool save_iterations = args.get_ctrl_optim_save_iterations();
+        int num_iterations = args.get_iter();
+        if (args.get_ctrl_optim_algorithm() == Newton) {
+          return_code
+            = stan::services::optimize::newton(model, init_context,
+                                               random_seed, id, init_radius,
+                                               num_iterations,
+                                               save_iterations,
+                                               interrupt, info,
+                                               init_writer, sample_writer);
+        }
+        if (args.get_ctrl_optim_algorithm() == BFGS) {
+          double init_alpha = args.get_ctrl_optim_init_alpha();
+          double tol_obj= args.get_ctrl_optim_tol_obj();
+          double tol_rel_obj = args.get_ctrl_optim_tol_rel_obj();
+          double tol_grad = args.get_ctrl_optim_tol_grad();
+          double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
+          double tol_param = args.get_ctrl_optim_tol_param();
+          int refresh = args.get_ctrl_sampling_refresh();
+          return_code
+            = stan::services::optimize::bfgs(model, init_context,
+                                             random_seed, id, init_radius,
+                                             init_alpha,
+                                             tol_obj,
+                                             tol_rel_obj,
+                                             tol_grad,
+                                             tol_rel_grad,
+                                             tol_param,
+                                             num_iterations,
+                                             save_iterations,
+                                             refresh,
+                                             interrupt, info,
+                                             init_writer, sample_writer);
+        }
+        if (args.get_ctrl_optim_algorithm() == LBFGS) {
+          int history_size = args.get_ctrl_optim_history_size();
+          double init_alpha = args.get_ctrl_optim_init_alpha();
+          double tol_obj= args.get_ctrl_optim_tol_obj();
+          double tol_rel_obj = args.get_ctrl_optim_tol_rel_obj();
+          double tol_grad = args.get_ctrl_optim_tol_grad();
+          double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
+          double tol_param = args.get_ctrl_optim_tol_param();
+          int refresh = args.get_ctrl_sampling_refresh();
+          return_code
+            = stan::services::optimize::lbfgs(model, init_context,
+                                              random_seed, id, init_radius,
+                                              history_size,
+                                              init_alpha,
+                                              tol_obj,
+                                              tol_rel_obj,
+                                              tol_grad,
+                                              tol_rel_grad,
+                                              tol_param,
+                                              num_iterations,
+                                              save_iterations,
+                                              refresh,
+                                              interrupt, info,
+                                              init_writer, sample_writer);
+        }
+        std::vector<double> params = sample_writer.x();
+        double lp = params.front();
+        params.erase(params.begin());
+        holder = Rcpp::List::create(Rcpp::_["par"] = params,
+                                    Rcpp::_["value"] = lp);
+
+      }
       if (args.get_method() == SAMPLING) {
         std::vector<std::string> sample_names;
         stan::mcmc::sample::get_sample_param_names(sample_names);
         std::vector<std::string> sampler_names;
-        std::vector<std::string> constrained_param_names;
-        model.constrained_param_names(constrained_param_names);
 
         rstan_sample_writer *sample_writer_ptr;
         size_t sample_writer_size;
         size_t sample_writer_offset;
-        rstan::values<std::vector<double> > init_writer(1, constrained_param_names.size());
         
         Rcpp::Rcout << "method is SAMPLING" << std::endl;
         if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
           Rcpp::Rcout << "  algorithm = Fixed_param" << std::endl;
+          sampler_names.resize(0);
+          sample_writer_size = sample_names.size() + sampler_names.size() + constrained_param_names.size();
+          sample_writer_offset = sample_names.size() + sampler_names.size();
+          
+          sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
+                                                    sample_names.size(),
+                                                    sampler_names.size(),
+                                                    constrained_param_names.size(),
+                                                    args.get_ctrl_sampling_iter_save(),
+                                                    args.get_ctrl_sampling_warmup(),
+                                                    sample_writer_offset,
+                                                    qoi_idx);
           // 5: sample fixed_param
         } else if (args.get_ctrl_sampling_algorithm() == NUTS) {
           sampler_names.resize(5);
@@ -714,11 +779,13 @@ namespace rstan {
           sample_writer_offset = sample_names.size() + sampler_names.size();
                     
           sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
-                                                sample_writer_size,
-                                                args.get_ctrl_sampling_iter_save(),
-                                                args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
-                                                sample_writer_offset,
-                                                qoi_idx);
+                                                    sample_names.size(),
+                                                    sampler_names.size(),
+                                                    constrained_param_names.size(),
+                                                    args.get_ctrl_sampling_iter_save(),
+                                                    args.get_ctrl_sampling_warmup(),
+                                                    sample_writer_offset,
+                                                    qoi_idx);
 
           
 
@@ -737,11 +804,7 @@ namespace rstan {
               Rcpp::Rcout << "      adapt disengaged" << std::endl;
               // 8: sample nuts diag_e adapt_false
             } else {
-              // 9: sample nuts diag_e adapt_true
               Rcpp::Rcout << "      adapt engaged" << std::endl;
-              unsigned int random_seed = args.get_random_seed();
-              unsigned int id = args.get_chain_id();
-              double init_radius = args.get_init_radius();
               int num_warmup = args.get_ctrl_sampling_warmup();
               int num_samples = args.get_ctrl_sampling_iter_save_wo_warmup();
               int num_thin = args.get_ctrl_sampling_thin();
@@ -757,34 +820,17 @@ namespace rstan {
               unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
               unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
               unsigned int window = args.get_ctrl_sampling_adapt_window();
-
-              return_code = stan::services::sample::hmc_nuts_diag_e_adapt(model,
-                                                                          init_context,
-                                                                          random_seed,
-                                                                          id,
-                                                                          init_radius,
-                                                                          num_warmup,
-                                                                          num_samples,
-                                                                          num_thin,
-                                                                          save_warmup,
-                                                                          refresh,
-                                                                          stepsize,
-                                                                          stepsize_jitter,
-                                                                          max_depth,
-                                                                          delta,
-                                                                          gamma,
-                                                                          kappa,
-                                                                          t0,
-                                                                          init_buffer,
-                                                                          term_buffer,
-                                                                          window,
-                                                                          interrupt,
-                                                                          info,
-                                                                          err,
-                                                                          init_writer,
-                                                                          *sample_writer_ptr,
-                                                                          diagnostic_writer);
-
+              
+              return_code = stan::services::sample
+                ::hmc_nuts_diag_e_adapt(model, init_context,
+                                        random_seed, id, init_radius,
+                                        num_warmup, num_samples,
+                                        num_thin, save_warmup, refresh,
+                                        stepsize, stepsize_jitter,
+                                        max_depth, delta, gamma, kappa,
+                                        t0, init_buffer, term_buffer, window,
+                                        interrupt, info, err, init_writer,
+                                        *sample_writer_ptr, diagnostic_writer);
             }
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
             Rcpp::Rcout << "    metric = UNIT_E" << std::endl;
@@ -796,7 +842,6 @@ namespace rstan {
             // 11: sample nuts unit_e adapt_true
           }
         } else if (args.get_ctrl_sampling_algorithm() == HMC) {
-          // hmc: stepsize__,int_time__,energy__
           sampler_names.resize(3);
           sampler_names[0] = "stepsize__";
           sampler_names[1] = "int_time__";
@@ -805,9 +850,11 @@ namespace rstan {
           sample_writer_offset = sample_names.size() + sampler_names.size();
           
           sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
-                                                    sample_writer_size,
+                                                    sample_names.size(),
+                                                    sampler_names.size(),
+                                                    constrained_param_names.size(),
                                                     args.get_ctrl_sampling_iter_save(),
-                                                    args.get_ctrl_sampling_iter_save() - args.get_ctrl_sampling_iter_save_wo_warmup(),
+                                                    args.get_ctrl_sampling_warmup(),
                                                     sample_writer_offset,
                                                     qoi_idx);
 
@@ -854,8 +901,7 @@ namespace rstan {
                             sample_writer_ptr->values_.x().end());
         holder.attr("test_grad") = Rcpp::wrap(false);
         holder.attr("args") = args.stan_args_to_rlist();
-        std::vector<double> initv = init_writer.x()[0];
-        holder.attr("inits") = initv;
+        holder.attr("inits") = init_writer.x();
         holder.attr("mean_pars") = mean_pars;
         holder.attr("mean_lp__") = mean_lp;
         //holder.attr("adaptation_info") = adaptation_info;
@@ -873,6 +919,8 @@ namespace rstan {
         holder.names() = fnames_oi;
         delete sample_writer_ptr;
       }
+      if (args.get_method() == VARIATIONAL) 
+        Rcpp::Rcout << "method is VARIATIONAL" << std::endl;
       // 18: variational fullrank
       // 19: variational meanfield
 

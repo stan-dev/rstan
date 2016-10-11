@@ -148,10 +148,14 @@ namespace rstan {
      @param      warmup number of warmup iterations to be saved
   */
   rstan_sample_writer*
-  sample_writer_factory(std::ostream *o, const std::string prefix,
-                        const size_t N, const size_t M, const size_t warmup,
-                        const size_t offset,
+  sample_writer_factory(std::ostream *o, const std::string& prefix,
+                        size_t N_sample_names, size_t N_sampler_names,
+                        size_t N_constrained_param_names,
+                        size_t N_iter_save, size_t warmup,
+                        size_t offset,
                         const std::vector<size_t>& qoi_idx) {
+    size_t N = N_sample_names + N_sampler_names + N_constrained_param_names;
+    
     std::vector<size_t> filter(qoi_idx);
     std::vector<size_t> lp;
     for (size_t n = 0; n < filter.size(); n++)
@@ -167,8 +171,8 @@ namespace rstan {
       filter_sampler_values[n] = n;
 
     stan::callbacks::stream_writer csv(*o, prefix);
-    filtered_values<Rcpp::NumericVector> values(N, M, filter);
-    filtered_values<Rcpp::NumericVector> sampler_values(N, M, filter_sampler_values);
+    filtered_values<Rcpp::NumericVector> values(N, N_iter_save, filter);
+    filtered_values<Rcpp::NumericVector> sampler_values(N, N_iter_save, filter_sampler_values);
     sum_values sum(N, warmup);
 
     return new rstan_sample_writer(csv, values, sampler_values, sum);
