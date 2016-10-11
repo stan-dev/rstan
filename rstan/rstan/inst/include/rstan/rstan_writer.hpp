@@ -113,6 +113,7 @@ namespace rstan {
      * @param[in] state Values in a std::vector
      */
     void operator()(const std::vector<double>& state) {
+      // FIXME(dl): remove
       //Rcpp::Rcout << "next iter(" << state.size() << "): ";
       //for (size_t n = 0; n < state.size(); n++)
       //Rcpp::Rcout << state[n] << " ";
@@ -174,25 +175,26 @@ namespace rstan {
     for (size_t n = 0; n < offset; n++)
       filter_sampler_values[n] = n;
 
-    Rcpp::Rcout << "N = " << N << std::endl
-                << "N_iter_save = " << N_iter_save << std::endl
-                << "offset = " << offset << std::endl;
+    // FIXME(dl): remove
+    // Rcpp::Rcout << "N = " << N << std::endl
+    //             << "N_iter_save = " << N_iter_save << std::endl
+    //             << "offset = " << offset << std::endl;
 
     
-    Rcpp::Rcout << "lp(" << lp.size() << "): ";
-    for (size_t n = 0; n < lp.size(); ++n)
-      Rcpp::Rcout << lp[n] << " ";
-    Rcpp::Rcout << std::endl;
+    // Rcpp::Rcout << "lp(" << lp.size() << "): ";
+    // for (size_t n = 0; n < lp.size(); ++n)
+    //   Rcpp::Rcout << lp[n] << " ";
+    // Rcpp::Rcout << std::endl;
 
-    Rcpp::Rcout << "filter(" << filter.size() << "): ";
-    for (size_t n = 0; n < filter.size(); ++n)
-      Rcpp::Rcout << filter[n] << " ";
-    Rcpp::Rcout << std::endl;
+    // Rcpp::Rcout << "filter(" << filter.size() << "): ";
+    // for (size_t n = 0; n < filter.size(); ++n)
+    //   Rcpp::Rcout << filter[n] << " ";
+    // Rcpp::Rcout << std::endl;
 
-    Rcpp::Rcout << "filter_sampler_values(" << filter_sampler_values.size() << "): ";
-    for (size_t n = 0; n < filter_sampler_values.size(); ++n)
-      Rcpp::Rcout << filter_sampler_values[n] << " ";
-    Rcpp::Rcout << std::endl;
+    // Rcpp::Rcout << "filter_sampler_values(" << filter_sampler_values.size() << "): ";
+    // for (size_t n = 0; n < filter_sampler_values.size(); ++n)
+    //   Rcpp::Rcout << filter_sampler_values[n] << " ";
+    // Rcpp::Rcout << std::endl;
     
     stan::callbacks::stream_writer csv(*o, prefix);
     filtered_values<Rcpp::NumericVector> values(N, N_iter_save, filter);
