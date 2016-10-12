@@ -797,9 +797,7 @@ namespace rstan {
           double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
           int max_depth = args.get_ctrl_sampling_max_treedepth();
 
-          Rcpp::Rcout << "  algorithm = NUTS" << std::endl;
           if (args.get_ctrl_sampling_metric() == DENSE_E) {
-            Rcpp::Rcout << "    metric = DENSE_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
                 ::hmc_nuts_dense_e(model, init_context,
@@ -809,7 +807,6 @@ namespace rstan {
                                    stepsize, stepsize_jitter, max_depth,
                                    interrupt, info, err, init_writer,
                                    *sample_writer_ptr, diagnostic_writer);
-            // 6: sample nuts dense_e adapt_false
             } else {
               double delta = args.get_ctrl_sampling_adapt_delta();
               double gamma = args.get_ctrl_sampling_adapt_gamma();
@@ -819,7 +816,6 @@ namespace rstan {
               unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
               unsigned int window = args.get_ctrl_sampling_adapt_window();
               
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
               return_code = stan::services::sample
                 ::hmc_nuts_dense_e_adapt(model, init_context,
                                          random_seed, id, init_radius,
@@ -830,13 +826,10 @@ namespace rstan {
                                          t0, init_buffer, term_buffer, window,
                                          interrupt, info, err, init_writer,
                                          *sample_writer_ptr, diagnostic_writer);
-              // 7: sample nuts dense_e adapt_true
             }
           } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
             
-            Rcpp::Rcout << "    metric = DIAG_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
-              Rcpp::Rcout << "      adapt disengaged" << std::endl;
               return_code = stan::services::sample
                 ::hmc_nuts_diag_e(model, init_context,
                                   random_seed, id, init_radius,
@@ -845,9 +838,7 @@ namespace rstan {
                                   stepsize, stepsize_jitter, max_depth,
                                   interrupt, info, err, init_writer,
                                   *sample_writer_ptr, diagnostic_writer);
-              // 8: sample nuts diag_e adapt_false
             } else {
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
               double delta = args.get_ctrl_sampling_adapt_delta();
               double gamma = args.get_ctrl_sampling_adapt_gamma();
               double kappa = args.get_ctrl_sampling_adapt_kappa();
@@ -868,7 +859,6 @@ namespace rstan {
                                         *sample_writer_ptr, diagnostic_writer);
             }
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
-            Rcpp::Rcout << "    metric = UNIT_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
                 ::hmc_nuts_unit_e(model, init_context,
@@ -878,16 +868,11 @@ namespace rstan {
                                   stepsize, stepsize_jitter, max_depth,
                                   interrupt, info, err, init_writer,
                                   *sample_writer_ptr, diagnostic_writer);
-              
-              Rcpp::Rcout << "      adapt disengaged" << std::endl;
             } else {
               double delta = args.get_ctrl_sampling_adapt_delta();
               double gamma = args.get_ctrl_sampling_adapt_gamma();
               double kappa = args.get_ctrl_sampling_adapt_kappa();
               double t0 = args.get_ctrl_sampling_adapt_t0();
-              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
-              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
-              unsigned int window = args.get_ctrl_sampling_adapt_window();
               
               return_code = stan::services::sample
                 ::hmc_nuts_unit_e_adapt(model, init_context,
@@ -898,11 +883,7 @@ namespace rstan {
                                         delta, gamma, kappa, t0,
                                         interrupt, info, err, init_writer,
                                         *sample_writer_ptr, diagnostic_writer);
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
-              
             }
-            // 10: sample nuts unit_e adapt_false
-            // 11: sample nuts unit_e adapt_true
           }
         } else if (args.get_ctrl_sampling_algorithm() == HMC) {
           sampler_names.resize(3);
@@ -923,11 +904,8 @@ namespace rstan {
           double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
           double int_time = args.get_ctrl_sampling_int_time();
           
-          Rcpp::Rcout << "  algorithm = HMC" << std::endl;
           if (args.get_ctrl_sampling_metric() == DENSE_E) {
-            Rcpp::Rcout << "    metric = DENSE_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
-              Rcpp::Rcout << "      adapt disengaged" << std::endl;
               return_code = stan::services::sample
                 ::hmc_static_dense_e(model, init_context,
                                      random_seed, id, init_radius,
@@ -937,7 +915,6 @@ namespace rstan {
                                      interrupt, info, err, init_writer,
                                      *sample_writer_ptr, diagnostic_writer);
             } else {
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
               double delta = args.get_ctrl_sampling_adapt_delta();
               double gamma = args.get_ctrl_sampling_adapt_gamma();
               double kappa = args.get_ctrl_sampling_adapt_kappa();
@@ -958,12 +935,8 @@ namespace rstan {
                                            *sample_writer_ptr, diagnostic_writer);
               
             }
-            // 12: sample static dense_e adapt_false
-            // 13: sample static dense_e adapt_true
           } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
-            Rcpp::Rcout << "    metric = DIAG_E" << std::endl;
             if (!args.get_ctrl_sampling_adapt_engaged()) {
-              Rcpp::Rcout << "      adapt disengaged" << std::endl;
               return_code = stan::services::sample
                 ::hmc_static_diag_e(model, init_context,
                                     random_seed, id, init_radius,
@@ -974,7 +947,6 @@ namespace rstan {
                                     *sample_writer_ptr, diagnostic_writer);
 
             } else {
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
               double delta = args.get_ctrl_sampling_adapt_delta();
               double gamma = args.get_ctrl_sampling_adapt_gamma();
               double kappa = args.get_ctrl_sampling_adapt_kappa();
@@ -994,12 +966,8 @@ namespace rstan {
                                           interrupt, info, err, init_writer,
                                           *sample_writer_ptr, diagnostic_writer);
             }
-            // 14: sample static diag_e adapt_false
-            // 15: sample static diag_e adapt_true
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
-            Rcpp::Rcout << "    metric = UNIT_E" << std::endl;
             if (args.get_ctrl_sampling_adapt_engaged()) {
-              Rcpp::Rcout << "      adapt engaged" << std::endl;
               return_code = stan::services::sample
                 ::hmc_static_unit_e(model, init_context,
                                     random_seed, id, init_radius,
@@ -1014,9 +982,6 @@ namespace rstan {
               double gamma = args.get_ctrl_sampling_adapt_gamma();
               double kappa = args.get_ctrl_sampling_adapt_kappa();
               double t0 = args.get_ctrl_sampling_adapt_t0();
-              unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
-              unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
-              unsigned int window = args.get_ctrl_sampling_adapt_window();
 
               return_code = stan::services::sample
                 ::hmc_static_unit_e_adapt(model, init_context,
@@ -1027,11 +992,7 @@ namespace rstan {
                             delta, gamma, kappa, t0,
                             interrupt, info, err, init_writer,
                             *sample_writer_ptr, diagnostic_writer);
-
-              Rcpp::Rcout << "      adapt disengaged" << std::endl;
             }
-            // 16: sample static unit_e adapt_false
-            // 17: sample static unit_e adapt_true
           }
         }
         double mean_lp(0);
@@ -1047,23 +1008,6 @@ namespace rstan {
           }
         }
         
-        // Rcpp::Rcout << "sample_writer_size =   " << sample_writer_size << std::endl
-        //             << "sample_writer_offset = " << sample_writer_offset << std::endl
-        //             << "constrained size =     " << constrained_param_names.size() << std::endl
-        //             << "values_.size() =       " << sample_writer_ptr->values_.x().size() << std::endl
-        //             << "values_[0].size() =    " << sample_writer_ptr->values_.x()[0].size() << std::endl;
-        
-        // Rcpp::Rcout << "qoi_idx(" << qoi_idx.size() << "): ";
-        // for (size_t n = 0; n < qoi_idx.size(); n++)
-        //   Rcpp::Rcout << qoi_idx[n] << " ";
-        // Rcpp::Rcout << std::endl;
-
-        // Rcpp::Rcout << "init_writer.x()(" << init_writer.x().size() << "): ";
-        // for (size_t n = 0; n < init_writer.x().size(); n++)
-        //   Rcpp::Rcout << init_writer.x()[n] << " ";
-        // Rcpp::Rcout << std::endl;
-
-
         holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
                             sample_writer_ptr->values_.x().end());
         holder.attr("test_grad") = Rcpp::wrap(false);
@@ -1086,16 +1030,50 @@ namespace rstan {
         holder.names() = fnames_oi;
         delete sample_writer_ptr;
       }
-      if (args.get_method() == VARIATIONAL) 
-        Rcpp::Rcout << "method is VARIATIONAL" << std::endl;
-      // 18: variational fullrank
-      // 19: variational meanfield
+      if (args.get_method() == VARIATIONAL) {
+        int grad_samples = args.get_ctrl_variational_grad_samples();
+        int elbo_samples = args.get_ctrl_variational_elbo_samples();
+        int max_iterations = args.get_iter();
+        double tol_rel_obj = args.get_ctrl_variational_tol_rel_obj();
+        double eta = args.get_ctrl_variational_eta();
+        bool adapt_engaged = args.get_ctrl_variational_adapt_engaged();
+        int adapt_iterations = args.get_ctrl_variational_adapt_iter();
+        int eval_elbo = args.get_ctrl_variational_eval_elbo();
+        int output_samples = args.get_ctrl_variational_output_samples();
 
+        stan::callbacks::stream_writer sample_writer(sample_stream, "# ");
+        args.write_args_as_comment(sample_stream); // this is necessary for read_stan_csv
+        
+        if (args.get_ctrl_variational_algorithm() == FULLRANK) {
+          return_code = stan::services::experimental::advi
+            ::fullrank(model, init_context,
+                       random_seed, id, init_radius,
+                       grad_samples, elbo_samples,
+                       max_iterations, tol_rel_obj, eta,
+                       adapt_engaged, adapt_iterations,
+                       eval_elbo, output_samples,
+                       interrupt, info, init_writer,
+                       sample_writer, diagnostic_writer);
+        } else {
+          return_code = stan::services::experimental::advi
+            ::meanfield(model, init_context,
+                        random_seed, id, init_radius,
+                        grad_samples, elbo_samples,
+                        max_iterations, tol_rel_obj, eta,
+                        adapt_engaged, adapt_iterations,
+                        eval_elbo, output_samples,
+                        interrupt, info, init_writer,
+                        sample_writer, diagnostic_writer);
+        }
+        holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
+        holder.attr("args") = args.stan_args_to_rlist();
+        holder.attr("inits") = init_writer.x();
+      }
+      
       if (args.get_sample_file_flag())
         sample_stream.close();
       if (args.get_diagnostic_file_flag())
         diagnostic_stream.close();
-
       
       return return_code;
     }

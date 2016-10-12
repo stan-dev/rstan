@@ -22,7 +22,7 @@ setMethod("show", "stanfit",
 
 print.stanfit <- function(x, pars = x@sim$pars_oi, 
                           probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
-                          digits_summary = 2, include = TRUE, ...) { 
+                          digits_summary = 2, include = TRUE, ...) {
   if (x@mode == 1L) { 
     cat("Stan model '", x@model_name, "' is of mode 'test_grad';\n",
         "sampling is not conducted.\n", sep = '')
