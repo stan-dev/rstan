@@ -94,6 +94,7 @@ namespace rstan {
     std::string init;
     SEXP init_list;
     double init_radius;
+    // FIXME(syclik): remove `enable_random_init`
     bool enable_random_init; // enable randomly partially specifying inits 
     std::string sample_file; // the file for outputting the samples
     bool append_samples;
@@ -441,6 +442,7 @@ namespace rstan {
       }
       get_rlist_element(in, "init_r", init_radius, 2.0);
       if (0 >= init_radius)  init = "0";
+      if (init == "0") init_radius = 0;
       get_rlist_element(in, "enable_random_init", enable_random_init, true);
       validate_args();
     }

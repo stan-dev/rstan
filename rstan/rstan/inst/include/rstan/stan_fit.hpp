@@ -14,7 +14,6 @@
 #include <boost/random/uniform_real_distribution.hpp>
 
 #include <rstan/io/rlist_ref_var_context.hpp>
-// #include <rstan/io/rlist_ref_var_context_factory.hpp>
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 #include <Rcpp.h>
@@ -31,7 +30,7 @@
 #include <stan/callbacks/writer.hpp>
 #include <stan/callbacks/noop_writer.hpp>
 #include <stan/callbacks/stream_writer.hpp>
-#include <stan/io/dump.hpp>
+#include <stan/io/empty_var_context.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
 #include <stan/services/optimize/bfgs.hpp>
 #include <stan/services/optimize/lbfgs.hpp>
@@ -57,9 +56,6 @@
 #include <rstan/value.hpp>
 #include <rstan/values.hpp>
 #include <rstan/rstan_writer.hpp>
-
-// FIXME(dl): don't need this?
-#include <stan/io/empty_var_context.hpp>
 
 namespace rstan {
 
@@ -363,7 +359,7 @@ namespace rstan {
         R_CheckUserInterrupt();
       }
     };
-
+  
     /**
      * @tparam Model
      * @tparam RNG
@@ -403,7 +399,11 @@ namespace rstan {
 
       stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
       // FIXME(syclik): fix init_context
-      stan::io::empty_var_context init_context;
+      stan::io::var_context* init_context_ptr;
+      if (args.get_init() == "user")
+        init_context_ptr = new io::rlist_ref_var_context(args.get_init_list());
+      else
+        init_context_ptr = new stan::io::empty_var_context();
       
       std::vector<std::string> constrained_param_names;
       model.constrained_param_names(constrained_param_names);
@@ -421,7 +421,7 @@ namespace rstan {
         double error = args.get_ctrl_test_grad_error();
         stan::callbacks::noop_writer sample_writer;
         return_code = stan::services::diagnose::diagnose(model,
-                                                         init_context,
+                                                         *init_context_ptr,
                                                          random_seed, id,
                                                          init_radius,
                                                          epsilon, error,
@@ -439,7 +439,7 @@ namespace rstan {
         int num_iterations = args.get_iter();
         if (args.get_ctrl_optim_algorithm() == Newton) {
           return_code
-            = stan::services::optimize::newton(model, init_context,
+            = stan::services::optimize::newton(model, *init_context_ptr,
                                                random_seed, id, init_radius,
                                                num_iterations,
                                                save_iterations,
@@ -455,7 +455,7 @@ namespace rstan {
           double tol_param = args.get_ctrl_optim_tol_param();
           int refresh = args.get_ctrl_sampling_refresh();
           return_code
-            = stan::services::optimize::bfgs(model, init_context,
+            = stan::services::optimize::bfgs(model, *init_context_ptr,
                                              random_seed, id, init_radius,
                                              init_alpha,
                                              tol_obj,
@@ -479,7 +479,7 @@ namespace rstan {
           double tol_param = args.get_ctrl_optim_tol_param();
           int refresh = args.get_ctrl_sampling_refresh();
           return_code
-            = stan::services::optimize::lbfgs(model, init_context,
+            = stan::services::optimize::lbfgs(model, *init_context_ptr,
                                               random_seed, id, init_radius,
                                               history_size,
                                               init_alpha,
@@ -526,7 +526,7 @@ namespace rstan {
                                                     num_warmup,
                                                     qoi_idx);
           return_code
-            = stan::services::sample::fixed_param(model, init_context,
+            = stan::services::sample::fixed_param(model, *init_context_ptr,
                                                   random_seed, id, init_radius,
                                                   num_samples,
                                                   num_thin,
@@ -558,7 +558,7 @@ namespace rstan {
           if (args.get_ctrl_sampling_metric() == DENSE_E) {
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
-                ::hmc_nuts_dense_e(model, init_context,
+                ::hmc_nuts_dense_e(model, *init_context_ptr,
                                    random_seed, id, init_radius,
                                    num_warmup, num_samples,
                                    num_thin, save_warmup, refresh,
@@ -575,7 +575,7 @@ namespace rstan {
               unsigned int window = args.get_ctrl_sampling_adapt_window();
               
               return_code = stan::services::sample
-                ::hmc_nuts_dense_e_adapt(model, init_context,
+                ::hmc_nuts_dense_e_adapt(model, *init_context_ptr,
                                          random_seed, id, init_radius,
                                          num_warmup, num_samples,
                                          num_thin, save_warmup, refresh,
@@ -589,7 +589,7 @@ namespace rstan {
             
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
-                ::hmc_nuts_diag_e(model, init_context,
+                ::hmc_nuts_diag_e(model, *init_context_ptr,
                                   random_seed, id, init_radius,
                                   num_warmup, num_samples,
                                   num_thin, save_warmup, refresh,
@@ -606,7 +606,7 @@ namespace rstan {
               unsigned int window = args.get_ctrl_sampling_adapt_window();
               
               return_code = stan::services::sample
-                ::hmc_nuts_diag_e_adapt(model, init_context,
+                ::hmc_nuts_diag_e_adapt(model, *init_context_ptr,
                                         random_seed, id, init_radius,
                                         num_warmup, num_samples,
                                         num_thin, save_warmup, refresh,
@@ -619,7 +619,7 @@ namespace rstan {
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
-                ::hmc_nuts_unit_e(model, init_context,
+                ::hmc_nuts_unit_e(model, *init_context_ptr,
                                   random_seed, id, init_radius,
                                   num_warmup, num_samples,
                                   num_thin, save_warmup, refresh,
@@ -633,7 +633,7 @@ namespace rstan {
               double t0 = args.get_ctrl_sampling_adapt_t0();
               
               return_code = stan::services::sample
-                ::hmc_nuts_unit_e_adapt(model, init_context,
+                ::hmc_nuts_unit_e_adapt(model, *init_context_ptr,
                                         random_seed, id, init_radius,
                                         num_warmup, num_samples,
                                         num_thin, save_warmup, refresh,
@@ -665,7 +665,7 @@ namespace rstan {
           if (args.get_ctrl_sampling_metric() == DENSE_E) {
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
-                ::hmc_static_dense_e(model, init_context,
+                ::hmc_static_dense_e(model, *init_context_ptr,
                                      random_seed, id, init_radius,
                                      num_warmup, num_samples,
                                      num_thin, save_warmup, refresh,
@@ -682,7 +682,7 @@ namespace rstan {
               unsigned int window = args.get_ctrl_sampling_adapt_window();
 
               return_code = stan::services::sample
-                ::hmc_static_dense_e_adapt(model, init_context,
+                ::hmc_static_dense_e_adapt(model, *init_context_ptr,
                                            random_seed, id, init_radius,
                                            num_warmup, num_samples,
                                            num_thin, save_warmup, refresh,
@@ -696,7 +696,7 @@ namespace rstan {
           } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
             if (!args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
-                ::hmc_static_diag_e(model, init_context,
+                ::hmc_static_diag_e(model, *init_context_ptr,
                                     random_seed, id, init_radius,
                                     num_warmup, num_samples,
                                     num_thin, save_warmup, refresh,
@@ -714,7 +714,7 @@ namespace rstan {
               unsigned int window = args.get_ctrl_sampling_adapt_window();
 
               return_code = stan::services::sample
-                ::hmc_static_diag_e_adapt(model, init_context,
+                ::hmc_static_diag_e_adapt(model, *init_context_ptr,
                                           random_seed, id, init_radius,
                                           num_warmup, num_samples,
                                           num_thin, save_warmup, refresh,
@@ -727,7 +727,7 @@ namespace rstan {
           } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
             if (args.get_ctrl_sampling_adapt_engaged()) {
               return_code = stan::services::sample
-                ::hmc_static_unit_e(model, init_context,
+                ::hmc_static_unit_e(model, *init_context_ptr,
                                     random_seed, id, init_radius,
                                     num_warmup, num_samples,
                                     num_thin, save_warmup, refresh,
@@ -742,7 +742,7 @@ namespace rstan {
               double t0 = args.get_ctrl_sampling_adapt_t0();
 
               return_code = stan::services::sample
-                ::hmc_static_unit_e_adapt(model, init_context,
+                ::hmc_static_unit_e_adapt(model, *init_context_ptr,
                             random_seed, id, init_radius,
                             num_warmup, num_samples,
                             num_thin, save_warmup, refresh,
@@ -804,7 +804,7 @@ namespace rstan {
         
         if (args.get_ctrl_variational_algorithm() == FULLRANK) {
           return_code = stan::services::experimental::advi
-            ::fullrank(model, init_context,
+            ::fullrank(model, *init_context_ptr,
                        random_seed, id, init_radius,
                        grad_samples, elbo_samples,
                        max_iterations, tol_rel_obj, eta,
@@ -814,7 +814,7 @@ namespace rstan {
                        sample_writer, diagnostic_writer);
         } else {
           return_code = stan::services::experimental::advi
-            ::meanfield(model, init_context,
+            ::meanfield(model, *init_context_ptr,
                         random_seed, id, init_radius,
                         grad_samples, elbo_samples,
                         max_iterations, tol_rel_obj, eta,
@@ -827,14 +827,16 @@ namespace rstan {
         holder.attr("args") = args.stan_args_to_rlist();
         holder.attr("inits") = init_writer.x();
       }
-      
+
+      delete init_context_ptr;
       if (args.get_sample_file_flag())
         sample_stream.close();
       if (args.get_diagnostic_file_flag())
         diagnostic_stream.close();
-      
+
       return return_code;
     }
+  }
 
   template <class Model, class RNG_t>
   class stan_fit {
