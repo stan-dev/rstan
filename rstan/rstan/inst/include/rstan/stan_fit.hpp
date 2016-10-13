@@ -1,6 +1,7 @@
 #ifndef RSTAN__STAN_FIT_HPP
 #define RSTAN__STAN_FIT_HPP
 
+#include <cstring>
 #include <iomanip>
 #include <fstream>
 #include <sstream>
@@ -387,6 +388,7 @@ namespace rstan {
 
       std::fstream sample_stream;
       std::fstream diagnostic_stream;
+      std::stringstream comment_stream;
       bool append_samples(args.get_append_samples());
       if (args.get_sample_file_flag()) {
         std::ios_base::openmode samples_append_mode
@@ -398,7 +400,6 @@ namespace rstan {
         diagnostic_stream.open(args.get_diagnostic_file().c_str(), std::fstream::out);
 
       stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
-      // FIXME(syclik): fix init_context
       stan::io::var_context* init_context_ptr;
       if (args.get_init() == "user")
         init_context_ptr = new io::rlist_ref_var_context(args.get_init_list());
@@ -453,7 +454,7 @@ namespace rstan {
           double tol_grad = args.get_ctrl_optim_tol_grad();
           double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
           double tol_param = args.get_ctrl_optim_tol_param();
-          int refresh = args.get_ctrl_sampling_refresh();
+          int refresh = args.get_ctrl_optim_refresh();
           return_code
             = stan::services::optimize::bfgs(model, *init_context_ptr,
                                              random_seed, id, init_radius,
@@ -477,7 +478,7 @@ namespace rstan {
           double tol_grad = args.get_ctrl_optim_tol_grad();
           double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
           double tol_param = args.get_ctrl_optim_tol_param();
-          int refresh = args.get_ctrl_sampling_refresh();
+          int refresh = args.get_ctrl_optim_refresh();
           return_code
             = stan::services::optimize::lbfgs(model, *init_context_ptr,
                                               random_seed, id, init_radius,
@@ -515,10 +516,11 @@ namespace rstan {
         bool save_warmup = args.get_ctrl_sampling_save_warmup();
         int refresh = args.get_ctrl_sampling_refresh();
         int num_iter_save = args.get_ctrl_sampling_iter_save();
-        
+
         if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
           sampler_names.resize(0);
-          sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
+          sample_writer_ptr = sample_writer_factory(&sample_stream,
+                                                    comment_stream, "# ",
                                                     sample_names.size(),
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
@@ -543,7 +545,8 @@ namespace rstan {
           sampler_names[4] = "energy__";
           sample_writer_offset = sample_names.size() + sampler_names.size();
                     
-          sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
+          sample_writer_ptr = sample_writer_factory(&sample_stream,
+                                                    comment_stream, "# ",
                                                     sample_names.size(),
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
@@ -650,7 +653,8 @@ namespace rstan {
           sampler_names[2] = "energy__";
           sample_writer_offset = sample_names.size() + sampler_names.size();
           
-          sample_writer_ptr = sample_writer_factory(&sample_stream, "# ",
+          sample_writer_ptr = sample_writer_factory(&sample_stream,
+                                                    comment_stream, "# ",
                                                     sample_names.size(),
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
@@ -773,10 +777,33 @@ namespace rstan {
         holder.attr("inits") = init_writer.x();
         holder.attr("mean_pars") = mean_pars;
         holder.attr("mean_lp__") = mean_lp;
-        //holder.attr("adaptation_info") = adaptation_info;
-        // holder.attr("elapsed_time") =
-        //   Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
-        //                               Rcpp::_["sample"] = sampleDeltaT);
+
+        std::string comments = comment_stream.str();
+        size_t start = 0;
+        size_t end = 0;
+        std::string adaptation_info;
+        if ((start = comments.find("# Adaptation")) != std::string::npos) {
+          end = comments.find("# \n", start);
+          adaptation_info = comments.substr(start,
+                                            end - start);
+        }
+        double warmDeltaT = 0;
+        double sampleDeltaT = 0;
+        if ((start = comments.find("Elapsed Time: ")) != std::string::npos) {
+          start += strlen("Elapsed Time: ");
+          end = comments.find("seconds", start + 1);
+          std::stringstream ss(comments.substr(start, end));
+          ss >> warmDeltaT;
+    
+          start = comments.find("# ", end) + strlen("# ");
+          end = comments.find("seconds (Sampling)", start + 1);
+          ss.str(comments.substr(start, end));
+          ss >> sampleDeltaT;
+        }
+        holder.attr("adaptation_info") = adaptation_info;
+        holder.attr("elapsed_time") =
+          Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
+                                      Rcpp::_["sample"] = sampleDeltaT);
         
         Rcpp::List slst(sample_writer_ptr->sampler_values_.x().begin()+1,
                         sample_writer_ptr->sampler_values_.x().end());
