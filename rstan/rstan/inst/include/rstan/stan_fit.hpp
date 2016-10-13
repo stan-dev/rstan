@@ -942,7 +942,7 @@ namespace rstan {
      */
     SEXP unconstrain_pars(SEXP par) {
       BEGIN_RCPP
-        rstan::io::rlist_ref_var_context par_context(par);
+      rstan::io::rlist_ref_var_context par_context(par);
       std::vector<int> params_i;
       std::vector<double> params_r;
       model_.transform_inits(par_context, params_i, params_r, &rstan::io::rcout);
@@ -951,11 +951,11 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP unconstrained_param_names(SEXP include_tparams, SEXP include_gqs) {
       BEGIN_RCPP
-        std::vector<std::string> n;
+      std::vector<std::string> n;
       model_.unconstrained_param_names(n, Rcpp::as<bool>(include_tparams),
                                        Rcpp::as<bool>(include_gqs));
       SEXP __sexp_result;
@@ -963,11 +963,11 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP constrained_param_names(SEXP include_tparams, SEXP include_gqs) {
       BEGIN_RCPP
-        std::vector<std::string> n;
+      std::vector<std::string> n;
       model_.constrained_param_names(n, Rcpp::as<bool>(include_tparams),
                                      Rcpp::as<bool>(include_gqs));
       SEXP __sexp_result;
@@ -975,7 +975,7 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     /**
      * Contrary to unconstrain_pars, transform parameters
@@ -986,7 +986,7 @@ namespace rstan {
      */
     SEXP constrain_pars(SEXP upar) {
       BEGIN_RCPP
-        std::vector<double> par;
+      std::vector<double> par;
       std::vector<double> params_r = Rcpp::as<std::vector<double> >(upar);
       if (params_r.size() != model_.num_params_r()) {
         std::stringstream msg;
@@ -1004,7 +1004,7 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     /**
      * Expose the log_prob of the model to stan_fit so R user
@@ -1015,7 +1015,7 @@ namespace rstan {
      */
     SEXP log_prob(SEXP upar, SEXP jacobian_adjust_transform, SEXP gradient) {
       BEGIN_RCPP
-        using std::vector;
+      using std::vector;
       vector<double> par_r = Rcpp::as<vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
         std::stringstream msg;
@@ -1048,7 +1048,7 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     /**
      * Expose the grad_log_prob of the model to stan_fit so R user
@@ -1062,7 +1062,7 @@ namespace rstan {
      */
     SEXP grad_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
       BEGIN_RCPP
-        std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
+      std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
       if (par_r.size() != model_.num_params_r()) {
         std::stringstream msg;
         msg << "Number of unconstrained parameters does not match "
@@ -1086,24 +1086,24 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     /**
      * Return the number of unconstrained parameters
      */
     SEXP num_pars_unconstrained() {
       BEGIN_RCPP
-        int n = model_.num_params_r();
+      int n = model_.num_params_r();
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(n));
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP call_sampler(SEXP args_) {
       BEGIN_RCPP
-        Rcpp::List lst_args(args_);
+      Rcpp::List lst_args(args_);
       stan_args args(lst_args);
       Rcpp::List holder;
 
@@ -1118,25 +1118,25 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP param_names() const {
       BEGIN_RCPP
-        SEXP __sexp_result;
+      SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(names_));
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP param_names_oi() const {
       BEGIN_RCPP
-        SEXP __sexp_result;
+      SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(names_oi_));
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     /**
      * tidx (total indexes)
@@ -1145,7 +1145,7 @@ namespace rstan {
      */
     SEXP param_oi_tidx(SEXP pars) {
       BEGIN_RCPP
-        std::vector<std::string> names =
+      std::vector<std::string> names =
         Rcpp::as<std::vector<std::string> >(pars);
       std::vector<std::string> names2;
       std::vector<std::vector<unsigned int> > indexes;
@@ -1183,41 +1183,41 @@ namespace rstan {
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
 
     SEXP param_dims() const {
       BEGIN_RCPP
-        Rcpp::List lst = Rcpp::wrap(dims_);
+      Rcpp::List lst = Rcpp::wrap(dims_);
       lst.names() = names_;
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(lst));
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP param_dims_oi() const {
       BEGIN_RCPP
-        Rcpp::List lst = Rcpp::wrap(dims_oi_);
+      Rcpp::List lst = Rcpp::wrap(dims_oi_);
       lst.names() = names_oi_;
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(lst));
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
 
     SEXP param_fnames_oi() const {
       BEGIN_RCPP
-        std::vector<std::string> fnames;
+      std::vector<std::string> fnames;
       get_all_flatnames(names_oi_, dims_oi_, fnames, true);
       SEXP __sexp_result;
       PROTECT(__sexp_result = Rcpp::wrap(fnames));
       UNPROTECT(1);
       return __sexp_result;
       END_RCPP
-        }
+    }
   };
 }
 
@@ -1227,8 +1227,8 @@ namespace rstan {
  * compile to check syntax error
  */
 /*
-  STAN=../../../../../
-  RCPPINC=`Rscript -e "cat(system.file('include', package='Rcpp'))"`
-  RINC=`Rscript -e "cat(R.home('include'))"`
-  g++ -Wall -I${RINC} -I"${STAN}/lib/boost_1.51.0" -I"${STAN}/lib/eigen_3.1.1"  -I"${STAN}/src" -I"${RCPPINC}" -I"../" stan_fit.hpp
+STAN=../../../../../
+RCPPINC=`Rscript -e "cat(system.file('include', package='Rcpp'))"`
+RINC=`Rscript -e "cat(R.home('include'))"`
+g++ -Wall -I${RINC} -I"${STAN}/lib/boost_1.51.0" -I"${STAN}/lib/eigen_3.1.1"  -I"${STAN}/src" -I"${RCPPINC}" -I"../" stan_fit.hpp
 */

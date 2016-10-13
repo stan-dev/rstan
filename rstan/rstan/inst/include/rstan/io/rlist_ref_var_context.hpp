@@ -10,12 +10,15 @@
 #include <sstream>
 #include <iostream>
 #include <locale>
+
 #include <boost/throw_exception.hpp>
 #include <stan/io/var_context.hpp>
 #include <Rcpp.h>
 
 namespace rstan {
+
   namespace io {
+
     namespace {
       /**
       size_t product(std::vector<size_t> dims) {
@@ -261,4 +264,5 @@ namespace rstan {
 
   }
 }
+
 #endif

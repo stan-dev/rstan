@@ -15,8 +15,11 @@
  * http://goo.gl/mKmeP
  * and http://www.cplusplus.com/reference/iostream/streambuf/overflow/
  *
+ *
  */
+
 namespace rstan {
+
   namespace io {
 
     class r_cout_streambuf : public std::streambuf {
@@ -94,4 +97,5 @@ namespace rstan {
   }
 
 }
+
 #endif
