@@ -35,7 +35,7 @@ rstan_ggtheme_options <- function(...) {
   theme_classic() +
   theme(axis.line = element_line(color = "#222222"),
         axis.line.y = element_line(size = .5),
-        axis.line.x = element_line(size = 2),
+        axis.line.x = element_line(size = 1),
         axis.title = element_text(face = "bold", size = 13),
         strip.background = element_blank(),
         strip.text = element_text(color = "black", face = "bold"),
