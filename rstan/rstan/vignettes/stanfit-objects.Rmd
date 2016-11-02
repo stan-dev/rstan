@@ -59,8 +59,8 @@ a different format.
 
 #### extract()
 
-The `extract` function (with its default arguments) function returns a list with 
-named components corresponding to the model parameters.
+The `extract` function (with its default arguments) returns a list with named
+components corresponding to the model parameters.
 
 ```{r, extract-1}
 list_of_draws <- extract(fit)
