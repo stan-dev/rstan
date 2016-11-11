@@ -55,7 +55,7 @@ get_makefile_txt <- function() {
     else if (file.exists(f <- path.expand("~/.R/Makevars"))) 
        makefiles <- c(makefiles, f) 
   }
-
+  makefiles <- makefiles[file.exists(makefiles)]
   do.call(c, lapply(makefiles, function(f) readLines(f, warn = FALSE))) 
 } 
 
