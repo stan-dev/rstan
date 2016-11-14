@@ -13,8 +13,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   quantities} block of a Stan program.
 }
 \usage{
-  expose_stan_functions(stanmodel)
-} 
+  expose_stan_functions(stanmodel, env = globalenv())
+}
 
 \arguments{
   \item{stanmodel}{
