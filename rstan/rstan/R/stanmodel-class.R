@@ -493,12 +493,11 @@ setMethod("sampling", "stanmodel",
               cl <- parallel::makeCluster(min(cores, chains), 
                                           outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
-              dependencies <- c("rstan", "rstanarm", "Rcpp", "ggplot2")
-              .paths <- unique(sapply(dependencies, FUN = function(d) {
+              dependencies <- c("rstan", "Rcpp", "ggplot2")
+              .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {
                 dirname(system.file(package = d))
-              }))
+              })))
               .paths <- .paths[.paths != ""]
-              .paths <- unique(c(.paths, .libPaths()))
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
               parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
               parallel::clusterEvalQ(cl, expr = 
