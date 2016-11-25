@@ -18,7 +18,8 @@
              boost_lib = NULL, eigen_lib = NULL, 
              save_dso = TRUE, verbose = FALSE, 
              auto_write = rstan_options("auto_write"), 
-             obfuscate_model_name = TRUE)
+             obfuscate_model_name = TRUE, 
+             allow_undefined = FALSE, include = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 
@@ -64,6 +65,14 @@
     Otherwise, the object will be written to the \code{\link{tempdir}}.}
   \item{obfuscate_model_name}{A logical scalar that is \code{TRUE} by default and
     passed to \code{\link{stanc}}.}
+  \item{allow_undefined}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
+  \item{includes}{If not \code{NULL} (the default), then a character vector of
+    length one (possibly containing \code{"\n"}) of the form 
+    \code{'#include "/full/path/to/my_header.hpp"'}, which will be inserted
+    into the C++ code in the model's namespace and can be used to provide definitions 
+    of functions that are declared but not defined in \code{file} or
+    \code{model_code} when \code{allow_undefined = TRUE}}
 }
 
 \details{

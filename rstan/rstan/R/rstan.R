@@ -25,7 +25,9 @@ stan_model <- function(file,
                        save_dso = TRUE,
                        verbose = FALSE, 
                        auto_write = rstan_options("auto_write"), 
-                       obfuscate_model_name = TRUE) { 
+                       obfuscate_model_name = TRUE,
+                       allow_undefined = FALSE, 
+                       includes = NULL) {
 
   # Construct a stan model from stan code 
   # 
@@ -53,7 +55,8 @@ stan_model <- function(file,
     
     stanc_ret <- stanc(file = file, model_code = model_code, 
                        model_name = model_name, verbose = verbose,
-                       obfuscate_model_name = obfuscate_model_name)
+                       obfuscate_model_name = obfuscate_model_name, 
+                       allow_undefined = allow_undefined)
     
     # find possibly identical stanmodels
     model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
@@ -123,7 +126,11 @@ stan_model <- function(file,
   model_name <- stanc_ret$model_name 
   model_code <- stanc_ret$model_code 
   inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
-               stanc_ret$cppcode,
+               # include, stanc_ret$cppcode,
+               if(is.null(include)) stanc_ret$cppcode else
+               sub("using namespace stan::math;",
+                   paste("using namespace stan::math;", includes),
+                   stanc_ret$cppcode, fixed = TRUE),
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
                sep = '')  
