@@ -127,9 +127,9 @@ stan_model <- function(file,
   model_code <- stanc_ret$model_code 
   inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
                # include, stanc_ret$cppcode,
-               if(is.null(include)) stanc_ret$cppcode else
-               sub("using namespace stan::math;",
-                   paste("using namespace stan::math;", includes),
+               if(is.null(includes)) stanc_ret$cppcode else
+               sub("static int current_statement_begin__;",
+                   paste("static int current_statement_begin__;", includes),
                    stanc_ret$cppcode, fixed = TRUE),
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
