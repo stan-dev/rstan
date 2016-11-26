@@ -14,7 +14,7 @@ vignette: >
 ```{r setup, include=FALSE}
 library(rstan)
 knitr::opts_chunk$set(
-  echo = TRUE, eval = TRUE
+  echo = TRUE, eval = FALSE
 )
 ```
 
@@ -28,7 +28,7 @@ functions {
   int fib(int n);
   int fib(int n) {
     if (n <= 0) reject("n must be positive");
-    return n <= 1 ? 1 : fib(n - 1) + fib(n - 2);
+    return n <= 2 ? 1 : fib(n - 1) + fib(n - 2);
   }
 }
 model {} // use the fib() function somehow
@@ -56,7 +56,7 @@ function using the Stan language because Stan programs with functions that are
 _declared_ but not _defined_ can use the standard capabilities of the C++ 
 toolchain to provide the function definitions in C++. For example, this program
 produces a parser error by default
-```{r}
+```{r, eval = TRUE}
 mc <- 
 '
 functions { int fib(int n); }
@@ -109,7 +109,7 @@ static int current_statement_begin__;
 Thus, the definition of the `fib` function in the fib.hpp file need not be
 enclosed in any particular namespace (which is a random string by default. The 
 "meta-include" stan/model/model_header.hpp file reads as
-```{r, echo = FALSE, comment = NA}
+```{r, echo = FALSE, eval = TRUE, comment = NA}
 cat(readLines(system.file("include", "src", "stan", "model", "model_header.hpp", 
                           package = "StanHeaders")), sep = "\n")
 ```
@@ -136,7 +136,7 @@ Stan language
 ```{stan eval = FALSE, output.var="def"}
 int fib(int n) {
   if (n <= 0) reject("n must be positive");
-  return n <= 1 ? 1 : fib(n - 1) + fib(n - 2);
+  return n <= 2 ? 1 : fib(n - 1) + fib(n - 2);
 }
 ```
 parses to. Thus, there is no _speed_ advantage to defining the `fib` function
@@ -187,12 +187,14 @@ involve templating and type promotion in their signatures when parsed to C++
 (the only exceptions are functions whose only arguments are integers, as in
 the `fib` function above). Suppose you wanted to define a function whose
 arguments are real numbers (or at least one of the arguments is). For example,
-```{r}
+```{r, eval = TRUE}
 mc <- 
 '
 functions { real besselK(real v, real z); }
 model {} // use the besselK() function somehow
 '
+```
+```{r}
 stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
            includes = paste0('\n#include "', 
                              file.path(getwd(), 'besselK.hpp'), '"\n'))
@@ -231,7 +233,7 @@ is necessary due to the absence of a `using boost::math;` statement.
 An easy way to see what the generated function signature will be is to call the
 `stanc` function in the __rstan__ package with `allow_undefined = TRUE` and
 inspect the resuling C++ code. In this case, I first did
-```{r, error=FALSE}
+```{r, eval = TRUE}
 try(readLines(stanc(model_code = mc, allow_undefined = TRUE)$cppcode))
 ```
 to see what function signature needed to be written for besselK.hpp.
