@@ -1631,7 +1631,7 @@ throw_sampler_warnings <- function(object) {
       warning("There were ", n_e, 
               " chains where the estimated Bayesian Fraction of Missing Information",
               " was low. See\n", 
-              "http://mc-stan.org/misc/warnings.html#BFMI-low", call. = FALSE)
+              "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
   }
   if (n_d > 0 || n_m > 0 || n_e > 0) 
     warning("Examine the pairs() plot to diagnose sampling problems\n",
