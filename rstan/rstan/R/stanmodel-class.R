@@ -467,6 +467,7 @@ setMethod("sampling", "stanmodel",
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
               .dotlist$cores <- 1L
+              .dotlist$open_progress <- FALSE
               callFun <- function(i) {
                 .dotlist$chain_id <- i
                 if(is.list(.dotlist$init)) .dotlist$init <- .dotlist$init[i]
@@ -480,7 +481,8 @@ setMethod("sampling", "stanmodel",
                 out <- do.call(rstan::sampling, args = .dotlist)
                 return(out)
               }
-              if ( .Platform$OS.type == "unix" && isatty(stdout()) ) {
+              if ( .Platform$OS.type == "unix" && 
+                   (!interactive() || isatty(stdout())) ) {
                 nfits <- parallel::mclapply(1:chains, FUN = callFun, 
                                             mc.preschedule = FALSE, mc.cores = cores)
               }
