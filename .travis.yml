@@ -49,7 +49,7 @@ before_script:
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo /usr/texbin/tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
   - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
   - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
-  - echo "CXX = `which ccache` `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - echo "CXX = `which ccache` `R CMD config CXX1X`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
