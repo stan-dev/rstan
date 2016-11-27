@@ -67,7 +67,8 @@ pairs.stanfit <-
     else if(is.character(condition)) {
       condition <- match.arg(condition, several.ok = FALSE,
                              choices = c("accept_stat__", "stepsize__", "treedepth__", 
-                                         "n_leapfrog__", "divergent__", "lp__"))
+                                         "n_leapfrog__", "divergent__", "energy__",
+                                         "lp__"))
       if (condition == "lp__") 
         mark <- simplify2array(get_logposterior(x, inc_warmup = FALSE))
       else mark <- sapply(gsp, FUN = function(y) y[,condition])
