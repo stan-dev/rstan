@@ -51,6 +51,7 @@ pairs.stanfit <-
         arr <- array(c(c(arr), c(E)), dim = dims, dimnames = nms)
       }
     }
+    else arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
     sims <- nrow(arr)
     chains <- ncol(arr)
     varying <- apply(arr, 3, FUN = function(y) length(unique(c(y))) > 1)
