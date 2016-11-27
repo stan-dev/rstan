@@ -19,7 +19,7 @@
              save_dso = TRUE, verbose = FALSE, 
              auto_write = rstan_options("auto_write"), 
              obfuscate_model_name = TRUE, 
-             allow_undefined = FALSE, include = NULL)
+             allow_undefined = FALSE, includes = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 
