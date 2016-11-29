@@ -493,12 +493,11 @@ setMethod("sampling", "stanmodel",
               cl <- parallel::makeCluster(min(cores, chains), 
                                           outfile = sinkfile, useXDR = FALSE)
               on.exit(parallel::stopCluster(cl))
-              dependencies <- c("rstan", "rstanarm", "Rcpp", "ggplot2")
-              .paths <- unique(sapply(dependencies, FUN = function(d) {
+              dependencies <- c("rstan", "Rcpp", "ggplot2")
+              .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {
                 dirname(system.file(package = d))
-              }))
+              })))
               .paths <- .paths[.paths != ""]
-              .paths <- unique(c(.paths, .libPaths()))
               parallel::clusterExport(cl, varlist = ".paths", envir = environment())
               parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
               parallel::clusterEvalQ(cl, expr = 
@@ -604,9 +603,14 @@ setMethod("sampling", "stanmodel",
               sink(mfile, type = "message")
               samples_i <- try(sampler$call_sampler(args_list[[i]]))
               sink(NULL, type = "message")
-              close(mfile)
-              report <- scan(file = messages, what = character(),
-                             sep = "\n", quiet = TRUE)
+              if (!file.exists(messages)) {
+                report <- "log file disappeared"
+              }
+              else {
+                close(mfile)
+                report <- scan(file = messages, what = character(),
+                               sep = "\n", quiet = TRUE)
+              }
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 print(report)
                 msg <- "error occurred during calling the sampler; sampling not done"
@@ -625,7 +629,7 @@ setMethod("sampling", "stanmodel",
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
                   msg <- paste("The following numerical problems occured",
-                               "the indicated number of times after warmup on chain", 
+                               "the indicated number of times on chain", 
                                cid)
                   if (.Platform$OS.type == "windows") print(msg)
                   else message(msg)
