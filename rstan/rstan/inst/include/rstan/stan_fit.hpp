@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iomanip>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 
@@ -360,7 +361,7 @@ namespace rstan {
         R_CheckUserInterrupt();
       }
     };
-  
+
     /**
      * @tparam Model
      * @tparam RNG
@@ -400,11 +401,11 @@ namespace rstan {
         diagnostic_stream.open(args.get_diagnostic_file().c_str(), std::fstream::out);
 
       stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
-      stan::io::var_context* init_context_ptr;
+      std::auto_ptr<stan::io::var_context> init_context_ptr;
       if (args.get_init() == "user")
-        init_context_ptr = new io::rlist_ref_var_context(args.get_init_list());
+        init_context_ptr.reset(new io::rlist_ref_var_context(args.get_init_list()));
       else
-        init_context_ptr = new stan::io::empty_var_context();
+        init_context_ptr.reset(new stan::io::empty_var_context());
       
       std::vector<std::string> constrained_param_names;
       model.constrained_param_names(constrained_param_names);
@@ -507,7 +508,7 @@ namespace rstan {
         stan::mcmc::sample::get_sample_param_names(sample_names);
         std::vector<std::string> sampler_names;
 
-        rstan_sample_writer *sample_writer_ptr;
+        std::auto_ptr<rstan_sample_writer> sample_writer_ptr;
         size_t sample_writer_offset;
 
         int num_warmup = args.get_ctrl_sampling_warmup();
@@ -519,14 +520,14 @@ namespace rstan {
 
         if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
           sampler_names.resize(0);
-          sample_writer_ptr = sample_writer_factory(&sample_stream,
-                                                    comment_stream, "# ",
-                                                    sample_names.size(),
-                                                    sampler_names.size(),
-                                                    constrained_param_names.size(),
-                                                    num_iter_save,
-                                                    num_warmup,
-                                                    qoi_idx);
+          sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
+                                                        comment_stream, "# ",
+                                                        sample_names.size(),
+                                                        sampler_names.size(),
+                                                        constrained_param_names.size(),
+                                                        num_iter_save,
+                                                        num_warmup,
+                                                        qoi_idx));
           return_code
             = stan::services::sample::fixed_param(model, *init_context_ptr,
                                                   random_seed, id, init_radius,
@@ -545,14 +546,14 @@ namespace rstan {
           sampler_names[4] = "energy__";
           sample_writer_offset = sample_names.size() + sampler_names.size();
                     
-          sample_writer_ptr = sample_writer_factory(&sample_stream,
-                                                    comment_stream, "# ",
-                                                    sample_names.size(),
-                                                    sampler_names.size(),
-                                                    constrained_param_names.size(),
-                                                    num_iter_save,
-                                                    num_warmup,
-                                                    qoi_idx);
+          sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
+                                                        comment_stream, "# ",
+                                                        sample_names.size(),
+                                                        sampler_names.size(),
+                                                        constrained_param_names.size(),
+                                                        num_iter_save,
+                                                        num_warmup,
+                                                        qoi_idx));
 
           double stepsize = args.get_ctrl_sampling_stepsize();
           double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
@@ -653,14 +654,14 @@ namespace rstan {
           sampler_names[2] = "energy__";
           sample_writer_offset = sample_names.size() + sampler_names.size();
           
-          sample_writer_ptr = sample_writer_factory(&sample_stream,
-                                                    comment_stream, "# ",
-                                                    sample_names.size(),
-                                                    sampler_names.size(),
-                                                    constrained_param_names.size(),
-                                                    num_iter_save,
-                                                    num_warmup,
-                                                    qoi_idx);
+          sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
+                                                        comment_stream, "# ",
+                                                        sample_names.size(),
+                                                        sampler_names.size(),
+                                                        constrained_param_names.size(),
+                                                        num_iter_save,
+                                                        num_warmup,
+                                                        qoi_idx));
 
           double stepsize = args.get_ctrl_sampling_stepsize();
           double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
@@ -813,7 +814,7 @@ namespace rstan {
         slst.names() = slst_names;
         holder.attr("sampler_params") = slst;        
         holder.names() = fnames_oi;
-        delete sample_writer_ptr;
+        sample_writer_ptr.reset();
       }
       if (args.get_method() == VARIATIONAL) {
         int grad_samples = args.get_ctrl_variational_grad_samples();
@@ -855,10 +856,10 @@ namespace rstan {
         holder.attr("inits") = init_writer.x();
       }
 
-      delete init_context_ptr;
-      if (args.get_sample_file_flag())
+      init_context_ptr.reset();
+      if (sample_stream.is_open())
         sample_stream.close();
-      if (args.get_diagnostic_file_flag())
+      if (diagnostic_stream.is_open());
         diagnostic_stream.close();
 
       return return_code;
