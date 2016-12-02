@@ -48,6 +48,7 @@ stan_model <- function(file,
       writeLines(model_code, con = tf)
       file <- file.path(dirname(tf), paste0(tools::md5sum(tf), ".stan"))
       if(!file.exists(file)) file.rename(from = tf, to = file)
+      else file.remove(tf)
     }
     else file <- normalizePath(file)
     
@@ -92,9 +93,13 @@ stan_model <- function(file,
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
        (md5 != tools::md5sum(tf) && is.null(
         message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
-         # do nothing
+
+      file.remove(tf)
     }
-    else return(invisible(obj))
+    else {
+      if (file.exists(tf)) file.remove(tf)
+      return(invisible(obj))
+    }
   }
   if (!is.list(stanc_ret)) {
     stop("stanc_ret needs to be the returned object from stanc.")
@@ -168,6 +173,7 @@ stan_model <- function(file,
     writeLines(model_code, con = tf)
     file <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
     if(!file.exists(file)) file.rename(from = tf, to = file)
+    else file.remove(tf)
     saveRDS(obj, file = gsub("stan$", "rda", file))
   }
   else if(isTRUE(auto_write)) saveRDS(obj, file = gsub("stan$", "rda", file))
