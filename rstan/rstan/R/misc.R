@@ -1623,7 +1623,7 @@ throw_sampler_warnings <- function(object) {
             "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
   n_e <- 0L
   if (is_sfinstance_valid(object)) {
-    E <- sapply(sp, FUN = function(x) x[,"energy__"])
+    E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
     threshold <- 0.3
     EBFMI <- get_num_upars(object) / apply(E, 2, var)
     n_e <- sum(EBFMI < threshold, na.rm = TRUE)
@@ -1658,4 +1658,3 @@ get_CXX <- function(CXX11 = FALSE) {
 is.sparc <- function() {
   grepl("^sparc",  R.version$platform)
 }
-             
