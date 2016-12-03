@@ -93,7 +93,7 @@ stan_model <- function(file,
        (md5 != tools::md5sum(tf) && is.null(
         message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
 
-      file.remove(tf)
+      if (exists("tf") && file.exists(tf)) file.remove(tf)
     }
     else {
       if (file.exists(tf)) file.remove(tf)
