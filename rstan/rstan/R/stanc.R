@@ -20,7 +20,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   if (.Platform$OS.type == "unix" && R.Version()$os == "linux-gnu" &&
       identical(Sys.getenv("RSTUDIO"), "1")) {
         cl <- parallel::makePSOCKcluster(1L, outfile = "")
-        on.exit(stopCluster(cl))
+        on.exit(parallel::stopCluster(cl))
         parallel::clusterEvalQ(cl, Sys.setenv("RSTUDIO" = 0))
         parallel::clusterExport(cl, "obfuscate_model_name", environment())
         if (missing(file)) {
