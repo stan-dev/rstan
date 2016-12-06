@@ -17,6 +17,24 @@
 
 stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE) {
+  if (.Platform$OS.type == "unix" && R.Version()$os == "linux-gnu" &&
+      identical(Sys.getenv("RSTUDIO"), "1")) {
+        cl <- parallel::makePSOCKcluster(1L, outfile = "")
+        on.exit(stopCluster(cl))
+        parallel::clusterEvalQ(cl, Sys.setenv("RSTUDIO" = 0))
+        parallel::clusterExport(cl, "obfuscate_model_name", environment())
+        if (missing(file)) {
+          parallel::clusterExport(cl, "model_code", environment())
+          out <- parallel::clusterEvalQ(cl, 
+                   rstan::stanc(model_code = model_code,
+                                obfuscate_model_name = obfuscate_model_name))
+        }
+        else {
+          parallel::clusterExport(cl, "file", environment())
+          out <- parallel::clusterEvalQ(cl, 
+                  rstan::stanc(file, obfuscate_model_name = obfuscate_model_name))
+        }
+      }
   # Call stanc, written in C++ 
   model_name2 <- deparse(substitute(model_code))  
   if (is.null(attr(model_code, "model_name2"))) 
