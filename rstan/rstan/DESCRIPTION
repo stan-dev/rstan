@@ -10,7 +10,7 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
              person("Krzysztof", "Sakrejda", role = "ctb"),
              person("Trustees of", "Columbia University", role = "cph"),
              person("Oleg", "Sklyar", role = "cph", comment = "R/cxxfunplus.R"),
-             person("The R", "Core Team", role = "cph", comment = "R/pairs.R"),
+             person("The R", "Core Team", role = "cph", comment = "R/pairs.R, R/dynGet.R"),
              person("Jens", "Oehlschlaegel-Akiyoshi", role = "cph", comment = "R/pairs.R"),
              person("Hadley", "Wickham", role = "cph", comment = "R/rtools.R"),
              person("Joel", "de Guzman", role = "cph", comment = "Boost"),

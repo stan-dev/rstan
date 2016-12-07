@@ -1539,7 +1539,7 @@ get_time_from_csv <- function(tlines) {
   t
 }
 
-parse_data <- function(cppcode, e = parent.frame()) {
+parse_data <- function(cppcode) {
   cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
                   text = cppcode)
   private <- grep("^private:$", cppcode) + 1L
@@ -1554,12 +1554,15 @@ parse_data <- function(cppcode, e = parent.frame()) {
   
   # get them from the calling environment
   objects <- setdiff(objects, tdata)
-  modes <- rep("any", length(objects))
-  names(modes) <- objects
-  if ("T" %in% objects) modes["T"] <- "numeric"
-  if ("F" %in% objects) modes["F"] <- "numeric"
-  mget(objects, envir = e, inherits = TRUE, mode = modes,
-       ifnotfound = vector("list", length(objects)))
+  stuff <- sapply(objects, simplify = FALSE, FUN = dynGet, 
+                  inherits = FALSE, ifnotfound = NULL)
+  for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
+    if (exists(objects[i], envir = globalenv(), mode = "numeric"))
+      stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
+    else if (exists(objects[i], envir = globalenv(), mode = "logical"))
+      stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "logical")
+  }
+  return(stuff)
 }
 
 set_cppo <- function(...) {
