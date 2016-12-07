@@ -147,14 +147,24 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   start_idx <- (if (warmup2 == 0) (start_i - warmup) else start_i) %/% thin
   if (start_idx < 1)  start_idx <- 1
   idx <- seq.int(start_idx, by = 1, length.out = window_size)
-  if (unconstrain) sim$samples <- .upars(object)
-  samp_use <- lapply(sim$samples, function(chain) {
-    out <- lapply(chain[tidx], function(x) x[idx])
-    names(out) <- sim$fnames_oi[tidx]
-    out
-  })
-  nchains <- length(samp_use)
   
+  if (unconstrain) {
+    sim$samples <- .upars(object)
+    sel <- grep(paste(pars, collapse ="|"), names(sim$samples[[1]]), value = TRUE)
+    samp_use <- lapply(sim$samples, function(chain) {
+      out <- lapply(chain[names(chain) %in% sel], function(x) x[idx])
+      names(out) <- sel
+      out
+    })
+  } else {
+    samp_use <- lapply(sim$samples, function(chain) {
+      out <- lapply(chain[tidx], function(x) x[idx])
+      names(out) <- sim$fnames_oi[tidx]
+      out
+    })
+  }
+  nchains <- length(samp_use)
+
   if (unconstrain) {
     if (is.stanreg(object)) 
       object <- object$stanfit
@@ -170,7 +180,8 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   dat <- .reshape_sample(samp_use)
   dat$iteration <- idx
   dat$chain <- factor(dat$chain)
-  fnames <- sim$fnames_oi[tidx]
+  fnames <- if (unconstrain) 
+    names(samp_use[[1]]) else sim$fnames_oi[tidx]
   lp <- which(dat$parameter == "lp__")
   if (!identical(lp, integer(0))) {
     dat$parameter[lp] <- "log-posterior"
@@ -179,7 +190,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   dat$parameter <- factor(dat$parameter, levels = fnames)
   list(samp = dat,
        nchains = nchains,
-       nparams = length(tidx),
+       nparams = length(fnames),
        warmup = warmup)
 }
 
@@ -221,6 +232,9 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   }
   param_names <- param_names[sort(mark)]
   
+  cpp_code <- strsplit(get_cppcode(get_stanmodel(object)), "\n")[[1]]
+  param_names <- .remove_udiag_pars(cpp_code, pblock, param_names)
+
   lapply(seq_len(nchains), function(chain) {
     x <- upars[chain,, ]
     if (NCOL(x) == 1) x <- rbind(x)
@@ -228,6 +242,27 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     names(plist) <- param_names
     plist
   })
+}
+
+.remove_udiag_pars <- function(cpp_code, pblock, param_names) {
+  patts <- c("cholesky_corr", "cholesky_cov", "corr_matrix", "cov_matrix")
+  for (patt in patts) {
+    rms <- c()
+    for (p in pblock) {
+      par_mentions = grep(paste0("(",p,")"),
+                          fixed = TRUE, value = TRUE,
+                          x = cpp_code)
+      if (length(grep(patt,par_mentions)) > 0) {
+        for (v in grep(p,param_names)) {
+          if (diff(as.numeric(strsplit(x = param_names[v],
+                                       split = c("\\[|,|\\]"))[[1]][2:3])) > -1) { rms = c(v,rms)}
+        }
+      }
+    }
+    if (length(rms))
+      param_names <- param_names[-rms]
+  }
+  return(param_names)
 }
 
 color_vector <- function(n) {
