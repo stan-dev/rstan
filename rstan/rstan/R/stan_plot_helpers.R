@@ -247,21 +247,22 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 .remove_udiag_pars <- function(cpp_code, pblock, param_names) {
   patts <- c("cholesky_corr", "cholesky_cov", "corr_matrix", "cov_matrix")
   for (patt in patts) {
-    rms <- c()
+    to_drop <- c()
     for (p in pblock) {
-      par_mentions = grep(paste0("(",p,")"),
-                          fixed = TRUE, value = TRUE,
-                          x = cpp_code)
-      if (length(grep(patt,par_mentions)) > 0) {
-        for (v in grep(p,param_names)) {
-          if (diff(as.numeric(strsplit(x = param_names[v],
-                                       split = c("\\[|,|\\]"))[[1]][2:3])) > -1) { rms = c(v,rms)}
+      par_mentions = grep(paste0("(",p,")"), x = cpp_code, 
+                          fixed = TRUE, value = TRUE)
+      if (length(grep(patt, par_mentions))) {
+        for (v in grep(p, param_names)) {
+          ij <- strsplit(x = param_names[v], split = c("\\[|,|\\]"))[[1]][2:3]
+          if (diff(as.numeric(ij)) > -1)
+            to_drop = c(v,to_drop)
         }
       }
     }
-    if (length(rms))
-      param_names <- param_names[-rms]
+    if (length(to_drop))
+      param_names <- param_names[-to_drop]
   }
+  
   return(param_names)
 }
 
