@@ -531,7 +531,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     bool save_warmup = args.get_ctrl_sampling_save_warmup();
     int refresh = args.get_ctrl_sampling_refresh();
     int num_iter_save = args.get_ctrl_sampling_iter_save();
-    
+
     if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
       sampler_names.resize(0);
       sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
@@ -540,7 +540,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
                                                     num_iter_save,
-                                                    num_warmup,
+                                                    num_iter_save - num_samples,
                                                     qoi_idx));
       return_code
         = stan::services::sample::fixed_param(model, *init_context_ptr,
@@ -566,7 +566,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
                                                     num_iter_save,
-                                                    num_warmup,
+                                                    num_iter_save - num_samples,
                                                     qoi_idx));
       
       double stepsize = args.get_ctrl_sampling_stepsize();
@@ -674,7 +674,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     sampler_names.size(),
                                                     constrained_param_names.size(),
                                                     num_iter_save,
-                                                    num_warmup,
+                                                    num_iter_save - num_samples,
                                                     qoi_idx));
       
       double stepsize = args.get_ctrl_sampling_stepsize();
