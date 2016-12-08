@@ -63,17 +63,17 @@ stan_model <- function(file,
         stop("model name must match ", model_re)
     S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
     if (length(S4_objects) > 0) {
-      pf <- parent.frame()
-      stanfits <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
+      e <- environment()
+      stanfits <- sapply(mget(S4_objects, envir = e, inherits = TRUE), 
                          FUN = is, class2 = "stanfit")
-      stanmodels <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
+      stanmodels <- sapply(mget(S4_objects, envir = e, inherits = TRUE), 
                            FUN = is, class2 = "stanmodel")
       if (any(stanfits)) for (i in names(which(stanfits))) {
-        obj <- get_stanmodel(get(i, envir = pf, inherits = TRUE))
+        obj <- get_stanmodel(get(i, envir = e, inherits = TRUE))
         if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
       }
       if (any(stanmodels)) for (i in names(which(stanmodels))) {
-        obj <- get(i, envir = pf, inherits = TRUE)
+        obj <- get(i, envir = e, inherits = TRUE)
         if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
       }
     }
@@ -87,7 +87,7 @@ stan_model <- function(file,
     if(!file.exists(file.rda) ||
        (mtime.rda <- file.info(file.rda)$mtime) < 
        as.POSIXct(packageDescription("rstan")$Date) ||
-       mtime.rda > rstan_load_time ||
+       # mtime.rda > rstan_load_time ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
