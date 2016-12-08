@@ -898,8 +898,8 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
   init_context_ptr.reset();
   if (sample_stream.is_open())
     sample_stream.close();
-  if (diagnostic_stream.is_open());
-  diagnostic_stream.close();
+  if (diagnostic_stream.is_open())
+    diagnostic_stream.close();
   
   return return_code;
 }
