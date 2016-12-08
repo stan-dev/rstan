@@ -392,6 +392,9 @@ setMethod("sampling", "stanmodel",
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), 
                    show_messages = TRUE, ...) {
+            is_arg_deprecated(names(list(...)),
+                              c("enable_random_init"),
+                              pre_msg = "passing deprecated arguments: ")
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- try(parse_data(get_cppcode(object)))
