@@ -653,7 +653,7 @@ plot_rhat_legend <- function(x, y, cex = 1) {
 }
 
 
-read_rdump <- function(f) {
+read_rdump <- function(f, keep.source = FALSE, ...) {
   # Read data defined in an R dump file to an R list
   #
   # Args:
@@ -665,7 +665,7 @@ read_rdump <- function(f) {
   if (missing(f))
     stop("no file specified.")
   e <- new.env()
-  source(file = f, local = e)
+  source(file = f, local = e, keep.source = keep.source, ...)
   as.list(e)
 }
 
