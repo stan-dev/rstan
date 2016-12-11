@@ -1,3 +1,4 @@
+s
 # This file is part of RStan
 # Copyright (C) 2012, 2013, 2014, 2015, 2016 Trustees of Columbia University
 #
@@ -36,7 +37,6 @@ stan_model <- function(file,
   #     by using returned results from stanc. 
   #   model_code: if file is not specified, we can used 
   #     a character to specify the model.   
-
   if (is.null(stanc_ret)) {
     model_name2 <- deparse(substitute(model_code))
     if (is.null(attr(model_code, "model_name2")))
