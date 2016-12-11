@@ -50,7 +50,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
-  r <- .Call("CPP_stanc280", model_code, model_cppname)
+  r <- .Call(CPP_stanc280, model_code, model_cppname)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
@@ -77,7 +77,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
 
 stan_version <- function() {
-  .Call('CPP_stan_version')
+  .Call(CPP_stan_version)
 }
 
 rstudio_stanc <- function(filename) {
