@@ -89,7 +89,6 @@ stan_model <- function(file,
     if(!file.exists(file.rda) ||
        (mtime.rda <- file.info(file.rda)$mtime) < 
        as.POSIXct(packageDescription("rstan")$Date) ||
-       mtime.rda > rstan_load_time ||
        !is(obj <- readRDS(file.rda), "stanmodel") ||
        !is_sm_valid(obj) ||
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
@@ -128,9 +127,8 @@ stan_model <- function(file,
   inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
                # include, stanc_ret$cppcode,
                if(is.null(includes)) stanc_ret$cppcode else
-               sub("static int current_statement_begin__;",
-                   paste("static int current_statement_begin__;", includes),
-                   stanc_ret$cppcode, fixed = TRUE),
+                 sub("(class.*: public prob_grad \\{)", 
+                     paste(includes, "\\1"), stanc_ret$cppcode),
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
                sep = '')  

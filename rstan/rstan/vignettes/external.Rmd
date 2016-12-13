@@ -105,6 +105,7 @@ typedef Eigen::Matrix<double,1,Eigen::Dynamic> row_vector_d;
 typedef Eigen::Matrix<double,Eigen::Dynamic,Eigen::Dynamic> matrix_d;
 
 static int current_statement_begin__;
+// various function declarations and / or definitions
 ```
 Thus, the definition of the `fib` function in the fib.hpp file need not be
 enclosed in any particular namespace (which is a random string by default. The 
