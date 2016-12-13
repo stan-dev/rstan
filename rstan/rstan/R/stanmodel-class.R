@@ -467,41 +467,7 @@ setMethod("sampling", "stanmodel",
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
               .dotlist$cores <- 1L
-              tfile <- tempfile()
-              sinkfile <- paste0(tfile, "_StanProgress.txt")
-              cat("Click the Refresh button to see progress of the chains\n", file = sinkfile)
-              if (open_progress && 
-                  !identical(browser <- getOption("browser"), "false")) {
-                if (identical(Sys.getenv("RSTUDIO"), "1"))
-                  stop("you cannot specify 'open_progress = TRUE' when using RStudio")
-                sinkfile_html <- paste0(tfile, "_StanProgress.html")
-                create_progress_html_file(sinkfile_html, sinkfile)
-                utils::browseURL(paste0("file://", sinkfile_html))
-              }
-              else if (identical(Sys.getenv("RSTUDIO"), "1") && 
-                       .Platform$OS.type == "windows" && interactive()) {
-                if (!requireNamespace("rstudioapi"))
-                  stop("must install the rstudioapi package when using RStan in parallel via RStudio")
-                if (rstudioapi::isAvailable("0.98.423")) {
-                  v <- rstudioapi::getVersion()
-                  if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
-                  else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
-                }
-                else sinkfile <- ""
-              }
-              else sinkfile <- ""
-              cl <- parallel::makeCluster(min(cores, chains), 
-                                          outfile = sinkfile, useXDR = FALSE)
-              on.exit(parallel::stopCluster(cl))
-              dependencies <- c("rstan", "Rcpp", "ggplot2")
-              .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {
-                dirname(system.file(package = d))
-              })))
-              .paths <- .paths[.paths != ""]
-              parallel::clusterExport(cl, varlist = ".paths", envir = environment())
-              parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
-              parallel::clusterEvalQ(cl, expr = 
-                                    suppressPackageStartupMessages(require(rstan, quietly = TRUE)))
+              .dotlist$open_progress <- FALSE
               callFun <- function(i) {
                 .dotlist$chain_id <- i
                 if(is.list(.dotlist$init)) .dotlist$init <- .dotlist$init[i]
@@ -515,10 +481,52 @@ setMethod("sampling", "stanmodel",
                 out <- do.call(rstan::sampling, args = .dotlist)
                 return(out)
               }
-              parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
-              data_e <- as.environment(data)
-              parallel::clusterExport(cl, varlist = names(data_e), envir = data_e)
-              nfits <- parallel::parLapplyLB(cl, X = 1:chains, fun = callFun)
+              if ( .Platform$OS.type == "unix" && 
+                   (!interactive() || isatty(stdout())) ) {
+                nfits <- parallel::mclapply(1:chains, FUN = callFun, 
+                                            mc.preschedule = FALSE, mc.cores = cores)
+              }
+              else {
+                tfile <- tempfile()
+                sinkfile <- paste0(tfile, "_StanProgress.txt")
+                cat("Click the Refresh button to see progress of the chains\n", file = sinkfile)
+                if (open_progress && 
+                    !identical(browser <- getOption("browser"), "false")) {
+                  if (identical(Sys.getenv("RSTUDIO"), "1"))
+                    stop("you cannot specify 'open_progress = TRUE' when using RStudio")
+                  sinkfile_html <- paste0(tfile, "_StanProgress.html")
+                  create_progress_html_file(sinkfile_html, sinkfile)
+                  utils::browseURL(paste0("file://", sinkfile_html))
+                }
+                else if (identical(Sys.getenv("RSTUDIO"), "1") && 
+                         .Platform$OS.type == "windows" && interactive()) {
+                  if (!requireNamespace("rstudioapi"))
+                    stop("must install the rstudioapi package when using RStan in parallel via RStudio")
+                  if (rstudioapi::isAvailable("0.98.423")) {
+                    v <- rstudioapi::getVersion()
+                    if (v > "0.99.100") rstudioapi::viewer(sinkfile, height = "maximize")
+                    else if (v >= "0.98.423") rstudioapi::viewer(sinkfile)
+                  }
+                  else sinkfile <- ""
+                }
+                else sinkfile <- ""
+                cl <- parallel::makeCluster(min(cores, chains), 
+                                            outfile = sinkfile, useXDR = FALSE)
+                on.exit(parallel::stopCluster(cl))
+                dependencies <- c("rstan", "Rcpp", "ggplot2")
+                .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {
+                  dirname(system.file(package = d))
+                })))
+                .paths <- .paths[.paths != ""]
+                parallel::clusterExport(cl, varlist = ".paths", envir = environment())
+                parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
+                parallel::clusterEvalQ(cl, expr = 
+                                      suppressPackageStartupMessages(require(rstan, quietly = TRUE)))
+                parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
+                data_e <- as.environment(data)
+                parallel::clusterExport(cl, varlist = names(data_e), envir = data_e)
+                nfits <- parallel::parLapplyLB(cl, X = 1:chains, fun = callFun)
+              }
               valid <- sapply(nfits, is, class2 = "stanfit") &
                        sapply(nfits, FUN = function(x) x@mode == 0)
               if(all(valid)) {
