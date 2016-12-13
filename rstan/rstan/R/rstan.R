@@ -92,16 +92,12 @@ stan_model <- function(file,
        as.POSIXct(packageDescription("rstan")$Date) ||
        !is(obj <- readRDS(file.rds), "stanmodel") ||
        !is_sm_valid(obj) ||
-       !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
-       (md5 != tools::md5sum(tf) && is.null(
+       (!identical(stanc_ret$model_code, obj@model_code) && is.null(
         message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
 
-      if (exists("tf") && file.exists(tf)) file.remove(tf)
+        # do nothing
     }
-    else {
-      if (file.exists(tf)) file.remove(tf)
-      return(invisible(obj))
-    }
+    else return(invisible(obj))
   }
   if (!is.list(stanc_ret)) {
     stop("stanc_ret needs to be the returned object from stanc.")
