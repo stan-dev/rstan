@@ -67,8 +67,8 @@ Translate Stan model specification to C++ code
     \item \code{model_name} Character string for the model name.
     \item \code{model_code} Character string for the model's Stan specification. 
     \item \code{cppcode}    Character string for the model's C++ code. 
-    \item \code{status}     Logical indicating success/failure (\code{TRUE/FALSE}) of 
-                            translating the Stan code. 
+    \item \code{status}     Logical indicating success/failure (always \code{TRUE}) 
+                            of translating the Stan code.
   } 
 }
 

@@ -14,13 +14,13 @@
 \title{Model's \code{log_prob} and \code{grad_log_prob} functions} 
 
 \description{
-  Using model's \code{log_prob} and \code{grad_log_prob} functions  
-  on the unconstrained space of model parameters. Sometimes we   
-  need to convert the values of parameters from their support defined 
-  in the parameters block (which might be constrained, and for simplicity, 
-  we call it the constrained space) to the unconstrained space and vice versa. 
-  The \code{constrain_pars} and \code{unconstrain_pars} functions are used 
-  for this purpose.
+  Using model's \code{log_prob} and \code{grad_log_prob} take values from the
+  unconstrained space of model parameters and (by default) return values in 
+  the same space. Sometimes we need to convert the values of parameters from 
+  their support defined in the parameters block (which might be constrained, 
+  and for simplicity, we call it the constrained space) to the unconstrained 
+  space and vice versa. The \code{constrain_pars} and \code{unconstrain_pars} 
+  functions are used for this purpose.
 } 
 \usage{
   %% log_prob(object, upars, adjust_transform = TRUE, gradient = FALSE) 
@@ -38,7 +38,10 @@
 \section{Methods}{
   \describe{
     \item{log_prob}{\code{signature(object = "stanfit")}}{Compute the log posterior 
-      (\code{lp__}) for the model represented by a \code{stanfit} object. 
+      (\code{lp__}) for the model represented by a \code{stanfit} object. Note that,
+      by default, \code{log_prob} returns the log posterior in the unconstrained
+      space; set \code{adjust_transform = FALSE} to make the values match Stan's
+      output.
     }
     \item{grad_log_prob}{\code{signature(object = "stanfit")}}{Compute the gradients
       for \code{log_prob} as well as the log posterior. The latter is returned as 
@@ -65,7 +68,10 @@
     on the unconstrained space.}  
   \item{adjust_transform}{Logical to indicate whether to adjust
     the log density since Stan transforms parameters to unconstrained
-    space if it is in constrained space.} 
+    space if it is in constrained space. Set to \code{FALSE} to make the
+    function return the same values as Stan's \code{lp__} output.
+    
+    } 
   \item{gradient}{Logical to indicate whether gradients are also 
     computed as well as the log density. 
   } 
