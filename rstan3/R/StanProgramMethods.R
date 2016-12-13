@@ -35,8 +35,8 @@ StanProgram$methods(initialize = function(file = file.choose(), code, auto_write
   .self$cpp_code <<- scan(text = ret$cppcode, what = character(), 
                           sep = "\n", quiet = TRUE)
   .self$dso <<- rstan::stan_model(file, auto_write = FALSE, ...)@dso
-  if (auto_write) .self$save(file = sub("stan$", "rda", file))
-  else .self$save(file = file.path(tempdir(), paste0(md5, ".rda")))
+  if (auto_write) .self$save(file = sub("stan$", "rds", file))
+  else .self$save(file = file.path(tempdir(), paste0(md5, ".rds")))
   return(invisible(NULL))
 })
 

@@ -82,16 +82,15 @@ stan_model <- function(file,
     }
     
     mtime <- file.info(file)$mtime
-    file.rda <- gsub("stan$", "rda", file)
+    file.rds <- gsub("stan$", "rds", file)
     md5 <- tools::md5sum(file)
-    if (!file.exists(file.rda)) {
-      file.rda <- file.path(tempdir(), paste0(md5, ".rda"))
+    if (!file.exists(file.rds)) {
+      file.rds <- file.path(tempdir(), paste0(md5, ".rds"))
     }
-    if(!file.exists(file.rda) ||
-       (mtime.rda <- file.info(file.rda)$mtime) < 
+    if(!file.exists(file.rds) ||
+       (mtime.rds <- file.info(file.rds)$mtime) < 
        as.POSIXct(packageDescription("rstan")$Date) ||
-       # mtime.rda > rstan_load_time ||
-       !is(obj <- readRDS(file.rda), "stanmodel") ||
+       !is(obj <- readRDS(file.rds), "stanmodel") ||
        !is_sm_valid(obj) ||
        !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
        (md5 != tools::md5sum(tf) && is.null(
@@ -180,9 +179,18 @@ stan_model <- function(file,
     file <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
     if(!file.exists(file)) file.rename(from = tf, to = file)
     else file.remove(tf)
-    saveRDS(obj, file = gsub("stan$", "rda", file))
+    saveRDS(obj, file = gsub("stan$", "rds", file))
   }
-  else if(isTRUE(auto_write)) saveRDS(obj, file = gsub("stan$", "rda", file))
+  else if(isTRUE(auto_write)) {
+    file <- gsub("stan$", "rds", file)
+    if (file.exists(file)) {
+      rds <- readRDS(file)
+      if (!is(rds, "stanmodel"))
+        warning(rds, " exists but is not a 'stanmodel' so not overwriting")
+      saveRDS(obj, file = file)
+    }
+    else saveRDS(obj, file = file)
+  }
   
   invisible(obj) 
   ## We keep a reference to *dso* above to avoid dso to be 

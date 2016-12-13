@@ -61,7 +61,7 @@
     \code{rstan_options("auto_write" = TRUE)} in order to avoid unnecessary 
     recompilations. If \code{file} is supplied and its \code{\link{dirname}} 
     is writable, then the object will be written to that same directory, 
-    substituting a \code{.rda} extension for the \code{.stan} extension. 
+    substituting a \code{.rds} extension for the \code{.stan} extension. 
     Otherwise, the object will be written to the \code{\link{tempdir}}.}
   \item{obfuscate_model_name}{A logical scalar that is \code{TRUE} by default and
     passed to \code{\link{stanc}}.}
