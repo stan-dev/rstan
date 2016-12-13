@@ -7,9 +7,9 @@ rm -rf src/cvodes
 
 cp -r inst/include/mathlib/stan inst/include/stan
 cp -r inst/include/upstream/src inst/include/src
-cp -r inst/include/mathlib/lib/cvodes* src/cvodes
+cp -r inst/include/mathlib/lib/cvodes_2.9.0 src/cvodes
 mkdir -p inst/include/src/cvodes/include
-mv inst/include/mathlib/lib/cvodes*/include/* inst/include/src/cvodes/include
+mv inst/include/mathlib/lib/cvodes_2.9.0/include/* inst/include/src/cvodes/include
 
 exit $?
 

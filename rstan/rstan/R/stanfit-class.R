@@ -396,7 +396,7 @@ setMethod("get_posterior_mean", signature = "stanfit",
           })
 
 setGeneric(name = "extract",
-           def = function(object, ...) { standardGeneric("extract")}) 
+           def = function(object, ...) { standardGeneric("extract") }) 
 
 setMethod("extract", signature = "stanfit",
           definition = function(object, pars, permuted = TRUE, 
