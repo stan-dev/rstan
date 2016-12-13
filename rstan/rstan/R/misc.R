@@ -578,6 +578,10 @@ stan_rdump <- function(list, file = "", append = FALSE,
       storage.mode(vv) <- "integer"
 
     if (is.vector(vv)) {
+      if (length(vv) == 0) {
+        cat(v, " <- integer(0)\n", file = file, sep = '')
+        next
+      }
       if (length(vv) == 1) {
         cat(v, " <- ", as.character(vv), "\n", file = file, sep = '')
         next
@@ -593,7 +597,11 @@ stan_rdump <- function(list, file = "", append = FALSE,
       l2 <- c(l2, v) 
       vvdim <- dim(vv)
       cat(v, " <- \n", file = file, sep = '')
-      str <- paste0("structure(c(", paste(as.vector(vv), collapse = ', '), "),") 
+      if (length(vv) == 0) { 
+        str <- paste0("structure(integer(0), ")
+      } else {
+        str <- paste0("structure(c(", paste(as.vector(vv), collapse = ', '), "),") 
+      }
       str <- gsub(addnlpat, '\\1\n', str)
       cat(str, 
           ".Dim = c(", paste(vvdim, collapse = ', '), "))\n", file = file, sep = '')
@@ -658,6 +666,7 @@ read_rdump <- function(f, keep.source = FALSE, ...) {
   # 
   # Args:
   #   f: the file to be sourced
+  #   keep.source: see doc of function source
   # 
   # Returns:
   #   A list
