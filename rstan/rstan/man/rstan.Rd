@@ -5,6 +5,11 @@
 \docType{package}
 \title{RStan --- \R interface to Stan}
 \description{
+\if{html}{
+   \figure{stanlogo.png}{options: width="50px" alt="mc-stan.org"}
+   \emph{Stan Development Team}
+}
+
   RStan is the \R interface to the Stan C++ package. RStan provides
   \itemize{
   \item full Bayesian inference using the No-U-Turn sampler (NUTS), 

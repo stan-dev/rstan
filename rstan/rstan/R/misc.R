@@ -1624,8 +1624,21 @@ throw_sampler_warnings <- function(object) {
             " transitions after warmup that exceeded the maximum treedepth.",
             " Increase max_treedepth above ", max_td, ". See\n", 
             "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
-  if (n_d > 0 || n_m > 0) warning("Examine the pairs() plot to diagnose sampling problems\n",
-                                  call. = FALSE, noBreaks. = TRUE)
+  n_e <- 0L
+  if (is_sfinstance_valid(object)) {
+    E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
+    threshold <- 0.3
+    EBFMI <- get_num_upars(object) / apply(E, 2, var)
+    n_e <- sum(EBFMI < threshold, na.rm = TRUE)
+    if (n_e > 0)
+      warning("There were ", n_e, 
+              " chains where the estimated Bayesian Fraction of Missing Information",
+              " was low. See\n", 
+              "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
+  }
+  if (n_d > 0 || n_m > 0 || n_e > 0) 
+    warning("Examine the pairs() plot to diagnose sampling problems\n",
+            call. = FALSE, noBreaks. = TRUE)
   return(invisible(NULL))
 }
 
@@ -1648,4 +1661,3 @@ get_CXX <- function(CXX11 = FALSE) {
 is.sparc <- function() {
   grepl("^sparc",  R.version$platform)
 }
-             

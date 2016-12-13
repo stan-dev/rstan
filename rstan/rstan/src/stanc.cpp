@@ -29,7 +29,7 @@
 #include <Rcpp.h>
 #include <rstan/io/r_ostream.hpp>
 
-RcppExport SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name);
+RcppExport SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name, SEXP allow_undefined);
 RcppExport SEXP CPP_stan_version();
 
 SEXP CPP_stan_version() {
@@ -64,7 +64,7 @@ void split_str_by_newline(const std::string& str,  std::vector<std::string>& v) 
   }
 }
 
-SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name) {
+SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name, SEXP allow_undefined) {
   BEGIN_RCPP;
   static const int SUCCESS_RC = 0;
   static const int EXCEPTION_RC = -1;
@@ -84,7 +84,8 @@ SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name) {
   std::istringstream in(mcode_);
   try {
     bool valid_model
-      = stan::lang::compile(&rstan::io::rcerr,in,out,mname_);
+      = stan::lang::compile(&rstan::io::rcerr,in,out,mname_,
+                            Rcpp::as<bool>(allow_undefined));
     if (!valid_model) {
       return Rcpp::List::create(Rcpp::Named("status") = PARSE_FAIL_RC);
 
