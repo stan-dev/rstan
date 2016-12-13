@@ -59,7 +59,7 @@ stan_model <- function(file,
                        allow_undefined = allow_undefined)
     
     # find possibly identical stanmodels
-    model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
+    model_re <- "(^[[:alnum:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
     if(!is.null(model_name))
       if(!grepl(model_re, model_name))
         stop("model name must match ", model_re)
