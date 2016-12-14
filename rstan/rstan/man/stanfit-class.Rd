@@ -272,7 +272,9 @@ exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'),
                        full.names = TRUE))
 
 print(exfit)
+\dontrun{
 plot(exfit)
+}
 
 adaptinfo <- get_adaptation_info(exfit)
 seed <- get_seed(exfit)
