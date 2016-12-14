@@ -117,11 +117,11 @@ For \code{stan_plot}, there are additional arguments that can be specified in
 \code{\link[=rstan_gg_options]{Plot options}}
 }
 \examples{
+\dontrun{
 example("read_stan_csv")
 stan_plot(fit)
 stan_trace(fit)
 
-\dontrun{
 library(gridExtra)
 fit <- stan_demo("eight_schools")
 
