@@ -1,54 +1,13 @@
-citEntry(entry = "Article",
-         title = "The Stan Math Library: Reverse-Mode Automatic Differentiation in C++",
-         author = person("Bob", "Carpenter"),
-         year = 2016,
-         journal = "arXiv[1509.07164]",
-         url = "http://arxiv.org/abs/1509.07164",
-         textVersion = paste("Bob Carpenter, et al.",
-                             " The Stan Math Library: Reverse-Mode Automatic Differentiation in C++.",
-                             "arXiv[1509.07164]")
+citHeader("To cite StanHeaders in publications use:")
+
+citEntry(entry = "Misc", 
+         title = "{StanHeaders}: Headers for the {R} interface to {Stan}",
+         author = person(given = "Stan Development Team"),
+         note = "R package version 2.13.1",
+         year = "2016",
+         url = "http://mc-stan.org/",
+         textVersion =
+           paste("Stan Development Team (2016).",
+                 title = "StanHeaders: Headers for the {R} interface to {Stan}.",
+                 "http://mc-stan.org/.") 
 )
-
-bibentry(bibtype = "Article",
-  title        = "{Stan}: A Probabilistic Programming Language",
-
-  author       = c(person(given = "Bob",
-                          family = "Carpenter",
-                          email = "carp@alias-i.com"),
-                   person(given = "Andrew",
-                          family = "Gelman"),
-                   person(given = c("Matthew", "D."),
-                          family = "Hoffman"),
-                   person(given = "Daniel",
-                          family = "Lee"),
-                   person(given = "Ben",
-                          family = "Goodrich"),
-                   person(given = "Michael",
-                          family = "Betancourt"),
-                   person(given = "Marcus",
-                          family = "Brubaker"),
-                   person(given = "Jiqiang",
-                          family = "Guo"),
-                   person(given = "Peter",
-                          family = "Li"),
-                   person(given = "Allen",
-                          family = "Riddell")),
-
-  journal      = "Journal of Statistical Software",
-  year         = "2016",
-  volume       = "75",
-  number       = "8",
-  pages        = "1--30",
-  doi          = "10.18637/jss.v075.i08",
-
-  header       = "To cite StanHeaders in publications use:",
-  textVersion  =
-  paste("Bob Carpenter, Andrew Gelman, Matthew D. Hoffman, Daniel Lee, Ben Goodrich, Michael Betancourt, Marcus Brubaker, Jiqiang Guo, Peter Li, Allen Riddell (2016).",
-        "Stan: A Probabilistic Programming Language.",
-        "Journal of Statistical Software, 75(8), 1-30.",
-        "doi:10.18637/jss.v075.i08")
-
-)
-
-
-
