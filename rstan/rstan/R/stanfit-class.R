@@ -129,7 +129,16 @@ setGeneric(name = 'get_inits',
            def = function(object, ...) { standardGeneric("get_inits")})
 
 setMethod("get_inits", signature = "stanfit", 
-          function(object) { return(object@inits) })
+          function(object, iter = NULL) { 
+            if (is.null(iter)) return(object@inits)
+            stopifnot(is.numeric(iter), iter > 0, 
+                      iter <= length(object@sim$samples[[1]][[1]]))
+            inits <- object@inits
+            for (c in 1:ncol(object))
+              inits[[c]] <- relist(as.data.frame(object@sim$samples[[c]])[iter,],
+                                   skeleton = inits[[c]])
+            return(inits)                       
+})
 
 setGeneric(name = 'get_seed', 
            def = function(object, ...) { standardGeneric("get_seed")})
