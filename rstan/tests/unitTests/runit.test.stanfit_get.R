@@ -1,7 +1,7 @@
 test_get_elapsed_time <- function() {
   code <- 'parameters { real y; } model {y ~ normal(0,1); }'
   nchains = 5L
-  sm <- stan_model(stanc_ret = stanc(model_code = code))
+  sm <- stan_model(model_code = code)
   fit <- sampling(sm, chains = nchains, iter = 30)
   checkEquals(dim(get_elapsed_time(fit)), c(nchains, 2L))
   nchains = 1L

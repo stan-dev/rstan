@@ -81,7 +81,7 @@ prep_call_sampler <- function(object) {
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
                "  - compiled with save_dso=FALSE;\n", 
                "  - compiled on a different platform;\n", 
-               "  - not existed (created from reading csv files).", sep = '')) 
+               "  - does not exist (created from reading csv files).", sep = '')) 
   if (!is_dso_loaded(object@dso)) {
     # load the dso if available 
     grab_cxxfun(object@dso) 
@@ -94,6 +94,8 @@ mk_cppmodule <- function(object) {
   prep_call_sampler(object)
   model_cppname <- object@model_cpp$model_cppname
   mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
+  if (avoid_crash(mod))
+    stop("your R session would otherwise crash; please post on the stan-users Google group")
   eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
 }
 

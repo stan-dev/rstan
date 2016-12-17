@@ -1670,3 +1670,7 @@ get_CXX <- function(CXX11 = FALSE) {
 is.sparc <- function() {
   grepl("^sparc",  R.version$platform)
 }
+
+avoid_crash <- function(mod) {
+  as(get("packageName", envir = mod)["info"][1], "character") == "<pointer: (nil)>"
+}

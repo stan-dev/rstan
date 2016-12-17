@@ -93,7 +93,9 @@ stan_model <- function(file,
        !is(obj <- readRDS(file.rds), "stanmodel") ||
        !is_sm_valid(obj) ||
        (!identical(stanc_ret$model_code, obj@model_code) && is.null(
-        message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
+        message("hash mismatch so recompiling; make sure Stan code ends with a blank line"))) ||
+       avoid_crash(obj@dso@.CXXDSOMISC$module) && is.null(
+        message("recompiling to avoid crashing R session"))) {
 
         # do nothing
     }
