@@ -94,8 +94,6 @@ mk_cppmodule <- function(object) {
   prep_call_sampler(object)
   model_cppname <- object@model_cpp$model_cppname
   mod <- get("module", envir = object@dso@.CXXDSOMISC, inherits = FALSE)
-  if (avoid_crash(mod))
-    stop("your R session would otherwise crash; please post on the stan-users Google group")
   eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
 }
 
@@ -620,6 +618,7 @@ setMethod("sampling", "stanmodel",
                 close(mfile)
                 report <- scan(file = messages, what = character(),
                                sep = "\n", quiet = TRUE)
+                unlink(messages)
               }
               if (is(samples_i, "try-error") || is.null(samples_i)) {
                 print(report)
