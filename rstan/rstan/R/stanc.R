@@ -23,17 +23,20 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
         cl <- parallel::makePSOCKcluster(1L, outfile = "")
         on.exit(parallel::stopCluster(cl))
         parallel::clusterEvalQ(cl, Sys.setenv("RSTUDIO" = 0))
-        parallel::clusterExport(cl, "obfuscate_model_name", environment())
+        parallel::clusterExport(cl, c("obfuscate_model_name", "allow_undefined"),
+                                environment())
         if (missing(file)) {
           parallel::clusterExport(cl, "model_code", environment())
           out <- parallel::clusterEvalQ(cl, 
                    rstan::stanc(model_code = model_code,
-                                obfuscate_model_name = obfuscate_model_name))
+                                obfuscate_model_name = obfuscate_model_name,
+                                allow_undefined = allow_undefined))
         }
         else {
           parallel::clusterExport(cl, "file", environment())
           out <- parallel::clusterEvalQ(cl, 
-                  rstan::stanc(file, obfuscate_model_name = obfuscate_model_name))
+                  rstan::stanc(file, obfuscate_model_name = obfuscate_model_name,
+                               allow_undefined = allow_undefined))
         }
   }
   
