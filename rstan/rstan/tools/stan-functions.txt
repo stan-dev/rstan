@@ -195,9 +195,9 @@ hypot;(real x, real y);real;404
 inc_beta;(real alpha, real beta, real x);real;409
 integrate_ode_bdf;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i);real[];450
 integrate_ode_bdf;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i, real rel_tol, real abs_tol, int max_num_steps);real[];450
-integrate_ode;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i);real[  ,  ];450
-integrate_ode_rk45;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i);real[  ,  ];450
-integrate_ode_rk45;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i, real rel_tol, real abs_tol, int max_num_steps);real[  ,  ];450
+integrate_ode;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i);real[,];450
+integrate_ode_rk45;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i);real[,];450
+integrate_ode_rk45;(function ode, real[] initial_state, real initial_time, real[] times, real[] theta, real[] x_r, int[] x_i, real rel_tol, real abs_tol, int max_num_steps);real[,];450
 int_step;(int x);int;391
 int_step;(real x);int;391
 inv_chi_square_cdf;(reals y, reals nu);real;483
