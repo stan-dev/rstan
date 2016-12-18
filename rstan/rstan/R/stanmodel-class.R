@@ -484,7 +484,8 @@ setMethod("sampling", "stanmodel",
               if ( .Platform$OS.type == "unix" && 
                    (!interactive() || isatty(stdout())) ) {
                 nfits <- parallel::mclapply(1:chains, FUN = callFun, 
-                                            mc.preschedule = FALSE, mc.cores = cores)
+                                            mc.preschedule = FALSE, 
+                                            mc.cores = min(chains, cores))
               }
               else {
                 tfile <- tempfile()
