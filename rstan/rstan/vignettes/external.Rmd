@@ -259,8 +259,17 @@ it require a compiler that is compliant with the C++11 standard. However,
 almost any modern C++ compiler is compliant, so you can use (at least some
 subset of the) features that were introduced by the C++11 standard in external
 C++ code and your Stan program should compile (perhaps with some warnings). In
-particular, you may want to use the `auto` keyword to declare symbols _within_
-your external C++ function to avoid having to learn a lot of the messy 
-type-promotion syntax used in the Stan Math Library and the rules for what kind
-of object is returned by various mathematical operations.
+particular, you may want to use the `auto` keyword to avoid having to learn a 
+lot of the messy type-promotion syntax used in the Stan Math Library and the 
+rules for what kind of object is returned by various mathematical operations.
+For example, under the C++11 standard, the `besselK.hpp` file could be written as
+```{Rcpp, eval = FALSE}
+template <typename T0__, typename T1__>
+auto
+besselK(const T0__& v, const T1__& z, std::ostream* pstream__) -> decltype(v + z) {
+  return boost::math::cyl_bessel_k(v, z);
+}
+```
+where the `auto` keyword combined with `-> decltype (v + z)` results in the same code 
+as the Boost metaprogram `typename boost::math::tools::promote_args<T0__, T1__>::type`.
 
