@@ -2,7 +2,7 @@ Package: rstan
 Type: Package
 Title: R Interface to Stan
 Version: 2.13.2
-Date: 2016-12-14
+Date: 2016-12-16
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -31,7 +31,7 @@ NeedsCompilation: yes
 Imports: methods, stats4, inline, gridExtra (>= 2.0.0), Rcpp (>= 0.12.0)
 Depends: R (>= 3.0.2), ggplot2 (>= 2.0.0), StanHeaders (>= 2.13.0)
 LinkingTo: Rcpp (>= 0.12.0), RcppEigen, BH (>= 1.62), StanHeaders (>= 2.13.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.62), parallel, KernSmooth, RCurl, loo (>= 0.1.6), shinystan (>= 2.2.1), bayesplot, rstantools, rstudioapi, Matrix, knitr (>= 1.15.1)
+Suggests: RUnit, RcppEigen, BH (>= 1.62), parallel, KernSmooth, loo (>= 0.1.6), shinystan (>= 2.2.1), bayesplot, rstantools, rstudioapi, Matrix, knitr (>= 1.15.1)
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr

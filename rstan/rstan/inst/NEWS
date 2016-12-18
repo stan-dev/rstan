@@ -1,3 +1,31 @@
+Sun December 18 2016 (2.13.2)
+1. Bug fixes
+  * Avoid using hashing to check whether a recompile is necessary
+  * Use .rds extension rather than .rda extension (thanks @illarisheinen)
+  * Stan file names are now allowed to start with a number
+  * Fix stan_rdump writing NULL instead of zero-length objects
+  * Fix for structured unconstrained parameters in plots
+  * The model-fitting functions now search lexically for objects declared in 
+    the data block 
+  * Estimated Bayesian Fraction of Missing Information is back but will only
+    warn if a chain is less than 0.3
+  * A keep.source (by default FALSE) argument was added to read_rdump in order
+    to speed up read times (thanks @mespe)
+  * Clarify doc on constrained parameters (thatnks @davharris)
+  * The expose_stan_functions function gained an env argument
+  * Relaxed attempt to find rtools on Windows
+  * Try to preserve path order (thanks @vdorie)
+  * The rstan package now works on openCPU
+  * Check for existence of log files that might be cleaned out in long runs
+    before attempting to read from them
+  * Delete unneeded files in the temporary directory  
+2. Changes
+  * New vignette on interfacing with external C++ code, plus supporting arguments
+    to stanc and stan_model
+  * Use forking rather than socket connections in non-Windows, non-GUI environments
+  * Energy diagnostic is accessable from the pairs plot
+  * Uses the bayesplot package for most plots
+
 Sat September 10 2016 (2.12.1)
 1. Bug fixes
   * Now throws warnings even if not in interactive() mode
