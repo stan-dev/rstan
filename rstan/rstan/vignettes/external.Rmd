@@ -86,7 +86,7 @@ that contains `#include` directives to other C++ header files.
 The result of the `includes` argument is inserted into the C++ file directly
 after the following lines (as opposed to CmdStan where it is inserted directly
 _before_ the following lines)
-```{rcpp, eval = FALSE}
+```{Rcpp, eval = FALSE}
 #include <stan/model/model_header.hpp>
 
 namespace some_namespace {
@@ -122,7 +122,7 @@ header files. Nevertheless, an external C++ file _may_ contain additional
 include directives that bring in class definitions, for example.
 
 Now let's examine the fib.hpp file, which contains the C++ lines
-```{rcpp, eval = FALSE}
+```{Rcpp, eval = FALSE}
 int fib(const int&n, std::ostream* pstream__) {
   if (n <= 0) {
     stringstream errmsg;
@@ -203,7 +203,7 @@ stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
 Although the Stan Math Library (via Boost) has an implementation of the 
 Modified Bessel Function of the Second Kind, it only supports the case where
 the order (`v`) is an integer. The besselK.hpp file reads as
-```{rcpp, eval = FALSE}
+```{Rcpp, eval = FALSE}
 template <typename T0__, typename T1__>
 typename boost::math::tools::promote_args<T0__, T1__>::type
 besselK(const T0__& v, const T1__& z, std::ostream* pstream__) {
