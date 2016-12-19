@@ -117,6 +117,10 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   
   # convert inline declarations to Rcpp export declarations
   lines <- gsub("^inline$", "// \\[\\[Rcpp::export\\]\\]", lines)
+  
+  ints <- grep("^int$", lines)
+  for (i in rev(ints))
+    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
 
   # declare attributes for Rcpp for non-functor user-defined Stan functions
   templates <- grep("^template .*$", lines)
