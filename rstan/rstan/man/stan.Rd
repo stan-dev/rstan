@@ -114,9 +114,10 @@ stan(file, model_name = "anon_model", model_code = "",
     The seed can also be specified as a character string of digits, such as
     \code{"12345"}, which is converted to integer.}
     
-  \item{algorithm}{One of algorithms that are implemented in Stan such 
-    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC,
-    or Fixed_param.}
+  \item{algorithm}{One of sampling algorithms that are implemented in Stan. 
+    Current options are \code{"NUTS"} (No-U-Turn sampler, Hoffman and Gelman 2011), 
+    \code{"HMC"} (static HMC), or \code{"Fixed_param"}. The default and 
+    preferred algorithm is \code{"NUTS"}.}
 
   \item{sample_file}{An optional character string providing the name of a file.
     If specified the draws for \emph{all} parameters and other saved quantities
