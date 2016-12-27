@@ -14,7 +14,6 @@
 #  A copy of the GNU General Public License is available at
 #  https://www.R-project.org/Licenses/
 
-if (getRversion() < "3.2.0") { # when dynGet() was added
   dynGet <- function (x, 
                       ifnotfound = stop(gettextf("%s not found", sQuote(x)), domain = NA), 
                       minframe = 1L, inherits = FALSE) 
@@ -23,9 +22,10 @@ if (getRversion() < "3.2.0") { # when dynGet() was added
     while (n > minframe) {
       n <- n - 1L
       env <- sys.frame(n)
-      if (exists(x, envir = env, inherits = inherits)) 
-        return(get(x, envir = env, inherits = inherits))
+      if (exists(x, envir = env, inherits = inherits, mode = "numeric")) 
+        return(get(x, envir = env, inherits = inherits, mode = "numeric"))
+      else if (exists(x, envir = env, inherits = inherits, mode = "logical"))
+        return(get(x, envir = env, inherits = inherits, mode = "logical"))
     }
     return(ifnotfound)
   }
-}

@@ -1556,13 +1556,12 @@ parse_data <- function(cppcode) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
-  tdata <- grep("stan::math::fill(", cppcode, value = TRUE, fixed = TRUE)
-  tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
-  tdata <- gsub("^.*stan::math::fill\\((.*), std::numeric_limits<int>::min\\(\\)\\);$",
-                "\\1", tdata)
+  
+  in_data <- grep("context__.vals_", cppcode, fixed = TRUE, value = TRUE)
+  in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)  
   
   # get them from the calling environment
-  objects <- setdiff(objects, tdata)
+  objects <- intersect(objects, in_data)
   stuff <- sapply(objects, simplify = FALSE, FUN = dynGet, 
                   inherits = FALSE, ifnotfound = NULL)
   for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
