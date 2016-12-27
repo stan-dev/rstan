@@ -105,13 +105,13 @@ setMethod("vb", "stanmodel",
                    algorithm = c("meanfield", "fullrank"), ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- parse_data(get_cppcode(object))
+              parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
               }
-              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
-              parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
+              # for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
+              # parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             } else if (is.character(data)) { # names of objects
               data <- try(mklist(data))
@@ -263,13 +263,13 @@ setMethod("optimizing", "stanmodel",
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- parse_data(get_cppcode(object))
+              parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
               }
-              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
-              parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
+              # for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
+              # parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             } else if (is.character(data)) { # names of objects
               data <- try(mklist(data))
@@ -394,13 +394,13 @@ setMethod("sampling", "stanmodel",
                    show_messages = TRUE, ...) {
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- try(parse_data(get_cppcode(object)))
+              parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
               }
-              for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
-              parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
+              # for (nm in names(data)) parsed_data[[nm]] <- data[[nm]]
+              # parsed_data <- parsed_data[!sapply(parsed_data, is.null)]
               data <- parsed_data
             } else if (is.character(data)) { # names of objects
               data <- try(mklist(data))
