@@ -1,3 +1,10 @@
+Wed December 28 2016 (2.14.1)
+1. Bug fixes
+  * Fix data parsing error that occurred in rare cases
+  * expose_stan_functions() works with integer-returning functions again
+  * Do not use more cores than chains when calling mclapply()
+  * Fix NUTS bug (really in StanHeaders) that underestimates variance
+
 Sun December 18 2016 (2.13.2)
 1. Bug fixes
   * Avoid using hashing to check whether a recompile is necessary
