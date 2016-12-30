@@ -1,10 +1,13 @@
-citEntry(entry = "Article",
-         title = "The Stan Math Library: Reverse-Mode Automatic Differentiation in C++",
-         author = person("Bob", "Carpenter"),
-         year = 2016,
-         journal = "arXiv[1509.07164]",
-         url = "http://arxiv.org/abs/1509.07164",
-         textVersion = paste("Bob Carpenter, et al.",
-                             " The Stan Math Library: Reverse-Mode Automatic Differentiation in C++.",
-                             "arXiv[1509.07164]")
+citHeader("To cite StanHeaders in publications use:")
+
+citEntry(entry = "Misc", 
+         title = "{StanHeaders}: Headers for the {R} interface to {Stan}",
+         author = person(given = "Stan Development Team"),
+         note = "R package version 2.13.1",
+         year = "2016",
+         url = "http://mc-stan.org/",
+         textVersion =
+           paste("Stan Development Team (2016).",
+                 title = "StanHeaders: Headers for the {R} interface to {Stan}.",
+                 "http://mc-stan.org/.") 
 )

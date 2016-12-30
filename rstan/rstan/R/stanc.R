@@ -16,25 +16,30 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 stanc <- function(file, model_code = '', model_name = "anon_model",
-                  verbose = FALSE, obfuscate_model_name = TRUE) {
+                  verbose = FALSE, obfuscate_model_name = TRUE,
+                  allow_undefined = FALSE) {
   if (.Platform$OS.type == "unix" && R.Version()$os == "linux-gnu" &&
       identical(Sys.getenv("RSTUDIO"), "1")) {
         cl <- parallel::makePSOCKcluster(1L, outfile = "")
         on.exit(parallel::stopCluster(cl))
         parallel::clusterEvalQ(cl, Sys.setenv("RSTUDIO" = 0))
-        parallel::clusterExport(cl, "obfuscate_model_name", environment())
+        parallel::clusterExport(cl, c("obfuscate_model_name", "allow_undefined"),
+                                environment())
         if (missing(file)) {
           parallel::clusterExport(cl, "model_code", environment())
           out <- parallel::clusterEvalQ(cl, 
                    rstan::stanc(model_code = model_code,
-                                obfuscate_model_name = obfuscate_model_name))
+                                obfuscate_model_name = obfuscate_model_name,
+                                allow_undefined = allow_undefined))
         }
         else {
           parallel::clusterExport(cl, "file", environment())
           out <- parallel::clusterEvalQ(cl, 
-                  rstan::stanc(file, obfuscate_model_name = obfuscate_model_name))
+                  rstan::stanc(file, obfuscate_model_name = obfuscate_model_name,
+                               allow_undefined = allow_undefined))
         }
-      }
+  }
+  
   # Call stanc, written in C++ 
   model_name2 <- deparse(substitute(model_code))  
   if (is.null(attr(model_code, "model_name2"))) 
@@ -50,7 +55,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
-  r <- .Call("CPP_stanc280", model_code, model_cppname)
+  r <- .Call("CPP_stanc280", model_code, model_cppname, allow_undefined)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
@@ -87,7 +92,8 @@ rstudio_stanc <- function(filename) {
 }
 
 stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
-                          verbose = FALSE, obfuscate_model_name = FALSE) {
+                          verbose = FALSE, obfuscate_model_name = FALSE, 
+                          allow_undefined = FALSE) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_cppname <- sub("\\.stan$", "", basename(file))
   program <- readLines(file)
@@ -115,6 +121,7 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
   }    
   out <- stanc(model_code = paste(program, collapse = "\n"), 
                model_name = model_cppname, verbose = verbose, 
-               obfuscate_model_name = obfuscate_model_name)
+               obfuscate_model_name = obfuscate_model_name, 
+               allow_undefined = allow_undefined)
   return(out)
 }

@@ -98,9 +98,10 @@
     to print intermediate output from Stan on the console, which might
     be helpful for model debugging.}
 
-  \item{algorithm}{One of algorithms that are implemented in Stan such 
-    as the No-U-Turn sampler (NUTS, Hoffman and Gelman 2011), static HMC,
-    or Fixed_param.} 
+  \item{algorithm}{One of sampling algorithms that are implemented in Stan. 
+    Current options are \code{"NUTS"} (No-U-Turn sampler, Hoffman and Gelman 2011), 
+    \code{"HMC"} (static HMC), or \code{"Fixed_param"}. The default and 
+    preferred algorithm is \code{"NUTS"}.}
 
   \item{control}{A named \code{list} of parameters to control the sampler's
     behavior. See the details in the documentation for the \code{control} argument

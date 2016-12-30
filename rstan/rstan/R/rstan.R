@@ -25,7 +25,9 @@ stan_model <- function(file,
                        save_dso = TRUE,
                        verbose = FALSE, 
                        auto_write = rstan_options("auto_write"), 
-                       obfuscate_model_name = TRUE) { 
+                       obfuscate_model_name = TRUE,
+                       allow_undefined = FALSE, 
+                       includes = NULL) {
 
   # Construct a stan model from stan code 
   # 
@@ -54,51 +56,51 @@ stan_model <- function(file,
     
     stanc_ret <- stanc(file = file, model_code = model_code, 
                        model_name = model_name, verbose = verbose,
-                       obfuscate_model_name = obfuscate_model_name)
+                       obfuscate_model_name = obfuscate_model_name, 
+                       allow_undefined = allow_undefined)
     
     # find possibly identical stanmodels
-    model_re <- "(^[[:alpha:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
+    model_re <- "(^[[:alnum:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
     if(!is.null(model_name))
       if(!grepl(model_re, model_name))
         stop("model name must match ", model_re)
     S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
     if (length(S4_objects) > 0) {
-      pf <- parent.frame()
-      stanfits <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
+      e <- environment()
+      stanfits <- sapply(mget(S4_objects, envir = e, inherits = TRUE), 
                          FUN = is, class2 = "stanfit")
-      stanmodels <- sapply(mget(S4_objects, envir = pf, inherits = TRUE), 
+      stanmodels <- sapply(mget(S4_objects, envir = e, inherits = TRUE), 
                            FUN = is, class2 = "stanmodel")
       if (any(stanfits)) for (i in names(which(stanfits))) {
-        obj <- get_stanmodel(get(i, envir = pf, inherits = TRUE))
+        obj <- get_stanmodel(get(i, envir = e, inherits = TRUE))
         if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
       }
       if (any(stanmodels)) for (i in names(which(stanmodels))) {
-        obj <- get(i, envir = pf, inherits = TRUE)
+        obj <- get(i, envir = e, inherits = TRUE)
         if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
       }
     }
     
     mtime <- file.info(file)$mtime
-    file.rda <- gsub("stan$", "rda", file)
+    file.rds <- gsub("stan$", "rds", file)
     md5 <- tools::md5sum(file)
-    if (!file.exists(file.rda)) {
-      file.rda <- file.path(tempdir(), paste0(md5, ".rda"))
+    if (!file.exists(file.rds)) {
+      file.rds <- file.path(tempdir(), paste0(md5, ".rds"))
     }
-    if(!file.exists(file.rda) ||
-       (mtime.rda <- file.info(file.rda)$mtime) < 
+    if(!file.exists(file.rds) ||
+       (mtime.rds <- file.info(file.rds)$mtime) < 
        as.POSIXct(packageDescription("rstan")$Date) ||
-       !is(obj <- readRDS(file.rda), "stanmodel") ||
+       !is(obj <- readRDS(file.rds), "stanmodel") ||
        !is_sm_valid(obj) ||
-       !is.null(writeLines(obj@model_code, con = tf <- tempfile())) ||
-       (md5 != tools::md5sum(tf) && is.null(
-        message("hash mismatch so recompiling; make sure Stan code ends with a blank line")))) {
+       (!identical(stanc_ret$model_code, obj@model_code) && is.null(
+        message("hash mismatch so recompiling; make sure Stan code ends with a blank line"))) ||
+       dirname(file.rds) == tempdir() &&
+       avoid_crash(obj@dso@.CXXDSOMISC$module) && is.null(
+        message("recompiling to avoid crashing R session"))) {
 
-      if (exists("tf") && file.exists(tf)) file.remove(tf)
+        # do nothing
     }
-    else {
-      if (file.exists(tf)) file.remove(tf)
-      return(invisible(obj))
-    }
+    else return(invisible(obj))
   }
   if (!is.list(stanc_ret)) {
     stop("stanc_ret needs to be the returned object from stanc.")
@@ -127,7 +129,10 @@ stan_model <- function(file,
   model_name <- stanc_ret$model_name 
   model_code <- stanc_ret$model_code 
   inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
-               stanc_ret$cppcode,
+               # include, stanc_ret$cppcode,
+               if(is.null(includes)) stanc_ret$cppcode else
+                 sub("(class.*: public prob_grad \\{)", 
+                     paste(includes, "\\1"), stanc_ret$cppcode),
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
                sep = '')  
@@ -173,9 +178,18 @@ stan_model <- function(file,
     file <- file.path(tempdir(), paste0(tools::md5sum(tf), ".stan"))
     if(!file.exists(file)) file.rename(from = tf, to = file)
     else file.remove(tf)
-    saveRDS(obj, file = gsub("stan$", "rda", file))
+    saveRDS(obj, file = gsub("stan$", "rds", file))
   }
-  else if(isTRUE(auto_write)) saveRDS(obj, file = gsub("stan$", "rda", file))
+  else if(isTRUE(auto_write)) {
+    file <- gsub("stan$", "rds", file)
+    if (file.exists(file)) {
+      rds <- readRDS(file)
+      if (!is(rds, "stanmodel"))
+        warning(rds, " exists but is not a 'stanmodel' so not overwriting")
+      saveRDS(obj, file = file)
+    }
+    else saveRDS(obj, file = file)
+  }
   
   invisible(obj) 
   ## We keep a reference to *dso* above to avoid dso to be 

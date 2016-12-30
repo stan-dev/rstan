@@ -4,11 +4,14 @@
 \title{Read data in an \R dump file to a list}
 \description{Create an \R list from an \R dump file}
 \usage{
-read_rdump(f)
+read_rdump(f, keep.source = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{f}{A character string providing the dump file name.}
+  \item{keep.source}{logical: should the source formatting be retained when
+                     echoing expressions, if possible?}
+  \item{...}{passed to \code{source}}
 }
 \details{
 The \R dump file can be read directly by \R function \code{source}, which

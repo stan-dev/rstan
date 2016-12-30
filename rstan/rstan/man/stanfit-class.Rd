@@ -167,11 +167,12 @@ summarizing results and various access methods also allow the underlying data
       Get the warmup time and sample time in seconds.
       A matrix of two columns is returned with each row containing the warmup
       and sample times for one chain.}
-    \item{\code{get_inits}}{
+    \item{\code{get_inits, iter = NULL}}{
       Get the initial values for parameters used in sampling all chains. The 
       returned object is a list with the same structure as the \code{inits} 
       slot described above. If \code{object@mode=2} (error mode) an empty list 
-      is returned.}
+      is returned. If \code{iter} is not \code{NULL}, then the draw from that
+      iteration is returned for each chain rather than the initial state.}
     \item{\code{get_cppo_mode}}{
       Get the optimization mode used for compilation. The returned string is 
       one of \code{"fast"}, \code{"presentation2"}, \code{"presentation1"},
@@ -272,7 +273,9 @@ exfit <- read_stan_csv(dir(system.file('misc', package = 'rstan'),
                        full.names = TRUE))
 
 print(exfit)
+\dontrun{
 plot(exfit)
+}
 
 adaptinfo <- get_adaptation_info(exfit)
 seed <- get_seed(exfit)
