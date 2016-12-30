@@ -28,9 +28,7 @@
 
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
-#include <stan/callbacks/noop_interrupt.hpp>
 #include <stan/callbacks/writer.hpp>
-#include <stan/callbacks/noop_writer.hpp>
 #include <stan/callbacks/stream_writer.hpp>
 #include <stan/io/empty_var_context.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
@@ -457,7 +455,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
   if (args.get_method() == TEST_GRADIENT) {
     double epsilon = args.get_ctrl_test_grad_epsilon();
     double error = args.get_ctrl_test_grad_error();
-    stan::callbacks::noop_writer sample_writer;
+    stan::callbacks::writer sample_writer;
     return_code = stan::services::diagnose::diagnose(model,
                                                      *init_context_ptr,
                                                      random_seed, id,

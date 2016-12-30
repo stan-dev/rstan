@@ -33,20 +33,6 @@ namespace rstan {
         M_ = x_[0].size();
     }
 
-    void operator()(const std::string& key, double value) { }
-
-    void operator()(const std::string& key, int value) { }
-
-    void operator()(const std::string& key, const std::string& value) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_values) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_rows, int n_cols) { }
-
-    void operator()(const std::vector<std::string>& names) { }
-
     void operator()(const std::vector<double>& x) {
       if (N_ != x.size())
         throw std::length_error("vector provided does not "
@@ -57,10 +43,6 @@ namespace rstan {
         x_[n][m_] = x[n];
       m_++;
     }
-
-    void operator()(const std::string& message) { }
-
-    void operator()() { }
 
     const std::vector<InternalVector>& x() const {
       return x_;

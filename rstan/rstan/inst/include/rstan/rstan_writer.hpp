@@ -27,84 +27,6 @@ namespace rstan {
         values_(values), sampler_values_(sampler_values), sum_(sum) { }
 
     /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] value A double value
-     */
-    void operator()(const std::string& key, double value) {
-      csv_(key, value);
-      comment_writer_(key, value);
-      values_(key, value);
-      sampler_values_(key, value);
-      sum_(key, value);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] value An integer value
-     */
-    void operator()(const std::string& key, int value) {
-      csv_(key, value);
-      comment_writer_(key, value);
-      values_(key, value);
-      sampler_values_(key, value);
-      sum_(key, value);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] value A string
-     */
-    void operator()(const std::string& key, const std::string& value) {
-      csv_(key, value);
-      comment_writer_(key, value);
-      values_(key, value);
-      sampler_values_(key, value);
-      sum_(key, value);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] values A double array, typically used with
-     *   contiguous Eigen vectors
-     * @param[in] n_values Length of the array
-     */
-    void operator()(const std::string& key, const double* values,
-                    int n_values)  {
-      csv_(key, values, n_values);
-      comment_writer_(key, values, n_values);
-      values_(key, values, n_values);
-      sampler_values_(key, values, n_values);
-      sum_(key, values, n_values);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] values A double array assumed to represent a 2d
-     *   matrix stored in column major order, typically used with
-     *   contiguous Eigen matrices
-     * @param[in] n_rows Rows
-     * @param[in] n_cols Columns
-     */
-    void operator()(const std::string& key, const double* values,
-                    int n_rows, int n_cols) {
-      csv_(key, values, n_rows, n_cols);
-      comment_writer_(key, values, n_rows, n_cols);
-      values_(key, values, n_rows, n_cols);
-      sampler_values_(key, values, n_rows, n_cols);
-      sum_(key, values, n_rows, n_cols);
-    }
-
-    /**
      * Writes a set of names.
      *
      * @param[in] names Names in a std::vector
@@ -170,7 +92,7 @@ namespace rstan {
                         const std::vector<size_t>& qoi_idx) {
     size_t N = N_sample_names + N_sampler_names + N_constrained_param_names;
     size_t offset = N_sample_names + N_sampler_names;
-    
+
     std::vector<size_t> filter(qoi_idx);
     std::vector<size_t> lp;
     for (size_t n = 0; n < filter.size(); n++)
