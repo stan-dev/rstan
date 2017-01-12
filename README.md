@@ -3,8 +3,9 @@
 <img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo.png" width=200 alt="Stan Logo"/>
 </a>
 
-[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
-[![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=brightgreen)](http://cran.rstudio.com/package=rstan)
+[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)  
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
+[![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=blue)](http://cran.rstudio.com/package=rstan)
 
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 

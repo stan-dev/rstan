@@ -1633,7 +1633,7 @@ throw_sampler_warnings <- function(object) {
             " Increase max_treedepth above ", max_td, ". See\n", 
             "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
   n_e <- 0L
-  if (is_sfinstance_valid(object)) {
+  if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
     E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
     threshold <- 0.3
     EBFMI <- get_num_upars(object) / apply(E, 2, var)
