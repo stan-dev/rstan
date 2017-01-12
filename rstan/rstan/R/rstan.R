@@ -94,7 +94,7 @@ stan_model <- function(file,
        !is_sm_valid(obj) ||
        (!identical(stanc_ret$model_code, obj@model_code) && is.null(
         message("hash mismatch so recompiling; make sure Stan code ends with a blank line"))) ||
-       dirname(file.rds) == tempdir() &&
+       dirname(file.rds) == gsub("\\", "/", tempdir(), fixed = TRUE) &&
        avoid_crash(obj@dso@.CXXDSOMISC$module) && is.null(
         message("recompiling to avoid crashing R session"))) {
 
