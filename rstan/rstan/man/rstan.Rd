@@ -10,7 +10,8 @@
    \emph{Stan Development Team}
 }
 
-  RStan is the \R interface to the Stan C++ package. RStan provides
+  RStan is the \R interface to the \href{http://mc-stan.org/}{Stan} C++ package. 
+  RStan provides
   \itemize{
   \item full Bayesian inference using the No-U-Turn sampler (NUTS), 
     a variant of Hamiltonian Monte Carlo (HMC)
@@ -19,19 +20,36 @@
   \item penalized maximum likelihood estimation using L-BFGS optimization
   }
   
-  For more information about Stan visit \url{http://mc-stan.org/}.
+  For documentation on the Stan modeling language see the
+  \href{http://mc-stan.org/documentation/}{\emph{Stan Modeling Language User's Guide and Reference Manual}}.
 }
-
-\details{
-  \tabular{ll}{
-    Package: \tab rstan\cr
-    License: \tab GPL-3 \cr
+\section{Other R packages from the Stan Development Team}{
+  Various related \R packages are also available from the Stan Development Team: 
+  \tabular{lll}{
+  \strong{Package} \tab \strong{Description} \tab \strong{Link} \cr
+  \pkg{bayesplot} 
+    \tab ggplot-based plotting library for graphing parameter estimates, 
+      MCMC diagnostics, and posterior predictive checks. 
+    \tab \link[bayesplot]{bayesplot-package}
+    \cr
+  \pkg{shinystan} 
+    \tab Interactive visual summaries and advanced posterior analysis of 
+      MCMC output. 
+    \tab \link[shinystan]{shinystan-package}
+    \cr
+  \pkg{loo} 
+    \tab Out-of-sample predictive performance estimates and model comparison.
+    \tab \link[loo]{loo-package} 
+    \cr
+  \pkg{rstanarm} 
+    \tab \R formula interface for Bayesian applied regression modeling. 
+    \tab \link[rstanarm]{rstanarm-package}
+    \cr 
+  \pkg{rstantools} 
+    \tab Tools for developers of R packages interfacing with Stan.
+    \tab \link[rstantools]{rstantools-package}
+    \cr
   }
-  
-  For more information on Stan and its modeling language,
-  see the \emph{Stan Modeling Language User's Guide and Reference Manual}   
-  available at \url{http://mc-stan.org/}.
-
 }
 \author{
   \tabular{ll}{
@@ -42,12 +60,18 @@
 
   \tabular{ll}{
   Maintainer:\tab Ben Goodrich <benjamin.goodrich@columbia.edu>    \cr
-  } 
+  }
 }
-\references{
-  Stan Development Team 
-  \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
+
+\seealso{
+\itemize{
+  \item \code{\link{stan}} for details on fitting models and 
+  \code{\linkS4class{stanfit}} for information on the fitted model objects.
+  \item \url{https://github.com/stan-dev/rstan/issues/} to submit a bug
+  report or feature request.
+  \item \url{https://groups.google.com/forum/#!forum/stan-users/} to ask a 
+  question on the Stan-users forum.
+}
 }
 
 \examples{\dontrun{ 
@@ -86,20 +110,7 @@ print(dimnames(m))
 # using as.array directly on stanfit objects 
 m2 <- as.array(fit)
 
-}}  
-
-\seealso{
-  The \code{\link{stan}} function for details on fitting models and 
-  \code{\linkS4class{stanfit}} for information on the fitted model objects.
-  
-  Several related \R packages are also available from the Stan Development Team: 
-  \pkg{loo} (\link[loo]{loo-package}) offers model comparison on estimated
-  out-of-sample predictive performance, 
-  \pkg{shinystan} (\link[shinystan]{shinystan-package}) provides the ShinyStan 
-  GUI for exploring fitted Bayesian models, 
-  and \pkg{rstanarm} is an appendage to \pkg{rstan} providing an \R formula 
-  interface for Bayesian regression modeling.
-}
+}}
 \keyword{rstan} 
-\keyword{package} 
+\keyword{package}
 
