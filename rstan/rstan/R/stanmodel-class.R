@@ -638,7 +638,7 @@ setMethod("sampling", "stanmodel",
                 report <- strtrim(report, width = 100)
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
-                  msg <- paste("The following numerical problems occured",
+                  msg <- paste("The following numerical problems occurred",
                                "the indicated number of times on chain", 
                                cid)
                   if (.Platform$OS.type == "windows") print(msg)
