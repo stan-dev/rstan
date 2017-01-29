@@ -26,6 +26,8 @@
         return(get(x, envir = env, inherits = inherits, mode = "numeric"))
       else if (exists(x, envir = env, inherits = inherits, mode = "logical"))
         return(get(x, envir = env, inherits = inherits, mode = "logical"))
+      else if (exists(x, envir = env, inherits = inherits, mode = "list"))
+        return(get(x, envir = env, inherits = inherits, mode = "list"))
     }
     return(ifnotfound)
   }
