@@ -32,7 +32,7 @@ rstan_ggtheme_options <- function(...) {
 # defaults ----------------------------------------------------------------
 .rstanvis_defaults <- new.env(parent = emptyenv())
 .rstanvis_defaults$theme <-
-  theme_classic(base_size = 11, base_family = "Arial") +
+  theme_classic(base_size = 11) +
   theme(axis.line = element_line(color = "#222222"),
         axis.line.y = element_line(size = .5),
         axis.line.x = element_line(size = 1),
