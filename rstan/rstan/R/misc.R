@@ -1671,5 +1671,6 @@ is.sparc <- function() {
 }
 
 avoid_crash <- function(mod) {
-  as(get("packageName", envir = mod)["info"][1], "character") == "<pointer: (nil)>"
+  as(get("packageName", envir = mod)["info"][1], "character") %in% 
+    c("<pointer: (nil)>", "<pointer: 0x0>")
 }
