@@ -650,14 +650,14 @@ setMethod("sampling", "stanmodel",
                     print("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
                     print("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     print(paste("If the number in the 'count' column is small, ",
-                                "do not ask about this message on stan-users."))
+                                "there is no need to ask about this message on stan-users."))
                   }
                   else {
                     message(paste(capture.output(print(mat)), collapse = "\n"))
                     message("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
                     message("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     message("If the number in the 'count' column is small, ",
-                            "do not ask about this message on stan-users.")
+                            "there is no need to ask about this message on stan-users.")
                   }
                 }
               }
