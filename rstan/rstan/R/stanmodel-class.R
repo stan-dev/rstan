@@ -472,10 +472,19 @@ setMethod("sampling", "stanmodel",
                 .dotlist$chain_id <- i
                 if(is.list(.dotlist$init)) .dotlist$init <- .dotlist$init[i]
                 if(is.character(.dotlist$sample_file)) {
-                  .dotlist$sample_file <- paste0(.dotlist$sample_file, i)
+                  if (grepl("\\.csv$", .dotlist$sample_file))
+                    .dotlist$sample_file <- sub("\\.csv$", paste0("_", i, ".csv"), 
+                                                .dotlist$sample_file)
+                  else .dotlist$sample_file <- paste0(.dotlist$sample_file, 
+                                                      "_", i, ".csv")
                 }
                 if(is.character(.dotlist$diagnostic_file)) {
-                  .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, i)
+                  if (grepl("\\.csv$", .dotlist$diagnostic_file))
+                    .dotlist$diagnostic_file <- sub("\\.csv$", paste0("_", i, ".csv"),
+                                                    .dotlist$diagnostic_file)
+                  else
+                    .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, 
+                                                       "_", i, ".csv")
                 }
                 Sys.sleep(0.5 * i)
                 out <- do.call(rstan::sampling, args = .dotlist)
