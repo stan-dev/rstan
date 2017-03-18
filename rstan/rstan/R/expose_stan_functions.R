@@ -118,7 +118,7 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   # convert inline declarations to Rcpp export declarations
   lines <- gsub("^inline$", "// \\[\\[Rcpp::export\\]\\]", lines)
   
-  ints <- sort(c(grep("^int$", lines), grep("^std::vector<int>", lines)))
+  ints <- sort(c(grep("^int$", lines), grep("^std::vector<.*int>", lines)))
   for (i in rev(ints))
     lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
 
