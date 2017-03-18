@@ -1671,6 +1671,7 @@ is.sparc <- function() {
 }
 
 avoid_crash <- function(mod) {
+  file.exists(get("packageName", envir = mod)[["path"]]) &&
   as(get("packageName", envir = mod)["info"][1], "character") %in% 
     c("<pointer: (nil)>", "<pointer: 0x0>")
 }
