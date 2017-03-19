@@ -1,3 +1,20 @@
+Sat March 18, 2017 (2.14.2)
+1. Bug fixes
+  * Crashes less often when calling stan() repeatedly without assigning 
+    the resulting stanfit object to a symbol
+  * expose_stan_functions() handles functions that produce integer arrays
+    again
+  * Improved regex for class names (thanks to Torsti Schulz)
+  * Passing a list of matrices to the data argument works again
+2. Changes
+  * When the sample_file and / or diagnostic_file arguments to sampling()
+    were specified and the chains were run in parallel, the resulting file
+    names were different than if the chains were run serially. The behavior
+    in the parallel case has been changed to match the serial case; i.e. the
+    file will be named "foo_#.csv" where # is the chain number rather than
+    "foo.csv#". Some scripts that expect the old behavior may now be broken,
+    but they should be fixed easily.
+
 Wed December 28 2016 (2.14.1)
 1. Bug fixes
   * Fix data parsing error that occurred in rare cases
