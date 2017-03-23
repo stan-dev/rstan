@@ -121,6 +121,10 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   ints <- sort(c(grep("^int$", lines), grep("^std::vector<.*int>", lines)))
   for (i in rev(ints))
     lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
+  
+  doubles <- sort(c(grep("^double$", lines), grep("^std::vector<.*double>", lines)))
+  for (i in rev(doubles))
+    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
 
   # declare attributes for Rcpp for non-functor user-defined Stan functions
   templates <- grep("^template .*$", lines)
