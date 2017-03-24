@@ -122,7 +122,11 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   for (i in rev(ints))
     lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
   
-  doubles <- sort(c(grep("^double$", lines), grep("^std::vector<.*double>", lines)))
+  doubles <- sort(c(grep("^double$", lines), grep("^std::vector<.*double>", lines), 
+                    grep("^vector_d$", lines), grep("^matrix_d", lines),
+                    grep("^std::vector<.*vector_d>", lines),
+                    grep("^std::vector<.*matrix_d>", lines)))
+                    
   for (i in rev(doubles))
     lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
 
