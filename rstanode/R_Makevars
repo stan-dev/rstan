@@ -1,0 +1,23 @@
+
+#CXXFLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function
+#CC=clang
+#CXX=clang++ -arch x86_64 -ftemplate-depth-256
+
+CC=gcc-mp-6
+CXX=g++-mp-6
+
+# on mac with gcc6 one needs -Wa,-q to make the mtune stuff work, checkout the net for info
+CXXFLAGS=-O3 -mtune=native -march=native -Wa,-q -Wno-unused-variable -Wno-unused-function
+
+## for gcc only
+#CXXFLAGS+=-flto -ffat-lto-objects  -Wno-unused-local-typedefs
+CXXFLAGS+=-Wno-ignored-attributes -Wno-deprecated-declarations
+
+CXXFLAGS+=-fopenmp
+CFLAGS+=-fopenmp
+LDFLAGS+=-fopenmp -lgomp
+
+#CC=clang
+#CXX=clang++ -arch x86_64 -ftemplate-depth-256
+
+# whenever the compiler is changed, reinstall Rcpp and rstan!
