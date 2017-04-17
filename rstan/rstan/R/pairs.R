@@ -74,7 +74,7 @@ pairs.stanfit <-
       max_td <- max_td$max_treedepth
       if (is.null(max_td)) max_td <- 10
     }
-    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] > max_td)), 
+    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] >= max_td)), 
                     nrow = sims * chains, ncol = dim(arr)[3])
     
     if(is.list(condition)) {

@@ -1624,7 +1624,7 @@ throw_sampler_warnings <- function(object) {
     if (is.null(max_td)) max_td <- 10
   }
   n_m <- sum(sapply(sp, FUN = function(x) {
-    if ("treedepth__" %in% colnames(x)) return(sum(x[,"treedepth__"] > max_td))
+    if ("treedepth__" %in% colnames(x)) return(sum(x[,"treedepth__"] >= max_td))
     else return(0)
   }))
   if (n_m > 0)
