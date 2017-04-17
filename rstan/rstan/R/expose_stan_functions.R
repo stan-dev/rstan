@@ -118,8 +118,16 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   # convert inline declarations to Rcpp export declarations
   lines <- gsub("^inline$", "// \\[\\[Rcpp::export\\]\\]", lines)
   
-  ints <- grep("^int$", lines)
+  ints <- sort(c(grep("^int$", lines), grep("^std::vector<.*int>", lines)))
   for (i in rev(ints))
+    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
+  
+  doubles <- sort(c(grep("^double$", lines), grep("^std::vector<.*double>", lines), 
+                    grep("^vector_d$", lines), grep("^matrix_d", lines),
+                    grep("^std::vector<.*vector_d>", lines),
+                    grep("^std::vector<.*matrix_d>", lines)))
+                    
+  for (i in rev(doubles))
     lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
 
   # declare attributes for Rcpp for non-functor user-defined Stan functions
@@ -140,8 +148,8 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   }
 
   # special cases
-  ODE_lines <- grep("integrate_ode(", lines, fixed = TRUE)
-  ODE_statements <- grep("integrate_ode(", lines, fixed = TRUE, value = TRUE)
+  ODE_lines <- grep("integrate_ode", lines, fixed = TRUE)
+  ODE_statements <- grep("integrate_ode", lines, fixed = TRUE, value = TRUE)
 
   print_lines <- grep("if (pstream__)", lines, fixed = TRUE)
   print_statements <- grep("if (pstream__)", lines, fixed = TRUE, value = TRUE)

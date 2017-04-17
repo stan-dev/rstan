@@ -25,7 +25,8 @@ paridx_fun <- function(names) {
   #   with the indexes of 'treedepth__', 'lp__', and 'stepsize__'
   #   if available. 
   
-  sampler_param_names <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__', 'divergent__', 'n_leapfrog__')
+  sampler_param_names <- c('lp__', 'accept_stat__', 'treedepth__', 'stepsize__', 
+                           'divergent__', 'n_leapfrog__', "energy__")
   metaidx <- match(sampler_param_names, names)
   names(metaidx) <- sampler_param_names
   paridx <- setdiff(seq_along(names), metaidx)
@@ -38,7 +39,7 @@ parse_stancsv_comments <- function(comments) {
   # iter, thin, seed, etc. This is specific to the CSV files
   # generated from Stan
 
-  adapt_term_lineno <- which(grepl("Adaptation terminated", comments))
+  adapt_term_lineno <- which(grepl("Adaptation terminated", comments))[1]
   time_lineno <- which(grepl("Elapsed Time", comments))
   has_time <- length(time_lineno) > 0
   len <- length(comments)
