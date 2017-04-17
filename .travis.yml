@@ -18,7 +18,7 @@ os:
 
 env:
   global:
-    - STAN_BRANCH=develop
+    - STAN_BRANCH=feature/issue-1751-service-methods
     - STAN_MATH_BRANCH=develop
   matrix: 
     - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
@@ -35,9 +35,6 @@ before_install:
   - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
-  - tlmgr install verbatimbox
-  - tlmgr install readarray
-  - tlmgr install ifnextok
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown'), repos='http://cran.rstudio.com')"
@@ -49,7 +46,7 @@ before_script:
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo /usr/texbin/tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
   - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
   - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
-  - echo "CXX = `which ccache` `R CMD config CXX`" >> ./rstan/R_Makevars 
+  - echo "CXX = `R CMD config CXX`" >> ./rstan/R_Makevars 
   - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi

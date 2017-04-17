@@ -1,7 +1,7 @@
 #ifndef RSTAN_VALUES_HPP
 #define RSTAN_VALUES_HPP
 
-#include <stan/interface_callbacks/writer/base_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 #include <ostream>
 #include <stdexcept>
 #include <string>
@@ -10,7 +10,7 @@
 namespace rstan {
 
   template <class InternalVector>
-  class values: public stan::interface_callbacks::writer::base_writer {
+  class values : public stan::callbacks::writer {
   private:
     size_t m_;
     size_t N_;
@@ -32,25 +32,6 @@ namespace rstan {
       if (N_ > 0)
         M_ = x_[0].size();
     }
-    
-    void operator()(const std::string& key,
-                    double value) { }
-
-    void operator()(const std::string& key,
-                    int value) { }
-
-    void operator()(const std::string& key,
-                    const std::string& value) { }
-
-    void operator()(const std::string& key,
-                    const double* values,
-                    int n_values) { }
-
-    void operator()(const std::string& key,
-                    const double* values,
-                    int n_rows, int n_cols) { } 
-        
-    void operator()(const std::vector<std::string>& names) { }
 
     void operator()(const std::vector<double>& x) {
       if (N_ != x.size())
@@ -62,10 +43,6 @@ namespace rstan {
         x_[n][m_] = x[n];
       m_++;
     }
-    
-    void operator()() { }
-
-    void operator()(const std::string& message) { }
 
     const std::vector<InternalVector>& x() const {
       return x_;
@@ -73,5 +50,4 @@ namespace rstan {
   };
 
 }
-
 #endif

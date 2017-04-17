@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.14.2
-Date: 2017-03-18
+Version: 2.15.1
+Date: 2017-04-17
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -29,9 +29,9 @@ Description: User-facing R functions are provided to parse, compile, test,
 License: GPL (>=3)
 NeedsCompilation: yes
 Imports: methods, stats4, inline, gridExtra (>= 2.0.0), Rcpp (>= 0.12.0)
-Depends: R (>= 3.0.2), ggplot2 (>= 2.2.1), StanHeaders (>= 2.14.0)
-LinkingTo: Rcpp (>= 0.12.0), RcppEigen, BH (>= 1.62), StanHeaders (>= 2.14.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.62), parallel, KernSmooth, loo (>= 1.0.0), shinystan (>= 2.2.1), bayesplot (>= 1.1.0), rstantools (>= 1.1.0), rstanarm (>= 2.14.1), rstudioapi, Matrix, knitr (>= 1.15.1)
+Depends: R (>= 3.0.2), ggplot2 (>= 2.0.0), StanHeaders (>= 2.15.0)
+LinkingTo: Rcpp (>= 0.12.0), RcppEigen, BH (>= 1.62), StanHeaders (>= 2.15.0)
+Suggests: RUnit, RcppEigen, BH (>= 1.62), parallel, KernSmooth, loo (>= 1.0.0), shinystan (>= 2.2.1), bayesplot, rstantools, rstudioapi, Matrix, knitr (>= 1.15.1)
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr

@@ -13,6 +13,6 @@ test_get_adaptation_info <- function() {
   code <- 'parameters { real y; } model {y ~ normal(0,1); }'
   fit <- stan(model_code = code, chains = 5L, iter = 30L)
   info <- get_adaptation_info(fit)
-  checkTrue(!is.na(info))
+  checkTrue(all(!is.na(info)))
   checkEquals(length(info), 5L)
 }

@@ -130,6 +130,7 @@ model {
   lp__ <- log(square(y - 5) + 1);
 }
 "
+opfit <- stan(model_code = opcode, chains = 0)
 tfun <- function(y) log_prob(opfit, y)
 tgrfun <- function(y) grad_log_prob(opfit, y)
 or <- optim(1, tfun, tgrfun, method = 'BFGS')
