@@ -359,7 +359,7 @@ struct R_CheckUserInterrupt_Functor : public stan::callbacks::interrupt {
     R_CheckUserInterrupt();
   }
 };
-
+/*
 template <class Model>
 std::vector<double> unconstrained_to_constrained(Model& model,
                                                  unsigned int random_seed,
@@ -372,7 +372,7 @@ std::vector<double> unconstrained_to_constrained(Model& model,
                     constrained_params);
   return constrained_params;
 }
-
+*/
 /**
 * @tparam Model
 * @tparam RNG
@@ -467,8 +467,10 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                      sample_writer);
     holder = Rcpp::List::create(Rcpp::_["num_failed"] = return_code);
     holder.attr("test_grad") = Rcpp::wrap(true);
+/*    
     holder.attr("inits") = unconstrained_to_constrained(model, random_seed, id,
                                                         init_writer.x());
+*/ 
   }
   if (args.get_method() == OPTIM) {
     rstan::value sample_writer;
@@ -811,8 +813,10 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                         sample_writer_ptr->values_.x().end());
     holder.attr("test_grad") = Rcpp::wrap(false);
     holder.attr("args") = args.stan_args_to_rlist();
+/*    
     holder.attr("inits") = unconstrained_to_constrained(model, random_seed, id,
                                                         init_writer.x());
+*/ 
     holder.attr("mean_pars") = mean_pars;
     holder.attr("mean_lp__") = mean_lp;
 
@@ -889,8 +893,10 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     }
     holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
     holder.attr("args") = args.stan_args_to_rlist();
+/*    
     holder.attr("inits") = unconstrained_to_constrained(model, random_seed, id,
                                                         init_writer.x());
+*/ 
   }
 
   init_context_ptr.reset();

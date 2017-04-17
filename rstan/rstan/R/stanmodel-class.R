@@ -669,8 +669,9 @@ setMethod("sampling", "stanmodel",
 
             idx_wo_lp <- which(m_pars != 'lp__')
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
-            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
-                                function(y) rstan_relist(y, skeleton))
+            # inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
+            #                     function(y) rstan_relist(y, skeleton))
+            inits_used <- vector("list", length(samples)) #FIXME
 
             # test_gradient mode: no sample 
             if (attr(samples[[1]], 'test_grad')) {
