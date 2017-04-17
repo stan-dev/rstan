@@ -18,8 +18,8 @@ os:
 
 env:
   global:
-    - STAN_BRANCH=feature/issue-1751-service-methods
-    - STAN_MATH_BRANCH=develop
+    - STAN_BRANCH=master
+    - STAN_MATH_BRANCH=master
   matrix: 
     - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
