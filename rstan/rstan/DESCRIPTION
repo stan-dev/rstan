@@ -35,3 +35,4 @@ Suggests: RUnit, RcppEigen, BH (>= 1.62), parallel, KernSmooth, loo (>= 1.0.0), 
 URL: https://groups.google.com/forum/#!forum/stan-users, http://mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
+SystemRequirements: pandoc

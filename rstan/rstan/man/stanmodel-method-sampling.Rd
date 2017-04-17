@@ -86,13 +86,14 @@
     will be written to the file. If not provided, files are not created. 
     When the folder specified is not writable, \code{tempdir()} is used. 
     When there are multiple chains, an underscore and chain number are appended
-    to the file name.}
+    to the file name prior to the \code{.csv} extension.}
 
   \item{diagnostic_file}{An optional character string providing the name of a file.
     If specified the diagnostics data for \emph{all} parameters will be written
     to the file. If not provided, files are not created. When the folder specified 
     is not writable, \code{tempdir()} is used. When there are multiple chains, 
-    an underscore and chain number are appended to the file name.}
+    an underscore and chain number are appended to the file name prior to the
+    \code{.csv} extension.}
    
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
     to print intermediate output from Stan on the console, which might

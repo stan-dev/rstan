@@ -64,23 +64,18 @@ Expose user-defined Stan functions to \R for testing and simulation
   \code{\link[Rcpp]{sourceCpp}}
 }
 \examples{
-  # You could use a function like this to calculate the log-likelihood
-  # for an observation over the posterior distribution to then use as
-  # an ingredient to the calculation of the WAIC
   mc <- 
   '
   functions {
-    vector logLik(int y, real x, vector beta) {
-      vector[rows(beta)] logLik;
-      for (i in 1:rows(beta)) {
-        logLik[i] <- poisson_log_log(y, x * beta[i]);
-      }
-      return logLik;
+    int fibonacci(int x);
+    int fibonacci(int x) {
+      if (x <= 0) reject("x must be positive");
+      return x <= 2 ? 1 : fibonacci(x - 1) + fibonacci(x - 2);
     }
   }
   model {}
   '
-  cppcode <- stanc(model_code = mc, model_name = "Demonstration")
+  cppcode <- stanc(model_code = mc, model_name = "Fibonacci")
   \dontrun{
   expose_stan_functions(cppcode)
   }

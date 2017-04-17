@@ -475,10 +475,19 @@ setMethod("sampling", "stanmodel",
                 .dotlist$chain_id <- i
                 if(is.list(.dotlist$init)) .dotlist$init <- .dotlist$init[i]
                 if(is.character(.dotlist$sample_file)) {
-                  .dotlist$sample_file <- paste0(.dotlist$sample_file, i)
+                  if (grepl("\\.csv$", .dotlist$sample_file))
+                    .dotlist$sample_file <- sub("\\.csv$", paste0("_", i, ".csv"), 
+                                                .dotlist$sample_file)
+                  else .dotlist$sample_file <- paste0(.dotlist$sample_file, 
+                                                      "_", i, ".csv")
                 }
                 if(is.character(.dotlist$diagnostic_file)) {
-                  .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, i)
+                  if (grepl("\\.csv$", .dotlist$diagnostic_file))
+                    .dotlist$diagnostic_file <- sub("\\.csv$", paste0("_", i, ".csv"),
+                                                    .dotlist$diagnostic_file)
+                  else
+                    .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, 
+                                                       "_", i, ".csv")
                 }
                 Sys.sleep(0.5 * i)
                 out <- do.call(rstan::sampling, args = .dotlist)
@@ -641,7 +650,7 @@ setMethod("sampling", "stanmodel",
                 report <- strtrim(report, width = 100)
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
-                  msg <- paste("The following numerical problems occured",
+                  msg <- paste("The following numerical problems occurred",
                                "the indicated number of times on chain", 
                                cid)
                   if (.Platform$OS.type == "windows") print(msg)
@@ -653,14 +662,14 @@ setMethod("sampling", "stanmodel",
                     print("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
                     print("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     print(paste("If the number in the 'count' column is small, ",
-                                "do not ask about this message on stan-users."))
+                                "there is no need to ask about this message on stan-users."))
                   }
                   else {
                     message(paste(capture.output(print(mat)), collapse = "\n"))
                     message("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
                     message("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     message("If the number in the 'count' column is small, ",
-                            "do not ask about this message on stan-users.")
+                            "there is no need to ask about this message on stan-users.")
                   }
                 }
               }

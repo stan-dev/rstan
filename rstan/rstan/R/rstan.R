@@ -94,7 +94,6 @@ stan_model <- function(file,
        !is_sm_valid(obj) ||
        (!identical(stanc_ret$model_code, obj@model_code) && is.null(
         message("hash mismatch so recompiling; make sure Stan code ends with a blank line"))) ||
-       dirname(file.rds) == tempdir() &&
        avoid_crash(obj@dso@.CXXDSOMISC$module) && is.null(
         message("recompiling to avoid crashing R session"))) {
 
@@ -131,7 +130,7 @@ stan_model <- function(file,
   inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
                # include, stanc_ret$cppcode,
                if(is.null(includes)) stanc_ret$cppcode else
-                 sub("(class.*: public prob_grad \\{)", 
+                 sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*: public prob_grad \\{)",
                      paste(includes, "\\1"), stanc_ret$cppcode),
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
