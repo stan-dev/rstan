@@ -63,7 +63,7 @@ ifeq ($(GIT),)
 else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" >> rstan/R/git_rstan_head.R
 endif
-	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
+	$(R) CMD build rstan --md5  $(BUILD_OPTS)   --no-build-vignettes --no-manual
 
 example_csv: 
 ifneq ($(OS), win)

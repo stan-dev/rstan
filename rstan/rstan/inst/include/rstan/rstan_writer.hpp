@@ -2,105 +2,29 @@
 #define RSTAN__RSTAN_WRITER_HPP
 
 #include <Rcpp.h>
-#include <stan/interface_callbacks/writer/base_writer.hpp>
-#include <stan/interface_callbacks/writer/stream_writer.hpp>
+#include <stan/callbacks/writer.hpp>
+#include <stan/callbacks/stream_writer.hpp>
+#include <rstan/comment_writer.hpp>
 #include <rstan/filtered_values.hpp>
 #include <rstan/sum_values.hpp>
 
 namespace rstan {
 
-  class rstan_sample_writer
-    : public stan::interface_callbacks::writer::base_writer {
+  class rstan_sample_writer : public stan::callbacks::writer {
   public:
-    typedef stan::interface_callbacks::writer::stream_writer CsvWriter;
-    typedef rstan::filtered_values<Rcpp::NumericVector> FilteredValuesWriter;
-    typedef rstan::sum_values SumValuesWriter;
+    stan::callbacks::stream_writer csv_;
+    comment_writer comment_writer_;
+    filtered_values<Rcpp::NumericVector> values_;
+    filtered_values<Rcpp::NumericVector> sampler_values_;
+    sum_values sum_;
 
-    CsvWriter csv_;
-    FilteredValuesWriter values_;
-    FilteredValuesWriter sampler_values_;
-    SumValuesWriter sum_;
-
-    rstan_sample_writer(CsvWriter csv, FilteredValuesWriter values, FilteredValuesWriter sampler_values, SumValuesWriter sum)
-      : csv_(csv), values_(values), sampler_values_(sampler_values), sum_(sum) { }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] value A double value
-     */
-    void operator()(const std::string& key,
-                    double value) {
-      csv_(key, value);
-      values_(key, value);
-      sampler_values_(key, value);
-      sum_(key, value);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] value An integer value
-     */
-    void operator()(const std::string& key,
-                    int value) {
-      csv_(key, value);
-      values_(key, value);
-      sampler_values_(key, value);
-      sum_(key, value);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] value A string
-     */
-    void operator()(const std::string& key,
-                    const std::string& value) {
-      csv_(key, value);
-      values_(key, value);
-      sampler_values_(key, value);
-      sum_(key, value);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] values A double array, typically used with
-     *   contiguous Eigen vectors
-     * @param[in] n_values Length of the array
-     */
-    void operator()(const std::string& key,
-                            const double* values,
-                            int n_values)  {
-      csv_(key, values, n_values);
-      values_(key, values, n_values);
-      sampler_values_(key, values, n_values);
-      sum_(key, values, n_values);
-    }
-
-    /**
-     * Writes a key, value pair.
-     *
-     * @param[in] key A string
-     * @param[in] values A double array assumed to represent a 2d
-     *   matrix stored in column major order, typically used with
-     *   contiguous Eigen matrices
-     * @param[in] n_rows Rows
-     * @param[in] n_cols Columns
-     */
-    void operator()(const std::string& key,
-                            const double* values,
-                            int n_rows, int n_cols) {
-      csv_(key, values, n_rows, n_cols);
-      values_(key, values, n_rows, n_cols);
-      sampler_values_(key, values, n_rows, n_cols);
-      sum_(key, values, n_rows, n_cols);
-    }
+    rstan_sample_writer(stan::callbacks::stream_writer csv,
+                        comment_writer comment_writer,
+                        filtered_values<Rcpp::NumericVector> values,
+                        filtered_values<Rcpp::NumericVector> sampler_values,
+                        sum_values sum)
+      : csv_(csv), comment_writer_(comment_writer),
+        values_(values), sampler_values_(sampler_values), sum_(sum) { }
 
     /**
      * Writes a set of names.
@@ -109,6 +33,7 @@ namespace rstan {
      */
     void operator()(const std::vector<std::string>& names) {
       csv_(names);
+      comment_writer_(names);
       values_(names);
       sampler_values_(names);
       sum_(names);
@@ -121,19 +46,10 @@ namespace rstan {
      */
     void operator()(const std::vector<double>& state) {
       csv_(state);
+      comment_writer_(state);
       values_(state);
       sampler_values_(state);
       sum_(state);
-    }
-
-    /**
-     * Writes blank input.
-     */
-    void operator()() {
-      csv_();
-      values_();
-      sampler_values_();
-      sum_();
     }
 
     /**
@@ -143,23 +59,40 @@ namespace rstan {
      */
     void operator()(const std::string& message) {
       csv_(message);
+      comment_writer_(message);
       values_(message);
       sampler_values_(message);
       sum_(message);
     }
+
+    /**
+     * Writes blank input.
+     */
+    void operator()() {
+      csv_();
+      comment_writer_();
+      values_();
+      sampler_values_();
+      sum_();
+    }
   };
 
   /**
-    @param      N
-    @param      M  number of iterations to be saved
-    @param      warmup number of warmup iterations to be saved
-   */
+     @param      N
+     @param      M  number of iterations to be saved
+     @param      warmup number of warmup iterations to be saved
+  */
+  rstan_sample_writer*
+  sample_writer_factory(std::ostream *csv_fstream,
+                        std::ostream& comment_stream,
+                        const std::string& prefix,
+                        size_t N_sample_names, size_t N_sampler_names,
+                        size_t N_constrained_param_names,
+                        size_t N_iter_save, size_t warmup,
+                        const std::vector<size_t>& qoi_idx) {
+    size_t N = N_sample_names + N_sampler_names + N_constrained_param_names;
+    size_t offset = N_sample_names + N_sampler_names;
 
-  rstan_sample_writer
-  sample_writer_factory(std::ostream *o, const std::string prefix,
-                          const size_t N, const size_t M, const size_t warmup,
-                          const size_t offset,
-                          const std::vector<size_t>& qoi_idx) {
     std::vector<size_t> filter(qoi_idx);
     std::vector<size_t> lp;
     for (size_t n = 0; n < filter.size(); n++)
@@ -174,17 +107,14 @@ namespace rstan {
     for (size_t n = 0; n < offset; n++)
       filter_sampler_values[n] = n;
 
-    rstan_sample_writer::CsvWriter csv(*o, prefix);
-    rstan_sample_writer::FilteredValuesWriter values(N, M, filter);
-    rstan_sample_writer::FilteredValuesWriter sampler_values(N, M, filter_sampler_values);
-    rstan_sample_writer::SumValuesWriter sum(N, warmup);
+    stan::callbacks::stream_writer csv(*csv_fstream, prefix);
+    comment_writer comments(comment_stream, prefix);
+    filtered_values<Rcpp::NumericVector> values(N, N_iter_save, filter);
+    filtered_values<Rcpp::NumericVector> sampler_values(N, N_iter_save, filter_sampler_values);
+    sum_values sum(N, warmup);
 
-    return rstan_sample_writer(csv, values, sampler_values, sum);
+    return new rstan_sample_writer(csv, comments, values, sampler_values, sum);
   }
 
-  rstan_sample_writer::CsvWriter diagnostic_writer_factory(std::ostream *o, const std::string prefix) {
-    return rstan_sample_writer::CsvWriter(*o, prefix);
-  }
 }
-
 #endif

@@ -392,6 +392,9 @@ setMethod("sampling", "stanmodel",
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), 
                    show_messages = TRUE, ...) {
+            is_arg_deprecated(names(list(...)),
+                              c("enable_random_init"),
+                              pre_msg = "passing deprecated arguments: ")
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -675,7 +678,7 @@ setMethod("sampling", "stanmodel",
 
             idx_wo_lp <- which(m_pars != 'lp__')
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
-            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
+            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")),
                                 function(y) rstan_relist(y, skeleton))
 
             # test_gradient mode: no sample 

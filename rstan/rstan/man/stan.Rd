@@ -209,8 +209,8 @@ stan(file, model_name = "anon_model", model_code = "",
       \item \code{test_grad} (\code{logical})
       \item \code{append_samples} (\code{logical})
       \item \code{refresh}(\code{integer})
-      \item \code{enable_random_init}(\code{logical})
       \item \code{save_warmup}(\code{logical})
+      \item deprecated: \code{enable_random_init}(\code{logical}) 
     }
 
     \code{chain_id} can be a vector to specify the chain_id for all 
@@ -243,7 +243,7 @@ stan(file, model_name = "anon_model", model_code = "",
     By default, \code{refresh = max(iter/10, 1)}. 
     The progress indicator is turned off if \code{refresh <= 0}.
 
-    \code{enable_random_init} (\code{logical}) being \code{TRUE}
+    Deprecated: \code{enable_random_init} (\code{logical}) being \code{TRUE}
     enables specifying initial values randomly when the initial
     values are not fully specified from the user. 
     
