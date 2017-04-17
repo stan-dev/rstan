@@ -182,7 +182,11 @@ setMethod("vb", "stanmodel",
             
             m_pars <- sampler$param_names()
             p_dims <- sampler$param_dims()
-            if(!include) pars <- setdiff(m_pars, pars)
+            if(!include) {
+              if (length(pars) == 1 && is.na(pars)) pars <- "lp__"
+              else pars <- setdiff(m_pars, pars)
+              if (length(pars) == 0) pars <- "lp__"
+            }
             
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
@@ -574,8 +578,11 @@ setMethod("sampling", "stanmodel",
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
-
-            if(!include) pars <- setdiff(m_pars, pars)
+            if(!include) {
+              if (length(pars) == 1 && is.na(pars)) pars <- "lp__"
+              else pars <- setdiff(m_pars, pars)
+              if (length(pars) == 0) pars <- "lp__"
+            }
             
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
