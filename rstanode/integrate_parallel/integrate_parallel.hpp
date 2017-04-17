@@ -23,9 +23,10 @@ namespace MODEL_NAMESPACE {
                      std::ostream* pstream__) {
     int O = y0.size();
     int exceptions = 0;
+    std::string what_exception;
     std::vector<std::vector<double> > y_coupled(ts.size());
 
-#pragma omp parallel shared(exceptions)
+#pragma omp parallel shared(exceptions, what_exception)
     {
       //std::cout << "Hello from thread " << omp_get_thread_num() <<
       // ", nthreads " << omp_get_num_threads() << std::endl;
@@ -61,13 +62,16 @@ namespace MODEL_NAMESPACE {
             }
           }
         } catch(const std::exception& e) {
-#pragma omp atomic
-          ++exceptions;
+#pragma omp critical
+          {
+            ++exceptions;
+            what_exception = std::string( e.what() );
+          }
         }
       }
     }
     if (exceptions != 0)
-      throw std::domain_error("ODE error");
+      throw std::domain_error(what_exception);
 
     return(stan::math::decouple_ode_states_blocked(y_coupled, y0, theta, Si_ts));
 

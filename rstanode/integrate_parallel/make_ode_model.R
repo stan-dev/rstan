@@ -70,10 +70,12 @@ gen_ode_code <- function(ode_rhs, parameters, export=FALSE, ode_name=deparse(sub
     ode_jacobian_states_str <- gen_jac_code(ode_jacobian_states, "Jy")
     ode_jacobian_params_str <- gen_jac_code(ode_jacobian_params, "Jtheta")
 
-    ## the states are always first such that we can pre paste anything
-    ## here
+    ## check if also c++ pre/post includes are defined
     if(file.exists(sub(".stan", ".hpp", pre_include))) {
-        ode_jacobian_states_str <- paste0(c(readLines(sub(".stan", ".hpp", pre_include)), "", ode_jacobian_states_str), collapse="\n")
+        ode_rhs_str_cpp <- paste0(c(readLines(sub(".stan", ".hpp", pre_include)), "", ode_rhs_str_cpp), collapse="\n")
+    }
+    if(file.exists(sub(".stan", ".hpp", post_include))) {
+        ode_rhs_str_cpp <- paste0(c(ode_rhs_str_cpp, "", readLines(sub(".stan", ".hpp", post_include))), collapse="\n")
     }
 
     stan_def <- paste0("// WARNING: THIS FILE IS AUTO-GENERATED!\n",
