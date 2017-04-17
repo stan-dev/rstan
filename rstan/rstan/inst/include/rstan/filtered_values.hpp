@@ -45,19 +45,8 @@ namespace rstan {
                                   "elements out of range");
     }
 
-    void operator()(const std::string& key, double value) { }
-
-    void operator()(const std::string& key, int value) { }
-
-    void operator()(const std::string& key, const std::string& value) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_values) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_rows, int n_cols) { }
-
-    void operator()(const std::vector<std::string>& names) { }
+    // To deal with C++ name hiding
+    using stan::callbacks::writer::operator();
 
     void operator()(const std::vector<double>& state) {
       if (state.size() != N_)
@@ -67,10 +56,6 @@ namespace rstan {
         tmp[n] = state[filter_[n]];
       values_(tmp);
     }
-
-    void operator()() { }
-
-    void operator()(const std::string& message) { }
 
     const std::vector<InternalVector>& x() {
       return values_.x();

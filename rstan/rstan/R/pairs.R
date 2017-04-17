@@ -25,9 +25,33 @@ pairs.stanfit <-
             row1attop = TRUE, gap = 1, log = "",
             pars = NULL, condition = "accept_stat__", include = TRUE) {
     
-    if(is.null(pars)) pars <- dimnames(x)[[3]]
-    else if (!include) pars <- setdiff(x@sim$pars_oi, pars)
-    arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
+    gsp <- get_sampler_params(x, inc_warmup = FALSE)
+    if(is.null(pars)) {
+      pars <- dimnames(x)[[3]]
+      arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
+      if ("energy__" %in% colnames(gsp[[1]])) {
+        dims <- dim(arr)
+        dims[3] <- dims[3] + 1L
+        nms <- dimnames(arr)
+        nms$parameters <- c(nms$parameters, "energy__")
+        E <- sapply(gsp, FUN = function(y) y[,"energy__"])
+        arr <- array(c(c(arr), c(E)), dim = dims, dimnames = nms)
+      }
+    }
+    else if (!include) {
+      incl_energy <- !any(pars == "energy__")
+      pars <- setdiff(x@sim$pars_oi, pars)
+      arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
+      if (incl_energy && "energy__" %in% colnames(gsp[[1]])) {
+        dims <- dim(arr)
+        dims[3] <- dims[3] + 1L
+        nms <- dimnames(arr)
+        nms$parameters <- c(nms$parameters, "energy__")
+        E <- sapply(gsp, FUN = function(y) y[,"energy__"])
+        arr <- array(c(c(arr), c(E)), dim = dims, dimnames = nms)
+      }
+    }
+    else arr <- round(extract(x, pars = pars, permuted = FALSE), digits = 12)
     sims <- nrow(arr)
     chains <- ncol(arr)
     varying <- apply(arr, 3, FUN = function(y) length(unique(c(y))) > 1)
@@ -42,7 +66,6 @@ pairs.stanfit <-
               paste(dimnames(arr)[[3]][dupes], collapse = " "))
       arr <- arr[,,!dupes,drop = FALSE]
     }
-    gsp <- get_sampler_params(x, inc_warmup = FALSE)
     divergent__ <- matrix(c(sapply(gsp, FUN = function(y) y[,"divergent__"])), 
                             nrow = sims * chains, ncol = dim(arr)[3])
     max_td <- x@stan_args[[1]]$control
@@ -67,7 +90,8 @@ pairs.stanfit <-
     else if(is.character(condition)) {
       condition <- match.arg(condition, several.ok = FALSE,
                              choices = c("accept_stat__", "stepsize__", "treedepth__", 
-                                         "n_leapfrog__", "divergent__", "lp__"))
+                                         "n_leapfrog__", "divergent__", "energy__",
+                                         "lp__"))
       if (condition == "lp__") 
         mark <- simplify2array(get_logposterior(x, inc_warmup = FALSE))
       else mark <- sapply(gsp, FUN = function(y) y[,condition])

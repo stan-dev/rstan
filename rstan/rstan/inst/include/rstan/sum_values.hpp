@@ -15,24 +15,8 @@ namespace rstan {
     sum_values(const size_t N, const size_t skip)
       : N_(N), m_(0), skip_(skip), sum_(N_, 0.0) { }
 
-    void operator()(const std::string& key, double value) { }
-
-    void operator()(const std::string& key, int value) { }
-
-    void operator()(const std::string& key, const std::string& value) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_values) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_rows, int n_cols) { }
-
-    /**
-     * Do nothing with std::string vector
-     *
-     * @param names
-     */
-    void operator()(const std::vector<std::string>& names) { }
+    // To deal with C++ name hiding
+    using stan::callbacks::writer::operator();
 
     /**
      * Add values to cumulative sum
@@ -49,19 +33,6 @@ namespace rstan {
       }
       m_++;
     }
-
-    /**
-     * Do nothing with a string.
-     *
-     * @param x string to print with prefix in front
-     */
-    void operator()(const std::string& message) { }
-
-    /**
-     * Do nothing
-     *
-     */
-    void operator()() { }
 
     const std::vector<double>& sum() const {
       return sum_;

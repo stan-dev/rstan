@@ -47,7 +47,9 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -I"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
-         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS', sep = '')
+         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS',
+         ' -DBOOST_NO_CXX11_RVALUE_REFERENCES', 
+         sep = '')
 }
 
 legitimate_space_in_path <- function(path) {

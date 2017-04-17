@@ -1,44 +1,13 @@
-citHeader("To cite Stan in publications use:")
+citHeader("To cite RStan in publications use:")
 
 citEntry(entry = "Misc", 
-         title = "Stan: A C++ Library for Probability and Sampling, Version 2.10.0",
+         title = "{RStan}: the {R} interface to {Stan}",
          author = person(given = "Stan Development Team"),
-         year = "2015",
+         note = "R package version 2.14.1",
+         year = "2016",
          url = "http://mc-stan.org/",
          textVersion =
-           paste("Stan Development Team (2015).",
-                 title = "Stan: A C++ Library for Probability and Sampling, Version 2.10.0.",
-                 "URL http://mc-stan.org/.") 
-)
-  
-citEntry(entry = "Manual", 
-         title = "Stan Modeling Language User's Guide and Reference Manual, Version 2.10.0",
-         author = person(given = "Stan Development Team"),
-         year = "2015", 
-         url = "http://mc-stan.org/",
-         textVersion  =
-           paste("Stan Development Team (2015).", 
-                 "Stan Modeling Language User's Guide and Reference Manual, Version 2.10.0.",
-                 "URL http://mc-stan.org/.") 
-)
-
-citEntry(entry = "Article", 
-         title = "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo",
-         author = c(person(given = "Matthew  D.", family = "Hoffman"), person(given = "Andrew", family = "Gelman")),
-         year = "2014",
-         journal = "Journal of Machine Learning Research",
-         textVersion = 
-           paste("Hoffman, Matthew D. and Andrew Gelman. In press.",
-                 "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo.",
-                 "Journal of Machine Learning Research.")
-) 
-
-citEntry(entry = "Article",
-         title = "Stan: A Probabilistic Programming Language",
-         author = person("Bob", "Carpenter"),
-         year = 2015,
-         journal = "Journal of Statistical Software",
-         textVersion = paste("Bob Carpenter, et al. In press.",
-                             "Stan: A Probabilistic Programming Language.",
-                             "Journal of Statistical Software")
+           paste("Stan Development Team (2016).",
+                 title = "RStan: the R interface to Stan. R package version 2.14.1.",
+                 "http://mc-stan.org/.") 
 )

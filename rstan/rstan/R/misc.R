@@ -578,6 +578,10 @@ stan_rdump <- function(list, file = "", append = FALSE,
       storage.mode(vv) <- "integer"
 
     if (is.vector(vv)) {
+      if (length(vv) == 0) {
+        cat(v, " <- integer(0)\n", file = file, sep = '')
+        next
+      }
       if (length(vv) == 1) {
         cat(v, " <- ", as.character(vv), "\n", file = file, sep = '')
         next
@@ -593,7 +597,11 @@ stan_rdump <- function(list, file = "", append = FALSE,
       l2 <- c(l2, v)
       vvdim <- dim(vv)
       cat(v, " <- \n", file = file, sep = '')
-      str <- paste0("structure(c(", paste(as.vector(vv), collapse = ', '), "),")
+      if (length(vv) == 0) { 
+        str <- paste0("structure(integer(0), ")
+      } else {
+        str <- paste0("structure(c(", paste(as.vector(vv), collapse = ', '), "),") 
+      }
       str <- gsub(addnlpat, '\\1\n', str)
       cat(str,
           ".Dim = c(", paste(vvdim, collapse = ', '), "))\n", file = file, sep = '')
@@ -653,19 +661,20 @@ plot_rhat_legend <- function(x, y, cex = 1) {
 }
 
 
-read_rdump <- function(f) {
+read_rdump <- function(f, keep.source = FALSE, ...) {
   # Read data defined in an R dump file to an R list
   #
   # Args:
   #   f: the file to be sourced
-  #
+  #   keep.source: see doc of function source
+  # 
   # Returns:
   #   A list
 
   if (missing(f))
     stop("no file specified.")
   e <- new.env()
-  source(file = f, local = e)
+  source(file = f, local = e, keep.source = keep.source, ...)
   as.list(e)
 }
 
@@ -1551,7 +1560,7 @@ get_time_from_csv <- function(tlines) {
   t
 }
 
-parse_data <- function(cppcode, e = parent.frame()) {
+parse_data <- function(cppcode) {
   cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
                   text = cppcode)
   private <- grep("^private:$", cppcode) + 1L
@@ -1559,19 +1568,21 @@ parse_data <- function(cppcode, e = parent.frame()) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
-  tdata <- grep("stan::math::fill(", cppcode, value = TRUE, fixed = TRUE)
-  tdata <- gsub("^.*stan::math::fill\\((.*),DUMMY_VAR__\\);$", "\\1", tdata)
-  tdata <- gsub("^.*stan::math::fill\\((.*), std::numeric_limits<int>::min\\(\\)\\);$",
-                "\\1", tdata)
-
+  
+  in_data <- grep("context__.vals_", cppcode, fixed = TRUE, value = TRUE)
+  in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)  
+  
   # get them from the calling environment
-  objects <- setdiff(objects, tdata)
-  modes <- rep("any", length(objects))
-  names(modes) <- objects
-  if ("T" %in% objects) modes["T"] <- "numeric"
-  if ("F" %in% objects) modes["F"] <- "numeric"
-  mget(objects, envir = e, inherits = TRUE, mode = modes,
-       ifnotfound = vector("list", length(objects)))
+  objects <- intersect(objects, in_data)
+  stuff <- sapply(objects, simplify = FALSE, FUN = dynGet, 
+                  inherits = FALSE, ifnotfound = NULL)
+  for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
+    if (exists(objects[i], envir = globalenv(), mode = "numeric"))
+      stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
+    else if (exists(objects[i], envir = globalenv(), mode = "logical"))
+      stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "logical")
+  }
+  return(stuff)
 }
 
 set_cppo <- function(...) {
@@ -1633,8 +1644,21 @@ throw_sampler_warnings <- function(object) {
             " transitions after warmup that exceeded the maximum treedepth.",
             " Increase max_treedepth above ", max_td, ". See\n",
             "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
-  if (n_d > 0 || n_m > 0) warning("Examine the pairs() plot to diagnose sampling problems\n",
-                                  call. = FALSE, noBreaks. = TRUE)
+  n_e <- 0L
+  if (is_sfinstance_valid(object)) {
+    E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
+    threshold <- 0.3
+    EBFMI <- get_num_upars(object) / apply(E, 2, var)
+    n_e <- sum(EBFMI < threshold, na.rm = TRUE)
+    if (n_e > 0)
+      warning("There were ", n_e, 
+              " chains where the estimated Bayesian Fraction of Missing Information",
+              " was low. See\n", 
+              "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
+  }
+  if (n_d > 0 || n_m > 0 || n_e > 0) 
+    warning("Examine the pairs() plot to diagnose sampling problems\n",
+            call. = FALSE, noBreaks. = TRUE)
   return(invisible(NULL))
 }
 
@@ -1656,4 +1680,8 @@ get_CXX <- function(CXX11 = FALSE) {
 
 is.sparc <- function() {
   grepl("^sparc",  R.version$platform)
+}
+
+avoid_crash <- function(mod) {
+  as(get("packageName", envir = mod)["info"][1], "character") == "<pointer: (nil)>"
 }

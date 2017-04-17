@@ -230,7 +230,7 @@ fit1 <- stan(
   chains = 4,             # number of Markov chains
   warmup = 1000,          # number of warmup iterations per chain
   iter = 2000,            # total number of iterations per chain
-  cores = 1,              # number of cores (using 1 just for the vignette)
+  cores = 2,              # number of cores (using 2 just for the vignette)
   refresh = 1000          # show progress every 'refresh' iterations
   )
 ```

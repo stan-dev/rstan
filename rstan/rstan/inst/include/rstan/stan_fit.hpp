@@ -28,9 +28,7 @@
 
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
-#include <stan/callbacks/noop_interrupt.hpp>
 #include <stan/callbacks/writer.hpp>
-#include <stan/callbacks/noop_writer.hpp>
 #include <stan/callbacks/stream_writer.hpp>
 #include <stan/io/empty_var_context.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
@@ -126,11 +124,11 @@ void expand_indices(std::vector<T> dim,
   std::vector<size_t> loopj;
   for (size_t i = 1; i <= len; ++i)
     loopj.push_back(len - i);
-  
+
   if (col_major)
     for (size_t i = 0; i < len; ++i)
       loopj[i] = len - 1 - loopj[i];
-  
+
   idx.push_back(std::vector<T>(len, 0));
   for (size_t i = 1; i < total; i++) {
     std::vector<T>  v(idx.back());
@@ -189,13 +187,13 @@ template <class T> void
                 std::vector<std::string>& fnames,
                 bool col_major = true,
                 bool first_is_one = true) {
-    
+
     fnames.clear();
     if (0 == dim.size()) {
       fnames.push_back(name);
       return;
     }
-    
+
     std::vector<std::vector<T> > idx;
     expand_indices(dim, idx, col_major);
     size_t first = first_is_one ? 1 : 0;
@@ -204,7 +202,7 @@ template <class T> void
          ++it) {
       std::stringstream stri;
       stri << name << "[";
-      
+
       size_t lenm1 = it -> size() - 1;
       for (size_t i = 0; i < lenm1; i++)
         stri << ((*it)[i] + first) << ",";
@@ -249,12 +247,12 @@ void get_indices_col2row(const std::vector<T>& dim, std::vector<T2>& midx,
     midx.push_back(start);
     return;
   }
-  
+
   std::vector<T> z(len, 1);
   for (size_t i = 1; i < len; i++) {
     z[i] *= z[i - 1] * dim[i - 1];
   }
-  
+
   T total = calc_num_params(dim);
   midx.resize(total);
   std::fill_n(midx.begin(), total, start);
@@ -344,13 +342,13 @@ template <class Model>
 std::vector<std::vector<unsigned int> > get_param_dims(Model& m) {
   std::vector<std::vector<size_t> > dims;
   m.get_dims(dims);
-  
+
   std::vector<std::vector<unsigned int> > uintdims;
   for (std::vector<std::vector<size_t> >::const_iterator it = dims.begin();
        it != dims.end();
        ++it)
     uintdims.push_back(sizet_to_uint(*it));
-  
+
   std::vector<unsigned int> scalar_dim; // for lp__
   uintdims.push_back(scalar_dim);
   return uintdims;
@@ -397,9 +395,9 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                    "model that has no parameters.");
   stan::callbacks::stream_writer info(Rcpp::Rcout);
   stan::callbacks::stream_writer err(rstan::io::rcerr);
-  
+
   R_CheckUserInterrupt_Functor interrupt;
-  
+
   std::fstream sample_stream;
   std::fstream diagnostic_stream;
   std::stringstream comment_stream;
@@ -435,29 +433,29 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     write_stan_version_as_comment(diagnostic_stream);
     args.write_args_as_comment(diagnostic_stream);
   }
-  
+
   stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
   std::auto_ptr<stan::io::var_context> init_context_ptr;
   if (args.get_init() == "user")
     init_context_ptr.reset(new io::rlist_ref_var_context(args.get_init_list()));
   else
     init_context_ptr.reset(new stan::io::empty_var_context());
-  
+
   std::vector<std::string> constrained_param_names;
   model.constrained_param_names(constrained_param_names);
   rstan::value init_writer;
-  
+
   int return_code = stan::services::error_codes::CONFIG;
-  
-  
+
+
   unsigned int random_seed = args.get_random_seed();
   unsigned int id = args.get_chain_id();
   double init_radius = args.get_init_radius();
-  
+
   if (args.get_method() == TEST_GRADIENT) {
     double epsilon = args.get_ctrl_test_grad_epsilon();
     double error = args.get_ctrl_test_grad_error();
-    stan::callbacks::noop_writer sample_writer;
+    stan::callbacks::writer sample_writer;
     return_code = stan::services::diagnose::diagnose(model,
                                                      *init_context_ptr,
                                                      random_seed, id,
@@ -476,7 +474,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     rstan::value sample_writer;
     bool save_iterations = args.get_ctrl_optim_save_iterations();
     int num_iterations = args.get_iter();
-    
+
     if (args.get_ctrl_optim_algorithm() == Newton) {
       return_code
       = stan::services::optimize::newton(model, *init_context_ptr,
@@ -539,16 +537,16 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     params.erase(params.begin());
     holder = Rcpp::List::create(Rcpp::_["par"] = params,
                                 Rcpp::_["value"] = lp);
-    
+
   }
   if (args.get_method() == SAMPLING) {
     std::vector<std::string> sample_names;
     stan::mcmc::sample::get_sample_param_names(sample_names);
     std::vector<std::string> sampler_names;
-    
+
     std::auto_ptr<rstan_sample_writer> sample_writer_ptr;
     size_t sample_writer_offset;
-    
+
     int num_warmup = args.get_ctrl_sampling_warmup();
     int num_samples = args.get_iter() - num_warmup;
     int num_thin = args.get_ctrl_sampling_thin();
@@ -556,7 +554,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     int refresh = args.get_ctrl_sampling_refresh();
     int num_iter_save = args.get_ctrl_sampling_iter_save();
     int num_warmup_save = num_iter_save - args.get_ctrl_sampling_iter_save_wo_warmup();
-    
+
     if (args.get_ctrl_sampling_algorithm() == Fixed_param) {
       sampler_names.resize(0);
       sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
@@ -584,7 +582,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       sampler_names[3] = "divergent__";
       sampler_names[4] = "energy__";
       sample_writer_offset = sample_names.size() + sampler_names.size();
-      
+
       sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
                                                     comment_stream, "# ",
                                                     sample_names.size(),
@@ -593,11 +591,11 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     num_iter_save,
                                                     num_warmup_save,
                                                     qoi_idx));
-      
+
       double stepsize = args.get_ctrl_sampling_stepsize();
       double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
       int max_depth = args.get_ctrl_sampling_max_treedepth();
-      
+
       if (args.get_ctrl_sampling_metric() == DENSE_E) {
         if (!args.get_ctrl_sampling_adapt_engaged()) {
           return_code = stan::services::sample
@@ -616,7 +614,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
           unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
           unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
           unsigned int window = args.get_ctrl_sampling_adapt_window();
-          
+
           return_code = stan::services::sample
             ::hmc_nuts_dense_e_adapt(model, *init_context_ptr,
                                      random_seed, id, init_radius,
@@ -646,7 +644,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
           unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
           unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
           unsigned int window = args.get_ctrl_sampling_adapt_window();
-          
+
           return_code = stan::services::sample
             ::hmc_nuts_diag_e_adapt(model, *init_context_ptr,
                                     random_seed, id, init_radius,
@@ -673,7 +671,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
           double gamma = args.get_ctrl_sampling_adapt_gamma();
           double kappa = args.get_ctrl_sampling_adapt_kappa();
           double t0 = args.get_ctrl_sampling_adapt_t0();
-          
+
           return_code = stan::services::sample
             ::hmc_nuts_unit_e_adapt(model, *init_context_ptr,
                                     random_seed, id, init_radius,
@@ -691,7 +689,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       sampler_names[1] = "int_time__";
       sampler_names[2] = "energy__";
       sample_writer_offset = sample_names.size() + sampler_names.size();
-      
+
       sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
                                                     comment_stream, "# ",
                                                     sample_names.size(),
@@ -700,11 +698,11 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     num_iter_save,
                                                     num_warmup_save,
                                                     qoi_idx));
-      
+
       double stepsize = args.get_ctrl_sampling_stepsize();
       double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
       double int_time = args.get_ctrl_sampling_int_time();
-      
+
       if (args.get_ctrl_sampling_metric() == DENSE_E) {
         if (!args.get_ctrl_sampling_adapt_engaged()) {
           return_code = stan::services::sample
@@ -723,7 +721,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
           unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
           unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
           unsigned int window = args.get_ctrl_sampling_adapt_window();
-          
+
           return_code = stan::services::sample
             ::hmc_static_dense_e_adapt(model, *init_context_ptr,
                                        random_seed, id, init_radius,
@@ -734,7 +732,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                        init_buffer, term_buffer, window,
                                        interrupt, info, err, init_writer,
                                        *sample_writer_ptr, diagnostic_writer);
-          
+
         }
       } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
         if (!args.get_ctrl_sampling_adapt_engaged()) {
@@ -746,7 +744,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                               stepsize, stepsize_jitter, int_time,
                               interrupt, info, err, init_writer,
                               *sample_writer_ptr, diagnostic_writer);
-          
+
         } else {
           double delta = args.get_ctrl_sampling_adapt_delta();
           double gamma = args.get_ctrl_sampling_adapt_gamma();
@@ -755,7 +753,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
           unsigned int init_buffer = args.get_ctrl_sampling_adapt_init_buffer();
           unsigned int term_buffer = args.get_ctrl_sampling_adapt_term_buffer();
           unsigned int window = args.get_ctrl_sampling_adapt_window();
-          
+
           return_code = stan::services::sample
             ::hmc_static_diag_e_adapt(model, *init_context_ptr,
                                       random_seed, id, init_radius,
@@ -777,13 +775,13 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                               stepsize, stepsize_jitter, int_time,
                               interrupt, info, err, init_writer,
                               *sample_writer_ptr, diagnostic_writer);
-          
+
         } else  {
           double delta = args.get_ctrl_sampling_adapt_delta();
           double gamma = args.get_ctrl_sampling_adapt_gamma();
           double kappa = args.get_ctrl_sampling_adapt_kappa();
           double t0 = args.get_ctrl_sampling_adapt_t0();
-          
+
           return_code = stan::services::sample
             ::hmc_static_unit_e_adapt(model, *init_context_ptr,
                                       random_seed, id, init_radius,
@@ -799,7 +797,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     double mean_lp(0);
     std::vector<double> mean_pars;
     mean_pars.resize(constrained_param_names.size(), 0);
-    
+
     sample_writer_offset = sample_names.size() + sampler_names.size();
     if (args.get_ctrl_sampling_iter_save_wo_warmup() > 0) {
       double inverse_saved = 1.0 / args.get_ctrl_sampling_iter_save_wo_warmup();
@@ -808,7 +806,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
         mean_pars[n] = sample_writer_ptr->sum_.sum()[sample_writer_offset + n] * inverse_saved;
       }
     }
-    
+
     holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
                         sample_writer_ptr->values_.x().end());
     holder.attr("test_grad") = Rcpp::wrap(false);
@@ -817,7 +815,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                         init_writer.x());
     holder.attr("mean_pars") = mean_pars;
     holder.attr("mean_lp__") = mean_lp;
-    
+
     std::string comments = comment_stream.str();
     size_t start = 0;
     size_t end = 0;
@@ -834,7 +832,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       end = comments.find("seconds", start + 1);
       std::stringstream ss(comments.substr(start, end));
       ss >> warmDeltaT;
-      
+
       start = comments.find("# ", end) + strlen("# ");
       end = comments.find("seconds (Sampling)", start + 1);
       ss.str(comments.substr(start, end));
@@ -844,14 +842,14 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     holder.attr("elapsed_time") =
       Rcpp::NumericVector::create(Rcpp::_["warmup"] = warmDeltaT,
                                   Rcpp::_["sample"] = sampleDeltaT);
-    
+
     Rcpp::List slst(sample_writer_ptr->sampler_values_.x().begin()+1,
                     sample_writer_ptr->sampler_values_.x().end());
-    
+
     std::vector<std::string> slst_names(sample_names.begin()+1, sample_names.end());
     slst_names.insert(slst_names.end(), sampler_names.begin(), sampler_names.end());
     slst.names() = slst_names;
-    holder.attr("sampler_params") = slst;        
+    holder.attr("sampler_params") = slst;
     holder.names() = fnames_oi;
     sample_writer_ptr.reset();
   }
@@ -865,9 +863,9 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     int adapt_iterations = args.get_ctrl_variational_adapt_iter();
     int eval_elbo = args.get_ctrl_variational_eval_elbo();
     int output_samples = args.get_ctrl_variational_output_samples();
-    
+
     stan::callbacks::stream_writer sample_writer(sample_stream, "# ");
-    
+
     if (args.get_ctrl_variational_algorithm() == FULLRANK) {
       return_code = stan::services::experimental::advi
       ::fullrank(model, *init_context_ptr,
@@ -894,20 +892,20 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     holder.attr("inits") = unconstrained_to_constrained(model, random_seed, id,
                                                         init_writer.x());
   }
-  
+
   init_context_ptr.reset();
   if (sample_stream.is_open())
     sample_stream.close();
-  if (diagnostic_stream.is_open());
-  diagnostic_stream.close();
-  
+  if (diagnostic_stream.is_open())
+    diagnostic_stream.close();
+
   return return_code;
 }
 }
 
 template <class Model, class RNG_t>
 class stan_fit {
-  
+
 private:
   io::rlist_ref_var_context data_;
   Model model_;
@@ -915,7 +913,7 @@ private:
   const std::vector<std::string> names_;
   const std::vector<std::vector<unsigned int> > dims_;
   const unsigned int num_params_;
-  
+
   std::vector<std::string> names_oi_; // parameters of interest
   std::vector<std::vector<unsigned int> > dims_oi_;
   std::vector<size_t> names_oi_tidx_;  // the total indexes of names2.
@@ -924,7 +922,7 @@ private:
   unsigned int num_params2_;  // total number of POI's.
   std::vector<std::string> fnames_oi_;
   Rcpp::Function cxxfunction; // keep a reference to the cxxfun, no functional purpose.
-  
+
 private:
   /**
   * Tell if a parameter name is an element of an array parameter.
@@ -935,7 +933,7 @@ private:
   bool is_flatname(const std::string& name) {
     return name.find('[') != name.npos && name.find(']') != name.npos;
   }
-  
+
   /*
   * Update the parameters we are interested for the model.
   * As well, the dimensions vector for the parameters are
@@ -945,7 +943,7 @@ private:
     names_oi_.clear();
     dims_oi_.clear();
     names_oi_tidx_.clear();
-    
+
     std::vector<unsigned int> starts;
     calc_starts(dims_, starts);
     for (std::vector<std::string>::const_iterator it = pnames.begin();
@@ -968,7 +966,7 @@ private:
     calc_starts(dims_oi_, starts_oi_);
     num_params2_ = names_oi_tidx_.size();
   }
-  
+
 public:
   SEXP update_param_oi(SEXP pars) {
     std::vector<std::string> pnames =
@@ -979,7 +977,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     return Rcpp::wrap(true);
   }
-  
+
   stan_fit(SEXP data, SEXP cxxf) :
   data_(data),
   model_(data_, &rstan::io::rcout),
@@ -999,7 +997,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     // get_all_indices_col2row(dims_, midx_for_col2row);
   }
-  
+
   /**
   * Transform the parameters from its defined support
   * to unconstrained space
@@ -1019,7 +1017,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP unconstrained_param_names(SEXP include_tparams, SEXP include_gqs) {
     BEGIN_RCPP
     std::vector<std::string> n;
@@ -1031,7 +1029,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP constrained_param_names(SEXP include_tparams, SEXP include_gqs) {
     BEGIN_RCPP
     std::vector<std::string> n;
@@ -1043,7 +1041,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   /**
   * Contrary to unconstrain_pars, transform parameters
   * from unconstrained support to the constrained.
@@ -1072,7 +1070,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   /**
   * Expose the log_prob of the model to stan_fit so R user
   * can call this function.
@@ -1101,7 +1099,7 @@ public:
         return Rcpp::wrap(stan::model::log_prob_propto<false>(model_, par_r, par_i, &rstan::io::rcout));
       }
     }
-    
+
     std::vector<double> gradient;
     double lp;
     if (Rcpp::as<bool>(jacobian_adjust_transform))
@@ -1116,7 +1114,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   /**
   * Expose the grad_log_prob of the model to stan_fit so R user
   * can call this function.
@@ -1154,7 +1152,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   /**
   * Return the number of unconstrained parameters
   */
@@ -1167,13 +1165,13 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP call_sampler(SEXP args_) {
     BEGIN_RCPP
     Rcpp::List lst_args(args_);
     stan_args args(lst_args);
     Rcpp::List holder;
-    
+
     int ret;
     ret = command(args, model_, holder, names_oi_tidx_,
                   fnames_oi_, base_rng);
@@ -1186,7 +1184,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP param_names() const {
     BEGIN_RCPP
     SEXP __sexp_result;
@@ -1195,7 +1193,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP param_names_oi() const {
     BEGIN_RCPP
     SEXP __sexp_result;
@@ -1204,7 +1202,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   /**
   * tidx (total indexes)
   * the index is among those parameters of interest, not
@@ -1251,8 +1249,8 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
-  
+
+
   SEXP param_dims() const {
     BEGIN_RCPP
     Rcpp::List lst = Rcpp::wrap(dims_);
@@ -1263,7 +1261,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP param_dims_oi() const {
     BEGIN_RCPP
     Rcpp::List lst = Rcpp::wrap(dims_oi_);
@@ -1274,7 +1272,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP param_fnames_oi() const {
     BEGIN_RCPP
     std::vector<std::string> fnames;
@@ -1299,4 +1297,3 @@ public:
  RINC=`Rscript -e "cat(R.home('include'))"`
  g++ -Wall -I${RINC} -I"${STAN}/lib/boost_1.51.0" -I"${STAN}/lib/eigen_3.1.1"  -I"${STAN}/src" -I"${RCPPINC}" -I"../" stan_fit.hpp
  */
-

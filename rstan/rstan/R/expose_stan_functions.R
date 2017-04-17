@@ -27,8 +27,9 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
     stanmodel <- get_cppcode(stanmodel)
   }
   else if(is.character(stanmodel)) {
-    if(length(stanmodel) == 1) stanmodel <- stanc(file = stanmodel)$cppcode
-    else stanmodel <- stanc(model_code = stanmodel)$cppcode
+    if(length(stanmodel) == 1) 
+      stanmodel <- stanc(file = stanmodel, allow_undefined = TRUE)$cppcode
+    else stanmodel <- stanc(model_code = stanmodel, allow_undefined = TRUE)$cppcode
   }
   else stop("'stanmodel' is not a valid object")
   
@@ -116,6 +117,10 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
   
   # convert inline declarations to Rcpp export declarations
   lines <- gsub("^inline$", "// \\[\\[Rcpp::export\\]\\]", lines)
+  
+  ints <- grep("^int$", lines)
+  for (i in rev(ints))
+    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
 
   # declare attributes for Rcpp for non-functor user-defined Stan functions
   templates <- grep("^template .*$", lines)
@@ -221,7 +226,7 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
              if (has_model) "#include <src/stan/model/indexing.hpp>",
              "#include <boost/exception/all.hpp>",
              "#include <boost/random/linear_congruential.hpp>",
-             
+
              "#include <cmath>",
              "#include <cstddef>",
              "#include <fstream>",
@@ -235,7 +240,7 @@ expose_stan_functions <- function(stanmodel, env = globalenv()) {
              "#include <boost/math/special_functions/fpclassify.hpp>",
              "#include <boost/random/additive_combine.hpp>",
              "#include <boost/random/uniform_real_distribution.hpp>",
-             
+
              lines)
   
   # try to compile

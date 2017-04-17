@@ -34,18 +34,21 @@
     roughly half will be plotted in the lower panel and the rest in the upper
     panel. A list of two integer vectors can be passed, each specifying a subset
     of the chains to be plotted in the lower and upper panels respectively.
+    
     A single number between zero and one exclusive can be passed, which is 
     interpreted as the proportion of realizations (among all chains) to plot
     in the lower panel starting with the first realization in each chain, 
     with the complement (from the end of each chain) plotted in the upper panel.
+    
     A (possibly abbreviated) character vector of length one can be passed among 
     \code{"accept_stat__", "stepsize__"}, \code{"treedepth__", "n_leapfrog__"},
-    \code{"divergent__"} or \code{"lp__"}, which are the variables produced by 
-    \code{\link{get_sampler_params}} and \code{\link{get_logposterior}}. In that 
-    case the lower panel will plot realizations that are below the median of the 
-    indicated variable (or are zero in the case of \code{"divergent__"}) and 
-    the upper panel will plot realizations that are greater than or equal to the 
-    median of the indicated variable (or are one in the case of \code{"divergent__"}). 
+    \code{"divergent__"},, \code{"energy__"}, or \code{"lp__"}, which are the 
+    variables produced by \code{\link{get_sampler_params}} and 
+    \code{\link{get_logposterior}}. In that case the lower panel will plot 
+    realizations that are below the median of the indicated variable (or are zero 
+    in the case of \code{"divergent__"}) and the upper panel will plot realizations 
+    that are greater than or equal to the median of the indicated variable (or are 
+    one in the case of \code{"divergent__"}). 
     Finally, any logical vector whose length is equal to the product of the number 
     of iterations and the number of chains can be passed, in which case realizations
     corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 

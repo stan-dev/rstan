@@ -18,27 +18,8 @@ namespace rstan {
       : writer_(stream, prefix) {
     }
 
-    void operator()(const std::string& key, double value) {
-      writer_(key, value);
-    }
-
-    void operator()(const std::string& key, int value) {
-      writer_(key, value);
-    }
-
-    void operator()(const std::string& key, const std::string& value) {
-      writer_(key, value);
-    }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_values) { }
-
-    void operator()(const std::string& key, const double* values,
-                    int n_rows, int n_cols) { }
-
-    void operator()(const std::vector<std::string>& names) { }
-
-    void operator()(const std::vector<double>& x) { }
+    // To deal with C++ name hiding
+    using stan::callbacks::writer::operator();
 
     void operator()(const std::string& message) {
       writer_(message);
