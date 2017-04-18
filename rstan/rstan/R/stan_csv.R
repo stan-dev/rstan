@@ -48,7 +48,7 @@ parse_stancsv_comments <- function(comments) {
   if (length(time_lineno) < 1)
     warning("line with \"Elapsed Time\" not found")
 
-  if (is.na(adapt_term_lineo) || adapt_term_lineno == len)
+  if (is.na(adapt_term_lineno) || adapt_term_lineno == len)
     adaptation_info <- ''
   else {
     if (has_time)
