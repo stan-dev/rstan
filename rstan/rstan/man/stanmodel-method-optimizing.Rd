@@ -115,11 +115,12 @@
   }
 }
 \value{
-   If the optimization is done successfully, a list with named components:
    \item{par}{The point estimate found. Its form (vector or list) 
      is determined by the \code{as_vector} argument.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
      the \code{"lp__"} in Stan) corresponding to \code{par}.}
+   \item{return_code}{The value of the return code from the optimizer;
+     anything that is not zero is problematic.}
    \item{hessian}{The Hessian matrix if \code{hessian} is \code{TRUE}}
    \item{theta_tilde}{If \code{draws > 0}, the matrix of parameter draws
     in the constrained or unconstrained space, depending on the value of 

@@ -1174,9 +1174,7 @@ public:
     int ret;
     ret = command(args, model_, holder, names_oi_tidx_,
                   fnames_oi_, base_rng);
-    if (ret != 0) {
-      return R_NilValue;  // indicating error happened
-    }
+    holder.attr("return_code") = ret;
     SEXP __sexp_result;
     PROTECT(__sexp_result = Rcpp::wrap(holder));
     UNPROTECT(1);

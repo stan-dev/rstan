@@ -341,6 +341,9 @@ setMethod("optimizing", "stanmodel",
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             if (!verbose && is.null(dotlist$refresh)) dotlist$refresh <- 0L
             optim <- sampler$call_sampler(c(args, dotlist))
+            optim$return_code <- attr(optim, "return_code")
+            if (optim$return_code != 0) warning("non-zero return code in optimizing")
+            attr(optim, "return_code") <- NULL
             names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
             if (hessian || draws) {
