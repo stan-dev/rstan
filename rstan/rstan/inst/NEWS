@@ -1,3 +1,7 @@
+Wed April 19, 2017 (2.15.1)
+1. Bug fixes
+  * expose_stan_functions() works with functions that return real containers
+
 Sat March 18, 2017 (2.14.2)
 1. Bug fixes
   * Crashes less often when calling stan() repeatedly without assigning 
