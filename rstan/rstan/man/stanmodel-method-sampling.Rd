@@ -100,7 +100,7 @@
     be helpful for model debugging.}
 
   \item{algorithm}{One of sampling algorithms that are implemented in Stan. 
-    Current options are \code{"NUTS"} (No-U-Turn sampler, Hoffman and Gelman 2011), 
+    Current options are \code{"NUTS"} (No-U-Turn sampler, Hoffman and Gelman 2011, Betancourt 2017), 
     \code{"HMC"} (static HMC), or \code{"Fixed_param"}. The default and 
     preferred algorithm is \code{"NUTS"}.}
 
