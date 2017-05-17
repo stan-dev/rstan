@@ -791,10 +791,12 @@ as.array.stanfit <- function(x, ...) {
 as.matrix.stanfit <- function(x, ...) {
   if (x@mode != 0) return(numeric(0)) 
   e <- extract(x, permuted = FALSE, inc_warmup = FALSE, ...) 
-  out <- apply(e, 3, FUN = function(y) y)
-  if (length(dim(out)) < 2L) out <- t(as.matrix(out))
-  dimnames(out) <- dimnames(e)[-2]
-  return(out)
+  if (is.null(e)) return(e)
+  enames <- dimnames(e)
+  edim <- dim(e)
+  dim(e) <- c(edim[1] * edim[2], edim[3])
+  dimnames(e) <- enames[-2]
+  e
 }
  
 as.data.frame.stanfit <- function(x, ...) {
