@@ -24,7 +24,8 @@ Expose user-defined Stan functions to \R for testing and simulation
     program should contain a non-empty \code{functions} block.
   }
  \item{env}{
-   an \code{\link[base]{environment}}. By default, the global environment
+   An \code{\link[base]{environment}} passed to the \code{env} argument of 
+   \code{\link[Rcpp]{sourceCpp}}. By default, the global environment
    is used.
   }
 }
