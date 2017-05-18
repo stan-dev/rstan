@@ -26,7 +26,8 @@ Expose user-defined Stan functions to \R for testing and simulation
  \item{env}{
    An \code{\link[base]{environment}} passed to the \code{env} argument of 
    \code{\link[Rcpp]{sourceCpp}}. By default, the global environment
-   is used.
+   is used. Specifying an environment that has the empty environment as its 
+   parent will result in an error.
   }
 }
 
