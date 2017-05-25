@@ -1,17 +1,26 @@
-Package: rstan
+Package: rstan3
 Type: Package
-Title: R Interface to Stan
-Version: 2.7.0
-Date: 2015-06-01
+Title: A Provisional R Interface to Stan
+Version: 2.16.0
+Date: 2017-05-22
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")))
-Description: R interface to Stan (Stan is an open-source package for obtaining
-        Bayesian inference using the No-U-Turn sampler, a variant of
-        Hamiltonian Monte Carlo).
+Description: This is a preview of version 3.x of the rstan package. Do not use it.
 License: GPL (>=3)
-Imports: stats4
-Depends: R (>= 3.0.2), Rcpp (>= 0.11.0), utils, inline, methods
-LinkingTo: Rcpp, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.7.0)
-Suggests: RUnit, RcppEigen, BH (>= 1.55), StanHeaders (>= 2.7.0), parallel, KernSmooth, RCurl
+Imports:
+    Rcpp (>= 0.12.0),
+    rstan (>= 2.15.1),
+    sourcetools,
+    stats,
+    stats4,
+    utils
+Depends:
+    R (>= 3.0.2),
+    methods
+Enhances:
+    rstan
+Suggests:
+    roxygen2
 URL: http://mc-stan.org
+RoxygenNote: 5.0.1

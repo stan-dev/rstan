@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,11 +20,6 @@
 #' @param csvfiles A character vector of paths to CSV files of MCMC output
 #' @return An object of \code{\link{StanFitMCMC-class}}
 #' @seealso \code{\link{StanFitMCMC-class}}
-#' @examples
-#' csvfiles <- dir(system.file('misc', package = 'rstan'),
-#'                 pattern = 'rstan_doc_ex_[0-9].csv', full.names = TRUE)
-#' fit <- read_stan_csv(csvfiles)
-#' fit
 read_stan_csv <- function(csvfiles) {
 
   col_major <- TRUE
