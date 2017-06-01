@@ -28,8 +28,9 @@
 
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
-#include <stan/callbacks/writer.hpp>
+#include <stan/callbacks/stream_logger.hpp>
 #include <stan/callbacks/stream_writer.hpp>
+#include <stan/callbacks/writer.hpp>
 #include <stan/io/empty_var_context.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
 #include <stan/services/optimize/bfgs.hpp>
@@ -392,8 +393,8 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
         throw std::runtime_error("Must use algorithm=\"Fixed_param\" for "
                                    "model that has no parameters.");
-  stan::callbacks::stream_writer info(Rcpp::Rcout);
-  stan::callbacks::stream_writer err(rstan::io::rcerr);
+  stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
+                                        rstan::io::rcerr, rstan::io::rcerr);
 
   R_CheckUserInterrupt_Functor interrupt;
 
@@ -461,7 +462,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                      init_radius,
                                                      epsilon, error,
                                                      interrupt,
-                                                     info,
+                                                     logger,
                                                      init_writer,
                                                      sample_writer);
     holder = Rcpp::List::create(Rcpp::_["num_failed"] = return_code);
@@ -480,7 +481,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                          random_seed, id, init_radius,
                                          num_iterations,
                                          save_iterations,
-                                         interrupt, info,
+                                         interrupt, logger,
                                          init_writer, sample_writer);
     }
     if (args.get_ctrl_optim_algorithm() == BFGS) {
@@ -503,7 +504,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                          num_iterations,
                                          save_iterations,
                                          refresh,
-                                         interrupt, info,
+                                         interrupt, logger,
                                          init_writer, sample_writer);
     }
     if (args.get_ctrl_optim_algorithm() == LBFGS) {
@@ -528,7 +529,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                           num_iterations,
                                           save_iterations,
                                           refresh,
-                                          interrupt, info,
+                                          interrupt, logger,
                                           init_writer, sample_writer);
     }
     std::vector<double> params = sample_writer.x();
@@ -571,7 +572,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                               num_thin,
                                               refresh,
                                               interrupt,
-                                              info, err, init_writer,
+                                              logger, init_writer,
                                               *sample_writer_ptr, diagnostic_writer);
     } else if (args.get_ctrl_sampling_algorithm() == NUTS) {
       sampler_names.resize(5);
@@ -603,7 +604,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                              num_warmup, num_samples,
                              num_thin, save_warmup, refresh,
                              stepsize, stepsize_jitter, max_depth,
-                             interrupt, info, err, init_writer,
+                             interrupt, logger, init_writer,
                              *sample_writer_ptr, diagnostic_writer);
         } else {
           double delta = args.get_ctrl_sampling_adapt_delta();
@@ -622,7 +623,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                      stepsize, stepsize_jitter, max_depth,
                                      delta, gamma, kappa,
                                      t0, init_buffer, term_buffer, window,
-                                     interrupt, info, err, init_writer,
+                                     interrupt, logger, init_writer,
                                      *sample_writer_ptr, diagnostic_writer);
         }
       } else if (args.get_ctrl_sampling_metric() == DIAG_E) {
@@ -633,7 +634,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                             num_warmup, num_samples,
                             num_thin, save_warmup, refresh,
                             stepsize, stepsize_jitter, max_depth,
-                            interrupt, info, err, init_writer,
+                            interrupt, logger, init_writer,
                             *sample_writer_ptr, diagnostic_writer);
         } else {
           double delta = args.get_ctrl_sampling_adapt_delta();
@@ -652,7 +653,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                     stepsize, stepsize_jitter, max_depth,
                                     delta, gamma, kappa,
                                     t0, init_buffer, term_buffer, window,
-                                    interrupt, info, err, init_writer,
+                                    interrupt, logger, init_writer,
                                     *sample_writer_ptr, diagnostic_writer);
         }
       } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
@@ -663,7 +664,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                             num_warmup, num_samples,
                             num_thin, save_warmup, refresh,
                             stepsize, stepsize_jitter, max_depth,
-                            interrupt, info, err, init_writer,
+                            interrupt, logger, init_writer,
                             *sample_writer_ptr, diagnostic_writer);
         } else {
           double delta = args.get_ctrl_sampling_adapt_delta();
@@ -678,7 +679,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                     num_thin, save_warmup, refresh,
                                     stepsize, stepsize_jitter, max_depth,
                                     delta, gamma, kappa, t0,
-                                    interrupt, info, err, init_writer,
+                                    interrupt, logger, init_writer,
                                     *sample_writer_ptr, diagnostic_writer);
         }
       }
@@ -710,7 +711,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                num_warmup, num_samples,
                                num_thin, save_warmup, refresh,
                                stepsize, stepsize_jitter, int_time,
-                               interrupt, info, err, init_writer,
+                               interrupt, logger, init_writer,
                                *sample_writer_ptr, diagnostic_writer);
         } else {
           double delta = args.get_ctrl_sampling_adapt_delta();
@@ -729,7 +730,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                        stepsize, stepsize_jitter, int_time,
                                        delta, gamma, kappa, t0,
                                        init_buffer, term_buffer, window,
-                                       interrupt, info, err, init_writer,
+                                       interrupt, logger, init_writer,
                                        *sample_writer_ptr, diagnostic_writer);
 
         }
@@ -741,7 +742,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                               num_warmup, num_samples,
                               num_thin, save_warmup, refresh,
                               stepsize, stepsize_jitter, int_time,
-                              interrupt, info, err, init_writer,
+                              interrupt, logger, init_writer,
                               *sample_writer_ptr, diagnostic_writer);
 
         } else {
@@ -761,7 +762,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                       stepsize, stepsize_jitter, int_time,
                                       delta, gamma, kappa, t0,
                                       init_buffer, term_buffer, window,
-                                      interrupt, info, err, init_writer,
+                                      interrupt, logger, init_writer,
                                       *sample_writer_ptr, diagnostic_writer);
         }
       } else if (args.get_ctrl_sampling_metric() == UNIT_E) {
@@ -772,7 +773,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                               num_warmup, num_samples,
                               num_thin, save_warmup, refresh,
                               stepsize, stepsize_jitter, int_time,
-                              interrupt, info, err, init_writer,
+                              interrupt, logger, init_writer,
                               *sample_writer_ptr, diagnostic_writer);
 
         } else  {
@@ -788,7 +789,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                       num_thin, save_warmup, refresh,
                                       stepsize, stepsize_jitter, int_time,
                                       delta, gamma, kappa, t0,
-                                      interrupt, info, err, init_writer,
+                                      interrupt, logger, init_writer,
                                       *sample_writer_ptr, diagnostic_writer);
         }
       }
@@ -873,7 +874,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                  max_iterations, tol_rel_obj, eta,
                  adapt_engaged, adapt_iterations,
                  eval_elbo, output_samples,
-                 interrupt, info, init_writer,
+                 interrupt, logger, init_writer,
                  sample_writer, diagnostic_writer);
     } else {
       return_code = stan::services::experimental::advi
@@ -883,7 +884,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                   max_iterations, tol_rel_obj, eta,
                   adapt_engaged, adapt_iterations,
                   eval_elbo, output_samples,
-                  interrupt, info, init_writer,
+                  interrupt, logger, init_writer,
                   sample_writer, diagnostic_writer);
     }
     holder = Rcpp::List::create(Rcpp::_["samples"] = R_NilValue);
