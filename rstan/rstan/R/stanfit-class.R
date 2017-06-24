@@ -134,9 +134,18 @@ setMethod("get_inits", signature = "stanfit",
             stopifnot(is.numeric(iter), iter > 0, 
                       iter <= length(object@sim$samples[[1]][[1]]))
             inits <- object@inits
-            for (c in 1:ncol(object))
-              inits[[c]] <- relist(as.data.frame(object@sim$samples[[c]])[iter,],
-                                   skeleton = inits[[c]])
+            if (length(inits) == 0) {
+              inits <- lapply(1:ncol(object), FUN = function(c) {
+                sapply(object@par_dims, simplify = FALSE, FUN = function(p) {
+                  if (length(p) == 0) return(NA_real_)
+                  array(NA_real_, dim = p)
+                })
+              })
+            }
+            for (c in 1:ncol(object)) {
+              vec <- as.matrix(as.data.frame(object@sim$samples[[c]]))[iter,]
+              inits[[c]] <- relist(vec, skeleton = inits[[c]])
+            }
             return(inits)                       
 })
 
