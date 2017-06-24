@@ -45,27 +45,27 @@ hmc_nuts_diag_e_adapt = function(chains = 4, iter = 2000, warmup = 1000,
                                  stepsize_jitter = 0, max_treedepth = 10, 
                                  ...) {
   "No U-Turn Sampling (NUTS) with adaptive integration time and a Euclidean metric
-  'chains' = 4: number of Markov chains to execute
-  'iter' = 2000: total number of iterations to execute per chain, including 'warmup'
-  'warmup' = 1000: number of warmup iterations
-  'thin' = 1: thinning interval
-  'sample_file' = NULL: optional path specifying where to store draws on disk
-  'diagnostic_file' = NULL: optional path specifying where to store diagnostics on disk
-  'adapt_gamma' = 0.05: gamma tuning parameter
-  'adapt_delta' = 0.8: delta tuning parameter
-  'adapt_kappa' = 0.75: kappa tuning parameter
-  'adapt_t0' = 10: t0 tuning parameter
-  'adapt_init_buffer' = 75: pre-adaptation buffer
-  'adapt_term_buffer' = 50: final adaptation buffer
-  'adapt_window' = 25: interior phase buffer
-  'stepsize' = 1: initial stepsize, final stepsize is adapted
-  'stepsize_jitter' = 0: bad idea, do not change this
-  'max_treedepth' = 10: maximum number of leapfrog steps per iteration'
-  '...' = various other arguments such as:
-    chain_id (integer >= 0)
-    init_r (numeric > 0)
-    refresh (integer >= 0)
-    save_warmup (logical)"
+  \n'chains' = 4: number of Markov chains to execute
+  \n'iter' = 2000: total number of iterations to execute per chain, including 'warmup'
+  \n'warmup' = 1000: number of warmup iterations
+  \n'thin' = 1: thinning interval
+  \n'sample_file' = NULL: optional path specifying where to store draws on disk
+  \n'diagnostic_file' = NULL: optional path specifying where to store diagnostics on disk
+  \n'adapt_gamma' = 0.05: gamma tuning parameter
+  \n'adapt_delta' = 0.8: delta tuning parameter
+  \n'adapt_kappa' = 0.75: kappa tuning parameter
+  \n'adapt_t0' = 10: t0 tuning parameter
+  \n'adapt_init_buffer' = 75: pre-adaptation buffer
+  \n'adapt_term_buffer' = 50: final adaptation buffer
+  \n'adapt_window' = 25: interior phase buffer
+  \n'stepsize' = 1: initial stepsize, final stepsize is adapted
+  \n'stepsize_jitter' = 0: bad idea, do not change this
+  \n'max_treedepth' = 10: maximum number of leapfrog steps per iteration
+  \n'...' = various other arguments such as:
+    \nchain_id (integer >= 0)
+    \ninit_r (numeric > 0)
+    \nrefresh (integer >= 0)
+    \nsave_warmup (logical)"
   
   control <- list(adapt_engaged = TRUE, adapt_gamma = adapt_gamma,
                   adapt_kappa = adapt_kappa, adapt_t0 = adapt_t0,
@@ -105,17 +105,23 @@ finalize = function() {
   try(dyn.unload(.self$shared.object), silent = TRUE)
   return(invisible(NULL))
 },
-data = function(...) {
-  if (nargs() == 0) {
-    dotlist <- sapply(tail(names(.self$getRefClass()$fields()), -3L),
-                      FUN = rstan:::dynGet, ifnotfound = NULL,
-                      inherits = TRUE, simplify = FALSE)
+data = function(..., search.env = parent.env(.self), inherits.env = FALSE) {
+  fields <- tail(names(.self$getRefClass()$fields()), -3L)
+  if (nargs() == 0 || (nargs() == 1 && !missing(min.frame))) {
+    dotlist <- mget(fields, envir = search.env, inherits = inherits.env,
+                    ifnotfound = list(function(...) NULL))
+    nms <- names(dotlist)
   }
-  else dotlist <- list(...)
-  nms <- names(dotlist)
-  if (is.null(nms)) nms <- as.character(match.call())[-1]
+  else {
+    dotlist <- list(...)
+    nms <- setdiff(as.character(match.call())[-1], 
+                   c("parent.env", "inherits.env"))
+  }
   for (i in seq_along(dotlist)) if (!is.null(dotlist[[i]])) {
-    .self$field(nms[i], as(dotlist[[i]], class(.self$field(nms[i]))))
+    if (nms[i] %in% fields)
+      .self$field(nms[i], as(dotlist[[i]], class(.self$field(nms[i]))))
+    else 
+      warning(nms[i], " is not declared in the data block of the Stan program")
   }
 },
 # Question: Should build be a method or a standalone function()
