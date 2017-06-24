@@ -476,7 +476,7 @@ setMethod("sampling", "stanmodel",
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
-              .dotlist$cores <- 1L
+              .dotlist$cores <- 0L
               .dotlist$open_progress <- FALSE
               callFun <- function(i) {
                 .dotlist$chain_id <- i
@@ -733,7 +733,7 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv)
-            if (chains > 1 && cores <= 1) throw_sampler_warnings(nfit)
+            if (cores > 0) throw_sampler_warnings(nfit)
             return(nfit)
           }) 
 
