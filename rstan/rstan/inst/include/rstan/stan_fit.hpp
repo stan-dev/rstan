@@ -978,10 +978,10 @@ public:
     return Rcpp::wrap(true);
   }
 
-  stan_fit(SEXP data, SEXP cxxf) :
+  stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
-  model_(data_, &rstan::io::rcout),
-  base_rng(static_cast<boost::uint32_t>(std::time(0))),
+  model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),
+  base_rng(Rcpp::as<boost::uint32_t>(seed)),
   names_(get_param_names(model_)),
   dims_(get_param_dims(model_)),
   num_params_(calc_total_num_params(dims_)),

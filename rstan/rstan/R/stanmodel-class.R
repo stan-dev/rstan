@@ -137,7 +137,7 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             if (is(sampler, "try-error")) {
               message('failed to create the model; variational Bayes not done')
               return(invisible(new_empty_stanfit(object)))
@@ -299,7 +299,7 @@ setMethod("optimizing", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             if (is(sampler, "try-error")) {
               message('failed to create the optimizer; optimization not done') 
               return(invisible(list(stanmodel = object)))
@@ -447,7 +447,7 @@ setMethod("sampling", "stanmodel",
             if (verbose)
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
-            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
             if (is(sampler, "try-error")) {
               message('failed to create the sampler; sampling not done') 
