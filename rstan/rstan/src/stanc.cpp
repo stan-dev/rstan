@@ -20,6 +20,7 @@
 // #include <iostream>
 #include <stan/version.hpp>
 #include <stan/lang/compiler.hpp>
+#include <stan/lang/compile_functions.hpp>
 
 #include <exception>
 #include <iostream>
@@ -105,6 +106,51 @@ SEXP CPP_stanc280(SEXP model_stancode,
                               Rcpp::Named("msg") = Rcpp::List(msgv.begin(), msgv.end()));
   }
 
+  Rcpp::List lst =
+    Rcpp::List::create(Rcpp::Named("status") = SUCCESS_RC,
+                       Rcpp::Named("model_cppname") = mname_,
+                       Rcpp::Named("cppcode") = out.str());
+  SEXP __sexp_result;
+  PROTECT(__sexp_result = lst);
+  UNPROTECT(1);
+  return __sexp_result;
+  END_RCPP
+}
+
+RcppExport SEXP stanfuncs(SEXP model_stancode, SEXP model_name, 
+                          SEXP allow_undefined);
+
+SEXP stanfuncs(SEXP model_stancode, 
+               SEXP model_name, 
+               SEXP allow_undefined) {
+  BEGIN_RCPP;
+  static const int SUCCESS_RC = 0;
+  static const int EXCEPTION_RC = -1;
+  static const int PARSE_FAIL_RC = -2;
+  
+  std::string mcode_ = Rcpp::as<std::string>(model_stancode);
+  std::string mname_ = Rcpp::as<std::string>(model_name);
+  std::vector<std::string> ns_(0);
+  
+  std::stringstream out;
+  std::istringstream in(mcode_);
+  try {
+    bool valid_model
+    = stan::lang::compile_functions(&rstan::io::rcerr,in,out,ns_,
+                                    Rcpp::as<bool>(allow_undefined));
+    if (!valid_model) {
+      return Rcpp::List::create(Rcpp::Named("status") = PARSE_FAIL_RC);
+      
+    }
+  } catch(const std::exception& e) {
+    // REprintf("\nERROR PARSING\n %s\n", e.what());
+    std::string msgstr = e.what();
+    std::vector<std::string> msgv; 
+    split_str_by_newline(msgstr, msgv);
+    return Rcpp::List::create(Rcpp::Named("status") = EXCEPTION_RC,
+                              Rcpp::Named("msg") = Rcpp::List(msgv.begin(), msgv.end()));
+  }
+  
   Rcpp::List lst =
     Rcpp::List::create(Rcpp::Named("status") = SUCCESS_RC,
                        Rcpp::Named("model_cppname") = mname_,
