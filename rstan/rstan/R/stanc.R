@@ -17,26 +17,30 @@
 
 stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE,
-                  allow_undefined = FALSE) {
+                  allow_undefined = FALSE, 
+                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
   if (.Platform$OS.type == "unix" && R.Version()$os == "linux-gnu" &&
       identical(Sys.getenv("RSTUDIO"), "1")) {
         cl <- parallel::makePSOCKcluster(1L, outfile = "")
         on.exit(parallel::stopCluster(cl))
         parallel::clusterEvalQ(cl, Sys.setenv("RSTUDIO" = 0))
-        parallel::clusterExport(cl, c("obfuscate_model_name", "allow_undefined"),
+        parallel::clusterExport(cl, c("obfuscate_model_name", 
+                                      "allow_undefined", "isystem"),
                                 environment())
         if (missing(file)) {
           parallel::clusterExport(cl, "model_code", environment())
           out <- parallel::clusterEvalQ(cl, 
                    rstan::stanc(model_code = model_code,
                                 obfuscate_model_name = obfuscate_model_name,
-                                allow_undefined = allow_undefined))
+                                allow_undefined = allow_undefined,
+                                isystem = isystem))
         }
         else {
           parallel::clusterExport(cl, "file", environment())
           out <- parallel::clusterEvalQ(cl, 
                   rstan::stanc(file, obfuscate_model_name = obfuscate_model_name,
-                               allow_undefined = allow_undefined))
+                               allow_undefined = allow_undefined,
+                               isystem = isystem))
         }
   }
   
@@ -55,7 +59,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
-  r <- .Call("CPP_stanc280", model_code, model_cppname, allow_undefined)
+  r <- .Call("CPP_stanc280", model_code, model_cppname, allow_undefined, isystem)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
