@@ -978,6 +978,26 @@ public:
     return Rcpp::wrap(true);
   }
 
+  stan_fit(SEXP data, SEXP cxxf) :
+  data_(data),
+  model_(data_, &rstan::io::rcout),
+  base_rng(static_cast<boost::uint32_t>(std::time(0))),
+  names_(get_param_names(model_)),
+  dims_(get_param_dims(model_)),
+  num_params_(calc_total_num_params(dims_)),
+  names_oi_(names_),
+  dims_oi_(dims_),
+  num_params2_(num_params_),
+  cxxfunction(cxxf)
+  {
+    for (size_t j = 0; j < num_params2_ - 1; j++)
+      names_oi_tidx_.push_back(j);
+    names_oi_tidx_.push_back(-1); // lp__
+    calc_starts(dims_oi_, starts_oi_);
+    get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
+    // get_all_indices_col2row(dims_, midx_for_col2row);
+  }
+  
   stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
   model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),

@@ -139,9 +139,13 @@ setMethod("vb", "stanmodel",
             cxxfun <- grab_cxxfun(object@dso)
             sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             if (is(sampler, "try-error")) {
-              message('failed to create the model; variational Bayes not done')
-              return(invisible(new_empty_stanfit(object)))
-            }
+              message('trying deprecated constructor; please alert package maintainer')
+              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the model; variational Bayes not done')
+                return(invisible(new_empty_stanfit(object)))
+              }
+            } 
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) init <- init()
             if (!is.list(init) && !is.character(init)) {
@@ -301,8 +305,12 @@ setMethod("optimizing", "stanmodel",
             cxxfun <- grab_cxxfun(object@dso)
             sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             if (is(sampler, "try-error")) {
-              message('failed to create the optimizer; optimization not done') 
-              return(invisible(list(stanmodel = object)))
+              message('trying deprecated constructor; please alert package maintainer')
+              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the optimizer; optimization not done') 
+                return(invisible(list(stanmodel = object)))
+              }
             } 
             m_pars <- sampler$param_names() 
             idx_wo_lp <- which(m_pars != "lp__")
@@ -447,11 +455,15 @@ setMethod("sampling", "stanmodel",
             if (verbose)
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
             if (is(sampler, "try-error")) {
-              message('failed to create the sampler; sampling not done') 
-              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              message('trying deprecated constructor; please alert package maintainer')
+              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
             } 
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
             m_pars = sampler$param_names()
