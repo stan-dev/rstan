@@ -1,5 +1,5 @@
 PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Icvodes/include/
 SOURCES1 = cvodes/src/cvodes/cvodes.c cvodes/src/cvodes/cvodes_io.c cvodes/src/cvodes/cvodea.c cvodes/src/cvodes/cvodea_io.c cvodes/src/cvodes/cvodes_direct.c cvodes/src/cvodes/cvodes_band.c cvodes/src/cvodes/cvodes_dense.c cvodes/src/cvodes/cvodes_diag.c cvodes/src/cvodes/cvodes_spils.c cvodes/src/cvodes/cvodes_spbcgs.c cvodes/src/cvodes/cvodes_spgmr.c cvodes/src/cvodes/cvodes_sptfqmr.c cvodes/src/cvodes/cvodes_sparse.c cvodes/src/cvodes/cvodes_bandpre.c cvodes/src/cvodes/cvodes_bbdpre.c
 SOURCES2 =  $(SOURCES1) cvodes/src/sundials/sundials_band.c cvodes/src/sundials/sundials_direct.c cvodes/src/sundials/sundials_math.c cvodes/src/sundials/sundials_pcg.c cvodes/src/sundials/sundials_spbcgs.c  cvodes/src/sundials/sundials_spgmr.c cvodes/src/sundials/sundials_dense.c cvodes/src/sundials/sundials_iterative.c cvodes/src/sundials/sundials_nvector.c cvodes/src/sundials/sundials_sparse.c cvodes/src/sundials/sundials_spfgmr.c cvodes/src/sundials/sundials_sptfqmr.c
-SOURCES = $(SOURCES2) cvodes/src/nvec_ser/nvector_serial.c
+SOURCES = $(SOURCES2) cvodes/src/nvec_ser/nvector_serial.c init.c
 OBJECTS = $(SOURCES:.c=.o)
