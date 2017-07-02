@@ -1,3 +1,11 @@
+Sun July 2, 2017 (2.16.1)
+1. Bug fixes
+  * Now throws warnings even if there is only one chain
+  * get_inits() handles its iter argument more correctly
+2. Features
+  * expose_stan_functions() now has a ... argument allowing things to be
+    passed to Rcpp::sourceCpp()
+    
 Wed April 19, 2017 (2.15.1)
 1. Bug fixes
   * expose_stan_functions() works with functions that return real containers
