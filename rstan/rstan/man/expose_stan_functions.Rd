@@ -13,7 +13,7 @@ Expose user-defined Stan functions to \R for testing and simulation
   quantities} block of a Stan program.
 }
 \usage{
-  expose_stan_functions(stanmodel, env = globalenv())
+  expose_stan_functions(stanmodel, ...)
 }
 
 \arguments{
@@ -23,11 +23,8 @@ Expose user-defined Stan functions to \R for testing and simulation
     program (\code{.stan} file). In any of these cases, the underlying Stan 
     program should contain a non-empty \code{functions} block.
   }
- \item{env}{
-   An \code{\link[base]{environment}} passed to the \code{env} argument of 
-   \code{\link[Rcpp]{sourceCpp}}. By default, the global environment
-   is used. Specifying an environment that has the empty environment as its 
-   parent will result in an error.
+ \item{\dots}{
+   Further arguments passed to \code{\link[Rcpp]{sourceCpp}}.
   }
 }
 
@@ -75,7 +72,6 @@ Expose user-defined Stan functions to \R for testing and simulation
       return x <= 2 ? 1 : fibonacci(x - 1) + fibonacci(x - 2);
     }
   }
-  model {}
   '
   cppcode <- stanc(model_code = mc, model_name = "Fibonacci")
   \dontrun{
