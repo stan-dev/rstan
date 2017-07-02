@@ -122,7 +122,7 @@ test_init_zero_gradient_failure <- function() {
   model_cppname <- sm@model_cpp$model_cppname
   sf_mod <- eval(call("$", mod, paste0('stan_fit4', model_cppname)))
   dat <- list()
-  sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
+  sampler <- new(sf_mod, dat, 12345, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
   errmsg <- geterrmessage()
@@ -145,7 +145,7 @@ test_init_zero_exception_inf_lp <- function() {
   model_cppname <- sm@model_cpp$model_cppname
   sf_mod <- eval(call("$", mod, paste0('stan_fit4', model_cppname)))
   dat <- list()
-  sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
+  sampler <- new(sf_mod, dat, 12345, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
   errmsg <- geterrmessage()
@@ -167,7 +167,7 @@ test_init_zero_exception_inf_grad <- function() {
   model_cppname <- sm@model_cpp$model_cppname
   sf_mod <- eval(call("$", mod, paste0('stan_fit4', model_cppname)))
   dat <- list()
-  sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
+  sampler <- new(sf_mod, dat, 12345, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
   errmsg <- geterrmessage()
