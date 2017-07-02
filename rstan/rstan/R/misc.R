@@ -1650,8 +1650,11 @@ throw_sampler_warnings <- function(object) {
   if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
     E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
     threshold <- 0.3
-    EBFMI <- get_num_upars(object) / apply(E, 2, var)
-    n_e <- sum(EBFMI < threshold, na.rm = TRUE)
+    if (nrow(E) > 1) {
+      EBFMI <- get_num_upars(object) / apply(E, 2, var)
+      n_e <- sum(EBFMI < threshold, na.rm = TRUE)
+    }
+    else n_e <- 0L
     if (n_e > 0)
       warning("There were ", n_e, 
               " chains where the estimated Bayesian Fraction of Missing Information",
