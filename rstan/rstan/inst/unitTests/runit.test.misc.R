@@ -279,10 +279,10 @@ test_mklist <- function() {
   checkEquals(rstan:::mklist('p')$p, 4, checkNames = FALSE)
 } 
 
-test_makeconf_path <- function() {
-  p <- makeconf_path()  
-  checkTrue(file.exists(makeconf_path()))
-} 
+#test_makeconf_path <- function() {
+#  p <- makeconf_path()  
+#  checkTrue(file.exists(makeconf_path()))
+#} 
 
 test_config_argss <- function() {
   # (chains, iter, warmup, thin, init, seed, sample_file, ...)
