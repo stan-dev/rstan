@@ -1375,7 +1375,7 @@ boost_url <- function() {"http://www.boost.org/users/download/"}
 
 makeconf_path <- function() {
   RMU <- Sys.getenv("R_MAKEVARS_USER")
-  if (RMU != "") return(RMU)
+  if (!is.na(RMU) && RMU != "") return(RMU)
   arch <- .Platform$r_arch
   if (arch == '')
     return(file.path(R.home(component = 'etc'), 'Makeconf'))
