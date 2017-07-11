@@ -6,6 +6,7 @@ services:
 cache: 
   apt: true
   ccache: true
+  packages: true
   directories:
     - $HOME/.ccache
     - $HOME/.m2
