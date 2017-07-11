@@ -182,10 +182,10 @@ stan_model <- function(file,
   else if(isTRUE(auto_write)) {
     file <- gsub("stan$", "rds", file)
     if (file.exists(file)) {
-      rds <- readRDS(file)
+      rds <- try(readRDS(file), silent = TRUE)
       if (!is(rds, "stanmodel"))
         warning(rds, " exists but is not a 'stanmodel' so not overwriting")
-      saveRDS(obj, file = file)
+      else saveRDS(obj, file = file)
     }
     else saveRDS(obj, file = file)
   }
