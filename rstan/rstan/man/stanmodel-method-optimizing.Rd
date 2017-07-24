@@ -48,7 +48,10 @@
     \code{"12345"}, which is converted to integer.}
     
   \item{init}{Initial values specification. See the detailed documentation for 
-    the init argument in \code{\link{stan}}.}
+    the \code{init} argument in \code{\link{stan}} with one exception. If specifying inits  
+    using a list then only a single named list of values should be provided.
+    For example, to initialize a parameter \code{alpha} to \code{value1} and 
+    \code{beta} to \code{value2} you can specify \code{list(alpha = value1, beta = value2)}.}
     
   \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
     the data will be preprocessed; otherwise not.
