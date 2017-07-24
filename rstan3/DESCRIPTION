@@ -10,7 +10,7 @@ Description: This is a preview of version 3.x of the rstan package. Do not use i
 License: GPL (>=3)
 Imports:
     Rcpp (>= 0.12.0),
-    rstan (>= 2.15.1),
+    rstan (>= 2.16.2),
     sourcetools,
     stats,
     stats4,

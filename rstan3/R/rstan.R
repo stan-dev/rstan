@@ -78,34 +78,29 @@
 #' The Stan language supports the several types of objects. These same types are now
 #' available in \R via S4 classes, as documented by the \code{\link{StanType-class}}.
 #' 
-#' @section Step 1 --- Compile your Stan program:
+#' @section Step 1 --- Build your Stan program:
 #' Either pass a file path to the \code{file} argument of the 
 #' \code{\link{stan_config}} constructor or pass specify the \code{mode_code}
-#' argument. For example, \code{config <- stan_config(file = "MyStanFile.stan")} 
+#' argument. For example, \code{post <- stan_build(file = "MyStanFile.stan")} 
 #' would locate a file called MyStanFile.stan in the working directory on the 
 #' hard disk. If the \code{file} argument is unspecified, a dialogue box will
 #' open (in \code{\link[base]{interactive}} mode) that will prompt you to a file
 #' on your hard disk. An illustration of the \code{model_code} argument is given  
 #' in the examples section below. Either approach will cause the Stan syntax to
 #' be parsed to C++ and (if successful) compiled, which may take a considerable 
-#' amount of time. This will create an object of \code{\link{StanConfig-class}}.
+#' amount of time. This will create an object of \code{\link{StanModule-class}}.
 #' 
-#' @section Step 2 --- Prepare to estimate the parameters of your model:
-#' First, specify what is being passed from \R to the \code{data} block of the
-#' Stan program using the \code{$data} method for an object or 
-#' \code{\link{StanConfig-class}}.These \R objects can either be specified by 
-#' name or the \code{$data} methodcan be called without any arguments to 
-#' \code{\link[base]{dynGet}} them from the inherited 
-#' \code{\link[base]{environment}}(s) that the object of
-#' \code{\link{StanProgram-class}} was created in.
+#' By default \code{stan_build} will look in the calling environment for R 
+#' objects named in the data block of the Stan program and will use them to
+#' instantiate the C++ object that ultimately estimates the unknown parameters.
+#' However, you can (and should) specify these arguments explicitly when calling
+#' \code{stan_build} as illustrated in the example below. If the R objects have
+#' the same names as the Stan objects, then you can simply pass them. Otherwise,
+#' use the \code{tag = object} R syntax as for any other \code{\link{list}},
+#' where \code{tag} is the name of the object in the data block of the Stan
+#' program.
 #' 
-#' Second, once the objects in the \code{data} block of the Stan program have
-#' been fully specified, call the \code{$build} method to pass them to the C++
-#' constructor and instantiate a Stan model object, which in \R is represented
-#' as a \pkg{Rcpp} \code{\link[Rcpp]{Module}} that is contained within an object
-#' of \code{\link{StanModule-class}}.
-#' 
-#' @section Step 3 --- Estimate the unknowns your model:
+#' @section Step 2 --- Estimate the unknowns your model:
 #' There are a variety of methods for an object of \code{\link{StanModule-class}}
 #' that can be invoked to estimate the unknowns of your model in various ways.
 #' The preferred way is to draw from the posterior distribution using Markov 
@@ -131,7 +126,7 @@
 #' the corresponding methods, which are documented with the 
 #' \code{\link{StanModule-class}}.
 #'  
-#' @section Step 4 --- Diagnose any problems:
+#' @section Step 3 --- Diagnose any problems:
 #' The best way to diagnose problems with MCMC is to call the 
 #' \code{\link[shinyStan]{launch_shinystan}} function in the 
 #' \pkg{shinyStan} package, but this requires user interactivity. Many
@@ -144,7 +139,7 @@
 #' # create data in R
 #' J <- 8                                     # number of schools
 #' y <- c(28,  8, -3,  7, -1,  1, 18, 12)     # estimated treatment effects
-#' sigma <- c(15, 10, 16, 11,  9, 11, 10, 18) # estimated standard deviations
+#' sigma <- c(15, 10, 16, 11,  9, 11, 10, 18) # estimated standard errors
 #' 
 #' # Step 0 --- Write a Stan program 
 #' mc <- '
@@ -169,22 +164,18 @@
 #' }
 #' '
 #' \donttest{
-#' # Step 1 --- Compile your Stan program
-#' # a path to file is preferable but a character works
-#' config <- stan_config(model_code = mc, model_name = "8schools")
+#' # Step 1 --- Build your Stan program
+#' # a path to file is preferable but a character vector works
+#' post <- stan_build(model_code = mc, model_name = "8schools", seed = 12345,
+#'                    data = list(J = J, y = y, sigma = sigma))
 #'                                           
-#' # Step 2 --- Prepare to estimate the parameters of your model
-#' config$data()            # grabs J, y, and sigma from .GlobalEnv
-#' config$data(J, y, sigma) # has the same effect as the previous line
-#' module <- config$build(seed = 12345)
+#' # Step 2 --- Estimate the unknowns ofyour model
+#' post$help("hmc_nuts_diag_e_adapt") # this is what is called by $sample()
+#' draws <- post$sample()             # draws from posterior distribution
 #' 
-#' # Step 3 --- Estimate the unknowns ofyour model
-#' module$help("hmc_nuts_diag_e_adapt") # this is what is called by $sample()
-#' post <- module$sample()              # draws from posterior distribution
-#' 
-#' # Step 4 --- Diagnose any problems
-#' post           # shows basic characteristics of the posterior distribution
-#' post$summary() # shows more details about the posterior distribution
+#' # Step 3 --- Diagnose any problems
+#' draws           # shows basic characteristics of the posterior distribution
+#' draws$summary() # shows more details about the posterior distribution
 #' }
 #' @docType package
 #' @name rstan3
