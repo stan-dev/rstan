@@ -69,7 +69,7 @@
   \code{\linkS4class{stanfit}} for information on the fitted model objects.
   \item \url{https://github.com/stan-dev/rstan/issues/} to submit a bug
   report or feature request.
-  \item \url{https://groups.google.com/forum/#!forum/stan-users/} to ask a 
+  \item \url{http://discourse.mc-stan.org} to ask a 
   question on the Stan-users forum.
 }
 }
