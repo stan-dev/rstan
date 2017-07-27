@@ -24,3 +24,4 @@ Rbuildignore.*$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 revdep
+^_pkgdown\.yml$
