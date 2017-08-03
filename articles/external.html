@@ -42,19 +42,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="http://mc-stan.org/users/interfaces/rstan.html">rstan</a>
+      <a href="http://mc-stan.org/rstanarm">rstanarm</a>
     </li>
     <li>
-      <a href="http://mc-stan.org/users/interfaces/rstanarm.html">rstanarm</a>
+      <a href="http://mc-stan.org/bayesplot">bayesplot</a>
     </li>
     <li>
-      <a href="http://mc-stan.org/users/interfaces/bayesplot.html">bayesplot</a>
+      <a href="http://mc-stan.org/shinystan">shinystan</a>
     </li>
     <li>
-      <a href="http://mc-stan.org/users/interfaces/shinystan.html">shinystan</a>
+      <a href="http://mc-stan.org/loo">loo</a>
     </li>
     <li>
-      <a href="http://mc-stan.org/users/interfaces/rstantools.html">rstantools</a>
+      <a href="http://mc-stan.org/rstantools">rstantools</a>
     </li>
   </ul>
 </li>
@@ -64,20 +64,20 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="http://discourse.mc-stan.org/">
-    <span class="fa fa-users"></span>
-     
-  </a>
-</li>
-<li>
   <a href="https://twitter.com/mcmc_stan">
     <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/stan-dev/loo">
+  <a href="https://github.com/stan-dev/rstan">
     <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://discourse.mc-stan.org/">
+    <span class="fa fa-users"></span>
      
   </a>
 </li>
@@ -96,7 +96,7 @@
       <h1>Interfacing with External C++ Code</h1>
                         <h4 class="author">Stan Development Team</h4>
             
-            <h4 class="date">2017-07-26</h4>
+            <h4 class="date">2017-08-03</h4>
           </div>
 
     
@@ -130,7 +130,7 @@ model {} // use the complicated() function somehow</code></pre>
 <pre><code>## SYNTAX ERROR, MESSAGE(S) FROM PARSER:</code></pre>
 <pre><code>## </code></pre>
 <pre><code>## Function declared, but not defined. Function name=fib</code></pre>
-<pre><code>##   error in 'model14f077d303403_parser_error' at line 2, column 30</code></pre>
+<pre><code>##   error in 'model40095e707f2_parser_error' at line 2, column 30</code></pre>
 <pre><code>##   -------------------------------------------------</code></pre>
 <pre><code>##      1:</code></pre>
 <pre><code>##      2: functions { int fib(int n); }</code></pre>
@@ -235,7 +235,7 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 ## 
 ## #include &lt;stan/model/model_header.hpp&gt;
 ## 
-## namespace model14f0716e6ff5_mc_namespace {
+## namespace model400923923b8_mc_namespace {
 ## 
 ## using std::istream;
 ## using std::string;
@@ -254,8 +254,8 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 ## 
 ## stan::io::program_reader prog_reader__() {
 ##     stan::io::program_reader reader;
-##     reader.add_event(0, 0, "start", "model14f0716e6ff5_mc");
-##     reader.add_event(3, 3, "end", "model14f0716e6ff5_mc");
+##     reader.add_event(0, 0, "start", "model400923923b8_mc");
+##     reader.add_event(3, 3, "end", "model400923923b8_mc");
 ##     return reader;
 ## }
 ## 
@@ -264,7 +264,7 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 ## besselK(const T0__&amp; v,
 ##             const T1__&amp; z, std::ostream* pstream__);
 ## 
-## class model14f0716e6ff5_mc : public pro [... truncated]</code></pre>
+## class model400923923b8_mc : public prob_gr [... truncated]</code></pre>
 <p>to see what function signature needed to be written for besselK.hpp.</p>
 <p>When using external C++ code, care must be taken to ensure that the function is numerically stable over a wide range of floating point numbers. Indeed, in the case of the <code>besselK</code> function, the derivative with respect to the order argument (<code>v</code>) may not be sufficiently stable numerically. In general, it is best to strip the underlying double-precision numbers out of Stan’s custom scalar types, evaluate the desired function, and then calculate the necessary derivatives analytically in an object whose class that inherits from the <code>vari</code> class in Stan. The details of doing so are beyond the scope of this vignette but are discussed in the links above. Once you go to the trouble of writing such a C++ function, we would welcome a pull request on GitHub to include your C++ function in the Stan Math Library for everyone to benefit from, provided that it can be licensed under the 3-clause BSD license and its use is not overly-specific to your particular Stan program.</p>
 <p>The Stan Math Library is compliant with the C++11 standard but currently does not utilize any features that were introduced by the C++11 standard nor does it require a compiler that is compliant with the C++11 standard. However, almost any modern C++ compiler is compliant, so you can use (at least some subset of the) features that were introduced by the C++11 standard in external C++ code and your Stan program should compile (perhaps with some warnings). In particular, you may want to use the <code>auto</code> keyword to avoid having to learn a lot of the messy type-promotion syntax used in the Stan Math Library and the rules for what kind of object is returned by various mathematical operations. For example, under the C++11 standard, the <code>besselK.hpp</code> file could be written as</p>
