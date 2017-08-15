@@ -10,8 +10,8 @@ check_hmc_diagnostics <- function(object) {
 
 # Check transitions that ended with a divergence
 #
-# @param object stanfit object
-# @return nothing, just prints the number (and percentage) of iterations that
+# @param object A stanfit object.
+# @return nothing, just prints the number (and percentage) of iterations that 
 #   ended with a divergence and, if any, suggests increasing adapt_delta.
 #
 check_divergences <- function(object) {
@@ -34,8 +34,8 @@ check_divergences <- function(object) {
 
 # Check transitions that ended prematurely due to maximum tree depth limit
 #
-# @param object stanfit object
-# @return nothing, just prints the number (and percentage) of iterations that
+# @param object A stanfit object.
+# @return Nothing, just prints the number (and percentage) of iterations that
 #   saturated the max treedepth and, if any, suggests increasing max_treedepth.
 #
 check_treedepth <- function(object) {
@@ -64,8 +64,9 @@ check_treedepth <- function(object) {
 
 # Check the energy Bayesian fraction of missing information (E-BFMI)
 #
-# @param object stanfit object
-# @return nothing, just prints
+# @param object A stanfit object.
+# @return Nothing, just prints E-BFMI for chains with low E-BFMI and suggests 
+#   reparameterizing.
 #
 check_energy <- function(object) {
   energies_by_chain <- sampler_param_matrix(object, "energy__")
@@ -87,14 +88,21 @@ check_energy <- function(object) {
 }
 
 
-# return a single vector of length chains * iter (post-warmup)
+# internal ----------------------------------------------------------------
+
+# Extract single sampler parameters in conventient form
+#
+# @param object A stanfit object.
+# @param param The name of a single sampler parameter (e.g. "divergent__").
+# @return sampler_param_vector returns a single vector of length chains * iters
+#   (post-warmup). sampler_param_matrix returns an iters (post-warmup) by chains
+#   matrix.
+#
 sampler_param_vector <- function(object, param) {
   stopifnot(length(param) == 1, is.character(param))
   sampler_params <- get_sampler_params(object, inc_warmup = FALSE)
   do.call(rbind, sampler_params)[, param]
 }
-
-# return an iter by chains matrix
 sampler_param_matrix <- function(object, param) {
   stopifnot(length(param) == 1, is.character(param))
   sampler_params <- get_sampler_params(object, inc_warmup=FALSE)
