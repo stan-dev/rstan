@@ -1,3 +1,9 @@
+
+# Check divergences, treedepth, and energy diagnostics
+#
+# @param object A stanfit object.
+# @return Nothing, just prints the output from the functions it calls internally.
+#
 check_hmc_diagnostics <- function(object) {
   cat("\nDivergences:\n")
     check_divergences(object)

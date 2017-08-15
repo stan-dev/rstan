@@ -12,9 +12,15 @@ The \code{check_hmc_diagnostics} function calls the other functions internally
 and prints an overall summary, but the other functions can also be called 
 directly: 
 \code{check_divergences} prints the number (and percentage) of iterations that
-ended with a divergence, \code{check_treedepth} prints the number (and percentage) of iterations that saturated the max treedepth, and \code{check_energy} 
-prints E-BFMI values for each chain for which E-BFMI is less than 0.2.
-} 
+ended with a divergence, \code{check_treedepth} prints the number 
+(and percentage) of iterations that saturated the max treedepth, 
+and \code{check_energy} prints E-BFMI values for each chain for which E-BFMI 
+is less than 0.2.
+
+Brief explanations of some of the problems detected by these diagnostics can
+be found at \url{http://mc-stan.org/misc/warnings.html}. For more depth see
+Betancourt (2017).
+}
  
 \usage{
 check_hmc_diagnostics(object)
