@@ -137,7 +137,8 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun),
+                           silent = TRUE)
             if (is(sampler, "try-error")) {
               message('trying deprecated constructor; please alert package maintainer')
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
@@ -303,7 +304,8 @@ setMethod("optimizing", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun),
+                           silent = TRUE)
             if (is(sampler, "try-error")) {
               message('trying deprecated constructor; please alert package maintainer')
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
@@ -456,7 +458,8 @@ setMethod("sampling", "stanmodel",
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
             sfmiscenv <- new.env(parent = emptyenv())
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun),
+                           silent = TRUE)
             if (is(sampler, "try-error")) {
               message('trying deprecated constructor; please alert package maintainer')
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
