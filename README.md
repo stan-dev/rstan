@@ -14,7 +14,7 @@ Home Page
 ---------
 RStan's home page, with links to everything you'll need to use RStan and Stan is:
 
-<http://mc-stan.org/>
+<http://mc-stan.org/rstan>
 
 
 RStan Getting Started
