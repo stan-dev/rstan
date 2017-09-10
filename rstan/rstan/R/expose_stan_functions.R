@@ -259,13 +259,19 @@ expose_stan_functions <- function(stanmodel, ...) {
   return(invisible(compiled$functions))
 }
 
-# This does not work yet
 expose_stan_functions <- function(file, ...) {
   model_code <- get_model_strcode(file, NULL)
   model_cppname <- legitimate_model_name(basename(file), obfuscate_name = TRUE)
   r <- .Call("stanfuncs", model_code, model_cppname, allow_undefined = FALSE)
   code <- sub("_header.hpp>\n", "_header.hpp>\n#include <stan/model/model_header.hpp>", 
               r$cppcode, fixed = TRUE)
+  code <- sub("// [[Rcpp::export]]", "", code, fixed = TRUE)
+  code <- sub("// [[Rcpp::depends(rstan)]]", 
+              "// [[Rcpp::depends(rstan)]]\n#include <Rcpp.h>\n#include <RcppEigen.h>",
+              code, fixed = TRUE)
+  code <- gsub("pstream__);", "&Rcpp::Rcout);", code, fixed = TRUE)
+  code <- gsub(", std::ostream* pstream__ = 0){", "){", code, fixed = TRUE)
+  code <- gsub("(std::ostream* pstream__ = 0){", "(){", code, fixed = TRUE)
   compiled <- Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)
   return(invisible(compiled$functions))
 }
