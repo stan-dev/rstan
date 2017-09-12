@@ -3,6 +3,8 @@
 <img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo.png" width=200 alt="Stan Logo"/>
 </a>
 
+# RStan
+
 [![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
 [![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=blue)](http://cran.rstudio.com/package=rstan)
@@ -10,28 +12,31 @@
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 
 
-## Home Page
+### Quick links
 
-RStan's home page is [mc-stan.org/rstan](http://mc-stan.org/rstan).
+* [mc-stan.org/rstan](http://mc-stan.org/rstan) (online RStan documentation, vignettes)
+* [Stan documentation](http://mc-stan.org/users/documentation/) (language manual, case studies, and more)
+* [Ask a question](http://discourse.mc-stan.org) (Stan Forums on Discourse)
+* [Open an issue](https://github.com/stan-dev/rstan/issues) (GitHub issues for bug reports, feature requests)
 
 
-## Getting Started
+### Getting Started
 
 For installation instructions and other tips on getting started with RStan see
 
 * [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
 
-Several Stan users have also contributed translations:
+Several Stan users have also contributed translations of the _RStan Getting Started_ page:
 
 * [RStan Getting Started (French)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Français))
 * [RStan Getting Started (Japanese)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Japanese))
 
 
-## Source Repository
+### Source Repository
 
-RStan's source-code repository is hosted here on GitHub. Stan's source repository is defined as a submodule. 
+RStan's source code repository is hosted here on GitHub. Stan's source repository is defined as a submodule. 
 See [how to work with stan submodule in rstan repo](https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule-in-rstan-repo%3F).
 
-## Licensing
+### Licensing
 
 RStan is licensed under GPLv3.  The Stan code packaged in RStan is licensed under new BSD.   
