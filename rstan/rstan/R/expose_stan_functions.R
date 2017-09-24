@@ -18,12 +18,8 @@
 expose_stan_functions_hacks <- function(code) {
   code <- sub("_header.hpp>\n", "_header.hpp>\n#include <stan/model/model_header.hpp>", 
               code, fixed = TRUE)
-  #code <- sub("// [[Rcpp::export]]", "", code, fixed = TRUE)
   code <- sub("// [[Rcpp::depends(rstan)]]", 
-              "// [[Rcpp::depends(rstan)]]\n#include <exporter.h>\n#include <Rcpp.h>\n#include <RcppEigen.h>", code, fixed = TRUE)
-  code <- gsub("pstream__);", "&Rcpp::Rcout);", code, fixed = TRUE)
-  code <- gsub(", std::ostream* pstream__ = 0){", "){", code, fixed = TRUE)
-  code <- gsub("(std::ostream* pstream__ = 0){", "(){", code, fixed = TRUE)
+              "// [[Rcpp::depends(rstan)]]\n#include <exporter.h>\n#include <RcppEigen.h>", code, fixed = TRUE)
   return(code)
 }
 
