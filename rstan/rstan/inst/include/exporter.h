@@ -10,6 +10,7 @@ namespace Rcpp {
   template <> boost::ecuyer1988& as(SEXP ptr_RNG);
   template <> std::ostream* as(SEXP ptr_stream);
   namespace traits {
+    template <> class Exporter<boost::ecuyer1988&>;
     template <> struct input_parameter<boost::ecuyer1988&>;
   }
 }
@@ -36,27 +37,37 @@ namespace Rcpp {
     return Xptr_stream;
   }
 
-  template<> boost::ecuyer1988 as(SEXP ptr_RNG) {
+  template <> boost::ecuyer1988 as(SEXP ptr_RNG) {
     Rcpp::XPtr<boost::ecuyer1988> ptr(ptr_RNG);
     boost::ecuyer1988& RNG = *ptr; 
  		return RNG;
   }
 
-  template<> boost::ecuyer1988& as(SEXP ptr_RNG) {
+  template <> boost::ecuyer1988& as(SEXP ptr_RNG) {
     Rcpp::XPtr<boost::ecuyer1988> ptr(ptr_RNG);
     boost::ecuyer1988& RNG = *ptr; 
  		return RNG;
   }
 
-  template<> std::ostream* as(SEXP ptr_stream) {
+  template <> std::ostream* as(SEXP ptr_stream) {
     Rcpp::XPtr<std::ostream> ptr(ptr_stream);
     return ptr;
   }
 
+
   namespace traits {
+    template <> class Exporter<boost::ecuyer1988&> {
+    public:
+      Exporter( SEXP x ) : t(Rcpp::as<boost::ecuyer1988&>(x)) {}
+      inline boost::ecuyer1988& get(){ return t ; }
+    private:
+      boost::ecuyer1988& t ;
+    } ; 
+
     template <>
     struct input_parameter<boost::ecuyer1988&> {
-      typedef typename Rcpp::ReferenceInputParameter<boost::ecuyer1988&> type ;
+      typedef typename Rcpp::ConstReferenceInputParameter<boost::ecuyer1988&> type ;
+      //typedef typename boost::ecuyer1988& type ;
     };
   }
 
