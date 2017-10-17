@@ -56,7 +56,8 @@ export(
   check_divergences, 
   check_treedepth, 
   check_energy,
-  get_rng
+  get_rng,
+  get_stream
 )
 
 exportClasses(

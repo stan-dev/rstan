@@ -45,6 +45,7 @@ SEXP stanfuncs(SEXP model_stancode, SEXP model_name, SEXP allow_undefined);
 SEXP CPP_stan_version();
 SEXP extract_sparse_components(SEXP A);
 SEXP get_rng(SEXP seed);
+SEXP get_stream();
 
 #ifdef __cplusplus
 }
@@ -66,6 +67,7 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(CPP_stan_version, 0),
   CALLDEF(extract_sparse_components, 1),
   CALLDEF(get_rng, 1),
+  CALLDEF(get_stream, 0),
   {NULL, NULL, 0}
 };
 
