@@ -57,7 +57,8 @@ export(
   check_treedepth, 
   check_energy,
   get_rng,
-  get_stream
+  get_stream,
+  RNG, OUT
 )
 
 exportClasses(

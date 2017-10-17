@@ -16,9 +16,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
+RNG <- 0
+OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
+  assignInMyNamespace("RNG", value = get_rng(0))
+  assignInMyNamespace("OUT", value = get_stream())
 }
 
 .onAttach <- function(...) {
@@ -31,4 +35,3 @@ rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
                         "rstan_options(auto_write = TRUE)\n",
                         "options(mc.cores = parallel::detectCores())")
 } 
-
