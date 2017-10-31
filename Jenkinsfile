@@ -3,7 +3,10 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
-                sh "R CMD install.packages('knitr', 'ggplot2', 'StanHeaders', 'inline', 'gridExtra', 'Rcpp', 'RcppEigen', 'BH')"
+                sh """
+                    echo "install.packages('knitr', 'ggplot2', 'StanHeaders', 'inline', 'gridExtra', 'Rcpp', 'RcppEigen', 'BH')" > install.R
+                    R CMD BATCH install.R
+                """
             }
         }
         stage('Build') {
