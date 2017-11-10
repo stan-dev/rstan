@@ -4,6 +4,7 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh """
+                    R -e 'install.packages("devtools")'
                     R -e 'update(devtools::package_deps("rstan"))'
                 """
             }
