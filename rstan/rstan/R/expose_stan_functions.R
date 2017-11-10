@@ -28,8 +28,10 @@ expose_stan_functions <- function(stanmodel, ...) {
   }
   else if(is.character(stanmodel)) {
     if(length(stanmodel) == 1) 
-      stanmodel <- stanc(file = stanmodel, allow_undefined = TRUE)$cppcode
-    else stanmodel <- stanc(model_code = stanmodel, allow_undefined = TRUE)$cppcode
+      stanmodel <- stanc(file = stanmodel, allow_undefined = TRUE,
+                         obfuscate_model_name = FALSE)$cppcode
+    else stanmodel <- stanc(model_code = stanmodel, allow_undefined = TRUE,
+                            obfuscate_model_name = FALSE)$cppcode
   }
   else stop("'stanmodel' is not a valid object")
   
