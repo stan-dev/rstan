@@ -28,7 +28,8 @@ rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
   gitrev <- substring(git_head(), 0, 12)
   packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", packaged: ", builddate, ", GitRev: ", gitrev, ")", sep = ""))
   packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
-                        "rstan_options(auto_write = TRUE)\n",
-                        "options(mc.cores = parallel::detectCores())")
+                        "options(mc.cores = parallel::detectCores()).\n",
+                        "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
+                        "rstan_options(auto_write = TRUE)")
 } 
 
