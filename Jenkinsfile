@@ -4,8 +4,7 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh """
-                    echo "install.packages('knitr', 'ggplot2', 'StanHeaders', 'inline', 'gridExtra', 'Rcpp', 'RcppEigen', 'BH')" > install.R
-                    R CMD BATCH install.R
+                    R -e 'update(devtools::package_deps("rstan"))'
                 """
             }
         }
@@ -21,16 +20,23 @@ pipeline {
         stage("Check timings and output") {
             steps {
                 sh """
-                    R CMD check --as-cran --timings rstan_*.tar.gz
-                    cat rstan.Rcheck/00install.out
-                    cat rstan.Rcheck/tests/doRUnit.Rout
+                    R CMD check --as-cran --timings rstan_*.tar.gz || rstan.Rcheck/00install.out
+                """
+            }
+        }
+        stage("Check additional unit tests") {
+            steps {
+                sh """
+                    R CMD INSTALL rstan_*.tar.gz
+                    cd rstan
+                    make test-R
                 """
             }
         }
     }
     post {
         always {
-            warnings consoleParsers: [[parserName: 'GNU C Compiler 4 (gcc)']], failedTotalAll: '0', usePreviousBuildAsReference: false, canRunOnFailed: true
+            warnings consoleParsers: [[parserName: 'GNU C Compiler (gcc)']], failedTotalAll: '0', usePreviousBuildAsReference: false, canRunOnFailed: true
             warnings consoleParsers: [[parserName: 'Clang (LLVM based)']], failedTotalAll: '0', usePreviousBuildAsReference: false, canRunOnFailed: true
             deleteDir()
         }
