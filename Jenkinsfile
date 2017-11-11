@@ -28,7 +28,7 @@ pipeline {
                     R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
                       cat StanHeaders.Rcheck/00install
                     R CMD INSTALL StanHeaders_*.tar.gz
-                    R CMD check --as-cran --timings rstan_*.tar.gz || \
+                    R CMD check --as-cran --timings --run-donttest rstan_*.tar.gz || \
                       cat rstan.Rcheck/00install.out
                 """
             }
