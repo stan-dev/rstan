@@ -14,6 +14,9 @@ pipeline {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
                     export CC=${env.CXX}
+                    cd StanHeaders
+                    git submodule update --init --recursive --remote
+                    cd ..
                     R CMD build StanHeaders
                     R CMD build rstan/rstan
                 """
