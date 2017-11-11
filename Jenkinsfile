@@ -14,6 +14,7 @@ pipeline {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
                     export CC=${env.CXX}
+                    R CMD build StanHeaders
                     R CMD build rstan/rstan
                 """
             }
@@ -21,7 +22,11 @@ pipeline {
         stage("Check timings and output") {
             steps {
                 sh """
-                    R CMD check --as-cran --timings rstan_*.tar.gz || rstan.Rcheck/00install.out
+                    R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
+                      cat StanHeaders.Rcheck/00install
+                    R CMD INSTALL StanHeaders_*.tar.gz
+                    R CMD check --as-cran --timings rstan_*.tar.gz || \
+                      cat rstan.Rcheck/00install.out
                 """
             }
         }
