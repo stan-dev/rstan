@@ -26,10 +26,10 @@ pipeline {
             steps {
                 sh """
                     R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
-                      cat StanHeaders.Rcheck/00install
+                      cat StanHeaders.Rcheck/00check
                     R CMD INSTALL StanHeaders_*.tar.gz
                     R CMD check --as-cran --timings --run-donttest --run-dontrun rstan_*.tar.gz || \
-                      cat rstan.Rcheck/00install.out
+                      cat rstan.Rcheck/00check.out
                 """
             }
         }
