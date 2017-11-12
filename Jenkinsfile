@@ -4,6 +4,8 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
+                    export CC=${env.CXX}
                     R -e 'install.packages("devtools")'
                     R -e 'update(devtools::package_deps("rstan"))'
                     R -e 'install.packages("RInside")'
@@ -39,6 +41,7 @@ pipeline {
         stage("Check additional unit tests") {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     export CC=${env.CXX}
                     R CMD INSTALL rstan_*.tar.gz
                     cd rstan
