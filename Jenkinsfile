@@ -19,7 +19,7 @@ pipeline {
                     git submodule update --init --recursive --remote
                     cd ..
                     R CMD build StanHeaders
-                    R CMD build rstan/rstan
+                    R CMD build --no-build-vignettes rstan/rstan
                 """
             }
         }
