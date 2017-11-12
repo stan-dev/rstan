@@ -5,7 +5,6 @@ pipeline {
             steps {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
-                    export CC=${env.CXX}
                     R -e 'install.packages("devtools")'
                     R -e 'update(devtools::package_deps("rstan"))'
                     R -e 'install.packages("RInside")'
@@ -16,7 +15,6 @@ pipeline {
             steps {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
-                    export CC=${env.CXX}
                     cd StanHeaders
                     git submodule update --init --recursive --remote
                     cd ..
@@ -29,7 +27,6 @@ pipeline {
             steps {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
-                    export CC=${env.CXX}
                     R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
                       cat StanHeaders.Rcheck/00check.log
                     R CMD INSTALL StanHeaders_*.tar.gz
@@ -42,7 +39,6 @@ pipeline {
             steps {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
-                    export CC=${env.CXX}
                     R CMD INSTALL rstan_*.tar.gz
                     cd rstan
                     make test-R || echo "extra unit tests failed"
@@ -54,7 +50,6 @@ pipeline {
             steps {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
-                    export CC=${env.CXX}
                     R -e 'update(devtools::package_deps("rstanarm"))'
                     wget -Nc https://cran.r-project.org/src/contrib/rstanarm_2.15.3.tar.gz
 #                    R CMD check --as-cran --timings --run-donttest --run-dontrun rstanarm_*.tar.gz || \
