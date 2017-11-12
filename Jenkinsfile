@@ -6,6 +6,7 @@ pipeline {
                 sh """
                     R -e 'install.packages("devtools")'
                     R -e 'update(devtools::package_deps("rstan"))'
+                    R -e 'install.packages("RInside")'
                 """
             }
         }
