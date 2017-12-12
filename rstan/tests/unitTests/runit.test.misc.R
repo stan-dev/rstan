@@ -1,11 +1,28 @@
 test_mklist_fun <- function() {
   c <- 4
+  z <- matrix(0, ncol = 2, nrow = 3)
+  x <- list()
+  x[[1]] <- 1:2
+  x[[2]] <- 3:4
+  y <- 3
   fun1 <- function(n) {
     a <- 3
     rstan:::mklist(n)[[n]]
   }
   checkEquals(fun1("a"), 3, checkNames = FALSE)
   checkEquals(fun1("c"), 4, checkNames = FALSE)
+
+  L <- rstan:::mklist(c("y", "z")) # no list
+  checkEquals(L$y, y)
+  checkEquals(L$z, z)
+
+  L <- rstan:::mklist(c("x", "y", "z"))
+  checkEquals(L$x, x)
+  checkEquals(L$y, y)
+  checkEquals(L$z, z)
+
+  L <- rstan:::mklist("x") # only list
+  checkEquals(L$x, x)
 }
 
 test_get_time_from_csv <- function() {
