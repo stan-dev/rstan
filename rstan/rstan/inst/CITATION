@@ -3,14 +3,14 @@ citHeader("To cite RStan in publications use:")
 citEntry(entry = "Misc", 
          title = "{RStan}: the {R} interface to {Stan}",
          author = person(given = "Stan Development Team"),
-         note = paste("R package version", packageVersion('rstan')),
-         year = substr(packageDescription("rstan")$Date, start = 1, stop = 4),
+         note = paste("R package version", meta$Version),
+         year = substr(meta$Date, start = 1, stop = 4),
          url = "http://mc-stan.org/",
          textVersion =
            paste0("Stan Development Team (",
-                  substr(packageDescription("rstan")$Date, start = 1, stop = 4),
+                  substr(meta$Date, start = 1, stop = 4),
                   "). ",
                   title = "RStan: the R interface to Stan. R package version ",
-                  packageVersion('rstan'), ". ",
+                  meta$Version, ". ",
                   "http://mc-stan.org/.")
 )
