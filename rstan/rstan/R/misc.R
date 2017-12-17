@@ -65,6 +65,7 @@ mklist <- function(names) {
   #   Only extracted are modes of numeric and list, which
   #   are enough for stan
 
+  names <- unique(names)
   cenv <- environment()
   for (fn in rev(sys.parents())) {
     env1 <- sys.frame(fn)
@@ -79,8 +80,8 @@ mklist <- function(names) {
       stop(paste("objects ", paste("'", names[na_idx], "'", collapse = ', ', sep = ''),
                  " of mode numeric and list not found", sep = ''))
     if (numf == length(names))  next
-    r <- c(d1[!na_idx1], d2[!na_idx2])
-    names(r) <- names
+    r <- c(d1[!na_idx1], d2[na_idx1])
+    names(r) <- c(names[!na_idx1], names[na_idx1])
     return(r)
   }
   stop(paste("objects ", paste("'", names, "'", collapse = ', ', sep = ''),
