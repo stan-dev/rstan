@@ -24,7 +24,6 @@ rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
 .onAttach <- function(...) {
   rstanLib <- dirname(system.file(package = "rstan"))
   pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
-  builddate <- gsub(';.*$', '', pkgdesc$Packaged)
   gitrev <- substring(git_head(), 0, 12)
   packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", packaged: ", builddate, ", GitRev: ", gitrev, ")", sep = ""))
   packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
