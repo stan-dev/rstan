@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.17.2
-Date: 2017-12-20
+Version: 2.17.3
+Date: 2018-01-15
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -37,11 +37,11 @@ Imports:
 Depends:
     R (>= 3.0.2),
     ggplot2 (>= 2.0.0),
-    StanHeaders (>= 2.17.1)
+    StanHeaders (>= 2.17.2)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     BH (>= 1.65),
-    StanHeaders (>= 2.17.1)
+    StanHeaders (>= 2.17.2)
 Suggests:
     RUnit,
     RcppEigen (>= 0.3.3.3.0),
