@@ -313,7 +313,7 @@ setMethod("optimizing", "stanmodel",
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
               if (is(sampler, "try-error")) {
                 message('failed to create the sampler; sampling not done') 
-                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+                return(invisible(list(stanmodel = object)))
               }
               message('trying deprecated constructor; please alert package maintainer')
             } else {

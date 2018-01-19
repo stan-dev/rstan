@@ -1,3 +1,10 @@
+Fri January 19 2017 (2.17.3)
+1. Bug fixes
+  * Might build on Solaris again
+  * Might propogate exception messages when there are parser errors on a Mac
+  * Propogate error messages when the list of data passed is inconsistent with
+    the data block in a Stan program
+
 Wed December 20 2017 (2.17.2)
 1. Bug fixes
   * Now handles data types consistently when passed by string
@@ -11,7 +18,7 @@ Sun July 2, 2017 (2.16.1)
 2. Features
   * expose_stan_functions() now has a ... argument allowing things to be
     passed to Rcpp::sourceCpp()
-    
+
 Wed April 19, 2017 (2.15.1)
 1. Bug fixes
   * expose_stan_functions() works with functions that return real containers
