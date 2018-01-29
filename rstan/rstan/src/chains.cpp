@@ -346,6 +346,7 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
     acov_t[chain] = acov[chain][1];
   }
   double rho_hat_even = 1;
+  rho_hat_t.push_back(rho_hat_even);
   double rho_hat_odd = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
   rho_hat_t.push_back(rho_hat_odd);
   // Geyer's initial positive sequence
@@ -353,11 +354,11 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
   for (size_t t = 1;
        (t < (n_samples - 2) && (rho_hat_even + rho_hat_odd) >= 0);
        t += 2) {
-    for (int chain = 0; chain < chains; chain++)
-      acov_t(chain) = acov(chain)(t + 1);
+    for (int chain = 0; chain < m; chain++)
+      acov_t[chain] = acov[chain][t + 1];
     rho_hat_even = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
-    for (int chain = 0; chain < chains; chain++)
-      acov_t(chain) = acov(chain)(t + 2);
+    for (int chain = 0; chain < m; chain++)
+      acov_t[chain] = acov[chain][t + 2];
     rho_hat_odd = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
     if ((rho_hat_even + rho_hat_odd) >= 0) {
       rho_hat_t.push_back(rho_hat_even);
@@ -368,14 +369,14 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
   // Geyer's initial monotone sequence
   for (size_t t = 3; t <= max_t - 2; t += 2) {
     if (rho_hat_t[t + 1] + rho_hat_t[t + 2] >
-	rho_hat_t[t - 1] + rho_hat_t[t]) {
+  	rho_hat_t[t - 1] + rho_hat_t[t]) {
       rho_hat_t[t + 1] = (rho_hat_t[t - 1] + rho_hat_t[t]) / 2;
       rho_hat_t[t + 2] = rho_hat_t[t + 1];
     }
   }
 
   double ess = m*n_samples;
-  ess /= (1 + 2 * stan::math::sum(rho_hat_t);
+  ess /= (-1 + 2 * stan::math::sum(rho_hat_t));
   SEXP __sexp_result;
   PROTECT(__sexp_result = Rcpp::wrap(ess));
   UNPROTECT(1);
