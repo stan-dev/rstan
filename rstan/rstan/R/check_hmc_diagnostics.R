@@ -14,6 +14,25 @@ check_hmc_diagnostics <- function(object) {
 }
 
 
+# Get a logical vector indicating whict transitions ended with a divergence
+#
+# @param object A stanfit object.
+# @return a logical vector
+#
+get_divergent_vector <- function(object) {
+  sampler_param_vector(object, "divergent__") > 0
+}
+
+# Get the number of transitions that ended with a divergence
+#
+# @param object A stanfit object.
+# @return the number of divergent transitions
+#
+get_n_divergent <- function(object) {
+  divergent <- get_divergent_vector(object)
+  sum(divergent)
+}
+
 # Check transitions that ended with a divergence
 #
 # @param object A stanfit object.
@@ -21,7 +40,7 @@ check_hmc_diagnostics <- function(object) {
 #   ended with a divergence and, if any, suggests increasing adapt_delta.
 #
 check_divergences <- function(object) {
-  divergent <- sampler_param_vector(object, "divergent__")
+  divergent <- get_divergent_vector(object)
   n <- sum(divergent)
   N <- length(divergent)
   
@@ -38,6 +57,36 @@ check_divergences <- function(object) {
   }
 }
 
+get_treedepth_threshold <- function(object) {
+  max_depth <- object@stan_args[[1]]$control$max_treedepth
+  if (is.null(max_depth)) {
+    max_depth <- 10
+  }
+  max_depth
+}
+
+# Get a logical vector indicating transitions that ended prematurely 
+# due to maximum tree depth limit
+#
+# @param object A stanfit object.
+# @return a logical vector
+#
+get_max_treedepth_vector <- function(object) {
+  max_depth <- get_treedepth_threshold(object)
+  treedepths <- sampler_param_vector(object, "treedepth__") >= max_depth
+  
+  treedepths
+}
+
+# Get the number of transitions that ended prematurely due to maximum tree depth limit
+#
+# @param object A stanfit object.
+# @return the number of affected transitions
+#
+get_n_max_treedepth <- function(object) {
+  sum(get_max_treedepth_vector(object))
+}
+
 # Check transitions that ended prematurely due to maximum tree depth limit
 #
 # @param object A stanfit object.
@@ -45,12 +94,9 @@ check_divergences <- function(object) {
 #   saturated the max treedepth and, if any, suggests increasing max_treedepth.
 #
 check_treedepth <- function(object) {
-  max_depth <- object@stan_args[[1]]$control$max_treedepth
-  if (is.null(max_depth)) {
-    max_depth <- 10
-  }
-  treedepths <- sampler_param_vector(object, "treedepth__")
-  n <- sum(treedepths == max_depth)
+  max_depth <- get_treedepth_threshold(object)
+  treedepths <- get_max_treedepth_vector(object)
+  n <- sum(treedepths)
   N <- length(treedepths)
   
   if (n == 0) {
@@ -67,6 +113,30 @@ check_treedepth <- function(object) {
   }
 }
 
+# Get the Bayesian fraction of missing information (E-BFMI)
+#
+# @param object A stanfit object.
+# @return vector, one element per chain containing the E-BFMI
+#
+get_bfmi <- function(object) {
+  energies_by_chain <- sampler_param_matrix(object, "energy__")
+  EBFMIs <- apply(energies_by_chain, 2, function(x) {
+    numer <- sum(diff(x) ^ 2) / length(x)
+    denom <- var(x)
+    numer / denom
+  })
+  
+  EBFMIs
+}
+
+# Get the chains with low Bayesian fraction of missing information (E-BFMI)
+#
+# @param object A stanfit object.
+# @return a vector of IDs of chains with low E-BFMI 
+#
+get_low_bfmi_chains <- function(object) {
+  which(get_bfmi(object) < 0.2)
+}
 
 # Check the energy Bayesian fraction of missing information (E-BFMI)
 #
@@ -75,12 +145,8 @@ check_treedepth <- function(object) {
 #   reparameterizing.
 #
 check_energy <- function(object) {
-  energies_by_chain <- sampler_param_matrix(object, "energy__")
-  EBFMIs <- apply(energies_by_chain, 2, function(x) {
-    numer <- sum(diff(x) ^ 2) / length(x)
-    denom <- var(x)
-    numer / denom
-  })
+  EBFMIs <- get_bfmi(object)
+  
   bad_chains <- which(EBFMIs < 0.2)
   if (!length(bad_chains)) {
     message("E-BFMI indicated no pathological behavior.")
@@ -114,3 +180,4 @@ sampler_param_matrix <- function(object, param) {
   sampler_params <- get_sampler_params(object, inc_warmup=FALSE)
   sapply(sampler_params, function(x) x[, param])
 }
+

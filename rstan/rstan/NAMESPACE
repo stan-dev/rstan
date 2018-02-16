@@ -55,7 +55,14 @@ export(
   check_hmc_diagnostics,
   check_divergences, 
   check_treedepth, 
-  check_energy
+  check_energy,
+  get_divergent_vector,
+  get_max_treedepth_vector,
+  get_n_divergent,
+  get_n_max_treedepth,
+  get_bfmi,
+  get_low_bfmi_chains
+
 )
 
 exportClasses(
