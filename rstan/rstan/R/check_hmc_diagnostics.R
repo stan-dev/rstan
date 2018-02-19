@@ -5,6 +5,7 @@
 # @return Nothing, just prints the output from the functions it calls internally.
 #
 check_hmc_diagnostics <- function(object) {
+  stopifnot(is.stanfit(object))
   cat("\nDivergences:\n")
     check_divergences(object)
   cat("\nTree depth:\n")
@@ -19,7 +20,8 @@ check_hmc_diagnostics <- function(object) {
 # @param object A stanfit object.
 # @return a logical vector
 #
-get_divergent_vector <- function(object) {
+get_divergent_iterations <- function(object) {
+  stopifnot(is.stanfit(object))
   sampler_param_vector(object, "divergent__") > 0
 }
 
@@ -28,8 +30,9 @@ get_divergent_vector <- function(object) {
 # @param object A stanfit object.
 # @return the number of divergent transitions
 #
-get_n_divergent <- function(object) {
-  divergent <- get_divergent_vector(object)
+get_num_divergent <- function(object) {
+  stopifnot(is.stanfit(object))
+  divergent <- get_divergent_iterations(object)
   sum(divergent)
 }
 
@@ -40,7 +43,8 @@ get_n_divergent <- function(object) {
 #   ended with a divergence and, if any, suggests increasing adapt_delta.
 #
 check_divergences <- function(object) {
-  divergent <- get_divergent_vector(object)
+  stopifnot(is.stanfit(object))
+  divergent <- get_divergent_iterations(object)
   n <- sum(divergent)
   N <- length(divergent)
   
@@ -58,6 +62,7 @@ check_divergences <- function(object) {
 }
 
 get_treedepth_threshold <- function(object) {
+  stopifnot(is.stanfit(object))
   max_depth <- object@stan_args[[1]]$control$max_treedepth
   if (is.null(max_depth)) {
     max_depth <- 10
@@ -71,7 +76,8 @@ get_treedepth_threshold <- function(object) {
 # @param object A stanfit object.
 # @return a logical vector
 #
-get_max_treedepth_vector <- function(object) {
+get_max_treedepth_iterations <- function(object) {
+  stopifnot(is.stanfit(object))
   max_depth <- get_treedepth_threshold(object)
   treedepths <- sampler_param_vector(object, "treedepth__") >= max_depth
   
@@ -83,8 +89,9 @@ get_max_treedepth_vector <- function(object) {
 # @param object A stanfit object.
 # @return the number of affected transitions
 #
-get_n_max_treedepth <- function(object) {
-  sum(get_max_treedepth_vector(object))
+get_num_max_treedepth <- function(object) {
+  stopifnot(is.stanfit(object))
+  sum(get_max_treedepth_iterations(object))
 }
 
 # Check transitions that ended prematurely due to maximum tree depth limit
@@ -94,8 +101,9 @@ get_n_max_treedepth <- function(object) {
 #   saturated the max treedepth and, if any, suggests increasing max_treedepth.
 #
 check_treedepth <- function(object) {
+  stopifnot(is.stanfit(object))
   max_depth <- get_treedepth_threshold(object)
-  treedepths <- get_max_treedepth_vector(object)
+  treedepths <- get_max_treedepth_iterations(object)
   n <- sum(treedepths)
   N <- length(treedepths)
   
@@ -119,6 +127,7 @@ check_treedepth <- function(object) {
 # @return vector, one element per chain containing the E-BFMI
 #
 get_bfmi <- function(object) {
+  stopifnot(is.stanfit(object))
   energies_by_chain <- sampler_param_matrix(object, "energy__")
   EBFMIs <- apply(energies_by_chain, 2, function(x) {
     numer <- sum(diff(x) ^ 2) / length(x)
@@ -135,6 +144,7 @@ get_bfmi <- function(object) {
 # @return a vector of IDs of chains with low E-BFMI 
 #
 get_low_bfmi_chains <- function(object) {
+  stopifnot(is.stanfit(object))
   which(get_bfmi(object) < 0.2)
 }
 
@@ -145,6 +155,7 @@ get_low_bfmi_chains <- function(object) {
 #   reparameterizing.
 #
 check_energy <- function(object) {
+  stopifnot(is.stanfit(object))
   EBFMIs <- get_bfmi(object)
   
   bad_chains <- which(EBFMIs < 0.2)
@@ -159,6 +170,16 @@ check_energy <- function(object) {
   }
 }
 
+
+# Get the number of actual leapfrog evaluations for each iteration
+#
+# @param object A stanfit object.
+# @return an integer vector with the number of evaluations for each iteration
+#
+get_num_leapfrog_per_iteration <- function(object) {
+  stopifnot(is.stanfit(object))
+  sampler_param_vector(object,"n_leapfrog__")
+}
 
 # internal ----------------------------------------------------------------
 

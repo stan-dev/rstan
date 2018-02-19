@@ -25,9 +25,10 @@ and \code{check_energy} prints E-BFMI values for each chain for which E-BFMI
 is less than 0.2. 
 
 The \code{get_} functions are for programmatic access to the diagnostics. 
-\code{get_divergent_vector} and \code{get_max_treedepth_vector} return a logical
-vector indicating problems for individual iterations, while 'code{get_n_divergences} 
-and \code{get_n_max_treedepth} return the number of offending interations.
+\code{get_divergent_iterations} and \code{get_max_treedepth_iterations} return a logical
+vector indicating problems for individual iterations,  while 'code{get_num_divergences} 
+and \code{get_num_max_treedepth} return the number of offending interations.
+\code{get_num_leapfrog_per_iteration} returns an integer vector with the number of leapfrog evalutions for each iteration.
 \code{get_bfmi} returns per-chain E-BFMI values and \code{get_low_bfmi_chains}
 returns the indices of chains with low E-BFMI.
 
@@ -42,11 +43,12 @@ check_divergences(object)
 check_treedepth(object)
 check_energy(object)
 
-get_divergent_vector(object)
-get_max_treedepth_vector(object)
+get_divergent_iterations(object)
+get_max_treedepth_iterations(object)
+get_num_leapfrog_per_iteration(object)
 
-get_n_divergent(object)
-get_n_max_treedepth(object)
+get_num_divergent(object)
+get_num_max_treedepth(object)
 
 get_bfmi(object)
 get_low_bfmi_chains(object)
