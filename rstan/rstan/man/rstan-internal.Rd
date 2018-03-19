@@ -16,6 +16,8 @@
 \alias{show,cxxdso-method}
 \alias{grab_cxxfun,cxxdso-method}
 \alias{is_dso_loaded,cxxdso-method}
+\alias{RNG}
+\alias{OUT}
 \title{Internal Functions and Methods}
 \description{
 These functions are not intended to be called directly. In the case of

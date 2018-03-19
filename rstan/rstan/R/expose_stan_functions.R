@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,20 +15,39 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-expose_stan_functions_hacks <- function(code) {
+expose_stan_functions_hacks <- function(code, includes = NULL) {
   code <- paste("#include <exporter.h>\n#include <RcppEigen.h>", code, sep="\n")
-#  code <- sub("_header.hpp>\n", "_header.hpp>\n#include <stan/model/model_header.hpp>", 
-#              code, fixed = TRUE)
-  code <- sub("// [[stan::function]]", 
-              "// [[Rcpp::depends(rstan)]]\n// [[Rcpp::export]]", code, fixed = TRUE)
+  code <- gsub("// [[stan::function]]", 
+               "// [[Rcpp::depends(rstan)]]\n// [[Rcpp::export]]", code, fixed = TRUE)
+  if(is.null(includes)) return(code)
+  code <- sub("\n\nstan::io::program_reader prog_reader__() {",
+              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"), 
+              code, fixed = TRUE)
   return(code)
 }
 
-expose_stan_functions <- function(file, ...) {
-  model_code <- get_model_strcode(file, NULL)
-  model_cppname <- legitimate_model_name(basename(file), obfuscate_name = TRUE)
-  r <- .Call("stanfuncs", model_code, model_cppname, allow_undefined = FALSE)
-  code <- expose_stan_functions_hacks(r$cppcode)
+expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
+  mc <- NULL
+  if(is(stanmodel, "stanfit")) {
+    mc <- get_stancode(get_stanmodel(stanmodel))
+  }
+  else if(is.list(stanmodel)) {
+    mc <- stanmodel$model_code
+  }
+  else if(is(stanmodel, "stanmodel")) {
+    mc <- get_stancode(stanmodel)
+  }
+  else if(is.character(stanmodel)) {
+    if(length(stanmodel) == 1) mc <- get_model_strcode(stanmodel, NULL)
+    else mc <- get_model_strcode(model_code = stanmodel)
+  }
+  else stop("'stanmodel' is not a valid object")
+  
+  tf <- tempfile(fileext = ".stan")
+  writeLines(mc, con = tf)
+  md5 <- paste("user", tools::md5sum(tf), sep = "_")
+  r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
+  code <- expose_stan_functions_hacks(r$cppcode, includes)
   compiled <- Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)
   return(invisible(compiled$functions))
 }

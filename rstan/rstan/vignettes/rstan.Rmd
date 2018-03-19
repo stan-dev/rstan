@@ -481,7 +481,9 @@ functions {
 model {}
 '
 expose_stan_functions(stanc(model_code = model_code))
-standard_normal_rng(seed = 1)
+PRNG <- get_rng(seed = 3)
+o <- get_stream()
+standard_normal_rng(PRNG, o)
 ```
 
 

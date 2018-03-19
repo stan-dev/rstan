@@ -68,7 +68,7 @@
   \item{allow_undefined}{A logical scalar that is \code{FALSE} by default and
     passed to \code{\link{stanc}}.}
   \item{includes}{If not \code{NULL} (the default), then a character vector of
-    length one (possibly containing \code{"\n"}) of the form 
+    length one (possibly containing one or more \code{"\n"}) of the form 
     \code{'#include "/full/path/to/my_header.hpp"'}, which will be inserted
     into the C++ code in the model's namespace and can be used to provide definitions 
     of functions that are declared but not defined in \code{file} or
