@@ -55,7 +55,10 @@ export(
   check_hmc_diagnostics,
   check_divergences, 
   check_treedepth, 
-  check_energy
+  check_energy,
+  get_rng,
+  get_stream,
+  RNG, OUT
 )
 
 exportClasses(
