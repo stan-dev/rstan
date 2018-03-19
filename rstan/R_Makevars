@@ -2,7 +2,7 @@
 ## 
 
 ## for clang++ on Mac OS X Mavericks with Xcode 5
-CXX = ccache clang++
+## CXX = ccache clang++
 MAKEFLAGS=-j6
 
 # CXXFLAGS = -O3 $(LTO) 

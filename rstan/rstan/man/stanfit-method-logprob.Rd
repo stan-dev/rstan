@@ -127,7 +127,7 @@ parameters {
   real y;
 }
 model {
-  lp__ <- log(square(y - 5) + 1);
+  target += log(square(y - 5) + 1);
 }
 "
 opfit <- stan(model_code = opcode, chains = 0)

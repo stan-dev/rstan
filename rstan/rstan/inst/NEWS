@@ -1,3 +1,9 @@
+Wed December 20 2017 (2.17.2)
+1. Bug fixes
+  * Now handles data types consistently when passed by string
+  * expose_stan_functions() now does not obfuscate model names
+  * Now works on Macs using the clang4 compiler from the AT&T website
+
 Sun July 2, 2017 (2.16.1)
 1. Bug fixes
   * Now throws warnings even if there is only one chain
