@@ -85,7 +85,7 @@ rstanplugin <- function() {
     rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE) 
 
   
-  list(includes = '',
+  list(includes = '// [[Rcpp::plugins(cpp14)]]',
        body = function(x) x,
        env = list(PKG_LIBS = paste(rcpp_pkg_libs,  
                                    paste0("-L", shQuote(StanHeaders_pkg_libs)),
