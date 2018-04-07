@@ -21,7 +21,7 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
 
 \arguments{
   \item{x}{An object of S4 class \code{stanfit}.}
-  \item{pars}{Name of parameter, transformed parameter, or generated quantity in
+  \item{pars}{Name of transformed parameter or generated quantity in
   the Stan program corresponding to the pointwise log-likelihood. If not
   specified the default behavior is to look for \code{"log_lik"}.}
   \item{cores}{Number of cores to use for parallelization. The default is 1 unless
