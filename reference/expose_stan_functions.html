@@ -18,13 +18,25 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Expose user-defined Stan functions to <span style="R">R</span> for testing and simulation — expose_stan_functions" />
+
+<meta property="og:description" content="The Stan modeling language allows users to define their own functions in a 
+  functions block at the top of a Stan program. The 
+  expose_stan_functions utility function uses
+  sourceCpp to export those user-defined functions
+  to the specified environment for testing inside R or for doing posterior
+  predictive simulations in R rather than in the generated 
+  quantities block of a Stan program." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +44,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +61,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +124,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +132,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Expose user-defined Stan functions to <span style="R">R</span> for testing and simulation</h1>
+    
     </div>
 
     
@@ -131,7 +151,7 @@
 
     <pre class="usage"><span class='fu'>expose_stan_functions</span>(<span class='no'>stanmodel</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -150,7 +170,8 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>There are a few special types of user-defined Stan functions for which some 
-  additional details are relevant:</p><h3>(P)RNG functions</h3>
+  additional details are relevant:</p>  
+<p></p><h3>(P)RNG functions</h3>
     If a user-defined Stan function ends in <code>_rng</code>, then it can
   use the Boost pseudo-random number generator used by Stan. When exposing
   such functions to <span style="R">R</span>, a <code>seed</code> argument will be added to the 
@@ -192,11 +213,10 @@
     }
   }
   '</span>
-  <span class='no'>cppcode</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanc.html'>stanc</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>mc</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>"Fibonacci"</span>)
-  <span class='fu'>not_run</span>({
-    <span class='fu'>expose_stan_functions</span>(<span class='no'>cppcode</span>)
+  <span class='no'>cppcode</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanc.html'>stanc</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>mc</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>"Fibonacci"</span>)</div><span class='co'># NOT RUN {</span>
+  <span class='fu'>expose_stan_functions</span>(<span class='no'>cppcode</span>)
 
-})</div></pre>
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -221,11 +241,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

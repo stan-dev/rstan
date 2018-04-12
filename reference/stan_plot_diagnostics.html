@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="RStan Diagnostic plots — Diagnostic plots" />
+
+<meta property="og:description" content="Diagnostic plots for HMC and NUTS using ggplot2." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +38,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +118,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +126,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>RStan Diagnostic plots</h1>
+    
     </div>
 
     
@@ -132,7 +146,7 @@
   <span class='fu'>stan_ess</span>(<span class='no'>object</span>, <span class='no'>pars</span>, <span class='no'>...</span>)
   <span class='fu'>stan_mcse</span>(<span class='no'>object</span>, <span class='no'>pars</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -212,7 +226,7 @@
 
     <p>For details about the individual diagnostics and sampler parameters and their
   interpretations see the Stan Modeling Language User's Guide and Reference 
-  Manual at <a href = 'http://mc-stan.org/documentation/'>http://mc-stan.org/documentation/</a>.</p>
+  Manual at <a href='http://mc-stan.org/documentation/'>http://mc-stan.org/documentation/</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -221,17 +235,17 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>not_run</span>({
-  <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan_demo.html'>stan_demo</a></span>(<span class='st'>"eight_schools"</span>)
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan_demo.html'>stan_demo</a></span>(<span class='st'>"eight_schools"</span>)
 
-  <span class='fu'>stan_diag</span>(<span class='no'>fit</span>, <span class='kw'>info</span> <span class='kw'>=</span> <span class='st'>'sample'</span>) <span class='co'># shows three plots together</span>
-  <span class='no'>samp_info</span> <span class='kw'>&lt;-</span> <span class='fu'>stan_diag</span>(<span class='no'>fit</span>, <span class='kw'>info</span> <span class='kw'>=</span> <span class='st'>'sample'</span>) <span class='co'># saves the three plots in a list</span>
-  <span class='no'>samp_info</span><span class='kw'>[[</span><span class='fl'>3</span>]] <span class='co'># access just the third plot</span>
+<span class='fu'>stan_diag</span>(<span class='no'>fit</span>, <span class='kw'>info</span> <span class='kw'>=</span> <span class='st'>'sample'</span>) <span class='co'># shows three plots together</span>
+<span class='no'>samp_info</span> <span class='kw'>&lt;-</span> <span class='fu'>stan_diag</span>(<span class='no'>fit</span>, <span class='kw'>info</span> <span class='kw'>=</span> <span class='st'>'sample'</span>) <span class='co'># saves the three plots in a list</span>
+<span class='no'>samp_info</span><span class='kw'>[[</span><span class='fl'>3</span>]] <span class='co'># access just the third plot</span>
 
-  <span class='fu'>stan_diag</span>(<span class='no'>fit</span>, <span class='kw'>info</span> <span class='kw'>=</span> <span class='st'>'sample'</span>, <span class='kw'>chain</span> <span class='kw'>=</span> <span class='fl'>1</span>) <span class='co'># overlay chain 1</span>
+<span class='fu'>stan_diag</span>(<span class='no'>fit</span>, <span class='kw'>info</span> <span class='kw'>=</span> <span class='st'>'sample'</span>, <span class='kw'>chain</span> <span class='kw'>=</span> <span class='fl'>1</span>) <span class='co'># overlay chain 1</span>
 
-  <span class='fu'>stan_par</span>(<span class='no'>fit</span>, <span class='kw'>par</span> <span class='kw'>=</span> <span class='st'>"mu"</span>)
-})</div></pre>
+<span class='fu'>stan_par</span>(<span class='no'>fit</span>, <span class='kw'>par</span> <span class='kw'>=</span> <span class='st'>"mu"</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -258,11 +272,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

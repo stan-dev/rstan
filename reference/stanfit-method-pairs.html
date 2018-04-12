@@ -18,13 +18,19 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Create a matrix of output plots from a <code>stanfit</code> object — pairs.stanfit" />
+
+<meta property="og:description" content="A pairs method that is customized for MCMC output" />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +38,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +55,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +118,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +126,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a matrix of output plots from a <code>stanfit</code> object</h1>
+    
     </div>
 
     
@@ -131,7 +145,7 @@ pairs(x, labels = NULL, panel = NULL, &#8230;,
     row1attop = TRUE, gap = 1, log = "", pars = NULL, condition = "accept_stat__", 
     include = TRUE)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -169,14 +183,12 @@ pairs(x, labels = NULL, panel = NULL, &#8230;,
     integer vector can be passed to select some subset of the chains, of which
     roughly half will be plotted in the lower panel and the rest in the upper
     panel. A list of two integer vectors can be passed, each specifying a subset
-    of the chains to be plotted in the lower and upper panels respectively.
-    
-    A single number between zero and one exclusive can be passed, which is 
+    of the chains to be plotted in the lower and upper panels respectively.</p>    
+<p>A single number between zero and one exclusive can be passed, which is 
     interpreted as the proportion of realizations (among all chains) to plot
     in the lower panel starting with the first realization in each chain, 
-    with the complement (from the end of each chain) plotted in the upper panel.
-    
-    A (possibly abbreviated) character vector of length one can be passed among 
+    with the complement (from the end of each chain) plotted in the upper panel.</p>    
+<p>A (possibly abbreviated) character vector of length one can be passed among 
     <code>"accept_stat__", "stepsize__"</code>, <code>"treedepth__", "n_leapfrog__"</code>,
     <code>"divergent__"</code>,, <code>"energy__"</code>, or <code>"lp__"</code>, which are the 
     variables produced by <code><a href='stanfit-class.html'>get_sampler_params</a></code> and 
@@ -205,15 +217,15 @@ pairs(x, labels = NULL, panel = NULL, &#8230;,
   appropriate for visualizing thousands of draws from a posterior distribution.
   Also, if unspecified, histograms of the marginal distribution of each quantity
   are placed on the diagonal of the plot, after pooling all of the chains specified
-  by the <code>chain\_id</code> argument.
-    The draws from the warmup phase are always discarded before plotting.
-    By default, the lower (upper) triangle of the plot contains draws with below
+  by the <code>chain\_id</code> argument.</p>  
+<p>The draws from the warmup phase are always discarded before plotting.</p>  
+<p>By default, the lower (upper) triangle of the plot contains draws with below
   (above) median acceptance probability. Also, if <code>condition</code> is not
   <code>"divergent__"</code>, red points will be superimposed onto the smoothed
   density plots indicating which (if any) iterations encountered a divergent 
   transition. Otherwise, yellow points indicate a transition that hit the
-  maximum treedepth rather than terminated its evolution normally.
-    You may very well want to specify the <code>log</code> argument for non-negative
+  maximum treedepth rather than terminated its evolution normally.</p>  
+<p>You may very well want to specify the <code>log</code> argument for non-negative
   parameters. However, the <code>pairs</code> function will drop (with a message)
   parameters that are either constant or duplicative with previous parameters.
   For example, if a correlation matrix is included among <code>pars</code>, then 
@@ -233,7 +245,8 @@ pairs(x, labels = NULL, panel = NULL, &#8230;,
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>example</span>(<span class='no'>read_stan_csv</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no help found for ‘read_stan_csv’</span></div><div class='input'><span class='fu'>pairs</span>(<span class='no'>fit</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mu"</span>, <span class='st'>"sigma"</span>, <span class='st'>"alpha"</span>, <span class='st'>"lp__"</span>), <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>las</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), log = TRUE,     las = 1): object 'fit' not found</span></div><div class='input'><span class='co'># sigma and alpha will have logarithmic axes</span></div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>example</span>(<span class='no'>read_stan_csv</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: no help found for ‘read_stan_csv’</span></div><div class='input'><span class='fu'>pairs</span>(<span class='no'>fit</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mu"</span>, <span class='st'>"sigma"</span>, <span class='st'>"alpha"</span>, <span class='st'>"lp__"</span>), <span class='kw'>log</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>las</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; <span class='error'>Error in pairs(fit, pars = c("mu", "sigma", "alpha", "lp__"), log = TRUE,     las = 1): object 'fit' not found</span></div><div class='input'># sigma and alpha will have logarithmic axes
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -256,11 +269,14 @@ pairs(x, labels = NULL, panel = NULL, &#8230;,
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

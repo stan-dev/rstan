@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Translate Stan model specification to C++ code — stanc" />
+
+<meta property="og:description" content="Translate a model specification in Stan code to C++ code, which can 
+  then be compiled and loaded for sampling." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +39,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +119,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +127,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Translate Stan model specification to C++ code</h1>
+    
     </div>
 
     
@@ -131,7 +146,7 @@
                 <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>obfuscate_model_name</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
                 <span class='kw'>allow_undefined</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -189,8 +204,8 @@
   directories named by the <code>isystem</code> argument and --- if found --- insert its 
   contents verbatim at that position before calling <code>stanc</code> on the resulting 
   <code>model_code</code>. This mechanism reduces the need to copy common chunks of code
-  across Stan programs. It is possible to include such files recursively.
-    Note that line numbers referred to in parser warnings or errors refer to the
+  across Stan programs. It is possible to include such files recursively.</p>  
+<p>Note that line numbers referred to in parser warnings or errors refer to the
   postprocessed Stan program rather than <code>file</code>. In the case of a parser
   error, the postprocessed Stan program will be printed after the error message.
   Line numbers referred to in messages while Stan is executing also refer to
@@ -205,7 +220,8 @@
 <li><p><code>cppcode</code>    Character string for the model's C++ code.</p></li>
 <li><p><code>status</code>     Logical indicating success/failure (always <code>TRUE</code>) 
                             of translating the Stan code.</p></li>
-</ol><p></p>
+</ol> 
+
     
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
@@ -218,10 +234,10 @@
 
     <p>The Stan Development Team 
   <em>Stan Modeling Language User's Guide and Reference Manual</em>. 
-  <a href = 'http://mc-stan.org/'>http://mc-stan.org/</a>.</p>
+  <a href='http://mc-stan.org/'>http://mc-stan.org/</a>.</p>
 <p>The Stan Development Team
   <em>CmdStan Interface User's Guide</em>.
-  <a href = 'http://mc-stan.org'>http://mc-stan.org</a>.</p>
+  <a href='http://mc-stan.org'>http://mc-stan.org</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -248,8 +264,8 @@ model {
 <span class='no'>r</span> <span class='kw'>&lt;-</span> <span class='fu'>stanc</span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>stanmodelcode</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>"normal1"</span>)
 <span class='fu'>str</span>(<span class='no'>r</span>)</div><div class='output co'>#&gt; List of 5
 #&gt;  $ status       : logi TRUE
-#&gt;  $ model_cppname: chr "model3da66064b52d_normal1"
-#&gt;  $ cppcode      : chr "// Code generated by Stan version 2.16.0\n\n#include &lt;stan/model/model_header.hpp&gt;\n\nnamespace model3da66064b5"| __truncated__
+#&gt;  $ model_cppname: chr "model16e52ae2f51_normal1"
+#&gt;  $ cppcode      : chr "// Code generated by Stan version 2.17.0\n\n#include &lt;stan/model/model_header.hpp&gt;\n\nnamespace model16e52ae2f5"| __truncated__
 #&gt;  $ model_name   : chr "normal1"
 #&gt;  $ model_code   : atomic [1:1] 
 #&gt; data {
@@ -295,11 +311,14 @@ model {
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

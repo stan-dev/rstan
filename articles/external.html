@@ -8,8 +8,11 @@
 <title>Interfacing with External C++ Code • rstan</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Interfacing with External C++ Code">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
@@ -24,8 +27,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
@@ -91,17 +98,19 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Interfacing with External C++ Code</h1>
                         <h4 class="author">Stan Development Team</h4>
             
-            <h4 class="date">2017-08-03</h4>
-          </div>
+            <h4 class="date">2018-04-12</h4>
+      
+      
+
+    </div>
 
     
     
-<div class="contents">
 <p>Starting with the 2.13 release, it is much easier to use external C++ code in a Stan program. This vignette briefly illustrates how to do so.</p>
 <p>Suppose that you have (part of) a Stan program that involves Fibonacci numbers, such as</p>
 <pre class="stan"><code>functions {
@@ -130,7 +139,7 @@ model {} // use the complicated() function somehow</code></pre>
 <pre><code>## SYNTAX ERROR, MESSAGE(S) FROM PARSER:</code></pre>
 <pre><code>## </code></pre>
 <pre><code>## Function declared, but not defined. Function name=fib</code></pre>
-<pre><code>##   error in 'model40095e707f2_parser_error' at line 2, column 30</code></pre>
+<pre><code>##   error in 'model190c454902af_parser_error' at line 2, column 30</code></pre>
 <pre><code>##   -------------------------------------------------</code></pre>
 <pre><code>##      1:</code></pre>
 <pre><code>##      2: functions { int fib(int n); }</code></pre>
@@ -230,12 +239,12 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 }</code></pre></div>
 <p>because, in general, its first two arguments could either be integers, known real numbers, or unknown but real parameters. In the case of unknown real numbers, Stan will need to rely on its autodifferentiation mechanism to keep track of the derivative with respect to those arguments during estimation. But if either of the first two arguments is an integer or a known real number, then Stan avoids taking derivatives with respect to them. Thus, it is useful to utilize C++ templates that can generate all (four in this case) versions of this Bessel function with only a few lines of C++ source code. The first line of besselK.hpp states that the first two arguments are going to be templated with typenames <code>TO__</code> and <code>T1__</code> respectively. The second line is convoluted but merely states that the return type of the <code>besselK</code> function depends on <code>TO__</code> and <code>T1__</code>. In short, if either is an unknown real parameter, then the result will also be an unknown real parameter. The third line contains the generated signature of the function in C++, which involves the typenames <code>TO__</code> and <code>T1__</code>, as well as the pointer to a <code>std::ostream</code> (which is again not used in the body of the function). The body of the <code>besselK</code> function is simply a call to the coresponding function in the Boost Math Library, whose headers are pulled in by the Stan Math Library but the <code>boost::math::</code> prefix is necessary due to the absence of a <code>using boost::math;</code> statement.</p>
 <p>An easy way to see what the generated function signature will be is to call the <code>stanc</code> function in the <strong>rstan</strong> package with <code>allow_undefined = TRUE</code> and inspect the resuling C++ code. In this case, I first did</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">try</span>(<span class="kw">readLines</span>(<span class="kw"><a href="../reference/stanc.html">stanc</a></span>(<span class="dt">model_code =</span> mc, <span class="dt">allow_undefined =</span> <span class="ot">TRUE</span>)$cppcode))</code></pre></div>
-<pre><code>## Warning in file(con, "r"): cannot open file '// Code generated by Stan version 2.16.0
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">try</span>(<span class="kw">readLines</span>(<span class="kw"><a href="../reference/stanc.html">stanc</a></span>(<span class="dt">model_code =</span> mc, <span class="dt">allow_undefined =</span> <span class="ot">TRUE</span>)<span class="op">$</span>cppcode))</code></pre></div>
+<pre><code>## Warning in file(con, "r"): cannot open file '// Code generated by Stan version 2.17.1
 ## 
 ## #include &lt;stan/model/model_header.hpp&gt;
 ## 
-## namespace model400923923b8_mc_namespace {
+## namespace model190c1098cd27_mc_namespace {
 ## 
 ## using std::istream;
 ## using std::string;
@@ -246,16 +255,12 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 ## using stan::model::prob_grad;
 ## using namespace stan::math;
 ## 
-## typedef Eigen::Matrix&lt;double,Eigen::Dynamic,1&gt; vector_d;
-## typedef Eigen::Matrix&lt;double,1,Eigen::Dynamic&gt; row_vector_d;
-## typedef Eigen::Matrix&lt;double,Eigen::Dynamic,Eigen::Dynamic&gt; matrix_d;
-## 
 ## static int current_statement_begin__;
 ## 
 ## stan::io::program_reader prog_reader__() {
 ##     stan::io::program_reader reader;
-##     reader.add_event(0, 0, "start", "model400923923b8_mc");
-##     reader.add_event(3, 3, "end", "model400923923b8_mc");
+##     reader.add_event(0, 0, "start", "model190c1098cd27_mc");
+##     reader.add_event(3, 3, "end", "model190c1098cd27_mc");
 ##     return reader;
 ## }
 ## 
@@ -264,7 +269,13 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 ## besselK(const T0__&amp; v,
 ##             const T1__&amp; z, std::ostream* pstream__);
 ## 
-## class model400923923b8_mc : public prob_gr [... truncated]</code></pre>
+## class model190c1098cd27_mc : public prob_grad {
+## private:
+## public:
+##     model190c1098cd27_mc(stan::io::var_context&amp; context__,
+##         std::ostream* pstream__ = 0)
+##         : prob_grad(0) {
+##         ctor_body(context__, 0, pstream__) [... truncated]</code></pre>
 <p>to see what function signature needed to be written for besselK.hpp.</p>
 <p>When using external C++ code, care must be taken to ensure that the function is numerically stable over a wide range of floating point numbers. Indeed, in the case of the <code>besselK</code> function, the derivative with respect to the order argument (<code>v</code>) may not be sufficiently stable numerically. In general, it is best to strip the underlying double-precision numbers out of Stan’s custom scalar types, evaluate the desired function, and then calculate the necessary derivatives analytically in an object whose class that inherits from the <code>vari</code> class in Stan. The details of doing so are beyond the scope of this vignette but are discussed in the links above. Once you go to the trouble of writing such a C++ function, we would welcome a pull request on GitHub to include your C++ function in the Stan Math Library for everyone to benefit from, provided that it can be licensed under the 3-clause BSD license and its use is not overly-specific to your particular Stan program.</p>
 <p>The Stan Math Library is compliant with the C++11 standard but currently does not utilize any features that were introduced by the C++11 standard nor does it require a compiler that is compliant with the C++11 standard. However, almost any modern C++ compiler is compliant, so you can use (at least some subset of the) features that were introduced by the C++11 standard in external C++ code and your Stan program should compile (perhaps with some warnings). In particular, you may want to use the <code>auto</code> keyword to avoid having to learn a lot of the messy type-promotion syntax used in the Stan Math Library and the rules for what kind of object is returned by various mathematical operations. For example, under the C++11 standard, the <code>besselK.hpp</code> file could be written as</p>
@@ -274,7 +285,6 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
   <span class="cf">return</span> <span class="ex">boost::</span>math<span class="ex">::</span>cyl_bessel_k(v, z);
 }</code></pre></div>
 <p>where the <code>auto</code> keyword combined with <code>-&gt; decltype (v + z)</code> results in the same code as the Boost metaprogram <code>typename boost::math::tools::promote_args&lt;T0__, T1__&gt;::type</code>.</p>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -288,11 +298,13 @@ besselK(<span class="at">const</span> T0__&amp; v, <span class="at">const</span>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>

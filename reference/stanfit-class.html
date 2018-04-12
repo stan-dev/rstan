@@ -18,13 +18,21 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Class <code>stanfit</code>: fitted Stan model — stanfit-class" />
+
+<meta property="og:description" content="The components (slots) of a stanfit object and the various available
+methods are described below. When methods have their own more detailed 
+documentation pages links are provided." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +40,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +57,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +120,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +128,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Class <code>stanfit</code>: fitted Stan model</h1>
+    
     </div>
 
     
@@ -257,7 +273,7 @@ summarizing results and various access methods also allow the underlying data
 
     <p>The Stan Development Team 
   <em>Stan Modeling Language User's Guide and Reference Manual</em>. 
-  <a href = 'http://mc-stan.org'>http://mc-stan.org</a>.</p>
+  <a href='http://mc-stan.org'>http://mc-stan.org</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -265,8 +281,45 @@ summarizing results and various access methods also allow the underlying data
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='fu'>showClass</span>(<span class='st'>"stanfit"</span>)
+<span class='no'>ecode</span> <span class='kw'>&lt;-</span> <span class='st'>'
+  parameters {
+    real&lt;lower=0&gt; y[2];
+  } 
+  model {
+    y ~ exponential(1);
+  }
+'</span>
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan.html'>stan</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>ecode</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan.html'>stan</a></span>(<span class='kw'>fit</span> <span class='kw'>=</span> <span class='no'>fit</span>)
+<span class='fu'>print</span>(<span class='no'>fit2</span>)
+<span class='fu'>plot</span>(<span class='no'>fit2</span>)
+<span class='fu'><a href='stanfit-method-traceplot.html'>traceplot</a></span>(<span class='no'>fit2</span>)
+<span class='no'>ainfo</span> <span class='kw'>&lt;-</span> <span class='fu'>get_adaptation_info</span>(<span class='no'>fit2</span>)
+<span class='fu'>cat</span>(<span class='no'>ainfo</span><span class='kw'>[[</span><span class='fl'>1</span>]])
+<span class='no'>seed</span> <span class='kw'>&lt;-</span> <span class='fu'>get_seed</span>(<span class='no'>fit2</span>)
+<span class='no'>sp</span> <span class='kw'>&lt;-</span> <span class='fu'>get_sampler_params</span>(<span class='no'>fit2</span>)
+<span class='no'>sp2</span> <span class='kw'>&lt;-</span> <span class='fu'>get_sampler_params</span>(<span class='no'>fit2</span>, <span class='kw'>inc_warmup</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>head</span>(<span class='no'>sp</span><span class='kw'>[[</span><span class='fl'>1</span>]])
 
+<span class='no'>lp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-logprob.html'>log_prob</a></span>(<span class='no'>fit</span>, <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+<span class='no'>grad</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-logprob.html'>grad_log_prob</a></span>(<span class='no'>fit</span>, <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+<span class='no'>lp2</span> <span class='kw'>&lt;-</span> <span class='fu'>attr</span>(<span class='no'>grad</span>, <span class='st'>"log_prob"</span>) <span class='co'># should be the same as "lp"</span>
+
+<span class='co'># get the number of parameters on the unconstrained space</span>
+<span class='no'>n</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-logprob.html'>get_num_upars</a></span>(<span class='no'>fit</span>)
+
+<span class='co'># parameters on the positive real line (constrained space) </span>
+<span class='no'>y1</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fl'>2</span>))
+
+<span class='no'>uy</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-logprob.html'>unconstrain_pars</a></span>(<span class='no'>fit</span>, <span class='no'>y1</span>)
+<span class='co'>## uy should be c(0, 0) since here the log transformation is used</span>
+<span class='no'>y1star</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-logprob.html'>constrain_pars</a></span>(<span class='no'>fit</span>, <span class='no'>uy</span>)
+
+<span class='fu'>print</span>(<span class='no'>y1</span>)
+<span class='fu'>print</span>(<span class='no'>y1star</span>) <span class='co'># y1start should equal to y1 </span>
+<span class='co'># }</span><div class='input'>
 <span class='co'># Create a stanfit object from reading CSV files of samples (saved in rstan</span>
 <span class='co'># package) generated by funtion stan for demonstration purpose from model as follows. </span>
 <span class='co'># </span>
@@ -308,24 +361,23 @@ summarizing results and various access methods also allow the underlying data
 #&gt; post-warmup draws per chain=100, total post-warmup draws=400.
 #&gt; 
 #&gt;          mean se_mean   sd   2.5%    25%    50%    75%  97.5% n_eff Rhat
-#&gt; mu       0.09    0.01 0.23  -0.38  -0.05   0.11   0.25   0.56   334 1.00
-#&gt; sigma    1.16    0.02 0.21   0.86   1.02   1.14   1.28   1.74   183 1.00
+#&gt; mu       0.09    0.01 0.23  -0.38  -0.05   0.11   0.25   0.56   338 1.00
+#&gt; sigma    1.16    0.02 0.21   0.86   1.02   1.14   1.28   1.74   186 1.00
 #&gt; z[1,1]   0.00    0.05 0.92  -1.81  -0.65  -0.01   0.71   1.59   285 1.01
-#&gt; z[1,2]   0.01    0.06 1.03  -2.04  -0.66   0.05   0.67   1.99   269 1.00
-#&gt; z[2,1]   0.10    0.06 0.98  -1.71  -0.55   0.08   0.76   1.98   286 1.00
-#&gt; z[2,2]   0.04    0.05 0.95  -1.85  -0.68   0.07   0.72   1.73   400 1.00
-#&gt; z[3,1]  -0.06    0.05 1.07  -2.08  -0.81  -0.11   0.68   1.93   400 1.00
+#&gt; z[1,2]   0.01    0.06 1.03  -2.04  -0.66   0.05   0.67   1.99   270 1.00
+#&gt; z[2,1]   0.10    0.05 0.98  -1.71  -0.55   0.08   0.76   1.98   342 1.00
+#&gt; z[2,2]   0.04    0.05 0.95  -1.85  -0.68   0.07   0.72   1.73   394 1.00
+#&gt; z[3,1]  -0.06    0.05 1.07  -2.08  -0.81  -0.11   0.68   1.93   453 1.00
 #&gt; z[3,2]   0.12    0.06 1.04  -1.74  -0.51   0.08   0.77   2.16   310 1.00
-#&gt; alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   400 0.99
-#&gt; lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   130 1.02
+#&gt; alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   426 0.99
+#&gt; lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   124 1.02
 #&gt; 
-#&gt; Samples were drawn using NUTS(diag_e) at Thu Aug 03 17:10:58 2017.
+#&gt; Samples were drawn using NUTS(diag_e) at Thu Apr 12 01:13:22 2018.
 #&gt; For each parameter, n_eff is a crude measure of effective sample size,
 #&gt; and Rhat is the potential scale reduction factor on split chains (at 
-#&gt; convergence, Rhat=1).</div><div class='input'><span class='fu'>not_run</span>({
-  <span class='fu'>plot</span>(<span class='no'>exfit</span>)
-})
-
+#&gt; convergence, Rhat=1).</div><span class='co'># NOT RUN {</span>
+<span class='fu'>plot</span>(<span class='no'>exfit</span>)
+<span class='co'># }</span><div class='input'>
 <span class='no'>adaptinfo</span> <span class='kw'>&lt;-</span> <span class='fu'>get_adaptation_info</span>(<span class='no'>exfit</span>)
 <span class='no'>inits</span> <span class='kw'>&lt;-</span> <span class='fu'>get_inits</span>(<span class='no'>exfit</span>) <span class='co'># empty</span>
 <span class='no'>inits</span> <span class='kw'>&lt;-</span> <span class='fu'>get_inits</span>(<span class='no'>exfit</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>101</span>)
@@ -360,11 +412,14 @@ summarizing results and various access methods also allow the underlying data
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

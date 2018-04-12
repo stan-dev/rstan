@@ -18,13 +18,20 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Fit a model using Stan — stan" />
+
+<meta property="og:description" content="Fit a model defined in the Stan modeling language and  
+  return the fitted result as an instance of stanfit." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +39,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +56,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +119,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +127,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fit a model using Stan</h1>
+    
     </div>
 
     
@@ -140,7 +155,7 @@
   boost_lib = NULL,
   eigen_lib = NULL)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -373,15 +388,13 @@
     are initialized in the user-supplied list or function. If specified, 
     the initial values are simulated uniformly from interval 
     [-<code>init_r</code>, <code>init_r</code>] rather than using the default interval 
-    (see the manual of (cmd)Stan).
-    
-    <code>test_grad</code> (<code>logical</code>).  
+    (see the manual of (cmd)Stan).</p>    
+<p><code>test_grad</code> (<code>logical</code>).  
     If <code>test_grad=TRUE</code>, Stan will not do any sampling. Instead,
     the gradient calculation is tested and printed out and the fitted
     <code>stanfit</code> object is in test gradient mode.  By default, it is
-    <code>FALSE</code>.
-    
-    <code>append_samples</code> (<code>logical</code>). 
+    <code>FALSE</code>.</p>    
+<p><code>append_samples</code> (<code>logical</code>). 
     Only relevant if <code>sample_file</code> is specified <em>and</em> is an 
     existing file. In that case, setting <code>append_samples=TRUE</code> will append 
     the samples to the existing file rather than overwriting the contents of 
@@ -393,9 +406,8 @@
     The progress indicator is turned off if <code>refresh &lt;= 0</code>.</p>
 <p>Deprecated: <code>enable_random_init</code> (<code>logical</code>) being <code>TRUE</code>
     enables specifying initial values randomly when the initial
-    values are not fully specified from the user. 
-    
-    <code>save_warmup</code> (<code>logical</code>) indicates whether to 
+    values are not fully specified from the user.</p>    
+<p><code>save_warmup</code> (<code>logical</code>) indicates whether to 
     save draws during the warmup phase and defaults to <code>TRUE</code>. Some
     memory related problems can be avoided by setting it to <code>FALSE</code>,
     but some diagnostics are more limited if the warmup draws are not
@@ -487,8 +499,8 @@
      dimension "I*J*K". In addition, technically a <code>data.frame</code> in R is 
      also a list, but it should not be used for the purpose here since a
      <code>data.frame</code> will be converted to a matrix as described above.</p></li>
-</ol><p></p>
-<p>Stan treats a vector of length 1 in R as a scalar.  So technically 
+</ol>
+    <p>Stan treats a vector of length 1 in R as a scalar.  So technically 
   if, for example, <code>"real y[1];"</code> is defined in the data block, an array 
   such as <code>"y = array(1.0, dim = 1)"</code> in R should be used. This
   is also the case for specifying initial values since the same 
@@ -503,10 +515,10 @@
 
     <p>The Stan Development Team 
   <em>Stan Modeling Language User's Guide and Reference Manual</em>. 
-  <a href = 'http://mc-stan.org'>http://mc-stan.org</a>.</p>
+  <a href='http://mc-stan.org'>http://mc-stan.org</a>.</p>
 <p>The Stan Development Team
   <em>CmdStan Interface User's Guide</em>.
-  <a href = 'http://mc-stan.org'>http://mc-stan.org</a>.</p>
+  <a href='http://mc-stan.org'>http://mc-stan.org</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -518,30 +530,82 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='fu'>not_run</span>({
-  <span class='co'>## examples of specify argument `init` for function stan</span>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='co'>#### example 1 </span>
+<span class='fu'>library</span>(<span class='no'>rstan</span>)
+<span class='no'>scode</span> <span class='kw'>&lt;-</span> <span class='st'>"
+parameters {
+  real y[2]; 
+} 
+model {
+  y[1] ~ normal(0, 1);
+  y[2] ~ double_exponential(0, 2);
+} 
+"</span>
+<span class='no'>fit1</span> <span class='kw'>&lt;-</span> <span class='fu'>stan</span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>scode</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='fu'>print</span>(<span class='no'>fit1</span>)
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'>stan</span>(<span class='kw'>fit</span> <span class='kw'>=</span> <span class='no'>fit1</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
-  <span class='co'>## define a function to generate initial values that can</span>
-  <span class='co'>## be fed to function stan's argument `init`</span>
-  <span class='co'># function form 1 without arguments </span>
-  <span class='no'>initf1</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>() {
-    <span class='fu'>list</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>z</span> <span class='kw'>=</span> <span class='fu'>array</span>(<span class='fu'>rnorm</span>(<span class='fl'>6</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>3</span>,<span class='fl'>2</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+<span class='co'>## extract samples as a list of arrays</span>
+<span class='no'>e2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-extract.html'>extract</a></span>(<span class='no'>fit2</span>, <span class='kw'>permuted</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+
+<span class='co'>## using as.array on the stanfit object to get samples </span>
+<span class='no'>a2</span> <span class='kw'>&lt;-</span> <span class='fu'>as.array</span>(<span class='no'>fit2</span>)
+
+<span class='co'>#### example 2</span>
+<span class='co'>#### the result of this package is included in the package </span>
+
+<span class='no'>excode</span> <span class='kw'>&lt;-</span> <span class='st'>'
+  transformed data {
+    real y[20];
+    y[1] = 0.5796;  y[2] = 0.2276;   y[3]  = -0.2959; 
+    y[4] = -0.3742; y[5] = 0.3885;   y[6]  = -2.1585;
+    y[7] = 0.7111;  y[8] = 1.4424;   y[9]  = 2.5430; 
+    y[10] = 0.3746; y[11] = 0.4773;  y[12] = 0.1803; 
+    y[13] = 0.5215; y[14] = -1.6044; y[15] = -0.6703; 
+    y[16] = 0.9459; y[17] = -0.382;  y[18] = 0.7619;
+    y[19] = 0.1006; y[20] = -1.7461;
   }
-  <span class='co'># function form 2 with an argument named `chain_id`</span>
-  <span class='no'>initf2</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>chain_id</span> <span class='kw'>=</span> <span class='fl'>1</span>) {
-    <span class='co'># cat("chain_id =", chain_id, "\n")</span>
-    <span class='fu'>list</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>z</span> <span class='kw'>=</span> <span class='fu'>array</span>(<span class='fu'>rnorm</span>(<span class='fl'>6</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>3</span>,<span class='fl'>2</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>chain_id</span>)
-  }
+  parameters {
+    real mu;
+    real&lt;lower=0, upper=10&gt; sigma;
+    vector[2] z[3];
+    real&lt;lower=0&gt; alpha;
+  } 
+  model {
+    y ~ normal(mu, sigma);
+    for (i in 1:3) 
+      z[i] ~ normal(0, 1);
+    alpha ~ exponential(2);
+  } 
+'</span>
 
-  <span class='co'># generate a list of lists to specify initial values</span>
-  <span class='no'>n_chains</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>
-  <span class='no'>init_ll</span> <span class='kw'>&lt;-</span> <span class='fu'>lapply</span>(<span class='fl'>1</span>:<span class='no'>n_chains</span>, <span class='kw'>function</span>(<span class='no'>id</span>) <span class='fu'>initf2</span>(<span class='kw'>chain_id</span> <span class='kw'>=</span> <span class='no'>id</span>))
+<span class='no'>exfit</span> <span class='kw'>&lt;-</span> <span class='fu'>stan</span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>excode</span>, <span class='kw'>save_dso</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>500</span>)
+<span class='fu'>print</span>(<span class='no'>exfit</span>)
+<span class='fu'>plot</span>(<span class='no'>exfit</span>)
+<span class='co'># }</span><span class='co'># NOT RUN {</span>
+<span class='co'>## examples of specify argument `init` for function stan</span>
 
-  <span class='no'>exfit0</span> <span class='kw'>&lt;-</span> <span class='fu'>stan</span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>excode</span>, <span class='kw'>init</span> <span class='kw'>=</span> <span class='no'>initf1</span>)
-  <span class='fu'>stan</span>(<span class='kw'>fit</span> <span class='kw'>=</span> <span class='no'>exfit0</span>, <span class='kw'>init</span> <span class='kw'>=</span> <span class='no'>initf2</span>)
-  <span class='fu'>stan</span>(<span class='kw'>fit</span> <span class='kw'>=</span> <span class='no'>exfit0</span>, <span class='kw'>init</span> <span class='kw'>=</span> <span class='no'>init_ll</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='no'>n_chains</span>)
-})</div></pre>
+<span class='co'>## define a function to generate initial values that can</span>
+<span class='co'>## be fed to function stan's argument `init`</span>
+<span class='co'># function form 1 without arguments </span>
+<span class='no'>initf1</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>() {
+  <span class='fu'>list</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>z</span> <span class='kw'>=</span> <span class='fu'>array</span>(<span class='fu'>rnorm</span>(<span class='fl'>6</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>3</span>,<span class='fl'>2</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+}
+<span class='co'># function form 2 with an argument named `chain_id`</span>
+<span class='no'>initf2</span> <span class='kw'>&lt;-</span> <span class='kw'>function</span>(<span class='no'>chain_id</span> <span class='kw'>=</span> <span class='fl'>1</span>) {
+  <span class='co'># cat("chain_id =", chain_id, "\n")</span>
+  <span class='fu'>list</span>(<span class='kw'>mu</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>sigma</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>z</span> <span class='kw'>=</span> <span class='fu'>array</span>(<span class='fu'>rnorm</span>(<span class='fl'>6</span>), <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>3</span>,<span class='fl'>2</span>)), <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='no'>chain_id</span>)
+}
+
+<span class='co'># generate a list of lists to specify initial values</span>
+<span class='no'>n_chains</span> <span class='kw'>&lt;-</span> <span class='fl'>4</span>
+<span class='no'>init_ll</span> <span class='kw'>&lt;-</span> <span class='fu'>lapply</span>(<span class='fl'>1</span>:<span class='no'>n_chains</span>, <span class='kw'>function</span>(<span class='no'>id</span>) <span class='fu'>initf2</span>(<span class='kw'>chain_id</span> <span class='kw'>=</span> <span class='no'>id</span>))
+
+<span class='no'>exfit0</span> <span class='kw'>&lt;-</span> <span class='fu'>stan</span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>excode</span>, <span class='kw'>init</span> <span class='kw'>=</span> <span class='no'>initf1</span>)
+<span class='fu'>stan</span>(<span class='kw'>fit</span> <span class='kw'>=</span> <span class='no'>exfit0</span>, <span class='kw'>init</span> <span class='kw'>=</span> <span class='no'>initf2</span>)
+<span class='fu'>stan</span>(<span class='kw'>fit</span> <span class='kw'>=</span> <span class='no'>exfit0</span>, <span class='kw'>init</span> <span class='kw'>=</span> <span class='no'>init_ll</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='no'>n_chains</span>)
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -570,11 +634,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

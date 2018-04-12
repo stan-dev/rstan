@@ -18,13 +18,26 @@
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-  
-  
+<meta property="og:title" content="Construct a Stan model — stan_model" />
+
+<meta property="og:description" content="Construct an instance of S4 class stanmodel from a model 
+  specified in Stan's modeling language. A stanmodel object 
+  can then be used to draw samples from the model. The Stan program
+  (the model expressed in the Stan modeling language) is first translated to
+  C++ code and then the C++ code for the model plus other auxiliary 
+  code is compiled into a dynamic shared object (DSO) and then loaded. 
+  The loaded DSO for the model can be executed to draw samples, allowing
+  inference to be performed for the model and data." />
+<meta name="twitter:card" content="summary" />
+
+
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -32,6 +45,8 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
+
+
 
 
   </head>
@@ -47,8 +62,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rstan</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rstan</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">2.17.3</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
@@ -106,6 +125,7 @@
   </a>
 </li>
       </ul>
+      
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
@@ -113,10 +133,11 @@
       
       </header>
 
-      <div class="row">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Construct a Stan model</h1>
+    
     </div>
 
     
@@ -138,7 +159,7 @@
              <span class='kw'>obfuscate_model_name</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
              <span class='kw'>allow_undefined</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>includes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
@@ -193,10 +214,10 @@
     <tr>
       <th>auto_write</th>
       <td><p>Logical, defaulting to the value of 
-    <code>rstan_options("auto_write")</code>, indicating whether to write the
+    <code><a href='rstan_options.html'>rstan_options("auto_write")</a></code>, indicating whether to write the
     object to the hard disk using <code>saveRDS</code>. Although this argument
     is <code>FALSE</code> by default, we recommend calling 
-    <code>rstan_options("auto_write" = TRUE)</code> in order to avoid unnecessary 
+    <code><a href='rstan_options.html'>rstan_options("auto_write" = TRUE)</a></code> in order to avoid unnecessary 
     recompilations. If <code>file</code> is supplied and its <code>dirname</code> 
     is writable, then the object will be written to that same directory, 
     substituting a <code>.rds</code> extension for the <code>.stan</code> extension. 
@@ -231,15 +252,15 @@
   line, which causes the hash checker to think that the current model is different
   than the one saved on the hard drive. To avoid reading previously 
   compiled <code>stanmodel</code>s from the hard drive, supply the <code>stanc_ret</code>
-  argument rather than the <code>file</code> or <code>model_code</code> arguments.
-    There are three ways to specify the model's code for <code>stan_model</code>:</p><ol>
+  argument rather than the <code>file</code> or <code>model_code</code> arguments.</p>  
+<p>There are three ways to specify the model's code for <code>stan_model</code>:</p><ol>
 <li><p>parameter <code>model_code</code>: a character string containing the 
         Stan model specification,</p></li>
 <li><p>parameter <code>file</code>: a file name (or a connection) from
        which to read the Stan model specification, or</p></li>
 <li><p>parameter <code>stanc_ret</code>: a list returned by <code>stanc</code>
         to be reused.</p></li>
-</ol><p></p>
+</ol>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
@@ -251,20 +272,25 @@
 
     <p>The Stan Development Team 
   <em>Stan Modeling Language User's Guide and Reference Manual</em>. 
-  <a href = 'http://mc-stan.org/'>http://mc-stan.org/</a>.</p>
+  <a href='http://mc-stan.org/'>http://mc-stan.org/</a>.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='stanmodel-class.html'>stanmodel</a></code> for details on the class.
-    <code><a href='stanmodel-method-sampling.html'>sampling</a></code>, <code><a href='stanmodel-method-optimizing.html'>optimizing</a></code>, and <code><a href='stanmodel-method-vb.html'>vb</a></code>, 
+    <p><code><a href='stanmodel-class.html'>stanmodel</a></code> for details on the class.</p>  
+<p><code><a href='stanmodel-method-sampling.html'>sampling</a></code>, <code><a href='stanmodel-method-optimizing.html'>optimizing</a></code>, and <code><a href='stanmodel-method-vb.html'>vb</a></code>, 
   which take a <code>stanmodel</code> object as input, for estimating the model 
-  parameters.
-    More details on Stan, including the full user's guide and reference 
-  manual, can be found at <a href = 'http://mc-stan.org/'>http://mc-stan.org/</a>.</p>
+  parameters.</p>  
+<p>More details on Stan, including the full user's guide and reference 
+  manual, can be found at <a href='http://mc-stan.org/'>http://mc-stan.org/</a>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'></div></pre>
+    <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>stancode</span> <span class='kw'>&lt;-</span> <span class='st'>'data {real y_mean;} parameters {real y;} model {y ~ normal(y_mean,1);}'</span>
+<span class='no'>mod</span> <span class='kw'>&lt;-</span> <span class='fu'>stan_model</span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>stancode</span>)
+<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanmodel-method-sampling.html'>sampling</a></span>(<span class='no'>mod</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>y_mean</span> <span class='kw'>=</span> <span class='fl'>0</span>))
+<span class='no'>fit2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanmodel-method-sampling.html'>sampling</a></span>(<span class='no'>mod</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>y_mean</span> <span class='kw'>=</span> <span class='fl'>5</span>))
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -291,11 +317,14 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
    </div>
 
+  
+
   </body>
 </html>
+

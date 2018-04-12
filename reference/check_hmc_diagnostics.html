@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plots for stanfit objects — plot-methods • rstan</title>
+<title>Check HMC diagnostics after sampling — check_hmc_diagnostics • rstan</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,12 +25,27 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Plots for stanfit objects — plot-methods" />
+<meta property="og:title" content="Check HMC diagnostics after sampling — check_hmc_diagnostics" />
 
-<meta property="og:description" content="The default plot shows posterior uncertainty intervals and point 
-estimates for parameters and generated quantities. The plot method can 
-also be used to call the other rstan plotting functions via the 
-plotfun argument (see Examples)." />
+<meta property="og:description" content="These functions print summaries of important HMC diagnostics.
+The check_hmc_diagnostics function calls the other functions internally
+and prints an overall summary, but the other functions can also be called 
+directly: 
+check_divergences prints the number (and percentage) of iterations that
+ended with a divergence, check_treedepth prints the number 
+(and percentage) of iterations that saturated the max treedepth, 
+and check_energy prints E-BFMI values for each chain for which E-BFMI 
+is less than 0.2.
+The get_ functions are for programmatic access to the diagnostics. 
+get_divergent_iterations and get_max_treedepth_iterations return a logical
+vector indicating problems for individual iterations,  while 'codeget_num_divergences 
+and get_num_max_treedepth return the number of offending interations.
+get_num_leapfrog_per_iteration returns an integer vector with the number of leapfrog evalutions for each iteration.
+get_bfmi returns per-chain E-BFMI values and get_low_bfmi_chains
+returns the indices of chains with low E-BFMI.
+Brief explanations of some of the problems detected by these diagnostics can
+be found at http://mc-stan.org/misc/warnings.html. For more depth see
+Betancourt (2017)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -132,74 +147,72 @@ plotfun argument (see Examples)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plots for stanfit objects</h1>
+    <h1>Check HMC diagnostics after sampling</h1>
     
     </div>
 
     
-    <p>The default plot shows posterior uncertainty intervals and point 
-estimates for parameters and generated quantities. The <code>plot</code> method can 
-also be used to call the other <strong>rstan</strong> plotting functions via the 
-<code>plotfun</code> argument (see Examples).</p>
+    <p>These functions print summaries of important HMC diagnostics.
+The <code>check_hmc_diagnostics</code> function calls the other functions internally
+and prints an overall summary, but the other functions can also be called 
+directly: 
+<code>check_divergences</code> prints the number (and percentage) of iterations that
+ended with a divergence, <code>check_treedepth</code> prints the number 
+(and percentage) of iterations that saturated the max treedepth, 
+and <code>check_energy</code> prints E-BFMI values for each chain for which E-BFMI 
+is less than 0.2.</p>
+<p>The <code>get_</code> functions are for programmatic access to the diagnostics. 
+<code>get_divergent_iterations</code> and <code>get_max_treedepth_iterations</code> return a logical
+vector indicating problems for individual iterations,  while 'codeget_num_divergences 
+and <code>get_num_max_treedepth</code> return the number of offending interations.
+<code>get_num_leapfrog_per_iteration</code> returns an integer vector with the number of leapfrog evalutions for each iteration.
+<code>get_bfmi</code> returns per-chain E-BFMI values and <code>get_low_bfmi_chains</code>
+returns the indices of chains with low E-BFMI.</p>
+<p>Brief explanations of some of the problems detected by these diagnostics can
+be found at <a href='http://mc-stan.org/misc/warnings.html'>http://mc-stan.org/misc/warnings.html</a>. For more depth see
+Betancourt (2017).</p>
     
 
-    <pre class="usage"><span class='co'># S4 method for stanfit,missing</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='no'>...</span>, <span class='no'>plotfun</span>)</pre>
+    <pre class="usage"><span class='fu'>check_hmc_diagnostics</span>(<span class='no'>object</span>)
+<span class='fu'>check_divergences</span>(<span class='no'>object</span>)
+<span class='fu'>check_treedepth</span>(<span class='no'>object</span>)
+<span class='fu'>check_energy</span>(<span class='no'>object</span>)
+
+<span class='fu'>get_divergent_iterations</span>(<span class='no'>object</span>)
+<span class='fu'>get_max_treedepth_iterations</span>(<span class='no'>object</span>)
+<span class='fu'>get_num_leapfrog_per_iteration</span>(<span class='no'>object</span>)
+
+<span class='fu'>get_num_divergent</span>(<span class='no'>object</span>)
+<span class='fu'>get_num_max_treedepth</span>(<span class='no'>object</span>)
+
+<span class='fu'>get_bfmi</span>(<span class='no'>object</span>)
+<span class='fu'>get_low_bfmi_chains</span>(<span class='no'>object</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An instance of class <code><a href='stanfit-class.html'>stanfit</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>plotfun</th>
-      <td><p>A character string naming the plotting function to apply to the
-  stanfit object. If <code>plotfun</code> is missing, the default is to call
-  <code><a href='stan_plot.html'>stan_plot</a></code>, which generates a plot of credible intervals and
-  point estimates. See <code><a href='plotting-functions.html'>rstan-plotting-functions</a></code> for the names and
-  descriptions of the other plotting functions. <code>plotfun</code> can be either the
-  full name of the plotting function (e.g. <code>"stan_hist"</code>) or can be 
-  abbreviated to the part of the name following the underscore 
-  (e.g. <code>"hist"</code>).</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Optional arguments to <code>plotfun</code>.</p></td>
+      <th>object</th>
+      <td><p>A stanfit object.</p></td>
     </tr>
     </table>
     
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>A <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot</a></code> object that can be further customized
-using the <span class="pkg">ggplot2</span> package.</p>
-    
-    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
-
-    <p>Because the <span class="pkg">rstan</span> plotting functions use <span class="pkg">ggplot2</span> (and thus the 
-resulting plots behave like <code>ggplot</code> objects), when calling a plotting 
-function within a loop or when assigning a plot to a name 
-(e.g., <code>graph &lt;- plot(fit, plotfun = "rhat")</code>),
-if you also want the side effect of the plot being displayed you 
-must explicity print it (e.g., <code>(graph &lt;- plot(fit, plotfun = "rhat"))</code>, 
-<code>print(graph &lt;- plot(fit, plotfun = "rhat"))</code>).</p>
-    
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <p><code><a href='plotting-functions.html'>List of RStan plotting functions</a></code>,
-<code><a href='stan_plot_options.html'>Plot options</a></code></p>
+    <p>The Stan Development Team 
+  <em>Stan Modeling Language User's Guide and Reference Manual</em>. 
+  <a href='http://mc-stan.org/'>http://mc-stan.org/</a>.</p>  
+<p>Betancourt, M. (2017). A conceptual introduction to Hamiltonian Monte Carlo.
+  <a href='https://arxiv.org/abs/1701.02434'>https://arxiv.org/abs/1701.02434</a>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>library</span>(<span class='no'>rstan</span>)
-<span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan_demo.html'>stan_demo</a></span>(<span class='st'>"eight_schools"</span>)
-<span class='fu'>plot</span>(<span class='no'>fit</span>)
-<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>show_density</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ci_level</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>fill_color</span> <span class='kw'>=</span> <span class='st'>"purple"</span>)
-<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>plotfun</span> <span class='kw'>=</span> <span class='st'>"hist"</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='st'>"theta"</span>, <span class='kw'>include</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
-<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>plotfun</span> <span class='kw'>=</span> <span class='st'>"trace"</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"mu"</span>, <span class='st'>"tau"</span>), <span class='kw'>inc_warmup</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-<span class='fu'>plot</span>(<span class='no'>fit</span>, <span class='kw'>plotfun</span> <span class='kw'>=</span> <span class='st'>"rhat"</span>) + <span class='fu'>ggtitle</span>(<span class='st'>"Example of adding title to plot"</span>)
+<span class='no'>schools</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan_demo.html'>stan_demo</a></span>(<span class='st'>"eight_schools"</span>)
+<span class='fu'>check_hmc_diagnostics</span>(<span class='no'>schools</span>)
+<span class='fu'>check_divergences</span>(<span class='no'>schools</span>)
+<span class='fu'>check_treedepth</span>(<span class='no'>schools</span>)
+<span class='fu'>check_energy</span>(<span class='no'>schools</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -207,11 +220,7 @@ must explicity print it (e.g., <code>(graph &lt;- plot(fit, plotfun = "rhat"))</
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#note">Note</a></li>
-
-      <li><a href="#see-also">See also</a></li>
+      <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>
