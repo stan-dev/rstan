@@ -3,10 +3,11 @@
 \alias{check_divergences}
 \alias{check_treedepth}
 \alias{check_energy}
-\alias{get_divergent_vector}
-\alias{get_max_treedepth_vector}
-\alias{get_n_divergences}
-\alias{get_n_max_treedepth}
+\alias{get_divergent_iterations}
+\alias{get_max_treedepth_iterations}
+\alias{get_num_leapfrog_per_iteration}
+\alias{get_num_divergent}
+\alias{get_num_max_treedepth}
 \alias{get_bfmi}
 \alias{get_low_bfmi_chains}
 
