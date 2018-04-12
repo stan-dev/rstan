@@ -137,15 +137,21 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
-            if (is(sampler, "try-error")) {
-              message('trying deprecated constructor; please alert package maintainer')
+            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+              message('trying deprecated constructor; please alert package maintainer')
+            } else {
+              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
               if (is(sampler, "try-error")) {
                 message('failed to create the model; variational Bayes not done')
                 return(invisible(new_empty_stanfit(object)))
               }
-            } 
+            }
+            
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) init <- init()
             if (!is.list(init) && !is.character(init)) {
@@ -303,15 +309,21 @@ setMethod("optimizing", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
-            if (is(sampler, "try-error")) {
-              message('trying deprecated constructor; please alert package maintainer')
+            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+              message('trying deprecated constructor; please alert package maintainer')
+            } else {
+              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
               if (is(sampler, "try-error")) {
                 message('failed to create the optimizer; optimization not done') 
                 return(invisible(list(stanmodel = object)))
               }
-            } 
+            }
+            
             m_pars <- sampler$param_names() 
             idx_wo_lp <- which(m_pars != "lp__")
             m_pars <- m_pars[idx_wo_lp]
@@ -456,15 +468,21 @@ setMethod("sampling", "stanmodel",
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
             sfmiscenv <- new.env(parent = emptyenv())
-            sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
-            if (is(sampler, "try-error")) {
-              message('trying deprecated constructor; please alert package maintainer')
+            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
               if (is(sampler, "try-error")) {
                 message('failed to create the sampler; sampling not done') 
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
-            } 
+              message('trying deprecated constructor; please alert package maintainer')
+            } else {
+              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+            }
+            
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
             m_pars = sampler$param_names()
             p_dims = sampler$param_dims()

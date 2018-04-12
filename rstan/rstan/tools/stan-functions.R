@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ rosetta$RFunction <- ifelse(rosetta$StanFunction %in% unlist(sapply(search(), ls
 rosetta$RFunction <- ifelse(grepl("^operator", rosetta$StanFunction), 
                             gsub("operator", "", rosetta$StanFunction), rosetta$RFunction)
 
+rosetta <- within(rosetta, RFunction[StanFunction == "algebra_solve"] <- "uniroot")
 rosetta <- within(rosetta, RFunction[StanFunction == "append_col"] <- "cbind")  
 rosetta <- within(rosetta, RFunction[StanFunction == "append_row"] <- "rbind")
 rosetta <- within(rosetta, RFunction[grepl("^bernoulli_.*cdf", StanFunction)] <- "pbinom")

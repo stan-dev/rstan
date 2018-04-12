@@ -50,8 +50,20 @@ export(
   quietgg,
   extract_sparse_parts,
   rstan.package.skeleton,
-  cpp_object_initializer
+  cpp_object_initializer,
 # get_rstan.options
+  check_hmc_diagnostics,
+  check_divergences, 
+  check_treedepth, 
+  check_energy,
+  get_divergent_iterations,
+  get_max_treedepth_iterations,
+  get_num_leapfrog_per_iteration,
+  get_num_divergent,
+  get_num_max_treedepth,
+  get_bfmi,
+  get_low_bfmi_chains
+
 )
 
 exportClasses(

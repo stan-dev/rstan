@@ -82,6 +82,7 @@ namespace rstan {
      @param      M  number of iterations to be saved
      @param      warmup number of warmup iterations to be saved
   */
+  inline
   rstan_sample_writer*
   sample_writer_factory(std::ostream *csv_fstream,
                         std::ostream& comment_stream,
