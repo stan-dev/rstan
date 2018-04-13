@@ -40,7 +40,7 @@ home:
 articles:
   - title: "Getting Started"
     desc: >
-      These first two vignettes provide an introduction to using the __rstan__ package.
+      These first two vignettes provide an introduction to using RStan.
     contents:
       - rstan
       - stanfit_objects

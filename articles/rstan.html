@@ -276,7 +276,7 @@ fit1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/stan.h
   <span class="dt">cores =</span> <span class="dv">2</span>,              <span class="co"># number of cores (using 2 just for the vignette)</span>
   <span class="dt">refresh =</span> <span class="dv">1000</span>          <span class="co"># show progress every 'refresh' iterations</span>
   )</code></pre></div>
-<pre><code>Warning: There were 3 divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See
+<pre><code>Warning: There were 1 divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See
 http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
 <pre><code>Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
 <p>The <code>stan</code> function wraps the following three steps:</p>
@@ -295,19 +295,19 @@ http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code><
 post-warmup draws per chain=1000, total post-warmup draws=4000.
 
            mean se_mean   sd    10%    50%    90% n_eff Rhat
-theta[1]  11.35    0.17 8.10   2.51  10.32  21.38  2149    1
-theta[2]   7.89    0.09 6.34   0.20   7.87  15.85  4551    1
-theta[3]   6.33    0.13 7.78  -3.34   6.65  15.56  3826    1
-theta[4]   7.44    0.10 6.50  -0.61   7.58  15.51  4644    1
-theta[5]   5.07    0.10 6.25  -2.91   5.39  12.72  3973    1
-theta[6]   6.15    0.11 6.77  -2.28   6.54  14.11  4093    1
-theta[7]  10.50    0.12 6.89   2.35   9.92  19.22  3407    1
-theta[8]   8.32    0.15 8.01  -0.78   8.06  17.53  3044    1
-mu         7.99    0.12 5.16   1.56   7.90  14.62  2010    1
-tau        6.62    0.23 5.94   1.03   5.29  13.73   651    1
-lp__     -39.50    0.08 2.62 -42.99 -39.29 -36.32  1055    1
+theta[1]  11.39    0.16 8.47   2.17  10.06  22.34  2738 1.00
+theta[2]   7.94    0.09 6.19   0.35   7.83  15.55  4352 1.00
+theta[3]   6.05    0.14 7.65  -3.28   6.57  14.80  3187 1.00
+theta[4]   7.70    0.10 6.58  -0.25   7.69  15.70  4317 1.00
+theta[5]   5.06    0.10 6.42  -3.24   5.60  12.73  4068 1.00
+theta[6]   6.02    0.12 6.91  -2.72   6.39  14.10  3573 1.00
+theta[7]  10.66    0.11 6.77   2.78  10.15  19.64  3807 1.00
+theta[8]   8.38    0.15 8.10  -0.95   7.95  18.23  2846 1.00
+mu         7.89    0.11 4.96   1.83   7.80  14.20  2094 1.00
+tau        6.67    0.18 5.68   1.06   5.32  13.78   977 1.01
+lp__     -39.51    0.08 2.68 -43.03 -39.26 -36.29  1133 1.00
 
-Samples were drawn using NUTS(diag_e) at Thu Apr 12 23:20:22 2018.
+Samples were drawn using NUTS(diag_e) at Thu Apr 12 23:42:09 2018.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -354,10 +354,10 @@ convergence, Rhat=1).</code></pre>
 post-warmup draws per chain=1000, total post-warmup draws=4000.
 
     mean se_mean   sd  2.5%  25%  50%   75% 97.5% n_eff Rhat
-mu  7.99    0.12 5.16 -2.08 4.53 7.90 11.32 18.56  2010    1
-tau 6.62    0.23 5.94  0.23 2.54 5.29  8.89 21.05   651    1
+mu  7.89    0.11 4.96 -2.01 4.63 7.80 11.11 18.11  2094 1.00
+tau 6.67    0.18 5.68  0.31 2.54 5.32  9.21 20.38   977 1.01
 
-Samples were drawn using NUTS(diag_e) at Thu Apr 12 23:20:22 2018.
+Samples were drawn using NUTS(diag_e) at Thu Apr 12 23:42:09 2018.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -371,85 +371,85 @@ convergence, Rhat=1).</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># all chains combined</span>
 sampler_params &lt;-<span class="st"> </span><span class="kw"><a href="../reference/stanfit-class.html">get_sampler_params</a></span>(fit1, <span class="dt">inc_warmup =</span> <span class="ot">TRUE</span>)
 <span class="kw">summary</span>(<span class="kw">do.call</span>(rbind, sampler_params), <span class="dt">digits =</span> <span class="dv">2</span>)</code></pre></div>
-<pre><code> accept_stat__    stepsize__    treedepth__   n_leapfrog__
- Min.   :0.00   Min.   :0.04   Min.   :0.0   Min.   :  1  
- 1st Qu.:0.78   1st Qu.:0.28   1st Qu.:3.0   1st Qu.:  7  
- Median :0.95   Median :0.40   Median :3.0   Median : 15  
- Mean   :0.83   Mean   :0.40   Mean   :3.3   Mean   : 12  
- 3rd Qu.:0.99   3rd Qu.:0.41   3rd Qu.:4.0   3rd Qu.: 15  
- Max.   :1.00   Max.   :8.11   Max.   :7.0   Max.   :159  
-  divergent__        energy__ 
- Min.   :0.0000   Min.   :35  
- 1st Qu.:0.0000   1st Qu.:42  
- Median :0.0000   Median :44  
- Mean   :0.0095   Mean   :45  
- 3rd Qu.:0.0000   3rd Qu.:47  
- Max.   :1.0000   Max.   :62  </code></pre>
+<pre><code> accept_stat__    stepsize__      treedepth__   n_leapfrog__
+ Min.   :0.00   Min.   : 0.045   Min.   :0.0   Min.   :  1  
+ 1st Qu.:0.76   1st Qu.: 0.275   1st Qu.:3.0   1st Qu.:  7  
+ Median :0.95   Median : 0.351   Median :3.0   Median : 15  
+ Mean   :0.82   Mean   : 0.391   Mean   :3.4   Mean   : 13  
+ 3rd Qu.:0.99   3rd Qu.: 0.427   3rd Qu.:4.0   3rd Qu.: 15  
+ Max.   :1.00   Max.   :11.247   Max.   :7.0   Max.   :255  
+  divergent__       energy__ 
+ Min.   :0.000   Min.   :34  
+ 1st Qu.:0.000   1st Qu.:42  
+ Median :0.000   Median :44  
+ Mean   :0.011   Mean   :45  
+ 3rd Qu.:0.000   3rd Qu.:47  
+ Max.   :1.000   Max.   :62  </code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># each chain separately</span>
 <span class="kw">lapply</span>(sampler_params, summary, <span class="dt">digits =</span> <span class="dv">2</span>)</code></pre></div>
 <pre><code>[[1]]
  accept_stat__    stepsize__     treedepth__   n_leapfrog__
- Min.   :0.00   Min.   :0.049   Min.   :0.0   Min.   :  1  
- 1st Qu.:0.73   1st Qu.:0.404   1st Qu.:3.0   1st Qu.:  7  
- Median :0.92   Median :0.410   Median :3.0   Median :  7  
- Mean   :0.80   Mean   :0.428   Mean   :3.2   Mean   : 11  
- 3rd Qu.:0.98   3rd Qu.:0.410   3rd Qu.:3.0   3rd Qu.: 15  
- Max.   :1.00   Max.   :6.097   Max.   :7.0   Max.   :159  
+ Min.   :0.00   Min.   :0.055   Min.   :0.0   Min.   :  1  
+ 1st Qu.:0.74   1st Qu.:0.309   1st Qu.:3.0   1st Qu.:  7  
+ Median :0.94   Median :0.309   Median :4.0   Median : 15  
+ Mean   :0.82   Mean   :0.363   Mean   :3.5   Mean   : 14  
+ 3rd Qu.:0.99   3rd Qu.:0.361   3rd Qu.:4.0   3rd Qu.: 15  
+ Max.   :1.00   Max.   :8.492   Max.   :7.0   Max.   :255  
   divergent__       energy__ 
  Min.   :0.000   Min.   :35  
  1st Qu.:0.000   1st Qu.:42  
  Median :0.000   Median :44  
- Mean   :0.009   Mean   :45  
+ Mean   :0.011   Mean   :45  
  3rd Qu.:0.000   3rd Qu.:47  
- Max.   :1.000   Max.   :61  
+ Max.   :1.000   Max.   :62  
 
 [[2]]
- accept_stat__    stepsize__    treedepth__   n_leapfrog__  divergent__   
- Min.   :0.00   Min.   :0.04   Min.   :0.0   Min.   :  1   Min.   :0.000  
- 1st Qu.:0.86   1st Qu.:0.28   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
- Median :0.96   Median :0.28   Median :4.0   Median : 15   Median :0.000  
- Mean   :0.86   Mean   :0.36   Mean   :3.6   Mean   : 14   Mean   :0.011  
- 3rd Qu.:0.99   3rd Qu.:0.38   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
- Max.   :1.00   Max.   :8.11   Max.   :6.0   Max.   :127   Max.   :1.000  
-    energy__ 
- Min.   :36  
- 1st Qu.:42  
- Median :44  
- Mean   :45  
- 3rd Qu.:47  
- Max.   :57  
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__
+ Min.   :0.00   Min.   :0.047   Min.   :0.0   Min.   :  1  
+ 1st Qu.:0.87   1st Qu.:0.268   1st Qu.:3.0   1st Qu.:  7  
+ Median :0.97   Median :0.268   Median :4.0   Median : 15  
+ Mean   :0.87   Mean   :0.346   Mean   :3.6   Mean   : 14  
+ 3rd Qu.:0.99   3rd Qu.:0.378   3rd Qu.:4.0   3rd Qu.: 15  
+ Max.   :1.00   Max.   :6.689   Max.   :6.0   Max.   :127  
+  divergent__       energy__ 
+ Min.   :0.000   Min.   :35  
+ 1st Qu.:0.000   1st Qu.:42  
+ Median :0.000   Median :45  
+ Mean   :0.009   Mean   :45  
+ 3rd Qu.:0.000   3rd Qu.:47  
+ Max.   :1.000   Max.   :60  
 
 [[3]]
- accept_stat__    stepsize__     treedepth__   n_leapfrog__
- Min.   :0.00   Min.   :0.064   Min.   :0.0   Min.   : 1   
- 1st Qu.:0.73   1st Qu.:0.399   1st Qu.:3.0   1st Qu.: 7   
- Median :0.93   Median :0.405   Median :3.0   Median : 7   
- Mean   :0.81   Mean   :0.427   Mean   :3.2   Mean   :11   
- 3rd Qu.:0.98   3rd Qu.:0.405   3rd Qu.:4.0   3rd Qu.:15   
- Max.   :1.00   Max.   :6.430   Max.   :6.0   Max.   :63   
+ accept_stat__    stepsize__      treedepth__   n_leapfrog__
+ Min.   :0.00   Min.   : 0.045   Min.   :0.0   Min.   : 1   
+ 1st Qu.:0.77   1st Qu.: 0.351   1st Qu.:3.0   1st Qu.: 7   
+ Median :0.95   Median : 0.351   Median :3.0   Median :15   
+ Mean   :0.83   Mean   : 0.407   Mean   :3.4   Mean   :13   
+ 3rd Qu.:0.99   3rd Qu.: 0.398   3rd Qu.:4.0   3rd Qu.:15   
+ Max.   :1.00   Max.   :11.247   Max.   :6.0   Max.   :95   
+  divergent__       energy__ 
+ Min.   :0.000   Min.   :34  
+ 1st Qu.:0.000   1st Qu.:42  
+ Median :0.000   Median :44  
+ Mean   :0.011   Mean   :45  
+ 3rd Qu.:0.000   3rd Qu.:47  
+ Max.   :1.000   Max.   :58  
+
+[[4]]
+ accept_stat__    stepsize__      treedepth__   n_leapfrog__
+ Min.   :0.00   Min.   : 0.052   Min.   :0.0   Min.   : 1   
+ 1st Qu.:0.67   1st Qu.: 0.423   1st Qu.:3.0   1st Qu.: 7   
+ Median :0.90   Median : 0.427   Median :3.0   Median : 7   
+ Mean   :0.78   Mean   : 0.449   Mean   :3.2   Mean   :11   
+ 3rd Qu.:0.98   3rd Qu.: 0.427   3rd Qu.:3.0   3rd Qu.:15   
+ Max.   :1.00   Max.   :10.723   Max.   :6.0   Max.   :79   
   divergent__       energy__ 
  Min.   :0.000   Min.   :36  
  1st Qu.:0.000   1st Qu.:42  
  Median :0.000   Median :44  
- Mean   :0.009   Mean   :45  
+ Mean   :0.012   Mean   :44  
  3rd Qu.:0.000   3rd Qu.:47  
- Max.   :1.000   Max.   :59  
-
-[[4]]
- accept_stat__    stepsize__     treedepth__   n_leapfrog__
- Min.   :0.00   Min.   :0.045   Min.   :0.0   Min.   : 1   
- 1st Qu.:0.82   1st Qu.:0.321   1st Qu.:3.0   1st Qu.: 7   
- Median :0.96   Median :0.321   Median :3.0   Median :15   
- Mean   :0.85   Mean   :0.382   Mean   :3.4   Mean   :13   
- 3rd Qu.:0.99   3rd Qu.:0.402   3rd Qu.:4.0   3rd Qu.:15   
- Max.   :1.00   Max.   :7.847   Max.   :6.0   Max.   :79   
-  divergent__        energy__ 
- Min.   :0.0000   Min.   :37  
- 1st Qu.:0.0000   1st Qu.:42  
- Median :0.0000   Median :45  
- Mean   :0.0095   Mean   :45  
- 3rd Qu.:0.0000   3rd Qu.:47  
- Max.   :1.0000   Max.   :62  </code></pre>
+ Max.   :1.000   Max.   :58  </code></pre>
 <p>Here we see that there are a small number of divergent transitions, which are identified by <code>divergent__</code> being <span class="math inline">\(1\)</span>. Ideally, there should be no divergent transitions after the warmup phase. The best way to try to eliminate divergent transitions is by increasing the target acceptance probability, which by default is <span class="math inline">\(0.8\)</span>. In this case the mean of <code>accept_stat__</code> is close to <span class="math inline">\(0.8\)</span> for all chains, but has a very skewed distribution because the median is near <span class="math inline">\(0.95\)</span>. We could go back and call <code>stan</code> again and specify the optional argument <code>control=list(adapt_delta=0.9)</code> to try to eliminate the divergent transitions. However, sometimes when the target acceptance rate is high, the stepsize is very small and the sampler hits its limit on the number of leapfrog steps it can take per iteration. In this case, it is a non-issue because each chain has a <code>treedepth__</code> of at most <span class="math inline">\(7\)</span> and the default is <span class="math inline">\(10\)</span>. But if any <code>treedepth__</code> were <span class="math inline">\(11\)</span>, then it would be wise to increase the limit by passing <code>control=list(max_treedepth=12)</code> (for example) to <code>stan</code>. See the vignette on stanfit objects for more on the structure of the object returned by <code>get_sampler_params</code>.</p>
 <p>We can also make a graphical representation of (much of the) the same information using <code>pairs</code>. The “pairs”" plot can be used to get a sense of whether any sampling difficulties are occurring in the tails or near the mode:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pairs</span>(fit1, <span class="dt">pars =</span> <span class="kw">c</span>(<span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span>), <span class="dt">las =</span> <span class="dv">1</span>)</code></pre></div>
@@ -508,17 +508,17 @@ sampler_params &lt;-<span class="st"> </span><span class="kw"><a href="../refere
 sm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/stan_model.html">stan_model</a></span>(<span class="dt">model_code =</span> ocode)
 y2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">20</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(y2)</code></pre></div>
-<pre><code>[1] -0.1115918</code></pre>
+<pre><code>[1] -0.3518591</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/stanmodel-method-optimizing.html">optimizing</a></span>(sm, <span class="dt">data =</span> <span class="kw">list</span>(<span class="dt">y =</span> y2, <span class="dt">N =</span> <span class="kw">length</span>(y2)), <span class="dt">hessian =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>Initial log joint probability = -22.5136
+<pre><code>Initial log joint probability = -33.0388
 Optimization terminated normally: 
   Convergence detected: gradient norm is below tolerance</code></pre>
 <pre><code>$par
         mu 
--0.1115918 
+-0.3518591 
 
 $value
-[1] -22.42828
+[1] -24.1429
 
 $return_code
 [1] 0
