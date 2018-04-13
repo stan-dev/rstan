@@ -14,8 +14,10 @@
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 
 
+---
 
-RStan Getting Started
+
+Getting Started
 ----------------
 
 For installation instructions and other tips on getting started with RStan see:

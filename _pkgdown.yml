@@ -31,22 +31,22 @@ navbar:
      href: https://github.com/stan-dev/rstan
    - icon: fa-users
      href: http://discourse.mc-stan.org/
-     
+
 home:
   links:
   - text: Ask a question
     href: http://discourse.mc-stan.org/
-    
+
 articles:
   - title: "Getting Started"
     desc: >
-      These documents below provide an introduction to using the rstan package.
+      These first two vignettes provide an introduction to using the __rstan__ package.
     contents:
       - rstan
       - stanfit_objects
   - title: "Interfacing with C++"
     desc: >
-      The document below details on how to include external C++ code in your
+      This vignette provides details on how to include external C++ code in your
       Stan program.
     contents:
       - external
