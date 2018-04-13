@@ -36,7 +36,7 @@
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{seed}{The seed for random number generation. The default is generated 
     from 1 to the maximum integer supported by \R on the machine. Even if 
@@ -55,7 +55,7 @@
     
   \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
     the data will be preprocessed; otherwise not.
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 

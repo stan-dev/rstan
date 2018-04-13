@@ -60,7 +60,10 @@ Expose user-defined Stan functions to \R for testing and simulation
   The names of the new functions in \code{env} are returned invisibly.
 }
 \seealso{
-  \code{\link[Rcpp]{sourceCpp}}
+  \itemize{
+  \item \code{\link[Rcpp]{sourceCpp}}
+  \item The sections of the Stan manual on user-defined functions. 
+  }
 }
 \examples{
   mc <- 
