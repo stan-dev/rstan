@@ -4,15 +4,15 @@
 
 <br>
 
-<div style="text-align:center">
-<a href="http://mc-stan.org">
-<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo.png" width=200 alt="Stan Logo"/>
-</a>
+<div style="text-align:left">
+<span><a href="http://mc-stan.org">
+<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width=100 alt="Stan Logo"/> </a><h2><strong>rstan</strong></h2>
+<h4>The R interface to Stan</h4></span>
 </div>
 
 <br>
 
-**RStan** is the R interface to [Stan](http://mc-stan.org). 
+**RStan** is the R interface to [Stan](http://mc-stan.org).
 
 ---
 
@@ -20,7 +20,8 @@
 Getting Started
 ----------------
 
-For installation instructions and other tips on getting started with RStan see:
+For installation instructions and other tips on getting started with 
+the __rstan__ R package see:
 
 * [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
 
