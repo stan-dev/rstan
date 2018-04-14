@@ -53,7 +53,7 @@
     \tab \link[rstanarm]{rstanarm-package}
     \tab \href{http://mc-stan.org/rstanarm/}{mc-stan.org/rstanarm}
     \cr 
-  \pkg{rstantools    } 
+  \pkg{rstantools} 
     \tab Tools for developers of \R packages interfacing with Stan.
     \tab \link[rstantools]{rstantools-package}
     \tab \href{http://mc-stan.org/rstantools/}{mc-stan.org/rstantools}
@@ -62,15 +62,16 @@
 }
 \author{
   \tabular{ll}{
-  Jonah Gabry (author) \tab <jonah.sol.gabry@columbia.edu> \cr
-  Jiqiang Guo (author) \tab <guojq28@gmail.com> \cr 
-  Ben Goodrich (maintainer, author) \tab <benjamin.goodrich@columbia.edu> \cr
+    Jonah Gabry (author)\tab <jonah.sol.gabry@columbia.edu> \cr
+    Ben Goodrich (maintainer, author)\tab <benjamin.goodrich@columbia.edu> \cr
+    Jiqiang Guo (author)\tab <guojq28@gmail.com> \cr 
   }
-  
-  These are the primary developers of RStan, however there are many other 
-  contributors to the package. Please use 'Stan Development Team' when citing RStan. 
-  A BibTex entry is available from \url{http://mc-stan.org/rstan/authors} or 
-  \code{citation("rstan")}.
+
+  There are also many other important contributors to RStan 
+  (\href{https://github.com/stan-dev/rstan}{github.com/rstan}). 
+  Please use 'Stan Development Team' whenever citing the R interface to Stan. 
+  A BibTex entry is available from \url{http://mc-stan.org/rstan/authors} 
+  or \code{citation("rstan")}.
 }
 
 \seealso{
