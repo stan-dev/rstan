@@ -1,6 +1,6 @@
 \name{stan}
 \alias{stan}
-\title{Fit a model using Stan}
+\title{Fit a model with Stan}
 \description{
 \if{html}{\figure{stanlogo.png}{options: width="25px" alt="http://mc-stan.org/about/logo/"}}
 Fit a model defined in the Stan modeling language and  
@@ -23,10 +23,11 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{file}{The path to the Stan program to use. 
-    \code{file} should be a character string file name or a 
-    connection that \R supports containing the text of a model 
-    specification in the Stan modeling language. 
+  \item{file}{
+    The path to the Stan program to use. 
+    \code{file} should be a character string file name or a connection that 
+    \R supports containing the text of a model specification in the Stan 
+    modeling language. 
     
     A model may also be specified directly as a character string using the 
     \code{model_code} argument, but we recommend always putting Stan programs 
@@ -37,19 +38,28 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     specified, the \code{file} argument is ignored.
     }
     
-  \item{model_name}{A character string naming the model; defaults 
-    to \code{"anon_model"}. However, the model name will be derived from 
-    \code{file} or \code{model_code} (if \code{model_code} is the name
-    of a character string object) if \code{model_name} is not specified.}
+  \item{model_code}{
+    A character string either containing the model definition or the name of 
+    a character string object in the workspace. This argument is used only 
+    if arguments \code{file} and \code{fit} are not specified.
+  }
     
-  \item{model_code}{A character string either containing the model definition
-    or the name of a character string object in the workspace. This argument is 
-    used only if arguments \code{file} and \code{fit} are not specified.}
-    
-  \item{fit}{An instance of S4 class \code{stanfit} derived from a previous fit;
+  \item{fit}{
+    An instance of S4 class \code{stanfit} derived from a previous fit;
     defaults to \code{NA}. If \code{fit} is not \code{NA}, the compiled model 
     associated with the fitted result is re-used; thus the time that would 
-    otherwise be spent recompiling the C++ code for the model can be saved.}
+    otherwise be spent recompiling the C++ code for the model can be saved.
+  }
+    
+  \item{model_name}{
+    A string to use as the name of the model; defaults 
+    to \code{"anon_model"}. However, the model name will be derived from 
+    \code{file} or \code{model_code} (if \code{model_code} is the name
+    of a character string object) if \code{model_name} is not specified.
+    This is not a particularly important argument, although since it 
+    affects the name used in printed messages, developers of other packages 
+    that use \pkg{rstan} to fit models may want to use informative names.
+  }
     
   \item{data}{A named \code{list} or \code{environment} providing the data for 
     the model, or a character vector for all the names of objects to use as data. 
@@ -67,9 +77,6 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     \code{pars} argument. If \code{FALSE}, only entire multidimensional
     parameters can be excluded, rather than particular elements of them.}
     
-  \item{chains}{A positive integer specifying the number of Markov chains. 
-    The default is 4.} 
- 
   \item{iter}{A positive integer specifying the number of iterations for each 
     chain (including warmup). The default is 2000.}
 
@@ -79,6 +86,18 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     hence these warmup samples should not be used for inference). The number of 
     warmup iterations should not be larger than \code{iter} and the default is 
     \code{iter/2}.}
+    
+  \item{chains}{A positive integer specifying the number of Markov chains. 
+    The default is 4.} 
+    
+  \item{cores}{
+    The number of cores to use when executing the Markov chains in parallel.
+    The default is to use the value of the \code{"mc.cores""} option if it 
+    has been set and otherwise to default to 1 core. However, we recommend 
+    setting it to be as many processors as the hardware and RAM allow 
+    (up to the number of chains). See \code{\link[parallel]{detectCores}} 
+    if you don't know this number for your system.
+  }
 
   \item{thin}{A positive integer specifying the period for saving samples. 
     The default is 1, which is usually the recommended value. Unless your
@@ -133,7 +152,6 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     
     Using \R's \code{set.seed} function to set the seed for Stan will not work.
     }
-    
     
   \item{algorithm}{
     One of the sampling algorithms that are implemented in Stan. 
@@ -212,11 +230,6 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     }
   }
   
-  \item{cores}{Number of cores to use when executing the chains in parallel,
-    which defaults to 1 but we recommend setting the \code{mc.cores} option 
-    to be as many processors as the hardware and RAM allow (up to the 
-    number of chains).}
-    
   \item{open_progress}{Logical scalar that only takes effect if 
     \code{cores > 1} but is recommended to be \code{TRUE} in interactive
     use so that the progress of the chains will be redirected to a file
@@ -273,7 +286,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     memory related problems can be avoided by setting it to \code{FALSE},
     but some diagnostics are more limited if the warmup draws are not
     stored.
-  } 
+  }
 
   \item{boost_lib}{The path for an alternative version of the Boost C++ 
     to use instead of the one in the \pkg{BH} package.}
