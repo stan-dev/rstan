@@ -92,7 +92,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     
   \item{cores}{
     The number of cores to use when executing the Markov chains in parallel.
-    The default is to use the value of the \code{"mc.cores""} option if it 
+    The default is to use the value of the \code{"mc.cores"} option if it 
     has been set and otherwise to default to 1 core. However, we recommend 
     setting it to be as many processors as the hardware and RAM allow 
     (up to the number of chains). See \code{\link[parallel]{detectCores}} 
@@ -316,6 +316,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
   using the \code{fit} argument to specify an existing \code{stanfit} object. 
   In this case, the compiled C++ code for the model is reused. 
 }
+
 \value{
   An object of S4 class \code{\link{stanfit}}. However, if \code{cores > 1}
   and there is an error for any of the chains, then the error(s) are printed. If 

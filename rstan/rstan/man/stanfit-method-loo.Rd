@@ -5,7 +5,6 @@
 \title{Approximate leave-one-out cross-validation} 
 
 \description{
-A \code{\link[loo]{loo}} method that is customized for stanfit objects.
 The \code{loo} method for stanfit objects ---a wrapper around the
 \code{\link[loo]{loo.array}} (\pkg{loo} package)--- computes PSIS-LOO CV,
 approximate leave-one-out cross-validation using Pareto smoothed importance 
@@ -80,10 +79,10 @@ Bayesian Analysis, advance publication, \code{doi:10.1214/17-BA1091}.
 
 \seealso{
  \itemize{
- \item The \pkg{\link[loo]{loo}} package documentation, including the vignettes for 
- many examples (\url{http://mc-stan.org/loo}).
+ \item The \pkg{\link[loo]{loo}} package documentation, including the vignettes 
+ for many examples (\url{http://mc-stan.org/loo/articles/}).
  \item \code{\link[loo]{loo_model_weights}} for model averaging/weighting via 
- stacking or pseudo-BMA weighting.
+ stacking of predictive distributions and other methods.
  }
 } 
 
