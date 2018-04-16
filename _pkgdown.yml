@@ -38,7 +38,7 @@ home:
     href: http://discourse.mc-stan.org/
 
 articles:
-  - title: "Getting Started"
+  - title: "Using the RStan package"
     desc: >
       These first two vignettes provide an introduction to using RStan.
     contents:

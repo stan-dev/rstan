@@ -3,46 +3,48 @@
 [![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](http://depsy.org/package/r/rstan)
 
 <br>
-
 <div style="text-align:left">
 <span><a href="http://mc-stan.org">
-<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width=100 alt="Stan Logo"/> </a><h2><strong>rstan</strong></h2>
-<h4>The R interface to Stan</h4></span>
+<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width=100 alt="Stan Logo"/></a><h2><strong>RStan</strong></h2><h4>The R interface to Stan</h4></span>
 </div>
 
-<br>
+-----
+**RStan** is the R interface to [Stan](http://mc-stan.org). It is distributed on
+[CRAN](https://CRAN.R-project.org/package=rstan) as the **rstan** packge and its
+source code is hosted on GitHub. Before installation, make sure you have the
+necessary C++ toolchain for your system by following the instructions in the
+Getting Started documents below.
 
-**RStan** is the R interface to [Stan](http://mc-stan.org).
+## Getting Started
 
----
-
-
-Getting Started
-----------------
-
-For installation instructions and other tips on getting started with 
-the __rstan__ R package see:
+For installation instructions and other tips on getting started with RStan see:
 
 * [RStan Getting Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
 
-Several Stan users have also contributed translations of the _RStan Getting Started_ page:
+Once you have the package up and running some good places to start are: 
 
-* [RStan Getting Started (French)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Français))
-* [RStan Getting Started (Japanese)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Japanese))
-* [RStan Getting Started (繁體中文)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87))
+* The [RStan vignettes](http://mc-stan.org/rstan/articles/) show how to fit a
+model, extract the contents of a stanfit object, and use external C++ code with
+a Stan program.
+
+* The majority of the [Stan Case Studies](http://mc-stan.org/users/documentation/case-studies.html) include fully worked examples using Rstan.
+
+Several Stan users have also contributed translations of the Getting Started page:
+
+* [RStan Getting Started translations](https://github.com/stan-dev/rstan/#getting-started)
 
 
-Stan
----------
+## Stan
+
 Stan's home page with links to everything you'll need to use Stan's language and algorithms is:
 
-<http://mc-stan.org/>
+* [mc-stan.org](http://mc-stan.org) 
 
+## Source Repository
 
-Source Repository
------------------
-RStan's source-code repository is hosted on GitHub.  Stan's source repository is defined as a submodule (see [how to work with stan submodule in rstan repo](https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule-in-rstan-repo%3F)).
+RStan's source-code repository is hosted on GitHub.  
+Stan's source repository is defined as a submodule (see [how to work with stan submodule in rstan repo](https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule-in-rstan-repo%3F)).
 
-Licensing
----------
-RStan is licensed under GPLv3.  The Stan code packaged in RStan is licensed under new BSD.
+## Licensing
+
+RStan is licensed under GPLv3. The Stan code packaged in RStan is licensed under new BSD.

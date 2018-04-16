@@ -40,13 +40,13 @@ home:
 articles:
   - title: "Getting Started"
     desc: >
-      These documents below provide an introduction to using RStan.
+      These documents provide an introduction to using RStan.
     contents:
       - rstan
       - stanfit_objects
   - title: "Interfacing with C++"
     desc: >
-      The document below details on how to include external C++ code in your
+      This document demonstrates how to include external C++ code in your
       Stan program.
     contents:
       - external
