@@ -48,6 +48,6 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
-  compiled <- Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)
+  compiled <- suppressWarnings(Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...))
   return(invisible(compiled$functions))
 }
