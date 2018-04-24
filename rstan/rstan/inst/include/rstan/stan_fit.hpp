@@ -997,7 +997,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     // get_all_indices_col2row(dims_, midx_for_col2row);
   }
-  
+
   stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
   model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),
@@ -1160,6 +1160,46 @@ public:
     std::vector<int> par_i(model_.num_params_i(), 0);
     std::vector<double> gradient;
     double lp;
+    if (Rcpp::as<bool>(jacobian_adjust_transform))
+      lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+    else
+      lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+    Rcpp::NumericVector grad = Rcpp::wrap(gradient);
+    grad.attr("log_prob") = lp;
+    SEXP __sexp_result;
+    PROTECT(__sexp_result = Rcpp::wrap(grad));
+    UNPROTECT(1);
+    return __sexp_result;
+    END_RCPP
+  }
+
+
+  /**
+  * Expose the hessian_log_prob of the model to stan_fit so R user
+  * can call this function.
+  *
+  * @param upar The real parameters on the unconstrained
+  *  space.
+  * @param jacobian_adjust_transform TRUE/FALSE, whether
+  *  we add the term due to the transform from constrained
+  *  space to unconstrained space implicitly done in Stan.
+  */
+  SEXP hessian_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
+    BEGIN_RCPP
+    std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
+    if (par_r.size() != model_.num_params_r()) {
+      std::stringstream msg;
+      msg << "Number of unconstrained parameters does not match "
+      "that of the model ("
+      << par_r.size() << " vs "
+      << model_.num_params_r()
+      << ").";
+      throw std::domain_error(msg.str());
+    }
+    std::vector<int> par_i(model_.num_params_i(), 0);
+    std::vector<double> gradient;
+    double lp;
+    // TODO: change to log_prob_hessian.
     if (Rcpp::as<bool>(jacobian_adjust_transform))
       lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
     else

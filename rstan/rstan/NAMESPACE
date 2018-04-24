@@ -20,7 +20,7 @@ export(
   stan_model,
   stanc,
   stanc_builder,
-  stan_version, 
+  stan_version,
   stan,
   stan_rdump,
   read_rdump,
@@ -34,12 +34,12 @@ export(
   rstan_options,
   As.mcmc.list,
   set_cppo,
-  stan_plot, 
-  stan_trace, 
-  stan_hist, 
-  stan_dens, 
+  stan_plot,
+  stan_trace,
+  stan_hist,
+  stan_dens,
   stan_scat,
-  stan_ac, 
+  stan_ac,
   stan_diag,
   stan_par,
   stan_rhat,
@@ -53,8 +53,8 @@ export(
   cpp_object_initializer,
 # get_rstan.options
   check_hmc_diagnostics,
-  check_divergences, 
-  check_treedepth, 
+  check_divergences,
+  check_treedepth,
   check_energy,
   get_rng,
   get_stream,
@@ -62,21 +62,21 @@ export(
 )
 
 exportClasses(
-  stanmodel, stanfit 
-) 
+  stanmodel, stanfit
+)
 exportMethods(
-#   print, plot, 
-#   extract, 
+#   print, plot,
+#   extract,
   optimizing, vb,
-  get_cppcode, get_cxxflags, # for stanmodel 
+  get_cppcode, get_cxxflags, # for stanmodel
   show, sampling, summary, extract,
   traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,
-  log_prob, grad_log_prob, 
+  log_prob, grad_log_prob, hessian_log_prob,
   unconstrain_pars, constrain_pars, get_num_upars,
   get_seeds,
   get_adaptation_info,
   get_sampler_params,
-  get_logposterior, 
+  get_logposterior,
   get_posterior_mean,
   get_elapsed_time,
   get_stanmodel
