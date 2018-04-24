@@ -1216,14 +1216,14 @@ public:
     else
       stan::model::log_prob_hessian<true,false>(
           model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
+
     Rcpp::NumericVector grad = Rcpp::wrap(grad_f);
     Rcpp::NumericMatrix hess = Rcpp::wrap(hess_f);
 
-    // TODO: do this differently
-    grad.attr("log_prob") = lp;
-    grad.attr("hessian") = hess;
+    hess.attr("log_prob") = lp;
+    hess.attr("gradient") = grad;
     SEXP __sexp_result;
-    PROTECT(__sexp_result = Rcpp::wrap(grad));
+    PROTECT(__sexp_result = Rcpp::wrap(hess));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP
