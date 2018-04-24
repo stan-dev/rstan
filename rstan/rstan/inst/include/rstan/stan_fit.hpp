@@ -1189,9 +1189,11 @@ public:
   */
   SEXP hessian_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
     BEGIN_RCPP
+    std::vector<double> std_par_r = Rcpp::as<std::vector<double> >(upar);
     Eigen::Matrix<double, Eigen::Dynamic, 1> par_r =
-        Rcpp::as<Eigen::Matrix<double, Eigen::Dynamic, 1>>(upar);
-    //std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
+        Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, 1>>(
+            std_par_r.data(), std_par_r.size());
+
     if (par_r.size() != model_.num_params_r()) {
       std::stringstream msg;
       msg << "Number of unconstrained parameters does not match "
