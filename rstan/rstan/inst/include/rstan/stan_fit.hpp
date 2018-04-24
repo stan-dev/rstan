@@ -1189,7 +1189,9 @@ public:
   */
   SEXP hessian_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
     BEGIN_RCPP
-    std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
+    Eigen::Matrix<double, Eigen::Dynamic, 1> par_r =
+        Rcpp::as<Eigen::Matrix<double, Eigen::Dynamic, 1>>(upar);
+    //std::vector<double> par_r = Rcpp::as<std::vector<double> >(upar);
     if (par_r.size() != model_.num_params_r()) {
       std::stringstream msg;
       msg << "Number of unconstrained parameters does not match "
@@ -1199,16 +1201,16 @@ public:
       << ").";
       throw std::domain_error(msg.str());
     }
-    std::vector<int> par_i(model_.num_params_i(), 0);
+    //std::vector<int> par_i(model_.num_params_i(), 0);
     Eigen::Matrix<double, Eigen::Dynamic, 1> grad_f;
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> hess_f;
 
     double lp;
     if (Rcpp::as<bool>(jacobian_adjust_transform))
-      lp = stan::model::log_prob_hessian<true,true>(
+      stan::model::log_prob_hessian<true,true>(
           model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
     else
-      lp = stan::model::log_prob_hessian<true,false>(
+      stan::model::log_prob_hessian<true,false>(
           model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
     Rcpp::NumericVector grad = Rcpp::wrap(grad_f);
     Rcpp::NumericMatrix hess = Rcpp::wrap(hess_f);
