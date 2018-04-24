@@ -6,3 +6,4 @@
 MAKEFLAGS=-j6
 
 # CXXFLAGS = -O3 $(LTO) 
+CXXFLAGS+=-std=c++14
