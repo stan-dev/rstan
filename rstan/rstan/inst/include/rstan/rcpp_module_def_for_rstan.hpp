@@ -25,6 +25,8 @@ RCPP_MODULE(stan_fit4%model_name%_mod){
             &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::param_oi_tidx)
     .method("grad_log_prob",
             &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::grad_log_prob)
+    .method("hessian_times_vector_log_prob",
+            &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::hessian_times_vector_log_prob)
     .method("hessian_log_prob",
             &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::hessian_log_prob)
     .method("log_prob",
