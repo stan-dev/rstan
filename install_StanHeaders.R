@@ -4,12 +4,16 @@
 
 path_rstan <- tempfile(pattern = "git2r-")
 path_stan_dev <- "/home/rgiordan/Documents/git_repos/stan-dev/"
+
 git2r::clone(file.path(path_stan_dev, "rstan"),
              path_rstan, branch = "add_hessian4")
+
 git2r::clone(file.path(path_stan_dev, "stan"),
              file.path(path_rstan, "StanHeaders", "inst", "include", "upstream"),
-             branch = "add_hessians") # may want to change this branch
+             branch = "add_hessians2")
+
 git2r::clone(file.path(path_stan_dev, "math"),
              file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"),
-             branch = "develop") # may want to change this branch
+             branch = "develop")
+
 devtools::install(file.path(path_rstan, "StanHeaders"), args = "--preclean")

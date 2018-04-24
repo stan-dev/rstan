@@ -26,8 +26,9 @@
 // void R_CheckUserInterrupt(void);
 
 
-// TODO: where is this actually supposed to go?
+// TODO: where are these includes actually supposed to go?
 #include <stan/model/hessian.hpp>
+#include <RcppEigen.h>
 
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
