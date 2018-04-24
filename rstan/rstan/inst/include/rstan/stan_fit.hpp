@@ -26,6 +26,9 @@
 // void R_CheckUserInterrupt(void);
 
 
+// TODO: where is this actually supposed to go?
+#include <stan/model/hessian.hpp>
+
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
 #include <stan/callbacks/stream_logger.hpp>
@@ -1197,8 +1200,8 @@ public:
       throw std::domain_error(msg.str());
     }
     std::vector<int> par_i(model_.num_params_i(), 0);
-    Eigen::Matrix<double, Eigen::Dynamic, 1> grad_f,
-    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> hess_f,
+    Eigen::Matrix<double, Eigen::Dynamic, 1> grad_f;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> hess_f;
 
     double lp;
     if (Rcpp::as<bool>(jacobian_adjust_transform))
