@@ -1197,15 +1197,22 @@ public:
       throw std::domain_error(msg.str());
     }
     std::vector<int> par_i(model_.num_params_i(), 0);
-    std::vector<double> gradient;
+    Eigen::Matrix<double, Eigen::Dynamic, 1> grad_f,
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> hess_f,
+
     double lp;
-    // TODO: change to log_prob_hessian.
     if (Rcpp::as<bool>(jacobian_adjust_transform))
-      lp = stan::model::log_prob_grad<true,true>(model_, par_r, par_i, gradient, &rstan::io::rcout);
+      lp = stan::model::log_prob_hessian<true,true>(
+          model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
     else
-      lp = stan::model::log_prob_grad<true,false>(model_, par_r, par_i, gradient, &rstan::io::rcout);
-    Rcpp::NumericVector grad = Rcpp::wrap(gradient);
+      lp = stan::model::log_prob_hessian<true,false>(
+          model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
+    Rcpp::NumericVector grad = Rcpp::wrap(grad_f);
+    Rcpp::NumericMatrix hess = Rcpp::wrap(hess_f);
+
+    // TODO: do this differently
     grad.attr("log_prob") = lp;
+    grad.attr("hessian") = hess;
     SEXP __sexp_result;
     PROTECT(__sexp_result = Rcpp::wrap(grad));
     UNPROTECT(1);
