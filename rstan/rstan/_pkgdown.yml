@@ -20,6 +20,8 @@ navbar:
           href: http://mc-stan.org/shinystan
         - text: "loo"
           href: http://mc-stan.org/loo
+        - text: "projpred"
+          href: http://mc-stan.org/projpred
         - text: "rstantools"
           href: http://mc-stan.org/rstantools
     - text: "Stan"
@@ -38,15 +40,16 @@ home:
     href: http://discourse.mc-stan.org/
     
 articles:
-  - title: "Getting Started"
+  - title: "Using the RStan package"
     desc: >
-      These documents provide an introduction to using RStan.
+      These first two vignettes provide an introduction to fitting a model in 
+      RStan and extracting the important contents from fitted model objects.
     contents:
       - rstan
       - stanfit_objects
   - title: "Interfacing with C++"
     desc: >
-      This document demonstrates how to include external C++ code in your
+      This vignette provides details on how to include external C++ code in your
       Stan program.
     contents:
       - external
