@@ -14,7 +14,12 @@ test_optimizing <- function() {
       y ~ normal(0,1); 
       target += -square(a[1]) - square(a[2]);
     }
+    generated quantities {
+      matrix[4, 5] B;
+      for (i in 1:4) for (j in 1:5) B[i,j] = 1;
+    }
   ' 
+  # TODO: add check the names of the returns
   m2 <- stan_model(model_code = mc)
   set.seed(1287)
   o2 <- optimizing(m2, hessian = TRUE, seed = 4)
