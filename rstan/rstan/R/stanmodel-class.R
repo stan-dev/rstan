@@ -366,7 +366,7 @@ setMethod("optimizing", "stanmodel",
             attr(optim, "return_code") <- NULL
             # names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             fnames <- sampler$param_fnames_oi()
-            names(optim$par) <- fnames[1:(length(fnames)-1)]
+            names(optim$par) <- fnames[-length(fnames)]
             skeleton <- create_skeleton(m_pars, p_dims)
             if (hessian || draws) {
               fn <- function(theta) {
