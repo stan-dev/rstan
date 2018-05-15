@@ -19,46 +19,93 @@
 #   .Call("stan_prob_autocovariance", v)
 # }
 
+fft_next_good_size <- function(N) {
+  # Find the optimal next size for the FFT so that
+  # a minimum number of zeros are padded.
+  if (N <= 2)
+    return(2)
+  while (TRUE) {
+    m = N
+    while ((m %% 2) == 0) m = m / 2
+    while ((m %% 3) == 0) m = m / 3
+    while ((m %% 5) == 0) m = m / 5
+    if (m <= 1)
+      return(N)
+    N = N + 1
+  }
+}
+
+autocovariance <- function(y) {
+  # Compute autocovariance estimates for every lag for the specified
+  # input sequence using a fast Fourier transform approach.
+  N <- length(y)
+  M <- fft_next_good_size(N)
+  Mt2 <- 2 * M
+  yc <- y - mean(y)
+  yc <- c(yc, rep.int(0, Mt2-N))
+  transform <- fft(yc)
+  ac <- fft(Conj(transform) * transform, inverse = TRUE)
+  ac <- Re(ac)[1:N]/(N*2*seq(N, 1, by = -1))
+  ac
+}
+   
+autocorrelation <- function(y) {
+  # Compute autocorrelation estimates for every lag for the specified
+  # input sequence using a fast Fourier transform approach.
+  ac <- autocovariance(y)
+  ac <- ac/ac[1]
+}
+
 ess_rfun <- function(sims) {
   # Compute the effective sample size for samples of several chains 
   # for one parameter; see the C++ code of function  
-  # effective_sample_size2 in chains.cpp 
+  # effective_sample_size in chains.cpp 
   # 
   # Args:
   #   sims: a 2-d array _without_ warmup samples (# iter * # chains) 
   # 
-  # Note: 
-  #   The implementation in R uses acf in R to compute the autocovariance
-  #   and the results might be a little bit different from that in stan. 
-  #   The R function wrapping the C++ implementation is defined in 
-  #   chains.R with name rstan_ess2_cpp 
   if (is.vector(sims)) dim(sims) <- c(length(sims), 1)
   chains <- ncol(sims)
   n_samples <- nrow(sims)
 
   acov <- lapply(1:chains, 
-                 FUN = function(i) {
-                   cov <- acf(sims[,i], lag.max = n_samples - 1, 
-                              plot = FALSE, type = c("covariance")) 
-                   cov$acf[,,1]
-                 }) 
-#   acov <- lapply(1:chains, 
-#                  FUN = function(i) stan_prob_autocovariance(sims[, i]))
+                 FUN = function(i) autocovariance(sims[,i])) 
   acov <- do.call(cbind, acov)
   chain_mean <- apply(sims, 2, mean)
   mean_var <- mean(acov[1,]) * n_samples / (n_samples - 1) 
   var_plus <- mean_var * (n_samples - 1) / n_samples
   if (chains > 1) 
     var_plus <- var_plus + var(chain_mean)
-  rho_hat_sum <- 0
-  for (t in 2:nrow(acov)) {
-    rho_hat <- 1 - (mean_var - mean(acov[t, ])) / var_plus
-    if (is.nan(rho_hat)) rho_hat <- 0
-    if (rho_hat < 0) break
-    rho_hat_sum <- rho_hat_sum + rho_hat
-  } 
+  # Geyer's initial positive sequence
+  rho_hat_t <- rep.int(0, n_samples)
+  t <- 0
+  rho_hat_even <- 1;
+  rho_hat_t[t+1] <- rho_hat_even
+  rho_hat_odd <- 1 - (mean_var - mean(acov[t+2, ])) / var_plus
+  rho_hat_t[t+2] <- rho_hat_odd
+  t <- 2  
+  while (t < nrow(acov)-1 && (rho_hat_even + rho_hat_odd > 0)) {
+    rho_hat_even = 1 - (mean_var - mean(acov[t+1, ])) / var_plus
+    rho_hat_odd = 1 - (mean_var - mean(acov[t+2, ])) / var_plus
+    if ((rho_hat_even + rho_hat_odd) >= 0) {
+      rho_hat_t[t+1] <- rho_hat_even
+      rho_hat_t[t+2] <- rho_hat_odd
+    }
+    t <- t + 2
+  }
+  max_t <- t
+  # Geyer's initial monotone sequence
+  t <- 2
+  while (t <= max_t - 2) {  
+    if (rho_hat_t[t + 1] + rho_hat_t[t + 2] >
+  	rho_hat_t[t - 1] + rho_hat_t[t]) {
+      rho_hat_t[t + 1] = (rho_hat_t[t - 1] + rho_hat_t[t]) / 2;
+      rho_hat_t[t + 2] = rho_hat_t[t + 1];
+    }
+    t <- t + 2
+  }
   ess <- chains * n_samples
-  if (rho_hat_sum > 0) ess <- ess / (1 + 2 * rho_hat_sum)
+  ess <- ess / (-1 + 2 * sum(rho_hat_t[1:max_t]))
   ess 
 } 
 
