@@ -156,16 +156,21 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   # Return: 
   #   A summary array  
   dim_sims <- dim(sims)
-  dimnames_sims <- dimnames(sims)
-  parnames <- dimnames_sims[[3]]
-  if (length(dim_sims) != 3) 
-    stop("'sims' is not a 3-d array")
+  if (is.null(dim_sims))
+      dim(sims) <- c(length(sims), 1, 1)
+  if (length(dim_sims) == 2)
+      dim(sims) <- c(dim_sims, 1)
+  if (length(dim_sims) > 3) 
+    stop("'sims' has more than 3 dimensions")
+  dim_sims <- dim(sims)
   if (warmup > dim_sims[1])
     stop("warmup is larger than the total number of iterations")
   if (is(sims, "stanfit")) {
     warmup <- 0L
     sims <- as.array(sims)
   }
+  dimnames_sims <- dimnames(sims)
+  parnames <- dimnames_sims[[3]]
   num_par <- dim_sims[3]
   
   if (is.null(parnames)) parnames <- paste0("V", 1:num_par)
