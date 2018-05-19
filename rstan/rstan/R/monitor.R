@@ -84,7 +84,7 @@ ess_rfun <- function(sims) {
   rho_hat_odd <- 1 - (mean_var - mean(acov[t+2, ])) / var_plus
   rho_hat_t[t+2] <- rho_hat_odd
   t <- 2  
-  while (t < nrow(acov)-1 && (rho_hat_even + rho_hat_odd > 0)) {
+  while (t < nrow(acov)-1 && !is.nan(rho_hat_even + rho_hat_odd) && (rho_hat_even + rho_hat_odd > 0)) {
     rho_hat_even = 1 - (mean_var - mean(acov[t+1, ])) / var_plus
     rho_hat_odd = 1 - (mean_var - mean(acov[t+2, ])) / var_plus
     if ((rho_hat_even + rho_hat_odd) >= 0) {
