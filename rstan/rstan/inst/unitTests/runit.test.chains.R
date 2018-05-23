@@ -15,28 +15,28 @@
 
 test_essnrhat <- function() {
   upath <- system.file('unitTests', package='rstan')
-  f1 <- file.path(upath, 'testdata', 'blocker1.csv')  
-  f2 <- file.path(upath, 'testdata', 'blocker2.csv')  
-  c1 <- read.csv(f1, comment.char = "#", header = TRUE)[, -(1:2)] 
+  f1 <- file.path(upath, 'testdata', 'blocker.1.csv')  
+  f2 <- file.path(upath, 'testdata', 'blocker.2.csv')  
+  c1 <- read.csv(f1, comment.char = "#", header = TRUE)[, -(1:4)] 
   # c1 <- do.call(cbind, c1)  
-  c2 <- read.csv(f2, comment.char = "#", header = TRUE)[, -(1:2)]
+  c2 <- read.csv(f2, comment.char = "#", header = TRUE)[, -(1:4)]
   # c2 <- do.call(cbind, c2)  
   lst <- list(samples = list(c1 = c1, c2 = c2), 
               n_save = c(nrow(c1), nrow(c2)), 
               permutation = NULL, 
               warmup2 = rep(0, 2), chains = 2, n_flatnames = ncol(c1))
-  ess <- rstan:::rstan_ess(lst, 3)
+  ess <- rstan:::rstan_ess(lst, 1)
   # cat("ess=", ess, "\n") 
-  checkEquals(ess, 13.0778, tolerance = 0.001); 
-  rhat <- rstan:::rstan_splitrhat(lst, 3)
+  checkEquals(ess, 466.0988, tolerance = 0.001); 
+  rhat <- rstan:::rstan_splitrhat(lst, 1)
   # cat("rhat=", rhat, "\n") 
-  checkEquals(rhat, 1.187, tolerance = 0.001); 
-  ess2 <- rstan:::rstan_ess(lst, 46)
+  checkEquals(rhat, 1.007182, tolerance = 0.001); 
+  ess2 <- rstan:::rstan_ess(lst, 5)
   # cat("ess=", ess2, "\n") 
-  checkEquals(ess2, 43.0242, tolerance = 0.001); 
-  rhat2 <- rstan:::rstan_splitrhat(lst, 46) 
+  checkEquals(ess2, 518.0513, tolerance = 0.001); 
+  rhat2 <- rstan:::rstan_splitrhat(lst, 5) 
   # cat("rhat=", rhat2, "\n") 
-  checkEquals(rhat2, 1.03715, tolerance = 0.001); 
+  checkEquals(rhat2, 1.003782, tolerance = 0.001); 
 } 
 
 test_seq_perm <- function() {
