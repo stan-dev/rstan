@@ -1,9 +1,5 @@
 inst/include/upstream
 inst/include/mathlib
-src/lib/cvodes/src/nvec_openmp
-src/lib/cvodes/src/nvec_par
-src/lib/cvodes/src/nvec_pthreads
-src/lib/cvodes/include
 inst/include/src/test.*$
 inst/include/src/.*\.hpp\.d$
 inst/include/src/.*\..pp\.gch$
