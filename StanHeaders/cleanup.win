@@ -3,13 +3,15 @@
 rm -rf inst/include/stan
 rm -rf inst/include/src
 rm -rf inst/include/cvodes
+rm -rf inst/include/nvector
+rm -rf inst/include/sundials
 rm -rf src/cvodes
 
 cp -r inst/include/mathlib/stan inst/include/stan
 cp -r inst/include/upstream/src inst/include/src
 cp -r inst/include/mathlib/lib/cvodes_2.9.0 src/cvodes
 mkdir -p inst/include/src/cvodes/include
-mv inst/include/mathlib/lib/cvodes_2.9.0/include/* inst/include/src/cvodes/include
+cp -r inst/include/mathlib/lib/cvodes_2.9.0/include/* inst/include/src/cvodes/include
 
 exit $?
 
