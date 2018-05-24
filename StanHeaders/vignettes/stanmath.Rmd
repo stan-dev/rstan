@@ -41,20 +41,27 @@ $\left(\mathbf{x} - \mathbf{a}\right)^\top \left(\mathbf{x} - \mathbf{a}\right)$
 // [[Rcpp::depends(StanHeaders)]]
 #include <Rcpp.h>
 #include <RcppEigen.h>
-#include <stan/math.hpp>  // pulls in everything; could be more specific with included headers
+#include <stan/math.hpp>  
+// pulls in everything; could be more specific with included headers
 
 // [[Rcpp::export]]
 double f(Eigen::VectorXd x, Eigen::VectorXd a) {  // objective function in doubles
-  return stan::math::dot_self( (x - a).eval() );  // dot_self() is a dot product with the same vector
+  return stan::math::dot_self( (x - a).eval() );  
+  // dot_self() is a dot product with the same vector
 }
 stan::math::var f(Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1> x, Eigen::VectorXd a) {
-  return stan::math::dot_self( (x - stan::math::to_var(a)).eval() );  // same but with vars
+  return stan::math::dot_self( (x - stan::math::to_var(a)).eval() );  
+  // same but with vars
 }
 // [[Rcpp::export]]
 std::vector<double> g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
-  auto x_var = stan::math::to_var(x); std::vector<stan::math::var> theta; std::vector<double> grad;
+  Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1> x_var = stan::math::to_var(x); 
+  std::vector<stan::math::var> theta; 
+  std::vector<double> grad;
   for (int k = 0; k < x.rows(); k++) theta.push_back(x_var.coeff(k));
-  stan::math::var lp = f(x_var, a); lp.grad(theta, grad); return grad;
+  stan::math::var lp = f(x_var, a); 
+  lp.grad(theta, grad); 
+  return grad;
 }
 ```
 ```{r}
