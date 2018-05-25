@@ -260,7 +260,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
   idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
   for (i in seq_along(samples)) {
-    m <- apply(samples[[i]][idx_kept,], 2, mean)
+    m <- vapply(samples[[i]], function(x) mean(x[idx_kept]), numeric(1))
     attr(samples[[i]], "mean_pars") <- m[-length(m)]
     attr(samples[[i]], "mean_lp__") <- m["lp__"]
   }
