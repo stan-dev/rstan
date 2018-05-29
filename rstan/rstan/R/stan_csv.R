@@ -145,28 +145,24 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
                     row.names = c(NA,-iter.count),
                     class = "data.frame")
     comments = character()
-    con <- file(csvfiles[[i]],"r")
+    con <- file(csvfiles[[i]],"rb")
     buffer.size <- min(ceiling(1000000/variable.count),iter.count)
     row.buffer <- matrix(ncol=variable.count,nrow=buffer.size)
     row <- 1
     buffer.pointer <- 1  
-    while(length(char <- readChar(con, 1)) > 0) {
+    while(length(char <- readBin(con,'int',size=1L)) > 0) {
       # back up 1 character, since we already looked at one to check for comment
-      if(getRversion() >="3.5.0") seek(con,seek(con)-1)
-      else seek(con,origin="current",-1)
-      if(char == "#"){
+      seek(con,origin="current",-1)
+      if(char == 35){ #35 is '#'
         line <- readLines(con, n = 1)
-        if(getRversion() >="3.5.0") seek(con,seek(con))
         comments <- c(comments, line)
         next
       }
-      if(char == "l"){ #start of lp__ in header
+      if(char == 108){ #start of lp__ in header 108
         readLines(con, n = 1)
-        if(getRversion() >="3.5.0") seek(con,seek(con))
         next
       }
       row.buffer[buffer.pointer,] <- scan(con, nlines=1, sep="," ,quiet=TRUE)
-        seek(con,seek(con))
       if(buffer.pointer == buffer.size){
         df[row:(row + buffer.size - 1), ] <- row.buffer
         row <- row + buffer.size
