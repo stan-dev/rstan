@@ -39,9 +39,10 @@ before_install:
   - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
-  - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
-  - git config -f .gitmodules submodule.StanHeaders/inst/include/mathlib.branch ${STAN_MATH_BRANCH}
   - git submodule update --init --recursive  || echo "ok"
+  - cd ${TRAVIS_BUILD_DIR}/StanHeaders/inst/include/upstream && git checkout origin/${STAN_BRANCH}
+  - cd ${TRAVIS_BUILD_DIR}/StanHeaders/inst/include/mathlib && git checkout origin/${STAN_MATH_BRANCH}
+  - cd ${TRAVIS_BUILD_DIR}
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown'), repos='http://cran.rstudio.com')"
