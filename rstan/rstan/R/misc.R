@@ -1696,7 +1696,7 @@ avoid_crash <- function(mod) {
                           
 allow_higher_SH <- function() {
   x <- as.logical(Sys.getenv("ALLOW_HIGHER_STANHEADER"))
-  if (is.na(x)) return FALSE
+  if (is.na(x)) return(FALSE)
   TRUE
 }
                           
