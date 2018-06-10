@@ -2,6 +2,9 @@ sudo: true
 dist: trusty
 services:
   - docker
+  
+git:
+  submodules: false
 
 cache: 
   apt: true
