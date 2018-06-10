@@ -45,7 +45,7 @@ before_install:
   - cd ${TRAVIS_BUILD_DIR}
 
 before_script: 
-  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown'), repos='http://cran.rstudio.com')"
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown', 'loo'), repos='http://cran.rstudio.com')"
   - R CMD build StanHeaders/
   - R CMD INSTALL `find StanHeaders*.tar.gz`
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr update --self; fi
