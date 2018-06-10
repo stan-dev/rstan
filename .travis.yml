@@ -60,7 +60,7 @@ before_script:
   - if [[ $RCPP_VER = 'github' ]]; then R -q -e "options(repos = getCRANmirrors()[1,'URL']); library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
   - echo ${CXX}
   - echo ${CLANG_EXTRA_ARG}
-  - sed -i.bak "s/^Version.*/Version: ${RSTAN_NEXT_VER}/" ./rstan/rstan/DESCRIPTION
+  - sed -i.bak "s/^Version.*/Version\x3A ${RSTAN_NEXT_VER}/" ./rstan/rstan/DESCRIPTION
   - sed -i.bak "s/ g++/ ${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
   - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - rm ./rstan/R_Makevars.bak
