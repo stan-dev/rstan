@@ -1693,3 +1693,11 @@ avoid_crash <- function(mod) {
   as(get("packageName", envir = mod)["info"][1], "character") %in% 
     c("<pointer: (nil)>", "<pointer: 0x0>")
 }
+                          
+allow_higher_SH <- function() {
+  x <- as.logical(Sys.getenv("ALLOW_HIGHER_STANHEADER"))
+  if (is.na(x)) return FALSE
+  TRUE
+}
+                          
+                          
