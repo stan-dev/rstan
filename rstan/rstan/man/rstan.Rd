@@ -114,7 +114,7 @@ fit <- stan(model_code = stanmodelcode, model_name = "example",
 print(fit)
 
 # extract samples 
-e <- extract(fit, permuted = FALSE) # return a list of arrays 
+e <- extract(fit, permuted = TRUE) # return a list of arrays
 mu <- e$mu 
 
 arr <- as.array(fit) # return an array 
