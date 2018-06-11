@@ -348,7 +348,6 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
   }
 
   double rho_hat_even = 1;
-  rho_hat_t[0] = rho_hat_even;
   double rho_hat_odd = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
   rho_hat_t[1] = rho_hat_odd;
   // Geyer's initial positive sequence
