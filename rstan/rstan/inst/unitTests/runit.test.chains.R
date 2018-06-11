@@ -37,6 +37,8 @@ test_ess2 <- function() {
               warmup2 = rep(17, 2),
               chains = 2, 
               n_flatnames = 2)
+  # just make sure this can run without segfault first
+  ess <- rstan:::rstan_ess(lst, 1)
   ess <- rstan:::rstan_ess(lst, 2)
 }
 
