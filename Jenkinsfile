@@ -3,7 +3,7 @@ pipeline {
     environment {
         MAKEFLAGS="-j${env.PARALLEL}"
         R_LIBS="~/.RLibs"
-        export USE_CXX14=1
+        USE_CXX14=1
     }
     stages {
         stage('Install dependencies') {
