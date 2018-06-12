@@ -15,8 +15,8 @@ pipeline {
                     R -q -e 'dir.create("~/RLibs", recursive=TRUE)'
                     R -q -e 'cat("R_LIBS_USER=~/RLibs", file = "~/.Renviron")'
                     R -q -e '.libPaths()' 
-                    R -e 'install.packages(c("devtools", "knitr"), repos="http://cran.us.r-project.org")'
-                    R -e 'update(devtools::package_deps("rstan"))'
+                    R -e 'install.packages(c("devtools"), repos="http://cran.us.r-project.org")'
+                    R -e 'update(devtools::package_deps("rstan",  dependencies=TRUE))'
                     R -e 'install.packages("RInside", repos="http://cran.us.r-project.org")'
                 """
             }
