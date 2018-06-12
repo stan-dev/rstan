@@ -138,6 +138,22 @@ namespace rstan {
             << ", but INTSXP/REALSXP needed";
         throw std::domain_error(msg.str());
       }
+
+      SEXP sample_sexp = lst["samples"];
+
+      if (TYPEOF(lst["samples"]) != VECSXP) {
+        std::stringstream msg;
+        msg << "sim$samples is not a list";
+        throw std::domain_error(msg.str());
+      }
+
+      int nchains2 = Rcpp::List(sample_sexp).size();
+      if (nchains2 != Rcpp::as<int>(lst["chains"])) {
+        std::stringstream msg;
+        msg << "the number of chains specified is different from "
+            << "the one found in samples";
+        throw std::domain_error(msg.str());
+      }
     }
 
     unsigned int num_chains(SEXP sim) {
@@ -157,11 +173,6 @@ namespace rstan {
     void get_kept_samples(SEXP sim, const size_t k, const size_t n,
                           std::vector<double>& samples) {
       Rcpp::List lst(sim);
-      if (TYPEOF(lst["samples"]) != VECSXP) {
-        std::stringstream msg;
-        msg << "sim$samples is not a list";
-        throw std::domain_error(msg.str());
-      }
       Rcpp::List allsamples(static_cast<SEXP>(lst["samples"]));
       Rcpp::IntegerVector n_save(static_cast<SEXP>(lst["n_save"]));
       Rcpp::IntegerVector warmup2(static_cast<SEXP>(lst["warmup2"]));
