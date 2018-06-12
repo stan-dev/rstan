@@ -11,8 +11,6 @@ pipeline {
             steps {
                 // writeFile file: "~/.Renviron", text: "R_LIBS_USER=~/.RLibs"
                 sh """
-                    // mkdir -p ~/.RLibs
-                    // more ~/.Renviron 
                     mkdir -p `R -q -e 'cat(.expand_R_libs_env_var("~/R/%p-library/%v"))'`
                     R -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
                     R -e 'update(devtools::package_deps("rstan"))'
