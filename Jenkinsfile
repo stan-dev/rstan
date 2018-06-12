@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
-                writieFile file: "~/.Renviron", text: "R_LIBS_USER=~/.RLibs"
+                writeFile file: "~/.Renviron", text: "R_LIBS_USER=~/.RLibs"
                 sh """
                     mkdir -p ~/.RLibs
                     more ~/.Renviron 
