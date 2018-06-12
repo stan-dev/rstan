@@ -2,14 +2,16 @@ pipeline {
     agent any
     environment {
         MAKEFLAGS="-j${env.PARALLEL}"
-        R_LIBS="~/.RLibs"
         USE_CXX14=1
+        STAN_BRANCH=master
+        STAN_MATH_BRANCH=master 
     }
     stages {
         stage('Install dependencies') {
             steps {
                 sh """
                     mkdir -p ~/.RLibs
+                    echo "R_LIBS_USER=~/.RLibs" > ~/.Renviron 
                     R -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
                     R -e 'update(devtools::package_deps("rstan"))'
                     R -e 'install.packages("RInside", repos="http://cran.us.r-project.org")'
@@ -20,8 +22,11 @@ pipeline {
             steps {
                 sh """
                     cd StanHeaders
-                    git submodule update --init --recursive --remote
-                    cd ..
+                    git submodule update --init --recursive --remote || echo "ok" 
+                    cd inst/include/upstream && git checkout origin/${STAN_BRANCH}
+                    cd ../../.. 
+                    cd inst/include/mathlib && git checkout origin/${STAN_MATH_BRANCH}
+                    cd ../../../.. 
                     R CMD build StanHeaders
                     R CMD build --no-build-vignettes rstan/rstan
                 """
