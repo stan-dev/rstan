@@ -29,7 +29,7 @@ pipeline {
                     cd inst/include/mathlib && git checkout origin/${STAN_MATH_BRANCH}
                     cd ../../../.. 
                     R CMD build StanHeaders
-                    sed -i.bak "s/^\\(Version.\).*/\\1 ${RSTAN_NEXT_VER}/" ./rstan/rstan/DESCRIPTION
+                    sed -i.bak "s/^\\(Version.\\).*/\\1 ${RSTAN_NEXT_VER}/" ./rstan/rstan/DESCRIPTION
                     R CMD build --no-build-vignettes rstan/rstan
                 """
             }
