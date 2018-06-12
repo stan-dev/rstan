@@ -5,6 +5,7 @@ pipeline {
         USE_CXX14=1
         STAN_BRANCH="master"
         STAN_MATH_BRANCH="master" 
+        RSTAN_NEXT_VER="2.99" 
     }
     stages {
         stage('Install dependencies') {
@@ -28,6 +29,7 @@ pipeline {
                     cd inst/include/mathlib && git checkout origin/${STAN_MATH_BRANCH}
                     cd ../../../.. 
                     R CMD build StanHeaders
+                    sed -i.bak "s/^\(Version.\).*/\1 ${RSTAN_NEXT_VER}/" ./rstan/rstan/DESCRIPTION
                     R CMD build --no-build-vignettes rstan/rstan
                 """
             }
@@ -37,7 +39,7 @@ pipeline {
                 sh """
                     R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
                       cat StanHeaders.Rcheck/00check.log
-                    R CMD INSTALL --library=~/.RLibs StanHeaders_*.tar.gz
+                    R CMD INSTALL StanHeaders_*.tar.gz
                     R CMD check --as-cran --timings --run-donttest --run-dontrun rstan_*.tar.gz || \
                       cat rstan.Rcheck/00check.log
                 """
