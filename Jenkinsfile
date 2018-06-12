@@ -9,9 +9,10 @@ pipeline {
     stages {
         stage('Install dependencies') {
             steps {
+                wrtieFile file: "~/.Renviron", text: "R_LIBS_USER=~/.RLibs"
                 sh """
                     mkdir -p ~/.RLibs
-                    echo "R_LIBS_USER=~/.RLibs" > ~/.Renviron 
+                    more ~/.Renviron 
                     R -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
                     R -e 'update(devtools::package_deps("rstan"))'
                     R -e 'install.packages("RInside", repos="http://cran.us.r-project.org")'
