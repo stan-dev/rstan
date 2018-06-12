@@ -3,8 +3,8 @@ pipeline {
     environment {
         MAKEFLAGS="-j${env.PARALLEL}"
         USE_CXX14=1
-        STAN_BRANCH=master
-        STAN_MATH_BRANCH=master 
+        STAN_BRANCH="master"
+        STAN_MATH_BRANCH="master" 
     }
     stages {
         stage('Install dependencies') {
