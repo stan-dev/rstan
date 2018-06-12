@@ -32,12 +32,19 @@ test_ess2 <- function() {
   x2 <- list(x = x21, y = rep(1, length(x21)))
 
   lst <- list(samples = list(c1=x1, c2=x2),
-              n_save = c(34, 2),
+              n_save = rep(34, 2),
               permutation = NULL,
               warmup2 = rep(17, 2),
               chains = 2, 
               n_flatnames = 2)
+
+  # just make sure this can run without segfault first
+  ess <- rstan:::rstan_ess(lst, 1)
   ess <- rstan:::rstan_ess(lst, 2)
+
+  # this is NaN because variable rho_hat_odd in function
+  # effective_sample_size in ../../src/chains.cpp is NaN and then max_t=1
+  checkTrue(is.nan(ess))
 }
 
 test_essnrhat <- function() {
