@@ -614,11 +614,22 @@ if (!isGeneric("unconstrain_pars")) {
 } 
 
 setMethod("unconstrain_pars", signature = "stanfit", 
-          function(object, pars) {
+          function(object, pars = NULL) {
             # pars is a list as in specifying inits for a chain
             if (!is_sfinstance_valid(object)) 
               stop("the model object is not created or not valid")
-            object@.MISC$stan_fit_instance$unconstrain_pars(pars)
+            if (length(pars) > 0)
+              return(object@.MISC$stan_fit_instance$unconstrain_pars(pars))
+            m_pars <- object@model_pars
+            idx_wo_lp <- which(m_pars != "lp__")
+            m_pars <- m_pars[idx_wo_lp]
+            p_dims <- object@par_dims[idx_wo_lp]
+            skeleton <- create_skeleton(m_pars, p_dims)
+            mat <- as.matrix(object)
+            t(apply(mat, MARGIN = 1, FUN = function(theta) {
+              pars <- rstan_relist(theta, skeleton)
+              object@.MISC$stan_fit_instance$unconstrain_pars(pars)
+            }))
           })
 
 if (!isGeneric("constrain_pars")) {
