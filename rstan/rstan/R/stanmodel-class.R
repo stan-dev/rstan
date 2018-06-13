@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -237,6 +237,11 @@ setMethod("vb", "stanmodel",
             samples <- samples[,unlist(cC[c(pars, "lp__")]), drop = FALSE]
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
+            if (is.list(init[[1]])) {
+              live <- sapply(inits_used[[1]], FUN = function(x) prod(dim(x)) > 0)
+              fnames_oi <- c(rename_fnames_oi(inits_used[[1]][live], init[[1]]), "lp__")
+              stopifnot(length(fnames_oi) == n_flatnames)
+            }
             iter <- nrow(samples)
             sim <- list(samples = list(as.list(samples)),
                         iter = iter, thin = 1L,
@@ -740,6 +745,11 @@ setMethod("sampling", "stanmodel",
 
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
+            if (is.list(init[[1]])) {
+              live <- sapply(inits_used[[1]], FUN = function(x) prod(dim(x)) > 0)
+              fnames_oi <- c(rename_fnames_oi(inits_used[[1]][live], init[[1]]), "lp__")
+              stopifnot(length(fnames_oi) == n_flatnames)
+            }
             sim = list(samples = samples,
                        iter = iter, thin = thin, 
                        warmup = warmup, 

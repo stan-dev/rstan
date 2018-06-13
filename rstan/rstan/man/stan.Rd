@@ -8,12 +8,12 @@ return the fitted result as an instance of \code{stanfit}.
 }
 \usage{
 stan(file, model_name = "anon_model", model_code = "", fit = NA, 
-  data = list(), pars = NA, include = TRUE,
+  data = list(), pars = NA,
   chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   algorithm = c("NUTS", "HMC", "Fixed_param"), %, "Metropolis"),
   control = NULL, sample_file = NULL, diagnostic_file = NULL, 
-  save_dso = TRUE, verbose = FALSE, 
+  save_dso = TRUE, verbose = FALSE, include = TRUE,
   cores = getOption("mc.cores", 1L),
   open_progress = interactive() && !isatty(stdout()) &&
                   !identical(Sys.getenv("RSTUDIO"), "1"),
@@ -71,11 +71,6 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     are stored in the fitted results. Conversely, if \code{include = FALSE}, 
     samples for all parameters \emph{except} those named in \code{pars} are 
     stored in the fitted results.}
-    
-  \item{include}{Logical scalar defaulting to \code{TRUE} indicating
-    whether to include or exclude the parameters given by the 
-    \code{pars} argument. If \code{FALSE}, only entire multidimensional
-    parameters can be excluded, rather than particular elements of them.}
     
   \item{iter}{A positive integer specifying the number of iterations for each 
     chain (including warmup). The default is 2000.}
@@ -191,6 +186,11 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
     to print intermediate output from Stan on the console, which might
     be helpful for model debugging.}
+    
+  \item{include}{Logical scalar defaulting to \code{TRUE} indicating
+    whether to include or exclude the parameters given by the 
+    \code{pars} argument. If \code{FALSE}, only entire multidimensional
+    parameters can be excluded, rather than particular elements of them.}
  
   \item{control}{A named \code{list} of parameters to control the sampler's
     behavior. It defaults to \code{NULL} so all the default values are used. 

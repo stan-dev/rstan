@@ -5,7 +5,7 @@ importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segme
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
 importFrom("stats", "acf", "aggregate", "density", "dnorm", "median", "optimHess", "pacf", "quantile", "reshape", "rnorm", "sd", "var")
 importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
-
+importFrom("stats", "fft")
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
 #importFrom("Rcpp", cpp_object_initializer)

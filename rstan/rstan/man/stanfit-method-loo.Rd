@@ -1,6 +1,6 @@
 \name{loo.stanfit}
 \alias{loo.stanfit}
-\alias{loo}
+\alias{loo,stanfit-method}
 
 \title{Approximate leave-one-out cross-validation} 
 
@@ -14,8 +14,7 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
 \usage{
   \method{loo}{stanfit}(x, pars = "log_lik", 
     \dots, 
-    cores = getOption("mc.cores", 1), 
-    save_psis = FALSE) 
+    save_psis = FALSE, cores = getOption("mc.cores", 1)) 
 } 
 
 \arguments{
@@ -23,14 +22,14 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
   \item{pars}{Name of transformed parameter or generated quantity in
   the Stan program corresponding to the pointwise log-likelihood. If not
   specified the default behavior is to look for \code{"log_lik"}.}
-  \item{cores}{Number of cores to use for parallelization. The default is 1 unless
-  \code{cores} is specified or the \code{mc.cores} \link[=options]{option} 
-  has been set.}
+  \item{\dots}{Ignored.}
   \item{save_psis}{Should the intermediate results from \code{\link[loo]{psis}}
   be saved in the returned object? The default is \code{FALSE}. This can be
   useful to avoid repeated computation when using other functions in the
-  \pkg{loo} and \pkg{bayesplot} packages.}
-  \item{\dots}{Ignored.}
+  \pkg{loo} and \pkg{bayesplot} package.}
+  \item{cores}{Number of cores to use for parallelization. The default is 1 unless
+  \code{cores} is specified or the \code{mc.cores} \link[=options]{option} 
+  has been set.}
 }
 
 \details{
