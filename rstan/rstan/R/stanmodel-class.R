@@ -385,8 +385,14 @@ setMethod("optimizing", "stanmodel",
               H <- optimHess(theta, fn, gr, control = list(fnscale = -1))
               colnames(H) <- rownames(H) <- sampler$unconstrained_param_names(FALSE, FALSE)
               if (hessian) optim$hessian <- H
-              if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
+              R <- chol(-H, pivot = TRUE)
+              pivot <- attr(R, "pivot")
+              oo <- order(pivot)
+              R <- R[ , pivot]
+              if (draws > 0) {
                 K <- ncol(R)
+                m <- min(diag(R))
+                if (m <= 0) diag(R) <- diag(R) - m + sqrt(.Machine$double.eps)
                 R_inv <- backsolve(R, diag(K))
                 Z <- matrix(rnorm(K * draws), K, draws)
                 theta_tilde <- t(theta + R_inv %*% Z)
