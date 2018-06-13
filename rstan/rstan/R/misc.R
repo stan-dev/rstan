@@ -1694,4 +1694,23 @@ avoid_crash <- function(mod) {
     c("<pointer: (nil)>", "<pointer: 0x0>")
 }
                      
-                          
+rename_fnames_oi <- function(inits_used, inits) {
+  unlist(lapply(names(inits_used), FUN = function(i) {
+    x <- inits_used[[i]]
+    dims <- dim(x)    
+    if (is.null(dims)) {
+      nms <- names(inits[[i]])
+      if (is.null(nms)) nms <- flat_one_par(i, dims)
+    }
+    else {
+      nms <- dimnames(inits[[i]])
+      if (is.null(nms)) nms <- flat_one_par(i, dims)
+      else {
+        eg <- do.call(expand.grid, args = nms)
+        nms <- paste0("[", apply(eg, 1L, FUN = paste, collapse = ","), "]")
+      }
+    }
+    return(nms)
+  }))
+}
+
