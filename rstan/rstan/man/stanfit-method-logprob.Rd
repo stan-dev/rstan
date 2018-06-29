@@ -32,7 +32,7 @@
   %% constrain_pars(object, upars)
   \S4method{constrain_pars}{stanfit}(object, upars)
   %% unconstrain_pars(object, pars)
-  \S4method{unconstrain_pars}{stanfit}(object, pars)
+  \S4method{unconstrain_pars}{stanfit}(object, pars = NULL)
 } 
 
 \section{Methods}{
@@ -55,7 +55,7 @@
       of the parameter from unconstrained space (given as a vector) to their
       constrained space (returned as a named list).}
     \item{unconstrain_pars}{\code{signature(object = "stanfit")}}{Contrary to
-      \code{constrained}, conert values of the parameters from constrained
+      \code{constrained}, convert values of the parameters from constrained
       to unconstrained space.
     }
   }
@@ -64,7 +64,9 @@
 \arguments{
   \item{object}{An object of class \code{\linkS4class{stanfit}}.}
   \item{pars}{An list specifying the values for all parameters on the
-    constrained space.} 
+    constrained space. If its length is zero (the default), then a
+    matrix is returned with the unconstrained parameters corresponding
+    to each realization of the constrained parameter vector.} 
   \item{upars}{A numeric vector for specifying the values for all parameters 
     on the unconstrained space.}  
   \item{adjust_transform}{Logical to indicate whether to adjust
@@ -106,7 +108,8 @@
 
   \code{get_num_upars} returns the number of parameters on the unconstrained space. 
 
-  \code{constrain_pars} returns a list and \code{unconstrain_pars} returns a vector. 
+  \code{constrain_pars} returns a list and \code{unconstrain_pars} returns a vector
+  or matrix of unconstrained parameters. 
 }
 
 \references{
