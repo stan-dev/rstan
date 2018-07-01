@@ -1,16 +1,18 @@
 .PHONY: static
 
-PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Icvodes/include/
-SOURCES1 = cvodes/src/cvodes/cvodes.c cvodes/src/cvodes/cvodes_io.c cvodes/src/cvodes/cvodea.c cvodes/src/cvodes/cvodea_io.c cvodes/src/cvodes/cvodes_direct.c cvodes/src/cvodes/cvodes_diag.c cvodes/src/cvodes/cvodes_spils.c cvodes/src/cvodes/cvodes_bandpre.c cvodes/src/cvodes/cvodes_bbdpre.c
-SOURCES2 = $(SOURCES1) cvodes/src/sundials/sundials_band.c cvodes/src/sundials/sundials_direct.c cvodes/src/sundials/sundials_math.c cvodes/src/sundials/sundials_pcg.c cvodes/src/sundials/sundials_spbcgs.c  cvodes/src/sundials/sundials_spgmr.c cvodes/src/sundials/sundials_dense.c cvodes/src/sundials/sundials_iterative.c cvodes/src/sundials/sundials_nvector.c cvodes/src/sundials/sundials_sparse.c cvodes/src/sundials/sundials_spfgmr.c cvodes/src/sundials/sundials_sptfqmr.c
-SOURCES = $(SOURCES2) cvodes/src/nvec_ser/nvector_serial.c cvodes/src/sundials/sundials_math.c
+PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Isundials/include/ -include stan_sundials_printf_override.hpp
+
+SUNDIALS_CVODES = sundials/src/cvodes/cvodes.c sundials/src/cvodes/cvodes_io.c sundials/src/cvodes/cvodea.c sundials/src/cvodes/cvodea_io.c sundials/src/cvodes/cvodes_direct.c sundials/src/cvodes/cvodes_diag.c sundials/src/cvodes/cvodes_spils.c sundials/src/cvodes/cvodes_bandpre.c sundials/src/cvodes/cvodes_bbdpre.c sundials/src/sundials/sundials_band.c sundials/src/sundials/sundials_dense.c sundials/src/sundials/sundials_direct.c sundials/src/sundials/sundials_iterative.c sundials/src/sundials/sundials_linearsolver.c sundials/src/sundials/sundials_math.c sundials/src/sundials/sundials_matrix.c sundials/src/sundials/sundials_nvector.c sundials/src/sundials/sundials_pcg.c sundials/src/sundials/sundials_sparse.c sundials/src/sundials/sundials_spbcgs.c sundials/src/sundials/sundials_spfgmr.c sundials/src/sundials/sundials_spgmr.c sundials/src/sundials/sundials_sptfqmr.c sundials/src/sundials/sundials_version.c sundials/src/sunmat_band/fsunmatrix_band.c sundials/src/sunmat_band/sunmatrix_band.c sundials/src/sunmat_dense/fsunmatrix_dense.c sundials/src/sunmat_dense/sunmatrix_dense.c sundials/src/sunlinsol_band/fsunlinsol_band.c sundials/src/sunlinsol_band/sunlinsol_band.c sundials/src/sunlinsol_dense/fsunlinsol_dense.c sundials/src/sunlinsol_dense/sunlinsol_dense.c
+SUNDIALS_IDAS = sundials/src/idas/idaa.c sundials/src/idas/idaa_io.c sundials/src/idas/idas.c sundials/src/idas/idas_bbdpre.c sundials/src/idas/idas_direct.c sundials/src/idas/idas_ic.c sundials/src/idas/idas_io.c sundials/src/idas/idas_spils.c
+SUNDIALS_NVECSERIAL = sundials/src/nvec_ser/nvector_serial.c sundials/src/sundials/sundials_math.c
+SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_NVECSERIAL)
 OBJECTS = $(SOURCES:.c=.o)
 
 static: $(OBJECTS)
-				@mkdir -p ../lib
-				$(AR) -rs ../lib/libStanHeaders.a $(OBJECTS)
+	@mkdir -p ../lib
+	$(AR) -rs ../lib/libStanHeaders.a $(OBJECTS)
 				
 clean:
-				rm -rf ../lib
-				rm $(OBJECTS)
+	rm -rf ../lib
+	rm $(OBJECTS)
 
