@@ -41,14 +41,15 @@ PKG_CPPFLAGS_env_fun <- function() {
    paste(' -I"', file.path(inc_path_fun("Rcpp"), '" '),
          ' -I"', file.path(eigen_path_fun(), '" '),
          ' -I"', file.path(eigen_path_fun(), 'unsupported" '),
-         ' -I"', boost_path_fun2(), '"', # boost_not_in_BH should come 
+         # ' -I"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -I"', boost_path_fun(), '"',  # before BH/include
          ' -I"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
          ' -I"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
-         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS',
-         ' -DBOOST_NO_CXX11_RVALUE_REFERENCES', 
+         # ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE', 
+         ' -DBOOST_DISABLE_ASSERTS',
+         # ' -DBOOST_NO_CXX11_RVALUE_REFERENCES',
          sep = '')
 }
 
