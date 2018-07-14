@@ -19,8 +19,8 @@ os:
 
 env:
   global:
-    - STAN_BRANCH=develop
-    - STAN_MATH_BRANCH=develop
+    - STAN_BRANCH=master
+    - STAN_MATH_BRANCH=master
   matrix: 
     - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
@@ -48,14 +48,14 @@ before_script:
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
   - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
   - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
-  - echo "CXX = `R CMD config CXX`" >> ./rstan/R_Makevars 
-  - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
+  - echo "CXX14 = `R CMD config CXX14`" >> ./rstan/R_Makevars 
+  - echo "CXX14FLAGS = `R CMD config CXX14FLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
   - if [[ $RCPP_VER = 'github' ]]; then R -q -e "options(repos = getCRANmirrors()[1,'URL']); library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
   - echo ${CXX}
   - echo ${CLANG_EXTRA_ARG}
-  - sed -i.bak "s/ g++/ ${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
+  - sed -i.bak "s/ g++/ ${CXX14}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
   - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
   - rm ./rstan/R_Makevars.bak
   - more ./rstan/R_Makevars
