@@ -6,8 +6,7 @@ pipeline {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
                     R -e 'install.packages("devtools", repos = "https://cran.r-project.org")'
-                    R -e 'update(devtools::package_deps("rstan"), 
-                                 repos = "https://cran.r-project.org")'
+                    R -e 'update(devtools::package_deps("rstan"), repos = "https://cran.r-project.org")'
                     R -e 'install.packages("RInside", repos = "https://cran.r-project.org")'
                 """
             }
@@ -51,8 +50,7 @@ pipeline {
             steps {
                 sh """
                     export MAKEFLAGS=-j${env.PARALLEL}
-                    R -e 'update(devtools::package_deps("rstanarm"), 
-                                 repos = "https://cran.r-project.org")'
+                    R -e 'update(devtools::package_deps("rstanarm"), repos = "https://cran.r-project.org")'
                     wget -Nc https://cran.r-project.org/src/contrib/rstanarm_2.17.4.tar.gz
                     R CMD check --as-cran --timings --run-donttest --run-dontrun rstanarm_*.tar.gz || \
                       cat rstanarm.Rcheck/00check.log
