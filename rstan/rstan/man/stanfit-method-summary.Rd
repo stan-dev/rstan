@@ -38,11 +38,8 @@ Monte Carlo standard errors (se_mean) are also reported.
 }
 
 \seealso{
-\itemize{
-\item \code{\link{monitor}}, which computes similar summaries but accepts an 
+\code{\link{monitor}}, which computes similar summaries but accepts an 
 array of MCMC draws as its input rather than a \code{stanfit} object.
-\item The RStan vignettes for more example usage.
-}
 }
 
 \examples{\dontrun{

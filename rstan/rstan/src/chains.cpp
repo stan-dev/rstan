@@ -138,22 +138,6 @@ namespace rstan {
             << ", but INTSXP/REALSXP needed";
         throw std::domain_error(msg.str());
       }
-
-      SEXP sample_sexp = lst["samples"];
-
-      if (TYPEOF(lst["samples"]) != VECSXP) {
-        std::stringstream msg;
-        msg << "sim$samples is not a list";
-        throw std::domain_error(msg.str());
-      }
-
-      int nchains2 = Rcpp::List(sample_sexp).size();
-      if (nchains2 != Rcpp::as<int>(lst["chains"])) {
-        std::stringstream msg;
-        msg << "the number of chains specified is different from "
-            << "the one found in samples";
-        throw std::domain_error(msg.str());
-      }
     }
 
     unsigned int num_chains(SEXP sim) {
@@ -173,6 +157,11 @@ namespace rstan {
     void get_kept_samples(SEXP sim, const size_t k, const size_t n,
                           std::vector<double>& samples) {
       Rcpp::List lst(sim);
+      if (TYPEOF(lst["samples"]) != VECSXP) {
+        std::stringstream msg;
+        msg << "sim$samples is not a list";
+        throw std::domain_error(msg.str());
+      }
       Rcpp::List allsamples(static_cast<SEXP>(lst["samples"]));
       Rcpp::IntegerVector n_save(static_cast<SEXP>(lst["n_save"]));
       Rcpp::IntegerVector warmup2(static_cast<SEXP>(lst["warmup2"]));
@@ -294,9 +283,7 @@ RcppExport SEXP stan_prob_autocovariance(SEXP v);
  * Returns the effective sample size for the specified parameter
  * across all kept samples.
  *
- * The implementation is close to the effective sample size
- * description in BDA3 (p. 286-287).  See more details in Stan
- * reference manual section "Effective Sample Size".
+ * The implementation matches BDA3's effective size description.
  *
  * Current implementation takes the minimum number of samples
  * across chains as the number of samples per chain.
@@ -348,47 +335,25 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
     chain_mean.push_back(rstan::get_chain_mean(sim,chain,n));
     chain_var.push_back(acov[chain][0]*n_kept_samples/(n_kept_samples-1));
   }
-
   double mean_var = stan::math::mean(chain_var);
   double var_plus = mean_var*(n_samples-1)/n_samples;
   if (m > 1) var_plus += stan::math::variance(chain_mean);
-  vector<double> rho_hat_t(n_samples, 0);
-  vector<double> acov_t(m);
-  for (size_t chain = 0; chain < m; chain++) {
-    acov_t[chain] = acov[chain][1];
-  }
-
-  double rho_hat_even = 1;
-  double rho_hat_odd = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
-  rho_hat_t[1] = rho_hat_odd;
-  // Geyer's initial positive sequence
-  int max_t = 1;
-  for (int t = 1;
-       (t < (n_samples - 2) && (rho_hat_even + rho_hat_odd) >= 0);
-       t += 2) {
-    for (int chain = 0; chain < m; chain++)
-      acov_t[chain] = acov[chain][t + 1];
-    rho_hat_even = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
-    for (int chain = 0; chain < m; chain++)
-      acov_t[chain] = acov[chain][t + 2];
-    rho_hat_odd = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
-    if ((rho_hat_even + rho_hat_odd) >= 0) {
-      rho_hat_t[t+1] = rho_hat_even;
-      rho_hat_t[t+2] = rho_hat_odd;
+  vector<double> rho_hat_t;
+  double rho_hat = 0;
+  for (size_t t = 1; (t < n_samples && rho_hat >= 0); t++) {
+    vector<double> acov_t(m);
+    for (size_t chain = 0; chain < m; chain++) {
+      acov_t[chain] = acov[chain][t];
     }
-    max_t = t + 2;
-  }
-
-  // Geyer's initial monotone sequence
-  for (int t = 3; t <= max_t - 2; t += 2) {
-    if (rho_hat_t[t + 1] + rho_hat_t[t + 2] > rho_hat_t[t - 1] + rho_hat_t[t]) {
-      rho_hat_t[t + 1] = (rho_hat_t[t - 1] + rho_hat_t[t]) / 2;
-      rho_hat_t[t + 2] = rho_hat_t[t + 1];
-    }
+    rho_hat = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
+    if (rho_hat >= 0)
+      rho_hat_t.push_back(rho_hat);
   }
 
   double ess = m*n_samples;
-  ess /= (1 + 2 * stan::math::sum(rho_hat_t));
+  if (rho_hat_t.size() > 0) {
+    ess /= 1 + 2 * stan::math::sum(rho_hat_t);
+  }
   SEXP __sexp_result;
   PROTECT(__sexp_result = Rcpp::wrap(ess));
   UNPROTECT(1);

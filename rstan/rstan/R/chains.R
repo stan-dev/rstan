@@ -18,7 +18,7 @@
 rstan_ess <- function(sim, n) {
   # Args:
   #   n: Chain index starting from 1.
-  ess <- .Call(effective_sample_size, sim, n - 1)
+  ess <- .Call("effective_sample_size", sim, n - 1)
   ess
 } 
 
@@ -26,21 +26,21 @@ rstan_splitrhat <- function(sim, n) {
   # Args:
   #   n: Chain index starting from 1.
   if (sim$n_save[1] - sim$warmup2[1] < 2) return(NaN)
-  rhat <- .Call(split_potential_scale_reduction, sim, n - 1)
+  rhat <- .Call("split_potential_scale_reduction", sim, n - 1)
   rhat
 }
 
 rstan_splitrhat2_cpp <- function(sims) {
   # Args:
   #   sim: samples of several chains _without_ warmup
-  rhat <- .Call(split_potential_scale_reduction2, sims)
+  rhat <- .Call("split_potential_scale_reduction2", sims)
   rhat
 }
 
 rstan_ess2_cpp <- function(sims) {
   # Args:
   #   sim: samples of several chains _without_ warmup
-  ess <- .Call(effective_sample_size2, sims)
+  ess <- .Call("effective_sample_size2", sims)
   ess
 } 
 
@@ -52,6 +52,6 @@ rstan_seq_perm <- function(n, chains, seed, chain_id = 1) {
   #   chain_id: the chain id, for which the returned permuation is applied 
   # 
   conf <- list(n = n, chains = chains, seed = seed, chain_id = chain_id) 
-  perm <- .Call(seq_permutation, conf)
+  perm <- .Call("seq_permutation", conf)
   perm + 1L # start from 1 
 } 

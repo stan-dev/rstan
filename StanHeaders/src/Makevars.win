@@ -1,5 +1,25 @@
-PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Icvodes/include/
-SOURCES1 = cvodes/src/cvodes/cvodes.c cvodes/src/cvodes/cvodes_io.c cvodes/src/cvodes/cvodea.c cvodes/src/cvodes/cvodea_io.c cvodes/src/cvodes/cvodes_direct.c cvodes/src/cvodes/cvodes_band.c cvodes/src/cvodes/cvodes_dense.c cvodes/src/cvodes/cvodes_diag.c cvodes/src/cvodes/cvodes_spils.c cvodes/src/cvodes/cvodes_spbcgs.c cvodes/src/cvodes/cvodes_spgmr.c cvodes/src/cvodes/cvodes_sptfqmr.c cvodes/src/cvodes/cvodes_sparse.c cvodes/src/cvodes/cvodes_bandpre.c cvodes/src/cvodes/cvodes_bbdpre.c
-SOURCES2 =  $(SOURCES1) cvodes/src/sundials/sundials_band.c cvodes/src/sundials/sundials_direct.c cvodes/src/sundials/sundials_math.c cvodes/src/sundials/sundials_pcg.c cvodes/src/sundials/sundials_spbcgs.c  cvodes/src/sundials/sundials_spgmr.c cvodes/src/sundials/sundials_dense.c cvodes/src/sundials/sundials_iterative.c cvodes/src/sundials/sundials_nvector.c cvodes/src/sundials/sundials_sparse.c cvodes/src/sundials/sundials_spfgmr.c cvodes/src/sundials/sundials_sptfqmr.c
-SOURCES = $(SOURCES2) cvodes/src/nvec_ser/nvector_serial.c init.c
+SUNDIALS = sundials
+
+PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Isundials/include/ -include stan_sundials_printf_override.hpp
+
+SUNDIALS_CVODES := $(patsubst %.c,%.o,\
+  $(addprefix $(SUNDIALS)/src/cvodes/, cvodes.c cvodes_io.c cvodea.c cvodea_io.c cvodes_direct.c cvodes_diag.c cvodes_spils.c cvodes_bandpre.c cvodes_bbdpre.c) \
+  $(wildcard $(SUNDIALS)/src/sundials/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunmat_band/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunmat_dense/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunlinsol_band/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunlinsol_dense/*.c))
+
+SUNDIALS_IDAS := $(patsubst %.c,%.o,\
+  $(addprefix $(SUNDIALS)/src/idas/, idaa.c idaa_io.c idas.c idas_bbdpre.c idas_direct.c idas_ic.c idas_io.c idas_spils.c) \
+  $(wildcard $(SUNDIALS)/src/sundials/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunmat_band/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunmat_dense/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunlinsol_band/*.c) \
+  $(wildcard $(SUNDIALS)/src/sunlinsol_dense/*.c))
+
+SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
+  $(addprefix $(SUNDIALS)/src/, nvec_ser/nvector_serial.c sundials/sundials_math.c))
+
+SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_NVECSERIAL)
 OBJECTS = $(SOURCES:.c=.o)

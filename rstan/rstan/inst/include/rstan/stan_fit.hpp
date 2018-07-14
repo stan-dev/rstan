@@ -19,7 +19,6 @@
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 #include <Rcpp.h>
-// #include <Rinternals.h>
 
 //http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
@@ -435,7 +434,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
   }
 
   stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
-  std::auto_ptr<stan::io::var_context> init_context_ptr;
+  std::unique_ptr<stan::io::var_context> init_context_ptr;
   if (args.get_init() == "user")
     init_context_ptr.reset(new io::rlist_ref_var_context(args.get_init_list()));
   else
@@ -544,7 +543,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     stan::mcmc::sample::get_sample_param_names(sample_names);
     std::vector<std::string> sampler_names;
 
-    std::auto_ptr<rstan_sample_writer> sample_writer_ptr;
+    std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
     size_t sample_writer_offset;
 
     int num_warmup = args.get_ctrl_sampling_warmup();
@@ -1293,8 +1292,10 @@ public:
 
   SEXP param_fnames_oi() const {
     BEGIN_RCPP
+    std::vector<std::string> fnames;
+    get_all_flatnames(names_oi_, dims_oi_, fnames, true);
     SEXP __sexp_result;
-    PROTECT(__sexp_result = Rcpp::wrap(fnames_oi_));
+    PROTECT(__sexp_result = Rcpp::wrap(fnames));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP
