@@ -54,12 +54,13 @@ before_script:
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr update --self; fi
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
   - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
-  - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
+  - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi
+  - echo "CXX = g++-6" >> ./rstan/R_Makevars 
   - echo "CXX14 = g++-6" >> ./rstan/R_Makevars 
   - echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
-  - echo ${CXX}
+  - echo ${CXX} --version
   - echo ${CLANG_EXTRA_ARG}
   - more ./rstan/R_Makevars
   - mkdir -p ~/.R/; cat ./rstan/R_Makevars > ~/.R/Makevars
