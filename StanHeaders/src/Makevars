@@ -1,5 +1,4 @@
 .PHONY: static
-CXX_STD = CXX14
 
 PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Isundials/include/ -include stan_sundials_printf_override.hpp
 
