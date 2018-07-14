@@ -1409,36 +1409,6 @@ system_info <- function() {
         "; inline: ", packageVersion('inline'), sep = '')
 }
 
-read_comments_old <- function(file, n) {
-  # Read comments beginning with `#`
-  # Args:
-  #   file: the filename
-  #   n: max number of line; -1 means all
-  .Call("CPP_read_comments", file, n)
-}
-
-read_comments <- function(f, n = -1) {
-  # Read comments beginning with `#`
-  # Args:
-  #   f: the filename
-  #   n: max number of line; -1 means all
-  # Returns:
-  #   a vector of strings
-  con <- file(f, 'r')
-  comments <- list()
-  iter <- 0
-  while (length(input <- readLines(con, n = 1)) > 0) {
-    if (n > 0 && n <= iter) break;
-    if (grepl("#", input)) {
-      comments <- c(comments, gsub("^.*#", "#", input))
-      iter <- iter + 1
-    }
-  }
-  close(con)
-  do.call(c, comments)
-}
-
-
 sqrfnames_to_dotfnames <- function(fnames) {
   # change names such as alpha[1,1] to alpha.1.1
   gsub('\\]', '', gsub('\\[|,', '.', fnames))
@@ -1508,11 +1478,32 @@ read_csv_header <- function(f, comment.char = '#') {
   # comment.char). And the line number is return as attribute of name 'lineno'.
   con <- file(f, 'r')
   niter <- 0
+  iter.count <- NA
+  save.warmup <- FALSE
   while (length(input <- readLines(con, n = 1)) > 0) {
     niter <- niter + 1
     if (!grepl(comment.char, input)) break;
+    if (grepl("# iter=",input))
+      iter.count <- as.integer(gsub("# iter=","",input))
+    if (grepl("#.*num_samples",input)){
+      sample.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
+    }
+    if (grepl("#.*num_warmup",input)){
+      warmup.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
+    }
+    if (grepl("#.*save_warmup",input)){
+      save.warmup <- !grepl("0",input)
+    }
+
   }
   header <- input
+  if(is.na(iter.count)){
+    if(save.warmup)
+      iter.count <- warmup.count + sample.count
+    else
+      iter.count <- warmup.count
+  } 
+  attr(header, "iter.count") <- iter.count
   attr(header, "lineno") <- niter
   close(con)
   header
