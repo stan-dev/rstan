@@ -23,8 +23,7 @@ pairs.stanfit <-
             text.panel = NULL, label.pos = 0.5 + 1/3, 
             cex.labels = NULL, font.labels = 1, 
             row1attop = TRUE, gap = 1, log = "",
-            pars = NULL, include = TRUE,
-            condition = "accept_stat__") {
+            pars = NULL, condition = "accept_stat__", include = TRUE) {
     
     gsp <- get_sampler_params(x, inc_warmup = FALSE)
     if(is.null(pars)) {
@@ -179,7 +178,7 @@ pairs.stanfit <-
     else textPanel <- text.panel
     if(is.null(labels)) labels <- colnames(x)
 
-    mc <- match.call(expand.dots = TRUE)
+    mc <- match.call(expand.dots = FALSE)
     mc[1] <- call("pairs")
     mc$x <- x
     mc$labels <- labels

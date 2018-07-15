@@ -12,8 +12,8 @@ if (!require("RUnit", quietly = TRUE)) {
 if (exists("path")) { 
   reportfile <- file.path(getwd(), "report")
 } else {
-  path <- getwd()
-  reportfile <- file.path(path, "report")
+   path <- getwd() 
+   reportfile <- file.path(path, "report") 
 } 
 
 stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
@@ -24,8 +24,7 @@ if (length(args) > 0)  rstan_lib_loc <- args[1]
 library(package = pkg, character.only = TRUE, lib.loc = rstan_lib_loc)
 
 rstantest <- defineTestSuite("rstantest",
-                             dirs = c(file.path(path, "unitTests"),
-                                      system.file(package = 'rstan', "unitTests")),
+                             dirs = file.path(path, "unitTests"),
                              testFileRegexp = "^runit.+.*\\.R",
                              testFuncRegexp = "^test_+",
                              rngKind = "Marsaglia-Multicarry",

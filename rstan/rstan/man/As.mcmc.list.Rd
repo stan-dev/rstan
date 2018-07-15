@@ -12,7 +12,7 @@
   \item{object}{object of class \code{"stanfit"}}
   \item{pars}{optional character vector of parameters to include}
   \item{include}{logical scalar indicating whether to include (the default) or 
-    exclude the parameters named in \code{pars}}
+    exclude theh parameters named in \code{pars}}
   \item{\dots}{unused}
 }
 \value{

@@ -1,77 +1,66 @@
 \name{stan}
 \alias{stan}
-\title{Fit a model with Stan}
+\title{Fit a model using Stan}
 \description{
-\if{html}{\figure{stanlogo.png}{options: width="25px" alt="http://mc-stan.org/about/logo/"}}
-Fit a model defined in the Stan modeling language and  
-return the fitted result as an instance of \code{stanfit}. 
+  Fit a model defined in the Stan modeling language and  
+  return the fitted result as an instance of \code{stanfit}. 
 }
 \usage{
-stan(file, model_name = "anon_model", model_code = "", fit = NA, 
-  data = list(), pars = NA,
-  chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1, 
+stan(file, model_name = "anon_model", model_code = "", 
+  fit = NA, data = list(), pars = NA, chains = 4,
+  iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   algorithm = c("NUTS", "HMC", "Fixed_param"), %, "Metropolis"),
-  control = NULL, sample_file = NULL, diagnostic_file = NULL, 
-  save_dso = TRUE, verbose = FALSE, include = TRUE,
+  control = NULL,
+  sample_file = NULL, diagnostic_file = NULL, 
+  save_dso = TRUE, 
+  verbose = FALSE, include = TRUE,
   cores = getOption("mc.cores", 1L),
   open_progress = interactive() && !isatty(stdout()) &&
                   !identical(Sys.getenv("RSTUDIO"), "1"),
   ...,
-  boost_lib = NULL, eigen_lib = NULL
-  )
+  boost_lib = NULL,
+  eigen_lib = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{file}{
-    The path to the Stan program to use. 
-    \code{file} should be a character string file name or a connection that 
-    \R supports containing the text of a model specification in the Stan 
-    modeling language. 
+  \item{file}{A character string file name or a connection that \R supports 
+    containing the text of a model specification in the Stan modeling 
+    language; a model may also be specified directly
+    as a character string using parameter \code{model_code} or through
+    a previous fit using parameter \code{fit}. 
+    When \code{fit} is specified, parameter \code{file} is ignored.}
     
-    A model may also be specified directly as a character string using the 
-    \code{model_code} argument, but we recommend always putting Stan programs 
-    in separate files with a \code{.stan} extension.
+  \item{model_name}{A character string naming the model; defaults 
+    to \code{"anon_model"}. However, the model name would be derived from 
+    \code{file} or \code{model_code} (if \code{model_code} is the name
+    of a character string object) if \code{model_name} is not specified.}
     
-    The \code{stan} function can also use the Stan program from an existing
-    \code{stanfit} object via the \code{fit} argument. When \code{fit} is 
-    specified, the \code{file} argument is ignored.
-    }
+  \item{model_code}{A character string either containing the model definition
+    or the name of a character string object in the workspace. This 
+    parameter is used only if parameter \code{file} is not specified. 
+    When \code{fit} is specified, the model compiled previously
+    is used so specifying \code{model_code} is ignored.}
     
-  \item{model_code}{
-    A character string either containing the model definition or the name of 
-    a character string object in the workspace. This argument is used only 
-    if arguments \code{file} and \code{fit} are not specified.
-  }
-    
-  \item{fit}{
-    An instance of S4 class \code{stanfit} derived from a previous fit;
+  \item{fit}{An instance of S4 class \code{stanfit} derived from a previous fit;
     defaults to \code{NA}. If \code{fit} is not \code{NA}, the compiled model 
     associated with the fitted result is re-used; thus the time that would 
-    otherwise be spent recompiling the C++ code for the model can be saved.
-  }
-    
-  \item{model_name}{
-    A string to use as the name of the model; defaults 
-    to \code{"anon_model"}. However, the model name will be derived from 
-    \code{file} or \code{model_code} (if \code{model_code} is the name
-    of a character string object) if \code{model_name} is not specified.
-    This is not a particularly important argument, although since it 
-    affects the name used in printed messages, developers of other packages 
-    that use \pkg{rstan} to fit models may want to use informative names.
-  }
+    otherwise be spent recompiling the C++ code for the model can be saved.}
     
   \item{data}{A named \code{list} or \code{environment} providing the data for 
-    the model, or a character vector for all the names of objects to use as data. 
-    See the \strong{Passing data to Stan} section below.}
+    the model, or a character vector for all the names of objects used as data. 
+    See the Note section below.}    
     
-  \item{pars}{A character vector specifying parameters of interest to be saved. 
-    The default is to save all parameters from the model. 
+  \item{pars}{A vector of character strings specifying parameters of interest. 
+    The default is \code{NA} indicating all parameters in the model. 
     If \code{include = TRUE}, only samples for parameters named in \code{pars} 
     are stored in the fitted results. Conversely, if \code{include = FALSE}, 
     samples for all parameters \emph{except} those named in \code{pars} are 
     stored in the fitted results.}
     
+  \item{chains}{A positive integer specifying the number of Markov chains. 
+    The default is 4.} 
+ 
   \item{iter}{A positive integer specifying the number of iterations for each 
     chain (including warmup). The default is 2000.}
 
@@ -81,39 +70,19 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     hence these warmup samples should not be used for inference). The number of 
     warmup iterations should not be larger than \code{iter} and the default is 
     \code{iter/2}.}
-    
-  \item{chains}{A positive integer specifying the number of Markov chains. 
-    The default is 4.} 
-    
-  \item{cores}{
-    The number of cores to use when executing the Markov chains in parallel.
-    The default is to use the value of the \code{"mc.cores"} option if it 
-    has been set and otherwise to default to 1 core. However, we recommend 
-    setting it to be as many processors as the hardware and RAM allow 
-    (up to the number of chains). See \code{\link[parallel]{detectCores}} 
-    if you don't know this number for your system.
-  }
 
   \item{thin}{A positive integer specifying the period for saving samples. 
-    The default is 1, which is usually the recommended value. Unless your
-    posterior distribution takes up too much memory we do \emph{not} recommend 
-    thinning as it throws away information. The tradition of thinning when 
-    running MCMC stems primarily from the use of samplers that require 
-    a large number of iterations to achieve the desired effective sample size. 
-    Because of the efficiency (effective samples per second) of 
-    Hamiltonian Monte Carlo, rarely should this be necessary when using Stan.}
+    The default is 1, which is usually the recommended value.}
     
-  \item{init}{
-    Specification of initial values for all or some parameters.
-    Can be the digit \code{0}, the strings \code{"0"} or \code{"random"}, 
-    a function that returns a named list, or a list of named lists:
+  \item{init}{Can be the digit \code{0}, the strings \code{"0"} or \code{"random"}, 
+    a function that returns a named list, or a list of named lists.
     \describe{
     \item{\code{init="random"} (default):}{Let Stan generate random initial values
       for all parameters. The seed of the random number generator used by Stan 
       can be specified via the \code{seed} argument. If the seed for Stan is 
       fixed, the same initial values are used. The default is to randomly 
-      generate initial values between \code{-2} and \code{2} \emph{on the 
-      unconstrained support}. The optional additional parameter \code{init_r} can 
+      generate initial values between \code{-2} and \code{2} on the 
+      unconstrained support. The optional additional parameter \code{init_r} can 
       be set to some value other than \code{2} to change the range of the randomly 
       generated inits.}
     \item{\code{init="0", init=0}:}{Initialize all parameters to zero on 
@@ -128,8 +97,8 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
       The function can take an optional parameter \code{chain_id} through which the 
       \code{chain_id} (if specified) or the integers from 1 to \code{chains} will be 
       supplied to the function for generating initial values.
-      See the \strong{Examples} section below for examples of defining 
-      such functions and using a list of lists for specifying initial values.}
+      See the Examples section below for examples of defining such functions and using a 
+      list of lists for specifying initial values.}
     }
     When specifying initial values via a \code{list} or \code{function}, any
     parameters for which values are not specified will receive initial values
@@ -143,20 +112,12 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     When a seed is specified by a number, \code{as.integer} will be applied to it. 
     If \code{as.integer} produces \code{NA}, the seed is generated randomly. 
     The seed can also be specified as a character string of digits, such as
-    \code{"12345"}, which is converted to integer.
+    \code{"12345"}, which is converted to integer.}
     
-    Using \R's \code{set.seed} function to set the seed for Stan will not work.
-    }
-    
-  \item{algorithm}{
-    One of the sampling algorithms that are implemented in Stan. 
-    The default and preferred algorithm is \code{"NUTS"}, which is 
-    the No-U-Turn sampler variant of Hamiltonian Monte Carlo
-    (Hoffman and Gelman 2011, Betancourt 2017). Currently the other options 
-    are \code{"HMC"} (Hamiltonian Monte Carlo), and \code{"Fixed_param"}. 
-    When \code{"Fixed_param"} is used no MCMC sampling is performed 
-    (e.g., for simulating with in the generated quantities block).
-  }
+  \item{algorithm}{One of sampling algorithms that are implemented in Stan. 
+    Current options are \code{"NUTS"} (No-U-Turn sampler, Hoffman and Gelman 2011, Betancourt 2017), 
+    \code{"HMC"} (static HMC), or \code{"Fixed_param"}. The default and 
+    preferred algorithm is \code{"NUTS"}.}
 
   \item{sample_file}{An optional character string providing the name of a file.
     If specified the draws for \emph{all} parameters and other saved quantities
@@ -186,11 +147,6 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
   \item{verbose}{\code{TRUE} or \code{FALSE}: flag indicating whether 
     to print intermediate output from Stan on the console, which might
     be helpful for model debugging.}
-    
-  \item{include}{Logical scalar defaulting to \code{TRUE} indicating
-    whether to include or exclude the parameters given by the 
-    \code{pars} argument. If \code{FALSE}, only entire multidimensional
-    parameters can be excluded, rather than particular elements of them.}
  
   \item{control}{A named \code{list} of parameters to control the sampler's
     behavior. It defaults to \code{NULL} so all the default values are used. 
@@ -214,22 +170,32 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
       \item \code{stepsize_jitter} (\code{double}, [0,1])
       \item \code{metric} (\code{string}, one of "unit_e", "diag_e", "dense_e")
     }
-    For algorithm NUTS, we can also set:
-    \itemize{
-      \item \code{max_treedepth} (\code{integer}, positive)
-    }
-    For algorithm HMC, we can also set:
+    For algorithm HMC, we can also set 
     \itemize{
       \item \code{int_time} (\code{double}, positive)
     }
-    
-    For \code{test_grad} mode, the following parameters can be set:
+    For algorithm NUTS, we can set 
+    \itemize{
+      \item \code{max_treedepth} (\code{integer}, positive)
+    }
+
+    For \code{test_grad} mode, the following parameters can be set
     \itemize{
       \item \code{epsilon} (\code{double}, defaults to 1e-6)
       \item \code{error} (\code{double}, defaults to 1e-6)
     }
   }
   
+  \item{include}{Logical scalar defaulting to \code{TRUE} indicating
+    whether to include or exclude the parameters given by the 
+    \code{pars} argument. If \code{FALSE}, only entire multidimensional
+    parameters can be excluded, rather than particular elements of them.}
+  
+  \item{cores}{Number of cores to use when executing the chains in parallel,
+    which defaults to 1 but we recommend setting the \code{mc.cores} option 
+    to be as many processors as the hardware and RAM allow (up to the 
+    number of chains).}
+    
   \item{open_progress}{Logical scalar that only takes effect if 
     \code{cores > 1} but is recommended to be \code{TRUE} in interactive
     use so that the progress of the chains will be redirected to a file
@@ -272,7 +238,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     the file.
 
     \code{refresh} (\code{integer}) can be used to
-    control how often the progress of the sampling is reported (i.e. 
+    control how to indicate the progress during sampling (i.e. 
     show the progress every \code{refresh} iterations). 
     By default, \code{refresh = max(iter/10, 1)}. 
     The progress indicator is turned off if \code{refresh <= 0}.
@@ -286,7 +252,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     memory related problems can be avoided by setting it to \code{FALSE},
     but some diagnostics are more limited if the warmup draws are not
     stored.
-  }
+  } 
 
   \item{boost_lib}{The path for an alternative version of the Boost C++ 
     to use instead of the one in the \pkg{BH} package.}
@@ -295,28 +261,21 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
      library to the one in \pkg{RcppEigen}.} 
 }
 \details{
-  The \code{stan} function does all of the work of fitting a Stan model and 
-  returning the results as an instance of \code{stanfit}. The steps are 
-  roughly as follows:
-  
-  \enumerate{
-  \item Translate the Stan model to C++ code.  (\code{\link{stanc}})
-  \item Compile the C++ code into a binary shared object, which
+  \code{stan} does all of the work of fitting a
+  Stan model and returning the results as an instance of \code{stanfit}. 
+  First, it translates the Stan model to C++ code.  Second, the 
+  C++ code is compiled into a binary shared object, which
   is loaded into the current \R session (an object
-  of S4 class \code{stanmodel} is created).   (\code{\link{stan_model}})
-  \item Draw samples and wrap them in an object of S4 class \code{stanfit}. (\code{\link{sampling}}) 
-  }
-  
-  The returned object can be used with methods such as \code{print}, 
-  \code{summary}, and \code{plot} to inspect and retrieve the results of 
-  the fitted model. 
+  of S4 class \code{stanmodel} is created). Finally, samples
+  are drawn and wrapped in an object of S4 class \code{stanfit}, 
+  which has methods such as \code{print}, \code{summary}, and \code{plot}
+  to inspect and retrieve the results of the fitted model. 
 
   \code{stan} can also be used to sample again from a fitted model under
   different settings (e.g., different \code{iter}, \code{data}, etc.) by 
   using the \code{fit} argument to specify an existing \code{stanfit} object. 
   In this case, the compiled C++ code for the model is reused. 
 }
-
 \value{
   An object of S4 class \code{\link{stanfit}}. However, if \code{cores > 1}
   and there is an error for any of the chains, then the error(s) are printed. If 
@@ -326,7 +285,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
   sampling. 
 }
 
-\section{Passing data to Stan}{
+\note{
   The data passed to \code{stan} are preprocessed before being passed to Stan.
   If \code{data} is not a character vector, the data block of the Stan program
   is parsed and \R objects of the same name are searched starting from the
@@ -407,17 +366,12 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
   \url{http://mc-stan.org}.
 }
 \seealso{
-  \itemize{
-  \item The package vignettes for an example of fitting a model and accessing
-  the contents of \code{stanfit} objects (\url{http://mc-stan.org/rstan/articles/}).
-  
-  \item \code{\link{stanc}} for translating model code in Stan modeling language to C++, 
+  \code{\link{stanc}} for translating model code in Stan modeling language to C++, 
   \code{\link{sampling}} for sampling, and \code{\linkS4class{stanfit}} for the
   fitted results.
 
-  \item \code{\link{as.array.stanfit}} and \code{\link{extract}} for extracting
+  see \code{\link{extract}} and \code{\link{as.array.stanfit}} for extracting
   samples from \code{stanfit} objects.
-  }
 }
 \examples{\dontrun{
 #### example 1 
@@ -435,11 +389,11 @@ fit1 <- stan(model_code = scode, iter = 10, verbose = FALSE)
 print(fit1)
 fit2 <- stan(fit = fit1, iter = 10000, verbose = FALSE) 
 
+## extract samples as a list of arrays
+e2 <- extract(fit2, permuted = TRUE)
+
 ## using as.array on the stanfit object to get samples 
 a2 <- as.array(fit2)
-
-## extract samples as a list of arrays
-e2 <- extract(fit2, permuted = FALSE)
 
 #### example 2
 #### the result of this package is included in the package 

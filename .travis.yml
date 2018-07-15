@@ -2,9 +2,6 @@ sudo: true
 dist: trusty
 services:
   - docker
-  
-git:
-  submodules: false
 
 cache: 
   apt: true
@@ -24,15 +21,22 @@ env:
   global:
     - STAN_BRANCH=master
     - STAN_MATH_BRANCH=master
-    - RSTAN_NEXT_VER=2.99
-  matrix: 
-    - CXX_OLEVEL=2 RCPP_VER=cran CXX=clang++
 
 matrix:
-  allow_failures:
-    - env: CXX_OLEVEL=0 RCPP_VER=cran
-    - env: CXX_OLEVEL=3 RCPP_VER=github
-    - compiler: gcc
+    # works on Precise and Trusty
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+        - COMPILER=g++-6
+
+before_install:
+    - eval "${MATRIX_EVAL}"
 
 before_install:
   - echo -e "#\x21/bin/sh\n\$1 &\nPROCESS=\"\$!\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`" > wait4.sh
@@ -40,30 +44,25 @@ before_install:
   - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
-  - git submodule update --init --recursive  || echo "ok"
-  - cd ${TRAVIS_BUILD_DIR}/StanHeaders/inst/include/upstream && git checkout origin/${STAN_BRANCH}
-  - cd ${TRAVIS_BUILD_DIR}/StanHeaders/inst/include/mathlib && git checkout origin/${STAN_MATH_BRANCH}
-  - cd ${TRAVIS_BUILD_DIR}
 
 before_script: 
-  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown', 'loo'), repos='http://cran.rstudio.com')"
+  - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown'), repos='http://cran.rstudio.com')"
+  - git config -f .gitmodules submodule.stan.branch ${STAN_BRANCH} 
+  - git config -f .gitmodules submodule.StanHeaders/inst/include/mathlib.branch ${STAN_MATH_BRANCH}
+  - git submodule update --remote
   - R CMD build StanHeaders/
   - R CMD INSTALL `find StanHeaders*.tar.gz`
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr update --self; fi
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
   - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
-  - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi     
-  - echo "CXX = `R CMD config CXX`" >> ./rstan/R_Makevars 
-  - echo "CXXFLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
+  - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi
+  - echo "CXX = g++-6" >> ./rstan/R_Makevars 
+  - echo "CXX14 = g++-6" >> ./rstan/R_Makevars 
+  - echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
   - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
-  - if [[ $RCPP_VER = 'github' ]]; then R -q -e "options(repos = getCRANmirrors()[1,'URL']); library(devtools); install_github('Rcpp', 'Rcppcore')"; fi
-  - echo ${CXX}
+  - echo ${CXX} --version
   - echo ${CLANG_EXTRA_ARG}
-  - sed -i.bak "s/^\(Version.\).*/\1 ${RSTAN_NEXT_VER}/" ./rstan/rstan/DESCRIPTION
-  - sed -i.bak "s/ g++/ ${CXX}${CLANG_EXTRA_ARG}/" ./rstan/R_Makevars
-  - sed -i.bak "s/O[0-3]/O$CXX_OLEVEL/" ./rstan/R_Makevars
-  - rm ./rstan/R_Makevars.bak
   - more ./rstan/R_Makevars
   - mkdir -p ~/.R/; cat ./rstan/R_Makevars > ~/.R/Makevars
   - more ~/.R/Makevars

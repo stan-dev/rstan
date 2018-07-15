@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -237,11 +237,6 @@ setMethod("vb", "stanmodel",
             samples <- samples[,unlist(cC[c(pars, "lp__")]), drop = FALSE]
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
-            if (is.list(init[[1]])) {
-              live <- sapply(inits_used[[1]], FUN = function(x) prod(dim(x)) > 0)
-              fnames_oi <- c(rename_fnames_oi(inits_used[[1]][live], init[[1]]), "lp__")
-              stopifnot(length(fnames_oi) == n_flatnames)
-            }
             iter <- nrow(samples)
             sim <- list(samples = list(as.list(samples)),
                         iter = iter, thin = 1L,
@@ -369,9 +364,7 @@ setMethod("optimizing", "stanmodel",
             optim$return_code <- attr(optim, "return_code")
             if (optim$return_code != 0) warning("non-zero return code in optimizing")
             attr(optim, "return_code") <- NULL
-            # names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
-            fnames <- sampler$param_fnames_oi()
-            names(optim$par) <- fnames[-length(fnames)]
+            names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
             skeleton <- create_skeleton(m_pars, p_dims)
             if (hessian || draws) {
               fn <- function(theta) {
@@ -385,14 +378,8 @@ setMethod("optimizing", "stanmodel",
               H <- optimHess(theta, fn, gr, control = list(fnscale = -1))
               colnames(H) <- rownames(H) <- sampler$unconstrained_param_names(FALSE, FALSE)
               if (hessian) optim$hessian <- H
-              R <- chol(-H, pivot = TRUE)
-              pivot <- attr(R, "pivot")
-              oo <- order(pivot)
-              R <- R[ , pivot]
-              if (draws > 0) {
+              if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
                 K <- ncol(R)
-                m <- min(diag(R))
-                if (m <= 0) diag(R) <- diag(R) - m + sqrt(.Machine$double.eps)
                 R_inv <- backsolve(R, diag(K))
                 Z <- matrix(rnorm(K * draws), K, draws)
                 theta_tilde <- t(theta + R_inv %*% Z)
@@ -751,11 +738,6 @@ setMethod("sampling", "stanmodel",
 
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
-            if (is.list(init[[1]])) {
-              live <- sapply(inits_used[[1]], FUN = function(x) prod(dim(x)) > 0)
-              fnames_oi <- c(rename_fnames_oi(inits_used[[1]][live], init[[1]]), "lp__")
-              stopifnot(length(fnames_oi) == n_flatnames)
-            }
             sim = list(samples = samples,
                        iter = iter, thin = thin, 
                        warmup = warmup, 
