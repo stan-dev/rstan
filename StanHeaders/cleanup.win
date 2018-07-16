@@ -7,9 +7,11 @@ rm -rf src/sundials
 
 cp -r inst/include/mathlib/stan inst/include/stan
 cp -r inst/include/upstream/src inst/include/src
+# cp -r inst/include/mathlib/lib/sundials_3.1.0/include/cvodes inst/include/cvodes
+
 cp -r inst/include/mathlib/lib/sundials_3.1.0 src/sundials
 mkdir -p inst/include/src/sundials/include
-mv inst/include/mathlib/lib/sundials_3.1.0/include/* inst/include/src/sundials/include
+mv inst/include/mathlib/lib/sundials_3.1.0/include/* inst/include/
 
 exit $?
 
