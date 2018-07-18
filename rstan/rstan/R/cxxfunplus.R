@@ -139,6 +139,9 @@ cxxfunctionplus <- function(sig = character(), body = character(),
                             settings = getPlugin(plugin), 
                             save_dso = FALSE, module_name = "MODULE", 
                             ..., verbose = FALSE) {
+  has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
+  Sys.setenv(USE_CXX14 = 1)
+  if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   fx <- cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
                     settings = settings, ..., verbose = verbose)
   dso_last_path <- dso_path(fx)

@@ -7,19 +7,14 @@ SUNDIALS_CVODES := $(patsubst %.c,%.o,\
   $(wildcard $(SUNDIALS)/src/sundials/*.c) \
   $(wildcard $(SUNDIALS)/src/sunmat_band/*.c) \
   $(wildcard $(SUNDIALS)/src/sunmat_dense/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunlinsol_band/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunlinsol_dense/*.c))
+  $(SUNDIALS)/src/sunlinsol_band/sunlinsol_band.c \
+  $(SUNDIALS)/src/sunlinsol_dense/sunlinsol_dense.c)
 
 SUNDIALS_IDAS := $(patsubst %.c,%.o,\
-  $(addprefix $(SUNDIALS)/src/idas/, idaa.c idaa_io.c idas.c idas_bbdpre.c idas_direct.c idas_ic.c idas_io.c idas_spils.c) \
-  $(wildcard $(SUNDIALS)/src/sundials/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunmat_band/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunmat_dense/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunlinsol_band/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunlinsol_dense/*.c))
+  $(addprefix $(SUNDIALS)/src/idas/, idaa.c idaa_io.c idas.c idas_bbdpre.c idas_direct.c idas_ic.c idas_io.c idas_spils.c))
 
 SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
-  $(addprefix $(SUNDIALS)/src/, nvec_ser/nvector_serial.c sundials/sundials_math.c))
+  $(addprefix $(SUNDIALS)/src/, nvec_ser/nvector_serial.c))
 
 SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_NVECSERIAL)
 OBJECTS = $(SOURCES:.c=.o)
