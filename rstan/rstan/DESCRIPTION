@@ -29,7 +29,8 @@ Imports:
     stats4,
     inline,
     gridExtra (>= 2.0.0),
-    Rcpp (>= 0.12.0)
+    Rcpp (>= 0.12.0),
+    loo (>= 2.0.0)
 Depends:
     R (>= 3.4.0),
     ggplot2 (>= 2.0.0),
@@ -45,8 +46,8 @@ Suggests:
     parallel,
     KernSmooth,
     loo (>= 1.0.0),
-    shinystan (>= 2.2.1),
-    bayesplot,
+    shinystan (>= 2.3.0),
+    bayesplot (>= 1.5.0),
     rstantools,
     rstudioapi,
     Matrix,
