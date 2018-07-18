@@ -48,6 +48,7 @@
 #include <stan/services/sample/hmc_static_diag_e_adapt.hpp>
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
+#include <stan/services/sample/standalone_gqs.hpp>
 #include <stan/services/experimental/advi/fullrank.hpp>
 #include <stan/services/experimental/advi/meanfield.hpp>
 
@@ -1202,6 +1203,32 @@ public:
     END_RCPP
   }
 
+  SEXP standalone_gqs(SEXP pars, SEXP seed) {
+    BEGIN_RCPP
+    Rcpp::List holder;
+
+    R_CheckUserInterrupt_Functor interrupt;
+    stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
+                                          rstan::io::rcerr, rstan::io::rcerr);
+    std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
+
+    std::vector<std::vector<double> > draws = 
+      Rcpp::as<std::vector<std::vector<double> > >(pars); // unconstrained
+    
+    int ret;
+    ret = stan::services::standalone_generate(model_, draws,
+            Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);
+    
+    holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
+                        sample_writer_ptr->values_.x().end());
+    
+    SEXP __sexp_result;
+    PROTECT(__sexp_result = Rcpp::wrap(holder));
+    UNPROTECT(1);
+    return __sexp_result;
+    END_RCPP
+  }
+  
   SEXP param_names() const {
     BEGIN_RCPP
     SEXP __sexp_result;

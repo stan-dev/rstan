@@ -37,5 +37,7 @@ RCPP_MODULE(stan_fit4%model_name%_mod){
             &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::unconstrained_param_names)
     .method("constrained_param_names",
             &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::constrained_param_names)
-    ;
+    .method("standalone_gqs",
+            &rstan::stan_fit<%model_name%_namespace::%model_name%, boost::random::ecuyer1988>::standalone_gqs)
+  ;
 }
