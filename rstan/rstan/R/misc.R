@@ -1641,7 +1641,7 @@ throw_sampler_warnings <- function(object) {
   n_e <- 0L
   if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
     E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
-    threshold <- 0.3
+    threshold <- 0.2
     if (nrow(E) > 1) {
       EBFMI <- get_num_upars(object) / apply(E, 2, var)
       n_e <- sum(EBFMI < threshold, na.rm = TRUE)
