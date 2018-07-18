@@ -1384,7 +1384,7 @@ makeconf_path <- function() {
 }
 
 is_null_ptr <- function(ns) {
-  .Call("is_Null_NS", ns)
+  .Call(is_Null_NS, ns)
 }
 
 is_null_cxxfun <- function(cx) {
@@ -1392,7 +1392,7 @@ is_null_cxxfun <- function(cx) {
   # contains null pointer
   add <- body(cx@.Data)[[2]]
   # add is of class NativeSymbol
-  .Call("is_Null_NS", add)
+  .Call(is_Null_NS, add)
 }
 
 obj_size_str <- function(x) {
