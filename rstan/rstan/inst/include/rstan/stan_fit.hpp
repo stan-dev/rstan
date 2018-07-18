@@ -1322,7 +1322,7 @@ public:
     std::vector<std::string> fnames;
     get_all_flatnames(names_oi_, dims_oi_, fnames, true);
     SEXP __sexp_result;
-    PROTECT(__sexp_result = Rcpp::wrap(fnames));
+    PROTECT(__sexp_result = Rcpp::wrap(fnames_oi_));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP
