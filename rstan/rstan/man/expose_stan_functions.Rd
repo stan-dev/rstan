@@ -72,7 +72,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   The names of the new functions in \code{env} are returned invisibly.
 }
 \seealso{
-  \code{\link[Rcpp]{sourceCpp}}
+  \code{\link[Rcpp]{sourceCpp}} and the section in the Stan User Manual on
+  user-defined functions
 }
 \examples{
 \dontrun{

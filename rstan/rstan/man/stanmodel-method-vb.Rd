@@ -6,6 +6,8 @@
 \title{Run Stan's variational algorithm for approximate posterior sampling}
 \description{
   Approximately draw from a posterior distribution using variational inference.
+  
+  This is still considered an experimental feature.
   We recommend calling \code{\link{stan}} or \code{\link{sampling}} for 
   final inferences and only using \code{vb} to get a rough idea of the parameter
   distributions.
@@ -37,7 +39,7 @@
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{pars}{If not \code{NA}, then a character vector naming parameters,
     which are included in the output if \code{include = TRUE} and excluded
@@ -62,7 +64,7 @@
       
   \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
     the data will be preprocessed; otherwise not.
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
@@ -126,4 +128,3 @@
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
 f <- vb(m)
 }} 
-
