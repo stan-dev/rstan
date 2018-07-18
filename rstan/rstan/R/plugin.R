@@ -75,7 +75,7 @@ rstanplugin <- function() {
  
   if (.Platform$OS.type == "windows")
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
-  else StanHeaders_pkg_libs <- system.file("lib", package = "StanHeaders")
+  else StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
 
   # In case  we have space (typical on windows though not necessarily)
   # in the file path of Rcpp's library. 
