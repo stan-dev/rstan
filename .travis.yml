@@ -13,10 +13,6 @@ cache:
 
 language: r
 
-os:
-  - linux
-  - osx
-
 env:
   global:
     - STAN_BRANCH=master
@@ -28,13 +24,11 @@ matrix:
     - os: linux
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
-            - g++-6
+            - g++-7
       env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
-        - COMPILER=g++-6
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - COMPILER=g++-7
        
     - os: osx
       osx_image: xcode8
