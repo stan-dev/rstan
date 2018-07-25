@@ -28,12 +28,12 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-6.0
           packages:
-            - g++-8 fails 
+            - gcc-8 
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
        
     - os: osx
-      osx_image: xcode9.4
+      osx_image: xcode9.3
       env:
         - MATRIX_EVAL="CC=clang && CXX=clang++"
         
