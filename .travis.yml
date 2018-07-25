@@ -29,6 +29,7 @@ matrix:
             - llvm-toolchain-trusty-6.0
           packages:
             - gcc-8 
+            - g++-8
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
        
@@ -36,9 +37,6 @@ matrix:
       osx_image: xcode9.3
       env:
         - MATRIX_EVAL="CC=clang && CXX=clang++"
-        
-      # env:
-      #   - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -47,6 +45,7 @@ before_install:
   - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
+  
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown'), repos='http://cran.rstudio.com')"
