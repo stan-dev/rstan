@@ -26,16 +26,17 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-6.0
           packages:
-            - g++-7
+            -clang-6 # - g++-7 fails 
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-        - COMPILER=g++-7
+        - MATRIX_EVAL="CC=clang-6 && CXX=clang++-6"
+        - COMPILER=clang-7
        
     - os: osx
-      osx_image: xcode8
-      env:
-        - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
+      osx_image: xcode9.4
+      # env:
+      #   - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
 
 before_install:
   - eval "${MATRIX_EVAL}"
