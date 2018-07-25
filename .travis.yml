@@ -28,13 +28,15 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-6.0
           packages:
-            - clang-6.0 # - g++-7 fails 
+            - g++-8 fails 
       env:
-        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
-        - COMPILER=clang-6.0 
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
        
     - os: osx
       osx_image: xcode9.4
+      env:
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
+        
       # env:
       #   - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
 
