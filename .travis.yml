@@ -1,7 +1,7 @@
 sudo: true
 dist: trusty
-services:
-  - docker
+# services:
+#   - docker
 
 cache: 
   apt: true
@@ -13,37 +13,49 @@ cache:
 
 language: r
 
-os:
-  - linux
-  - osx
-
 env:
   global:
     - STAN_BRANCH=master
     - STAN_MATH_BRANCH=master
 
 matrix:
+  include:
+    - os: osx
+      osx_image: xcode9.4
+      env:
+        - CC=clang
+        - CXX=clang++
+        
+    # - os: osx
+    #   osx_image: xcode9.4
+    #   env:
+    #     - MATRIX_EVAL="brew cask uninstall oclint && brew install gcc@8; xcode-select --install; CC=gcc-7 ; CXX=g++-7 "
+        
     # works on Precise and Trusty
     - os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-6.0
           packages:
-            - g++-6
+            - clang-6.0
+            # - gcc-8 
+            # - g++-8
+           
       env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
-        - COMPILER=g++-6
+        # - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+
 
 before_install:
-    - eval "${MATRIX_EVAL}"
-
-before_install:
+  - eval "${MATRIX_EVAL}"
   - echo -e "#\x21/bin/sh\n\$1 &\nPROCESS=\"\$!\"\nwhile :\ndo\n  RESULT=\`ps -p \${PROCESS} -o comm=\`" > wait4.sh
   - echo -e "  if [ -z \"\${RESULT}\" ]; then\n    wait \${PROCESS}; exit \$?\n  else\n    echo \"-\"; sleep 10\n  fi\ndone\nexit \$?" >> wait4.sh
-  - more wait4.sh
+  # - more wait4.sh
   - echo -e "Package\x3A mnb_bnm" > DESCRIPTION
   - chmod 755 wait4.sh
+  
 
 before_script: 
   - Rscript -e "install.packages(c('inline', 'Rcpp', 'coda', 'BH', 'RcppEigen', 'RInside', 'RUnit', 'ggplot2', 'gridExtra', 'knitr', 'rmarkdown'), repos='http://cran.rstudio.com')"
@@ -56,16 +68,16 @@ before_script:
   - if [[ $TRAVIS_OS_NAME = 'osx' ]] ; then sudo tlmgr install verbatimbox readarray ifnextok multirow fancyvrb url titlesec booktabs; fi 
   - if [[ $TRAVIS_OS_NAME != 'osx' ]] ; then tlmgr install verbatimbox readarray ifnextok; fi
   - if [[ $TRAVIS_OS_NAME = "osx" ]] ; then  brew install ccache; brew link ccache; fi
-  - echo "CXX = g++-6" >> ./rstan/R_Makevars 
-  - echo "CXX14 = g++-6" >> ./rstan/R_Makevars 
-  - echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0" >> ./rstan/R_Makevars 
+  - echo "CXX = $CXX" >> ./rstan/R_Makevars 
+  - echo "CXX14 = $CXX" >> ./rstan/R_Makevars 
+  - echo "CXX14FLAGS = `R CMD config CXXFLAGS` -pedantic -g0 -fPIC" >> ./rstan/R_Makevars 
   - export CLANG_EXTRA_ARG=""
-  - if [[ $CXX = "clang++" ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
+  - if [[ $CXX =~ clang.* ]] ;  then export CLANG_EXTRA_ARG=" -Qunused-arguments -fcolor-diagnostics " ; fi
   - echo ${CXX} --version
   - echo ${CLANG_EXTRA_ARG}
-  - more ./rstan/R_Makevars
+  # - more ./rstan/R_Makevars
   - mkdir -p ~/.R/; cat ./rstan/R_Makevars > ~/.R/Makevars
-  - more ~/.R/Makevars
+  # - more ~/.R/Makevars
 
 notifications:
   email:

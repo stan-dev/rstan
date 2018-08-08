@@ -24,7 +24,8 @@ if (length(args) > 0)  rstan_lib_loc <- args[1]
 library(package = pkg, character.only = TRUE, lib.loc = rstan_lib_loc)
 
 rstantest <- defineTestSuite("rstantest",
-                             dirs = file.path(path, "unitTests"),
+                             dirs = c(file.path(path, "unitTests"),
+                                      system.file(package = 'rstan', "unitTests")),
                              testFileRegexp = "^runit.+.*\\.R",
                              testFuncRegexp = "^test_+",
                              rngKind = "Marsaglia-Multicarry",
