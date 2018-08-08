@@ -1,20 +1,17 @@
-SUNDIALS = sundials
-
-PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -Isundials/include/ -include stan_sundials_printf_override.hpp
+PKG_CPPFLAGS=-DNO_FPRINTF_OUTPUT -I"../inst/include" -include stan_sundials_printf_override.hpp
 
 SUNDIALS_CVODES := $(patsubst %.c,%.o,\
-  $(addprefix $(SUNDIALS)/src/cvodes/, cvodes.c cvodes_io.c cvodea.c cvodea_io.c cvodes_direct.c cvodes_diag.c cvodes_spils.c cvodes_bandpre.c cvodes_bbdpre.c) \
-  $(wildcard $(SUNDIALS)/src/sundials/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunmat_band/*.c) \
-  $(wildcard $(SUNDIALS)/src/sunmat_dense/*.c) \
-  $(SUNDIALS)/src/sunlinsol_band/sunlinsol_band.c \
-  $(SUNDIALS)/src/sunlinsol_dense/sunlinsol_dense.c)
+  $(addprefix cvodes/, cvodes.c cvodes_io.c cvodea.c cvodea_io.c cvodes_direct.c cvodes_diag.c cvodes_spils.c cvodes_bandpre.c cvodes_bbdpre.c) \
+  $(wildcard sundials/*.c) \
+  $(wildcard sunmat_band/*.c) \
+  $(wildcard sunmat_dense/*.c) \
+  sunlinsol_band/sunlinsol_band.c \
+  sunlinsol_dense/sunlinsol_dense.c)
 
 SUNDIALS_IDAS := $(patsubst %.c,%.o,\
-  $(addprefix $(SUNDIALS)/src/idas/, idaa.c idaa_io.c idas.c idas_bbdpre.c idas_direct.c idas_ic.c idas_io.c idas_spils.c))
+  $(addprefix idas/, idaa.c idaa_io.c idas.c idas_bbdpre.c idas_direct.c idas_ic.c idas_io.c idas_spils.c))
 
-SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
-  $(addprefix $(SUNDIALS)/src/, nvec_ser/nvector_serial.c))
+SUNDIALS_NVECSERIAL := nvec_ser/nvector_serial.c
 
 SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_NVECSERIAL)
 OBJECTS = $(SOURCES:.c=.o)
