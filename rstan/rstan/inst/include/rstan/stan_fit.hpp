@@ -57,6 +57,7 @@
 #include <rstan/value.hpp>
 #include <rstan/values.hpp>
 #include <rstan/rstan_writer.hpp>
+#include <rstan/logger.hpp>
 
 namespace rstan {
 
@@ -393,8 +394,9 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
         throw std::runtime_error("Must use algorithm=\"Fixed_param\" for "
                                    "model that has no parameters.");
-  stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
-                                        rstan::io::rcerr, rstan::io::rcerr);
+  stan::callbacks::stream_logger_with_chain_id<std::stringstream> 
+    logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
+           rstan::io::rcerr, rstan::io::rcerr, args.get_chain_id());
 
   R_CheckUserInterrupt_Functor interrupt;
 
