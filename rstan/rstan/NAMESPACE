@@ -3,7 +3,7 @@ useDynLib(rstan, .registration = TRUE)
 
 importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
-importFrom("stats", "acf", "aggregate", "density", "dnorm", "median", "optimHess", "pacf", "quantile", "reshape", "rnorm", "sd", "var")
+importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "quantile", "reshape", "rnorm", "sd", "var")
 importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
 
 importFrom("stats4", summary, plot)

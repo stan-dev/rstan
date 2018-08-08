@@ -8,12 +8,12 @@ return the fitted result as an instance of \code{stanfit}.
 }
 \usage{
 stan(file, model_name = "anon_model", model_code = "", fit = NA, 
-  data = list(), pars = NA, include = TRUE,
+  data = list(), pars = NA,
   chains = 4, iter = 2000, warmup = floor(iter/2), thin = 1, 
   init = "random", seed = sample.int(.Machine$integer.max, 1), 
   algorithm = c("NUTS", "HMC", "Fixed_param"), %, "Metropolis"),
   control = NULL, sample_file = NULL, diagnostic_file = NULL, 
-  save_dso = TRUE, verbose = FALSE, 
+  save_dso = TRUE, verbose = FALSE, include = TRUE,
   cores = getOption("mc.cores", 1L),
   open_progress = interactive() && !isatty(stdout()) &&
                   !identical(Sys.getenv("RSTUDIO"), "1"),
@@ -92,7 +92,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
     
   \item{cores}{
     The number of cores to use when executing the Markov chains in parallel.
-    The default is to use the value of the \code{"mc.cores""} option if it 
+    The default is to use the value of the \code{"mc.cores"} option if it 
     has been set and otherwise to default to 1 core. However, we recommend 
     setting it to be as many processors as the hardware and RAM allow 
     (up to the number of chains). See \code{\link[parallel]{detectCores}} 

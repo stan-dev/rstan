@@ -72,7 +72,7 @@ The following are several of many resources that provide more information on
 these diagnostics:
 \itemize{
 \item Brief explanations of some of the problems detected by these diagnostics 
-can be found in the \href{http://mc-stan.org/misc/warnings.html}{\emph{Brief Guide to Stan’s Warnings}}.
+can be found in the \href{http://mc-stan.org/misc/warnings.html}{\emph{Brief Guide to Stan's Warnings}}.
 
 \item Betancourt (2017) provides much more depth on these diagnostics
 as well as a conceptual introduction to Hamiltonian Monte Carlo in general.

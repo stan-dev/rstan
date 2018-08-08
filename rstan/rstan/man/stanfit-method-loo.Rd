@@ -1,5 +1,6 @@
 \name{loo.stanfit}
 \alias{loo.stanfit}
+\alias{loo,stanfit-method}
 \alias{loo}
 
 \title{Approximate leave-one-out cross-validation} 
@@ -14,9 +15,8 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
 
 \usage{
   \method{loo}{stanfit}(x, pars = "log_lik", 
-    \dots, 
-    cores = getOption("mc.cores", 1), 
-    save_psis = FALSE) 
+    \dots, save_psis = FALSE,
+    cores = getOption("mc.cores", 1)) 
 } 
 
 \arguments{
