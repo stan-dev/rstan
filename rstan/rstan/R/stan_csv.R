@@ -348,5 +348,3 @@ read_one_stan_csv <- function(csvfile) {
   attributes(draws)$timings <- timings
   return(draws)
 }
-
-if (!exists("trimws")) trimws <- function(x) gsub("^\\s+|\\s+$", "", x)
