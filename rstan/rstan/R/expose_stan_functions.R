@@ -49,5 +49,16 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
   compiled <- suppressWarnings(Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...))
+  DOTS <- list(...)
+  ENV <- DOTS$env
+  if (is.null(ENV)) ENV <- globalenv()
+  for (x in compiled$functions) {
+    FUN <- get(x, envir = ENV)
+    args <- formals(FUN)
+    args$pstream__ <- get_stream()
+    if ("base_rng__" %in% names(args)) args$base_rng__ <- get_rng()
+    formals(FUN) <- args
+    assign(x, FUN, envir = ENV)
+  }
   return(invisible(compiled$functions))
 }
