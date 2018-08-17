@@ -561,8 +561,11 @@ setMethod("sampling", "stanmodel",
                   else sinkfile <- ""
                 }
                 else sinkfile <- ""
-                cl <- parallel::makeCluster(min(cores, chains), 
-                                            outfile = sinkfile, useXDR = FALSE)
+                capture.output(cl <- 
+                        parallel::makeCluster(min(cores, chains), 
+                                              outfile = sinkfile, useXDR = FALSE), 
+                        file = if (.Platform$OS.type == "windows") "NUL" else
+                               "/dev/null")
                 on.exit(parallel::stopCluster(cl))
                 dependencies <- c("rstan", "Rcpp", "ggplot2")
                 .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {

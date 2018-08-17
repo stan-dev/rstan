@@ -394,9 +394,15 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
         throw std::runtime_error("Must use algorithm=\"Fixed_param\" for "
                                    "model that has no parameters.");
+  int refresh = args.get_ctrl_optim_refresh();
+  unsigned int id = args.get_chain_id();
+  
+  std::ostream nullout(nullptr);
+  std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
+  std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
+  
   stan::callbacks::stream_logger_with_chain_id<std::stringstream> 
-    logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
-           rstan::io::rcerr, rstan::io::rcerr, args.get_chain_id());
+    logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
 
@@ -451,7 +457,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
 
 
   unsigned int random_seed = args.get_random_seed();
-  unsigned int id = args.get_chain_id();
   double init_radius = args.get_init_radius();
 
   if (args.get_method() == TEST_GRADIENT) {
@@ -493,7 +498,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       double tol_grad = args.get_ctrl_optim_tol_grad();
       double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
       double tol_param = args.get_ctrl_optim_tol_param();
-      int refresh = args.get_ctrl_optim_refresh();
       return_code
         = stan::services::optimize::bfgs(model, *init_context_ptr,
                                          random_seed, id, init_radius,
@@ -517,7 +521,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       double tol_grad = args.get_ctrl_optim_tol_grad();
       double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
       double tol_param = args.get_ctrl_optim_tol_param();
-      int refresh = args.get_ctrl_optim_refresh();
       return_code
         = stan::services::optimize::lbfgs(model, *init_context_ptr,
                                           random_seed, id, init_radius,
@@ -553,7 +556,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     int num_samples = args.get_iter() - num_warmup;
     int num_thin = args.get_ctrl_sampling_thin();
     bool save_warmup = args.get_ctrl_sampling_save_warmup();
-    int refresh = args.get_ctrl_sampling_refresh();
     int num_iter_save = args.get_ctrl_sampling_iter_save();
     int num_warmup_save = num_iter_save - args.get_ctrl_sampling_iter_save_wo_warmup();
 

@@ -22,10 +22,11 @@ test_essnrhat <- function() {
   c2 <- read.csv(f2, comment.char = "#", header = TRUE)[, -(1:4)]
   # c2 <- do.call(cbind, c2)  
   lst <- list(samples = list(c1 = c1, c2 = c2), 
-              n_save = c(nrow(c1), nrow(c2)), 
+              n_save = rep(34, 2), 
               permutation = NULL, 
               warmup2 = rep(0, 2), chains = 2, n_flatnames = ncol(c1))
   ess <- rstan:::rstan_ess(lst, 1)
+  ess <- rstan:::rstan_ess(lst, 2)
   # cat("ess=", ess, "\n") 
   checkEquals(ess, 466.0988, tolerance = 0.001); 
   rhat <- rstan:::rstan_splitrhat(lst, 1)

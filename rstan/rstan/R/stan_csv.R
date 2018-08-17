@@ -162,6 +162,10 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
         readLines(con, n = 1)
         next
       }
+      if(char == 10){ #empty line
+        readLines(con, n = 1)
+        next
+      }
       row.buffer[buffer.pointer,] <- scan(con, nlines=1, sep="," ,quiet=TRUE)
       if(buffer.pointer == buffer.size){
         df[row:(row + buffer.size - 1), ] <- row.buffer
