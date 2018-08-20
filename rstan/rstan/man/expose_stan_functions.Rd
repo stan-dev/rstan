@@ -53,8 +53,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   \code{seed} argument for reproducibility) and the \code{pstream__} should
   be passed the result of a call to \code{get_stream}, which can be used to
   see the result of \code{print} and \code{reject} calls in the user-defined
-  Stan program but the \code{pstream__} argument is mandatory even if there
-  are no \code{print} or \code{reject} calls.
+  Stan functions. These arguments default to \code{get_stream()} and
+  \code{get_rng()} respectively.
   }
   \subsection{LP functions}{
   If a user-defined Stan function ends in \code{_lp}, then it can
@@ -86,6 +86,7 @@ model_code <-
   }
 '
 expose_stan_functions(stanc(model_code = model_code))
+standard_normal_rng()
 PRNG <- get_rng(seed = 3)
 o <- get_stream()
 standard_normal_rng(PRNG, o)
