@@ -24,7 +24,7 @@ ACC <- 0
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
-  assignInMyNamespace("ACC", value = get_accumulator(0))
+  assignInMyNamespace("ACC", value = get_accumulator())
 }
 
 .onAttach <- function(...) {

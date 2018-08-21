@@ -65,6 +65,8 @@ export(
   get_low_bfmi_chains,
   get_rng,
   get_stream,
+  get_accumulator,
+  check_accumulator,
   RNG, OUT, ACC
 )
 

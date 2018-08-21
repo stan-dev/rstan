@@ -79,7 +79,7 @@ namespace Rcpp {
       inline boost::ecuyer1988& get(){ return t ; }
     private:
       boost::ecuyer1988& t ;
-    } ; 
+    }; 
 
     template <> class Exporter<stan::math::accumulator<double>&> {
     public:
@@ -87,7 +87,7 @@ namespace Rcpp {
       inline stan::math::accumulator<double>& get(){ return t ; }
     private:
       stan::math::accumulator<double>& t ;
-    } ; 
+    }; 
 
     template <>
     struct input_parameter<boost::ecuyer1988&> {
