@@ -65,7 +65,7 @@ export(
   get_low_bfmi_chains,
   get_rng,
   get_stream,
-  RNG, OUT
+  RNG, OUT, ACC
 )
 
 exportClasses(

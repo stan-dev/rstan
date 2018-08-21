@@ -18,11 +18,13 @@
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
 RNG <- 0
 OUT <- 0
+ACC <- 0
 
 .onLoad <- function(libname, pkgname) {
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
+  assignInMyNamespace("ACC", value = get_accumulator(0))
 }
 
 .onAttach <- function(...) {
