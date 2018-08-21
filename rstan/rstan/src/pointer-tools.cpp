@@ -22,4 +22,11 @@ RcppExport SEXP get_accumulator_(SEXP start) {
   return ptr;
 }
 
+RcppExport SEXP check_accumulator_(SEXP ptr_ACC) {
+  Rcpp::XPtr<stan::math::accumulator<double>> ptr(ptr_ACC, true);
+  stan::math::accumulator<double>& acc = *ptr;
+  double total = acc.sum();
+  return total;
+}
+
 
