@@ -227,7 +227,7 @@ setMethod("vb", "stanmodel",
             if ("lp__" %in% names(inits_used))  inits_used$lp__ <- NULL
             samples <- cbind(samples[-1,-1,drop=FALSE], 
                              "lp__" = samples[-1,1])[,unlist(cC)]
-            cC <- cC[sapply(cC, all)]
+            cC <- cC[sapply(cC, any)] # any(logical()) is FALSE
             count <- 1L
             for (i in seq_along(cC)) {
               len <- length(cC[[i]])
