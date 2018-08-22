@@ -231,7 +231,7 @@ fit1 <- stan(
   warmup = 1000,          # number of warmup iterations per chain
   iter = 2000,            # total number of iterations per chain
   cores = 2,              # number of cores (using 2 just for the vignette)
-  refresh = 1000          # show progress every 'refresh' iterations
+  refresh = 0             # no progress shown
   )
 ```
 
@@ -481,7 +481,7 @@ functions {
 model {}
 '
 expose_stan_functions(stanc(model_code = model_code))
-standard_normal_rng(get_rng(), pstream__ = get_stream())
+standard_normal_rng()
 ```
 
 
