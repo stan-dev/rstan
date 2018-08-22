@@ -18,6 +18,7 @@
 \alias{is_dso_loaded,cxxdso-method}
 \alias{RNG}
 \alias{OUT}
+\alias{ACC}
 \title{Internal Functions and Methods}
 \description{
 These functions are not intended to be called directly. In the case of
