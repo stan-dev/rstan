@@ -30,6 +30,7 @@ get_makefile_txt <- function() {
   makefiles <- strsplit(sub("SHLIB.*$", "", out), split = "-f ")[[1]][-1]
   makefiles <- gsub("'", "", makefiles)
   makefiles <- gsub("[[:space:]]*$", "", makefiles)
+  makefiles <- gsub('\"', '', makefiles)
   makefiles <- makefiles[file.exists(makefiles)]
   do.call(c, lapply(makefiles, function(f) readLines(f, warn = FALSE))) 
 }
