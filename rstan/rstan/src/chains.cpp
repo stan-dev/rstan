@@ -366,10 +366,10 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
   for (int t = 1;
        (t < (n_samples - 2) && (rho_hat_even + rho_hat_odd) >= 0);
        t += 2) {
-    for (int chain = 0; chain < m; chain++)
+    for (unsigned int chain = 0; chain < m; chain++)
       acov_t[chain] = acov[chain][t + 1];
     rho_hat_even = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
-    for (int chain = 0; chain < m; chain++)
+    for (unsigned int chain = 0; chain < m; chain++)
       acov_t[chain] = acov[chain][t + 2];
     rho_hat_odd = 1 - (mean_var - stan::math::mean(acov_t)) / var_plus;
     if ((rho_hat_even + rho_hat_odd) >= 0) {
