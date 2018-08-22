@@ -1409,6 +1409,27 @@ system_info <- function() {
         "; inline: ", packageVersion('inline'), sep = '')
 }
 
+read_comments <- function(f, n = -1) {
+  # Read comments beginning with `#`
+  # Args:
+  #   f: the filename
+  #   n: max number of line; -1 means all
+  # Returns:
+  #   a vector of strings
+  con <- file(f, 'r')
+  comments <- list()
+  iter <- 0
+  while (length(input <- readLines(con, n = 1)) > 0) {
+    if (n > 0 && n <= iter) break;
+    if (grepl("#", input)) {
+      comments <- c(comments, gsub("^.*#", "#", input))
+      iter <- iter + 1
+    }
+  }
+  close(con)
+  do.call(c, comments)
+}
+
 sqrfnames_to_dotfnames <- function(fnames) {
   # change names such as alpha[1,1] to alpha.1.1
   gsub('\\]', '', gsub('\\[|,', '.', fnames))
@@ -1490,6 +1511,8 @@ read_csv_header <- function(f, comment.char = '#') {
     }
     if (grepl("#.*num_warmup",input)){
       warmup.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
+    } else {
+      warmup.count <- 0L
     }
     if (grepl("#.*save_warmup",input)){
       save.warmup <- !grepl("0",input)

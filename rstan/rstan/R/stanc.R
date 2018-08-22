@@ -66,7 +66,7 @@ stan_version <- function() {
 }
 
 rstudio_stanc <- function(filename) {
-  output <- stanc_builder(filename)
+  output <- stanc(filename, allow_undefined = TRUE)
   message(filename, " is syntactically correct.")
   return(invisible(output))
 }
