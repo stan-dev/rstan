@@ -2,8 +2,6 @@
 \alias{expose_stan_functions}
 \alias{get_stream}
 \alias{get_rng}
-\alias{get_accumulator}
-\alias{check_accumulator}
 \title{
 Expose user-defined Stan functions to \R for testing and simulation
 }
@@ -17,17 +15,12 @@ Expose user-defined Stan functions to \R for testing and simulation
   quantities} block of a Stan program.
 }
 \usage{
-  check_accumulator(accumulator = ACC)
   expose_stan_functions(stanmodel, includes = NULL, ...)
-  get_accumulator()
   get_rng(seed = 0L)
   get_stream()
 }
 
 \arguments{
-  \item{accumulator}{A numeric vector of length one that contains the 
-    result of any increments to the \code{target} keyword in a user-defined
-    Stan function}
   \item{stanmodel}{
     A \code{\linkS4class{stanmodel}} object, a \code{\linkS4class{stanfit}} 
     object, a list produced by \code{\link{stanc}} or the path to a Stan 
@@ -67,23 +60,16 @@ Expose user-defined Stan functions to \R for testing and simulation
   If a user-defined Stan function ends in \code{_lp}, then it can
   modify the log-probability used by Stan to evaluate Metropolis
   proposals or as an objective function for optimization. When exposing
-  such functions to \R, \code{lp__} and \code{lp_accum__} arguments will be added  
-  to the \code{\link{formals}}. This \code{lp__} argument defaults to zero, but a 
+  such functions to \R, a \code{lp__} argument will be added to the 
+  \code{\link{formals}}. This \code{lp__} argument defaults to zero, but a 
   \code{\link{double}} precision scalar may be  passed to this argument when the 
   function is called from \R. Such a user-defined Stan function can terminate 
   with \code{return target();} or can execute \code{print(target());} to verify that 
-  the calculation is correct. Alternatively, you can subsequently call 
-  \code{check_accumulator} to evaluate in R the state of \code{target} keyword
-  from Stan. The \code{lp_accum__} argument defaults to an accumulator that
-  is initialized to zero when the package is loaded.
+  the calculation is correct.
   }
 }
 \value{
-  The names of the new functions in \code{env} are returned invisibly by
-  \code{expose_stan_functions}. The \code{get_accumulator}, \code{get_rng},
-  and \code{get_stream} functions return the R representations of external 
-  pointers to respective C++ objects. The \code{check_accumulator} function
-  returns a numeric value.
+  The names of the new functions in \code{env} are returned invisibly.
 }
 \seealso{
   \code{\link[Rcpp]{sourceCpp}} and the section in the Stan User Manual on
@@ -97,10 +83,6 @@ model_code <-
     real standard_normal_rng() {
       return normal_rng(0,1);
    }
-   
-   void standard_normal_lp(real x) {
-     target += normal_lpdf(x | 0, 1);
-   }
   }
 '
 expose_stan_functions(stanc(model_code = model_code))
@@ -108,7 +90,5 @@ standard_normal_rng()
 PRNG <- get_rng(seed = 3)
 o <- get_stream()
 standard_normal_rng(PRNG, o)
-standard_normal_lp(sqrt(2))
-check_accumulator(get_accumulator())
 }
 }

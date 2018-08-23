@@ -19,6 +19,9 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
   code <- paste("#include <exporter.h>\n#include <RcppEigen.h>", code, sep="\n")
   code <- gsub("// [[stan::function]]", 
                "// [[Rcpp::depends(rstan)]]\n// [[Rcpp::export]]", code, fixed = TRUE)
+  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){", 
+               "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;", 
+               code, fixed = TRUE)
   if(is.null(includes)) return(code)
   code <- sub("\n\nstan::io::program_reader prog_reader__() {",
               paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"), 
@@ -62,7 +65,6 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
     args <- formals(FUN)
     args$pstream__ <- get_stream()
     if ("lp__" %in% names(args)) args$lp__ <- 0
-    if ("lp_accum__" %in% names(args)) args$lp_accum__ <- get_accumulator()
     if ("base_rng__" %in% names(args)) args$base_rng__ <- get_rng()
     formals(FUN) <- args
     assign(x, FUN, envir = ENV)
