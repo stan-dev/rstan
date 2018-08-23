@@ -46,8 +46,6 @@ SEXP CPP_stan_version();
 SEXP extract_sparse_components(SEXP A);
 SEXP get_rng_(SEXP seed);
 SEXP get_stream_();
-SEXP get_accumulator_();
-SEXP check_accumulator_(SEXP ptr_ACC);
 
 #ifdef __cplusplus
 }
@@ -70,8 +68,6 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(extract_sparse_components, 1),
   CALLDEF(get_rng_, 1),
   CALLDEF(get_stream_, 0),
-  CALLDEF(get_accumulator_, 0),
-  CALLDEF(check_accumulator_, 1),
   {NULL, NULL, 0}
 };
 
