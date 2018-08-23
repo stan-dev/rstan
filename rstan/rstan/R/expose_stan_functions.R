@@ -48,6 +48,11 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
+  
+  has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
+  Sys.setenv(USE_CXX14 = 1)
+  if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+  
   compiled <- suppressWarnings(Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...))
   DOTS <- list(...)
   ENV <- DOTS$env
