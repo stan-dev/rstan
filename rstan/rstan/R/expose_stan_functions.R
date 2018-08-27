@@ -56,7 +56,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   Sys.setenv(USE_CXX14 = 1)
   if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   
-  compiled <- suppressWarnings(Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...))
+  compiled <- suppressWarnings(pkgbuild::with_build_tools(
+    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)) )
   DOTS <- list(...)
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()

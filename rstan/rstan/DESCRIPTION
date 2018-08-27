@@ -31,7 +31,8 @@ Imports:
     inline,
     gridExtra (>= 2.0.0),
     Rcpp (>= 0.12.0),
-    loo (>= 2.0.0)
+    loo (>= 2.0.0),
+    pkgbuild
 Depends:
     R (>= 3.4.0),
     ggplot2 (>= 2.0.0),

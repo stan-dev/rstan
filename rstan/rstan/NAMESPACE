@@ -8,6 +8,7 @@ importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "downloa
 
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
+importFrom("pkgbuild", with_build_tools)
 #importFrom("Rcpp", cpp_object_initializer)
 import("methods")
 import(Rcpp)

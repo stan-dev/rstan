@@ -142,10 +142,11 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
   Sys.setenv(USE_CXX14 = 1)
   if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
-  fx <- cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
-                    settings = settings, ..., verbose = verbose)
+  fx <- pkgbuild::with_build_tools(
+    cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
+                settings = settings, ..., verbose = verbose))
   dso_last_path <- dso_path(fx)
-  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX())) {
+  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
     cmd <- paste(
       "install_name_tool",
       "-change",

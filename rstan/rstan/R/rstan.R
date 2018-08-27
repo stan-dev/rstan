@@ -113,8 +113,7 @@ stan_model <- function(file,
   }
   
   # check for compilers
-  if (.Platform$OS.type == "windows") find_rtools()
-  else {
+  if (.Platform$OS.type != "windows") {
     CXX <- get_CXX()
     if (nchar(CXX) == 0) {
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
@@ -158,7 +157,6 @@ stan_model <- function(file,
          "see https://github.com/stan-dev/rstan/wiki/RStan-Transition-Periods")
     
 
-  
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
