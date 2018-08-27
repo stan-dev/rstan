@@ -178,7 +178,8 @@ setMethod("vb", "stanmodel",
                                   "grad_samples",
                                   "output_samples",
                                   "adapt_iter",
-                                  "tol_rel_obj"),
+                                  "tol_rel_obj",
+                                  "refresh"),
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
@@ -527,7 +528,6 @@ setMethod("sampling", "stanmodel",
                     .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, 
                                                        "_", i, ".csv")
                 }
-                Sys.sleep(0.5 * i)
                 out <- do.call(rstan::sampling, args = .dotlist)
                 return(out)
               }
@@ -561,11 +561,10 @@ setMethod("sampling", "stanmodel",
                   else sinkfile <- ""
                 }
                 else sinkfile <- ""
-                capture.output(cl <- 
-                        parallel::makeCluster(min(cores, chains), 
-                                              outfile = sinkfile, useXDR = FALSE), 
-                        file = if (.Platform$OS.type == "windows") "NUL" else
-                               "/dev/null")
+                if (!is.null(dots$refresh) && dots$refresh == 0) 
+                  cl <- parallel::makeCluster(min(cores, chains), useXDR = FALSE)
+                else
+                  cl <- parallel::makeCluster(min(cores, chains), outfile = sinkfile, useXDR = FALSE)
                 on.exit(parallel::stopCluster(cl))
                 dependencies <- c("rstan", "Rcpp", "ggplot2")
                 .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {

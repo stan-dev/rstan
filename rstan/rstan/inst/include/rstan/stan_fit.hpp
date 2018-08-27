@@ -394,7 +394,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
         throw std::runtime_error("Must use algorithm=\"Fixed_param\" for "
                                    "model that has no parameters.");
-  int refresh = args.get_ctrl_optim_refresh();
+  int refresh = args.get_refresh();
   unsigned int id = args.get_chain_id();
   
   std::ostream nullout(nullptr);
