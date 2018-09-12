@@ -1,4 +1,4 @@
-Sun September 2 2018
+Wed September 12 2018
 1. Bug fixes
   * Variational Bayes variable names were off-by-one in some circumstances
   * get_makefile_text() works on multiarch systems
