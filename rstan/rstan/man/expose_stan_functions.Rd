@@ -41,6 +41,13 @@ Expose user-defined Stan functions to \R for testing and simulation
 }
 
 \details{
+  The \code{expose_stan_functions} function requires as much compliance with
+  the C++14 standard as is implemented in the RTools toolchain for Windows.
+  On Windows, you will likely need to specify \code{CXX14 = g++ -std=c++1y}
+  in the file whose path is \code{\link{normalizePath}("~/.R/Makevars")} in
+  order for \code{expose_stan_functions} to work. Outside of Windows, the
+  necessary compiler flags are set programatically, which is likely to suffice.
+
   There are a few special types of user-defined Stan functions for which some 
   additional details are relevant:
   
