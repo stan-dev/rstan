@@ -1713,7 +1713,8 @@ make_makevars <- function(DIR = tempdir()) {
   Makevars <- c(CXX14 = paste0("CXX14 := ", CXX11),
                 CXX14STD = "CXX14STD := -std=c++1y",
                 CXX14FLAGS = "CXX14FLAGS := -O3")
-  fn <- file.path(DIR, "Makevars")
+  fn <- file.path(DIR, ifelse(.Platform$OS.type == "windows", 
+                              "Makevars.win", "Makevars"))
   if (!file.exists(fn) && file.access(DIR, mode = 2) == 0) {
     writeLines(Makevars, con = fn)
     return(invisible(TRUE))
