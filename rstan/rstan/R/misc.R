@@ -1685,7 +1685,7 @@ throw_sampler_warnings <- function(object) {
 get_CXX <- function(CXX14 = TRUE) {
   if (.Platform$OS.type != "windows")
     return (system2(file.path(R.home(component = "bin"), "R"),
-            args = paste("CMD config", ifelse(CXX14, "CXX14", "CXX")),
+            args = paste("CMD config", ifelse(CXX14, "CXX14", "CXX11")),
             stdout = TRUE, stderr = FALSE))
 
     ls_path <- Sys.which("ls")
@@ -1705,4 +1705,17 @@ avoid_crash <- function(mod) {
   file.exists(get("packageName", envir = mod)[["path"]]) &&
   as(get("packageName", envir = mod)["info"][1], "character") %in% 
     c("<pointer: (nil)>", "<pointer: 0x0>")
+}
+
+make_makevars <- function(DIR = tempdir()) {
+  CXX11 <- get_CXX(FALSE)
+  Makevars <- c(CXX14 = paste0("CXX14 = ", CXX11),
+                CXX14STD = "CXX14STD = -std=c++1y",
+                CXX14FLAGS = "CXX14FLAGS = -O3")
+  fn <- file.path(DIR, "Makevars")
+  if (!file.exists(fn) && file.access(DIR, mode = 2) == 0) {
+    writeLines(Makevars, con = fn)
+    return(invisible(TRUE))
+  }
+  return(invisible(FALSE))
 }

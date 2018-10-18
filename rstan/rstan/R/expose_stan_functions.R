@@ -49,12 +49,15 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   tf <- tempfile(fileext = ".stan")
   writeLines(mc, con = tf)
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
+  stopifnot(stanc(model_code = mc, model_name = "User-defined functions")$status)
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
   
   has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
-  Sys.setenv(USE_CXX14 = 1)
-  if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+  if (.Platform$OS.type != "windows") {
+    Sys.setenv(USE_CXX14 = 1)
+    if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+  }
   
   compiled <- suppressWarnings(pkgbuild::with_build_tools(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)) )

@@ -142,6 +142,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
   Sys.setenv(USE_CXX14 = 1)
   if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+  make_makevars(DIR = tempdir())
   fx <- pkgbuild::with_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
                 settings = settings, ..., verbose = verbose))

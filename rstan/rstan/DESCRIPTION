@@ -1,8 +1,8 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.18.1
-Date: 2018-10-08
+Version: 2.18.2
+Date: 2018-10-18
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -57,5 +57,5 @@ Suggests:
 URL: http://discourse.mc-stan.org, http://mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
-SystemRequirements: pandoc
+SystemRequirements: pandoc, C++14
 RoxygenNote: 5.0.1
