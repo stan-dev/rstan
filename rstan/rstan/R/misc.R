@@ -1709,9 +1709,10 @@ avoid_crash <- function(mod) {
 
 make_makevars <- function(DIR = tempdir()) {
   CXX11 <- get_CXX(FALSE)
-  Makevars <- c(CXX14 = paste0("CXX14 = ", CXX11),
-                CXX14STD = "CXX14STD = -std=c++1y",
-                CXX14FLAGS = "CXX14FLAGS = -O3")
+  if (!file.exists(CXX11)) CXX11 <- basename(CXX11)
+  Makevars <- c(CXX14 = paste0("CXX14 := ", CXX11),
+                CXX14STD = "CXX14STD := -std=c++1y",
+                CXX14FLAGS = "CXX14FLAGS := -O3")
   fn <- file.path(DIR, "Makevars")
   if (!file.exists(fn) && file.access(DIR, mode = 2) == 0) {
     writeLines(Makevars, con = fn)
