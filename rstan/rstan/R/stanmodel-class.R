@@ -46,6 +46,13 @@ setGeneric(name = 'vb',
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
 
+setMethod('get_stancode', signature = "stanmodel", 
+          function(object, print = FALSE) {
+            code <- object@model_code
+            if (print) cat(code, "\n") 
+            return(code)
+          }) 
+
 setGeneric(name = "get_cppcode", 
            def = function(object, ...) { standardGeneric("get_cppcode") })
 

@@ -112,9 +112,7 @@ setMethod('get_cppo_mode', signature = "stanfit",
 
 setMethod('get_stancode', signature = "stanfit", 
           function(object, print = FALSE) {
-            code <- object@stanmodel@model_code
-            if (print) cat(code, "\n") 
-            return(code)
+            return(get_stancode(object@stanmodel, print))
           }) 
 
 setGeneric(name = 'get_stanmodel', 
