@@ -53,8 +53,12 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
   
-  has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
-  if (.Platform$OS.type != "windows") {
+  if (.Platform$OS.type == "windows") {
+    has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
+    Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
+    if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+  } else {
+    has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
     Sys.setenv(USE_CXX14 = 1)
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
