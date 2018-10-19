@@ -52,8 +52,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   stopifnot(stanc(model_code = mc, model_name = "User-defined functions")$status)
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
-  
-  if (.Platform$OS.type == "windows") {
+
+  R_version <- with(R.version, paste(major, minor, sep = "."))
+  if (.Platform$OS.type == "windows" && R_version < "3.6.0") {
     has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
     Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
     if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
