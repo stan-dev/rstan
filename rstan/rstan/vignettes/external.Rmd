@@ -202,14 +202,19 @@ The sinc.hpp file reads as
 ```{r, echo = FALSE, comment=""}
 cat(readLines("sinc.hpp"), sep = "\n")
 ```
-In general, the argument to the `sinc` function could either be an integer, 
-a known real number, or an unknown but real parameter. Thus, it is useful to 
-utilize C++ templates that can generate all versions of the `sinc` function 
-with only a few lines of C++ source code. The first lines of sinc.hpp state
-that the first argument is of typename `TO__` and so is the return type. The 
-function signature also takes a pointer to a `std::ostream` (which is again
-not used in the body of the function). The body of the `sinc` function is
-simply its mathematical definition in the form of a ternary operator.
+The body of the first `sinc` function is simply its mathematical definition in the 
+form of a ternary operator, which is sufficient when the input is a `double`. 
+
+The last lines of sinc.hpp are a specialization for when the input is an
+unknown real parameter, which is represented in the Stan Math Library as a
+`stan::math::var`. Since the derivative of the `sinc` function is easy to
+compute analytically, we extract the underlying double-precision value from
+the inputted `stan::math::var` and use that to calculate the function value
+and its first derivative. Then, we return the result of `precomputed_gradients`,
+whose arguments are the function value (`f`), the derivative of `x` with
+respect to any other parameters (`x.vi_`), and the first derivative of `f`
+(`dfdx_`). The latter two are actually `std::vector`s but only have one
+element each because there is only one unknown.
 
 An easy way to see what the generated function signature will be is to call the
 `stanc` function in the __rstan__ package with `allow_undefined = TRUE` and
@@ -219,17 +224,6 @@ try(readLines(stanc(model_code = mc, allow_undefined = TRUE)$cppcode))
 ```
 to see what function signature needed to be written for sinc.hpp.
 
-The last lines of sinc.hpp are a specialization for when the input is an
-unknown real parameter, which is represented in the Stan Math Library as a
-`stan::math::var`. Since the derivative of the `sinc` function is easy to
-compute analytically, we extract the underlying double-precision value from
-the inputted `stan::math::var` and use that to calculate the function value
-and its first derivative. Then, we return the result of `precomp_v_vari`,
-whose arguments are the function value (`f`), the derivative of `x` with
-respect to any other parameters (`x.vi_`), and the first derivative of `f`
-(`dfdx_`). There are other convenience functions for handling gradients that
-are described 
-[here](https://github.com/stan-dev/math/wiki/Adding-a-new-function-with-known-gradients).
 Once you go to the trouble of writing a numerically stable C++ function, we 
 would welcome a pull request on GitHub to include your C++ function in the 
 Stan Math Library for everyone to benefit from, provided that it can be licensed 
@@ -238,5 +232,5 @@ particular Stan program.
 
 The Stan Math Library is compliant with the C++14 standard but not all compilers
 fully support the C++14 standard. In particular, the compiler that comes with
-RTools does not support all C++14 features. But you can use all C++11 features,
+RTools does not support all C++14 features. But you can use many C++14 features,
 such as the `auto` keyword.
