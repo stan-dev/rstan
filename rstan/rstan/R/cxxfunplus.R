@@ -151,7 +151,11 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   }
   fx <- pkgbuild::with_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
-                settings = settings, ..., verbose = verbose))
+                settings = settings, ..., verbose = verbose),
+    # workaround for packages with src/install.libs.R
+    required = !identical(Sys.getenv("WINDOWS"), "TRUE") &&
+               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+
   dso_last_path <- dso_path(fx)
   if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
     cmd <- paste(

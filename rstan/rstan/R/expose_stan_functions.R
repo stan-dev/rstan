@@ -65,7 +65,10 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   }
   
   compiled <- suppressWarnings(pkgbuild::with_build_tools(
-    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)) )
+    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...),
+    # workaround for packages with src/install.libs.R
+    required = !identical(Sys.getenv("WINDOWS"), "TRUE") &&
+               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") ))
   DOTS <- list(...)
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()
