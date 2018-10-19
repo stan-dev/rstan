@@ -12,8 +12,7 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
              person("Trustees of", "Columbia University", role = "cph"),
              person("Oleg", "Sklyar", role = "cph", comment = "R/cxxfunplus.R"),
              person("The R", "Core Team", role = "cph", comment = "R/pairs.R, R/dynGet.R"),
-             person("Jens", "Oehlschlaegel-Akiyoshi", role = "cph", comment = "R/pairs.R"),
-             person("Hadley", "Wickham", role = "cph", comment = "R/rtools.R"))
+             person("Jens", "Oehlschlaegel-Akiyoshi", role = "cph", comment = "R/pairs.R")
 Description: User-facing R functions are provided to parse, compile, test,
     estimate, and analyze Stan models by accessing the header-only Stan library
     provided by the 'StanHeaders' package. The Stan project develops a probabilistic
@@ -57,5 +56,5 @@ Suggests:
 URL: http://discourse.mc-stan.org, http://mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
-SystemRequirements: pandoc, C++14
+SystemRequirements: pandoc
 RoxygenNote: 5.0.1
