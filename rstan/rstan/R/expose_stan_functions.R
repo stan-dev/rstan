@@ -49,7 +49,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   tf <- tempfile(fileext = ".stan")
   writeLines(mc, con = tf)
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
-  stopifnot(stanc(model_code = mc, model_name = "User-defined functions")$status)
+  stopifnot(stanc(model_code = mc, model_name = "User-defined functions",
+                  allow_undefined = TRUE)$status)
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
 
