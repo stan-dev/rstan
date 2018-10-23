@@ -27,7 +27,7 @@ get_makefile_txt <- function() {
   #   the makefile 
   out <- system2(file.path(Sys.getenv("R_HOME"), "bin", "R"),
                  args = "CMD SHLIB --dry-run", stdout = TRUE)
-  out <- grep("SHLIB", out, value = TRUE)
+  out <- grep("SHLIB", out, value = TRUE)[1]
   makefiles <- strsplit(sub("SHLIB.*$", "", out), split = "-f ")[[1]][-1]
   makefiles <- gsub("'", "", makefiles)
   makefiles <- gsub("[[:space:]]*$", "", makefiles)
