@@ -20,13 +20,16 @@ Sys.setenv(USE_CXX14 = "1")
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
 in other packages, it is sufficient to specify
 ```
-LinkingTo: StanHeaders
+LinkingTo: StanHeaders (>= 2.18.0)
 ```
-in the DESCRIPTION file of another package (possibly with a minimum version). If, 
-in addition, the other package needs to utilize the MCMC, optimization, variational
-inference, or parsing facilities of the Stan Library, then it is also necessary to
-include the `src` directory of **StanHeaders** in the other package's `PKG_CPPFLAGS`
-with something like
+in the DESCRIPTION file of another package and
+```
+CXX_STD = CXX14
+```
+in the src/Makevars and src/Makevars.win files. If, in addition, the other package needs to utilize 
+the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is 
+also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CPPFLAGS`
+in the src/Makevars and src/Makevars.win files with something like
 ```
 STANHEADERS_SRC = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla \
   -e "cat(system.file('include', 'src', package = 'StanHeaders'))"`
@@ -42,20 +45,24 @@ $\left(\mathbf{x} - \mathbf{a}\right)^\top \left(\mathbf{x} - \mathbf{a}\right)$
 // [[Rcpp::depends(StanHeaders)]]
 #include <Rcpp.h>
 #include <RcppEigen.h>
-#include <stan/math.hpp>  // pulls in everything; could be more specific with included headers
+#include <stan/math.hpp>  // pulls in everything; could be more specific with includes
 
 // [[Rcpp::export]]
 double f(Eigen::VectorXd x, Eigen::VectorXd a) {  // objective function in doubles
-  return stan::math::dot_self( (x - a).eval() );  // dot_self() is a dot product with the same vector
+  return stan::math::dot_self( (x - a).eval() );  // dot_self() is a dot product with self
 }
 stan::math::var f(Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1> x, Eigen::VectorXd a) {
   return stan::math::dot_self( (x - stan::math::to_var(a)).eval() );  // same but with vars
 }
 // [[Rcpp::export]]
 std::vector<double> g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
-  auto x_var = stan::math::to_var(x); std::vector<stan::math::var> theta; std::vector<double> grad;
+  auto x_var = stan::math::to_var(x);
+  std::vector<stan::math::var> theta;
+  std::vector<double> grad;
   for (int k = 0; k < x.rows(); k++) theta.push_back(x_var.coeff(k));
-  stan::math::var lp = f(x_var, a); lp.grad(theta, grad); return grad;
+  stan::math::var lp = f(x_var, a);
+  lp.grad(theta, grad);
+  return grad;
 }
 ```
 ```{r}
