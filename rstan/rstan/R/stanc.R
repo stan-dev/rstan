@@ -34,8 +34,13 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   PARSE_FAIL_RC <- -2 
   
   # model_name in C++, to avoid names that would be problematic in C++. 
-  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
+  tf <- tempfile()
+  zz <- base::file(tf, open = "wt")
+  on.exit(file.remove(tf))
+  sink(zz, type = "message")
   r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
+  sink(type = "message")
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
@@ -55,7 +60,12 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   if (r$status == SUCCESS_RC && verbose)
     cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
-
+  msg <- readLines(tf)
+  msg <- grep("Unknown variable", msg, value = TRUE, invert = TRUE)
+  msg <- grep("aliasing", msg, value = TRUE, invert = TRUE)
+  if (length(msg) > 2L) {
+    cat(msg, sep = "\n")
+  }
   r$status = !as.logical(r$status)
   return(r)
 }
