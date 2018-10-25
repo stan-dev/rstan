@@ -149,12 +149,12 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     Sys.setenv(USE_CXX14 = 1)
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
-  fx <- pkgbuild::with_build_tools(
+  fx <- pkgbuild::local_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
-                settings = settings, ..., verbose = verbose),
+                settings = settings, ..., verbose = verbose), required = FALSE)
     # workaround for packages with src/install.libs.R
-    required = !identical(Sys.getenv("WINDOWS"), "TRUE") &&
-               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+    # required = !identical(Sys.getenv("WINDOWS"), "TRUE") &&
+               # !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
 
   dso_last_path <- dso_path(fx)
   if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
