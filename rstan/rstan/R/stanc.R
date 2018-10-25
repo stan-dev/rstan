@@ -41,6 +41,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   sink(zz, type = "message")
   r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
   sink(type = "message")
+  close(zz)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
