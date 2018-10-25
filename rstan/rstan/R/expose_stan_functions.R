@@ -65,11 +65,13 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
   
-  compiled <- pkgbuild::local_build_tools(suppressWarnings(
-    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)), required = FALSE)
+  compiled <- pkgbuild::with_build_tools(suppressWarnings(
+    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),
+    required = rstan_options("required") &&
     # workaround for packages with src/install.libs.R
-    # required = !identical(Sys.getenv("WINDOWS"), "TRUE") &&
-               # !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") ))
+      identical(Sys.getenv("WINDOWS"), "TRUE") &&
+      !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+  
   DOTS <- list(...)
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()
