@@ -1501,6 +1501,7 @@ read_csv_header <- function(f, comment.char = '#') {
   niter <- 0
   iter.count <- NA
   save.warmup <- FALSE
+  sample.count <- NA_integer_
   while (length(input <- readLines(con, n = 1)) > 0) {
     niter <- niter + 1
     if (!grepl(comment.char, input)) break;
