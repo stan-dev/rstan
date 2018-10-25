@@ -65,7 +65,7 @@ stan_model <- function(file,
     if(!is.null(model_name))
       if(!grepl(model_re, model_name))
         stop("model name must match ", model_re)
-    S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
+    S4_objects <- apropos(model_re, mode="S4", ignore.case = FALSE)
     if (length(S4_objects) > 0) {
       e <- environment()
       stanfits <- sapply(mget(S4_objects, envir = e, inherits = TRUE), 
@@ -81,7 +81,7 @@ stan_model <- function(file,
         if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
       }
     }
-    
+
     mtime <- file.info(file)$mtime
     file.rds <- gsub("stan$", "rds", file)
     md5 <- tools::md5sum(file)
@@ -172,7 +172,10 @@ stan_model <- function(file,
     writeLines(model_code, con = unprocessed)
     ARGS <- paste("-E -nostdinc -x c++ -P -C", paste("-I", isystem, " ", collapse = ""), 
                   "-o", processed, unprocessed)
-    pkgbuild::with_build_tools(system2(CXX, args = ARGS))
+    pkgbuild::with_build_tools(system2(CXX, args = ARGS), 
+                               required = rstan_options("required") && 
+                                  identical(Sys.getenv("WINDOWS"), "TRUE") &&
+                                 !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
     if (file.exists(processed)) model_code <- paste(readLines(processed), collapse = "\n")
   }
   obj <- new("stanmodel", model_name = model_name, 
