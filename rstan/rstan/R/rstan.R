@@ -162,7 +162,7 @@ stan_model <- function(file,
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
                          verbose = verbose)
-  if (grepl("#include", model_code, fixed = TRUE)) {
+  if (FALSE && grepl("#include", model_code, fixed = TRUE)) {
     model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
     model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
     model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
