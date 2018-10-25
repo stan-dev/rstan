@@ -1524,7 +1524,7 @@ read_csv_header <- function(f, comment.char = '#') {
     if(save.warmup)
       iter.count <- warmup.count + sample.count
     else
-      iter.count <- warmup.count
+      iter.count <- sample.count
   } 
   attr(header, "iter.count") <- iter.count
   attr(header, "lineno") <- niter
