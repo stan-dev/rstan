@@ -9,7 +9,6 @@
 namespace stan {
   namespace callbacks {
 
-    template <typename T>
     class stream_logger_with_chain_id : public logger {
     private:
       std::ostream& debug_;
@@ -18,13 +17,7 @@ namespace stan {
       std::ostream& error_;
       std::ostream& fatal_;
       const int chain_id_;
-      void copy_string(const std::string& x, std::ostream& o) {
-        o << x;
-      }
-      void copy_string(const std::stringstream& x, std::ostream& o) {
-        o << x.str();
-      }
-      
+
     public:
       stream_logger_with_chain_id(std::ostream& debug,
                                   std::ostream& info,
@@ -35,34 +28,55 @@ namespace stan {
         : debug_(debug), info_(info), warn_(warn), error_(error),
           fatal_(fatal), chain_id_(chain_id) { }
 
-      void debug(const T& msg) {
+      void debug(const std::string& msg) {
         debug_ << "Chain " << chain_id_  << ": ";
-        copy_string(msg, debug_);
-        debug_ << std::endl;
+        debug_ << msg << std::endl;
       }
       
-      void info(const T& msg) {
+      void info(const std::string& msg) {
         info_ << "Chain " << chain_id_  << ": ";
-        copy_string(msg, info_);
-        info_ << std::endl;
+        info_ << msg << std::endl;
       }
       
-      void warn(const T& msg) {
+      void warn(const std::string& msg) {
         warn_ << "Chain " << chain_id_  << ": ";
-        copy_string(msg, warn_);
-        warn_ << std::endl;
+        warn_ << msg << std::endl;
       }
       
-      void error(const T& msg) {
+      void error(const std::string& msg) {
         error_ << "Chain " << chain_id_  << ": ";
-        copy_string(msg, error_);
-        error_ << std::endl;
+        error_ << msg << std::endl;
       }
 
-      void fatal(const T& msg) {
+      void fatal(const std::string& msg) {
         fatal_ << "Chain " << chain_id_  << ": ";
-        copy_string(msg, fatal_);
-        fatal_ << std::endl;
+        fatal_ << msg << std::endl;
+      }
+
+
+      void debug(const std::stringstream& msg) {
+        debug_ << "Chain " << chain_id_  << ": ";
+        debug_ << msg.str() << std::endl;
+      }
+      
+      void info(const std::stringstream& msg) {
+        info_ << "Chain " << chain_id_  << ": ";
+        info_ << msg.str() << std::endl;
+      }
+      
+      void warn(const std::stringstream& msg) {
+        warn_ << "Chain " << chain_id_  << ": ";
+        warn_ << msg.str() << std::endl;
+      }
+      
+      void error(const std::stringstream& msg) {
+        error_ << "Chain " << chain_id_  << ": ";
+        error_ << msg.str() << std::endl;
+      }
+      
+      void fatal(const std::stringstream& msg) {
+        fatal_ << "Chain " << chain_id_  << ": ";
+        fatal_ << msg.str() << std::endl;
       }
       
     };

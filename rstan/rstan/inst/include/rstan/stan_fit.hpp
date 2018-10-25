@@ -400,8 +400,8 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
   std::ostream nullout(nullptr);
   std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
   std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
-  
-  stan::callbacks::stream_logger_with_chain_id<std::stringstream> 
+
+  stan::callbacks::stream_logger_with_chain_id 
     logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
