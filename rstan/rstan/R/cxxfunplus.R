@@ -149,6 +149,17 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     Sys.setenv(USE_CXX14 = 1)
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
+  if (rstan_options("required")) 
+    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+
+  if (!verbose) {
+    tf <- tempfile()
+    zz <- file(tf, open = "wt")
+    sink(zz)
+    on.exit(file.remove(tf))
+    on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
+    on.exit(sink(), add = TRUE)
+  }
   fx <- pkgbuild::with_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
                 settings = settings, ..., verbose = verbose),
@@ -156,7 +167,11 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     # workaround for packages with src/install.libs.R
       !identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-
+  if (!verbose) {
+    sink()
+    file.remove(tf)
+    on.exit(NULL)
+  }
   dso_last_path <- dso_path(fx)
   if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
     cmd <- paste(

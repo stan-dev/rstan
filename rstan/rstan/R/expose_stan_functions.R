@@ -64,6 +64,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
     Sys.setenv(USE_CXX14 = 1)
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
+
+  if (rstan_options("required"))
+    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
   
   compiled <- pkgbuild::with_build_tools(suppressWarnings(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),
