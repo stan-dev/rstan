@@ -19,9 +19,9 @@
              save_dso = TRUE, verbose = FALSE, 
              auto_write = rstan_options("auto_write"), 
              obfuscate_model_name = TRUE, 
-             allow_undefined = FALSE, includes = NULL)
+             allow_undefined = FALSE, includes = NULL,
+             isystem = c(if (!missing(file)) dirname(file), getwd()))
 }
-%- maybe also 'usage' for other objects documented here.
 
 \arguments{
   \item{file}{A character string or a connection that \R supports 
@@ -73,6 +73,9 @@
     into the C++ code in the model's namespace and can be used to provide definitions 
     of functions that are declared but not defined in \code{file} or
     \code{model_code} when \code{allow_undefined = TRUE}}
+  \item{isystem}{A character vector naming a path to look for 
+    file paths in \code{file} that are to be included within the Stan program
+    named by \code{file}. See the Details section below.}
 }
 
 \details{
