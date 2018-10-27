@@ -54,8 +54,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
   r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
 
+  WINDOWS <- .Platform$OS.type == "windows"
   R_version <- with(R.version, paste(major, minor, sep = "."))
-  if (.Platform$OS.type == "windows" && R_version < "3.6.0") {
+  if (WINDOWS && R_version < "3.6.0") {
     has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
     Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
     if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
@@ -67,6 +68,12 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
 
   if (rstan_options("required"))
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+
+  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
+  if (WINDOWS && !has_LOCAL_CPPFLAGS) {
+    Sys.setenv(LOCAL_CPPFLAGS = "-O3 -mtune=native -march=native -g0")
+    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
+  }
   
   compiled <- pkgbuild::with_build_tools(suppressWarnings(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),

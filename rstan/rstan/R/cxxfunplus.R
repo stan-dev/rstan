@@ -140,7 +140,8 @@ cxxfunctionplus <- function(sig = character(), body = character(),
                             save_dso = FALSE, module_name = "MODULE", 
                             ..., verbose = FALSE) {
   R_version <- with(R.version, paste(major, minor, sep = "."))
-  if (.Platform$OS.type == "windows" && R_version < "3.6.0") {
+  WINDOWS <- .Platform$OS.type == "windows"
+  if (WINDOWS && R_version < "3.6.0") {
     has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
     Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
     if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
@@ -151,14 +152,20 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   }
   if (rstan_options("required")) 
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+  
+  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
+  if (WINDOWS && !has_LOCAL_CPPFLAGS) {
+    Sys.setenv(LOCAL_CPPFLAGS = "-O3 -mtune=native -march=native -g0")
+    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
+  }
 
   if (!verbose) {
     tf <- tempfile()
     zz <- file(tf, open = "wt")
-    sink(zz)
-    on.exit(file.remove(tf))
+    sink(zz, type = "output")
+    on.exit(file.remove(tf), add = TRUE)
     on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
-    on.exit(sink(), add = TRUE)
+    on.exit(sink(type = "output"), add = TRUE)
   }
   fx <- pkgbuild::with_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
@@ -168,9 +175,14 @@ cxxfunctionplus <- function(sig = character(), body = character(),
       !identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
   if (!verbose) {
-    sink()
+    sink(type = "output")
     file.remove(tf)
     on.exit(NULL)
+    if (WINDOWS && R_version < "3.6.0") {
+      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+    } else {
+      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+    }
   }
   dso_last_path <- dso_path(fx)
   if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
