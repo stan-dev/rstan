@@ -155,7 +155,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   
   has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
   if (WINDOWS && !has_LOCAL_CPPFLAGS) {
-    Sys.setenv(LOCAL_CPPFLAGS = "-O3 -mtune=native -march=native -g0")
+    Sys.setenv(LOCAL_CPPFLAGS = "-march=native")
     on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
   }
 
