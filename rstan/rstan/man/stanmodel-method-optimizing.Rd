@@ -36,7 +36,7 @@
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{seed}{The seed for random number generation. The default is generated 
     from 1 to the maximum integer supported by \R on the machine. Even if 
@@ -48,11 +48,14 @@
     \code{"12345"}, which is converted to integer.}
     
   \item{init}{Initial values specification. See the detailed documentation for 
-    the init argument in \code{\link{stan}}.}
+    the \code{init} argument in \code{\link{stan}} with one exception. If specifying inits  
+    using a list then only a single named list of values should be provided.
+    For example, to initialize a parameter \code{alpha} to \code{value1} and 
+    \code{beta} to \code{value2} you can specify \code{list(alpha = value1, beta = value2)}.}
     
   \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
     the data will be preprocessed; otherwise not.
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
@@ -115,11 +118,12 @@
   }
 }
 \value{
-   If the optimization is done successfully, a list with named components:
    \item{par}{The point estimate found. Its form (vector or list) 
      is determined by the \code{as_vector} argument.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
      the \code{"lp__"} in Stan) corresponding to \code{par}.}
+   \item{return_code}{The value of the return code from the optimizer;
+     anything that is not zero is problematic.}
    \item{hessian}{The Hessian matrix if \code{hessian} is \code{TRUE}}
    \item{theta_tilde}{If \code{draws > 0}, the matrix of parameter draws
     in the constrained or unconstrained space, depending on the value of 

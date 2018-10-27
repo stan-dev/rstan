@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -65,9 +65,11 @@ setClass(Class = "stanfit",
          ),  
          validity = function(object) {
            if(length(object@sim) > 0 && !is.null(object@sim$samples)) {
-             NAs <- rapply(object@sim$samples, f = function(x) any(is.na(x)))
-             if(any(NAs)) return(paste("The following variables have undefined values: ",
-                                       unique(names(NAs[NAs])), collapse = ","))
+             NAs <- rapply(object@sim$samples, f = function(x) anyNA(x))
+             if(any(NAs)) 
+               warning(paste("The following variables have undefined values: ",
+                              unique(names(NAs[NAs])), collapse = ","),
+                              ". Many subsequent functions will not work correctly.")
            }
            return(TRUE) 
          })

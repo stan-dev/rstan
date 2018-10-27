@@ -46,18 +46,11 @@ test_partial_inits <- function() {
     checkEquals(i1[[i]]$sigma, 1)
     checkEquals(i1[[i]]$delta, as.array(rep(1, 3) / 3))
   }
-  f2 <- sampling(rr, data = dat, iter = 10, chains = 1,
-                 init = list(list(mu2 = 2)), seed = 3, thin = 1,
-                 enable_random_init = FALSE)
-  emsg <- geterrmessage()
-  # check 21
-  # checkTrue(grepl('.*mu.*missing', emsg))
-  checkTrue(grepl("Error", emsg))
   f3 <- sampling(rr, data = dat, iter = 10, chains = 1,
                  init = list(list(mu = 2)), seed = 3, thin = 1,
                  enable_random_init = TRUE)
   i3 <- get_inits(f3)
-  # check 22-30
+  # check 21-29
   for (i in seq_along(i3)) {
     checkEquals(i3[[i]]$mu, 2)
     # assuming it is not possible that the following is initialized to
@@ -77,7 +70,7 @@ test_partial_inits <- function() {
                  init = list(list(mu = rep(2, 2))), seed = 3, thin = 1,
                  enable_random_init = TRUE)
   emsg <- geterrmessage()
-  # check 31-32
+  # check 30-31
   # checkTrue(grepl('.*mismatch.*', emsg))
   # checkTrue(grepl('.*().*(2).*', emsg))
   checkTrue(grepl("Error", emsg))
@@ -97,7 +90,7 @@ test_partial_inits <- function() {
   i5 <- get_inits(f5)[[1]]
   i6 <- get_inits(f6)[[1]]
   i7 <- get_inits(f7)[[1]]
-  # check 33-35
+  # check 32-34
   checkEquals(i5$alpha * 2, i6$alpha)
   checkEquals(log(i5$sigma) * 2, log(i6$sigma))
   checkTrue(!identical(i7$alpha, i6$alpha))
@@ -106,7 +99,7 @@ test_partial_inits <- function() {
                  init = list(list(mu = 2, sigma = 2)),
                  enable_random_init = TRUE)
   i8 <- get_inits(f8)[[1]]
-  # check 36
+  # check 35
   checkEquals(i8$sigma, 2)
 
   f9 <- sampling(rr, data = dat, iter = 10, chains = 2, seed = 3,
@@ -117,7 +110,7 @@ test_partial_inits <- function() {
                   enable_random_init = TRUE)
   i9 <- get_inits(f9)
   i10 <- get_inits(f10)
-  # check 37, this check is based on the implementation in which
+  # check 36, this check is based on the implementation in which
   # though say mu is specified by the user, a random init is still
   # generated but not used. 
   checkEquals(i9[[1]]$delta, i10[[1]]$delta)

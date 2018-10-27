@@ -278,6 +278,8 @@ plot(exfit)
 }
 
 adaptinfo <- get_adaptation_info(exfit)
+inits <- get_inits(exfit) # empty
+inits <- get_inits(exfit, iter = 101)
 seed <- get_seed(exfit)
 sp <- get_sampler_params(exfit)
 ml <- As.mcmc.list(exfit)

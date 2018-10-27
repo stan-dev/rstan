@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -24,3 +24,8 @@ git_head <- function() "2ecf3f718c301f60df6a2f81a27dc5c473c2f43c"
 git_head <- function() "05c3d0058b6a42c7caf6fe6e04f17bb7a4a0258b"
 git_head <- function() "85f7a56811da8e3c73bf92d6978111eea45d0c6c"
 git_head <- function() "5fa1e80eb8173ff81c98a00c96d39dd942950ce5"
+git_head <- function() "2e1f913d3ca3678128f159b3d17d3d1f9b82704e"
+git_head <- function() "2e1f913d3ca3678128f159b3d17d3d1f9b82704e"
+git_head <- function() "2e1f913d3ca3678128f159b3d17d3d1f9b82704e"
+git_head <- function() "2e1f913d3ca3678128f159b3d17d3d1f9b82704e"
+git_head <- function() "2e1f913d3ca3678128f159b3d17d3d1f9b82704e"

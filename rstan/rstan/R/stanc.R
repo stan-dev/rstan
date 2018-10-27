@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,29 +17,9 @@
 
 stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE,
-                  allow_undefined = FALSE) {
-  if (.Platform$OS.type == "unix" && R.Version()$os == "linux-gnu" &&
-      identical(Sys.getenv("RSTUDIO"), "1")) {
-        cl <- parallel::makePSOCKcluster(1L, outfile = "")
-        on.exit(parallel::stopCluster(cl))
-        parallel::clusterEvalQ(cl, Sys.setenv("RSTUDIO" = 0))
-        parallel::clusterExport(cl, c("obfuscate_model_name", "allow_undefined"),
-                                environment())
-        if (missing(file)) {
-          parallel::clusterExport(cl, "model_code", environment())
-          out <- parallel::clusterEvalQ(cl, 
-                   rstan::stanc(model_code = model_code,
-                                obfuscate_model_name = obfuscate_model_name,
-                                allow_undefined = allow_undefined))
-        }
-        else {
-          parallel::clusterExport(cl, "file", environment())
-          out <- parallel::clusterEvalQ(cl, 
-                  rstan::stanc(file, obfuscate_model_name = obfuscate_model_name,
-                               allow_undefined = allow_undefined))
-        }
-  }
-  
+                  allow_undefined = FALSE, 
+                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
+
   # Call stanc, written in C++ 
   model_name2 <- deparse(substitute(model_code))  
   if (is.null(attr(model_code, "model_name2"))) 
@@ -54,8 +34,13 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   PARSE_FAIL_RC <- -2 
   
   # model_name in C++, to avoid names that would be problematic in C++. 
-  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name) 
-  r <- .Call("CPP_stanc280", model_code, model_cppname, allow_undefined)
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
+  tf <- tempfile()
+  zz <- base::file(tf, open = "wt")
+  on.exit(file.remove(tf))
+  sink(zz, type = "message")
+  r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
+  sink(type = "message")
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
@@ -75,18 +60,23 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   if (r$status == SUCCESS_RC && verbose)
     cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
-
+  msg <- readLines(tf)
+  msg <- grep("Unknown variable", msg, value = TRUE, invert = TRUE)
+  msg <- grep("aliasing", msg, value = TRUE, invert = TRUE)
+  if (length(msg) > 2L) {
+    cat(msg, sep = "\n")
+  }
   r$status = !as.logical(r$status)
   return(r)
 }
 
 
 stan_version <- function() {
-  .Call('CPP_stan_version')
+  .Call(CPP_stan_version)
 }
 
 rstudio_stanc <- function(filename) {
-  output <- stanc_builder(filename)
+  output <- stanc(filename, allow_undefined = TRUE)
   message(filename, " is syntactically correct.")
   return(invisible(output))
 }

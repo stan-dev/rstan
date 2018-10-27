@@ -16,12 +16,12 @@ ifeq ($(uname_S), Linux)
 endif
 
 ifdef R_HOME
-  R = $(R_HOME)/bin/R --vanilla
-  RSCRIPT = $(R_HOME)/bin/Rscript --vanilla
+  R = $(R_HOME)/bin/R 
+  RSCRIPT = $(R_HOME)/bin/Rscript 
 else
   # R = R --arch x86_64
-  R = R --vanilla
-  RSCRIPT = Rscript --vanilla
+  R = R 
+  RSCRIPT = Rscript 
 endif
 
 R_MAKEVARS_USER = $(CURDIR)/R_Makevars
@@ -63,7 +63,7 @@ ifeq ($(GIT),)
 else
 	@echo "git_head <- function() \"`git rev-parse HEAD`\"" >> rstan/R/git_rstan_head.R
 endif
-	$(R) CMD build rstan --md5  $(BUILD_OPTS)  # --no-build-vignettes --no-manual
+	$(R) CMD build rstan --md5  $(BUILD_OPTS)   --no-build-vignettes --no-manual
 
 example_csv: 
 ifneq ($(OS), win)
@@ -125,12 +125,12 @@ RCPPFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --cppflags)
 RLDFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --ldflags)
 
 ## include headers and libraries for Rcpp interface classes
-RCPPINCL := 		$(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
-RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --slave)
+RCPPINCL := 		$(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R  --slave)
+RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R  --slave)
 
 ## include headers and libraries for RInside embedding classes
-RINSIDEINCL := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::CxxFlags()')
-RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript --vanilla -e 'RInside:::LdFlags()')
+RINSIDEINCL := 		$(shell $(R_HOME)/bin/Rscript  -e 'RInside:::CxxFlags()')
+RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript  -e 'RInside:::LdFlags()')
 
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)

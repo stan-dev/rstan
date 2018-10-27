@@ -17,17 +17,19 @@
 
 StanFitMCMC$methods(show = function() {
   "Show a brief version of the posterior"
-  dims <- dim(.self)
-  cat(dims[1], "unknowns,", dims[2], "chains, and", 
-      dims[3], "retained samples")
-  return(invisible(NULL))
+  print("brief information about the fit")
+  # dims <- dim(.self)
+  # cat(dims[1], "unknowns,", dims[2], "chains, and", 
+  #     dims[3], "retained samples")
+  # return(invisible(NULL))
 })
 
 StanFitMCMC$methods(summary = function() {
   "Compute the summary of the posterior"
-  out <- sapply(.self$sample_draws, FUN = stats4::summary, 
-                simplify = FALSE)
-  return(t(do.call(cbind, args = out)))
+  print("detailed information about the fit")
+  # out <- sapply(.self$sample_draws, FUN = stats4::summary, 
+  #               simplify = FALSE)
+  # return(t(do.call(cbind, args = out)))
 })
 
 StanFitMCMC$methods(as.mcmc.list = function() {
@@ -37,47 +39,6 @@ StanFitMCMC$methods(as.mcmc.list = function() {
     mcmc(t(arr[,j,]))
   })))
 })
-
-StanFitMCMC$methods(extract = function() {
-  "Extract posterior draws"
-  stop("FIXME: Implement") # similar to current
-}) 
-
-StanFitMCMC$methods(add_params = function(...) {
-  "Add additional generated quantities"
-  dots <- list(...)
-  dots_names <- names(dots)
-  new_params <- sapply(dots_names, simplify = FALSE, FUN = function(x) {
-    y <- dots[[x]]
-    if (is(y, "StanParameter")) return(y)
-    else if (is.null(dim(y))) {
-      DIM <- c(1L, NROW(y))
-      DN <- list(NULL, "draws")
-      if (is.factor(y)) z <- new("StanFactor", name = x, 
-                                 theta = array(as.integer(y), dim = DIM,
-                                               dimnames = DN),
-                                 levels = levels(y), ordered = is.ordered(y))
-      else if (is.integer(y)) z <- new("StanInteger", name = x,
-                                      theta = array(as.integer(y), dim = DIM,
-                                                    dimnames = DN))
-      
-      else z <- new("StanReal", name = x, theta = array(y, dim = DIM, 
-                                                        dimnames = DN))
-    }
-    else {
-      DIM <- dim(y)
-      DN <- dimnames(y)
-      names(DN)[length(DN)] <- "draws"
-      dimnames(y) <- DN
-      z <- new("StanMatrix", name = x, theta = y)
-    }
-    return(z)
-  })
-  .self$added_draws <<- c(.self$added_draws, new_params)
-  return(invisible(NULL))
-})
-
-StanFitMCMC$methods(help = help_from_instance)
 
 # S3 methods for StanFitMCMC
 "[.StanFitMCMC" <- function(x, i, ...) {

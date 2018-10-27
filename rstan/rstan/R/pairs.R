@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 # Copyright (C) 1995-2012 The R Core Team
 # Some parts  Copyright (C) 1999 Dr. Jens Oehlschlaegel-Akiyoshi
 #
@@ -23,7 +23,8 @@ pairs.stanfit <-
             text.panel = NULL, label.pos = 0.5 + 1/3, 
             cex.labels = NULL, font.labels = 1, 
             row1attop = TRUE, gap = 1, log = "",
-            pars = NULL, condition = "accept_stat__", include = TRUE) {
+            pars = NULL, include = TRUE,
+            condition = "accept_stat__") {
     
     gsp <- get_sampler_params(x, inc_warmup = FALSE)
     if(is.null(pars)) {
@@ -74,7 +75,7 @@ pairs.stanfit <-
       max_td <- max_td$max_treedepth
       if (is.null(max_td)) max_td <- 10
     }
-    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] > max_td)), 
+    hit <- matrix(c(sapply(gsp, FUN = function(y) y[,"treedepth__"] >= max_td)), 
                     nrow = sims * chains, ncol = dim(arr)[3])
     
     if(is.list(condition)) {
@@ -178,7 +179,7 @@ pairs.stanfit <-
     else textPanel <- text.panel
     if(is.null(labels)) labels <- colnames(x)
 
-    mc <- match.call(expand.dots = FALSE)
+    mc <- match.call(expand.dots = TRUE)
     mc[1] <- call("pairs")
     mc$x <- x
     mc$labels <- labels

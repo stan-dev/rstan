@@ -1,5 +1,5 @@
 // This file is part of RStan
-// Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+// Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 //
 // RStan is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -39,9 +39,13 @@ SEXP seq_permutation(SEXP conf);
 SEXP CPP_read_comments(SEXP file, SEXP n);
 SEXP stan_prob_autocovariance(SEXP v);
 SEXP is_Null_NS(SEXP ns);
-SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name, SEXP allow_undefined);
+SEXP CPP_stanc280(SEXP model_stancode, SEXP model_name, 
+                  SEXP allow_undefined, SEXP include_paths);
+SEXP stanfuncs(SEXP model_stancode, SEXP model_name, SEXP allow_undefined);
 SEXP CPP_stan_version();
 SEXP extract_sparse_components(SEXP A);
+SEXP get_rng_(SEXP seed);
+SEXP get_stream_();
 
 #ifdef __cplusplus
 }
@@ -58,9 +62,12 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(CPP_read_comments, 2),
   CALLDEF(stan_prob_autocovariance, 1),
   CALLDEF(is_Null_NS, 1),
-  CALLDEF(CPP_stanc280, 3),
+  CALLDEF(CPP_stanc280, 4),
+  CALLDEF(stanfuncs, 3),
   CALLDEF(CPP_stan_version, 0),
   CALLDEF(extract_sparse_components, 1),
+  CALLDEF(get_rng_, 1),
+  CALLDEF(get_stream_, 0),
   {NULL, NULL, 0}
 };
 

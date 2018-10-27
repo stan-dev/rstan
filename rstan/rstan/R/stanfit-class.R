@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -112,9 +112,7 @@ setMethod('get_cppo_mode', signature = "stanfit",
 
 setMethod('get_stancode', signature = "stanfit", 
           function(object, print = FALSE) {
-            code <- object@stanmodel@model_code
-            if (print) cat(code, "\n") 
-            return(code)
+            return(get_stancode(object@stanmodel, print))
           }) 
 
 setGeneric(name = 'get_stanmodel', 
@@ -134,9 +132,18 @@ setMethod("get_inits", signature = "stanfit",
             stopifnot(is.numeric(iter), iter > 0, 
                       iter <= length(object@sim$samples[[1]][[1]]))
             inits <- object@inits
-            for (c in 1:ncol(object))
-              inits[[c]] <- relist(as.data.frame(object@sim$samples[[c]])[iter,],
-                                   skeleton = inits[[c]])
+            if (length(inits) == 0) {
+              inits <- lapply(1:ncol(object), FUN = function(c) {
+                sapply(object@par_dims, simplify = FALSE, FUN = function(p) {
+                  if (length(p) == 0) return(NA_real_)
+                  array(NA_real_, dim = p)
+                })
+              })
+            }
+            for (c in 1:ncol(object)) {
+              vec <- as.matrix(as.data.frame(object@sim$samples[[c]]))[iter,]
+              inits[[c]] <- relist(vec, skeleton = inits[[c]])
+            }
             return(inits)                       
 })
 
@@ -791,10 +798,12 @@ as.array.stanfit <- function(x, ...) {
 as.matrix.stanfit <- function(x, ...) {
   if (x@mode != 0) return(numeric(0)) 
   e <- extract(x, permuted = FALSE, inc_warmup = FALSE, ...) 
-  out <- apply(e, 3, FUN = function(y) y)
-  if (length(dim(out)) < 2L) out <- t(as.matrix(out))
-  dimnames(out) <- dimnames(e)[-2]
-  return(out)
+  if (is.null(e)) return(e)
+  enames <- dimnames(e)
+  edim <- dim(e)
+  dim(e) <- c(edim[1] * edim[2], edim[3])
+  dimnames(e) <- enames[-2]
+  e
 }
  
 as.data.frame.stanfit <- function(x, ...) {

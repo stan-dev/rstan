@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016 Jiqiang Guo and Benjamin Goodrich
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ rosetta$RFunction <- ifelse(rosetta$StanFunction %in% unlist(sapply(search(), ls
 rosetta$RFunction <- ifelse(grepl("^operator", rosetta$StanFunction), 
                             gsub("operator", "", rosetta$StanFunction), rosetta$RFunction)
 
+rosetta <- within(rosetta, RFunction[StanFunction == "algebra_solve"] <- "uniroot")
 rosetta <- within(rosetta, RFunction[StanFunction == "append_col"] <- "cbind")  
 rosetta <- within(rosetta, RFunction[StanFunction == "append_row"] <- "rbind")
 rosetta <- within(rosetta, RFunction[grepl("^bernoulli_.*cdf", StanFunction)] <- "pbinom")
@@ -55,6 +56,7 @@ rosetta <- within(rosetta, RFunction[grepl("^chi_square[_lpdf]*", StanFunction)]
 rosetta <- within(rosetta, RFunction[grepl("^chi_square_[lc]*cdf", StanFunction)] <- "pchisq")
 rosetta <- within(rosetta, RFunction[StanFunction == "chi_square_rng"] <- "rchisq")
 rosetta <- within(rosetta, RFunction[StanFunction == "cholesky_decompose"] <- "chol")
+rosetta <- within(rosetta, RFunction[StanFunction == "choose"] <- "choose")
 rosetta <- within(rosetta, RFunction[StanFunction == "col"] <- "subset")
 rosetta <- within(rosetta, RFunction[StanFunction == "cols"] <- "NCOL")
 rosetta <- within(rosetta, RFunction[grepl("^columns_", StanFunction)] <- "apply")
@@ -90,6 +92,7 @@ rosetta <- within(rosetta, RFunction[StanFunction == "inv_logit"] <- "plogis")
 rosetta <- within(rosetta, RFunction[StanFunction == "inv_Phi"] <- "qnorm")
 rosetta <- within(rosetta, RFunction[StanFunction == "is_inf"] <- "is.finite")
 rosetta <- within(rosetta, RFunction[StanFunction == "is_nan"] <- "is.nan")
+rosetta <- within(rosetta, RFunction[StanFunction == "lgamma"] <- "lgamma")
 rosetta <- within(rosetta, RFunction[StanFunction == "log1m"] <- "log1p")
 rosetta <- within(rosetta, RFunction[StanFunction == "log_determinant"] <- "determinant")
 rosetta <- within(rosetta, RFunction[StanFunction == "log_inv_logit"] <- "plogis")
@@ -138,8 +141,8 @@ rosetta <- within(rosetta, RFunction[grepl("^poisson_[lc]*cdf", StanFunction)] <
 rosetta <- within(rosetta, RFunction[StanFunction == "poisson_rng"] <- "rpois")
 rosetta <- within(rosetta, RFunction[StanFunction == "positive_infinity"] <- "Inf")
 rosetta <- within(rosetta, RFunction[StanFunction == "pow"] <- "^")
-rosetta <- within(rosetta, RFunction[StanFunction == "qr_Q"] <- "qr.Q")
-rosetta <- within(rosetta, RFunction[StanFunction == "qr_R"] <- "qr.R")
+rosetta <- within(rosetta, RFunction[StanFunction == "qr_thin_Q"] <- "qr.Q")
+rosetta <- within(rosetta, RFunction[StanFunction == "qr_thin_R"] <- "qr.R")
 rosetta <- within(rosetta, RFunction[grepl("^rep_.*vector", StanFunction)] <- "rep")
 rosetta <- within(rosetta, RFunction[StanFunction == "row"] <- "subset")
 rosetta <- within(rosetta, RFunction[grepl("^rows_", StanFunction)] <- "apply")

@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 # Copyright (C) 2005-2010 Oleg Sklyar
 #
 # RStan is free software; you can redistribute it and/or
@@ -139,9 +139,37 @@ cxxfunctionplus <- function(sig = character(), body = character(),
                             settings = getPlugin(plugin), 
                             save_dso = FALSE, module_name = "MODULE", 
                             ..., verbose = FALSE) {
-  fx <- cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
-                    settings = settings, ..., verbose = verbose)
+  R_version <- with(R.version, paste(major, minor, sep = "."))
+  if (.Platform$OS.type == "windows" && R_version < "3.6.0") {
+    has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
+    Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
+    if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+  } else {
+    has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
+    Sys.setenv(USE_CXX14 = 1)
+    if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+  }
+  fx <- pkgbuild::with_build_tools(
+    cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
+                settings = settings, ..., verbose = verbose),
+    required = rstan_options("required") &&
+    # workaround for packages with src/install.libs.R
+      !identical(Sys.getenv("WINDOWS"), "TRUE") &&
+      !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+
   dso_last_path <- dso_path(fx)
+  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
+    cmd <- paste(
+      "install_name_tool",
+      "-change",
+      "/usr/local/clang4/lib/libc++.1.dylib",
+      "/usr/lib/libc++.1.dylib",
+      dso_last_path
+    )
+    system(cmd)
+    dyn.unload(dso_last_path)
+    dyn.load(dso_last_path)
+  }
   dso_bin <- if (save_dso) read_dso(dso_last_path) else raw(0)
   dso_filename <- sub("\\.[^.]*$", "", basename(dso_last_path)) 
   if (!is.list(sig))  { 

@@ -92,6 +92,20 @@ test_output_csv_and_extract <- function() {
   checkEquals(e1$y3[1,2,2,2], 11, checkNames = FALSE)
   checkEquals(e1$y3[1,2,1,2], 8, checkNames = FALSE)
   checkEquals(e1$y3[1,3,1,2], 14, checkNames = FALSE)
+
+  m1 <- as.matrix(fitb, pars = "y3")
+  checkEquals(dim(m1), c(6L, 18L))
+  old_asmatrix_stanfit <- function(x, ...) {
+    if (x@mode != 0) return(numeric(0))
+    e <- extract(x, permuted = FALSE, inc_warmup = FALSE, ...)
+    out <- apply(e, 3, FUN = function(y) y)
+    if (length(dim(out)) < 2L) out <- t(as.matrix(out))
+    dimnames(out) <- dimnames(e)[-2]
+    return(out)
+  }
+  checkTrue(identical(m1, old_asmatrix_stanfit(fitb, pars = 'y3')))
+  m2 <- as.matrix(fitb)
+  checkTrue(identical(m2, old_asmatrix_stanfit(fitb)))
 } 
 
 test_init_zero_gradient_failure <- function() { 
@@ -108,7 +122,7 @@ test_init_zero_gradient_failure <- function() {
   model_cppname <- sm@model_cpp$model_cppname
   sf_mod <- eval(call("$", mod, paste0('stan_fit4', model_cppname)))
   dat <- list()
-  sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
+  sampler <- new(sf_mod, dat, 12345, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
   errmsg <- geterrmessage()
@@ -131,7 +145,7 @@ test_init_zero_exception_inf_lp <- function() {
   model_cppname <- sm@model_cpp$model_cppname
   sf_mod <- eval(call("$", mod, paste0('stan_fit4', model_cppname)))
   dat <- list()
-  sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
+  sampler <- new(sf_mod, dat, 12345, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
   errmsg <- geterrmessage()
@@ -153,7 +167,7 @@ test_init_zero_exception_inf_grad <- function() {
   model_cppname <- sm@model_cpp$model_cppname
   sf_mod <- eval(call("$", mod, paste0('stan_fit4', model_cppname)))
   dat <- list()
-  sampler <- new(sf_mod, dat, sm@dso@.CXXDSOMISC$cxxfun)
+  sampler <- new(sf_mod, dat, 12345, sm@dso@.CXXDSOMISC$cxxfun)
   args <- list(init = "0", iter = 1)
   checkException(s <- sampler$call_sampler(args))
   errmsg <- geterrmessage()

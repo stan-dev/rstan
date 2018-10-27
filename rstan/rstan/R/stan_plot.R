@@ -59,7 +59,7 @@ stan_scat <- function(object, pars, unconstrain = FALSE, inc_warmup = FALSE,
 #     .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)[, -1L]
 #   max_td <- .max_td(object)
 #   div <- unname(rowSums(ndivergent) == 1)
-#   hit_max_td <- sapply(1:nrow(treedepth), function(i) any(treedepth[i,] == max_td))
+#   hit_max_td <- sapply(1:nrow(treedepth), function(i) any(treedepth[i,] >= max_td))
   plot_data <- .make_plot_data(
     object, 
     pars = pars, 
@@ -507,14 +507,14 @@ stan_par <- function(object, par, chain = 0, ...) {
   else {
     max_td <- cntrl$max_treedepth
     if (is.null(max_td))
-      max_td <- 11
+      max_td <- 10
   }
   max_td <- .max_td(object)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)[,-1L]
   stepsize <- .sampler_params_post_warmup(object, "stepsize__", as.df = TRUE)[,-1L]
   ndivergent <- .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)[,-1L]
   treedepth <- .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)[,-1L]
-  hit_max_td <- apply(treedepth, 2L, function(y) as.numeric(y == max_td))
+  hit_max_td <- apply(treedepth, 2L, function(y) as.numeric(y >= max_td))
   graphs <- list()
   par_samp <- samp[,, par_sel]
   lp <- samp[,, -par_sel]

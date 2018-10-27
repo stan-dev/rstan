@@ -92,13 +92,13 @@ library(parallel)
 
 if (.Platform$OS.type == "unix") {
 sflist1 <- 
-  mclapply(1:4, mc.cores = 4, 
+  mclapply(1:4, mc.cores = 2, 
            function(i) stan(fit = foo, data = foo_data, seed = seed, 
 	                    chains = 1, chain_id = i, refresh = -1))
 f3 <- sflist2stanfit(sflist1)
 }
 if (.Platform$OS.type == "windows") { # also works on non-Windows
-CL <- makeCluster(4)
+CL <- makeCluster(2)
 clusterExport(cl = CL, c("foo_data", "foo", "seed")) 
 sflist1 <- parLapply(CL, 1:4, fun = function(cid) {  
   require(rstan)

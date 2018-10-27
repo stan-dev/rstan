@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -40,6 +40,7 @@ parse_stancsv_comments <- function(comments) {
   # generated from Stan
 
   adapt_term_lineno <- which(grepl("Adaptation terminated", comments))[1]
+  if (is.na(adapt_term_lineno)) adapt_term_lineno <- length(comments)
   time_lineno <- which(grepl("Elapsed Time", comments))
   has_time <- length(time_lineno) > 0
   len <- length(comments)
@@ -60,7 +61,7 @@ parse_stancsv_comments <- function(comments) {
     time_info <- comments[time_lineno:len]
   else
     time_info <- ''
-  comments <- comments[1:(adapt_term_lineno - 1)]
+  if (adapt_term_lineno > 0) comments <- head(comments, adapt_term_lineno - 1L)
 
   has_eq <- sapply(comments, function(i) grepl('=', i))
   comments <- comments[has_eq] 
@@ -129,24 +130,60 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     stop("csvfiles does not contain any CSV file name")
 
   g_skip <- 10
-  g_max_comm <- -1 # to read all 
-
-  cs_lst <- lapply(csvfiles, function(csv) read_comments(csv, n = g_max_comm))
-  cs_lst2 <- lapply(cs_lst, parse_stancsv_comments)
   
   ss_lst <- vector("list", length(csvfiles))
+  cs_lst2 <- vector("list", length(csvfiles))
+
   for (i in seq_along(csvfiles)) {
     header <- read_csv_header(csvfiles[i])
     lineno <- attr(header, 'lineno')
     vnames <- strsplit(header, ",")[[1]]
-    m <- matrix(scan(csvfiles[i], skip = lineno, comment.char = '#', sep = ',', quiet = TRUE),
-                ncol = length(vnames), byrow = TRUE)
-    ss_lst[[i]] <- as.data.frame(m)
-    colnames(ss_lst[[i]]) <- vnames 
+    iter.count <- attr(header,"iter.count")
+    variable.count <- length(vnames)
+    df <- structure(replicate(variable.count,list(numeric(iter.count))),
+                    names = vnames,
+                    row.names = c(NA,-iter.count),
+                    class = "data.frame")
+    comments = character()
+    con <- file(csvfiles[[i]],"rb")
+    buffer.size <- min(ceiling(1000000/variable.count),iter.count)
+    row.buffer <- matrix(ncol=variable.count,nrow=buffer.size)
+    row <- 1
+    buffer.pointer <- 1  
+    while(length(char <- readBin(con,'int',size=1L)) > 0) {
+      # back up 1 character, since we already looked at one to check for comment
+      seek(con,origin="current",-1)
+      if(char == 35){ #35 is '#'
+        line <- readLines(con, n = 1)
+        comments <- c(comments, line)
+        next
+      }
+      if(char == 108){ #start of lp__ in header 108
+        readLines(con, n = 1)
+        next
+      }
+      if(char == 10){ #empty line
+        readLines(con, n = 1)
+        next
+      }
+      row.buffer[buffer.pointer,] <- scan(con, nlines=1, sep="," ,quiet=TRUE)
+      if(buffer.pointer == buffer.size){
+        df[row:(row + buffer.size - 1), ] <- row.buffer
+        row <- row + buffer.size
+        buffer.pointer <- 0
+      }
+      buffer.pointer <- buffer.pointer + 1
+      
+    }
+    if(buffer.pointer > 1){
+      df[row:(row + buffer.pointer - 2), ] <- row.buffer[1:(buffer.pointer-1), ]
+    }
+
+    close(con)
+    cs_lst2[[i]] <- parse_stancsv_comments(comments)
+    ss_lst[[i]] <- df
   } 
 
-  ## read.csv is slow for large files 
-  ##ss_lst <- lapply(csvfiles, function(csv) read.csv(csv, header = TRUE, skip = 10, comment.char = '#'))
   # use the first CSV file name as model name
   m_name <- sub("(_\\d+)*$", '', filename_rm_ext(basename(csvfiles[1])))
 
@@ -206,7 +243,6 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     warmup2 <- 1 + (warmup[1] - 1) %/% thin[1]
     n_kept <- n_save - warmup2 
   } 
-  
   if (n_kept0[1] != n_kept) {
     warning("the number of iterations after warmup found (", n_kept, 
             ") does not match iter/warmup/thin from CSV comments (",
@@ -228,7 +264,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
   idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
   for (i in seq_along(samples)) {
-    m <- apply(samples[[i]][idx_kept,], 2, mean)
+    m <- vapply(samples[[i]], function(x) mean(x[idx_kept]), numeric(1))
     attr(samples[[i]], "mean_pars") <- m[-length(m)]
     attr(samples[[i]], "mean_lp__") <- m["lp__"]
   }
@@ -316,5 +352,3 @@ read_one_stan_csv <- function(csvfile) {
   attributes(draws)$timings <- timings
   return(draws)
 }
-
-if (!exists("trimws")) trimws <- function(x) gsub("^\\s+|\\s+$", "", x)

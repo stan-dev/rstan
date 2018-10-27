@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -67,7 +67,8 @@ function(model = character(0),
       MODELS <- MODELS[MODEL_NUM]
     }
     else if(MODEL_NUM == 0) MODELS <- ""
-    else MODELS <- select.list(MODELS)
+    else if(interactive()) MODELS <- select.list(MODELS)
+    else MODELS <- MODELS[1]
     if(!nzchar(MODELS)) {
       return(dir(MODELS_HOME, pattern = paste0(model, ".stan", "$"), 
                  recursive = TRUE, full.names = FALSE))

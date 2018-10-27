@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -45,6 +45,13 @@ setGeneric(name = 'vb',
 
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
+
+setMethod('get_stancode', signature = "stanmodel", 
+          function(object, print = FALSE) {
+            code <- object@model_code
+            if (print) cat(code, "\n") 
+            return(code)
+          }) 
 
 setGeneric(name = "get_cppcode", 
            def = function(object, ...) { standardGeneric("get_cppcode") })
@@ -137,11 +144,21 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-            if (is(sampler, "try-error")) {
-              message('failed to create the model; variational Bayes not done')
-              return(invisible(new_empty_stanfit(object)))
+            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+              message('trying deprecated constructor; please alert package maintainer')
+            } else {
+              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the model; variational Bayes not done')
+                return(invisible(new_empty_stanfit(object)))
+              }
             }
+            
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) init <- init()
             if (!is.list(init) && !is.character(init)) {
@@ -168,7 +185,8 @@ setMethod("vb", "stanmodel",
                                   "grad_samples",
                                   "output_samples",
                                   "adapt_iter",
-                                  "tol_rel_obj"),
+                                  "tol_rel_obj",
+                                  "refresh"),
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
@@ -182,7 +200,11 @@ setMethod("vb", "stanmodel",
             
             m_pars <- sampler$param_names()
             p_dims <- sampler$param_dims()
-            if(!include) pars <- setdiff(m_pars, pars)
+            if(!include) {
+              if (length(pars) == 1 && is.na(pars)) pars <- "lp__"
+              else pars <- setdiff(m_pars, pars)
+              if (length(pars) == 0) pars <- "lp__"
+            }
             
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
@@ -213,7 +235,7 @@ setMethod("vb", "stanmodel",
             if ("lp__" %in% names(inits_used))  inits_used$lp__ <- NULL
             samples <- cbind(samples[-1,-1,drop=FALSE], 
                              "lp__" = samples[-1,1])[,unlist(cC)]
-            cC <- cC[sapply(cC, all)]
+            cC <- cC[sapply(cC, any)] # any(logical()) is FALSE
             count <- 1L
             for (i in seq_along(cC)) {
               len <- length(cC[[i]])
@@ -295,11 +317,21 @@ setMethod("optimizing", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-            if (is(sampler, "try-error")) {
-              message('failed to create the optimizer; optimization not done') 
-              return(invisible(list(stanmodel = object)))
-            } 
+            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(list(stanmodel = object)))
+              }
+              message('trying deprecated constructor; please alert package maintainer')
+            } else {
+              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the optimizer; optimization not done') 
+                return(invisible(list(stanmodel = object)))
+              }
+            }
+            
             m_pars <- sampler$param_names() 
             idx_wo_lp <- which(m_pars != "lp__")
             m_pars <- m_pars[idx_wo_lp]
@@ -337,7 +369,11 @@ setMethod("optimizing", "stanmodel",
             if (!is.null(dotlist$method))  dotlist$method <- NULL
             if (!verbose && is.null(dotlist$refresh)) dotlist$refresh <- 0L
             optim <- sampler$call_sampler(c(args, dotlist))
-            names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
+            optim$return_code <- attr(optim, "return_code")
+            if (optim$return_code != 0) warning("non-zero return code in optimizing")
+            attr(optim, "return_code") <- NULL
+            fnames <- sampler$param_fnames_oi()
+            names(optim$par) <- fnames[-length(fnames)]
             skeleton <- create_skeleton(m_pars, p_dims)
             if (hessian || draws) {
               fn <- function(theta) {
@@ -392,6 +428,9 @@ setMethod("sampling", "stanmodel",
                    open_progress = interactive() && !isatty(stdout()) &&
                      !identical(Sys.getenv("RSTUDIO"), "1"), 
                    show_messages = TRUE, ...) {
+            is_arg_deprecated(names(list(...)),
+                              c("enable_random_init"),
+                              pre_msg = "passing deprecated arguments: ")
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -437,12 +476,22 @@ setMethod("sampling", "stanmodel",
             if (verbose)
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
                   "' NOW.\n", sep = '')
-            sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
             sfmiscenv <- new.env(parent = emptyenv())
-            if (is(sampler, "try-error")) {
-              message('failed to create the sampler; sampling not done') 
-              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
-            } 
+            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+              message('trying deprecated constructor; please alert package maintainer')
+            } else {
+              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done') 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+            }
+            
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
             m_pars = sampler$param_names()
             p_dims = sampler$param_dims()
@@ -466,7 +515,7 @@ setMethod("sampling", "stanmodel",
               .dotlist <- c(sapply(objects, simplify = FALSE, FUN = get,
                                   envir = environment()), list(...))
               .dotlist$chains <- 1L
-              .dotlist$cores <- 1L
+              .dotlist$cores <- 0L
               .dotlist$open_progress <- FALSE
               callFun <- function(i) {
                 .dotlist$chain_id <- i
@@ -486,7 +535,6 @@ setMethod("sampling", "stanmodel",
                     .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, 
                                                        "_", i, ".csv")
                 }
-                Sys.sleep(0.5 * i)
                 out <- do.call(rstan::sampling, args = .dotlist)
                 return(out)
               }
@@ -520,8 +568,10 @@ setMethod("sampling", "stanmodel",
                   else sinkfile <- ""
                 }
                 else sinkfile <- ""
-                cl <- parallel::makeCluster(min(cores, chains), 
-                                            outfile = sinkfile, useXDR = FALSE)
+                if (!is.null(dots$refresh) && dots$refresh == 0) 
+                  cl <- parallel::makeCluster(min(cores, chains), useXDR = FALSE)
+                else
+                  cl <- parallel::makeCluster(min(cores, chains), outfile = sinkfile, useXDR = FALSE)
                 on.exit(parallel::stopCluster(cl))
                 dependencies <- c("rstan", "Rcpp", "ggplot2")
                 .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {
@@ -571,8 +621,11 @@ setMethod("sampling", "stanmodel",
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
-
-            if(!include) pars <- setdiff(m_pars, pars)
+            if(!include) {
+              if (length(pars) == 1 && is.na(pars)) pars <- "lp__"
+              else pars <- setdiff(m_pars, pars)
+              if (length(pars) == 0) pars <- "lp__"
+            }
             
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
@@ -675,7 +728,7 @@ setMethod("sampling", "stanmodel",
 
             idx_wo_lp <- which(m_pars != 'lp__')
             skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
-            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")), 
+            inits_used = lapply(lapply(samples, function(x) attr(x, "inits")),
                                 function(y) rstan_relist(y, skeleton))
 
             # test_gradient mode: no sample 
@@ -720,7 +773,7 @@ setMethod("sampling", "stanmodel",
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv)
-            if (chains > 1 && cores <= 1) throw_sampler_warnings(nfit)
+            if (cores > 0) throw_sampler_warnings(nfit)
             return(nfit)
           }) 
 

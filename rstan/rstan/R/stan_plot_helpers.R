@@ -178,7 +178,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   }
   
   dat <- .reshape_sample(samp_use)
-  dat$iteration <- idx
+  dat$iteration <- idx * thin
   dat$chain <- factor(dat$chain)
   fnames <- if (unconstrain) 
     names(samp_use[[1]]) else sim$fnames_oi[tidx]
