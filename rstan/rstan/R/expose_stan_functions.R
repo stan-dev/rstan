@@ -79,11 +79,11 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (!isTRUE(show_compiler_warnings)) {
     tf <- tempfile()
     zz <- file(tf, open = "wt")
-    sink(zz)
+    sink(zz, type = "output")
     on.exit(suppressWarnings(file.remove(tf)), add = TRUE)
     on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
     on.exit(close(zz), add = TRUE)
-    on.exit(sink(), add = TRUE)
+    on.exit(sink(type = "output"), add = TRUE)
   }
   compiled <- pkgbuild::with_build_tools(suppressWarnings(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),
@@ -93,6 +93,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
   if (!isTRUE(show_compiler_warnings)) {
     sink()
+    close(zz)
     suppressWarnings(file.remove(tf))
     on.exit(NULL)
     if (WINDOWS && R_version < "3.6.0") {
