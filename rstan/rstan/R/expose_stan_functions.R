@@ -29,7 +29,8 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
   return(code)
 }
 
-expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
+expose_stan_functions <- function(stanmodel, includes = NULL, 
+                                  show_compiler_warnings = FALSE, ...) {
   mc <- NULL
   if(is(stanmodel, "stanfit")) {
     mc <- get_stancode(get_stanmodel(stanmodel))
@@ -75,13 +76,31 @@ expose_stan_functions <- function(stanmodel, includes = NULL, ...) {
     on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
   }
   
+  if (!isTRUE(show_compiler_warnings)) {
+    tf <- tempfile()
+    zz <- file(tf, open = "wt")
+    sink(zz)
+    on.exit(suppressWarnings(file.remove(tf)), add = TRUE)
+    on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
+    on.exit(close(zz), add = TRUE)
+    on.exit(sink(), add = TRUE)
+  }
   compiled <- pkgbuild::with_build_tools(suppressWarnings(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),
     required = rstan_options("required") &&
     # workaround for packages with src/install.libs.R
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-  
+  if (!isTRUE(show_compiler_warnings)) {
+    sink()
+    suppressWarnings(file.remove(tf))
+    on.exit(NULL)
+    if (WINDOWS && R_version < "3.6.0") {
+      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
+    } else {
+      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"), add = TRUE)
+    }
+  }
   DOTS <- list(...)
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()

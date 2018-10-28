@@ -15,7 +15,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   quantities} block of a Stan program.
 }
 \usage{
-  expose_stan_functions(stanmodel, includes = NULL, ...)
+  expose_stan_functions(stanmodel, includes = NULL, 
+                        show_compiler_warnings = FALSE, ...)
   get_rng(seed = 0L)
   get_stream()
 }
@@ -33,6 +34,9 @@ Expose user-defined Stan functions to \R for testing and simulation
     into the C++ code in the model's namespace and can be used to provide definitions 
     of functions that are declared but not defined in \code{stanmodel}
   }
+  \item{show_compiler_warnings}{Logical scalar defaulting to \code{FALSE} that
+    controls whether compiler warnings, which can be numerous and have never
+    been relevant, are shown}
   \item{seed}{An integer vector of length one indicating the state of Stan's
     pseudo-random number generator}
   \item{\dots}{
