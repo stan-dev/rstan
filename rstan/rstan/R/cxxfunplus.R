@@ -163,8 +163,6 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     tf <- tempfile()
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
-    on.exit(suppressWarnings(file.remove(tf)), add = TRUE)
-    on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
     on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
   }

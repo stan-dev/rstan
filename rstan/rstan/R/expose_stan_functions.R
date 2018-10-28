@@ -80,8 +80,6 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     tf <- tempfile()
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
-    on.exit(suppressWarnings(file.remove(tf)), add = TRUE)
-    on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
     on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
   }
@@ -92,7 +90,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
   if (!isTRUE(show_compiler_warnings)) {
-    sink()
+    sink(type = "output")
     close(zz)
     suppressWarnings(file.remove(tf))
     on.exit(NULL)
