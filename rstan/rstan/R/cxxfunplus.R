@@ -159,12 +159,13 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
   }
 
-  if (!verbose) {
+  if (!isTRUE(verbose)) {
     tf <- tempfile()
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
-    on.exit(file.remove(tf), add = TRUE)
+    on.exit(suppressWarnings(file.remove(tf)), add = TRUE)
     on.exit(cat(readLines(tf), sep = "\n"), add = TRUE)
+    on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
   }
   fx <- pkgbuild::with_build_tools(
@@ -174,14 +175,15 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     # workaround for packages with src/install.libs.R
       !identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-  if (!verbose) {
+  if (!isTRUE(verbose)) {
     sink(type = "output")
-    file.remove(tf)
+    close(zz)
+    suppressWarnings(file.remove(tf))
     on.exit(NULL)
     if (WINDOWS && R_version < "3.6.0") {
-      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
     } else {
-      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"), add = TRUE)
     }
   }
   dso_last_path <- dso_path(fx)

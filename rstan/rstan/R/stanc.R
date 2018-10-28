@@ -38,10 +38,10 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   tf <- tempfile()
   zz <- base::file(tf, open = "wt")
   on.exit(file.remove(tf))
+  on.exit(close(zz), add = TRUE)
   sink(zz, type = "message")
   r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
   sink(type = "message")
-  close(zz)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  

@@ -115,13 +115,13 @@ print(fit)
 
 # extract samples 
 e <- extract(fit, permuted = FALSE) # return a list of arrays 
-mu <- e$mu 
+str(e)
 
 arr <- as.array(fit) # return an array 
-print(dimnames(arr))
+str(arr)
 
 mat <- as.matrix(fit) # return a matrix
-print(dimnames(mat))
+str(mat)
 }}
 \keyword{rstan} 
 \keyword{package}
