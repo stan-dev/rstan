@@ -122,7 +122,7 @@ gen_ode_code <- function(ode_rhs, parameters, export=FALSE, ode_name=deparse(sub
 ## includes applied and finally compiles the Stan model with a on-the
 ## fly generated Stan parallel ODE code
 ## extra_magic is for need extra C++ needed for Intel C++
-stan_ode_model <- function(stan_ode_file, cpp_ode_dir, compile=TRUE, extra_magic="") {
+stan_ode_model <- function(stan_ode_file, cpp_ode_dir, compile=TRUE, extra_magic="", enable_threads=FALSE, obfuscate_model_name=compile) {
 
     ## parse from Stan file the ODE definitions
     ode_def <- grep("\\/\\/ode", readLines(stan_ode_file), value=TRUE)
@@ -180,8 +180,11 @@ stan_ode_model <- function(stan_ode_file, cpp_ode_dir, compile=TRUE, extra_magic
     ode_name <- ode_code$name
     ## set model namespace in line with cmdstan defaults
     ##model_namespace <- sub(".stan", "_model_namespace", stan_generated_file)
-    model_namespace <- paste0("model_", sub(".stan", "_namespace", stan_generated_file))
-    model_name <- sub(".stan", "", stan_generated_file)
+    model_prefix_extra <- ""
+    if(obfuscate_model_name)
+        model_prefix_extra <- paste0("M", sample.int(1E4, 1), "_")
+    model_namespace <- paste0("model_", model_prefix_extra, sub(".stan", "_namespace", stan_generated_file))
+    model_name <- paste0(model_prefix_extra, sub(".stan", "", stan_generated_file))
 
     cpp_extra_include <- paste0(sub(".stan", "", stan_generated_file), "_jacobian_analytic.hpp")
 
@@ -194,8 +197,8 @@ typedef model_ns::", ode_name, "_functor__ ode_functor;
 
     cpp_model_extra <- c(cpp_defs,
                          extra_magic,
-                         readLines(file.path(cpp_ode_dir, "coupled_ode_system_jacobian_optional.hpp"))
-                         ##readLines(file.path(cpp_ode_dir, "jacobian_ode_analytic.hpp"))
+                         readLines(file.path(cpp_ode_dir, "coupled_ode_system_jacobian_optional.hpp")),
+                         readLines(file.path(cpp_ode_dir, "jacobian_ode_analytic.hpp"))
                          )
     cpp_model_extra <- paste(cpp_model_extra, collapse="\n")
 
@@ -208,15 +211,21 @@ typedef model_ns::", ode_name, "_functor__ ode_functor;
 #include \"",  file.path(getwd(), cpp_extra_include), "\"
 #namespace ", model_namespace, " {
 #")
+##:ess-bp-start::browser@nil:##
 
     if(compile) {
         cat("Compiling ODE Stan model...\n")
-        scb <- stanc_builder(stan_generated_file, obfuscate_model_name=FALSE, allow_undefined=TRUE)
+        scb <- stanc(stan_generated_file, model_name=model_name, obfuscate_model_name=FALSE, allow_undefined=TRUE)
         scb$cppcode <- paste0(
             "\n#define STAN_MATH_REV_ARR_FUNCTOR_COUPLED_ODE_SYSTEM_HPP\n",
             scb$cppcode,
             "\n#include \"", file.path(getwd(), cpp_extra_include), "\"\n"
         )
+        if(enable_threads) {
+            cat("Enabling threading support.\n")
+            scb$cppcode <- paste0("\n#define STAN_THREADS\n", scb$cppcode)
+        }
+        ##return(scb)
         sm <- stan_model(stanc_ret=scb, model_name=model_name,
                          allow_undefined=TRUE, obfuscate_model_name=FALSE, verbose=FALSE)
         return(sm)

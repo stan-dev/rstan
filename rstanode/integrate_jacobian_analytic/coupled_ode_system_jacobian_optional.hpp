@@ -2,7 +2,7 @@
 #define STAN_MATH_REV_ARR_FUNCTOR_COUPLED_ODE_SYSTEM_JACOBIAN_OPTIONAL_HPP
 
 #include <stan/math/prim/mat/fun/typedefs.hpp>
-
+#include <stan/math/prim/mat/fun/Eigen.hpp>
 #include <stan/math/prim/arr/meta/get.hpp>
 #include <stan/math/prim/arr/meta/length.hpp>
 #include <stan/math/prim/arr/functor/coupled_ode_system.hpp>
@@ -10,9 +10,6 @@
 #include <stan/math/prim/scal/err/check_size_match.hpp>
 #include <stan/math/rev/scal/fun/value_of_rec.hpp>
 #include <stan/math/rev/core.hpp>
-
-#include <stan/math/fwd/core.hpp>
-#include <stan/math/prim/mat/fun/Eigen.hpp>
 
 #include <ostream>
 #include <stdexcept>

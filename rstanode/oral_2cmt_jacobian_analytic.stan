@@ -58,152 +58,133 @@ functions {
   // pre.hpp. This is useful for forcing functions like dosing in PK
   // systems.
 
-  real[,] integrate_serial(real[,] y0, real[] t0,
-                           real[] ts, int[] Si_ts,
-                           real[,] theta,
-                           real[] x_r, int[] Si_x_r,
-                           int[] x_i, int[] Si_x_i,
-                           real rel_tol, real abs_tol, int max_steps,
-                           int stiff) {
-    int J = size(Si_ts)-1;
+  real[] oral_2cmt_ode(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+    real dydt[3];
+    real a = y[1];
+    real m = y[2];
+    real p = y[3];
+    real ka = theta[1];
+    real ke = theta[2];
+    real k12 = theta[3];
+    real k21 = theta[4];
 
-    real res[size(ts),3];
-    for(j in 1:J) {
-      if(stiff) {
-        res[Si_ts[j] : Si_ts[j+1] - 1] = integrate_ode_bdf(oral_2cmt_jacobian_analytic_ode, y0[j], t0[j], ts[Si_ts[j] : Si_ts[j+1] - 1], theta[j], x_r[Si_x_r[j] : Si_x_r[j+1] - 1], x_i[Si_x_i[j] : Si_x_i[j+1] - 1],
-                                                           rel_tol, abs_tol, max_steps);
+    dydt[1] = -ka * a;
+    dydt[2] = ka * a - (k12 + ke) * m + k21 * p;
+    dydt[3] = k12 * m - k21 * p;
+
+    return(dydt);
+  }
+  
+  vector integrate_subject(vector theta, vector eta, real[] x_r, int[] x_i) {
+    int T = x_i[1];
+    int solver = x_i[2];
+    int max_steps = x_i[3];
+    int analytic_jacobian = x_i[4];
+    real y0[3] = {10.0, 0, 0};
+    real phi[4] = {theta[1], exp(log(theta[2]) + 0.2 * eta[1]), theta[3], theta[3]/theta[4]};
+    int rel_tol_idx = 2*T+1;
+    int abs_tol_idx = 2*T+2;
+    real yhat[T,3];
+
+    if(analytic_jacobian) {
+      if(solver == 0) {
+        yhat = integrate_ode_rk45(oral_2cmt_jacobian_analytic_ode, y0, 0.0, x_r[1:T], phi, x_r[1:1], x_i[1:1],
+                                  x_r[rel_tol_idx], x_r[abs_tol_idx], max_steps);
+      } else if(solver == 1) {
+        yhat = integrate_ode_bdf(oral_2cmt_jacobian_analytic_ode, y0, 0.0, x_r[1:T], phi, x_r[1:1], x_i[1:1],
+                                 x_r[rel_tol_idx], x_r[abs_tol_idx], max_steps);
       } else {
-        res[Si_ts[j] : Si_ts[j+1] - 1] = integrate_ode_rk45(oral_2cmt_jacobian_analytic_ode, y0[j], t0[j], ts[Si_ts[j] : Si_ts[j+1] - 1], theta[j], x_r[Si_x_r[j] : Si_x_r[j+1] - 1], x_i[Si_x_i[j] : Si_x_i[j+1] - 1],
-                                                            rel_tol, abs_tol, max_steps);
+        yhat = integrate_ode_adams(oral_2cmt_jacobian_analytic_ode, y0, 0.0, x_r[1:T], phi, x_r[1:1], x_i[1:1],
+                                   x_r[rel_tol_idx], x_r[abs_tol_idx], max_steps);
+      }
+    } else {
+      if(solver == 0) {
+        yhat = integrate_ode_rk45(oral_2cmt_ode, y0, 0.0, x_r[1:T], phi, x_r[1:1], x_i[1:1],
+                                  x_r[rel_tol_idx], x_r[abs_tol_idx], max_steps);
+      } else if(solver == 1) {
+        yhat = integrate_ode_bdf(oral_2cmt_ode, y0, 0.0, x_r[1:T], phi, x_r[1:1], x_i[1:1],
+                                 x_r[rel_tol_idx], x_r[abs_tol_idx], max_steps);
+      } else {
+        yhat = integrate_ode_adams(oral_2cmt_ode, y0, 0.0, x_r[1:T], phi, x_r[1:1], x_i[1:1],
+                                   x_r[rel_tol_idx], x_r[abs_tol_idx], max_steps);
       }
     }
-    return(res);
+
+    return to_vector(yhat[:,2]);
+  }
+
+  vector subject_logLik(vector theta, vector eta, real[] x_r, int[] x_i) {
+    int T = x_i[1];
+    real sigma_y = theta[5];
+    vector[T] log_yhat = log(integrate_subject(theta, eta, x_r, x_i) + 1E-6);
+
+    return [ lognormal_lpdf(x_r[T+1:2*T] | log_yhat, sigma_y) ]';
   }
 }
 data {
-  int<lower=1> T;
+  int<lower=0> T;
   int<lower=1> J;
-  real theta[4];
-  real<lower=0> pbar[3 + 4];
-  real theta_sd[4];
-  real dose;
-  int<lower=0,upper=1> parallel;
-  int<lower=0,upper=1> observed;
-  vector[ observed == 1 ? J*T : 0 ] yobs;
+  vector<lower=0>[4] prior_theta_mean;
+  vector<lower=0>[4] prior_theta_sd;
+  vector<lower=0>[J*T] yobs;
   real<lower=0> rel_tol;
   real<lower=0> abs_tol;
   int<lower=0> max_steps;
   int<lower=0,upper=2> solver;
+  int<lower=0,upper=1> analytic_jacobian;
 }
 transformed data {
-  real state0[J,3];
-  real t0[J];
-  real ts[T*J];
-  int S_ts[J];
-  int Si_ts[J+1];
-  real x_r[J];
-  int S_x_r[J];
-  int Si_x_r[J+1];
-  int x_i[0];
-  int S_x_i[J];
-  int Si_x_i[J+1];
-  vector[J] yobs_T;
-  int stiff;
-
-  stiff = solver == 1 ? 1 : 0;
+  int X_i[J,4];
+  real X_r[J,2*T+2];
 
   for(j in 1:J) {
-    state0[j,1] = 0;
-    state0[j,2] = 0;
-    state0[j,3] = 0;
-
-    x_r[j] = log(dose + j - 1.);
-
-    t0[j] = 0;
-    S_ts[j] = T;
-    S_x_r[j] = 1;
-    S_x_i[j] = 0;
-
-    ts[(j-1) * T + 1 : j * T] = to_array_1d(seq_int(1, T));
+    X_i[j,1] = T;
+    X_i[j,2] = solver;
+    X_i[j,3] = max_steps;
+    X_i[j,4] = analytic_jacobian;
+    
+    X_r[j,1:T] = to_array_1d(seq_int(1, T));
+    X_r[j,(T+1):2*T] = to_array_1d(yobs[(j-1)*T+1:j*T]);
+    X_r[j,2*T+1] = rel_tol;
+    X_r[j,2*T+2] = abs_tol;
   }
 
-  Si_ts  = make_slice_index(S_ts);
-  Si_x_r = make_slice_index(S_x_r);
-  Si_x_i = make_slice_index(S_x_i);
-
-  yobs_T = rep_vector(100., J);
-
-  if(stiff) {
-    print("Using stiff BDF integrator for serial integrator.");
-  } else {
-    print("Using non-stiff RK45 integrator for serial integrator.");
-  }
   if(solver == 0) {
-    print("Using non-stiff RK45 integrator for parallel integrator.");
+    print("Using non-stiff RK45 integrator.");
   } else if(solver == 1) {
-    print("Using stiff BDF integrator for parallel integrator.");
+    print("Using stiff BDF integrator.");
   } else if(solver == 2) {
-    print("Using non-stiff Adams-Moulton integrator for parallel integrator.");
+    print("Using non-stiff Adams-Moulton integrator.");
   }
+
+  if(analytic_jacobian) {
+    print("Using analytic Jacobians for ODE integration.");
+  } else {
+    print("Using autodiff Jacobians for ODE integration.");
+  }
+  
   print("Relative tolerance: ", rel_tol);
   print("Absolute tolerance: ", abs_tol);
   print("Maximum # of steps: ", max_steps);
-
-  if(parallel) {
-    reject("Parallel integration not supported for now => go with map_rect.");
-    print("Parallel ODE integration using OpenMP.");
-  } else {
-    print("Serial ODE integration.");
-  }
 }
 parameters {
-  real<lower=0> theta_v[4];
-  real<lower=0> dose0_v[J];
+  // ka, CL, Q, V2 (V1==1)
+  vector<lower=0>[4] theta;
+  vector[1] eta[J];
   real<lower=0> sigma_y;
 }
 transformed parameters {
-  //real yhat_par[sum(M),3];
-  //real yhat_ser[sum(M),3];
-  real yhat[sum(S_ts),3];
-  real<lower=0> state0_v[J,3];
-  real Theta_v[J,4];
-
-  for(j in 1:J) {
-    state0_v[j,1] = dose0_v[j];
-    state0_v[j,2] = 0;
-    state0_v[j,3] = 0;
-
-    Theta_v[j] = theta_v;
-  }
-
-  if(parallel) {
-    reject("Parallel integration not supported for now => go with map_rect.");
-    //yhat = integrate_parallel(state0_v, t0, ts, Si_ts, Theta_v, x_r, Si_x_r, x_i, Si_x_i, rel_tol, abs_tol, max_steps, solver, pbar);
-  } else {
-    yhat = integrate_serial(state0_v, t0, ts, Si_ts, Theta_v, x_r, Si_x_r, x_i, Si_x_i, rel_tol, abs_tol, max_steps, stiff);
-  }
-
 }
 model {
-  vector[J] conc_T;
-
-  for(j in 1:J)
-    conc_T[j] = yhat[(j-1) * T + T,2];
-
-  target += lognormal_lpdf(theta_v| log(theta), theta_sd);
-
-  target += lognormal_lpdf(dose0_v| log(10.), 1);
-
-  target += normal_lpdf(sigma_y| 0, 1);
-
-  if(observed)
-    target += lognormal_lpdf(yobs | log( to_vector(yhat[:,2]) + 1E-6 ), sigma_y);
-  else
-    target += normal_lpdf(yobs_T | conc_T, 5);
+  target += lognormal_lpdf(theta| log(prior_theta_mean), prior_theta_sd);
+  target += multi_normal_cholesky_lpdf(eta| [0]', [ [ 1 ] ]);
+  target += normal_lpdf(sigma_y| 0, 0.5);
+  target += sum(map_rect(subject_logLik, append_row(theta, sigma_y), eta, X_r, X_i));
 }
 generated quantities {
-  real yrepl[T*J];
+  vector[T*J] yrepl;
+  vector[T*J] yhat = map_rect(integrate_subject, theta, eta, X_r, X_i);
 
   for(i in 1:(T*J))
-    yrepl[i] = lognormal_rng(log(yhat[i,2] + 1E-6), sigma_y);
+    yrepl[i] = lognormal_rng(log(yhat[i] + 1E-6), sigma_y);
 }
