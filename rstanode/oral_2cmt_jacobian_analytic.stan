@@ -1,37 +1,6 @@
 
 functions {
 
-  // slice out a sub-range from the vector also make one for int
-  // arrays, etc.
-  real[] slice_r(real[] rdata, int[] S, int s) {
-    int l = sum(S[1:(s-1)]);
-    int u = l + S[s];
-    return(rdata[(l+1):u]);
-  }
-  int[] slice_i(int[] idata, int[] S, int s) {
-    int l = sum(S[1:(s-1)]);
-    int u = l + S[s];
-    return(idata[(l+1):u]);
-  }
-
- // turn a slicing variable for a ragged array
-  // S = {5, 6, 11}
-  // into
-  // Si = {0, 5, 5 + 6, 5+6+11} + 1
-  // such that we can index the ragged array A as
-  // A[Si[u] : Si[u+1]-1]
-  // for the uth unit
-  int[] make_slice_index(int[] S) {
-    int Si[size(S)+1];
-    int cv = 1;
-    Si[1] = cv;
-    for(i in 1:size(S)) {
-      cv = cv + S[i];
-      Si[i+1] = cv;
-    }
-    return(Si);
-  }
-
   // create an integer sequence
   int[] seq_int(int start, int end) {
     int N = end - start + 1;
