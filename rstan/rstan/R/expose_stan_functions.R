@@ -92,7 +92,6 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (!isTRUE(show_compiler_warnings)) {
     sink(type = "output")
     close(zz)
-    suppressWarnings(file.remove(tf))
     on.exit(NULL)
     if (WINDOWS && R_version < "3.6.0") {
       if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)

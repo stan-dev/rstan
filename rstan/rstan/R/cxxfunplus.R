@@ -176,7 +176,6 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   if (!isTRUE(verbose)) {
     sink(type = "output")
     close(zz)
-    suppressWarnings(file.remove(tf))
     on.exit(NULL)
     if (WINDOWS && R_version < "3.6.0") {
       if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)

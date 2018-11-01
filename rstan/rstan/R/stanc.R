@@ -37,7 +37,6 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
   tf <- tempfile()
   zz <- base::file(tf, open = "wt")
-  on.exit(file.remove(tf))
   on.exit(close(zz), add = TRUE)
   sink(zz, type = "message")
   r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
