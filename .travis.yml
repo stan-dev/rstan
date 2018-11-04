@@ -17,6 +17,7 @@ env:
   global:
     - STAN_BRANCH=master
     - STAN_MATH_BRANCH=master
+    - MAKEFLAGS="-j 2"
 
 matrix:
   include:
