@@ -160,7 +160,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   }
 
   if (!isTRUE(verbose)) {
-    tf <- tempfile()
+    tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
     on.exit(close(zz), add = TRUE)
@@ -176,6 +176,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   if (!isTRUE(verbose)) {
     sink(type = "output")
     close(zz)
+    try(file.remove(tf), silent = TRUE)
     on.exit(NULL)
     if (WINDOWS && R_version < "3.6.0") {
       if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)

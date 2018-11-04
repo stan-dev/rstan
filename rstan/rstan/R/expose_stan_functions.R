@@ -77,7 +77,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
   
   if (!isTRUE(show_compiler_warnings)) {
-    tf <- tempfile()
+    tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
     on.exit(close(zz), add = TRUE)
@@ -92,6 +92,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (!isTRUE(show_compiler_warnings)) {
     sink(type = "output")
     close(zz)
+    try(file.remove(tf), silent = TRUE)
     on.exit(NULL)
     if (WINDOWS && R_version < "3.6.0") {
       if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
