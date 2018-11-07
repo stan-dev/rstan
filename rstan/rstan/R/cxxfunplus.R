@@ -154,7 +154,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
   
   has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
-  if (WINDOWS && !has_LOCAL_CPPFLAGS) {
+  if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
     Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
     on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
   }
