@@ -172,7 +172,18 @@ stan_model <- function(file,
     writeLines(model_code, con = unprocessed)
     ARGS <- paste("-E -nostdinc -x c++ -P -C", paste("-I", isystem, " ", collapse = ""), 
                   "-o", processed, unprocessed)
-    pkgbuild::with_build_tools(system2(CXX, args = ARGS), 
+    
+    env <- character()
+    if (Sys.info()['sysname'] == 'Windows') {
+      # Ensure cmd.exe is on the PATH
+      win_root <- Sys.getenv('SystemRoot', 'C:\\Windows')
+      path <- Sys.getenv('PATH')
+      win_utils_path <- paste0(win_root, '\\', 'System32')
+      new_path <- paste0(path, ';', win_utils_path)
+      env <- c(PATH=new_path)
+    }
+      
+    pkgbuild::with_build_tools(system2(CXX, args = ARGS, env = env), 
                                required = rstan_options("required") && 
                                   identical(Sys.getenv("WINDOWS"), "TRUE") &&
                                  !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
