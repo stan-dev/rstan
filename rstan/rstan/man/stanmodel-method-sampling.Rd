@@ -40,7 +40,7 @@
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the Note section in \code{\link{stan}}.} 
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.} 
 
   \item{pars}{A vector of character strings specifying parameters of interest. 
     The default is \code{NA} indicating all parameters in the model. 
@@ -79,7 +79,7 @@
 
   \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
     the data will be preprocessed; otherwise not.
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
 
   \item{sample_file}{An optional character string providing the name of a file.
     If specified the draws for \emph{all} parameters and other saved quantities

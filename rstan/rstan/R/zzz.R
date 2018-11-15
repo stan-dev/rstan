@@ -34,4 +34,8 @@ OUT <- 0
                         "options(mc.cores = parallel::detectCores()).\n",
                         "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
                         "rstan_options(auto_write = TRUE)")
-} 
+  if (.Platform$OS.type == "windows")
+    packageStartupMessage("For improved execution time, we recommend calling\n",
+                          "Sys.setenv(LOCAL_CPPFLAGS = '-march=native')\n",
+                          "although this causes Stan to throw an error on a few processors.")
+}

@@ -19,7 +19,6 @@
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 #include <Rcpp.h>
-// #include <Rinternals.h>
 
 //http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
@@ -54,6 +53,7 @@
 #include <stan/services/sample/hmc_static_diag_e_adapt.hpp>
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
+#include <stan/services/sample/standalone_gqs.hpp>
 #include <stan/services/experimental/advi/fullrank.hpp>
 #include <stan/services/experimental/advi/meanfield.hpp>
 
@@ -62,6 +62,7 @@
 #include <rstan/value.hpp>
 #include <rstan/values.hpp>
 #include <rstan/rstan_writer.hpp>
+#include <rstan/logger.hpp>
 
 namespace rstan {
 
@@ -398,8 +399,15 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
         throw std::runtime_error("Must use algorithm=\"Fixed_param\" for "
                                    "model that has no parameters.");
-  stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
-                                        rstan::io::rcerr, rstan::io::rcerr);
+  int refresh = args.get_refresh();
+  unsigned int id = args.get_chain_id();
+  
+  std::ostream nullout(nullptr);
+  std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
+  std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
+
+  stan::callbacks::stream_logger_with_chain_id 
+    logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
 
@@ -440,7 +448,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
   }
 
   stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
-  std::auto_ptr<stan::io::var_context> init_context_ptr;
+  std::unique_ptr<stan::io::var_context> init_context_ptr;
   if (args.get_init() == "user")
     init_context_ptr.reset(new io::rlist_ref_var_context(args.get_init_list()));
   else
@@ -454,7 +462,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
 
 
   unsigned int random_seed = args.get_random_seed();
-  unsigned int id = args.get_chain_id();
   double init_radius = args.get_init_radius();
 
   if (args.get_method() == TEST_GRADIENT) {
@@ -496,7 +503,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       double tol_grad = args.get_ctrl_optim_tol_grad();
       double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
       double tol_param = args.get_ctrl_optim_tol_param();
-      int refresh = args.get_ctrl_optim_refresh();
       return_code
         = stan::services::optimize::bfgs(model, *init_context_ptr,
                                          random_seed, id, init_radius,
@@ -520,7 +526,6 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
       double tol_grad = args.get_ctrl_optim_tol_grad();
       double tol_rel_grad = args.get_ctrl_optim_tol_rel_grad();
       double tol_param = args.get_ctrl_optim_tol_param();
-      int refresh = args.get_ctrl_optim_refresh();
       return_code
         = stan::services::optimize::lbfgs(model, *init_context_ptr,
                                           random_seed, id, init_radius,
@@ -549,14 +554,13 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     stan::mcmc::sample::get_sample_param_names(sample_names);
     std::vector<std::string> sampler_names;
 
-    std::auto_ptr<rstan_sample_writer> sample_writer_ptr;
+    std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
     size_t sample_writer_offset;
 
     int num_warmup = args.get_ctrl_sampling_warmup();
     int num_samples = args.get_iter() - num_warmup;
     int num_thin = args.get_ctrl_sampling_thin();
     bool save_warmup = args.get_ctrl_sampling_save_warmup();
-    int refresh = args.get_ctrl_sampling_refresh();
     int num_iter_save = args.get_ctrl_sampling_iter_save();
     int num_warmup_save = num_iter_save - args.get_ctrl_sampling_iter_save_wo_warmup();
 
@@ -1315,6 +1319,32 @@ public:
     END_RCPP
   }
 
+  SEXP standalone_gqs(SEXP pars, SEXP seed) {
+    BEGIN_RCPP
+    Rcpp::List holder;
+
+    R_CheckUserInterrupt_Functor interrupt;
+    stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
+                                          rstan::io::rcerr, rstan::io::rcerr);
+    std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
+
+    std::vector<std::vector<double> > draws = 
+      Rcpp::as<std::vector<std::vector<double> > >(pars); // unconstrained
+    
+    int ret;
+    ret = stan::services::standalone_generate(model_, draws,
+            Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);
+    
+    holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
+                        sample_writer_ptr->values_.x().end());
+    
+    SEXP __sexp_result;
+    PROTECT(__sexp_result = Rcpp::wrap(holder));
+    UNPROTECT(1);
+    return __sexp_result;
+    END_RCPP
+  }
+  
   SEXP param_names() const {
     BEGIN_RCPP
     SEXP __sexp_result;
@@ -1408,7 +1438,7 @@ public:
     std::vector<std::string> fnames;
     get_all_flatnames(names_oi_, dims_oi_, fnames, true);
     SEXP __sexp_result;
-    PROTECT(__sexp_result = Rcpp::wrap(fnames));
+    PROTECT(__sexp_result = Rcpp::wrap(fnames_oi_));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP

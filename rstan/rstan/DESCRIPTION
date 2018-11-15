@@ -1,22 +1,18 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.18.1
-Date: 2018-03-14
+Version: 2.18.2
+Date: 2018-10-18
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
              person("Daniel", "Lee", role = "ctb"),
              person("Krzysztof", "Sakrejda", role = "ctb"),
+             person("Modrak", "Martin", role = "ctb"),
              person("Trustees of", "Columbia University", role = "cph"),
              person("Oleg", "Sklyar", role = "cph", comment = "R/cxxfunplus.R"),
              person("The R", "Core Team", role = "cph", comment = "R/pairs.R, R/dynGet.R"),
-             person("Jens", "Oehlschlaegel-Akiyoshi", role = "cph", comment = "R/pairs.R"),
-             person("Hadley", "Wickham", role = "cph", comment = "R/rtools.R"),
-             person("Joel", "de Guzman", role = "cph", comment = "Boost"),
-             person("John", "Fletcher", role = "cph",  comment = "Boost"),
-             person("Thomas", "Heller", role = "cph",  comment = "Boost"),
-             person("Eric", "Niebler", role = "cph",   comment = "Boost"))
+             person("Jens", "Oehlschlaegel-Akiyoshi", role = "cph", comment = "R/pairs.R"))
 Description: User-facing R functions are provided to parse, compile, test,
     estimate, and analyze Stan models by accessing the header-only Stan library
     provided by the 'StanHeaders' package. The Stan project develops a probabilistic
@@ -33,9 +29,11 @@ Imports:
     stats4,
     inline,
     gridExtra (>= 2.0.0),
-    Rcpp (>= 0.12.0)
+    Rcpp (>= 0.12.0),
+    loo (>= 2.0.0),
+    pkgbuild
 Depends:
-    R (>= 3.0.2),
+    R (>= 3.4.0),
     ggplot2 (>= 2.0.0),
     StanHeaders (>= 2.18.0)
 LinkingTo: Rcpp (>= 0.12.0),
@@ -48,9 +46,9 @@ Suggests:
     BH (>= 1.66),
     parallel,
     KernSmooth,
-    loo (>= 1.0.0),
-    shinystan (>= 2.2.1),
-    bayesplot,
+    shinystan (>= 2.3.0),
+    bayesplot (>= 1.5.0),
+    rmarkdown,
     rstantools,
     rstudioapi,
     Matrix,

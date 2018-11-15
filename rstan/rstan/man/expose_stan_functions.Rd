@@ -15,7 +15,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   quantities} block of a Stan program.
 }
 \usage{
-  expose_stan_functions(stanmodel, includes = NULL, ...)
+  expose_stan_functions(stanmodel, includes = NULL, 
+                        show_compiler_warnings = FALSE, ...)
   get_rng(seed = 0L)
   get_stream()
 }
@@ -33,6 +34,9 @@ Expose user-defined Stan functions to \R for testing and simulation
     into the C++ code in the model's namespace and can be used to provide definitions 
     of functions that are declared but not defined in \code{stanmodel}
   }
+  \item{show_compiler_warnings}{Logical scalar defaulting to \code{FALSE} that
+    controls whether compiler warnings, which can be numerous and have never
+    been relevant, are shown}
   \item{seed}{An integer vector of length one indicating the state of Stan's
     pseudo-random number generator}
   \item{\dots}{
@@ -41,6 +45,13 @@ Expose user-defined Stan functions to \R for testing and simulation
 }
 
 \details{
+  The \code{expose_stan_functions} function requires as much compliance with
+  the C++14 standard as is implemented in the RTools toolchain for Windows.
+  On Windows, you will likely need to specify \code{CXX14 = g++ -std=c++1y}
+  in the file whose path is \code{\link{normalizePath}("~/.R/Makevars")} in
+  order for \code{expose_stan_functions} to work. Outside of Windows, the
+  necessary compiler flags are set programatically, which is likely to suffice.
+
   There are a few special types of user-defined Stan functions for which some 
   additional details are relevant:
   
@@ -53,8 +64,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   \code{seed} argument for reproducibility) and the \code{pstream__} should
   be passed the result of a call to \code{get_stream}, which can be used to
   see the result of \code{print} and \code{reject} calls in the user-defined
-  Stan program but the \code{pstream__} argument is mandatory even if there
-  are no \code{print} or \code{reject} calls.
+  Stan functions. These arguments default to \code{get_stream()} and
+  \code{get_rng()} respectively.
   }
   \subsection{LP functions}{
   If a user-defined Stan function ends in \code{_lp}, then it can
@@ -72,7 +83,8 @@ Expose user-defined Stan functions to \R for testing and simulation
   The names of the new functions in \code{env} are returned invisibly.
 }
 \seealso{
-  \code{\link[Rcpp]{sourceCpp}}
+  \code{\link[Rcpp]{sourceCpp}} and the section in the Stan User Manual on
+  user-defined functions
 }
 \examples{
 \dontrun{
@@ -85,6 +97,7 @@ model_code <-
   }
 '
 expose_stan_functions(stanc(model_code = model_code))
+standard_normal_rng()
 PRNG <- get_rng(seed = 3)
 o <- get_stream()
 standard_normal_rng(PRNG, o)

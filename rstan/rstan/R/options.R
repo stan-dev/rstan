@@ -77,6 +77,8 @@ init_rstan_opt_env <- function(e) {
 
   assign('auto_write', FALSE, e)
   
+  assign('required', TRUE, e)
+  
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
 }

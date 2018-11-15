@@ -17,6 +17,18 @@
 
 ###  deal with the optimization level for c++ compilation 
 
+get_all_makefile_paths <- function() {
+  out <- system2(file.path(Sys.getenv("R_HOME"), "bin", "R"),
+                 args = "CMD SHLIB --dry-run", stdout = TRUE)
+  out <- grep("SHLIB", out, value = TRUE)[1]
+  makefiles <- strsplit(sub("SHLIB.*$", "", out), split = "-f ")[[1]][-1]
+  makefiles <- gsub("'", "", makefiles)
+  makefiles <- gsub("[[:space:]]*$", "", makefiles)
+  makefiles <- gsub('\"', '', makefiles)
+  makefiles <- makefiles[file.exists(makefiles)]
+  return(makefiles)  
+}
+
 get_makefile_txt <- function() { 
   # get the all makefile content used for R CMD SHLIB 
   # The order or files to look for are following the code 
@@ -25,39 +37,9 @@ get_makefile_txt <- function() {
   # Return: 
   #   a character vector in which each element is a line of 
   #   the makefile 
-  WINDOWS <- .Platform$OS.type == "windows"
-  rarch <- Sys.getenv("R_ARCH") # unix only
-  if (WINDOWS && nzchar(.Platform$r_arch))
-    rarch <- paste0("/", .Platform$r_arch)
-  site <- file.path(R.home("etc"), rarch, "Makevars.site")
-
-  sys_makeconf <- file.path(R.home("etc"), rarch, "Makeconf")
-  if (!file.exists(sys_makeconf)) 
-    stop(paste("file ", sys_makeconf, " does not exist", sep = '')) 
-  makefiles <-
-    c(sys_makeconf, 
-      if (file.exists(site)) site,
-      file.path(R.home("share"), "make", if (WINDOWS) "winshlib.mk" else "shlib.mk"))
-
-  if (WINDOWS) { 
-    if (rarch == "/x64" && 
-        file.exists(f <- path.expand("~/.R/Makevars.win64"))) 
-      makefiles <- c(makefiles, f) 
-    else if (file.exists(f <- path.expand("~/.R/Makevars.win"))) 
-      makefiles <- c(makefiles, f) 
-    else if (file.exists(f <- path.expand("~/.R/Makevars"))) 
-      makefiles <- c(makefiles, f) 
-  } else { 
-    if (file.exists(f <- path.expand(paste("~/.R/Makevars", 
-                                            Sys.getenv("R_PLATFORM"), 
-                                            sep = "-")))) 
-       makefiles <- c(makefiles, f) 
-    else if (file.exists(f <- path.expand("~/.R/Makevars"))) 
-       makefiles <- c(makefiles, f) 
-  }
-  makefiles <- makefiles[file.exists(makefiles)]
+  makefiles <- get_all_makefile_paths()
   do.call(c, lapply(makefiles, function(f) readLines(f, warn = FALSE))) 
-} 
+}
 
 get_makefile_flags <- function(FLAGNAME, makefile_txt, headtotail = FALSE) { 
   # get current CXXFLAGS used for in R CMD SHLIB, which controls
@@ -94,23 +76,8 @@ last_makefile <- function() {
   # This function return the last one, where we can set flags 
   # to overwrite what is set before. 
   # 
-  WINDOWS <- .Platform$OS.type == "windows"
-  rarch <- Sys.getenv("R_ARCH") # unix only
-  if (WINDOWS && nzchar(.Platform$r_arch))
-    rarch <- paste0("/", .Platform$r_arch)
-
-  if (WINDOWS) { 
-    if (rarch == "/x64") {
-       f <- path.expand("~/.R/Makevars.win64") 
-       if (file.exists(f)) return(f) 
-    }
-    f <- path.expand("~/.R/Makevars.win") 
-    if (file.exists(f)) return(f) 
-    return(path.expand("~/.R/Makevars"))
-  }
-  f <- path.expand(paste("~/.R/Makevars", Sys.getenv("R_PLATFORM"), sep = "-"))
-  if (file.exists(f)) return(f) 
-  return(path.expand("~/.R/Makevars"))
+  makefiles <- get_all_makefile_paths()
+  return(tail(makefiles, n = 1L))
 } 
 
 set_makefile_flags <- function(flags) { 

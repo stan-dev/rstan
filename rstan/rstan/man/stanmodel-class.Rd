@@ -9,6 +9,8 @@
 \alias{get_cxxflags}
 \alias{get_cppcode,stanmodel-method}
 \alias{get_cxxflags,stanmodel-method}
+\alias{get_stancode,stanmodel-method}
+
 \alias{show,stanmodel-method}
 
 \title{Class representing model compiled from C++}
@@ -49,9 +51,11 @@
       the model (see \code{\link{sampling}}).}
     \item{\code{optimizing}}{\code{signature(object = "stanmodel")}: obtain a point 
       estimate by maximizing the posterior (see \code{\link{optimizing}}).}
-    \item{\code{get_cppcode}}{\code{signature(object = "stanmodel")}: return the C++ code for the model
+    \item{\code{get_cppcode}}{\code{signature(object = "stanmodel")}: returns the C++ code for the model
       as a character string. This is part of the C++ code that is compiled to the dynamic 
       shared object for the model.}
+    \item{\code{get_stancode}}{\code{signature(object = "stanmodel")}: returns the Stan code for
+      the model as a character string}  
     \item{\code{get_cxxflags}}{\code{signature(object = "stanmodel")}: return the \code{CXXFLAGS} 
       used for compiling the model. The returned string is like \code{CXXFLAGS = -O3}.}
   }

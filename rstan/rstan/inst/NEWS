@@ -1,4 +1,31 @@
-Fri January 19 2017 (2.17.3)
+Mon October 09 2018
+1. Bug fixes
+  * Variational Bayes variable names were off-by-one in some circumstances
+  * get_makefile_text() works on multiarch systems
+  * The chain ID is printed in the intermediate output again
+  * Low BFMI threshold is changed to 0.2 from 0.3
+  
+2. Features
+  * Requires the C++14 standard and hence R >= 3.4.0
+  * Calculates effective sample size more correctly, which can result in
+    an effective sample size greater than the nominal sample size due to
+    negative first order autocorrelation for some quantities of interest
+  * Utilizes the pkgbuild R package
+  * Specifying refresh = 0 suppresses all intermediate output
+  * expose_stan_functions() uses a new, more robust procedure to generate
+    the Stan code to be exposed to R
+  * read_stan_csv() is faster with less memory consumed
+  * unconstrain_pars() gains a NULL default to its pars argument, in which
+    case the entire matrix of unconstrained parameters is returned
+  * If the list of initial values passed to Stan has named elements, these
+    names are retained in the output
+  * There is now a loo.stanfit() method
+  * HMC diagnostics can be obtained in a more programmatic way via
+    get_divergent_iterations(), get_max_treedepth_iterations(),
+    get_num_leapfrog_per_iteration(), get_num_divergent(),
+    get_num_max_treedepth()
+
+Fri January 19 2018 (2.17.3)
 1. Bug fixes
   * Might build on Solaris again
   * Might propogate exception messages when there are parser errors on a Mac

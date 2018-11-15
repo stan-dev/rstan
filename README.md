@@ -1,7 +1,4 @@
-
-<a href="http://mc-stan.org">
-<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo.png" width=200 alt="Stan Logo"/>
-</a>
+[<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width=100 alt="Stan Logo"/>](http://mc-stan.org)
 
 # RStan
 
@@ -30,7 +27,7 @@ Several Stan users have also contributed translations of the _RStan Getting Star
 
 * [RStan Getting Started (French)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Français))
 * [RStan Getting Started (Japanese)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Japanese))
-
+* [RStan Getting Started (繁體中文)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87))
 
 ### Source Repository
 

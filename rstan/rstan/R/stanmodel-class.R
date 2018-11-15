@@ -46,6 +46,13 @@ setGeneric(name = 'vb',
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
 
+setMethod('get_stancode', signature = "stanmodel", 
+          function(object, print = FALSE) {
+            code <- object@model_code
+            if (print) cat(code, "\n") 
+            return(code)
+          }) 
+
 setGeneric(name = "get_cppcode", 
            def = function(object, ...) { standardGeneric("get_cppcode") })
 
@@ -178,7 +185,8 @@ setMethod("vb", "stanmodel",
                                   "grad_samples",
                                   "output_samples",
                                   "adapt_iter",
-                                  "tol_rel_obj"),
+                                  "tol_rel_obj",
+                                  "refresh"),
                                  pre_msg = "passing unknown arguments: ",
                                  call. = FALSE)
             if (!is.null(dotlist$method))  dotlist$method <- NULL
@@ -227,7 +235,7 @@ setMethod("vb", "stanmodel",
             if ("lp__" %in% names(inits_used))  inits_used$lp__ <- NULL
             samples <- cbind(samples[-1,-1,drop=FALSE], 
                              "lp__" = samples[-1,1])[,unlist(cC)]
-            cC <- cC[sapply(cC, all)]
+            cC <- cC[sapply(cC, any)] # any(logical()) is FALSE
             count <- 1L
             for (i in seq_along(cC)) {
               len <- length(cC[[i]])
@@ -364,7 +372,8 @@ setMethod("optimizing", "stanmodel",
             optim$return_code <- attr(optim, "return_code")
             if (optim$return_code != 0) warning("non-zero return code in optimizing")
             attr(optim, "return_code") <- NULL
-            names(optim$par) <- flatnames(m_pars, p_dims, col_major = TRUE)
+            fnames <- sampler$param_fnames_oi()
+            names(optim$par) <- fnames[-length(fnames)]
             skeleton <- create_skeleton(m_pars, p_dims)
             if (hessian || draws) {
               fn <- function(theta) {
@@ -526,7 +535,6 @@ setMethod("sampling", "stanmodel",
                     .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, 
                                                        "_", i, ".csv")
                 }
-                Sys.sleep(0.5 * i)
                 out <- do.call(rstan::sampling, args = .dotlist)
                 return(out)
               }
@@ -560,8 +568,10 @@ setMethod("sampling", "stanmodel",
                   else sinkfile <- ""
                 }
                 else sinkfile <- ""
-                cl <- parallel::makeCluster(min(cores, chains), 
-                                            outfile = sinkfile, useXDR = FALSE)
+                if (!is.null(dots$refresh) && dots$refresh == 0) 
+                  cl <- parallel::makeCluster(min(cores, chains), useXDR = FALSE)
+                else
+                  cl <- parallel::makeCluster(min(cores, chains), outfile = sinkfile, useXDR = FALSE)
                 on.exit(parallel::stopCluster(cl))
                 dependencies <- c("rstan", "Rcpp", "ggplot2")
                 .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {

@@ -1384,7 +1384,7 @@ makeconf_path <- function() {
 }
 
 is_null_ptr <- function(ns) {
-  .Call("is_Null_NS", ns)
+  .Call(is_Null_NS, ns)
 }
 
 is_null_cxxfun <- function(cx) {
@@ -1392,7 +1392,7 @@ is_null_cxxfun <- function(cx) {
   # contains null pointer
   add <- body(cx@.Data)[[2]]
   # add is of class NativeSymbol
-  .Call("is_Null_NS", add)
+  .Call(is_Null_NS, add)
 }
 
 obj_size_str <- function(x) {
@@ -1407,14 +1407,6 @@ system_info <- function() {
         "; rstan: ",  packageVersion('rstan'),
         "; Rcpp: ", packageVersion('Rcpp'),
         "; inline: ", packageVersion('inline'), sep = '')
-}
-
-read_comments_old <- function(file, n) {
-  # Read comments beginning with `#`
-  # Args:
-  #   file: the filename
-  #   n: max number of line; -1 means all
-  .Call("CPP_read_comments", file, n)
 }
 
 read_comments <- function(f, n = -1) {
@@ -1437,7 +1429,6 @@ read_comments <- function(f, n = -1) {
   close(con)
   do.call(c, comments)
 }
-
 
 sqrfnames_to_dotfnames <- function(fnames) {
   # change names such as alpha[1,1] to alpha.1.1
@@ -1508,11 +1499,35 @@ read_csv_header <- function(f, comment.char = '#') {
   # comment.char). And the line number is return as attribute of name 'lineno'.
   con <- file(f, 'r')
   niter <- 0
+  iter.count <- NA
+  save.warmup <- FALSE
+  sample.count <- NA_integer_
   while (length(input <- readLines(con, n = 1)) > 0) {
     niter <- niter + 1
     if (!grepl(comment.char, input)) break;
+    if (grepl("# iter=",input))
+      iter.count <- as.integer(gsub("# iter=","",input))
+    if (grepl("#.*num_samples",input)){
+      sample.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
+    }
+    if (grepl("#.*num_warmup",input)){
+      warmup.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
+    } else {
+      warmup.count <- 0L
+    }
+    if (grepl("#.*save_warmup",input)){
+      save.warmup <- !grepl("0",input)
+    }
+
   }
   header <- input
+  if(is.na(iter.count)){
+    if(save.warmup)
+      iter.count <- warmup.count + sample.count
+    else
+      iter.count <- sample.count
+  } 
+  attr(header, "iter.count") <- iter.count
   attr(header, "lineno") <- niter
   close(con)
   header
@@ -1650,7 +1665,7 @@ throw_sampler_warnings <- function(object) {
   n_e <- 0L
   if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
     E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
-    threshold <- 0.3
+    threshold <- 0.2
     if (nrow(E) > 1) {
       EBFMI <- get_num_upars(object) / apply(E, 2, var)
       n_e <- sum(EBFMI < threshold, na.rm = TRUE)
@@ -1668,10 +1683,10 @@ throw_sampler_warnings <- function(object) {
   return(invisible(NULL))
 }
 
-get_CXX <- function(CXX11 = FALSE) {
+get_CXX <- function(CXX14 = TRUE) {
   if (.Platform$OS.type != "windows")
     return (system2(file.path(R.home(component = "bin"), "R"),
-            args = paste("CMD config", ifelse(CXX11, "CXX1X", "CXX")),
+            args = paste("CMD config", ifelse(CXX14, "CXX14", "CXX11")),
             stdout = TRUE, stderr = FALSE))
 
     ls_path <- Sys.which("ls")
@@ -1680,8 +1695,7 @@ get_CXX <- function(CXX11 = FALSE) {
 
     install_path <- dirname(dirname(ls_path))
     file.path(install_path,
-              if (getRversion() >= "3.3.0") paste0('mingw_', Sys.getenv('WIN')),
-              'bin', 'g++')
+              paste0('mingw_', Sys.getenv('WIN')), 'bin', 'g++')
 }
 
 is.sparc <- function() {
@@ -1692,4 +1706,19 @@ avoid_crash <- function(mod) {
   file.exists(get("packageName", envir = mod)[["path"]]) &&
   as(get("packageName", envir = mod)["info"][1], "character") %in% 
     c("<pointer: (nil)>", "<pointer: 0x0>")
+}
+
+make_makevars <- function(DIR = tempdir()) {
+  CXX11 <- get_CXX(FALSE)
+  if (!file.exists(CXX11)) CXX11 <- basename(CXX11)
+  Makevars <- c(CXX14 = paste0("CXX14 := ", CXX11),
+                CXX14STD = "CXX14STD := -std=c++1y",
+                CXX14FLAGS = "CXX14FLAGS := -O3")
+  fn <- file.path(DIR, ifelse(.Platform$OS.type == "windows", 
+                              "Makevars.win", "Makevars"))
+  if (!file.exists(fn) && file.access(DIR, mode = 2) == 0) {
+    writeLines(Makevars, con = fn)
+    return(invisible(TRUE))
+  }
+  return(invisible(FALSE))
 }

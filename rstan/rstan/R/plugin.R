@@ -41,14 +41,14 @@ PKG_CPPFLAGS_env_fun <- function() {
    paste(' -I"', file.path(inc_path_fun("Rcpp"), '" '),
          ' -I"', file.path(eigen_path_fun(), '" '),
          ' -I"', file.path(eigen_path_fun(), 'unsupported" '),
-         ' -I"', boost_path_fun2(), '"', # boost_not_in_BH should come 
+         # ' -I"', boost_path_fun2(), '"', # boost_not_in_BH should come 
          ' -I"', boost_path_fun(), '"',  # before BH/include
          ' -I"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
          ' -I"', file.path(inc_path_fun("StanHeaders"), '" '),
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
-         ' -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS',
-         ' -DBOOST_NO_CXX11_RVALUE_REFERENCES', 
+         ' -DBOOST_DISABLE_ASSERTS',
+         ifelse (.Platform$OS.type == "windows", ' -std=c++1y', ''),
          sep = '')
 }
 
@@ -74,7 +74,7 @@ rstanplugin <- function() {
  
   if (.Platform$OS.type == "windows")
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
-  else StanHeaders_pkg_libs <- system.file("lib", package = "StanHeaders")
+  else StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
 
   # In case  we have space (typical on windows though not necessarily)
   # in the file path of Rcpp's library. 

@@ -150,6 +150,7 @@ namespace rstan {
         bool adapt_engaged; // defaults to 1
         int adapt_iter; // defaults to 50
         double tol_rel_obj; // default to 0.01
+        int refresh; // default to 1
       } variational;
       struct {
         double epsilon; // default to 1e-6, for test_grad
@@ -317,6 +318,7 @@ namespace rstan {
           get_rlist_element(in, "eta", ctrl.variational.eta, 1.0);
           get_rlist_element(in, "adapt_engaged", ctrl.variational.adapt_engaged, true);
           get_rlist_element(in, "tol_rel_obj", ctrl.variational.tol_rel_obj, 0.01);
+          get_rlist_element(in, "refresh", ctrl.variational.refresh, 1);
           ctrl.variational.algorithm = MEANFIELD;
           if (get_rlist_element(in, "algorithm", t_str)) {
             if (t_str == "fullrank") ctrl.variational.algorithm = FULLRANK;
@@ -648,6 +650,15 @@ namespace rstan {
     }
     inline stan_args_method_t get_method() const {
       return method;
+    }
+    inline int get_refresh() const {
+      switch (method) {
+        case SAMPLING: return ctrl.sampling.refresh;
+        case OPTIM: return ctrl.optim.refresh;
+        case VARIATIONAL: return ctrl.variational.refresh;
+        case TEST_GRADIENT: return 0;
+      }
+      return 0;
     }
     inline int get_iter() const {
       switch (method) {
