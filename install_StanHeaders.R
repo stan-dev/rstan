@@ -3,31 +3,11 @@
 # including its submodules. This requires the git2r and devtools packages
 
 path_rstan <- tempfile(pattern = "git2r-")
-print(path_rstan)
-path_stan_dev <- "/home/rgiordan/Documents/git_repos/stan-dev/"
-
-# git2r::clone(file.path(path_stan_dev, "rstan"),
-#              path_rstan, branch = "add_hessian4")
-#
-# git2r::clone(file.path(path_stan_dev, "stan"),
-#              file.path(path_rstan, "StanHeaders", "inst", "include", "upstream"),
-#              branch = "add_hessians3")
-
- git2r::clone(file.path(path_stan_dev, "rstan"),
-              path_rstan, branch = "develop")
-
- git2r::clone(file.path(path_stan_dev, "stan"),
-              file.path(path_rstan, "StanHeaders", "inst", "include", "upstream"),
-              branch = "develop")
-
-# Currently broken:
-# git2r::clone(file.path(path_stan_dev, "math"),
-#              file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"),
-#              branch = "develop")
-
-#Currently works:
- git2r::clone(file.path(path_stan_dev, "math"),
-              file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"),
-              branch = "master")
-
+git2r::clone("http://github.com/stan-dev/rstan", path_rstan, branch = "develop")
+git2r::clone("http://github.com/stan-dev/stan", 
+             file.path(path_rstan, "StanHeaders", "inst", "include", "upstream"), 
+             branch = "develop") # may want to change this branch
+git2r::clone("http://github.com/stan-dev/math", 
+             file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"), 
+             branch = "develop") # may want to change this branch
 devtools::install(file.path(path_rstan, "StanHeaders"), args = "--preclean")

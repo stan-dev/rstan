@@ -16,33 +16,33 @@ ifeq ($(uname_S), Linux)
 endif
 
 ifdef R_HOME
-  R = $(R_HOME)/bin/R
-  RSCRIPT = $(R_HOME)/bin/Rscript
+  R = $(R_HOME)/bin/R 
+  RSCRIPT = $(R_HOME)/bin/Rscript 
 else
   # R = R --arch x86_64
-  R = R
-  RSCRIPT = Rscript
+  R = R 
+  RSCRIPT = Rscript 
 endif
 
 R_MAKEVARS_USER = $(CURDIR)/R_Makevars
 export R_MAKEVARS_USER
 
-BUILD_OPTS ?=
+BUILD_OPTS ?= 
 
 RSTANVER := $(shell $(RSCRIPT) -e "cat(read.dcf(file = './rstan/DESCRIPTION')[1, deparse(quote(Version))])")
-STANPKG := rstan_$(RSTANVER).tar.gz
+STANPKG := rstan_$(RSTANVER).tar.gz 
 
 GIT = $(strip $(shell $(WH) git))
 
-# The default target of this makefile
+# The default target of this makefile 
 help:
 
 .PHONY: help
-help:
+help: 
 	@echo '--------------------------------------------------------------------------------'
 	@echo 'main targets:'
 	@echo ' build: to build rstan source package using R CMD build'
-	@echo ' install: to install rstan using R CMD INSTALL'
+	@echo ' install: to install rstan using R CMD INSTALL' 
 	@echo ' uninstall: to install rstan using R CMD REMOVE rstan'
 	@echo ' clean: to remove the gzip package file'
 	@echo ' check: use R CMD check on rstan package'
@@ -55,7 +55,7 @@ help:
 .PHONY: build check install clean clean-all install_pre_rpkg test-R example_csv
 
 install_pre_rpkg:
-	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH', 'StanHeaders', 'RInside')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()"
+	@R -q -e "options(repos=structure(c(CRAN = 'http://cran.rstudio.com'))); for (pkg in c('inline', 'Rcpp', 'RcppEigen', 'RUnit', 'BH', 'StanHeaders', 'RInside')) if (!require(pkg, character.only = TRUE))  install.packages(pkg, dep = TRUE); sessionInfo()" 
 
 build $(STANPKG): ./rstan/DESCRIPTION
 ifeq ($(GIT),)
@@ -65,26 +65,26 @@ else
 endif
 	$(R) CMD build rstan --md5  $(BUILD_OPTS)   --no-build-vignettes --no-manual
 
-example_csv:
+example_csv: 
 ifneq ($(OS), win)
 	@if test -f "example/rstan_doc_ex_1.csv"; then cp example/rstan_doc_ex_*.csv ./rstan/inst/misc && echo "Copy done.";  \
 	else echo "Not found example/rstan_doc_ex_1.csv, run example/examplemodel.R first."; fi
 endif
 
-check: $(STANPKG)
-	$(R) CMD check --as-cran $(STANPKG)
+check: $(STANPKG) 
+	$(R) CMD check --as-cran $(STANPKG) 
 
-install: $(STANPKG)
+install: $(STANPKG) 
 	$(R) CMD INSTALL $(STANPKG)
 
 uninstall:
 	$(R) CMD REMOVE rstan
 
 test-R:
-	cd tests; R -q -f runRunitTests.R
+	cd tests; R -q -f runRunitTests.R 
 
-clean:
-	rm -f $(STANPKG)
+clean: 
+	rm -f $(STANPKG) 
 	rm -rf $(shell find tests/cpp -type f -name '*.d')
 	rm -rf $(shell find tests/cpp -type f -name '*.d.*')
 
@@ -92,9 +92,9 @@ clean-all: clean
 	rm -f $(shell find . -name 'rstan_*.tar.gz')
 	rm -rf rstan.Rcheck
 	rm -rf tests/cpp/lib $(GTEST_LIB)
-	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS))
+	rm -rf $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) 
 
-# buildbin:   # build a binary version
+# buildbin:   # build a binary version  
 # R CMD INSTALL -l ./tmp --build rstan
 
 
@@ -108,7 +108,7 @@ STANLIB := $(STAN_MATH_SUBMODULE)lib
 STANSRC := $(STAN_SUBMODULE)src
 GTEST_LIB := tests/cpp/gtest.o
 
-LIBPTHREAD =
+LIBPTHREAD = 
 ifeq ($(OS), linux)
   LIBPTHREAD += -lpthread
 endif
@@ -116,11 +116,11 @@ endif
 CPPTESTS := $(shell find tests/cpp -type f -name '*_test.cpp')
 STAN_INSTANTIATION_FILES := $(patsubst rstan/src/%.cpp,tests/cpp/lib/src/%.o,$(wildcard rstan/src/*.cpp))
 
-## comment this out if you need a different version of R,
+## comment this out if you need a different version of R, 
 ## and set set R_HOME accordingly as an environment variable
 R_HOME := 		$(shell R RHOME)
 
-## include headers and libraries for R
+## include headers and libraries for R 
 RCPPFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --cppflags)
 RLDFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --ldflags)
 
@@ -131,6 +131,7 @@ RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R  --slave)
 ## include headers and libraries for RInside embedding classes
 RINSIDEINCL := 		$(shell $(R_HOME)/bin/Rscript  -e 'RInside:::CxxFlags()')
 RINSIDELIBS := 		$(shell $(R_HOME)/bin/Rscript  -e 'RInside:::LdFlags()')
+
 
 $(STAN_INSTANTIATION_FILES) $(GTEST_LIB) $(patsubst %.cpp,%$(EXE),$(CPPTESTS)) $(patsubst %.cpp,%.d,$(CPPTESTS)): CPPFLAGS += -Wall $(RCPPFLAGS)
 
@@ -173,3 +174,4 @@ endif
 ifneq (,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
   -include $(patsubst %$(EXE),%.d,$(filter $(patsubst %.cpp,%$(EXE),$(CPPTESTS)),$(MAKECMDGOALS)))
 endif
+
