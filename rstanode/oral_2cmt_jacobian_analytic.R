@@ -75,6 +75,7 @@ fake_data_rk45_ad <- modifyList(fake_data_rk45, list(analytic_jacobian=0))
 fake_data_bdf_ad <- modifyList(fake_data_rk45, list(solver=1))
 fake_data_adams_ad <- modifyList(fake_data_rk45, list(solver=2))
 
+stan_rdump(names(fake_data_rk45), "oral_2cmt_jac_data.R", envir=list2env(fake_data_rk45))
 
 control <- list(adapt_delta=0.8, stepsize=1)
 

@@ -548,20 +548,28 @@ struct coupled_ode_system<F, var, var> {
     dStheta_dt = Jy * Stheta + Jtheta;
     */
 
+    // by reference value version
     // we write Jy into dSy_dt & Jtheta into dStheta_dt
     jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
                                    dy_dt, dSy_dt, dStheta_dt);
 
-    // handle sensitivities wrt to y
-    //dSy_dt = Jy * Sy;
-
-    // handle sensitivities wrt to theta
-    //dStheta_dt += Jy * Stheta;
-
     dStheta_dt.noalias() += dSy_dt * Stheta;
-
     dSy_dt *= Sy;
+
+    /* by value version with copying
+    matrix_d Jy_store(N_, N_);
+    Eigen::Map<matrix_d> Jy(Jy_store.data(), N_, N_);
+    matrix_d Jtheta_store(N_, M_);
+    Eigen::Map<matrix_d> Jtheta(Jtheta_store.data(), N_, M_);
     
+    jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
+                                   dy_dt, Jy, Jtheta);
+
+
+    dStheta_dt.noalias() = Jy * Stheta + Jtheta;
+    dSy_dt.noalias() = Jy * Sy;
+    */
+
   }
 
   /**
