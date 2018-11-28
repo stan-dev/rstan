@@ -23,8 +23,10 @@ void jacobian_ode_states_parameters(const F& f, const std::vector<double>& z,
                                     double t, const std::vector<double>& theta,
                                     const std::vector<double>& x,
                                     const std::vector<int>& x_int,
-                                    std::ostream* msgs, vector_d& dy_dt,
-                                    matrix_d& Jy, matrix_d& Jtheta) {
+                                    std::ostream* msgs,
+                                    Eigen::Map<vector_d>& dy_dt,
+                                    Eigen::Map<matrix_d>& Jy,
+                                    Eigen::Map<matrix_d>& Jtheta) {
   using std::vector;
   const size_t N = dy_dt.size();
   const size_t M = theta.size();
@@ -69,8 +71,11 @@ template <typename F>
 void jacobian_ode_states(const F& f, const std::vector<double>& z, double t,
                          const std::vector<double>& theta,
                          const std::vector<double>& x,
-                         const std::vector<int>& x_int, std::ostream* msgs,
-                         vector_d& dy_dt, matrix_d& Jy) {
+                         const std::vector<int>& x_int,
+                         std::ostream* msgs,
+                         Eigen::Map<vector_d>& dy_dt,
+                         Eigen::Map<matrix_d>& Jy
+                         ) {
   using std::vector;
   const size_t N = dy_dt.size();
   //const size_t M = theta.size();
@@ -190,20 +195,22 @@ struct coupled_ode_system<F, double, var> {
                   double t) const {
     using std::vector;
 
-    vector_d dy_dt(N_);
-    matrix_d Jy(N_, N_);
-    matrix_d Jtheta(N_, M_);
+    Eigen::Map<vector_d> dy_dt(dz_dt.data(), N_);
+    matrix_d Jy_store(N_, N_);
+    Eigen::Map<matrix_d> Jy(Jy_store.data(), N_, N_);
+    //matrix_d Jtheta(N_, M_);
+    
 
-    jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
-                                   dy_dt, Jy, Jtheta);
-
-    Eigen::Map<vector_d>(dz_dt.data(), N_) = dy_dt;
+    //Eigen::Map<vector_d>(dz_dt.data(), N_) = dy_dt;
 
     // handle sensitivities wrt to theta
     Eigen::Map<const matrix_d> Stheta(z.data() + N_, N_, M_);
     Eigen::Map<matrix_d> dStheta_dt(dz_dt.data() + N_, N_, M_);
 
-    dStheta_dt = Jy * Stheta + Jtheta;
+    //dStheta_dt = Jy * Stheta + Jtheta;
+    jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
+                                   dy_dt, Jy, dStheta_dt);
+    dStheta_dt.noalias() += Jy * Stheta;
   }
 
   /**
@@ -347,18 +354,18 @@ struct coupled_ode_system<F, var, double> {
                   double t) const {
     using std::vector;
 
-    vector_d dy_dt(N_);
-    matrix_d Jy(N_, N_);
+    Eigen::Map<vector_d> dy_dt(dz_dt.data(), N_);
+
+    matrix_d Jy_store(N_, N_);
+    Eigen::Map<matrix_d> Jy(Jy_store.data(), N_, N_);
 
     jacobian_ode_states(f_, z, t, theta_dbl_, x_, x_int_, msgs_, dy_dt, Jy);
-
-    Eigen::Map<vector_d>(dz_dt.data(), N_) = dy_dt;
 
     // handle sensitivities wrt to theta
     Eigen::Map<const matrix_d> Sy(z.data() + N_, N_, N_);
     Eigen::Map<matrix_d> dSy_dt(dz_dt.data() + N_, N_, N_);
 
-    dSy_dt = Jy * Sy;
+    dSy_dt.noalias() = Jy * Sy;
   }
 
   /**
@@ -522,26 +529,39 @@ struct coupled_ode_system<F, var, var> {
                   double t) const {
     using std::vector;
 
-    vector_d dy_dt(N_);
-    matrix_d Jy(N_, N_);
-    matrix_d Jtheta(N_, M_);
+    Eigen::Map<vector_d> dy_dt(dz_dt.data(), N_);
 
-    jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
-                                   dy_dt, Jy, Jtheta);
-
-    Eigen::Map<vector_d>(dz_dt.data(), N_) = dy_dt;
-
-    // handle sensitivities wrt to y
     Eigen::Map<const matrix_d> Sy(z.data() + N_, N_, N_);
     Eigen::Map<matrix_d> dSy_dt(dz_dt.data() + N_, N_, N_);
 
-    dSy_dt = Jy * Sy;
-
-    // handle sensitivities wrt to theta
     Eigen::Map<const matrix_d> Stheta(z.data() + N_ + N_ * N_, N_, M_);
     Eigen::Map<matrix_d> dStheta_dt(dz_dt.data() + N_ + N_ * N_, N_, M_);
 
+    /*
+    jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
+                                   dy_dt, Jy, Jtheta);
+
+    // handle sensitivities wrt to y
+    dSy_dt = Jy * Sy;
+
+    // handle sensitivities wrt to theta
     dStheta_dt = Jy * Stheta + Jtheta;
+    */
+
+    // we write Jy into dSy_dt & Jtheta into dStheta_dt
+    jacobian_ode_states_parameters(f_, z, t, theta_dbl_, x_, x_int_, msgs_,
+                                   dy_dt, dSy_dt, dStheta_dt);
+
+    // handle sensitivities wrt to y
+    //dSy_dt = Jy * Sy;
+
+    // handle sensitivities wrt to theta
+    //dStheta_dt += Jy * Stheta;
+
+    dStheta_dt.noalias() += dSy_dt * Stheta;
+
+    dSy_dt *= Sy;
+    
   }
 
   /**

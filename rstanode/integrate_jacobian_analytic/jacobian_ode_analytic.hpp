@@ -7,8 +7,10 @@ void jacobian_ode_states_parameters(const ode_functor& f, const std::vector<doub
                                     double t, const std::vector<double>& theta_,
                                     const std::vector<double>& x,
                                     const std::vector<int>& x_int,
-                                    std::ostream* msgs, vector_d& dydt,
-                                    matrix_d& Jy, matrix_d& Jtheta) {
+                                    std::ostream* msgs,
+                                    Eigen::Map<vector_d>& dydt,
+                                    Eigen::Map<matrix_d>& Jy,
+                                    Eigen::Map<matrix_d>& Jtheta) {
   using std::pow;
   using std::exp;
         
@@ -24,8 +26,9 @@ void jacobian_ode_states(const ode_functor& f, const std::vector<double>& y,
                          double t, const std::vector<double>& theta_,
                          const std::vector<double>& x,
                          const std::vector<int>& x_int,
-                         std::ostream* msgs, vector_d& dydt,
-                         matrix_d& Jy) {
+                         std::ostream* msgs,
+                         Eigen::Map<vector_d>& dydt,
+                         Eigen::Map<matrix_d>& Jy) {
   using std::pow;
   using std::exp;
         
