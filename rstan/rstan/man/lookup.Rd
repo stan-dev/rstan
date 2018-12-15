@@ -37,12 +37,8 @@ Look up the Stan function that corresponds to a \R function or name.
 
 \references{
   The Stan Development Team 
-  \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
-
-  The Stan Development Team
-  \emph{CmdStan Interface User's Guide}.
-  \url{http://mc-stan.org}.
+  \emph{Stan Language Functions Reference}. 
+  \url{http://mc-stan.org/users/documentation/index.html}. 
 } 
 
 \examples{
