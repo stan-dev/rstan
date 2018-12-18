@@ -1,0 +1,234 @@
+
+R version 3.4.1 (2017-06-30) -- "Single Candle"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> 
+> # One optional argument for running this R script is the location of
+> # library rstan. After 'make check', we can use "../rstan.Rcheck". 
+> 
+> 
+> pkg <- 'rstan' 
+> 
+> if (!require("RUnit", quietly = TRUE)) {
++   stop("Package Runit is not found.") 
++ } 
+> 
+> if (exists("path")) { 
++   reportfile <- file.path(getwd(), "report")
++ } else {
++   path <- getwd()
++   reportfile <- file.path(path, "report")
++ } 
+> 
+> stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
+> 
+> args <- commandArgs(trailingOnly = TRUE)
+> rstan_lib_loc <- NULL
+> if (length(args) > 0)  rstan_lib_loc <- args[1]
+> library(package = pkg, character.only = TRUE, lib.loc = rstan_lib_loc)
+Loading required package: ggplot2
+Loading required package: StanHeaders
+rstan (Version 2.17.4, GitRev: 2e1f913d3ca3)
+For execution on a local, multicore CPU with excess RAM we recommend calling
+options(mc.cores = parallel::detectCores()).
+To avoid recompilation of unchanged Stan programs, we recommend calling
+rstan_options(auto_write = TRUE)
+Warning messages:
+1: package ‘rstan’ was built under R version 3.4.4 
+2: package ‘ggplot2’ was built under R version 3.4.4 
+3: package ‘StanHeaders’ was built under R version 3.4.3 
+> 
+> rstantest <- defineTestSuite("rstantest",
++                              dirs = c(file.path(path, "unitTests"),
++                                       system.file(package = 'rstan', "unitTests")),
++                              testFileRegexp = "^runit.+.*\\.R",
++                              testFuncRegexp = "^test_+",
++                              rngKind = "Marsaglia-Multicarry",
++                              rngNormalKind = "Kinderman-Ramage")
+> 
+> testsres <- runTestSuite(rstantest) 
+
+
+Executing test function test_essnrhat  ...  done successfully.
+
+
+
+Executing test function test_seq_perm  ...  done successfully.
+
+
+
+Executing test function test_extract_sparse_parts  ... Loading required namespace: Matrix
+ done successfully.
+
+
+
+Executing test function test_config_argss  ... Error in rstan:::config_argss(3, 100, 10, 3, "random", 10, NA, algorithm = "NUTS",  : 
+  chain_id has duplicated elements
+Error in check_seed(seed) : seed needs to be string of digits
+Error in check_seed(seed) : seed needs to be string of digits
+ done successfully.
+
+
+
+Executing test function test_data_list2array  ...  done successfully.
+
+
+
+Executing test function test_data_preprocess  ... Error in FUN(X[[i]], ...) : Stan does not support NA (in f) in data
+In addition: Warning message:
+In FUN(X[[i]], ...) : data with name h is not numeric and not used
+ done successfully.
+
+
+
+Executing test function test_data_preprocess2  ... Error in data_list2array(x) : all elements of the list should be numeric
+ done successfully.
+
+
+
+Executing test function test_dotfnames_fromto_sqrfnames  ...  done successfully.
+
+
+
+Executing test function test_flatnames  ...  done successfully.
+
+
+
+Executing test function test_get_dims_from_fnames  ...  done successfully.
+
+
+
+Executing test function test_get_model_strcode  ... Error in rstan:::get_model_strcode() : 
+  model file missing and empty model_code
+In addition: Warning messages:
+1: In readLines(file, warn = TRUE) :
+  incomplete final line found on 'tmp.stan'
+2: In readLines(file, warn = TRUE) :
+  incomplete final line found on 'tmp.stan'
+ done successfully.
+
+
+
+Executing test function test_idx_col2rowm  ...  done successfully.
+
+
+
+Executing test function test_idx_row2colm  ...  done successfully.
+
+
+
+Executing test function test_is_named_list  ...  done successfully.
+
+
+
+Executing test function test_is_valid_stan_name  ...  done successfully.
+
+
+
+Executing test function test_mklist  ... Error in rstan:::mklist(c("x", "f")) : 
+  objects 'f' of mode numeric and list not found
+ done successfully.
+
+
+
+Executing test function test_multi_idx_row2colm  ...  done successfully.
+
+
+
+Executing test function test_par_vector2list  ...  done successfully.
+
+
+
+Executing test function test_pars_total_indexes  ...  done successfully.
+
+
+
+Executing test function test_read_comments  ...  done successfully.
+
+
+
+Executing test function test_read_csv_header  ...  done successfully.
+
+
+
+Executing test function test_read_rdump  ...  done successfully.
+
+
+
+Executing test function test_remove_empty_pars  ...  done successfully.
+
+
+
+Executing test function test_seq_array_ind  ...  done successfully.
+
+
+
+Executing test function test_stan_rdump  ...  done successfully.
+
+
+
+Executing test function test_options1  ...  done successfully.
+
+
+
+Executing test function test_options2  ...  done successfully.
+
+
+
+Executing test function test_plot_rhat_breaks  ...  done successfully.
+
+
+
+Executing test function test_rstan_options  ...  done successfully.
+
+
+
+Executing test function test_paridx_fun  ...  done successfully.
+
+
+
+Executing test function test_parse_stancsv_comments3  ...  done successfully.
+
+
+
+Executing test function test_getting_diagnostics  ... Timing stopped at: 0.055 0.002 0.059
+Error in get_bfmi(exfit) : could not find function "get_bfmi"
+In addition: Warning messages:
+1: In (function (x)  : rstan option 'c' not found
+2: In (function (x)  : rstan option 'c' not found
+3: In as.POSIXlt.POSIXct(x, tz) :
+  unknown timezone 'zone/tz/2018g.1.0/zoneinfo/America/New_York'
+ done successfully.
+
+
+
+Executing test function test_get_time_from_csv  ...  done successfully.
+
+
+
+Executing test function test_mklist_fun  ...  done successfully.
+
+
+
+Executing test function test_partial_inits  ... 
+Warning messages:
+1: In rstan:::get_time_from_csv(tlines) : NAs introduced by coercion
+2: In rstan:::get_time_from_csv(tlines) : NAs introduced by coercion
+3: running command '/Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB file1f0a25033cd2.cpp 2> file1f0a25033cd2.cpp.err.txt' had status 1 
+Timing stopped at: 0.81 0.137 28.67
+Execution halted
