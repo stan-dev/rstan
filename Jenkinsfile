@@ -1,12 +1,10 @@
 pipeline {
     agent { dockerfile true }
-    environment {
-        MAKEFLAGS="-j${env.PARALLEL}"
-    }
     stages {
         stage('Build') {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     cd StanHeaders
                     git submodule update --init --recursive --remote
                     cd ..
@@ -18,6 +16,7 @@ pipeline {
         stage("Check timings and output") {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
                       cat StanHeaders.Rcheck/00check.log
                     R CMD INSTALL StanHeaders_*.tar.gz
@@ -29,6 +28,7 @@ pipeline {
         stage("Check additional unit tests") {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     R CMD INSTALL rstan_*.tar.gz
                     cd rstan
                     make test-R || echo "extra unit tests failed"
@@ -39,6 +39,7 @@ pipeline {
         stage("Check rstanarm") {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     R -e 'update(devtools::package_deps("rstanarm"), repos = "https://cran.r-project.org")'
                     wget -Nc https://cran.r-project.org/src/contrib/rstanarm_2.17.4.tar.gz
                     R CMD check --as-cran --timings --run-donttest --run-dontrun rstanarm_*.tar.gz || \
