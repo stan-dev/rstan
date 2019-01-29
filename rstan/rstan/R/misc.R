@@ -1518,6 +1518,9 @@ read_csv_header <- function(f, comment.char = '#') {
     if (grepl("#.*save_warmup",input)){
       save.warmup <- !grepl("0",input)
     }
+    if (grepl("#.*output_sample",input)){
+      iter.count <- as.numeric(gsub("[^0-9]*([0-9]*).*","\\1",input))
+    }
 
   }
   header <- input

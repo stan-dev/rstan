@@ -114,6 +114,7 @@ parse_stancsv_comments <- function(comments) {
   for (z in names1) values[[z]] <- as.integer(values[[z]])
   for (z in names2) values[[z]] <- as.numeric(values[[z]])
   if (compute_iter) values[["iter"]] <- values[["iter"]] + values[["warmup"]]
+  if ("output_samples" %in% names(values)) values[["iter"]] <- as.integer(values[["output_samples"]])
   c(values, add_lst)  
 }
 
@@ -181,6 +182,8 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
     close(con)
     cs_lst2[[i]] <- parse_stancsv_comments(comments)
+    if(cs_lst2[[1]]$method=="variational") 
+      df <- df[-1,] # remove the means 
     ss_lst[[i]] <- df
   } 
 
@@ -229,12 +232,24 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
       attr(samples[[i]], "elapsed_time") <- get_time_from_csv(cs_lst2[[i]]$time_info)
   } 
 
-  save_warmup <- sapply(cs_lst2, function(i) i$save_warmup)
-  warmup <- sapply(cs_lst2, function(i) i$warmup)
-  thin <- sapply(cs_lst2, function(i) i$thin)
+  if(cs_lst2[[1]]$method=="variational"){
+    warmup <- rep(0L, length(i))
+    thin <- rep(1L, length(i))
+    save_warmup <- rep(0L, length(i))
+    
+  } else {
+    save_warmup <- sapply(cs_lst2, function(i) i$save_warmup)
+    
+    warmup <- sapply(cs_lst2, function(i) i$warmup)
+    thin <- sapply(cs_lst2, function(i) i$thin)
+  }
   iter <- sapply(cs_lst2, function(i) i$iter)
+
   if (!all_int_eq(warmup) || !all_int_eq(thin) || !all_int_eq(iter)) 
     stop("not all iter/warmups/thin are the same in all CSV files")
+
+
+
   n_kept0 <- 1 + (iter - warmup - 1) %/% thin
   warmup2 <- 0
   if (max(save_warmup) == 0L) { # all equal to 0L
@@ -247,7 +262,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     warning("the number of iterations after warmup found (", n_kept, 
             ") does not match iter/warmup/thin from CSV comments (",
             paste(n_kept0, collapse = ','), ")")
-
+    
     if (n_kept < 0) {
       warmup <- warmup + n_kept
       n_kept <- 0
@@ -255,14 +270,18 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
     }
     n_kept0 <- n_save
     iter <- n_save
-
+    
     for (i in 1:length(cs_lst2)) {
       cs_lst2[[i]]$warmup <- warmup
       cs_lst2[[i]]$iter <- iter
     }
   }
-
+  
+  
   idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
+    
+
+ 
   for (i in seq_along(samples)) {
     m <- vapply(samples[[i]], function(x) mean(x[idx_kept]), numeric(1))
     attr(samples[[i]], "mean_pars") <- m[-length(m)]
