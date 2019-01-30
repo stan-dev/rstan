@@ -114,7 +114,7 @@ parse_stancsv_comments <- function(comments) {
   for (z in names1) values[[z]] <- as.integer(values[[z]])
   for (z in names2) values[[z]] <- as.numeric(values[[z]])
   if (compute_iter) values[["iter"]] <- values[["iter"]] + values[["warmup"]]
-  if (values$method == "variational"){ ## fix missing values for variational 
+  if ("output_samples" %in% names(values)){ ## fix missing values for variational 
     values[["iter"]] <- as.integer(values[["output_samples"]])
     values[["warmup"]] <- 0L
     values[["thin"]] <- 1L
@@ -187,7 +187,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
     close(con)
     cs_lst2[[i]] <- parse_stancsv_comments(comments)
-    if(cs_lst2[[1]]$method=="variational") 
+    if("output_samples" %in% names(cs_lst2[[i]])) 
       df <- df[-1,] # remove the means 
     ss_lst[[i]] <- df
   } 
