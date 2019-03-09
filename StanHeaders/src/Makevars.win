@@ -14,7 +14,7 @@ SUNDIALS_IDAS := $(patsubst %.c,%.o,\
   $(wildcard idas/*.c))
 
 SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
-  $(addprefix , nvector/serial/nvector_serial.c sundials/sundials_math.c))
+  $(addprefix , nvector/serial/nvector_serial.c))
 
 SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_NVECSERIAL) init.c
 OBJECTS = $(SOURCES:.c=.o)
