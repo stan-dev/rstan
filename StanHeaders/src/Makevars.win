@@ -11,14 +11,7 @@ SUNDIALS_CVODES := $(patsubst %.c,%.o,\
   $(wildcard sunnonlinsol/fixedpoint/[^f]*.c))
 
 SUNDIALS_IDAS := $(patsubst %.c,%.o,\
-  $(wildcard idas/*.c) \
-  $(wildcard sundials/*.c) \
-  $(wildcard sunmatrix/band/[^f]*.c) \
-  $(wildcard sunmatrix/dense/[^f]*.c) \
-  $(wildcard sunlinsol/band/[^f]*.c) \
-  $(wildcard sunlinsol/dense/[^f]*.c) \
-  $(wildcard sunnonlinsol/newton/[^f]*.c) \
-  $(wildcard sunnonlinsol/fixedpoint/[^f]*.c))
+  $(wildcard idas/*.c))
 
 SUNDIALS_NVECSERIAL := $(patsubst %.c,%.o,\
   $(addprefix , nvector/serial/nvector_serial.c sundials/sundials_math.c))
