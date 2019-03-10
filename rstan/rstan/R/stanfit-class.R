@@ -667,6 +667,30 @@ setMethod("grad_log_prob", signature = "stanfit",
             object@.MISC$stan_fit_instance$grad_log_prob(upars, adjust_transform) 
           }) 
 
+if (!isGeneric("hessian_log_prob")) {
+    setGeneric(name = "hessian_log_prob",
+               def = function(object, ...) { standardGeneric("hessian_log_prob") })
+}
+
+setMethod("hessian_log_prob", signature = "stanfit",
+        function(object, upars, adjust_transform = TRUE) {
+          if (!is_sfinstance_valid(object))
+            stop("the model object is not created or not valid")
+          object@.MISC$stan_fit_instance$hessian_log_prob(upars, adjust_transform)
+        })
+
+if (!isGeneric("hessian_times_vector_log_prob")) {
+    setGeneric(name = "hessian_times_vector_log_prob",
+               def = function(object, ...) { standardGeneric("hessian_times_vector_log_prob") })
+}
+
+setMethod("hessian_times_vector_log_prob", signature = "stanfit",
+        function(object, upars, v, adjust_transform = TRUE) {
+          if (!is_sfinstance_valid(object))
+            stop("the model object is not created or not valid")
+          object@.MISC$stan_fit_instance$hessian_times_vector_log_prob(upars, v, adjust_transform)
+        })
+
 setMethod("traceplot", signature = "stanfit", 
           function(object, pars, include = TRUE, unconstrain = FALSE,
                    inc_warmup = FALSE, window = NULL, nrow = NULL, ncol = NULL,

@@ -26,6 +26,11 @@
 // void R_CheckUserInterrupt(void);
 
 
+// TODO: where are these includes actually supposed to go?
+#include <stan/model/hessian.hpp>
+#include <stan/model/hessian_times_vector.hpp>
+#include <RcppEigen.h>
+
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
 #include <stan/callbacks/stream_logger.hpp>
@@ -1002,7 +1007,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     // get_all_indices_col2row(dims_, midx_for_col2row);
   }
-  
+
   stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
   model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),
@@ -1173,6 +1178,113 @@ public:
     grad.attr("log_prob") = lp;
     SEXP __sexp_result;
     PROTECT(__sexp_result = Rcpp::wrap(grad));
+    UNPROTECT(1);
+    return __sexp_result;
+    END_RCPP
+  }
+
+
+  /**
+  * Expose the hessian_log_prob of the model to stan_fit so R user
+  * can call this function.
+  *
+  * @param upar The real parameters on the unconstrained
+  *  space.
+  * @param jacobian_adjust_transform TRUE/FALSE, whether
+  *  we add the term due to the transform from constrained
+  *  space to unconstrained space implicitly done in Stan.
+  */
+  SEXP hessian_log_prob(SEXP upar, SEXP jacobian_adjust_transform) {
+    BEGIN_RCPP
+    std::vector<double> std_par_r = Rcpp::as<std::vector<double> >(upar);
+    Eigen::Matrix<double, Eigen::Dynamic, 1> par_r =
+        Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, 1>>(
+            std_par_r.data(), std_par_r.size());
+
+    if (par_r.size() != model_.num_params_r()) {
+      std::stringstream msg;
+      msg << "Number of unconstrained parameters does not match "
+      "that of the model ("
+      << par_r.size() << " vs "
+      << model_.num_params_r()
+      << ").";
+      throw std::domain_error(msg.str());
+    }
+    //std::vector<int> par_i(model_.num_params_i(), 0);
+    Eigen::Matrix<double, Eigen::Dynamic, 1> grad_f;
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> hess_f;
+
+    double lp;
+    if (Rcpp::as<bool>(jacobian_adjust_transform))
+      stan::model::log_prob_hessian<true,true>(
+          model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
+    else
+      stan::model::log_prob_hessian<true,false>(
+          model_, par_r, lp, grad_f, hess_f, &rstan::io::rcout);
+
+    Rcpp::NumericVector grad = Rcpp::wrap(grad_f);
+    Rcpp::NumericMatrix hess = Rcpp::wrap(hess_f);
+
+    hess.attr("log_prob") = lp;
+    hess.attr("gradient") = grad;
+    SEXP __sexp_result;
+    PROTECT(__sexp_result = Rcpp::wrap(hess));
+    UNPROTECT(1);
+    return __sexp_result;
+    END_RCPP
+  }
+
+  /**
+  * Expose the hessian_log_prob of the model to stan_fit so R user
+  * can call this function.
+  *
+  * @param upar The real parameters on the unconstrained
+  *  space.
+  * @param jacobian_adjust_transform TRUE/FALSE, whether
+  *  we add the term due to the transform from constrained
+  *  space to unconstrained space implicitly done in Stan.
+  */
+  SEXP hessian_times_vector_log_prob(
+      SEXP upar, SEXP v, SEXP jacobian_adjust_transform) {
+
+    BEGIN_RCPP
+
+    // Is there a way to convert directly from SEXP to an Eigen matrix?
+    std::vector<double> std_par_r = Rcpp::as<std::vector<double> >(upar);
+    Eigen::Matrix<double, Eigen::Dynamic, 1> par_r =
+        Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, 1>>(
+            std_par_r.data(), std_par_r.size());
+
+    std::vector<double> v_r = Rcpp::as<std::vector<double> >(v);
+    Eigen::Matrix<double, Eigen::Dynamic, 1> v_vec =
+        Eigen::Map<Eigen::Matrix<double, Eigen::Dynamic, 1>>(
+            v_r.data(), v_r.size());
+
+    if (par_r.size() != model_.num_params_r()) {
+      std::stringstream msg;
+      msg << "Number of unconstrained parameters does not match "
+      "that of the model ("
+      << par_r.size() << " vs "
+      << model_.num_params_r()
+      << ").";
+      throw std::domain_error(msg.str());
+    }
+    //std::vector<int> par_i(model_.num_params_i(), 0);
+    Eigen::Matrix<double, Eigen::Dynamic, 1> hess_f_dot_v;
+
+    double lp;
+    if (Rcpp::as<bool>(jacobian_adjust_transform))
+      stan::model::log_prob_hessian_times_vector<true,true>(
+          model_, par_r, v_vec, lp, hess_f_dot_v, &rstan::io::rcout);
+    else
+      stan::model::log_prob_hessian_times_vector<true,false>(
+          model_, par_r, v_vec, lp, hess_f_dot_v, &rstan::io::rcout);
+    Rcpp::NumericVector hess_f_dot_v_r = Rcpp::wrap(hess_f_dot_v);
+
+    // TODO: do this differently
+    hess_f_dot_v_r.attr("log_prob") = lp;
+    SEXP __sexp_result;
+    PROTECT(__sexp_result = Rcpp::wrap(hess_f_dot_v_r));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP
