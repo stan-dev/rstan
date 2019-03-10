@@ -19,6 +19,7 @@
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 #include <Rcpp.h>
+#include <RcppEigen.h>
 
 //http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
@@ -1216,23 +1217,23 @@ public:
                                           rstan::io::rcerr, rstan::io::rcerr);
     std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
 
-    std::vector<std::vector<double> > draws = 
-      Rcpp::as<std::vector<std::vector<double> > >(pars); // unconstrained
+    // Eigen::MatrixXd draws = Rcpp::as<Eigen::MatrixXd>(pars);
+    const Eigen::Map<Eigen::MatrixXd> draws(as<Eigen::Map<Eigen::MatrixXd> >(pars));
     
     int ret;
     ret = stan::services::standalone_generate(model_, draws,
             Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);
-    
+
     holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
                         sample_writer_ptr->values_.x().end());
-    
+
     SEXP __sexp_result;
     PROTECT(__sexp_result = Rcpp::wrap(holder));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP param_names() const {
     BEGIN_RCPP
     SEXP __sexp_result;

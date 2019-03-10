@@ -776,3 +776,92 @@ setMethod("sampling", "stanmodel",
             return(nfit)
           }) 
 
+
+gqs <- function(object, data = list(), draws, 
+                seed = sample.int(.Machine$integer.max, size = 1L)) {
+  if (!is(object, "stanmodel")) stop("'object' must be of 'stanmodel-class")
+  draws <- as.matrix(draws)
+  objects <- ls()
+  if (is.list(data) & !is.data.frame(data)) {
+    parsed_data <- with(data, parse_data(get_cppcode(object)))
+    if (!is.list(parsed_data)) {
+      message("failed to get names of data from the model; sampling not done")
+      return(invisible(new_empty_stanfit(object)))
+    }
+    data <- parsed_data
+  } else if (is.character(data)) { # names of objects
+    data <- try(mklist(data))
+    if (is(data, "try-error")) {
+      message("failed to create the data; sampling not done")
+      return(invisible(new_empty_stanfit(object)))
+    }
+  }
+  if (TRUE) { # check_data
+    data <- try(force(data))
+    if (is(data, "try-error")) {
+      message("failed to evaluate the data; sampling not done")
+      return(invisible(new_empty_stanfit(object)))
+    }
+    if (!missing(data) && length(data) > 0) {
+      data <- try(data_preprocess(data))
+      if (is(data, "try-error")) {
+        message("failed to preprocess the data; sampling not done")
+        return(invisible(new_empty_stanfit(object)))
+      }
+    } else data <- list()
+  }
+  stan_fit_cpp_module <- object@mk_cppmodule(object)
+  cxxfun <- grab_cxxfun(object@dso)
+  sfmiscenv <- new.env(parent = emptyenv())
+  sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+  if (is(sampler, "try-error")) {
+    message('failed to create the sampler; sampling not done') 
+    return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+  }
+
+  assign("stan_fit_instance", sampler, envir = sfmiscenv)
+  m_pars = sampler$param_names()
+  p_dims = sampler$param_dims()
+  draws <- draws[ , colnames(draws) != "lp__", drop = FALSE]
+  samples <- try(sampler$standalone_gqs(draws, as.integer(seed)))
+  if (is(samples, "try-error") || is.null(samples)) {
+    msg <- "error occurred during calling the sampler; sampling not done"
+    message(msg)
+    return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
+                                       m_pars, p_dims, 2L))) 
+  }
+  
+  idx_wo_lp <- which(m_pars != 'lp__')
+  skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
+
+  perm_lst <- list(sample.int(nrow(draws)))
+  
+  fnames_oi <- sampler$param_fnames_oi()
+  n_flatnames <- length(fnames_oi)
+  sim = list(samples = samples,
+             iter = nrow(draws), thin = 1L, 
+             warmup = 0L, 
+             chains = 1L,
+             n_save = nrow(draws),
+             warmup2 = 0L, # number of warmup iters in n_save
+             permutation = perm_lst,
+             pars_oi = sampler$param_names_oi(),
+             dims_oi = sampler$param_dims_oi(),
+             fnames_oi = fnames_oi,
+             n_flatnames = n_flatnames) 
+  nfit <- new("stanfit",
+              model_name = object@model_name,
+              model_pars = m_pars, 
+              par_dims = p_dims, 
+              mode = 0L, 
+              sim = sim,
+              # keep a record of the initial values 
+              inits = list(), 
+              stan_args = list(),
+              stanmodel = object, 
+              # keep a ref to avoid garbage collection
+              # (see comments in fun stan_model)
+              date = date(),
+              .MISC = sfmiscenv)
+  return(nfit)
+}

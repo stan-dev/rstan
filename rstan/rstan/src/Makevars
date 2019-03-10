@@ -4,8 +4,8 @@ PKG_CPPFLAGS = -I"../inst/include" -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERT
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)
 
-LANG = $(shell find $(STANHEADERS_SRC)/stan/lang -type f -name '*.cpp')
-SOURCES = $(wildcard *.cpp) $(LANG)
+LANG = $(shell find $(STANHEADERS_SRC)/stan/lang -type f -name '*.cpp' -exec cp '{}' . \;)
+SOURCES = $(wildcard *.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(SHLIB)
