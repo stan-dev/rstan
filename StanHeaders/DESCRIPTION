@@ -1,5 +1,5 @@
 Package: StanHeaders
-Date: 2019-01-18
+Date: 2019-03-10
 Title: C++ Header Files for Stan
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),
@@ -34,5 +34,5 @@ Suggests: Rcpp, RcppEigen, BH, knitr (>= 1.15.1), rmarkdown
 VignetteBuilder: knitr
 SystemRequirements: pandoc
 Depends: R (>= 3.4.0)
-Version: 2.18.1
+Version: 2.18.9
 License: BSD_3_clause + file LICENSE

@@ -31,40 +31,60 @@ the MCMC, optimization, variational inference, or parsing facilities of the Stan
 also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CPPFLAGS`
 in the src/Makevars and src/Makevars.win files with something like
 ```
-STANHEADERS_SRC = `"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla \
-  -e "cat(system.file('include', 'src', package = 'StanHeaders'))"`
+STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
+  -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" \
+  -e "message()" | grep "StanHeaders")
 PKG_CPPFLAGS = -I"$(STANHEADERS_SRC)"
 ```
-
+and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file.
 The following is a minimal example of using the Stan Math library via `Rcpp::sourceCpp`:
 to minimize the function 
-$\left(\mathbf{x} - \mathbf{a}\right)^\top \left(\mathbf{x} - \mathbf{a}\right)$
+$$\left(\mathbf{x} - \mathbf{a}\right)^\top \left(\mathbf{x} - \mathbf{a}\right)$$
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(StanHeaders)]]
+#include <stan/math/mix/mat/functor/hessian.hpp> // stuff from mix/ has to come first
+#include <stan/math/fwd/mat/fun/dot_self.hpp>    // then stuff from fwd/
+#include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
 #include <RcppEigen.h>
-#include <stan/math.hpp>  // pulls in everything; could be more specific with includes
+
+// [[Rcpp::plugins(cpp14)]]
 
 // [[Rcpp::export]]
 double f(Eigen::VectorXd x, Eigen::VectorXd a) {  // objective function in doubles
   return stan::math::dot_self( (x - a).eval() );  // dot_self() is a dot product with self
 }
-stan::math::var f(Eigen::Matrix<stan::math::var, Eigen::Dynamic, 1> x, Eigen::VectorXd a) {
-  return stan::math::dot_self( (x - stan::math::to_var(a)).eval() );  // same but with vars
-}
+
 // [[Rcpp::export]]
-std::vector<double> g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
-  auto x_var = stan::math::to_var(x);
-  std::vector<stan::math::var> theta;
-  std::vector<double> grad;
-  for (int k = 0; k < x.rows(); k++) theta.push_back(x_var.coeff(k));
-  stan::math::var lp = f(x_var, a);
-  lp.grad(theta, grad);
-  return grad;
+Eigen::VectorXd g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
+  double fx;
+  Eigen::VectorXd grad_fx;
+  stan::math::gradient([&a](auto x) { return stan::math::dot_self( (x - a).eval() ); },
+                       x, fx, grad_fx);
+  return grad_fx;
 }
+
+// [[Rcpp::export]]
+Eigen::MatrixXd H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
+  double fx;
+  Eigen::VectorXd grad_fx;
+  Eigen::MatrixXd H;
+  stan::math::hessian([&a](auto x) {
+                        auto z = x.eval();
+                        for (int i = 0; i < x.rows(); i++) 
+                          z.coeffRef(i) -= a.coeff(i);
+                        return stan::math::dot_self(z);
+                      }, x, fx, grad_fx, H);
+  return H;
+}
+
 ```
 ```{r}
-optim(rnorm(3), fn = f, gr = g, a = c(1, 2, 3), method = "BFGS")$par  # Rcpp exported f and g
+# Rcpp exported the above f, g, and H via Rcpp::sourceCpp()
+x <- optim(rnorm(3), fn = f, gr = g, a = c(1, 2, 3), method = "BFGS", hessian = TRUE)
+x$par
+x$hessian
+H(x$par, a = 1:3)
 ```

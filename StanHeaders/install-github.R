@@ -10,8 +10,11 @@ git2r::clone("http://github.com/stan-dev/stan",
 git2r::clone("http://github.com/stan-dev/math",
              file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"), 
              branch = "develop") # may want to change this branch
-file.copy(from = file.path(path_rstan, "StanHeaders", "src", "Makevars.win"),
-          to   = file.path(path_rstan, "StanHeaders", "src", "Makevars"), overwrite = TRUE)
+writeLines(c(".PHONY: static", readLines(file.path(path_rstan, "StanHeaders", "src", "Makevars.win")),
+             "static: $(OBJECTS)", "\t@mkdir -p ../lib", "\t$(AR) -rs ../lib/libStanHeaders.a $(OBJECTS)"),
+             con = file.path(path_rstan, "StanHeaders", "src", "Makevars"))
+#file.copy(from = file.path(path_rstan, "StanHeaders", "src", "Makevars.win"),
+#          to   = file.path(path_rstan, "StanHeaders", "src", "Makevars"), overwrite = TRUE)
 utils::install.packages(file.path(path_rstan, "StanHeaders"), 
                         repos = NULL, INSTALL_opts = "--preclean")
 
