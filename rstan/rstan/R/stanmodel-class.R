@@ -777,9 +777,11 @@ setMethod("sampling", "stanmodel",
           }) 
 
 
-gqs <- function(object, data = list(), draws, 
+setGeneric(name = "gqs", 
+           def = function(object, ...) { standardGeneric("gqs") })
+setMethod("gqs", "stanmodel", 
+          function(object, data = list(), draws, 
                 seed = sample.int(.Machine$integer.max, size = 1L)) {
-  if (!is(object, "stanmodel")) stop("'object' must be of 'stanmodel-class")
   draws <- as.matrix(draws)
   objects <- ls()
   if (is.list(data) & !is.data.frame(data)) {
@@ -822,7 +824,12 @@ gqs <- function(object, data = list(), draws,
   assign("stan_fit_instance", sampler, envir = sfmiscenv)
   m_pars = sampler$param_names()
   p_dims = sampler$param_dims()
-  draws <- draws[ , colnames(draws) != "lp__", drop = FALSE]
+  p_names <- unique(sub("\\..*$", "", sampler$constrained_param_names(TRUE, FALSE)))
+  draws <- draws[ , p_names, drop = FALSE]
+  all_names <- sampler$constrained_param_names(TRUE, TRUE)
+  some_names <- sampler$constrained_param_names(TRUE, FALSE)
+  gq_names <- unique(sub("\\..*$", "", setdiff(all_names, some_names)))
+  sampler$update_param_oi(gq_names)
   samples <- try(sampler$standalone_gqs(draws, as.integer(seed)))
   if (is(samples, "try-error") || is.null(samples)) {
     msg <- "error occurred during calling the sampler; sampling not done"
@@ -831,37 +838,36 @@ gqs <- function(object, data = list(), draws,
                                        m_pars, p_dims, 2L))) 
   }
   
-  idx_wo_lp <- which(m_pars != 'lp__')
-  skeleton <- create_skeleton(m_pars[idx_wo_lp], p_dims[idx_wo_lp])
+  skeleton <- create_skeleton(gq_names, p_dims[gq_names])
 
-  perm_lst <- list(sample.int(nrow(draws)))
+  perm_lst <- list(1:nrow(draws)) # not actually permuted
   
-  fnames_oi <- sampler$param_fnames_oi()
+  fnames_oi <- setdiff(sampler$param_fnames_oi(), "lp__")
   n_flatnames <- length(fnames_oi)
-  sim = list(samples = samples,
+  sim = list(samples = list(samples),
              iter = nrow(draws), thin = 1L, 
              warmup = 0L, 
              chains = 1L,
              n_save = nrow(draws),
              warmup2 = 0L, # number of warmup iters in n_save
              permutation = perm_lst,
-             pars_oi = sampler$param_names_oi(),
-             dims_oi = sampler$param_dims_oi(),
+             pars_oi = gq_names,
+             dims_oi = sampler$param_dims_oi()[gq_names],
              fnames_oi = fnames_oi,
              n_flatnames = n_flatnames) 
   nfit <- new("stanfit",
               model_name = object@model_name,
-              model_pars = m_pars, 
-              par_dims = p_dims, 
-              mode = 0L, 
+              model_pars = gq_names,
+              par_dims = p_dims[gq_names],
+              mode = 0L,
               sim = sim,
               # keep a record of the initial values 
               inits = list(), 
-              stan_args = list(),
+              stan_args = list(list(seed = seed)),
               stanmodel = object, 
               # keep a ref to avoid garbage collection
               # (see comments in fun stan_model)
               date = date(),
               .MISC = sfmiscenv)
   return(nfit)
-}
+})

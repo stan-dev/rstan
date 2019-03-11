@@ -19,7 +19,6 @@ import(ggplot2)
 
 export(
   stan_model,
-  gqs,
   stanc,
   stanc_builder,
   stan_version, 
@@ -76,7 +75,7 @@ exportClasses(
 exportMethods(
 #   print, plot, 
 #   extract, 
-  optimizing, vb,
+  optimizing, vb, gqs,
   get_cppcode, get_cxxflags, # for stanmodel 
   show, sampling, summary, extract,
   traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,

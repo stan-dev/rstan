@@ -54,6 +54,7 @@ get_makefile_flags <- function(FLAGNAME, makefile_txt, headtotail = FALSE) {
 
   if (missing(makefile_txt)) 
     makefile_txt <- get_makefile_txt() 
+  if (length(makefile_txt) == 0) return(as.character(NULL))
 
   lineno <- -1 
   iseq <- if (headtotail) 1:length(makefile_txt) else length(makefile_txt):1 
