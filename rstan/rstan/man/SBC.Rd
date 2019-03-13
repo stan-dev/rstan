@@ -147,7 +147,7 @@ scode <- "
   generated quantities { // these adhere to the conventions above
     int y_ = y;
     vector[1] pars_ = [pi_]';
-    int ranks[1] = {pi > pi_};
+    int ranks_[1] = {pi > pi_};
   }
 "
 }
