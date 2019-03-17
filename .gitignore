@@ -1,9 +1,5 @@
 # /
 
-# files from StanHeaders
-rstan/rstan/src/*_def.cpp
-rstan/rstan/src/*_inst.cpp
-
 # other binary
 *.o
 *.exe
