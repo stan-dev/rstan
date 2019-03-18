@@ -226,6 +226,13 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
+            diagnostic_columns <- which(grepl('__',colnames(samples)))[-1]
+            if (length(diagnostic_columns)>0) {
+                diagnostics <- samples[-1,diagnostic_columns]
+                samples <- samples[,-diagnostic_columns]
+            } else {
+                diagnostics <- NULL
+            }
             pest <- rstan_relist(as.numeric(samples[1,-1]), skeleton[-length(skeleton)])
             means <- sapply(samples, mean)
             means <- as.matrix(c(means[-1], means[1]))
@@ -247,6 +254,7 @@ setMethod("vb", "stanmodel",
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
             sim <- list(samples = list(as.list(samples)),
+                        diagnostics = list(as.list(diagnostics)),
                         iter = iter, thin = 1L,
                         warmup = 0L,
                         chains = 1L,
