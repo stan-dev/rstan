@@ -54,7 +54,7 @@
     corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 
     and upper panel respectively. The default is \code{"accept_stat__"}.}
   \item{include}{Logical scalar indicating whether to include (the default) or
-    excldue the parameters named in the \code{pars} argument from the plot.}
+    exclude the parameters named in the \code{pars} argument from the plot.}
 } 
 
 \details{
