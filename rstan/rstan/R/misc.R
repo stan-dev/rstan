@@ -1063,12 +1063,21 @@ summary_sim <- function(sim, pars, probs = default_summary_probs()) {
                            stats = probs_str,
                            chains = paste0("chains:", cids))
 
-  ess <-  array(sapply(tidx, function(n) rstan_ess(sim, n)), dim = c(tidx_len, 1))
-  rhat <- array(sapply(tidx, function(n) rstan_splitrhat(sim, n)), dim = c(tidx_len, 1))
-
-  ss <- list(msd = msd, sem = msd[, 2] / sqrt(ess),
-             c_msd = c_msd, quan = quan, c_quan = c_quan,
-             ess = ess, rhat = rhat)
+  if ("diagnostics" %in% names(sim) & "n_eff" %in% names(sim$diagnostics)) {
+      #vb
+      ess <- array(sim$diagnostics$n_eff, dim = c(tidx_len, 1))
+      khat <- array(sim$diagnostics$theta_pareto_k, dim = c(tidx_len, 1))
+      mcse <- array(sim$diagnostics$mcse, dim = c(tidx_len, 1))
+      ss <- list(msd = msd, sem = mcse,
+                 c_msd = c_msd, quan = quan, c_quan = c_quan,
+                 ess = ess, khat = khat)
+  } else {
+      ess <-  array(sapply(tidx, function(n) rstan_ess(sim, n)), dim = c(tidx_len, 1))
+      rhat <- array(sapply(tidx, function(n) rstan_splitrhat(sim, n)), dim = c(tidx_len, 1))
+      ss <- list(msd = msd, sem = msd[, 2] / sqrt(ess),
+                 c_msd = c_msd, quan = quan, c_quan = c_quan,
+                 ess = ess, rhat = rhat)
+  }
   attr(ss, "row_major_idx") <- tidx_rowm
   attr(ss, "col_major_idx") <- tidx
   ss
@@ -1724,4 +1733,39 @@ make_makevars <- function(DIR = tempdir()) {
     return(invisible(TRUE))
   }
   return(invisible(FALSE))
+}
+
+# @param x numeric vector
+log_sum_exp <- function(x) {
+  max_x <- max(x)
+  max_x + log(sum(exp(x - max_x)))
+}
+
+sample_indices <- function(wts, n_draws) {
+  ## Stratified resampling
+  ##   Kitagawa, G., Monte Carlo Filter and Smoother for Non-Gaussian
+  ##   Nonlinear State Space Models, Journal of Computational and
+  ##   Graphical Statistics, 5(1):1-25, 1996.
+  K <- length(wts)
+  w <- n_draws * wts # expected number of draws from each model
+  idx <- rep(NA, n_draws)
+
+  c <- 0
+  j <- 0
+
+  for (k in 1:K) {
+    c <- c + w[k]
+    if (c >= 1) {
+      a <- floor(c)
+      c <- c - a
+      idx[j + 1:a] <- k
+      j <- j + a
+    }
+    if (j < n_draws && c >= runif(1)) {
+      c <- c - 1
+      j <- j + 1
+      idx[j] <- k
+    }
+  }
+  return(idx)
 }

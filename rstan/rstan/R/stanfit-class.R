@@ -42,15 +42,6 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
       "post-warmup draws per chain=", n_kept[1], ", ", 
       "total post-warmup draws=", sum(n_kept), ".\n\n", sep = '')
 
-  if (!is.null(x@stan_args[[1]]$method) && 
-               x@stan_args[[1]]$method == "variational") {
-    print(round(s$summary, digits_summary), ...) 
-    cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, ") at ", x@date, 
-        ".\n", sep = '')
-    message("We recommend genuine 'sampling' from the posterior distribution for final inferences!")
-    return(invisible(NULL))
-  }
-  
   # round n_eff to integers
   s$summary[, 'n_eff'] <- round(s$summary[, 'n_eff'], 0)
 
@@ -58,11 +49,26 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
 
   sampler <- attr(x@sim$samples[[1]], "args")$sampler_t
 
-  cat("\nSamples were drawn using ", sampler, " at ", x@date, ".\n",
-      "For each parameter, n_eff is a crude measure of effective sample size,\n", 
-      "and Rhat is the potential scale reduction factor on split chains (at \n",
-      "convergence, Rhat=1).\n", sep = '')
-  return(invisible(NULL)) 
+  if (!is.null(x@stan_args[[1]]$method) && 
+               x@stan_args[[1]]$method == "variational") {
+      if ("diagnostics" %in% names(x@sim)
+          & "ir_idx" %in% names(x@sim$diagnostics)
+          & !is.null(x@sim$diagnostics$ir_idx)) {
+        cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, ") + PSIS at ", x@date, 
+        ".\n", sep = '')
+    } else {
+      cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, ") at ", x@date, 
+        ".\n", sep = '')
+      message("We recommend genuine 'sampling' from the posterior distribution for final inferences!")
+    }
+    return(invisible(NULL))
+  } else {
+      cat("\nSamples were drawn using ", sampler, " at ", x@date, ".\n",
+          "For each parameter, n_eff is a crude measure of effective sample size,\n", 
+          "and Rhat is the potential scale reduction factor on split chains (at \n",
+          "convergence, Rhat=1).\n", sep = '')
+      return(invisible(NULL))
+  }
 }
 
 setMethod("plot", signature(x = "stanfit", y = "missing"), 
@@ -571,14 +577,17 @@ setMethod("summary", signature = "stanfit",
 
             ss <- object@.MISC$summary 
             qnames <- colnames(ss$quan)[m]
-            
+
             if (!is.null(object@stan_args[[1]]$method) && 
                          object@stan_args[[1]]$method == "variational") {
-              s1 <- cbind(ss$msd[tidx, 1, drop = FALSE],
+              s1 <- cbind(ss$msd[tidx, 1, drop = FALSE], 
+                          ss$sem[tidx, drop = FALSE], 
                           ss$msd[tidx, 2, drop = FALSE], 
-                          ss$quan[tidx, m, drop = FALSE])
-              dim(s1) <- c(length(tidx), length(m) + 2L)
-              colnames(s1) <- c("mean", "sd", qnames)
+                          ss$quan[tidx, m, drop = FALSE], 
+                          ss$ess[tidx, drop = FALSE],
+                          ss$khat[tidx, drop = FALSE])
+              dim(s1) <- c(length(tidx), length(m) + 5L)
+              colnames(s1) <- c("mean", "se_mean", "sd", qnames, 'n_eff', 'khat')
             }
             else {
               s1 <- cbind(ss$msd[tidx, 1, drop = FALSE], 
