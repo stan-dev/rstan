@@ -88,6 +88,45 @@ r_scale <- function(x) {
   r
 }
 
+split_chains <- function(sims) {
+  # split Markov chains
+  # Args:
+  #   sims: a 2D array of samples (# iter * # chains) 
+  if (is.vector(sims)) {
+    dim(sims) <- c(length(sims), 1)
+  }
+  niter <- dim(sims)[1]
+  half <- niter / 2
+  cbind(sims[1:floor(half), ], sims[ceiling(half + 1):niter, ])
+}
+
+is_constant <- function(x, tol = .Machine$double.eps) {
+  abs(max(x) - min(x)) < tol
+}
+
+rhat_rfun <- function(sims) {
+  # Compute the rhat convergence diagnostic for a single parameter
+  # For split-rhat, just call this with splitted chains
+  # Args:
+  #   sims: a 2D array _without_ warmup samples (# iter * # chains) 
+  # Returns:
+  #   A single numeric value
+  if (is.vector(sims)) {
+    dim(sims) <- c(length(sims), 1)
+  }
+  chains <- ncol(sims)
+  n_samples <- nrow(sims)
+  chain_mean <- numeric(chains)
+  chain_var <- numeric(chains)
+  for (i in seq_len(chains)) {
+    chain_mean[i] <- mean(sims[, i])
+    chain_var[i] <- var(sims[, i])
+  } 
+  var_between <- n_samples * var(chain_mean)
+  var_within <- mean(chain_var) 
+  sqrt((var_between / var_within + n_samples - 1) / n_samples)
+}
+
 ess_rfun <- function(sims) {
   # Compute the effective sample size for samples of several chains 
   # for one parameter; see the C++ code of function  
@@ -142,9 +181,23 @@ ess_rfun <- function(sims) {
   ess <- chains * n_samples
   ess <- ess / (-1 + 2 * sum(rho_hat_t[1:max_t]))
   ess 
-} 
+}
 
-tail_ess <- function(sims) {
+rhat <- function(sims) {
+  # Rhat as suggested in https://arxiv.org/abs/1903.08008
+  bulk_rhat <- rhat_rfun(z_scale(split_chains(sims)))
+  sims_folded <- abs(sims - median(sims))
+  tail_rhat <- rhat_rfun(z_scale(split_chains(sims_folded)))
+  max(bulk_rhat, tail_rhat)
+}
+
+ess_bulk <- function(sims) {
+  # Bulk-ESS as suggested in https://arxiv.org/abs/1903.08008
+  ess_rfun(z_scale(split_chains(sims)))
+}
+
+ess_tail <- function(sims) {
+  # Tail-ESS as suggested in https://arxiv.org/abs/1903.08008
   I05 <- sims <= quantile(sims, 0.05)
   q05_ess <- ess_rfun(z_scale(split_chains(I05)))
   I95 <- sims <= quantile(sims, 0.95)
@@ -152,39 +205,28 @@ tail_ess <- function(sims) {
   min(q05_ess, q95_ess)
 }
 
-rhat_rfun <- function(sims) {
-  # Compute the rhat convergence diagnostic for a single parameter
-  # For split-rhat, just call this with splitted chains
-  # Args:
-  #   sims: a 2D array _without_ warmup samples (# iter * # chains) 
-  # Returns:
-  #   A single numeric value
-  if (is.vector(sims)) {
-    dim(sims) <- c(length(sims), 1)
-  }
-  chains <- ncol(sims)
-  n_samples <- nrow(sims)
-  chain_mean <- numeric(chains)
-  chain_var <- numeric(chains)
-  for (i in seq_len(chains)) {
-    chain_mean[i] <- mean(sims[, i])
-    chain_var[i] <- var(sims[, i])
-  } 
-  var_between <- n_samples * var(chain_mean)
-  var_within <- mean(chain_var) 
-  sqrt((var_between/var_within + n_samples - 1) / n_samples)
-} 
+ess_quantile <- function(sims, prob) {
+  I <- sims <= quantile(sims, prob)
+  ess_rfun(z_scale(split_chains(I)))
+}
 
-quantile_mcse <- function(sims, prob) {
-  # compute Markov-chain SE of quantiles for a single parameter
+ess_mean <- function(sims) {
+  ess_rfun(sims)
+}
+
+ess_sd <- function(sims) {
+  min(ess_rfun(sims), ess_rfun(sims^2))
+}
+
+conv_quantile <- function(sims, prob) {
+  # compute convergence diagnostics for quantiles of a single parameter
   # prob must be a single probability for the quantile of interest
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
-  I <- sims <= quantile(sims, prob)
-  Seff <- ess_rfun(z_scale(split_chains(I)))
+  ess <- ess_quantile(sims, prob)
   p <- c(0.1586553, 0.8413447, 0.05, 0.95)
-  a <- qbeta(p, Seff * prob + 1, Seff * (1 - prob) + 1)
+  a <- qbeta(p, ess * prob + 1, ess * (1 - prob) + 1)
   ssims <- sort(sims)
   S <- length(ssims)
   th1 <- ssims[max(round(a[1] * S), 1)]
@@ -192,23 +234,21 @@ quantile_mcse <- function(sims, prob) {
   mcse <- (th2 - th1) / 2
   th1 <- ssims[max(round(a[3] * S), 1)]
   th2 <- ssims[min(round(a[4] * S), S)]
-  data.frame(mcse = mcse, Q05 = th1, Q95 = th2, Seff = Seff)
+  data.frame(mcse = mcse, Q05 = th1, Q95 = th2, ess = ess)
 }
 
-split_chains <- function(sims) {
-  # split Markov chains
-  # Args:
-  #   sims: a 2D array of samples (# iter * # chains) 
-  if (is.vector(sims)) {
-    dim(sims) <- c(length(sims), 1)
-  }
-  niter <- dim(sims)[1]
-  half <- niter / 2
-  cbind(sims[1:floor(half), ], sims[ceiling(half + 1):niter, ])
+mcse_quantile <- function(sims, prob) {
+  conv_quantile(sims, prob)$mcse
 }
 
-is_constant <- function(x, tol = .Machine$double.eps) {
-  abs(max(x) - min(x)) < tol
+mcse_mean <- function(sims) {
+  sd(sims) / sqrt(ess_mean(sims))
+}
+
+mcse_sd <- function(sims) {
+  # assumes normality of sims and uses Stirling's approximation
+  ess_sd <- ess_sd(sims)
+  sd(sims) * sqrt(exp(1) * (1 - 1 / ess_sd)^(ess_sd - 1) - 1)
 }
 
 monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95), 
@@ -251,7 +291,6 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
     }
   }
   
-  mcse_quan_fun <- function(p, sims) quantile_mcse(sims, p)$mcse
   out <- vector("list", length(parnames))
   out <- setNames(out, parnames)
   # loop over parameters
@@ -259,32 +298,17 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
   	sims_i <- sims[, , i]
   	valid <- all(is.finite(sims_i))
   	quan <- unname(quantile(sims_i, probs = probs))
-  	mcse_quan <- sapply(probs, mcse_quan_fun, sims_i)
-  	
-  	zsims_split <- z_scale(split_chains(sims_i))
-  	zsplit_rhat <- rhat_rfun(zsims_split)
-  	bulk_ess <- round(ess_rfun(zsims_split))
-  	tail_ess <- round(tail_ess(sims_i))
-  	
-  	sims_folded <- abs(sims_i - median(sims_i))
-  	zsims_folded_split <- z_scale(split_chains(sims_folded))
-  	zfsplit_rhat <- rhat_rfun(zsims_folded_split)
-  	rhat <- max(zsplit_rhat, zfsplit_rhat)
-  	
-  	ess <- ess_rfun(sims_i)
   	mean <- mean(sims_i)
   	sd <- sd(sims_i)
-  	mcse_mean <- sd / sqrt(ess)
-  	# mcse_sd assumes normality of sims and uses Stirling's approximation
-  	# min of ess for sims and sims^2 is used instead of ess
-  	ess2 <- ess_rfun(sims_i^2)
-  	essmin <- min(c(ess,ess2))
-  	fac_mcse_sd <- sqrt(exp(1) * (1 - 1 / essmin)^(essmin - 1) - 1)
-  	mcse_sd <- sd * fac_mcse_sd
-  	
+  	mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
+  	mcse_mean <- mcse_mean(sims_i)
+  	mcse_sd <- mcse_sd(sims_i)
+  	rhat <- rhat(sims_i)
+  	ess_bulk <- round(ess_bulk(sims_i))
+  	ess_tail <- round(ess_tail(sims_i))
   	out[[i]] <- c(
   		valid, quan, mean, sd, mcse_quan, mcse_mean,
-  		mcse_sd, rhat, bulk_ess, tail_ess
+  		mcse_sd, rhat, ess_bulk, ess_tail
   	)
   }
   
