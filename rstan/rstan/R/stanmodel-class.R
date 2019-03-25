@@ -270,8 +270,8 @@ setMethod("vb", "stanmodel",
               } else if (any(theta_pareto_k > 0.5, na.rm = TRUE)) { 
                 warning("Some Pareto k diagnostic values are slightly high. Increasing the number of draws or decreasing tol_rel_obj may help.", call.=FALSE, immediate. = TRUE)
               }
-              psis <- nlist(pareto_k = p$diagnostics$pareto_k,
-                            n_eff = p$diagnostics$n_eff/thin)
+              psis <- loo::nlist(pareto_k = p$diagnostics$pareto_k,
+                                 n_eff = p$diagnostics$n_eff/thin)
               ## importance_resampling
               if (importance_resampling) { 
                 ir_idx <- sample_indices(exp(p$log_weights),
