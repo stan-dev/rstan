@@ -277,7 +277,6 @@ setMethod("vb", "stanmodel",
                 ir_idx <- sample_indices(exp(p$log_weights),
                                          n_draws=ceiling(dim(samples)[1]/thin))
                 samples <- samples[ir_idx,]
-                diagnostics$ir_idx <- ir_idx
                 ## SIR mcse and n_eff
                 w_sir <- as.numeric(table(ir_idx))/length(ir_idx)
                 mcse <- apply(samples[!duplicated(ir_idx),], 2L, function(col) if (all(is.finite(col))) sqrt(sum(w_sir^2*(col-mean(col))^2)) else NaN)
