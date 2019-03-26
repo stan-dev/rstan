@@ -273,9 +273,10 @@ setMethod("vb", "stanmodel",
               psis <- loo::nlist(pareto_k = p$diagnostics$pareto_k,
                                  n_eff = p$diagnostics$n_eff/thin)
               ## importance_resampling
-              if (importance_resampling) { 
+              if (importance_resampling) {
+                iter <- ceiling(dim(samples)[1]/thin)
                 ir_idx <- sample_indices(exp(p$log_weights),
-                                         n_draws=ceiling(dim(samples)[1]/thin))
+                                         n_draws=iter)
                 samples <- samples[ir_idx,]
                 ## SIR mcse and n_eff
                 w_sir <- as.numeric(table(ir_idx))/length(ir_idx)
