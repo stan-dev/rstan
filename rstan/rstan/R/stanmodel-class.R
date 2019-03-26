@@ -265,8 +265,8 @@ setMethod("vb", "stanmodel",
               theta_pareto_k <- suppressWarnings(apply(samples, 2L, function(col) if (all(is.finite(col))) loo::psis(log1p(col^2)/2+lr, r_eff=1)$diagnostics$pareto_k else NaN))
               ## todo: change fixed threshold to an option
               if (any(theta_pareto_k > 0.7, na.rm = TRUE)) {
-                warning("Some Pareto k diagnostic values are too high. Resampling disabled. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.", call.=FALSE, immediate. = TRUE)
-                importance_resampling <- FALSE
+                warning("Some Pareto k diagnostic values are too high. Resampling is not reliable. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.", call.=FALSE, immediate. = TRUE)
+                #importance_resampling <- FALSE
               } else if (any(theta_pareto_k > 0.5, na.rm = TRUE)) { 
                 warning("Some Pareto k diagnostic values are slightly high. Increasing the number of draws or decreasing tol_rel_obj may help.", call.=FALSE, immediate. = TRUE)
               }
