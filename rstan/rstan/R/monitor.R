@@ -1,5 +1,6 @@
 # This file is part of RStan
 # Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018 Trustees of Columbia University
+# Copyright (C) 2018, 2019 Aki Vehtari, Paul Bürkner
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -35,9 +36,16 @@ fft_next_good_size <- function(N) {
   }
 }
 
+#' Autocovariance estimates
+#'
+#' Compute autocovariance estimates for every lag for the specified
+#' input sequence using a fast Fourier transform approach. Estimate
+#' for lag t is scaled by N-t.
+#'
+#' @param y A numeric vector forming a sequence of values.
+#'
+#' @return A numeric vector of autocovariances at every lag (scaled by N-lag).
 autocovariance <- function(y) {
-  # Compute autocovariance estimates for every lag for the specified
-  # input sequence using a fast Fourier transform approach.
   N <- length(y)
   M <- fft_next_good_size(N)
   Mt2 <- 2 * M
@@ -49,13 +57,31 @@ autocovariance <- function(y) {
   ac
 }
 
+#' Autocorrelation estimates
+#'
+#' Compute autocorrelation estimates for every lag for the specified
+#' input sequence using a fast Fourier transform approach. Estimate
+#' for lag t is scaled by N-t.
+#'
+#' @param y A numeric vector forming a sequence of values.
+#'
+#' @return A numeric vector of autocorrelations at every lag (scaled by N-lag).
 autocorrelation <- function(y) {
-  # Compute autocorrelation estimates for every lag for the specified
-  # input sequence using a fast Fourier transform approach.
   ac <- autocovariance(y)
   ac <- ac / ac[1]
 }
 
+#' Rank normalization
+#'
+#' Compute rank normalization for a numeric array. First replace each
+#' value by its rank. Average rank for ties are used to conserve the
+#' number of unique values of discrete quantities. Second, normalize
+#' ranks via the inverse normal transformation.
+#'
+#' @param x A numeric array of values.
+#'
+#' @return A numeric array of rank normalized values with the same
+#'     size as input.
 z_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
@@ -67,6 +93,17 @@ z_scale <- function(x) {
   z
 }
 
+#' Rank uniformization
+#'
+#' Compute rank uniformization for a numeric array. First replace each
+#' value by its rank. Average rank for ties are used to conserve the
+#' number of unique values of discrete quantities. Second, uniformize
+#' ranks to scale [1/(2S), 1-1/(2S)], where S is the the number of values.
+#'
+#' @param x A numeric array of values.
+#'
+#' @return A numeric array of rank uniformized values with the same
+#'     size as input.
 u_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
@@ -78,6 +115,17 @@ u_scale <- function(x) {
   u
 }
 
+#' Rank values
+#'
+#' Compute ranks for a numeric array. First replace each
+#' value by its rank. Average rank for ties are used to conserve the
+#' number of unique values of discrete quantities. Second, normalize
+#' ranks via the inverse normal transformation.
+#'
+#' @param x A numeric array of values.
+#'
+#' @return A numeric array of ranked values with the same
+#'     size as input.
 r_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
@@ -91,7 +139,7 @@ r_scale <- function(x) {
 split_chains <- function(sims) {
   # split Markov chains
   # Args:
-  #   sims: a 2D array of samples (# iter * # chains) 
+  #   sims: a 2D array of samples (# iter * # chains)
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
@@ -104,13 +152,21 @@ is_constant <- function(x, tol = .Machine$double.eps) {
   abs(max(x) - min(x)) < tol
 }
 
+#' Traditional Rhat convergence diagnostic
+#'
+#' Compute the Rhat convergence diagnostic for a single parameter
+#' For split-Rhat, call this with split chains.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for Rhat.
+#' 
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 rhat_rfun <- function(sims) {
-  # Compute the rhat convergence diagnostic for a single parameter
-  # For split-rhat, just call this with splitted chains
-  # Args:
-  #   sims: a 2D array _without_ warmup samples (# iter * # chains) 
-  # Returns:
-  #   A single numeric value
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
@@ -121,34 +177,41 @@ rhat_rfun <- function(sims) {
   for (i in seq_len(chains)) {
     chain_mean[i] <- mean(sims[, i])
     chain_var[i] <- var(sims[, i])
-  } 
+  }
   var_between <- n_samples * var(chain_mean)
-  var_within <- mean(chain_var) 
+  var_within <- mean(chain_var)
   sqrt((var_between / var_within + n_samples - 1) / n_samples)
 }
 
+#' Effective sample size
+#'
+#' Compute the effective sample size estimate for a sample of several chains
+#' for one parameter. For split-ESS, call this with split chains.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for the effective sample size.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 ess_rfun <- function(sims) {
-  # Compute the effective sample size for samples of several chains 
-  # for one parameter; see the C++ code of function  
-  # effective_sample_size in chains.cpp 
-  # Args:
-  #   sims: a 2D array _without_ warmup samples (# iter * # chains) 
-  # Returns:
-  #   A single numeric value
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
   chains <- ncol(sims)
   n_samples <- nrow(sims)
-  
-  acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i])) 
+
+  acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i]))
   acov <- do.call(cbind, acov)
   chain_mean <- apply(sims, 2, mean)
-  mean_var <- mean(acov[1, ]) * n_samples / (n_samples - 1) 
+  mean_var <- mean(acov[1, ]) * n_samples / (n_samples - 1)
   var_plus <- mean_var * (n_samples - 1) / n_samples
-  if (chains > 1) 
+  if (chains > 1)
     var_plus <- var_plus + var(chain_mean)
-  
+
   # Geyer's initial positive sequence
   rho_hat_t <- rep.int(0, n_samples)
   t <- 0
@@ -156,8 +219,8 @@ ess_rfun <- function(sims) {
   rho_hat_t[t + 1] <- rho_hat_even
   rho_hat_odd <- 1 - (mean_var - mean(acov[t + 2, ])) / var_plus
   rho_hat_t[t + 2] <- rho_hat_odd
-  t <- 2  
-  while (t < nrow(acov) - 1 && !is.nan(rho_hat_even + rho_hat_odd) && 
+  t <- 2
+  while (t < nrow(acov) - 1 && !is.nan(rho_hat_even + rho_hat_odd) &&
          (rho_hat_even + rho_hat_odd > 0)) {
     rho_hat_even = 1 - (mean_var - mean(acov[t + 1, ])) / var_plus
     rho_hat_odd = 1 - (mean_var - mean(acov[t + 2, ])) / var_plus
@@ -170,7 +233,7 @@ ess_rfun <- function(sims) {
   max_t <- t
   # Geyer's initial monotone sequence
   t <- 2
-  while (t <= max_t - 2) {  
+  while (t <= max_t - 2) {
     if (rho_hat_t[t + 1] + rho_hat_t[t + 2] >
         rho_hat_t[t - 1] + rho_hat_t[t]) {
       rho_hat_t[t + 1] = (rho_hat_t[t - 1] + rho_hat_t[t]) / 2;
@@ -180,24 +243,67 @@ ess_rfun <- function(sims) {
   }
   ess <- chains * n_samples
   ess <- ess / (-1 + 2 * sum(rho_hat_t[1:max_t]))
-  ess 
+  ess
 }
 
+#' Rhat convergence diagnostic
+#'
+#' Compute Rhat convergence diagnostic as the maximum of rank normalized
+#' split-Rhat and rank normalized folded-split-Rhat for one parameter.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for the effective sample size.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 rhat <- function(sims) {
-  # Rhat as suggested in https://arxiv.org/abs/1903.08008
   bulk_rhat <- rhat_rfun(z_scale(split_chains(sims)))
   sims_folded <- abs(sims - median(sims))
   tail_rhat <- rhat_rfun(z_scale(split_chains(sims_folded)))
   max(bulk_rhat, tail_rhat)
 }
 
+#' Bulk effective sample size (bulk-ESS)
+#'
+#' Compute bulk effective sample size estimate (bulk-ESS) for one parameter.
+#' Bulk-ESS is useful as a generic diagnostic for the sampling
+#' efficiency in the bulk of the posterior. It is defined as the
+#' effective sample size for rank normalized values using split chains.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for the bulk effective sample size.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 ess_bulk <- function(sims) {
-  # Bulk-ESS as suggested in https://arxiv.org/abs/1903.08008
   ess_rfun(z_scale(split_chains(sims)))
 }
 
+#' Tail effective sample size (tail-ESS)
+#'
+#' Compute tail effective sample size estimate (tail-ESS) for one parameter.
+#' Tail-ESS is useful for generic diagnostic for the sampling
+#' efficiency in the tails of the posterior. It is defined as
+#' the minimum of the effective sample sizes for 5% and 95% quantiles.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for the tail effective sample size.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 ess_tail <- function(sims) {
-  # Tail-ESS as suggested in https://arxiv.org/abs/1903.08008
   I05 <- sims <= quantile(sims, 0.05)
   q05_ess <- ess_rfun(z_scale(split_chains(I05)))
   I95 <- sims <= quantile(sims, 0.95)
@@ -205,22 +311,85 @@ ess_tail <- function(sims) {
   min(q05_ess, q95_ess)
 }
 
+#' Quantile effective sample size
+#'
+#' Compute effective sample size estimate for a quantile estimate of
+#' one parameter.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#' @param prob A single numeric value of probability.
+#'
+#' @return A single numeric value for the effective sample size for a
+#'     quantile estimate corresponding to the probability.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 ess_quantile <- function(sims, prob) {
   I <- sims <= quantile(sims, prob)
   ess_rfun(z_scale(split_chains(I)))
 }
 
+#' Effective sample size
+#'
+#' Compute effective sample size estimate for a mean (expectation)
+#' estimate of one parameter.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for the effective sample size
+#'     estimate for mean estimate.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 ess_mean <- function(sims) {
   ess_rfun(sims)
 }
 
+#' Effective sample size
+#'
+#' Compute effective sample size estimate for standard deviation (s)
+#' estimate of one parameter. This is defined as minimum of effective
+#' sample size estimate for mean and mean of squared value.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for the effective sample size
+#'     estimate for standard deviation estimate.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 ess_sd <- function(sims) {
   min(ess_rfun(sims), ess_rfun(sims^2))
 }
 
+#' Monte Carlo diagnostics for a quantile
+#'
+#' Compute Monte Carlo standard error, 5%-quantile, 95%-quantile, and
+#' effective sample size estimate for a quantile estimate of a single
+#' parameter.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#' @param prob A single numeric value of probability.
+#'
+#' @return A data frame with Monte Carlo standard error (mcse),
+#'     5%-quantile (Q05), 95%-quantile (Q95), and effective sample
+#'     size estimate (ess).
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 conv_quantile <- function(sims, prob) {
-  # compute convergence diagnostics for quantiles of a single parameter
-  # prob must be a single probability for the quantile of interest
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
@@ -237,31 +406,103 @@ conv_quantile <- function(sims, prob) {
   data.frame(mcse = mcse, Q05 = th1, Q95 = th2, ess = ess)
 }
 
+#' Monte Carlo standard error for a quantile
+#'
+#' Compute Monte Carlo standard error for a quantile estimate of a
+#' single parameter.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#' @param prob A single numeric value of probability.
+#'
+#' @return A single numeric value for Monte Carlo standard error for a
+#'     quantile estimate corresponding to the probability.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 mcse_quantile <- function(sims, prob) {
   conv_quantile(sims, prob)$mcse
 }
 
+#' Monte Carlo standard error for mean
+#'
+#' Compute Monte Carlo standard error for mean (expectation) of a
+#' single parameter.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for Monte Carlo standard error
+#'     for mean estimate.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 mcse_mean <- function(sims) {
   sd(sims) / sqrt(ess_mean(sims))
 }
 
+#' Monte Carlo standard error for standard error
+#'
+#' Compute Monte Carlo standard error for standard deviation (sd) of a
+#' single parameter using Stirling's approximation and assuming
+#' approximate normality.
+#'
+#' @param sims A 2D array _without_ warmup samples (# iter * # chains).
+#'
+#' @return A single numeric value for Monte Carlo standard error
+#'     for standard deviation estimate.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 mcse_sd <- function(sims) {
   # assumes normality of sims and uses Stirling's approximation
   ess_sd <- ess_sd(sims)
   sd(sims) * sqrt(exp(1) * (1 - 1 / ess_sd)^(ess_sd - 1) - 1)
 }
 
+#' Summary of General Simulation Results
+#'
+#' Create a summary for general simulation results. Computed
+#' quantities are specified quantiles, mean, standard deviation,
+#' corresponding Monte Carlo standard errors, Rhat, Bulk-ESS and
+#' Tail-ESS.
+#'
+#' @param sims A 3-dimensional array of simulation results. The first
+#'     dimension is the number of iterations per chain, the second its
+#'     the number of chains and the third is the number of
+#'     parameters. Alternatively, \code{sims} can be a \code{stanfit}
+#'     object from which the simulation results will be extracted.
+#' @param warmup The number of iterations used for warmup. These will
+#'     be removed before computing summary. Default is 0.
+#' @param probs A vector of probabilities defining summarizing
+#'     quantiles. Default is c(0.05, 0.50, 0.95).
+#' @param se Logical, defaulting to FALSE. If TRUE print also MCSEs.
+#' @param print Logical, defaulting to PRINT. If TRUE print summary table.
+#' @param digits Positive integer, a number of digits printedm
+#'     defaulting to 1.
+#'
+#' @return A summary matrix.
+#'
+#' @references
+#' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+#' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+#' localization: An improved R-hat for assessing convergence of
+#' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95), 
                     se = FALSE, print = TRUE, digits = 1, ...) { 
-  # print a summary for general simulation results 
-  # of 3D array: # iter * # chains * # parameters 
-  # Args:
-  #   sims: a 3D array described above or a stanfit object
-  #   warmup: the number of iterations used for warmup 
-  #   probs: probs of summarizing quantiles 
-  #   se: include MCSEs in the output
-  # Return: 
-  #   A summary matrix
   if (inherits(sims, "stanfit")) {
     chains <- sims@sim$chains
     iter <- sims@sim$iter
@@ -271,11 +512,11 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
   } else {
     dim_sims <- dim(sims)
     if (is.null(dim_sims)) {
-      dim(sims) <- c(length(sims), 1, 1) 
+      dim(sims) <- c(length(sims), 1, 1)
     } else if (length(dim_sims) == 2) {
       dim(sims) <- c(dim_sims, 1)
     } else if (length(dim_sims) > 3) {
-      stop("'sims' has more than 3 dimensions") 
+      stop("'sims' has more than 3 dimensions")
     }
     parnames <- dimnames(sims)[[3]]
     if (is.null(parnames)) {
@@ -287,40 +528,40 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
       stop("warmup is larger than the total number of iterations")
     }
     if (warmup >= 1) {
-      sims <- sims[-seq_len(warmup), , , drop = FALSE] 
+      sims <- sims[-seq_len(warmup), , , drop = FALSE]
     }
   }
-  
+
   out <- vector("list", length(parnames))
   out <- setNames(out, parnames)
   # loop over parameters
   for (i in seq_along(out)) {
-  	sims_i <- sims[, , i]
-  	valid <- all(is.finite(sims_i))
-  	quan <- unname(quantile(sims_i, probs = probs))
-  	mean <- mean(sims_i)
-  	sd <- sd(sims_i)
-  	mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
-  	mcse_mean <- mcse_mean(sims_i)
-  	mcse_sd <- mcse_sd(sims_i)
-  	rhat <- rhat(sims_i)
-  	ess_bulk <- round(ess_bulk(sims_i))
-  	ess_tail <- round(ess_tail(sims_i))
-  	out[[i]] <- c(
-  		valid, quan, mean, sd, mcse_quan, mcse_mean,
-  		mcse_sd, rhat, ess_bulk, ess_tail
-  	)
+    sims_i <- sims[, , i]
+    valid <- all(is.finite(sims_i))
+    quan <- unname(quantile(sims_i, probs = probs))
+    mean <- mean(sims_i)
+    sd <- sd(sims_i)
+    mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
+    mcse_mean <- mcse_mean(sims_i)
+    mcse_sd <- mcse_sd(sims_i)
+    rhat <- rhat(sims_i)
+    ess_bulk <- round(ess_bulk(sims_i))
+    ess_tail <- round(ess_tail(sims_i))
+    out[[i]] <- c(
+      valid, quan, mean, sd, mcse_quan, mcse_mean,
+      mcse_sd, rhat, ess_bulk, ess_tail
+    )
   }
   
   out <- do.call(rbind, out)
   str_quan <- paste0("Q", probs * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
   colnames(out) <- c(
-  	"valid", str_quan, "Mean", "SD", str_mcse_quan, 
-  	"MCSE_Mean", "MCSE_SD", "Rhat", "Bulk_ESS", "Tail_ESS"
+    "valid", str_quan, "Mean", "SD", str_mcse_quan,
+    "MCSE_Mean", "MCSE_SD", "Rhat", "Bulk_ESS", "Tail_ESS"
   )
   rownames(out) <- parnames
-  
+
   # replace NAs with appropriate values if draws are valid
   S <- prod(dim(sims)[1:2])
   valid <- out[, 1]
@@ -353,8 +594,8 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
   	print(tmp, digits = digits, ...)
   	cat(
   		"\nFor each parameter, Bulk_ESS and Tail_ESS are crude measures of \n",
-  		"effective sample size for bulk and tail quantities respectively (good values is \n",
-  		"ESS > 400), and Rhat is the potential scale reduction factor on rank normalized\n",
+  		"effective sample size for bulk and tail quantities respectively (an ESS > 400 \n",
+  		"considered good), and Rhat is the potential scale reduction factor on rank normalized\n",
   		"split chains (at convergence, Rhat = 1).\n", sep = ""
   	)
   }
