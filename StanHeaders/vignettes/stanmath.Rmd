@@ -5,8 +5,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using the Stan Math C++ Library}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: inline
 ---
 
 ```{r setup, include = FALSE}
@@ -15,12 +17,15 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 Sys.setenv(USE_CXX14 = "1")
+set.seed(12345)
 ```
 
+# Using the **StanHeaders** Package from Other R Packages
+
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
-in other packages, it is sufficient to specify
+in other packages, it is often sufficient to specify
 ```
-LinkingTo: StanHeaders (>= 2.18.0)
+LinkingTo: StanHeaders (>= 2.19.0)
 ```
 in the DESCRIPTION file of another package and
 ```
@@ -36,55 +41,351 @@ STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
   -e "message()" | grep "StanHeaders")
 PKG_CPPFLAGS = -I"$(STANHEADERS_SRC)"
 ```
-and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file.
-The following is a minimal example of using the Stan Math library via `Rcpp::sourceCpp`:
+and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file. Finally,
+if integrating systems of stiff Ordinary Differential Equations, then you need to link to the
+shared library of StanHeaders as is shown below.
+
+# Using Higher-Order Functions in the **StanHeaders** Package
+
+This section will demonstrate how to use some of the C++ functions in the **StanHeaders** package.
+
+## Derivatives and Minimization
+
+The following is a toy example of using the Stan Math library via `Rcpp::sourceCpp`:
 to minimize the function 
 $$\left(\mathbf{x} - \mathbf{a}\right)^\top \left(\mathbf{x} - \mathbf{a}\right)$$
+which has a global minimum when $\mathbf{x} = \mathbf{a}$. To find this minimum with autodifferentiation, 
+we need to define the objective function and its gradient with respect to $\mathbf{x}$, which we know is 
+$2\left(\mathbf{x} - \mathbf{a}\right)$ in this case. At the  optimum (or on the way to the optimum), we might 
+want to evaluate the Hessian matrix, which we know is $2\mathbf{I}$, but would need an additional function to 
+evaluate it via autodifferentiation. Finally, one could reconceptualize the problem as solving a homogeneous
+system of equations where the gradient is set equal to a vector of zeros. The `stan::math::algebra_solver` 
+function can solve such a system using autodifferentiation to obtain the Jacobian, which we know to be
+the identity matrix in this case.
+
+Here is C++ code that does all of the above, except for the part of finding the optimum, which is done
+using the R function `optim` below.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(StanHeaders)]]
-#include <stan/math/mix/mat/functor/hessian.hpp> // stuff from mix/ has to come first
-#include <stan/math/fwd/mat/fun/dot_self.hpp>    // then stuff from fwd/
+#include <stan/math/mix/mat/functor/hessian.hpp> // stuff from mix/ must come first for Hessians
+#include <stan/math/fwd/mat/fun/dot_self.hpp>    // then stuff from fwd/ to evaluate dot_self()
+#include <stan/math.hpp>                         // finally pull in everything from rev/ & prim/
+#include <Rcpp.h>
+#include <RcppEigen.h>
+
+// [[Rcpp::plugins(cpp14)]]
+
+/* Objective function */
+
+// [[Rcpp::export]]
+auto f(Eigen::VectorXd x, Eigen::VectorXd a) { // objective function in doubles
+  using stan::math::dot_self;                  // dot_self() is a dot product with self
+  return dot_self( (x - a).eval() );           // .eval() yields a Eigen::VectorXd
+}
+
+/* Gradient */
+
+// [[Rcpp::export]]
+auto g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
+  double fx;
+  Eigen::VectorXd grad_fx;
+  using stan::math::dot_self;
+  stan::math::gradient([&a](auto x) { return dot_self( (x - a).eval() ); },
+                       x, fx, grad_fx);
+  return grad_fx;
+}
+
+/* Hessian */
+
+// [[Rcpp::export]]
+auto H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
+  double fx;
+  Eigen::VectorXd grad_fx;
+  Eigen::MatrixXd H;
+  using stan::math::dot_self;
+  using stan::math::subtract; // necessary to get the type promotion correct
+  stan::math::hessian([&a](auto x) { return dot_self(subtract(x, a)); },
+                      x, fx, grad_fx, H);
+  return H;
+}
+
+/* Jacobian */
+
+// [[Rcpp::export]]
+auto J(Eigen::VectorXd x, Eigen::VectorXd a) { // not actually used
+  Eigen::VectorXd fx;
+  Eigen::MatrixXd J;
+  using stan::math::dot_self;
+  stan::math::jacobian([&a](auto x) {
+    return (2 * (x - a)).eval();
+  }, x, fx, J);
+  return J;
+}
+
+struct equations_functor {
+  template <typename T0, typename T1>
+  inline Eigen::Matrix<T0, Eigen::Dynamic, 1>
+  operator()(const Eigen::Matrix<T0, Eigen::Dynamic, 1>& x,
+             const Eigen::Matrix<T1, Eigen::Dynamic, 1>& theta,
+             const std::vector<double>& x_r, const std::vector<int>& x_i,
+             std::ostream* pstream__) const {
+    return 2 * (x - stan::math::to_vector(x_r)).eval();
+  }
+};
+
+// [[Rcpp::export]]
+auto solution(Eigen::VectorXd a, Eigen::VectorXd guess) {
+  Eigen::VectorXd theta;
+  auto x_r = stan::math::to_array_1d(a);
+  equations_functor f;
+  auto x = stan::math::algebra_solver(f, guess, theta, x_r, {});
+  return x;
+}
+```
+
+In this compiled RMarkdown document, the **knitr** package has exported functions `f`, `g`, `H`, `J` 
+and `solution` (but not `equations_functor`) to R's global environment using the `sourceCpp` function 
+in the **Rcpp** package, so that they can now be called from R. Here we find the optimum starting from 
+a random point in three dimensions:
+```{r}
+x <- optim(rnorm(3), fn = f, gr = g, a = 1:3, method = "BFGS", hessian = TRUE)
+x$par
+x$hessian
+H(x$par, a = 1:3)
+J(x$par, a = 1:3)
+solution(a = 1:3, guess = rnorm(3))
+```
+
+# Integrals and Ordinary Differential Equations
+
+The Stan Math library can do one-dimensional numerical integration and can solve stiff
+and non-stiff systems of differential equations, such as the harmonic oscillator example
+below. Solving stiff systems utilizes the CVODES package, which is included in **StanHeaders**, 
+but requires linking against its shared library with the following R code.
+
+```{r}
+StanHeaders_pkg_libs <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), 
+                                    .Platform$r_arch, package = "StanHeaders")
+Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(StanHeaders_pkg_libs)), "-lStanHeaders"))
+```
+
+```{Rcpp}
+// [[Rcpp::depends(BH)]]
+// [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
 #include <RcppEigen.h>
 
 // [[Rcpp::plugins(cpp14)]]
 
+/* Definite integrals */
+
 // [[Rcpp::export]]
-double f(Eigen::VectorXd x, Eigen::VectorXd a) {  // objective function in doubles
-  return stan::math::dot_self( (x - a).eval() );  // dot_self() is a dot product with self
+double Cauchy(double scale) {
+  std::vector<double> theta;
+  auto half = stan::math::integrate_1d([](auto x, auto xc, auto theta,
+                                          auto x_r, auto x_i, std::ostream &msgs) {
+    return exp(stan::math::cauchy_lpdf(x, 0, x_r[0]));
+  }, -scale, scale, theta, {scale}, {}, Rcpp::Rcout, 1e-7);
+  return half * 2; // should equal 1 for any positive scale
+}
+
+/* Ordinary Differential Equations */
+
+// [[Rcpp::export]]
+auto nonstiff(Eigen::MatrixXd A, Eigen::VectorXd y0) {
+  using stan::math::integrate_ode_rk45;
+  using stan::math::to_vector;
+  using stan::math::to_array_1d;
+  std::vector<double> theta;
+  auto y = integrate_ode_rk45([&A](auto t, auto y, 
+                                   auto theta, auto x_r, auto x_i, std::ostream *msgs) {
+    return to_array_1d( (A * to_vector(y)).eval() );
+  }, to_array_1d(y0), 0, {1, 2}, theta, {}, {});
+  return to_vector(y[0]) - stan::math::matrix_exp(A) * y0; // should be numerically zero
 }
 
 // [[Rcpp::export]]
-Eigen::VectorXd g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
-  double fx;
-  Eigen::VectorXd grad_fx;
-  stan::math::gradient([&a](auto x) { return stan::math::dot_self( (x - a).eval() ); },
-                       x, fx, grad_fx);
-  return grad_fx;
+auto stiff(Eigen::MatrixXd A, Eigen::VectorXd y0) { // not actually stiff
+  using stan::math::integrate_ode_bdf;              // but use the stiff solver anyways
+  using stan::math::to_vector;
+  using stan::math::to_array_1d;
+  std::vector<double> theta;
+  auto y = integrate_ode_bdf([&A](auto t, auto y, 
+                                  auto theta, auto x_r, auto x_i, std::ostream *msgs) {
+    return to_array_1d( (A * to_vector(y)).eval() );
+  }, to_array_1d(y0), 0, {1, 2}, theta, {}, {});
+  return to_vector(y[0]) - stan::math::matrix_exp(A) * y0; // should be numerically zero
 }
-
-// [[Rcpp::export]]
-Eigen::MatrixXd H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
-  double fx;
-  Eigen::VectorXd grad_fx;
-  Eigen::MatrixXd H;
-  stan::math::hessian([&a](auto x) {
-                        auto z = x.eval();
-                        for (int i = 0; i < x.rows(); i++) 
-                          z.coeffRef(i) -= a.coeff(i);
-                        return stan::math::dot_self(z);
-                      }, x, fx, grad_fx, H);
-  return H;
-}
-
 ```
+
+Again, in this compiled RMarkdown document, the **knitr** package has exported the
+`Cauchy`, `nonstiff` and `stiff` functions to R's global environment using the
+`sourceCpp` function in the **Rcpp** package so that they can be called from R.
+
+First, we numerically integrate the Cauchy PDF over its interquartile range --- which has
+an area of $\frac{1}{2}$ --- that we then double to verify that it is almost within machine
+precision of $1$.
+
 ```{r}
-# Rcpp exported the above f, g, and H via Rcpp::sourceCpp()
-x <- optim(rnorm(3), fn = f, gr = g, a = c(1, 2, 3), method = "BFGS", hessian = TRUE)
-x$par
-x$hessian
-H(x$par, a = 1:3)
+all.equal(1, Cauchy(rexp(1)), tol = 1e-15)
 ```
+
+Next, we consider the system of differential equations
+$$\frac{d}{dt}\mathbf{y} = \mathbf{A}\mathbf{y}$$
+where $\mathbf{A}$ is a square matrix such as that for a simple harmonic oscillator
+
+$$\mathbf{A} = \begin{bmatrix}0 & 1 \\ -1 & -\theta\end{bmatrix}$$
+for $\theta \in \left(0,1\right)$. The solution for $\mathbf{y}_t = e^{t\mathbf{A}}\mathbf{y}_0$ can 
+be obtained via the matrix exponential function, which is available in the Stan Math Library, but it
+can also be obtained numerically using a fourth-order Runge-Kutta solver, which is 
+appropriate for non-stiff systems of ODEs, such as this one. However, it is possible,
+albeit less efficient in this case, to use the backward-differentiation formula solver
+for stiff systems of ODEs. In both cases, we calculate the difference between the
+analytical solution and the numerical one, and the stiff version does produce somewhat
+better accuracy in this case.
+```{r}
+A <- matrix(c(0, -1, 1, -runif(1)), nrow = 2, ncol = 2)
+y0 <- rexp(2)
+stopifnot(isTRUE(all.equal(nonstiff(A, y0), c(0, 0), tol = 1e-6)))
+stopifnot(isTRUE(all.equal(   stiff(A, y0), c(0, 0), tol = 1e-8)))
+```
+
+# Map and Parellelization
+
+The Stan Math Library includes the `map_rect` function, which applies a function to each element
+of rectangular arrays and returns a vector, making it a bit like a restricted version of R's `sapply` 
+function. However, `map_rect` can also be executed in parallel by defining the pre-processor
+directive `STAN_THREADS` and then setting the `STAN_NUM_THREADS` environmental variable to be the 
+number of threads to use, as in
+```{r}
+Sys.setenv(PKG_CXXFLAGS = "-DSTAN_THREADS")
+Sys.setenv(STAN_NUM_THREADS = 2) # specify -1 to use all available cores
+```
+
+Below is C++ code to test whether an integer is prime, using a rather brute-force algorithm
+and running it in parallel via `map_rect`.
+```{Rcpp}
+// [[Rcpp::depends(BH)]]
+// [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(StanHeaders)]]
+#include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
+#include <Rcpp.h>
+#include <RcppEigen.h>
+
+// [[Rcpp::plugins(cpp14)]]
+
+// see https://en.wikipedia.org/wiki/Primality_test#Pseudocode
+struct is_prime {
+  is_prime() {}
+  template <typename T1, typename T2>
+  auto
+  operator()(const Eigen::Matrix<T1, Eigen::Dynamic, 1>& eta,
+             const Eigen::Matrix<T2, Eigen::Dynamic, 1>& theta,
+             const std::vector<double>& x_r, const std::vector<int>& x_i,
+             std::ostream* msgs = 0) const {
+    Eigen::VectorXd res(1); // can only return double or var vectors
+    int n = x_i[0];
+    if (n <= 3) {
+      res.coeffRef(0) = n > 1;
+      return res;
+    } else if ( (n % 2 == 0) || (n % 3 == 0) ) {
+      res.coeffRef(0) = false;
+      return res;
+    }
+    int i = 5;
+    while (i * i <= n) {
+      if ( (n % i == 0) || (n % (i + 2) == 0) ) {
+        res.coeffRef(0) = false;
+        return res;
+      }
+      i += 6;
+    }
+    res.coeffRef(0) = true;
+    return res;
+  }
+};
+
+/* parallelization */
+// [[Rcpp::export]]
+auto psapply(std::vector<std::vector<int> > n) {
+  std::vector<Eigen::VectorXd> eta(n.size()); // these all have to be the same size
+  Eigen::VectorXd theta;
+  std::vector<std::vector<double> > x_d(n.size());
+  return stan::math::map_rect<0, is_prime>(theta, eta, x_d, n, &Rcpp::Rcout);
+}
+```
+
+Since the signature for `n` is a `std::vector<std::vector<int> >`, we have to pass
+it from R as a list (which is converted to the outer `std::vector<>`) of integer
+vectors (which is converted to the inner `std::vector<int>`) that happen to be of
+size one in this case.
+```{r}
+odd <- seq.int(from = 2^25 - 1, to = 2^26 - 1, by = 2)
+tail(psapply(n = as.list(odd))) == 1 # check your process manager while this is running
+```
+Thus, $2^{26} - 3 = 67,108,859$ is a prime number.
+
+# Defining a Stan Model in C++
+
+The Stan _language_ does not have much support for sparse matrices for a variety of
+reasons. Essentially the only applicable function is `csr_matrix_times_vector`, which 
+pre-multiplies a vector by a sparse matrix in compressed row storage by taking as arguments 
+its number of rows, columns, non-zero values, column indices of non-zero values, and
+locations where the non-zero values start in each row. While the 
+`csr_matrix_times_vector` function could be used to implement the example below,
+we illustrate how to use the sparse data structures in the **Matrix** and **RcppEigen**
+packages in a Stan model written in C++, which could easily be extended to more complicated
+models with sparse data structures.
+
+Our C++ file for the log-likelihood of a linear model with a sparse design matrix reads as
+```{r, echo = FALSE, comment = ""}
+cat(readLines("sparselm_stan.hpp"), sep = "\n")
+```
+
+To use it from R, we call the `exposeClass` function in the **Rcpp** package with
+the necessary arguments and then call `sourceCpp` on the file it wrote in the
+temporary directory:
+```{r, message = FALSE}
+library(Rcpp)
+tf <- tempfile(fileext = "Module.cpp")
+exposeClass("sparselm_stan",
+      constructors = list(c("Eigen::Map<Eigen::SparseMatrix<double> >", 
+                            "Eigen::VectorXd")),
+      fields = c("X", "y"),
+      methods = c("log_prob<>", "gradient<>"),
+      rename = c(log_prob = "log_prob<>", gradient = "gradient<>"),
+      header = c("// [[Rcpp::depends(BH)]]",
+                 "// [[Rcpp::depends(RcppEigen)]]",
+                 "// [[Rcpp::depends(StanHeaders)]]",
+                 "// [[Rcpp::plugins(cpp14)]]",
+                 paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
+      file = tf,
+      Rfile = "/tmp/sparselm_stan.R")
+Sys.setenv(PKG_CPPFLAGS = paste0("-I", 
+                                 system.file("include", "src", 
+                                             package = "StanHeaders", mustWork = TRUE)))
+sourceCpp(tf)
+sparselm_stan
+```
+At this point, we need a sparse design matrix and (dense) outcome vector to pass to
+the constructor. The former can be created with a variety of functions in the **Matrix**
+package, such as
+```{r}
+dd <- data.frame(a = gl(3, 4), b = gl(4, 1, 12))
+X <- Matrix::sparse.model.matrix(~ a + b, data = dd)
+X
+```
+Finally, we call the `new` function in the **methods** package, which essentially
+calls our C++ constructor and provides an R interface to the instantiated object,
+which contains the `log_prob` and `gradient` methods we defined and can be called
+with arbitrary inputs.
+```{r}
+sm <- new(sparselm_stan, X = X, y = rnorm(nrow(X)))
+sm$log_prob(c(beta = rnorm(ncol(X)), log_sigma = log(pi)))
+round(sm$gradient(c(beta = rnorm(ncol(X)), log_sigma = log(pi))), digits = 4)
+```
+
