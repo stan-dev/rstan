@@ -226,6 +226,13 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
+            diagnostic_columns <- which(grepl('__',colnames(samples)))[-1]
+            if (length(diagnostic_columns)>0) {
+                diagnostics <- samples[-1,diagnostic_columns]
+                samples <- samples[,-diagnostic_columns]
+            } else {
+                diagnostics <- NULL
+            }
             pest <- rstan_relist(as.numeric(samples[1,-1]), skeleton[-length(skeleton)])
             means <- sapply(samples, mean)
             means <- as.matrix(c(means[-1], means[1]))
@@ -247,6 +254,7 @@ setMethod("vb", "stanmodel",
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
             sim <- list(samples = list(as.list(samples)),
+                        diagnostics = list(as.list(diagnostics)),
                         iter = iter, thin = 1L,
                         warmup = 0L,
                         chains = 1L,
@@ -375,6 +383,8 @@ setMethod("optimizing", "stanmodel",
             fnames <- sampler$param_fnames_oi()
             names(optim$par) <- fnames[-length(fnames)]
             skeleton <- create_skeleton(m_pars, p_dims)
+            theta <- rstan_relist(optim$par, skeleton)
+            theta <- sampler$unconstrain_pars(theta)
             if (hessian || draws) {
               fn <- function(theta) {
                 sampler$log_prob(theta, FALSE, FALSE)
@@ -382,12 +392,11 @@ setMethod("optimizing", "stanmodel",
               gr <- function(theta) {
                 sampler$grad_log_prob(theta, FALSE)
               }
-              theta <- rstan_relist(optim$par, skeleton)
-              theta <- sampler$unconstrain_pars(theta)
               H <- optimHess(theta, fn, gr, control = list(fnscale = -1))
               colnames(H) <- rownames(H) <- sampler$unconstrained_param_names(FALSE, FALSE)
               if (hessian) optim$hessian <- H
-              if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
+            }
+            if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
                 K <- ncol(R)
                 R_inv <- backsolve(R, diag(K))
                 Z <- matrix(rnorm(K * draws), K, draws)
@@ -401,16 +410,17 @@ setMethod("optimizing", "stanmodel",
                 colnames(theta_tilde) <- colnames(H)
                 optim$log_prob <- sampler$log_prob
                 optim$grad_log_prob <- sampler$grad_log_prob
-                if (constrained) {
-                  theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
-                    sampler$constrain_pars(theta)  
-                  }))
-                  if (length(theta) == 1L) theta_tilde <- t(theta_tilde)
-                }
-                colnames(theta_tilde) <- names(optim$par)
-                optim$theta_tilde <- theta_tilde
-              }
+            } else {
+              theta_tilde <- t(theta)
             }
+            if (constrained) {
+              theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
+                sampler$constrain_pars(theta)  
+              }))
+              if (length(theta) == 1L) theta_tilde <- t(theta_tilde)
+            }
+            colnames(theta_tilde) <- names(optim$par)
+            optim$theta_tilde <- theta_tilde
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             return(optim)
           }) 
