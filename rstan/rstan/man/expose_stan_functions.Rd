@@ -38,7 +38,8 @@ Expose user-defined Stan functions to \R for testing and simulation
     controls whether compiler warnings, which can be numerous and have never
     been relevant, are shown}
   \item{seed}{An integer vector of length one indicating the state of Stan's
-    pseudo-random number generator}
+    pseudo-random number generator, but Stan's pseudo-random number generator
+    is not used anymore in Stan functions that have been exposed to R}
   \item{\dots}{
     Further arguments passed to \code{\link[Rcpp]{sourceCpp}}.
   }
@@ -47,33 +48,30 @@ Expose user-defined Stan functions to \R for testing and simulation
 \details{
   The \code{expose_stan_functions} function requires as much compliance with
   the C++14 standard as is implemented in the RTools toolchain for Windows.
-  On Windows, you will likely need to specify \code{CXX14 = g++ -std=c++1y}
-  in the file whose path is \code{\link{normalizePath}("~/.R/Makevars")} in
-  order for \code{expose_stan_functions} to work. Outside of Windows, the
-  necessary compiler flags are set programatically, which is likely to suffice.
+
+  Exposed user-defined Stan functions have an additional \code{pstream__}
+  argument that is added to the \code{\link{formals}} that previously was
+  used to manage the output stream if the function called \code{reject} or
+  \code{print}. However, the output stream is not handled internally and the
+  additional \code{pstream__} argument (which defaults to \code{NULL}) does
+  nothing.
 
   There are a few special types of user-defined Stan functions for which some 
   additional details are relevant:
   
   \subsection{(P)RNG functions}{
-  If a user-defined Stan function ends in \code{_rng}, then it can
-  use the Boost pseudo-random number generator used by Stan. When exposing
-  such functions to \R, \code{base_rng__} and \code{pstream__} arguments will 
-  be added to the \code{\link{formals}}. The \code{base_rng__} argument should
-  be passed the result of a call to \code{get_rng} (perhaps specifying its
-  \code{seed} argument for reproducibility) and the \code{pstream__} should
-  be passed the result of a call to \code{get_stream}, which can be used to
-  see the result of \code{print} and \code{reject} calls in the user-defined
-  Stan functions. These arguments default to \code{get_stream()} and
-  \code{get_rng()} respectively.
+  If a user-defined Stan function ends in \code{_rng}, then it now uses R's
+  pseudo-random number stream rather than Boost's. However, for backward
+  compatibility, a \code{base_rng__} argument is added to the \code{\link{formals}}
+  of the R version of the function, which defaults to \code{NULL} and is not
+  used. To reproduce the results, call \code{\link{set.seed}} as usual.
   }
   \subsection{LP functions}{
   If a user-defined Stan function ends in \code{_lp}, then it can
-  modify the log-probability used by Stan to evaluate Metropolis
-  proposals or as an objective function for optimization. When exposing
-  such functions to \R, a \code{lp__} argument will be added to the 
+  modify the log-probability used by Stan to evaluate an objective function. When 
+  exposing such functions to \R, a \code{lp__} argument will be added to the 
   \code{\link{formals}}. This \code{lp__} argument defaults to zero, but a 
-  \code{\link{double}} precision scalar may be  passed to this argument when the 
+  \code{\link{double}} precision scalar may be passed to this argument when the 
   function is called from \R. Such a user-defined Stan function can terminate 
   with \code{return target();} or can execute \code{print(target());} to verify that 
   the calculation is correct.
@@ -97,9 +95,7 @@ model_code <-
   }
 '
 expose_stan_functions(stanc(model_code = model_code))
+# For reproducibility, first call set.seed() with some integer argument
 standard_normal_rng()
-PRNG <- get_rng(seed = 3)
-o <- get_stream()
-standard_normal_rng(PRNG, o)
 }
 }
