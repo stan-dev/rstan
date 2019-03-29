@@ -187,7 +187,7 @@ Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(StanHeaders_pkg_libs)), "-lStan
 double Cauchy(double scale) {
   std::vector<double> theta;
   auto half = stan::math::integrate_1d([](auto x, auto xc, auto theta,
-                                          auto x_r, auto x_i, std::ostream &msgs) {
+                                          auto x_r, auto x_i, auto msgs) {
     return exp(stan::math::cauchy_lpdf(x, 0, x_r[0]));
   }, -scale, scale, theta, {scale}, {}, Rcpp::Rcout, 1e-7);
   return half * 2; // should equal 1 for any positive scale

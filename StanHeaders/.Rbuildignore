@@ -22,6 +22,8 @@ _inst/include/src/stan/agrad/.*\.cpp$
 _inst/include/src/stan/math/.*\.cpp$
 cleanup
 cleanup.win
+install-github.R
+inst/doc/.install_extras
 .*\.o$
 .*\.a$
 \.gitignore$
