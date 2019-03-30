@@ -69,8 +69,8 @@ using the R function `optim` below.
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(StanHeaders)]]
-#include <stan/math/mix/mat/functor/hessian.hpp> // stuff from mix/ must come first for Hessians
-#include <stan/math/fwd/mat/fun/dot_self.hpp>    // then stuff from fwd/ to evaluate dot_self()
+#include <stan/math/fwd/mat/fun/dot_self.hpp>    // stuff from fwd/ must come first
+#include <stan/math/mix/mat/functor/hessian.hpp> // then stuff from mix/ must come next
 #include <stan/math.hpp>                         // finally pull in everything from rev/ & prim/
 #include <Rcpp.h>
 #include <RcppEigen.h>
@@ -364,7 +364,7 @@ exposeClass("sparselm_stan",
                  "// [[Rcpp::plugins(cpp14)]]",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
       file = tf,
-      Rfile = "/tmp/sparselm_stan.R")
+      Rfile = FALSE)
 Sys.setenv(PKG_CPPFLAGS = paste0("-I", 
                                  system.file("include", "src", 
                                              package = "StanHeaders", mustWork = TRUE)))
