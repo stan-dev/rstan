@@ -114,6 +114,12 @@ parse_stancsv_comments <- function(comments) {
   for (z in names1) values[[z]] <- as.integer(values[[z]])
   for (z in names2) values[[z]] <- as.numeric(values[[z]])
   if (compute_iter) values[["iter"]] <- values[["iter"]] + values[["warmup"]]
+  if ("output_samples" %in% names(values)){ ## fix missing values for variational 
+    values[["iter"]] <- as.integer(values[["output_samples"]])
+    values[["warmup"]] <- 0L
+    values[["thin"]] <- 1L
+    values[["save_warmup"]] <- 1L
+  }
   c(values, add_lst)  
 }
 
@@ -181,6 +187,8 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
     close(con)
     cs_lst2[[i]] <- parse_stancsv_comments(comments)
+    if("output_samples" %in% names(cs_lst2[[i]])) 
+      df <- df[-1,] # remove the means 
     ss_lst[[i]] <- df
   } 
 
@@ -233,8 +241,11 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
   warmup <- sapply(cs_lst2, function(i) i$warmup)
   thin <- sapply(cs_lst2, function(i) i$thin)
   iter <- sapply(cs_lst2, function(i) i$iter)
+
   if (!all_int_eq(warmup) || !all_int_eq(thin) || !all_int_eq(iter)) 
     stop("not all iter/warmups/thin are the same in all CSV files")
+  
+
   n_kept0 <- 1 + (iter - warmup - 1) %/% thin
   warmup2 <- 0
   if (max(save_warmup) == 0L) { # all equal to 0L
@@ -261,7 +272,6 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
       cs_lst2[[i]]$iter <- iter
     }
   }
-
   idx_kept <- if (warmup2 == 0) 1:n_kept else -(1:warmup2)
   for (i in seq_along(samples)) {
     m <- vapply(samples[[i]], function(x) mean(x[idx_kept]), numeric(1))
