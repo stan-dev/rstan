@@ -111,7 +111,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   
   WINDOWS <- .Platform$OS.type == "windows"
   R_version <- with(R.version, paste(major, minor, sep = "."))
-  if (WINDOWS && R_version < "3.6.0") {
+  if (WINDOWS && R_version < "3.7.0") {
     has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
     Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
     if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
@@ -148,7 +148,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     close(zz)
     try(file.remove(tf), silent = TRUE)
     on.exit(NULL)
-    if (WINDOWS && R_version < "3.6.0") {
+    if (WINDOWS && R_version < "3.7.0") {
       if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
     } else {
       if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"), add = TRUE)
