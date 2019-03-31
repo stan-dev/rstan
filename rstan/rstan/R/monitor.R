@@ -16,23 +16,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# stan_prob_autocovariance <- function(v) { 
-#   .Call("stan_prob_autocovariance", v)
-# }
-
 fft_next_good_size <- function(N) {
   # Find the optimal next size for the FFT so that
   # a minimum number of zeros are padded.
   if (N <= 2)
     return(2)
   while (TRUE) {
-    m = N
-    while ((m %% 2) == 0) m = m / 2
-    while ((m %% 3) == 0) m = m / 3
-    while ((m %% 5) == 0) m = m / 5
+    m <- N
+    while ((m %% 2) == 0) m <- m / 2
+    while ((m %% 3) == 0) m <- m / 3
+    while ((m %% 5) == 0) m <- m / 5
     if (m <= 1)
       return(N)
-    N = N + 1
+    N <- N + 1
   }
 }
 
@@ -594,9 +590,9 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
   	print(tmp, digits = digits, ...)
   	cat(
   		"\nFor each parameter, Bulk_ESS and Tail_ESS are crude measures of \n",
-  		"effective sample size for bulk and tail quantities respectively (an ESS > 400 \n",
-  		"considered good), and Rhat is the potential scale reduction factor on rank normalized\n",
-  		"split chains (at convergence, Rhat = 1).\n", sep = ""
+  		"effective sample size for bulk and tail quantities respectively (an ESS > 100 \n",
+  		"per chain is considered good), and Rhat is the potential scale reduction \n",
+  		"factor on rank normalized split chains (at convergence, Rhat <= 1.01).\n", sep = ""
   	)
   }
   invisible(out) 

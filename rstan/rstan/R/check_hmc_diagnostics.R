@@ -68,27 +68,30 @@ throw_sampler_warnings <- function(object) {
     warning("Examine the pairs() plot to diagnose sampling problems\n",
             call. = FALSE, noBreaks. = TRUE)
   
-  sims <- as.matrix(object)
-  z <- z_scale(split_chains(sims))
-  bulk_rhat <- rhat_rfun(z)
-  if (bulk_rhat > 1.015)
+  sims <- as.array(object)
+  bulk_rhat <- apply(sims, MARGIN = 3, FUN = function(x) {
+    rhat_rfun(z_scale(split_chains(x)))
+  })
+  if (any(bulk_rhat > 1.015))
     warning("Bulk Rhat is too high, indicating chains have not converged.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#bulk-rhat")
   sims_folded <- abs(sims - median(sims))
-  tail_rhat <- rhat_rfun(z_scale(split_chains(sims_folded)))
-  if (tail_rhat > 1.015)
+  tail_rhat <- apply(sims_folded, MARGIN = 3, FUN = function(x) {
+    rhat_rfun(z_scale(split_chains(x)))
+  })
+  if (any(tail_rhat > 1.015))
     warning("Tail Rhat is too high, indicating chains have not converged.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#tail-rhat")
-  bulk_ess <- ess_rfun(z)
-  if (bulk_ess < 100 * ncol(object))
+  bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
+  if (any(bulk_ess < 100 * ncol(object)))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
             "indicating posterior medians are unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#bulk-ess")
-  tail_ess <- ess_tail(sims)
-  if (tail_ess < 100 * ncol(object))
+  tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
+  if (any(tail_ess < 100 * ncol(object)))
     warning("Tail Effective Samples Size (ESS) is too low, ",
             "indicating extreme posterior quantiles are unreliable.\n",
             "Running the chains for more iterations may help. See\n",
