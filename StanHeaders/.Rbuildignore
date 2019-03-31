@@ -23,6 +23,8 @@ _inst/include/src/stan/math/.*\.cpp$
 cleanup
 cleanup.win
 revdep
+install-github.R
+inst/doc/.install_extras
 .*\.o$
 .*\.a$
 \.gitignore$
