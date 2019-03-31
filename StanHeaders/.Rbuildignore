@@ -22,6 +22,7 @@ _inst/include/src/stan/agrad/.*\.cpp$
 _inst/include/src/stan/math/.*\.cpp$
 cleanup
 cleanup.win
+revdep
 .*\.o$
 .*\.a$
 \.gitignore$
