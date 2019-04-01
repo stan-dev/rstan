@@ -94,12 +94,14 @@ z_scale <- function(x) {
 #' Compute rank uniformization for a numeric array. First replace each
 #' value by its rank. Average rank for ties are used to conserve the
 #' number of unique values of discrete quantities. Second, uniformize
-#' ranks to scale [1/(2S), 1-1/(2S)], where S is the the number of values.
+#' ranks to scale \code{[1/(2S), 1-1/(2S)]}, where \code{S} is the the number 
+#' of values.
 #'
 #' @param x A numeric array of values.
 #'
 #' @return A numeric array of rank uniformized values with the same
 #'     size as input.
+#'     
 u_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
@@ -122,6 +124,7 @@ u_scale <- function(x) {
 #'
 #' @return A numeric array of ranked values with the same
 #'     size as input.
+#'     
 r_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
@@ -256,6 +259,8 @@ ess_rfun <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 rhat <- function(sims) {
   bulk_rhat <- rhat_rfun(z_scale(split_chains(sims)))
   sims_folded <- abs(sims - median(sims))
@@ -279,6 +284,8 @@ rhat <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 ess_bulk <- function(sims) {
   ess_rfun(z_scale(split_chains(sims)))
 }
@@ -299,6 +306,8 @@ ess_bulk <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 ess_tail <- function(sims) {
   I05 <- sims <= quantile(sims, 0.05)
   q05_ess <- ess_rfun(z_scale(split_chains(I05)))
@@ -323,6 +332,8 @@ ess_tail <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 ess_quantile <- function(sims, prob) {
   I <- sims <= quantile(sims, prob)
   ess_rfun(z_scale(split_chains(I)))
@@ -343,6 +354,8 @@ ess_quantile <- function(sims, prob) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 ess_mean <- function(sims) {
   ess_rfun(sims)
 }
@@ -363,6 +376,8 @@ ess_mean <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 ess_sd <- function(sims) {
   min(ess_rfun(sims), ess_rfun(sims^2))
 }
@@ -418,6 +433,8 @@ conv_quantile <- function(sims, prob) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 mcse_quantile <- function(sims, prob) {
   conv_quantile(sims, prob)$mcse
 }
@@ -443,6 +460,8 @@ mcse_quantile <- function(sims, prob) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 mcse_mean <- function(sims) {
   sd(sims) / sqrt(ess_mean(sims))
 }
@@ -463,6 +482,8 @@ mcse_mean <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 mcse_sd <- function(sims) {
   # assumes normality of sims and uses Stirling's approximation
   ess_sd <- ess_sd(sims)
@@ -497,6 +518,8 @@ mcse_sd <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
+#' 
+#' @export
 monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95), 
                     se = FALSE, print = TRUE, digits = 1, ...) { 
   if (inherits(sims, "stanfit")) {
