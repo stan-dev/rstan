@@ -77,13 +77,13 @@ throw_sampler_warnings <- function(object) {
   bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
   if (any(bulk_ess < 100 * ncol(object)))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
-            "indicating posterior medians are unreliable.\n",
+            "indicating posterior means and medians may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#bulk-ess")
   tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
   if (any(tail_ess < 100 * ncol(object)))
-    warning("Tail Effective Samples Size (ESS) is too low, ",
-            "indicating extreme posterior quantiles are unreliable.\n",
+    warning("Tail Effective Samples Size (ESS) is too low, indicating",
+            "posterior variances and tail quantiles may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#tail-ess")
   
