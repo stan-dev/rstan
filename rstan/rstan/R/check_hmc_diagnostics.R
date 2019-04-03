@@ -73,7 +73,7 @@ throw_sampler_warnings <- function(object) {
       warning("The largest R-hat is ", round(max(rhat,2)),
             ", indicating chains have not mixed.\n",
             "Running the chains for more iterations may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#rhat")
+            "http://mc-stan.org/misc/warnings.html#r-hat")
   bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
   if (any(bulk_ess < 100 * ncol(object)))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
