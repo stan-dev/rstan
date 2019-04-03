@@ -68,22 +68,12 @@ throw_sampler_warnings <- function(object) {
     warning("Examine the pairs() plot to diagnose sampling problems\n",
             call. = FALSE, noBreaks. = TRUE)
   
-  sims <- as.array(object)
-  bulk_rhat <- apply(sims, MARGIN = 3, FUN = function(x) {
-    rhat_rfun(z_scale(split_chains(x)))
-  })
-  if (any(bulk_rhat > 1.015))
-    warning("Bulk Rhat is too high, indicating chains have not converged.\n",
+  rhat <- apply(sims, MARGIN = 3, FUN = rhat)
+  if (any(rhat > 1.01))
+      warning("The largest R-hat is ", round(max(rhat,2)),
+            ", indicating chains have not mixed.\n",
             "Running the chains for more iterations may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#bulk-rhat")
-  sims_folded <- abs(sims - median(sims))
-  tail_rhat <- apply(sims_folded, MARGIN = 3, FUN = function(x) {
-    rhat_rfun(z_scale(split_chains(x)))
-  })
-  if (any(tail_rhat > 1.015))
-    warning("Tail Rhat is too high, indicating chains have not converged.\n",
-            "Running the chains for more iterations may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#tail-rhat")
+            "http://mc-stan.org/misc/warnings.html#rhat")
   bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
   if (any(bulk_ess < 100 * ncol(object)))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
