@@ -24,21 +24,32 @@ ess_tail(sims)
   draws for a particular parameter or function of parameters.
 }
 }
-\details{
-Add details
-}
 \value{
-The \code{rhat} function produces an estimated potential
-scale factor reduction from running the chain for an infinite
-number of iteraions and should be less than \eqn{1.015} at
-convergence. The \code{ess_bulk} function produces an estimated
-Effective Sample Size from near the center of the posterior
-distribution, while the \code{ess_bulk} function produces an 
-estimated Effective Sample Size from the tails of the posterior
-distribution. Both Effective Sample Size estimates should be
-at least \eqn{100} per Markov Chain in order to be reliable and
-indicate that estimates of respective posterior quantiles are 
-reliable.
+The \code{rhat} function produces R-hat convergence diagnostic, which
+compares the between- and within-chain estimates for model parameters
+and other univariate quantities of interest. If chains have not mixed
+well (ie, the between- and within-chain estimates don't agree), R-hat is
+larger than 1. We recommend running at least four chains by default and
+only using the sample if R-hat is less than 1.01. Stan reports R-hat
+which is the maximum of rank normalized split-R-hat and rank normalized
+folded-split-R-hat, which works for thick tailed distributions and is
+sensitive also to differences in scale.
+
+The \code{ess_bulk} function produces an estimated Bulk Effective Sample
+Size (bulk-ESS) using rank normalized draws. Bulk-ESS is useful measure
+for sampling efficiency in the bulk of the distribution (related e.g. to
+efficiency of mean and median estimates), and is well defined even if
+the chains do not have finite mean or variance.
+
+The \code{ess_bulk} function produces an estimated Tail Effective Sample
+Size (tail-ESS) by computing the minimum of effective sample sizes for
+5\% and 95\% quantiles. Tail-ESS is useful measure for sampling
+efficiency in the tails of the distribution (related e.g. to efficiency
+of variance and tail quantile estimates).
+
+Both bulk-ESS and tail-ESS should be at least \eqn{100} (approximately)
+per Markov Chain in order to be reliable and indicate that estimates of
+respective posterior quantiles are reliable.
 }
 \references{
 Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
