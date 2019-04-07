@@ -257,18 +257,19 @@ setMethod("vb", "stanmodel",
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
             if ("log_g__" %in% colnames(diagnostics)) {
-              samples <- samples[,-which(grepl('lp__.1',colnames(samples)))]
+              if (length(extralp <- which(grepl('lp__.1',colnames(samples))))>0)
+                  samples <- samples[,-extralp]
               lr <- diagnostics$log_p-diagnostics$log_g
               lr[lr==-Inf] <- -800
               p <- suppressWarnings(loo::psis(lr, r_eff=1))
               p$log_weights <- p$log_weights-log_sum_exp(p$log_weights)
               theta_pareto_k <- suppressWarnings(apply(samples, 2L, function(col) if (all(is.finite(col))) loo::psis(log1p(col^2)/2+lr, r_eff=1)$diagnostics$pareto_k else NaN))
               ## todo: change fixed threshold to an option
-              if (any(theta_pareto_k > 0.7, na.rm = TRUE)) {
-                warning("Some Pareto k diagnostic values are too high. Resampling is not reliable. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.", call.=FALSE, immediate. = TRUE)
+              if (p$diagnostics$pareto_k > 1) {
+                warning("Pareto k diagnostic value is ", round(p$diagnostics$pareto_k,2), ". Resampling is disabled. Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely. Otherwise consider using sampling instead.", call.=FALSE, immediate. = TRUE)
                 #importance_resampling <- FALSE
-              } else if (any(theta_pareto_k > 0.5, na.rm = TRUE)) { 
-                warning("Some Pareto k diagnostic values are slightly high. Increasing the number of draws or decreasing tol_rel_obj may help.", call.=FALSE, immediate. = TRUE)
+              } else if (p$diagnostics$pareto_k > 0.7) { 
+                warning("Pareto k diagnostic value is ", round(p$diagnostics$pareto_k,2), ". Resampling is unreliable. Increasing the number of draws or decreasing tol_rel_obj may help.", call.=FALSE, immediate. = TRUE)
               }
               psis <- loo::nlist(pareto_k = p$diagnostics$pareto_k,
                                  n_eff = p$diagnostics$n_eff/thin)
