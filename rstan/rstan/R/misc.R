@@ -1710,18 +1710,3 @@ avoid_crash <- function(mod) {
   as(get("packageName", envir = mod)["info"][1], "character") %in% 
     c("<pointer: (nil)>", "<pointer: 0x0>")
 }
-
-make_makevars <- function(DIR = tempdir()) {
-  CXX11 <- get_CXX(FALSE)
-  if (!file.exists(CXX11)) CXX11 <- basename(CXX11)
-  Makevars <- c(CXX14 = paste0("CXX14 := ", CXX11),
-                CXX14STD = "CXX14STD := -std=c++1y",
-                CXX14FLAGS = "CXX14FLAGS := -O3")
-  fn <- file.path(DIR, ifelse(.Platform$OS.type == "windows", 
-                              "Makevars.win", "Makevars"))
-  if (!file.exists(fn) && file.access(DIR, mode = 2) == 0) {
-    writeLines(Makevars, con = fn)
-    return(invisible(TRUE))
-  }
-  return(invisible(FALSE))
-}
