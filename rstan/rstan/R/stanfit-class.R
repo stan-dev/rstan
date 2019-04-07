@@ -539,9 +539,15 @@ setMethod("summary", signature = "stanfit",
             if (!use_cache) {
               # not using the cached (and not create cache, which takes time for too many pars)
               ss <-  summary_sim(object@sim, pars, probs) 
-              s1 <- cbind(ss$msd[, 1, drop = FALSE], ss$sem, ss$msd[, 2, drop = FALSE], 
-                          ss$quan, ss$ess, ss$rhat)
-              colnames(s1) <- c("mean", "se_mean", "sd", colnames(ss$quan), 'n_eff', 'Rhat')
+              if (object@stan_args[[1]]$method=="variational") {
+                s1 <- cbind(ss$msd[, 1, drop = FALSE], ss$sem, ss$msd[, 2, drop = FALSE], 
+                            ss$quan, ss$ess, ss$khat)
+                colnames(s1) <- c("mean", "se_mean", "sd", colnames(ss$quan), 'n_eff', 'khat')
+              } else {
+                s1 <- cbind(ss$msd[, 1, drop = FALSE], ss$sem, ss$msd[, 2, drop = FALSE], 
+                            ss$quan, ss$ess, ss$rhat)
+                colnames(s1) <- c("mean", "se_mean", "sd", colnames(ss$quan), 'n_eff', 'Rhat')
+              }
               s2 <- combine_msd_quan(ss$c_msd, ss$c_quan) 
               idx2 <- match(attr(ss, "row_major_idx"), attr(ss, "col_major_idx"))
               sf <- list(summary = s1[idx2, , drop = FALSE],
@@ -552,14 +558,20 @@ setMethod("summary", signature = "stanfit",
             if (any(is.na(m))) { # unordinary quantiles are requested 
               ss <-  summary_sim_quan(object@sim, pars, probs) 
               col_idx <- attr(ss, "col_major_idx") 
-              ss$ess <- object@.MISC$summary$ess[col_idx, drop = FALSE] 
-              ss$rhat <- object@.MISC$summary$rhat[col_idx, drop = FALSE] 
+              ss$ess <- object@.MISC$summary$ess[col_idx, drop = FALSE]
+              if (object@stan_args[[1]]$method=="variational") {
+                ss$hat <- object@.MISC$summary$khat[col_idx, drop = FALSE]
+                hatstr <- "khat"
+              } else {
+                ss$hat <- object@.MISC$summary$rhat[col_idx, drop = FALSE]
+                hatstr <- "Rhat"
+              }
               ss$mean <- object@.MISC$summary$msd[col_idx, 1, drop = FALSE] 
               ss$sd <- object@.MISC$summary$msd[col_idx, 2, drop = FALSE] 
               ss$sem <- object@.MISC$summary$sem[col_idx]  
               s1 <- cbind(ss$mean, ss$sem, ss$sd, 
-                          ss$quan, ss$ess, ss$rhat)
-              colnames(s1) <- c("mean", "se_mean", "sd", colnames(ss$quan), 'n_eff', 'Rhat')
+                          ss$quan, ss$ess, ss$hat)
+              colnames(s1) <- c("mean", "se_mean", "sd", colnames(ss$quan), 'n_eff', hatstr)
               s2 <- combine_msd_quan(object@.MISC$summary$c_msd[col_idx, , , drop = FALSE], ss$c_quan) 
               idx2 <- match(attr(ss, "row_major_idx"), col_idx)
               ss <- list(summary = s1[idx2, , drop = FALSE],
