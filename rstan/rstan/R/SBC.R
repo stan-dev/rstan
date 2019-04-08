@@ -12,13 +12,14 @@ SBC <- function(stanmodel, data, M, ...) {
   # prior predictive distribution
   Y <- sapply(post, FUN = function(p) {
     means <- get_posterior_mean(p)[, 1]
-    means[grepl("y_\\[.*\\]", names(means))]
+    # will be just 'y_' if length 1, otherwise will have brackets
+    means[grepl("y_$|y_\\[.*\\]", names(means))] 
   })
   
   # parameter names
   stan_code <- get_stancode(stanmodel)
   stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
-  pars_lines <- grep("^[[:space:]]*pars_\\[.*\\][[:space:]]*=", stan_code, value = TRUE)
+  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE) # is this right?
   pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
   pars_names <- sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names)
   pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
@@ -33,11 +34,19 @@ SBC <- function(stanmodel, data, M, ...) {
     mark <- grepl("pars_\\[[[:digit:]]+\\]", names(means))
     return(means[mark])
   })
-  if (length(pars) > 0L) rownames(pars) <- pars_names
+  if (length(pars) > 0L) {
+    if (is.null(dim(pars))) {
+      pars <- t(as.matrix(pars))
+    }
+    rownames(pars) <- pars_names
+  }
   
   # not actually ranks but rather unthinned binary values for draw > true
   ranks <- lapply(post, FUN = function(p) {
     r <- extract(p, pars = "ranks_", permuted = FALSE)[, 1, ]
+    if (is.null(dim(r))) {
+      r <- as.matrix(r)
+    }
     colnames(r) <- pars_names
     return(r)
   })

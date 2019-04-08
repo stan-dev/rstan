@@ -84,18 +84,19 @@ a posterior distribution conditional on observed data.
   The \code{SBC} function outputs a list of S3 class \code{"SBC"}, which contains the
   following elements:
   \enumerate{
-  \item \code{ranks} A list of matrices whose rows are equal to the number of unknown
-    parameters and whose columns are equal to \code{M} that contain the realizations
+  \item \code{ranks} A list of \code{M} matrices, each with number of 
+    rows equal to the number of saved iterations and number of columns equal to 
+    the number of unknown parameters. These matrices contain the realizations
     of the \code{ranks_} object from the \code{generated quantities} block of the
-    Stan program
+    Stan program.
   \item \code{Y} If present, a matrix of realizations from the prior predictive
     distribution whose rows are equal to the number of observations and whose columns
     are equal to \code{M}, which are taken from the \code{y_} object in the 
-    \code{generated quantities} block of the Stan program
+    \code{generated quantities} block of the Stan program.
   \item \code{pars} A matrix of realizations from the prior distribution whose rows
     are equal to the number of parameters and whose columns are equal to \code{M}, 
     which are taken from the \code{pars_} object in the \code{generated quantities}
-    block of the Stan program
+    block of the Stan program.
   \item \code{sampler_params} A three-dimensional array that results from combining
     calls to \code{\link{get_sampler_params}} for each of
     the \code{M} runs. The resulting matrix has rows equal to the number of 
