@@ -226,6 +226,9 @@ ess_rfun <- function(sims) {
     if ((rho_hat_even + rho_hat_odd) >= 0) {
       rho_hat_t[t + 1] <- rho_hat_even
       rho_hat_t[t + 2] <- rho_hat_odd
+    } else {
+      # this is used in the improved truncation
+      rho_hat_t[t + 1] <- rho_hat_even
     }
     t <- t + 2
   }
@@ -241,7 +244,11 @@ ess_rfun <- function(sims) {
     t <- t + 2
   }
   ess <- chains * n_samples
-  ess <- ess / (-1 + 2 * sum(rho_hat_t[1:max_t]))
+  # Geyer's truncation
+  # tau_hat <- -1 + 2 * sum(rho_hat_t[1:max_t])
+  # Improved truncation handles antithetic case better
+  tau_hat <- -1 + 2 * sum(rho_hat_t[1:max_t]) + rho_hat_t[max_t+1]
+  ess <- ess / tau_hat
   ess
 }
 
