@@ -49,7 +49,8 @@ autocovariance <- function(y) {
   yc <- c(yc, rep.int(0, Mt2 - N))
   transform <- fft(yc)
   ac <- fft(Conj(transform) * transform, inverse = TRUE)
-  ac <- Re(ac)[1:N] / (N * 2 * seq(N, 1, by = -1))
+  # use "biased" estimate as recommended by Geyer (1992)
+  ac <- Re(ac)[1:N] / (N * N * 2)
   ac
 }
 
