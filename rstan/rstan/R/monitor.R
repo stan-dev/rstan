@@ -584,7 +584,7 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
     )
   }
   
-  out <- do.call(rbind, out)
+  out <- as.data.frame(do.call(rbind, out))
   str_quan <- paste0("Q", probs * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
   colnames(out) <- c(
@@ -605,24 +605,36 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
   	out[valid & !is.finite(out[, v]), v] <- 0
   }
   
-  if (print) {
-  	# amended output for pretty printing
-  	tmp <- out
-  	if (!se) {
-  		tmp <- tmp[, !grepl("^MCSE_", colnames(tmp))]
-  	}
-  	decimal_places <- max(1, digits - 1)
-  	tmp[, "Rhat"] <- round(tmp[, "Rhat"], digits = max(2, decimal_places))
-  	estimates <- setdiff(names(tmp), c("Rhat", "Bulk_ESS", "Tail_ESS"))
-  	tmp[, estimates] <- round(tmp[, estimates], digits = decimal_places)
-  	# add a space between summary and convergence estimates
-  	colnames(tmp)[colnames(tmp) %in% "Rhat"] <- " Rhat"
-  	cat(
-  		"Inference for the input samples (", chains, 
-  		" chains: each with iter = ", iter, 
-  		"; warmup = ", warmup, "):\n\n", sep = ""
-  	)
-  	print(tmp, digits = digits, ...)
+  structure(
+    out,
+    chains = chains,
+    iter = iter,
+    warmup = warmup,
+    class = c("simsummary", "data.frame")
+  )
+} 
+
+print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
+  atts <- attributes(x)
+  px <- x
+  if (!se) {
+    px <- px[, !grepl("^MCSE_", colnames(px))]
+  }
+  class(px) <- "data.frame"
+  decimal_places <- max(1, digits - 1)
+  px$Rhat <- round(px$Rhat, digits = max(2, decimal_places))
+  estimates <- setdiff(names(px), c("Rhat", "Bulk_ESS", "Tail_ESS"))
+  px[, estimates] <- round(px[, estimates], digits = decimal_places)
+  #px[, estimates] <- signif(px[, estimates], digits = digits)
+  # add a space between summary and convergence estimates
+  names(px)[names(px) %in% "Rhat"] <- " Rhat"
+  cat(
+    "Inference for the input samples (", atts$chains,
+    " chains: each with iter = ", atts$iter,
+    "; warmup = ", atts$warmup, "):\n\n", sep = ""
+  )
+  print(px, ...)
+  if (!isTRUE(atts$extra)) {
   	cat(
   		"\nFor each parameter, Bulk_ESS and Tail_ESS are crude measures of \n",
   		"effective sample size for bulk and tail quantities respectively (an ESS > 100 \n",
@@ -630,5 +642,5 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
   		"factor on rank normalized split chains (at convergence, Rhat <= 1.01).\n", sep = ""
   	)
   }
-  invisible(out) 
-} 
+  invisible(x)
+}
