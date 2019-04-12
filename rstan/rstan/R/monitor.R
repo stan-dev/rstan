@@ -49,7 +49,8 @@ autocovariance <- function(y) {
   yc <- c(yc, rep.int(0, Mt2 - N))
   transform <- fft(yc)
   ac <- fft(Conj(transform) * transform, inverse = TRUE)
-  ac <- Re(ac)[1:N] / (N * 2 * seq(N, 1, by = -1))
+  # use "biased" estimate as recommended by Geyer (1992)
+  ac <- Re(ac)[1:N] / (N * N * 2)
   ac
 }
 
@@ -216,40 +217,42 @@ ess_rfun <- function(sims) {
   # Geyer's initial positive sequence
   rho_hat_t <- rep.int(0, n_samples)
   t <- 0
-  rho_hat_even <- 1;
+  rho_hat_even <- 1
   rho_hat_t[t + 1] <- rho_hat_even
   rho_hat_odd <- 1 - (mean_var - mean(acov[t + 2, ])) / var_plus
   rho_hat_t[t + 2] <- rho_hat_odd
-  t <- 2
-  while (t < nrow(acov) - 1 && !is.nan(rho_hat_even + rho_hat_odd) &&
+  while (t < nrow(acov) - 5 && !is.nan(rho_hat_even + rho_hat_odd) &&
          (rho_hat_even + rho_hat_odd > 0)) {
+    t <- t + 2
     rho_hat_even = 1 - (mean_var - mean(acov[t + 1, ])) / var_plus
     rho_hat_odd = 1 - (mean_var - mean(acov[t + 2, ])) / var_plus
     if ((rho_hat_even + rho_hat_odd) >= 0) {
       rho_hat_t[t + 1] <- rho_hat_even
       rho_hat_t[t + 2] <- rho_hat_odd
-    } else {
-      # this is used in the improved truncation
-      rho_hat_t[t + 1] <- rho_hat_even
     }
-    t <- t + 2
   }
   max_t <- t
+  # this is used in the improved estimate
+  if (rho_hat_even>0)
+      rho_hat_t[max_t + 1] <- rho_hat_even
+  
   # Geyer's initial monotone sequence
-  t <- 2
-  while (t <= max_t - 2) {
+  t <- 0
+  while (t <= max_t - 4) {
+    t <- t + 2
     if (rho_hat_t[t + 1] + rho_hat_t[t + 2] >
         rho_hat_t[t - 1] + rho_hat_t[t]) {
       rho_hat_t[t + 1] = (rho_hat_t[t - 1] + rho_hat_t[t]) / 2;
       rho_hat_t[t + 2] = rho_hat_t[t + 1];
     }
-    t <- t + 2
   }
   ess <- chains * n_samples
-  # Geyer's truncation
+  # Geyer's truncated estimate
   # tau_hat <- -1 + 2 * sum(rho_hat_t[1:max_t])
-  # Improved truncation handles antithetic case better
+  # Improved estimate reduces variance in antithetic case
   tau_hat <- -1 + 2 * sum(rho_hat_t[1:max_t]) + rho_hat_t[max_t+1]
+  # Safety check for negative values and with max ess equal to ess*log10(ess)
+  tau_hat <- max(tau_hat, 1/log10(ess))
   ess <- ess / tau_hat
   ess
 }
