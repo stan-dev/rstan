@@ -417,7 +417,7 @@ setMethod("optimizing", "stanmodel",
               theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
                 sampler$constrain_pars(theta)  
               }))
-              if (length(theta) == 1L) theta_tilde <- t(theta_tilde)
+              if (NCOL(theta_tilde) != length(optim$par)) theta_tilde <- t(theta_tilde)
             }
             colnames(theta_tilde) <- names(optim$par)
             optim$theta_tilde <- theta_tilde

@@ -143,6 +143,7 @@ split_chains <- function(sims) {
     dim(sims) <- c(length(sims), 1)
   }
   niter <- dim(sims)[1]
+  if (niter == 1L) return(sims)
   half <- niter / 2
   cbind(sims[1:floor(half), ], sims[ceiling(half + 1):niter, ])
 }
@@ -202,6 +203,7 @@ ess_rfun <- function(sims) {
   }
   chains <- ncol(sims)
   n_samples <- nrow(sims)
+  if (n_samples < 3L) return(NaN)
 
   acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i]))
   acov <- do.call(cbind, acov)
