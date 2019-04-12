@@ -19,6 +19,9 @@ rstan_ess <- function(sim, n) {
   # Args:
   #   n: Chain index starting from 1.
   ess <- .Call(effective_sample_size, sim, n - 1)
+  S <- floor((sim$iter-sim$warmup)*sim$chains/sim$thin)
+  max_ess <- S*log10(S)
+  if (ess<0 || ess>max_ess) ess <- max_ess
   ess
 } 
 
@@ -41,6 +44,9 @@ rstan_ess2_cpp <- function(sims) {
   # Args:
   #   sim: samples of several chains _without_ warmup
   ess <- .Call(effective_sample_size2, sims)
+  S <- floor((sim$iter-sim$warmup)*sim$chains/sim$thin)
+  max_ess <- S*log10(S)
+  if (ess<0 || ess>max_ess) ess <- max_ess
   ess
 } 
 
