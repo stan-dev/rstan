@@ -369,7 +369,7 @@ ess_quantile <- function(sims, prob) {
 #' 
 #' @export
 ess_mean <- function(sims) {
-  ess_rfun(sims)
+  ess_rfun(split_chains(sims))
 }
 
 #' Effective sample size
@@ -391,7 +391,7 @@ ess_mean <- function(sims) {
 #' 
 #' @export
 ess_sd <- function(sims) {
-  min(ess_rfun(sims), ess_rfun(sims^2))
+  min(ess_rfun(split_chains(sims)), ess_rfun(split_chains(sims^2)))
 }
 
 #' Monte Carlo diagnostics for a quantile
@@ -416,7 +416,7 @@ conv_quantile <- function(sims, prob) {
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
-  ess <- ess_quantile(sims, prob)
+  ess <- ess_quantile(split_chains(sims), prob)
   p <- c(0.1586553, 0.8413447, 0.05, 0.95)
   a <- qbeta(p, ess * prob + 1, ess * (1 - prob) + 1)
   ssims <- sort(sims)
