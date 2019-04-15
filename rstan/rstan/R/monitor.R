@@ -322,9 +322,9 @@ ess_bulk <- function(sims) {
 #' @export
 ess_tail <- function(sims) {
   I05 <- sims <= quantile(sims, 0.05)
-  q05_ess <- ess_rfun(z_scale(split_chains(I05)))
+  q05_ess <- ess_rfun(split_chains(I05))
   I95 <- sims <= quantile(sims, 0.95)
-  q95_ess <- ess_rfun(z_scale(split_chains(I95)))
+  q95_ess <- ess_rfun(split_chains(I95))
   min(q05_ess, q95_ess)
 }
 
@@ -348,7 +348,7 @@ ess_tail <- function(sims) {
 #' @export
 ess_quantile <- function(sims, prob) {
   I <- sims <= quantile(sims, prob)
-  ess_rfun(z_scale(split_chains(I)))
+  ess_rfun(split_chains(I))
 }
 
 #' Effective sample size
