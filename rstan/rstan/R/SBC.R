@@ -80,7 +80,7 @@ print.SBC <- function(x, ...) {
                             "divergent transitions across all chains"))
   if (length(x$pareto_k)) {
     cut_pareto_k <- cut(c(x$pareto_k), breaks = c(0.5, 0.7, 1, Inf))
-    print("Aggregate Pareto k estimates:)
+    print("Aggregate Pareto k estimates:")
     print(prop.table(table(cut_pareto_k)))
   }
   return(invisible(NULL))
