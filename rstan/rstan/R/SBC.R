@@ -1,6 +1,6 @@
 SBC <- function(stanmodel, data, M, ...) {
   stopifnot(is(stanmodel, "stanmodel"))
-  post <- mclapply(1:M, FUN = function(m) {
+  post <- parallel::mclapply(1:M, FUN = function(m) {
     S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
     sampling(stanmodel, data, pars = "ranks_", include = TRUE,
              chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
