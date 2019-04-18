@@ -18,6 +18,7 @@ importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
 
 export(
+  SBC,
   stan_model,
   stanc,
   stanc_builder,
@@ -66,7 +67,8 @@ export(
   get_low_bfmi_chains,
   get_rng,
   get_stream,
-  RNG, OUT
+  RNG, OUT,
+  rhat, ess_bulk, ess_tail
 )
 
 exportClasses(
@@ -103,3 +105,5 @@ S3method(pairs, stanfit)
 S3method(loo, stanfit)
 importFrom("loo", "loo", "loo.array")
 export("loo")
+S3method(print, SBC)
+S3method(plot, SBC)

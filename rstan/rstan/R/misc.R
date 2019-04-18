@@ -1631,61 +1631,6 @@ create_progress_html_file <- function(htmlfname, textfname) {
   cat(src2, file = htmlfname)
 }
 
-throw_sampler_warnings <- function(object) {
-  if (!is(object, "stanfit"))
-    stop("'object' must be of class 'stanfit'")
-  sp <- get_sampler_params(object, inc_warmup = FALSE)
-  n_d <- sum(sapply(sp, FUN = function(x) {
-    if ("divergent__" %in% colnames(x)) return(sum(x[,"divergent__"]))
-    else return(0)
-  }))
-  if (n_d > 0) {
-    ad <- object@stan_args[[1]]$control
-    if (is.null(ad)) ad <- 0.8
-    else {
-      ad <- ad$adapt_delta
-      if (is.null(ad)) ad <- 0.8
-    }
-    warning("There were ", n_d, " divergent transitions after warmup.",
-            " Increasing adapt_delta above ", ad, " may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup", call. = FALSE)
-  }
-  max_td <- object@stan_args[[1]]$control
-  if (is.null(max_td)) max_td <- 10
-  else {
-    max_td <- max_td$max_treedepth
-    if (is.null(max_td)) max_td <- 10
-  }
-  n_m <- sum(sapply(sp, FUN = function(x) {
-    if ("treedepth__" %in% colnames(x)) return(sum(x[,"treedepth__"] >= max_td))
-    else return(0)
-  }))
-  if (n_m > 0)
-    warning("There were ", n_m,
-            " transitions after warmup that exceeded the maximum treedepth.",
-            " Increase max_treedepth above ", max_td, ". See\n",
-            "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
-  n_e <- 0L
-  if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
-    E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
-    threshold <- 0.2
-    if (nrow(E) > 1) {
-      EBFMI <- get_num_upars(object) / apply(E, 2, var)
-      n_e <- sum(EBFMI < threshold, na.rm = TRUE)
-    }
-    else n_e <- 0L
-    if (n_e > 0)
-      warning("There were ", n_e, 
-              " chains where the estimated Bayesian Fraction of Missing Information",
-              " was low. See\n", 
-              "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
-  }
-  if (n_d > 0 || n_m > 0 || n_e > 0) 
-    warning("Examine the pairs() plot to diagnose sampling problems\n",
-            call. = FALSE, noBreaks. = TRUE)
-  return(invisible(NULL))
-}
-
 get_CXX <- function(CXX14 = TRUE) {
   if (.Platform$OS.type != "windows")
     return (system2(file.path(R.home(component = "bin"), "R"),
@@ -1709,19 +1654,4 @@ avoid_crash <- function(mod) {
   file.exists(get("packageName", envir = mod)[["path"]]) &&
   as(get("packageName", envir = mod)["info"][1], "character") %in% 
     c("<pointer: (nil)>", "<pointer: 0x0>")
-}
-
-make_makevars <- function(DIR = tempdir()) {
-  CXX11 <- get_CXX(FALSE)
-  if (!file.exists(CXX11)) CXX11 <- basename(CXX11)
-  Makevars <- c(CXX14 = paste0("CXX14 := ", CXX11),
-                CXX14STD = "CXX14STD := -std=c++1y",
-                CXX14FLAGS = "CXX14FLAGS := -O3")
-  fn <- file.path(DIR, ifelse(.Platform$OS.type == "windows", 
-                              "Makevars.win", "Makevars"))
-  if (!file.exists(fn) && file.access(DIR, mode = 2) == 0) {
-    writeLines(Makevars, con = fn)
-    return(invisible(TRUE))
-  }
-  return(invisible(FALSE))
 }
