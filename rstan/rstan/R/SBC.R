@@ -1,8 +1,22 @@
 SBC <- function(stanmodel, data, M, ...) {
   stopifnot(is(stanmodel, "stanmodel"))
+  
+  # parameter names
+  stan_code <- get_stancode(stanmodel)
+  stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
+  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE)
+  pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
+  pars_names <- sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names)
+  pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
+  if (!is.character(pars_names)) {
+    warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
+    pars_names <- NULL
+  }
+  has_log_lik <- grepl("log_lik[[:space:]]*;[[:space:]]*" stan_code)
+  
   post <- parallel::mclapply(1:M, FUN = function(m) {
     S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
-    sampling(stanmodel, data, pars = "ranks_", include = TRUE,
+    sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
              chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
   })
   
@@ -16,18 +30,6 @@ SBC <- function(stanmodel, data, M, ...) {
     means[grepl("y_$|y_\\[.*\\]", names(means))] 
   })
   
-  # parameter names
-  stan_code <- get_stancode(stanmodel)
-  stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
-  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE) # is this right?
-  pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
-  pars_names <- sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names)
-  pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
-  if (!is.character(pars_names)) {
-    warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
-    pars_names <- NULL
-  }
-
   # realizations of true parameters from transformed data
   pars <- sapply(post, FUN = function(p) {
     means <- get_posterior_mean(p)[, 1]
@@ -50,8 +52,12 @@ SBC <- function(stanmodel, data, M, ...) {
     colnames(r) <- pars_names
     return(r)
   })
+    
+  if (has_log_lik) 
+    pareto_k <- sapply(post, FUN = function(x) loo(x)$diagnostics$pareto_k)
 
-  out <- list(ranks = ranks, Y = Y, pars = pars, sampler_params = sampler_params)
+  out <- list(ranks = ranks, Y = Y, pars = pars, sampler_params = sampler_params, 
+              pareto_k = if (has_log_lik) pareto_k)
   class(out) <- "SBC"
   return(out)
 }
@@ -72,5 +78,10 @@ print.SBC <- function(x, ...) {
   print(paste(bad, "chains had divergent transitions after warmup"))
   if (bad > 0L) print(paste("there were a total of", sum(divergences), 
                             "divergent transitions across all chains"))
+  if (length(x$pareto_k)) {
+    cut_pareto_k <- cut(c(x$pareto_k), breaks = c(0.5, 0.7, 1, Inf))
+    print("Aggregate Pareto k estimates:)
+    print(prop.table(table(cut_pareto_k)))
+  }
   return(invisible(NULL))
 }
