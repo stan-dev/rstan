@@ -12,7 +12,7 @@ SBC <- function(stanmodel, data, M, ...) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
     pars_names <- NULL
   }
-  has_log_lik <- grepl("log_lik[[:space:]]*;[[:space:]]*" stan_code)
+  has_log_lik <- grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code)
   
   post <- parallel::mclapply(1:M, FUN = function(m) {
     S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
