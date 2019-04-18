@@ -4,21 +4,22 @@ SBC <- function(stanmodel, data, M, ...) {
   # parameter names
   stan_code <- get_stancode(stanmodel)
   stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
-  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE)
+  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE)[-1]
   pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
   pars_names <- sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names)
-  pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
-  if (!is.character(pars_names)) {
-    warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
-    pars_names <- NULL
-  }
-  has_log_lik <- grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code)
+  has_log_lik <- any(grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code))
   
   post <- parallel::mclapply(1:M, FUN = function(m) {
     S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
     sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
              chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
   })
+
+  pars_names <- try(rstan:::flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
+  if (!is.character(pars_names)) {
+    warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
+    pars_names <- NULL
+  }
   
   # divergences, etc.
   sampler_params <- simplify2array(sapply(post, FUN = get_sampler_params, inc_warmup = FALSE))
@@ -75,12 +76,12 @@ plot.SBC <- function(x, thin = 4, ...) {
 print.SBC <- function(x, ...) {
   divergences <- apply(x$sampler_params, MARGIN = 3, FUN = function(y) sum(y[,"divergent__"]))
   bad <- sum(divergences > 0L)
-  print(paste(bad, "chains had divergent transitions after warmup"))
-  if (bad > 0L) print(paste("there were a total of", sum(divergences), 
-                            "divergent transitions across all chains"))
+  cat(paste(bad, "chains had divergent transitions after warmup\n"))
+  if (bad > 0L) cat(paste("there were a total of", sum(divergences), 
+                            "divergent transitions across all chains\n"))
   if (length(x$pareto_k)) {
-    cut_pareto_k <- cut(c(x$pareto_k), breaks = c(0.5, 0.7, 1, Inf))
-    print("Aggregate Pareto k estimates:")
+    cut_pareto_k <- cut(c(x$pareto_k), breaks = c(-Inf, 0.5, 0.7, 1, Inf))
+    cat("Aggregate Pareto k estimates:\n")
     print(prop.table(table(cut_pareto_k)))
   }
   return(invisible(NULL))
