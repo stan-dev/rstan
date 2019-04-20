@@ -168,6 +168,10 @@ is_constant <- function(x, tol = .Machine$double.eps) {
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 rhat_rfun <- function(sims) {
+  if (any(!is.finite(sims)))
+    return(NaN)
+  else if (is_constant(sims))
+    return(1)
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
@@ -204,8 +208,10 @@ ess_rfun <- function(sims) {
   }
   chains <- ncol(sims)
   n_samples <- nrow(sims)
-  if (n_samples < 3L) return(NaN)
-
+  if (any(!is.finite(sims)) || n_samples < 3L)
+    return(NaN)
+  else if (is_constant(sims))
+    return(chains*n_samples)
   acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i]))
   acov <- do.call(cbind, acov)
   chain_mean <- apply(sims, 2, mean)
