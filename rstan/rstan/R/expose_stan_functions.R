@@ -68,9 +68,6 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
     lines[mark] <- gsub(pat, "double lp__ = 0.0", lines[mark], fixed = TRUE)
     for (j in rev(mark))
       lines <- append(lines, "stan::math::accumulator<double> lp_accum__;", after = j)
-    
-    # mark <- mark + 2L
-    # lines[mark] <- gsub("lp_accum__", "stan::math::accumulator<double>(0.0)", lines[mark], fixed = TRUE)
   }
   # if there is lp_accum__, there is always and lp__ before it
   
