@@ -5,6 +5,6 @@ PKG_CPPFLAGS = -I"../inst/include" -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERT
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)
 
-SOURCES = $(wildcard *.cpp) $(LANG)
+SOURCES = $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
