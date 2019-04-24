@@ -47,12 +47,12 @@ rstan_ess2_cpp <- function(sims) {
   #   sim: samples of several chains _without_ warmup
   ess <- .Call(effective_sample_size2, sims)
   if (!is.nan(ess)) {
-    S <- floor((sim$iter-sim$warmup)*sim$chains/sim$thin)
+    S <- floor((sims$iter - sims$warmup) * sims$chains / sims$thin)
     max_ess <- S*log10(S)
     if (ess<0 || ess>max_ess) ess <- max_ess
   }
   ess
-} 
+}
 
 rstan_seq_perm <- function(n, chains, seed, chain_id = 1) {
   # Args:
