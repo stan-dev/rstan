@@ -10,7 +10,7 @@ vignettes/.*\.bbl$
 vignettes/.*\.toc$
 tests/.*[.]html$
 tests/.*[.]txt$
-install/doc/.install_extras
+inst/doc/.install_extras
 \.gitignore$
 Rbuildignore.*$
 .*\.new$
