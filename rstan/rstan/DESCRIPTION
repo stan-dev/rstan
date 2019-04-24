@@ -1,4 +1,5 @@
 Package: rstan
+Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
 Version: 2.18.9
