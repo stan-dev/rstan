@@ -4,9 +4,11 @@ SBC <- function(stanmodel, data, M, ...) {
   # parameter names
   stan_code <- get_stancode(stanmodel)
   stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
-  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE)[-1]
+  pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE)
+  pars_lines <- pars_lines[!grepl("^[[:space:]]*vector", pars_lines) & 
+                           !grepl("^[[:space:]]*real", pars_lines)]   
   pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
-  pars_names <- sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names)
+  pars_names <- unique(sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names))
   has_log_lik <- any(grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code))
   
   post <- parallel::mclapply(1:M, FUN = function(m) {
