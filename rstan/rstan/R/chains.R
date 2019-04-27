@@ -19,13 +19,13 @@ rstan_ess <- function(sim, n) {
   # Args:
   #   n: Chain index starting from 1.
   ess <- .Call(effective_sample_size, sim, n - 1)
-  if (!is.nan(ess)) {
-    S <- floor((sim$iter-sim$warmup)*sim$chains/sim$thin)
-    max_ess <- S*log10(S)
-    if (ess<0 || ess>max_ess) ess <- max_ess
+  if (!is.na(ess)) {
+    S <- floor((sim$iter - sim$warmup) * sim$chains / sim$thin)
+    max_ess <- S * log10(S)
+    if (ess < 0 || ess > max_ess) ess <- max_ess
   }
   ess
-} 
+}
 
 rstan_splitrhat <- function(sim, n) {
   # Args:
@@ -46,10 +46,10 @@ rstan_ess2_cpp <- function(sims) {
   # Args:
   #   sim: samples of several chains _without_ warmup
   ess <- .Call(effective_sample_size2, sims)
-  if (!is.nan(ess)) {
+  if (!is.na(ess)) {
     S <- floor((sims$iter - sims$warmup) * sims$chains / sims$thin)
     max_ess <- S*log10(S)
-    if (ess<0 || ess>max_ess) ess <- max_ess
+    if (ess < 0 || ess > max_ess) ess <- max_ess
   }
   ess
 }
