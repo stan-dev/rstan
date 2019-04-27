@@ -110,7 +110,7 @@ a posterior distribution conditional on observed data.
   }
   The \code{print} method outputs the number of divergent transitions and
   returns \code{NULL} invisibly.
-  The \code{plot} method returns an object of \code{\link[ggplot2]{gg}}-class
+  The \code{plot} method returns a \code{\link[ggplot2]{ggplot}} object
   with histograms whose appearance can be further customized.
 }
 
