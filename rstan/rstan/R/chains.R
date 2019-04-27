@@ -21,7 +21,8 @@ rstan_ess <- function(sim, n) {
   ess <- .Call(effective_sample_size, sim, n - 1)
   if (!is.na(ess)) {
     S <- floor((sim$iter - sim$warmup) * sim$chains / sim$thin)
-    max_ess <- S * log10(S)
+    if (length(S) == 0) return(ess)
+    max_ess <- ifelse(S <= 0, 0, S * log10(S))
     if (ess < 0 || ess > max_ess) ess <- max_ess
   }
   ess
@@ -48,7 +49,8 @@ rstan_ess2_cpp <- function(sims) {
   ess <- .Call(effective_sample_size2, sims)
   if (!is.na(ess)) {
     S <- floor((sims$iter - sims$warmup) * sims$chains / sims$thin)
-    max_ess <- S*log10(S)
+    if (length(S) == 0) return(ess)
+    max_ess <- ifelse(S <= 0, 0, S * log10(S))
     if (ess < 0 || ess > max_ess) ess <- max_ess
   }
   ess
