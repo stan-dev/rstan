@@ -289,8 +289,8 @@ setMethod("optimizing", "stanmodel",
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
-                   importance_resampling = FALSE,
-                   draws = 0, constrained = TRUE, ...) {
+                   draws = 0, constrained = TRUE, 
+                   importance_resampling = FALSE, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
