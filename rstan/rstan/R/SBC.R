@@ -17,7 +17,7 @@ SBC <- function(stanmodel, data, M, ...) {
              chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
   })
 
-  pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
+  pars_names <- try(rstan:::flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
     pars_names <- NULL
