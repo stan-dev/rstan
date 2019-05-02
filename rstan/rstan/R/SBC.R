@@ -16,6 +16,12 @@ SBC <- function(stanmodel, data, M, ...) {
     sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
              chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
   })
+  bad <- sapply(post, FUN = function(x) x@mode != 0)
+  if (any(bad)) {
+    warning(sum(bad), " out of ", M, " runs failed. Try decreasing 'init_r'")
+    if(all(bad)) stop("cannot continue")
+    post <- post[!bad]
+  }
 
   pars_names <- try(rstan:::flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
