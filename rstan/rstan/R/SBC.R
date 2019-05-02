@@ -62,8 +62,8 @@ SBC <- function(stanmodel, data, M, ...) {
     return(r)
   })
     
-  if (has_log_lik) 
-    pareto_k <- sapply(post, FUN = function(x) loo(x)$diagnostics$pareto_k)
+  if (has_log_lik) # high Pareto k values will be shown by the print method
+    pareto_k <- sapply(post, FUN = function(x) suppressWarnings(loo(x))$diagnostics$pareto_k)
 
   out <- list(ranks = ranks, Y = Y, pars = pars, sampler_params = sampler_params, 
               pareto_k = if (has_log_lik) pareto_k)
