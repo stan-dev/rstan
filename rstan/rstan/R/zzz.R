@@ -21,6 +21,7 @@ OUT <- quote(warning("'OUT' no longer does anything useful; see help(expose_stan
 
 .onLoad <- function(libname, pkgname) {
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
+  set_rstan_ggplot_defaults()
 }
 
 .onAttach <- function(...) {
