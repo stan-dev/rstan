@@ -16,11 +16,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
-RNG <- quote(warning("'RNG' no longer does anything useful; see help(expose_stan_functions)"))
-OUT <- quote(warning("'OUT' no longer does anything useful; see help(expose_stan_functions)"))
+RNG <- 0
+OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
+  assignInMyNamespace("RNG", value = get_rng(0))
+  assignInMyNamespace("OUT", value = get_stream())
 }
 
 .onAttach <- function(...) {
