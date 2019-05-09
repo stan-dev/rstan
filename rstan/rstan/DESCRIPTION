@@ -28,6 +28,7 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
+    ggplot2 (>= 2.0.0),
     inline,
     gridExtra (>= 2.0.0),
     Rcpp (>= 0.12.0),
@@ -35,7 +36,6 @@ Imports:
     pkgbuild
 Depends:
     R (>= 3.4.0),
-    ggplot2 (>= 2.0.0),
     StanHeaders (>= 2.18.0)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
