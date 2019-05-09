@@ -422,7 +422,7 @@ conv_quantile <- function(sims, prob) {
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
-  ess <- ess_quantile(split_chains(sims), prob)
+  ess <- ess_quantile(sims, prob)
   p <- c(0.1586553, 0.8413447, 0.05, 0.95)
   a <- qbeta(p, ess * prob + 1, ess * (1 - prob) + 1)
   ssims <- sort(sims)

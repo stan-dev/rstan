@@ -16,8 +16,14 @@ SBC <- function(stanmodel, data, M, ...) {
     sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
              chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
   })
+  bad <- sapply(post, FUN = function(x) x@mode != 0)
+  if (any(bad)) {
+    warning(sum(bad), " out of ", M, " runs failed. Try decreasing 'init_r'")
+    if(all(bad)) stop("cannot continue")
+    post <- post[!bad]
+  }
 
-  pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
+  pars_names <- try(rstan:::flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
     pars_names <- NULL
@@ -56,8 +62,8 @@ SBC <- function(stanmodel, data, M, ...) {
     return(r)
   })
     
-  if (has_log_lik) 
-    pareto_k <- sapply(post, FUN = function(x) loo(x)$diagnostics$pareto_k)
+  if (has_log_lik) # high Pareto k values will be shown by the print method
+    pareto_k <- sapply(post, FUN = function(x) suppressWarnings(loo(x))$diagnostics$pareto_k)
 
   out <- list(ranks = ranks, Y = Y, pars = pars, sampler_params = sampler_params, 
               pareto_k = if (has_log_lik) pareto_k)
