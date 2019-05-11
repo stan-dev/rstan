@@ -130,7 +130,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   } else {
     window <- c(1, sim$iter[1])
   }
-  if ((sim$warmup2 == 0 || !inc_warmup) && window[1] <= sim$warmup[1]) {
+  if ((all(sim$warmup2 == 0) || !inc_warmup) && window[1] <= sim$warmup[1]) {
     window[1] <- sim$warmup[1] + 1
   }
   if (window[1] > window[2]) {
