@@ -538,12 +538,13 @@ mcse_sd <- function(sims) {
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 #' 
 #' @export
-monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95), 
-                    se = FALSE, print = TRUE, digits = 1, ...) { 
+monitor <- function(sims, warmup = floor(dim(sims)[1] / 2), 
+                    probs = c(0.025, 0.25, 0.50, 0.75, 0.975), 
+                    digits_summary = 1, print = TRUE, ...) { 
   if (inherits(sims, "stanfit")) {
     chains <- sims@sim$chains
     iter <- sims@sim$iter
-    warmup <- sims@sim$warmup
+    warmup <- 0L
     parnames <- names(sims)
     sims <- as.array(sims)
   } else {
@@ -576,6 +577,7 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
     quan <- unname(quantile(sims_i, probs = probs))
+    quan2 <- quantile(sims_i, probs = c(0.05, 0.5, 0.95))
     mean <- mean(sims_i)
     sd <- sd(sims_i)
     mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
@@ -584,56 +586,62 @@ monitor <- function(sims, warmup = 0, probs = c(0.05, 0.50, 0.95),
     rhat <- rhat(sims_i)
     ess_bulk <- round(ess_bulk(sims_i))
     ess_tail <- round(ess_tail(sims_i))
+    ess <- round(ess_rfun(sims_i))
     out[[i]] <- c(
-      valid, quan, mean, sd, mcse_quan, mcse_mean,
-      mcse_sd, rhat, ess_bulk, ess_tail
+      mean, mcse_mean, sd, quan, ess, rhat,
+      valid, quan2, mcse_quan, mcse_sd, ess_bulk, ess_tail
     )
   }
   
   out <- as.data.frame(do.call(rbind, out))
+  probs_str <- names(quantile(sims_i, probs = probs))
   str_quan <- paste0("Q", probs * 100)
+  str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
-  colnames(out) <- c(
-    "valid", str_quan, "Mean", "SD", str_mcse_quan,
-    "MCSE_Mean", "MCSE_SD", "Rhat", "Bulk_ESS", "Tail_ESS"
-  )
+  colnames(out) <- c("mean", "se_mean", "sd", probs_str, "n_eff", "Rhat",
+                     "valid", str_quan2, str_mcse_quan, "MCSE_SD", "Bulk_ESS", "Tail_ESS")
   rownames(out) <- parnames
 
   # replace NAs with appropriate values if draws are valid
   S <- prod(dim(sims)[1:2])
-  valid <- out[, 1]
-  out <- out[, -1, drop = FALSE]
+  valid <- out[, "valid"]
   out[valid & !is.finite(out[, "Rhat"]), "Rhat"] <- 1
   out[valid & !is.finite(out[, "Bulk_ESS"]), "Bulk_ESS"] <- S
   out[valid & !is.finite(out[, "Tail_ESS"]), "Tail_ESS"] <- S
-  SE_vars <- colnames(out)[grepl("^SE_", colnames(out))]
+  SE_vars <- colnames(out)[grepl("^SE_", colnames(out), ignore.case = TRUE)]
   for (v in SE_vars) {
   	out[valid & !is.finite(out[, v]), v] <- 0
   }
   
-  structure(
+  out <- structure(
     out,
     chains = chains,
     iter = iter,
     warmup = warmup,
     class = c("simsummary", "data.frame")
   )
-} 
+  if (print) print.simsummary(out, digits = digits_summary, ...)
+  return(invisible(out))
+}
 
 print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
   atts <- attributes(x)
   px <- x
-  if (!se) {
-    px <- px[, !grepl("^MCSE_", colnames(px))]
-  }
   class(px) <- "data.frame"
+  quan2 <- grepl("^Q", colnames(px))
+  if (se) {
+    px <- cbind(px[ , quan2], Mean = px$mean, SD = px$sd,
+                px[ , grepl("^MCSE", colnames(px))], " Rhat" = px$Rhat,
+                Bulk_ESS = px$Bulk_ESS, Tail_ESS = px$Tail_ESS)
+  } else {
+    px <- cbind(px[ , quan2], Mean = px$mean, SD = px$sd, " Rhat" = px$Rhat,
+                Bulk_ESS = px$Bulk_ESS, Tail_ESS = px$Tail_ESS)
+  }
+  
   decimal_places <- max(1, digits - 1)
-  px$Rhat <- round(px$Rhat, digits = max(2, decimal_places))
-  estimates <- setdiff(names(px), c("Rhat", "Bulk_ESS", "Tail_ESS"))
+  px$` Rhat` <- round(px$` Rhat`, digits = max(2, decimal_places))
+  estimates <- setdiff(names(px), c(" Rhat", "Bulk_ESS", "Tail_ESS"))
   px[, estimates] <- round(px[, estimates], digits = decimal_places)
-  #px[, estimates] <- signif(px[, estimates], digits = digits)
-  # add a space between summary and convergence estimates
-  names(px)[names(px) %in% "Rhat"] <- " Rhat"
   cat(
     "Inference for the input samples (", atts$chains,
     " chains: each with iter = ", atts$iter,
@@ -645,7 +653,7 @@ print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
   		"\nFor each parameter, Bulk_ESS and Tail_ESS are crude measures of \n",
   		"effective sample size for bulk and tail quantities respectively (an ESS > 100 \n",
   		"per chain is considered good), and Rhat is the potential scale reduction \n",
-  		"factor on rank normalized split chains (at convergence, Rhat <= 1.01).\n", sep = ""
+  		"factor on rank normalized split chains (at convergence, Rhat <= 1.05).\n", sep = ""
   	)
   }
   invisible(x)
