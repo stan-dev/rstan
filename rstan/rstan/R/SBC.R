@@ -20,8 +20,16 @@ SBC <- function(stanmodel, data, M, ...) {
   stan_code <- get_stancode(stanmodel)
   stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
   pars_lines <- grep("[[:space:]]*(pars_)|(pars_\\[.*\\])[[:space:]]*=", stan_code, value = TRUE) # is this right?
+  pars_lines <- pars_lines[grepl("=", pars_lines, fixed=TRUE)]
   pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
   pars_names <- sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names)
+  noUnderscore <- grepl(";", pars_names, fixed=TRUE)
+  if (any(noUnderscore)) {
+    warning(paste("The following parameters were added to pars_ but did not",
+      "have the expected underscore postfix:",
+      paste(pars_names[noUnderscore], collapse = ' ')))
+    return(post)
+  }
   pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
@@ -35,6 +43,11 @@ SBC <- function(stanmodel, data, M, ...) {
     return(means[mark])
   })
   if (length(pars) > 0L) {
+    if (is.null(dim(pars))) pars <- matrix(pars, nrow=1)
+    if (dim(pars)[1] != length(pars_names)) {
+      warning("parameter names miscalculated due to non-compliance with conventions; see help(SBC)")
+      pars_names <- NULL
+    }
     if (is.null(dim(pars))) {
       pars <- t(as.matrix(pars))
     }
@@ -63,7 +76,7 @@ plot.SBC <- function(x, thin = 4, ...) {
   d <- data.frame(u = c(u), parameter)
   suppressWarnings(ggplot2::ggplot(d) + 
     ggplot2::geom_histogram(aes(x = u), pad = TRUE, ...) + 
-    ggplot2::facet_wrap(parameter))
+    ggplot2::facet_wrap('parameter'))
 }
 
 print.SBC <- function(x, ...) {
