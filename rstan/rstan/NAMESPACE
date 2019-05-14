@@ -3,8 +3,8 @@ useDynLib(rstan, .registration = TRUE)
 
 importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
-importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "quantile", "reshape", "rnorm", "sd", "var")
-importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
+importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "qbeta", "qnorm", "quantile", "reshape", "rnorm", "sd", "setNames", "var")
+importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "str", "tail", "unzip")
 
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
@@ -67,7 +67,8 @@ export(
   get_low_bfmi_chains,
   get_rng,
   get_stream,
-  RNG, OUT
+  RNG, OUT,
+  rhat, ess_bulk, ess_tail
 )
 
 exportClasses(
@@ -76,7 +77,7 @@ exportClasses(
 exportMethods(
 #   print, plot, 
 #   extract, 
-  optimizing, vb,
+  optimizing, vb, gqs,
   get_cppcode, get_cxxflags, # for stanmodel 
   show, sampling, summary, extract,
   traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,

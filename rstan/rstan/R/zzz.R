@@ -21,6 +21,7 @@ OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
   assignInMyNamespace("rstan_load_time", value = Sys.time())  
+  set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
 }

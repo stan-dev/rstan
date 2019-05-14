@@ -26,7 +26,11 @@ a posterior distribution conditional on observed data.
     The number of times to condition on draws from the prior predictive
     distribution}
   \item{\dots}{Additional arguments that are passed to \code{\link{sampling}},
-    such as \code{refresh = 0}}
+    such as \code{refresh = 0} when calling \code{SBC}. For the \code{plot}
+    and \code{print} methods, the additional arguments are not used.}
+  \item{x}{An object produced by \code{SBC}}
+  \item{thin}{An integer vector of length one indicating the thinning interval
+    when plotting}
 }
 \details{
   This function assumes adherence to the following conventions in the 
@@ -110,7 +114,7 @@ a posterior distribution conditional on observed data.
   }
   The \code{print} method outputs the number of divergent transitions and
   returns \code{NULL} invisibly.
-  The \code{plot} method returns an object of \code{\link[ggplot2]{gg-class}}
+  The \code{plot} method returns a \code{\link[ggplot2]{ggplot}} object
   with histograms whose appearance can be further customized.
 }
 

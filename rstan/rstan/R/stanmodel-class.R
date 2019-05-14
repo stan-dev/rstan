@@ -226,6 +226,13 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
+            diagnostic_columns <- which(grepl('__',colnames(samples)))[-1]
+            if (length(diagnostic_columns)>0) {
+                diagnostics <- samples[-1,diagnostic_columns]
+                samples <- samples[,-diagnostic_columns]
+            } else {
+                diagnostics <- NULL
+            }
             pest <- rstan_relist(as.numeric(samples[1,-1]), skeleton[-length(skeleton)])
             means <- sapply(samples, mean)
             means <- as.matrix(c(means[-1], means[1]))
@@ -247,6 +254,7 @@ setMethod("vb", "stanmodel",
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
             sim <- list(samples = list(as.list(samples)),
+                        diagnostics = list(as.list(diagnostics)),
                         iter = iter, thin = 1L,
                         warmup = 0L,
                         chains = 1L,
@@ -281,7 +289,8 @@ setMethod("optimizing", "stanmodel",
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
-                   draws = 0, constrained = TRUE, ...) {
+                   draws = 0, constrained = TRUE, 
+                   importance_resampling = FALSE, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
@@ -375,6 +384,8 @@ setMethod("optimizing", "stanmodel",
             fnames <- sampler$param_fnames_oi()
             names(optim$par) <- fnames[-length(fnames)]
             skeleton <- create_skeleton(m_pars, p_dims)
+            theta <- rstan_relist(optim$par, skeleton)
+            theta <- sampler$unconstrain_pars(theta)
             if (hessian || draws) {
               fn <- function(theta) {
                 sampler$log_prob(theta, FALSE, FALSE)
@@ -382,35 +393,40 @@ setMethod("optimizing", "stanmodel",
               gr <- function(theta) {
                 sampler$grad_log_prob(theta, FALSE)
               }
-              theta <- rstan_relist(optim$par, skeleton)
-              theta <- sampler$unconstrain_pars(theta)
               H <- optimHess(theta, fn, gr, control = list(fnscale = -1))
               colnames(H) <- rownames(H) <- sampler$unconstrained_param_names(FALSE, FALSE)
               if (hessian) optim$hessian <- H
-              if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
+            }
+            if (draws > 0 && is.matrix(R <- try(chol(-H)))) {
                 K <- ncol(R)
                 R_inv <- backsolve(R, diag(K))
                 Z <- matrix(rnorm(K * draws), K, draws)
                 theta_tilde <- t(theta + R_inv %*% Z)
-                log_p <- apply(theta_tilde, 1, FUN = function(theta) {
-                  sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
-                })
-                log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
-                optim$log_p <- log_p
-                optim$log_g <- log_g
+                if (importance_resampling) {
+                  log_p <- apply(theta_tilde, 1, FUN = function(theta) {
+                    sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
+                  })
+                  log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
+                  optim$log_p <- log_p
+                  optim$log_g <- log_g
+                } else {
+                  optim$log_p <- rep(NaN, length(theta))
+                  optim$log_g <- rep(NaN, length(theta))
+                }
                 colnames(theta_tilde) <- colnames(H)
                 optim$log_prob <- sampler$log_prob
                 optim$grad_log_prob <- sampler$grad_log_prob
-                if (constrained) {
-                  theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
-                    sampler$constrain_pars(theta)  
-                  }))
-                  if (length(theta) == 1L) theta_tilde <- t(theta_tilde)
-                }
-                colnames(theta_tilde) <- names(optim$par)
-                optim$theta_tilde <- theta_tilde
-              }
+            } else {
+              theta_tilde <- t(theta)
             }
+            if (constrained) {
+              theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
+                sampler$constrain_pars(theta)  
+              }))
+              if (NCOL(theta_tilde) != length(optim$par)) theta_tilde <- t(theta_tilde)
+            }
+            colnames(theta_tilde) <- names(optim$par)
+            optim$theta_tilde <- theta_tilde
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             return(optim)
           }) 
@@ -776,3 +792,98 @@ setMethod("sampling", "stanmodel",
             return(nfit)
           }) 
 
+
+setGeneric(name = "gqs", 
+           def = function(object, ...) { standardGeneric("gqs") })
+setMethod("gqs", "stanmodel", 
+          function(object, data = list(), draws, 
+                seed = sample.int(.Machine$integer.max, size = 1L)) {
+  draws <- as.matrix(draws)
+  objects <- ls()
+  if (is.list(data) & !is.data.frame(data)) {
+    parsed_data <- with(data, parse_data(get_cppcode(object)))
+    if (!is.list(parsed_data)) {
+      message("failed to get names of data from the model; sampling not done")
+      return(invisible(new_empty_stanfit(object)))
+    }
+    data <- parsed_data
+  } else if (is.character(data)) { # names of objects
+    data <- try(mklist(data))
+    if (is(data, "try-error")) {
+      message("failed to create the data; sampling not done")
+      return(invisible(new_empty_stanfit(object)))
+    }
+  }
+  if (TRUE) { # check_data
+    data <- try(force(data))
+    if (is(data, "try-error")) {
+      message("failed to evaluate the data; sampling not done")
+      return(invisible(new_empty_stanfit(object)))
+    }
+    if (!missing(data) && length(data) > 0) {
+      data <- try(data_preprocess(data))
+      if (is(data, "try-error")) {
+        message("failed to preprocess the data; sampling not done")
+        return(invisible(new_empty_stanfit(object)))
+      }
+    } else data <- list()
+  }
+  stan_fit_cpp_module <- object@mk_cppmodule(object)
+  cxxfun <- grab_cxxfun(object@dso)
+  sfmiscenv <- new.env(parent = emptyenv())
+  sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+  if (is(sampler, "try-error")) {
+    message('failed to create the sampler; sampling not done') 
+    return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+  }
+
+  assign("stan_fit_instance", sampler, envir = sfmiscenv)
+  m_pars = sampler$param_names()
+  p_dims = sampler$param_dims()
+  p_names <- unique(sub("\\..*$", "", sampler$constrained_param_names(TRUE, FALSE)))
+  draws <- draws[ , p_names, drop = FALSE]
+  all_names <- sampler$constrained_param_names(TRUE, TRUE)
+  some_names <- sampler$constrained_param_names(TRUE, FALSE)
+  gq_names <- unique(sub("\\..*$", "", setdiff(all_names, some_names)))
+  sampler$update_param_oi(gq_names)
+  samples <- try(sampler$standalone_gqs(draws, as.integer(seed)))
+  if (is(samples, "try-error") || is.null(samples)) {
+    msg <- "error occurred during calling the sampler; sampling not done"
+    message(msg)
+    return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
+                                       m_pars, p_dims, 2L))) 
+  }
+  
+  skeleton <- create_skeleton(gq_names, p_dims[gq_names])
+
+  perm_lst <- list(1:nrow(draws)) # not actually permuted
+  
+  fnames_oi <- setdiff(sampler$param_fnames_oi(), "lp__")
+  n_flatnames <- length(fnames_oi)
+  sim = list(samples = list(samples),
+             iter = nrow(draws), thin = 1L, 
+             warmup = 0L, 
+             chains = 1L,
+             n_save = nrow(draws),
+             warmup2 = 0L, # number of warmup iters in n_save
+             permutation = perm_lst,
+             pars_oi = gq_names,
+             dims_oi = sampler$param_dims_oi()[gq_names],
+             fnames_oi = fnames_oi,
+             n_flatnames = n_flatnames) 
+  nfit <- new("stanfit",
+              model_name = object@model_name,
+              model_pars = gq_names,
+              par_dims = p_dims[gq_names],
+              mode = 0L,
+              sim = sim,
+              # keep a record of the initial values 
+              inits = list(), 
+              stan_args = list(list(seed = seed)),
+              stanmodel = object, 
+              # keep a ref to avoid garbage collection
+              # (see comments in fun stan_model)
+              date = date(),
+              .MISC = sfmiscenv)
+  return(nfit)
+})

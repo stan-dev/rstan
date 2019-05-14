@@ -19,6 +19,7 @@
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
 #include <Rcpp.h>
+#include <RcppEigen.h>
 
 //http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
@@ -48,7 +49,7 @@
 #include <stan/services/sample/hmc_static_diag_e_adapt.hpp>
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
-#include <stan/services/sample/standalone_gqs.hpp>
+//#include <stan/services/sample/standalone_gqs.hpp>
 #include <stan/services/experimental/advi/fullrank.hpp>
 #include <stan/services/experimental/advi/meanfield.hpp>
 
@@ -1206,7 +1207,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-
+/*
   SEXP standalone_gqs(SEXP pars, SEXP seed) {
     BEGIN_RCPP
     Rcpp::List holder;
@@ -1214,25 +1215,41 @@ public:
     R_CheckUserInterrupt_Functor interrupt;
     stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
                                           rstan::io::rcerr, rstan::io::rcerr);
-    std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
-
-    std::vector<std::vector<double> > draws = 
-      Rcpp::as<std::vector<std::vector<double> > >(pars); // unconstrained
     
-    int ret;
+    // Eigen::MatrixXd draws = Rcpp::as<Eigen::MatrixXd>(pars);
+    const Eigen::Map<Eigen::MatrixXd> draws(Rcpp::as<Eigen::Map<Eigen::MatrixXd> >(pars));
+
+    std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
+    std::fstream sample_stream;
+    std::stringstream comment_stream;
+    std::vector<std::string> all_names;
+    model_.constrained_param_names(all_names, true, true);
+    std::vector<std::string> some_names;
+    model_.constrained_param_names(some_names, true, false);
+    int gq_size = all_names.size() - some_names.size();
+    std::vector<size_t> gq_idx(gq_size);
+    for (int i = 0; i < gq_size; i++) gq_idx[i] = i;
+    sample_writer_ptr.reset(sample_writer_factory(&sample_stream,
+                                                  comment_stream, "# ",
+                                                  0, 0,
+                                                  gq_size,
+                                                  draws.rows(), 0,
+                                                  gq_idx));
+    
+    int ret = stan::services::error_codes::CONFIG;
     ret = stan::services::standalone_generate(model_, draws,
             Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);
-    
+
     holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
                         sample_writer_ptr->values_.x().end());
-    
+
     SEXP __sexp_result;
     PROTECT(__sexp_result = Rcpp::wrap(holder));
     UNPROTECT(1);
     return __sexp_result;
     END_RCPP
   }
-  
+*/
   SEXP param_names() const {
     BEGIN_RCPP
     SEXP __sexp_result;

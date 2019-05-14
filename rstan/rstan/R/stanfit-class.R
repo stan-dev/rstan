@@ -392,7 +392,11 @@ setMethod("get_posterior_mean", signature = "stanfit",
             fnames <- flatnames(object@model_pars, object@par_dims, col_major = TRUE)
             if (!exists("posterior_mean_4all", envir = object@.MISC, inherits = FALSE)) {
               mean_pars <- lapply(object@sim$samples, function(x) attr(x, "mean_pars"))
+              if (all(sapply(mean_pars, is.null))) 
+                mean_pars <- list(rapply(object@sim$samples, mean))
               mean_lp__ <- lapply(object@sim$samples, function(x) attr(x, "mean_lp__"))
+              if (all(sapply(mean_lp__, is.null))) 
+                mean_lp__ <- as.list(rep(0, length(mean_lp__)))
               m <- rbind(do.call(cbind, mean_pars), do.call(cbind, mean_lp__))
               name_allchains <- NULL
               if (ncol(m) > 1) {

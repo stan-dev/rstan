@@ -7,8 +7,8 @@ rm -rf inst/include/libsundials
 cp -r inst/include/mathlib/stan inst/include/stan
 cp -r inst/include/upstream/src inst/include/src
 
-cp -r inst/include/mathlib/lib/sundials_3.1.0/src/* src
-cp -r inst/include/mathlib/lib/sundials_3.1.0/include/* inst/include/
+cp -r inst/include/mathlib/lib/sundials_*/src/* src
+cp -r inst/include/mathlib/lib/sundials_*/include/* inst/include/
 
 exit $?
 

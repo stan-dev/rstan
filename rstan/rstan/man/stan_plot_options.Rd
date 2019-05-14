@@ -21,7 +21,7 @@
 \code{\link[=rstan-plotting-functions]{List of RStan plotting functions}}
 }
 \examples{
-rstan_ggtheme_options(panel.background = element_rect(fill = "gray"),
+rstan_ggtheme_options(panel.background = ggplot2::element_rect(fill = "gray"),
                       legend.position = "top")
 rstan_gg_options(fill = "skyblue", color = "skyblue4", pt_color = "red")
 }
