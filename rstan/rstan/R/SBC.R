@@ -30,6 +30,12 @@ SBC <- function(stanmodel, data, M, ...) {
       paste(pars_names[noUnderscore], collapse = ' ')))
     return(post)
   }
+  noTwin <- is.na(match(pars_names, names(post[[1]]@par_dims)))
+  if (any(noTwin)) {
+    warning(paste("The following underscored priors did not have a matching",
+      "parameter without the underscore:", paste(pars_names[noTwin], collapse = ' ')))
+    pars_names <- NULL
+  }
   pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
