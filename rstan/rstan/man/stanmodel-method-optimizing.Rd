@@ -16,7 +16,7 @@
     check_data = TRUE, sample_file = NULL, 
     algorithm = c("LBFGS", "BFGS", "Newton"),
     verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
-    draws = 0, constrained = TRUE, \dots)   
+    draws = 0, constrained = TRUE, importance_resampling = FALSE, \dots)   
 } 
 
 \section{Methods}{
@@ -86,6 +86,10 @@
   \item{constrained}{A logical scalar indicating, if \code{draws > 0}, whether
      the draws should be transformed to the constrained space defined in the
      parameters block of the Stan program. Defaults to \code{TRUE}.}
+     
+  \item{importance_resampling}{A logical scalar (defaulting to \code{FALSE}) 
+     indicating whether to do importance resampling to compute diagnostics on the 
+     draws from the normal approximation to the posterior distribution.}
      
   \item{\dots}{Other optional parameters:
     \itemize{

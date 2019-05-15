@@ -5,7 +5,7 @@
   add_names <- gsub("pt_", "", to_add)
   for (j in seq_along(to_add)) {
     if (!add_names[j] %in% names(dots)) 
-      dots[[add_names[j]]] <- .rstanvis_defaults[[to_add[j]]]
+      dots[[add_names[j]]] <- rstanvis_aes_ops(to_add[j])
   }
   dots
 }
@@ -315,7 +315,7 @@ color_vector_chain <- function(n) {
 .rhat_neff_mcse_hist <- function(which = c("rhat", "n_eff_ratio", "mcse_ratio"),
                                  object, pars=NULL, ...) {
   if (is.stanreg(object)) object <- object$stanfit
-  thm <- .rstanvis_defaults$hist_theme
+  thm <- rstanvis_hist_theme()
   dots <- .add_aesthetics(list(...), c("fill", "color"))
   if (which == "n_eff_ratio") {
     lp <- suppressWarnings(get_logposterior(object, inc_warmup = FALSE))
@@ -335,10 +335,10 @@ color_vector_chain <- function(n) {
                  mcse_ratio = smry[, "se_mean"] / smry[, "sd"]
   )
   df <- data.frame(stat)
-  plot_labs <- labs(y = "", x = xlab)
-  base <- ggplot(df, aes(x = stat))
+  plot_labs <- ggplot2::labs(y = "", x = xlab)
+  base <- ggplot2::ggplot(df, ggplot2::aes(x = stat))
   base +
-    do.call(geom_histogram, dots) + 
+    do.call(ggplot2::geom_histogram, dots) + 
     plot_labs +
     thm
 }
@@ -436,30 +436,44 @@ color_vector_chain <- function(n) {
   dots$alpha <- 0.5 * dots$alpha
   dots$color <- .NUTS_PT_CLR
   dots$fill <- .NUTS_FILL
-  xy_labs <- labs(y = if (missing(p_lab)) NULL else p_lab,
-                  x = if (missing(sp_lab)) NULL else sp_lab)
+  xy_labs <- ggplot2::labs(
+    y = if (missing(p_lab)) NULL else p_lab,
+    x = if (missing(sp_lab)) NULL else sp_lab
+  )
   df <- data.frame(sp = do.call("c", sp), p = c(p))
   if (violin) df$sp <- as.factor(round(df$sp, 4))
   if (!is.null(divergent)) df$divergent <- do.call("c", divergent)
   if (!is.null(hit_max_td)) df$hit_max_td <- do.call("c", hit_max_td)
   
-  base <- ggplot(df, aes_string(x = "sp", y = "p")) + xy_labs
+  base <- ggplot2::ggplot(df, ggplot2::aes_string(x = "sp", y = "p")) + xy_labs
   if (chain == 0) {
     if (violin)
-      graph <- base + geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
+      graph <- base + ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
     else {
-      graph <- base + do.call(geom_point, dots)
-      if (smoother) graph <- graph + stat_smooth(se = FALSE)
+      graph <- base + do.call(ggplot2::geom_point, dots)
+      if (smoother) graph <- graph + ggplot2::stat_smooth(se = FALSE)
       if (!is.null(divergent))
-        graph <- graph + geom_point(data = subset(df, divergent == 1),
-                                    aes_string(x = "sp", y = "p"),
-                                    color = .NDIVERGENT_CLR, fill = .NDIVERGENT_FILL,
-                                    alpha = 0.8, size = 3, shape = .DIV_AND_MAXTD_SHAPE)
+        graph <-
+          graph + ggplot2::geom_point(
+            data = subset(df, divergent == 1),
+            mapping = ggplot2::aes_string(x = "sp", y = "p"),
+            color = .NDIVERGENT_CLR,
+            fill = .NDIVERGENT_FILL,
+            alpha = 0.8,
+            size = 3,
+            shape = .DIV_AND_MAXTD_SHAPE
+          )
       if (!is.null(hit_max_td))
-        graph <- graph + geom_point(data = subset(df, hit_max_td == 1),
-                                    aes_string(x = "sp", y = "p"),
-                                    color = .MAXTD_CLR, fill = .MAXTD_FILL,
-                                    alpha = 0.8, size = 3, shape = .DIV_AND_MAXTD_SHAPE)
+        graph <-
+          graph + ggplot2::geom_point(
+            data = subset(df, hit_max_td == 1),
+            mapping = ggplot2::aes_string(x = "sp", y = "p"),
+            color = .MAXTD_CLR,
+            fill = .MAXTD_FILL,
+            alpha = 0.8,
+            size = 3,
+            shape = .DIV_AND_MAXTD_SHAPE
+          )
     }
     return(graph)
   }
@@ -471,47 +485,75 @@ color_vector_chain <- function(n) {
   if (violin) {
     chain_data$sp <- as.factor(round(chain_data$sp, 4))
     graph <- base +
-      geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL, ...) +
-      geom_violin(data = chain_data, aes_string(x = "sp", y = "p"),
-                  color = chain_clr, fill = chain_fill, ...)
+      ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL, ...) +
+      ggplot2::geom_violin(
+        data = chain_data,
+        mapping = ggplot2::aes_string(x = "sp", y = "p"),
+        color = chain_clr,
+        fill = chain_fill,
+        ...
+      )
     return(graph)
   }
-  graph <- base + do.call(geom_point, dots)
-  if (smoother) graph <- graph + stat_smooth(se = FALSE)
+  graph <- base + do.call(ggplot2::geom_point, dots)
+  if (smoother) graph <- graph + ggplot2::stat_smooth(se = FALSE)
   graph <- graph +
-    geom_point(data = chain_data, aes_string(x = "sp", y = "p"),
-               color = chain_fill, ...)
+    ggplot2::geom_point(
+      data = chain_data,
+      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      color = chain_fill,
+      ...
+    )
   if (smoother) graph <- graph +
-    stat_smooth(data = chain_data, aes_string(x = "sp", y = "p"),
-                color = chain_fill, se = FALSE)
+    ggplot2::stat_smooth(
+      data = chain_data,
+      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      color = chain_fill,
+      se = FALSE
+    )
   if (!is.null(divergent))
-    graph <- graph + geom_point(data = chain_data[chain_data$div == 1,, drop=FALSE],
-                                aes_string(x = "sp", y = "p"),
-                                color = .NDIVERGENT_CLR, fill = .NDIVERGENT_FILL,
-                                size = 3, shape = .DIV_AND_MAXTD_SHAPE)
+    graph <- graph + 
+     ggplot2::geom_point(
+      data = chain_data[chain_data$div == 1, , drop = FALSE],
+      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      color = .NDIVERGENT_CLR,
+      fill = .NDIVERGENT_FILL,
+      size = 3,
+      shape = .DIV_AND_MAXTD_SHAPE
+     )
   if (!is.null(hit_max_td))
-    graph <- graph + geom_point(data = chain_data[chain_data$hit == 1,, drop=FALSE],
-                                aes_string(x = "sp", y = "p"),
-                                color = .MAXTD_CLR, fill = .MAXTD_FILL,
-                                size = 3, shape = .DIV_AND_MAXTD_SHAPE)
+    graph <-
+    graph + ggplot2::geom_point(
+      data = chain_data[chain_data$hit == 1, , drop = FALSE],
+      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      color = .MAXTD_CLR,
+      fill = .MAXTD_FILL,
+      size = 3,
+      shape = .DIV_AND_MAXTD_SHAPE
+    )
   graph
 }
 
 .sampler_param_vs_sampler_param_violin <- function(df_x, df_y, lab_x, lab_y,
                                                    chain = 0) {
   
-  xy_labs <- labs(y = lab_y, x = lab_x)
+  xy_labs <- ggplot2::labs(y = lab_y, x = lab_x)
   df <- data.frame(x = do.call("c", df_x), y = do.call("c", df_y))
   df$x <- as.factor(df$x)
   
-  base <- ggplot(df, aes_string("x","y")) + xy_labs
-  graph <- base + geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
+  base <- ggplot2::ggplot(df, ggplot2::aes_string("x","y")) + xy_labs
+  graph <- base + ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_x))[chain]
   chain_fill <- chain_clr
   chain_data <- data.frame(x = as.factor(df_x[, chain]), y = df_y[, chain])
-  graph + geom_violin(data = chain_data, aes_string("x","y"), color = chain_clr,
-                      fill = chain_fill, alpha = 0.5)
+  graph + ggplot2::geom_violin(
+    data = chain_data,
+    mapping = ggplot2::aes_string("x", "y"),
+    color = chain_clr,
+    fill = chain_fill,
+    alpha = 0.5
+  )
 }
 
 .p_hist <- function(df, lab, chain = 0, ...) {
@@ -520,23 +562,23 @@ color_vector_chain <- function(n) {
   dots$binwidth <- diff(range(mdf$value))/30
   dots$fill <- .NUTS_FILL
   dots$color <- .NUTS_CLR
-  base <- ggplot(mdf, aes_string(x = "value")) +
-    do.call(geom_histogram, dots) + 
-    labs(x = if (missing(lab)) NULL else lab, y = "")
+  base <- ggplot2::ggplot(mdf, ggplot2::aes_string(x = "value")) +
+    do.call(ggplot2::geom_histogram, dots) + 
+    ggplot2::labs(x = if (missing(lab)) NULL else lab, y = "")
   if (chain == 0) {
     graph <- base +
-      geom_vline(xintercept = mean(mdf$value), color = .NUTS_VLINE_CLR, size = .8) +
-      geom_vline(xintercept = median(mdf$value), color = .NUTS_VLINE_CLR, lty = 2, size = 1)
+      ggplot2::geom_vline(xintercept = mean(mdf$value), color = .NUTS_VLINE_CLR, size = .8) +
+      ggplot2::geom_vline(xintercept = median(mdf$value), color = .NUTS_VLINE_CLR, lty = 2, size = 1)
     return(graph)
   }
   chain_data <- mdf[mdf$variable == paste0("chain:",chain), ]
   chain_clr <- color_vector_chain(ncol(df) - 1)[chain]
   chain_fill <- chain_clr
-  base + geom_histogram(data = chain_data,
+  base + ggplot2::geom_histogram(data = chain_data,
                         binwidth = diff(range(chain_data$value))/30,
                         fill = chain_fill, alpha = 0.5) +
-    geom_vline(xintercept = mean(chain_data$value), color = chain_clr, size = .8) +
-    geom_vline(xintercept = median(chain_data$value),
+    ggplot2::geom_vline(xintercept = mean(chain_data$value), color = chain_clr, size = .8) +
+    ggplot2::geom_vline(xintercept = median(chain_data$value),
                color = chain_clr, lty = 2, size = 1)
 }
 
@@ -544,7 +586,7 @@ color_vector_chain <- function(n) {
                                        divergent = c("All", 0, 1), ...) {
   x_lab <- if (divergent == "All")
     "Treedepth" else paste0("Treedepth (Divergent = ", divergent,")")
-  plot_labs <- labs(x = x_lab, y = "")
+  plot_labs <- ggplot2::labs(x = x_lab, y = "")
   
   mdf_td <- .reshape_df(df_td) #reshape2::melt(df_td, id.vars = grep("iteration", colnames(df_td), value = TRUE))
   mdf_nd <- .reshape_df(df_nd) #reshape2::melt(df_nd, id.vars = grep("iteration", colnames(df_nd), value = TRUE))
@@ -552,15 +594,14 @@ color_vector_chain <- function(n) {
   plot_data <- if (divergent == "All") mdf else mdf[mdf$div == divergent,,drop=FALSE]
   if (nrow(plot_data) == 0) return(NULL)
   
-  graph <- ggplot(plot_data, aes_q(x = quote(factor(value))), na.rm = TRUE) +
-    geom_bar(aes_q(y=quote(..count../sum(..count..))),
-             width=1, fill = .NUTS_FILL, color = .NUTS_CLR) +
-    plot_labs
+  graph <- ggplot2::ggplot(plot_data, ggplot2::aes_q(x = quote(factor(value))), na.rm = TRUE) +
+    ggplot2::geom_bar(mapping = ggplot2::aes_q(y=quote(..count../sum(..count..))),
+             width=1, fill = .NUTS_FILL, color = .NUTS_CLR) + plot_labs
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_td) - 1)[chain]
   chain_fill <- chain_clr
   chain_data <- plot_data[plot_data$variable == paste0("chain:",chain),, drop=FALSE]
-  graph + geom_bar(data = chain_data, aes_q(y=quote(..count../sum(..count..))),
+  graph + ggplot2::geom_bar(data = chain_data, mapping = ggplot2::aes_q(y=quote(..count../sum(..count..))),
                    fill = chain_fill, width = 1)
 }
 

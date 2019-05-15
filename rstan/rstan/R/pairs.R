@@ -136,12 +136,18 @@ pairs.stanfit <-
       if(!is.null(panel)) lower.panel <- panel
       else lower.panel <- function(x,y, ...) {
         dots <- list(...)
-        dots$x <- x[!mark]
-        dots$y <- y[!mark]
-        if (is.null(mc$nrpoints) && !identical(condition, "divergent__")) {
-          dots$nrpoints <- Inf
-          dots$col <- ifelse(divergent__[!mark] == 1, "red", 
-                      ifelse(hit[!mark] == 1, "yellow", NA_character_))
+        x_tmp <- x[!mark]
+        y_tmp <- y[!mark]
+        div_tmp <- divergent__[!mark]
+        hit_tmp <- hit[!mark]
+        dots$x <- x_tmp
+        dots$y <- y_tmp
+        dots$nrpoints <- 0
+        dots$postPlotHook <- function() {
+          if (!identical(condition, "divergent__")) {
+            points(x_tmp[div_tmp==1], y_tmp[div_tmp == 1], col = "red", pch = ".")
+            points(x_tmp[hit_tmp == 1], y_tmp[hit_tmp == 1], col = "yellow", pch = ".")
+          }
         }
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)
@@ -151,12 +157,18 @@ pairs.stanfit <-
       if(!is.null(panel)) upper.panel <- panel
       else upper.panel <- function(x,y, ...) {
         dots <- list(...)
-        dots$x <- x[mark]
-        dots$y <- y[mark]
-        if (is.null(mc$nrpoints) && !identical(condition, "divergent__")) {
-          dots$nrpoints <- Inf
-          dots$col <- ifelse(divergent__[mark] == 1, "red", 
-                      ifelse(hit[mark] == 1, "yellow", NA_character_))
+        x_tmp <- x[mark]
+        y_tmp <- y[mark]
+        div_tmp <- divergent__[mark]
+        hit_tmp <- hit[mark]
+        dots$x <- x_tmp
+        dots$y <- y_tmp
+        dots$nrpoints <- 0
+        dots$postPlotHook <- function() {
+          if (!identical(condition, "divergent__")) {
+            points(x_tmp[div_tmp==1], y_tmp[div_tmp == 1], col = "red", pch = ".")
+            points(x_tmp[hit_tmp == 1], y_tmp[hit_tmp == 1], col = "yellow", pch = ".")
+          }
         }
         dots$add <- TRUE
         do.call(smoothScatter, args = dots)

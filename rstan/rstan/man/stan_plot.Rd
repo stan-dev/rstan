@@ -160,15 +160,15 @@ trace +
   scale_color_brewer(type = "div") +
   theme(legend.position = "none")
 
-facet_style <- theme(strip.background = element_rect(fill = "white"),
-                     strip.text = element_text(size = 13, color = "black"))
+facet_style <- theme(strip.background = ggplot2::element_rect(fill = "white"),
+                     strip.text = ggplot2::element_text(size = 13, color = "black"))
 (trace <- trace + facet_style)
 
 # scatterplot
 (mu_vs_tau <- stan_scat(fit, pars = c("mu", "tau"), color = "blue", size = 4))
 mu_vs_tau + 
-  coord_flip() + 
-  theme(panel.background = element_rect(fill = "black"))
+  ggplot2::coord_flip() + 
+  theme(panel.background = ggplot2::element_rect(fill = "black"))
   
 }
 }

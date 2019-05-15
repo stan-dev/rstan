@@ -330,7 +330,8 @@ setMethod("optimizing", "stanmodel",
                    init = 'random', check_data = TRUE, sample_file = NULL, 
                    algorithm = c("LBFGS", "BFGS", "Newton"),
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
-                   draws = 0, constrained = TRUE, ...) {
+                   draws = 0, constrained = TRUE, 
+                   importance_resampling = FALSE, ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
@@ -442,12 +443,17 @@ setMethod("optimizing", "stanmodel",
                 R_inv <- backsolve(R, diag(K))
                 Z <- matrix(rnorm(K * draws), K, draws)
                 theta_tilde <- t(theta + R_inv %*% Z)
-                log_p <- apply(theta_tilde, 1, FUN = function(theta) {
-                  sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
-                })
-                log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
-                optim$log_p <- log_p
-                optim$log_g <- log_g
+                if (importance_resampling) {
+                  log_p <- apply(theta_tilde, 1, FUN = function(theta) {
+                    sampler$log_prob(theta, adjust_transform = TRUE, gradient = FALSE)
+                  })
+                  log_g <- colSums(dnorm(Z, log = TRUE)) - sum(log(diag(R_inv)))
+                  optim$log_p <- log_p
+                  optim$log_g <- log_g
+                } else {
+                  optim$log_p <- rep(NaN, length(theta))
+                  optim$log_g <- rep(NaN, length(theta))
+                }
                 colnames(theta_tilde) <- colnames(H)
                 optim$log_prob <- sampler$log_prob
                 optim$grad_log_prob <- sampler$grad_log_prob
@@ -458,7 +464,7 @@ setMethod("optimizing", "stanmodel",
               theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
                 sampler$constrain_pars(theta)  
               }))
-              if (length(theta) == 1L) theta_tilde <- t(theta_tilde)
+              if (NCOL(theta_tilde) != length(optim$par)) theta_tilde <- t(theta_tilde)
             }
             colnames(theta_tilde) <- names(optim$par)
             optim$theta_tilde <- theta_tilde
