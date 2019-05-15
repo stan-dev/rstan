@@ -109,7 +109,10 @@ setMethod("vb", "stanmodel",
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random',
                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
-                   algorithm = c("meanfield", "fullrank"), ...) {
+                   algorithm = c("meanfield", "fullrank"),
+                   importance_resampling = FALSE,
+                   keep_every = 1,
+                   ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -228,13 +231,13 @@ setMethod("vb", "stanmodel",
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
             diagnostic_columns <- which(grepl('__',colnames(samples)))[-1]
             if (length(diagnostic_columns)>0) {
-                diagnostics <- samples[-1,diagnostic_columns]
-                samples <- samples[,-diagnostic_columns]
+              diagnostics <- samples[-1,diagnostic_columns]
+              samples <- samples[,-diagnostic_columns]
             } else {
-                diagnostics <- NULL
+              diagnostics <- NULL
             }
             pest <- rstan_relist(as.numeric(samples[1,-1]), skeleton[-length(skeleton)])
-            means <- sapply(samples, mean)
+            means <- sapply(samples[-1,], mean)
             means <- as.matrix(c(means[-1], means[1]))
             colnames(means) <- "chain:1"
             assign("posterior_mean_4all", means, envir = sfmiscenv)
@@ -253,9 +256,61 @@ setMethod("vb", "stanmodel",
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             iter <- nrow(samples)
+            if ("log_g__" %in% colnames(diagnostics)) {
+              if (length(extralp <- which(grepl('lp__.1', colnames(samples)))) > 0)
+                  samples <- samples[,-extralp]
+              lr <- diagnostics$log_p-diagnostics$log_g
+              lr[lr == -Inf] <- -800
+              p <- suppressWarnings(loo::psis(lr, r_eff = 1))
+              p$log_weights <- p$log_weights - log_sum_exp(p$log_weights)
+              theta_pareto_k <- suppressWarnings(apply(samples, 2L, function(col) {
+                if (all(is.finite(col))) loo::psis(log1p(col^2) / 2 + lr, r_eff = 1)$diagnostics$pareto_k 
+                else NaN
+              }))
+              ## todo: change fixed threshold to an option
+              if (p$diagnostics$pareto_k > 1) {
+                warning("Pareto k diagnostic value is ", 
+                        round(p$diagnostics$pareto_k,2),
+                        ". Resampling is disabled.",
+                        " Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely.", 
+                        " Otherwise consider using sampling instead.", call. = FALSE, immediate. = TRUE)
+                #importance_resampling <- FALSE
+              } else if (p$diagnostics$pareto_k > 0.7) { 
+                warning("Pareto k diagnostic value is ", 
+                        round(p$diagnostics$pareto_k,2), 
+                        ". Resampling is unreliable.", 
+                        " Increasing the number of draws or decreasing tol_rel_obj may help.", 
+                        call. = FALSE, immediate. = TRUE)
+              }
+              psis <- loo::nlist(pareto_k = p$diagnostics$pareto_k,
+                                 n_eff = p$diagnostics$n_eff / keep_every)
+              ## importance_resampling
+              if (importance_resampling) {
+                iter <- ceiling(dim(samples)[1] / keep_every)
+                ir_idx <- sample_indices(exp(p$log_weights),
+                                         n_draws = iter)
+                samples <- samples[ir_idx,]
+                ## SIR mcse and n_eff
+                w_sir <- as.numeric(table(ir_idx)) / length(ir_idx)
+                mcse <- apply(samples[!duplicated(ir_idx),], 2L, function(col) {
+                  if (all(is.finite(col))) sqrt(sum(w_sir^2*(col-mean(col))^2)) 
+                  else NaN
+                })
+                n_eff <- round(apply(samples[!duplicated(ir_idx),], 2L, var) / (mcse^2), digits = 0)
+              } else {
+                ir_idx <- NULL
+                mcse <- rep(NaN, length(theta_pareto_k))
+                n_eff <- rep(NaN, length(theta_pareto_k))
+              }
+              diagnostics <- list(as.list(diagnostics), psis = psis,
+                                  theta_pareto_k = theta_pareto_k,
+                                  ir_idx = ir_idx, mcse = mcse, n_eff = n_eff)
+            } else {
+              diagnostics <- list(as.list(diagnostics))
+            }
             sim <- list(samples = list(as.list(samples)),
-                        diagnostics = list(as.list(diagnostics)),
-                        iter = iter, thin = 1L,
+                        diagnostics = diagnostics,
+                        iter = iter, thin = keep_every,
                         warmup = 0L,
                         chains = 1L,
                         n_save = iter,
