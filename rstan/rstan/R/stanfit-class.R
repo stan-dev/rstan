@@ -54,11 +54,11 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
       if ("diagnostics" %in% names(x@sim)
           & "ir_idx" %in% names(x@sim$diagnostics)
           & !is.null(x@sim$diagnostics$ir_idx)) {
-        cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, ") + PSIS at ", x@date, 
-        ".\n", sep = '')
+        cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, 
+            ") + PSIS at ", x@date, ".\n", sep = '')
     } else {
-      cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, ") at ", x@date, 
-        ".\n", sep = '')
+      cat("\nApproximate samples were drawn using VB(", x@stan_args[[1]]$algorithm, 
+          ") at ", x@date, ".\n", sep = '')
       message("We recommend genuine 'sampling' from the posterior distribution for final inferences!")
     }
     return(invisible(NULL))
