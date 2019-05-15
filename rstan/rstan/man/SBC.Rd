@@ -58,6 +58,10 @@ a posterior distribution conditional on observed data.
     parameter from the posterior distribution exceeds the corresponding \dQuote{true} 
     realization, such as \code{theta > theta_;}. These are not actually "ranks"
     but can be used afterwards to reconstruct (thinned) ranks.
+  \item The \code{generated quantities} block may contain a vector named \code{log_lik}
+    whose values are the contribution to the log-likelihood by each observation. This
+    is optional but facilitates calculating Pareto k shape parameters to judge whether
+    the posterior distribution is sensitive to particular observations.
   }
   
   Although the user can pass additional arguments to \code{\link{sampling}} through the \dots,
@@ -101,6 +105,9 @@ a posterior distribution conditional on observed data.
     are equal to the number of parameters and whose columns are equal to \code{M}, 
     which are taken from the \code{pars_} object in the \code{generated quantities}
     block of the Stan program.
+  \item \code{pareto_k} A matrix of Pareto k shape parameter estimates or \code{NULL}
+    if there is no \code{log_lik} symbol in the \code{generated quantities} block
+    of the Stan program
   \item \code{sampler_params} A three-dimensional array that results from combining
     calls to \code{\link{get_sampler_params}} for each of
     the \code{M} runs. The resulting matrix has rows equal to the number of 
@@ -133,26 +140,30 @@ a posterior distribution conditional on observed data.
 }
 \examples{
 scode <- "
-  data {
-    int<lower = 1> N;
-    real<lower = 0> a;
-    real<lower = 0> b;
-  }
-  transformed data { // these adheres to the conventions above
-    real pi_ = beta_rng(a, b);
-    int y = binomial_rng(N, pi_);
-  }
-  parameters {
-    real<lower = 0, upper = 1> pi;
-  }
-  model {
-    target += beta_lpdf(pi | a, b);
-    target += binomial_lpmf(y | N, pi);
-  }
-  generated quantities { // these adhere to the conventions above
-    int y_ = y;
-    vector[1] pars_ = [pi_]';
-    int ranks_[1] = {pi > pi_};
-  }
+data {
+  int<lower = 1> N;
+  real<lower = 0> a;
+  real<lower = 0> b;
+}
+transformed data { // these adhere to the conventions above
+  real pi_ = beta_rng(a, b);
+  int y = binomial_rng(N, pi_);
+}
+parameters {
+  real<lower = 0, upper = 1> pi;
+}
+model {
+  target += beta_lpdf(pi | a, b);
+  target += binomial_lpmf(y | N, pi);
+}
+generated quantities { // these adhere to the conventions above
+  int y_ = y;
+  vector[1] pars_;
+  int ranks_[1] = {pi > pi_};
+  vector[N] log_lik;
+  pars_[1] = pi_;
+  for (n in 1:y) log_lik[n] = bernoulli_lpmf(1 | pi);
+  for (n in (y + 1):N) log_lik[n] = bernoulli_lpmf(0 | pi);
+}
 "
 }
