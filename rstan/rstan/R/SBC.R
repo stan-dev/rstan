@@ -9,6 +9,13 @@ SBC <- function(stanmodel, data, M, ...) {
                            !grepl("^[[:space:]]*real", pars_lines)]   
   pars_names <- trimws(sapply(strsplit(pars_lines, split = "=", fixed = TRUE), tail, n = 1))
   pars_names <- unique(sub("^([a-z,A-Z,0-9,_]*)_.*;", "\\1", pars_names))
+  noUnderscore <- grepl(";", pars_names, fixed=TRUE)
+  if (any(noUnderscore)) {
+    warning(paste("The following parameters were added to pars_ but did not",
+      "have the expected underscore postfix:",
+      paste(pars_names[noUnderscore], collapse = ' ')))
+    return()
+  }
   has_log_lik <- any(grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code))
   
   post <- parallel::mclapply(1:M, FUN = function(m) {
@@ -23,6 +30,12 @@ SBC <- function(stanmodel, data, M, ...) {
     post <- post[!bad]
   }
 
+  noTwin <- is.na(match(pars_names, names(post[[1]]@par_dims)))
+  if (any(noTwin)) {
+    warning(paste("The following underscored priors did not have a matching",
+      "parameter without the underscore:", paste(pars_names[noTwin], collapse = ' ')))
+    pars_names <- NULL
+  }
   pars_names <- try(rstan:::flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
@@ -46,6 +59,11 @@ SBC <- function(stanmodel, data, M, ...) {
     return(means[mark])
   })
   if (length(pars) > 0L) {
+    if (is.null(dim(pars))) pars <- matrix(pars, nrow=1)
+    if (dim(pars)[1] != length(pars_names)) {
+      warning("parameter names miscalculated due to non-compliance with conventions; see help(SBC)")
+      pars_names <- NULL
+    }
     if (is.null(dim(pars))) {
       pars <- t(as.matrix(pars))
     }
