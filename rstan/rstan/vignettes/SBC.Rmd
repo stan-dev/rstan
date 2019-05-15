@@ -22,7 +22,7 @@ data {
   real<lower = 0> a;
   real<lower = 0> b;
 }
-transformed data { // these adheres to the conventions above
+transformed data { // these adhere to the conventions above
   real pi_ = beta_rng(a, b);
   int y = binomial_rng(N, pi_);
 }
@@ -35,8 +35,12 @@ model {
 }
 generated quantities { // these adhere to the conventions above
   int y_ = y;
-  vector[1] pars_ = [pi_]';
+  vector[1] pars_;
   int ranks_[1] = {pi > pi_};
+  vector[N] log_lik;
+  pars_[1] = pi_;
+  for (n in 1:sum(y)) log_lik[n] = bernoulli_lpmf(1 | pi);
+  for (n in (sum(y) + 1):N) log_lik[n] = bernoulli_lpmf(0 | pi);
 }
 ```
 Notice that it adheres to the following conventions:
@@ -53,12 +57,18 @@ Notice that it adheres to the following conventions:
   in the `generated quantities` block named `pars_`
 * The realizations from the prior predictive distribution are copied 
   into an object (of the same type) in the `generated quantities` block
-  named `y_.
+  named `y_. This is optional.
 * The `generated quantities` block contains an integer array named 
   `ranks_` whose only values are zero or one, depending on whether the realization of a 
   parameter from the posterior distribution exceeds the corresponding "true"
   realization, which in this case is `ranks_[1] = {pi > pi_};`. These are not actually "ranks"
   but can be used afterwards to reconstruct (thinned) ranks.
+* The `generated quantities` block contains a vector named `log_lik` whose values
+  are the contribution to the log-likelihood by each observation. In this case, 
+  the "observations" are the implicit successes and failures that are aggregated
+  into a binomial likelihood. This is optional but facilitates calculating the
+  Pareto k shape parameter estimates that indicate whether the posterior distribution
+  is sensitive to particular observations.
 
 Assuming the above is compile to a code `stanmodel` named `beta_binomial`, we can
 then call the `SBC` function
@@ -76,16 +86,22 @@ ranks_ <- lapply(1:M, FUN = function(m) {
   matrix(post_[ , m] > pars_[m], ncol = 1, 
          dimnames = list(NULL, "pi"))
 })
+log_lik <- t(sapply(1:M, FUN = function(m) {
+  sum_y <- sum(y_[, m])
+  c(dbinom(rep(1, sum_y), size = 1, prob = pars_[m], log = TRUE),
+    dbinom(rep(1, N - sum_y), size = 1, prob = pars_[m], log = TRUE))
+}))
 sampler_params <- array(0, dim = c(1000, 6, M))
 colnames(sampler_params) <- c("accept_stat__", "stepsize__", "treedepth__",   
                               "n_leapfrog__",  "divergent__",   "energy__")
-output <- list(ranks = ranks_, Y = y_, pars = pars_, sampler_params = sampler_params)
+output <- list(ranks = ranks_, Y = y_, pars = pars_, 
+               log_lik = log_lik, sampler_params = sampler_params)
 class(output) <- "SBC"
 ```
 At which point, we can then call
 ```{r}
 print(output)
-plot(output, bins = 10)
+plot(output, bins = 10) # it is best to specify the bins argument yourself
 ```
 
 # References
