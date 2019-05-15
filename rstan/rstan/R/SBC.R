@@ -36,7 +36,7 @@ SBC <- function(stanmodel, data, M, ...) {
       "parameter without the underscore:", paste(pars_names[noTwin], collapse = ' ')))
     pars_names <- NULL
   }
-  pars_names <- try(rstan:::flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
+  pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
     warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
     pars_names <- NULL

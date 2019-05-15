@@ -19,7 +19,9 @@
     seed = sample.int(.Machine$integer.max, 1), 
     init = 'random', check_data = TRUE, 
     sample_file = tempfile(fileext = '.csv'),
-    algorithm = c("meanfield", "fullrank"), \dots)
+    algorithm = c("meanfield", "fullrank"), 
+    importance_resampling = FALSE, keep_every = 1,
+    \dots)
 } 
 
 \section{Methods}{
@@ -76,6 +78,12 @@
     \code{fullrank} option uses a Gaussian with a full-rank covariance matrix 
     for the approximation. Details and additional references are available in 
     the Stan manual.}
+    
+  \item{importance_resampling}{Logical scalar (defaulting to \code{FALSE}) indicating
+    whether to do importance resampling to adjust the draws at the optimum
+    to be more like draws from the posterior distribution}
+  \item{keep_every}{Integer scalar (defaulting to 1) indicating the interval
+    by which to thin the draws when \code{imporance_resampling = TRUE}}
     
   \item{\dots}{Other optional parameters:
     \itemize{

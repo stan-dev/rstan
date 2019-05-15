@@ -111,7 +111,7 @@ setMethod("vb", "stanmodel",
                    check_data = TRUE, sample_file = tempfile(fileext = '.csv'),
                    algorithm = c("meanfield", "fullrank"),
                    importance_resampling = FALSE,
-                   thin = 1,
+                   keep_every = 1,
                    ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
@@ -283,10 +283,10 @@ setMethod("vb", "stanmodel",
                         call. = FALSE, immediate. = TRUE)
               }
               psis <- loo::nlist(pareto_k = p$diagnostics$pareto_k,
-                                 n_eff = p$diagnostics$n_eff/thin)
+                                 n_eff = p$diagnostics$n_eff / keep_every)
               ## importance_resampling
               if (importance_resampling) {
-                iter <- ceiling(dim(samples)[1] / thin)
+                iter <- ceiling(dim(samples)[1] / keep_every)
                 ir_idx <- sample_indices(exp(p$log_weights),
                                          n_draws = iter)
                 samples <- samples[ir_idx,]
@@ -310,7 +310,7 @@ setMethod("vb", "stanmodel",
             }
             sim <- list(samples = list(as.list(samples)),
                         diagnostics = diagnostics,
-                        iter = iter, thin = 1L,
+                        iter = iter, thin = keep_every,
                         warmup = 0L,
                         chains = 1L,
                         n_save = iter,
