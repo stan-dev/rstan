@@ -89,14 +89,43 @@ sbc <- function(stanmodel, data, M, ...) {
   return(out)
 }
 
-plot.sbc <- function(x, thin = 4, ...) {
+klUniform <- function(v, numPriorDraws, samplesPerPrior) {
+  # D_{KL}(v || uniform)
+  # https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence
+  expectedPr <- qbinom(0.5, numPriorDraws, samplesPerPrior^-1) / numPriorDraws
+  observedPr <- table(v) / numPriorDraws
+  sum(observedPr * log(observedPr/expectedPr))
+}
+
+plot.sbc <- function(x, thin = 4, perBin=4, worst=16, ...) {
   thinner <- seq(from = 1, to = nrow(x$ranks[[1]]), by = thin)
+  samplesPerPrior <- length(thinner)
   u <- t(sapply(x$ranks, FUN = function(r) 1 + colSums(r[thinner, , drop = FALSE])))
-  parameter <- as.factor(rep(colnames(u), each = nrow(u)))
+  numPriorDraws <- ncol(u)
+  
+  if (!is.na(worst)) {
+    kl <- apply(u, 2, function(v) klUniform(v, numPriorDraws, samplesPerPrior))
+    filter <- order(-kl)[1:min(worst,ncol(u))]
+#    print(filter)
+    u <- u[, filter, drop=FALSE ]
+  }
+  
+  parameter <- ordered(rep(colnames(u), each = nrow(u)),
+                       levels=colnames(u))
   d <- data.frame(u = c(u), parameter)
-  suppressWarnings(ggplot2::ggplot(d) + 
-    ggplot2::geom_histogram(ggplot2::aes(x = u), pad = TRUE, ...) + 
-    ggplot2::facet_wrap("parameter"))
+  if (samplesPerPrior %% perBin != 0) {
+    warning(paste("perBin (", perBin, ") does not evenly divide the",
+      "number of samples per prior (",samplesPerPrior,")"))
+  }
+  numBins <- samplesPerPrior/perBin
+  ymark <- qbinom(c(.005,1-.005), numPriorDraws, numBins^-1)
+  ggplot2::ggplot(d, ggplot2::aes(x = u)) + 
+    ggplot2::geom_histogram(bins=numBins, na.rm=TRUE, ...) +
+#    ggplot2::xlim(1,1+samplesPerPrior) +
+    # https://github.com/tidyverse/ggplot2/issues/3332
+    ggplot2::facet_wrap("parameter") +
+    ggplot2::geom_hline(yintercept=ymark[1], color='red', alpha=.5) +
+    ggplot2::geom_hline(yintercept=ymark[2], color='red', alpha=.5)
 }
 
 print.sbc <- function(x, ...) {

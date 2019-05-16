@@ -11,7 +11,7 @@ a posterior distribution conditional on observed data.
 }
 \usage{
   sbc(stanmodel, data, M, ...)
-  \method{plot}{sbc}(x, thin = 4, ...)
+  \method{plot}{sbc}(x, thin = 4, perBin=4, worst=16, ...)
   \method{print}{sbc}(x, ...)
 
 }
@@ -31,6 +31,10 @@ a posterior distribution conditional on observed data.
   \item{x}{An object produced by \code{sbc}}
   \item{thin}{An integer vector of length one indicating the thinning interval
     when plotting}
+  \item{perBin}{Number of histogram entries to combine into a single
+    bar.}
+  \item{worst}{If NA, plots all parameters. Otherwise how many
+    parameters to show. Parameters are ordered by non-uniformity.}
 }
 \details{
   This function assumes adherence to the following conventions in the 
