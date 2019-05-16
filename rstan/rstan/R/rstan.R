@@ -116,7 +116,7 @@ stan_model <- function(file,
   # check for compilers
   if (.Platform$OS.type != "windows") {
     CXX <- get_CXX()
-    if (nchar(CXX) == 0) {
+    if (!is.null(attr(CXX, "status")) || nchar(CXX) == 0) {
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
       warning(paste("C++ compiler not found on system. If absent, see\n", WIKI))
     }

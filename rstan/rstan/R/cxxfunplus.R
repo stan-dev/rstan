@@ -202,12 +202,14 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   if (!is.list(sig))  { 
     sig <- list(sig) 
     names(sig) <- dso_filename 
-  } 
+  }
+  cxxflags <- try(get_makefile_flags("CXXFLAGS"))
+  if (!is.character(cxxflags)) cxxflags <- NA_character_
   dso <- new('cxxdso', sig = sig, dso_saved = save_dso, 
              dso_filename = dso_filename, 
              modulename = module_name, 
              system = R.version$system, 
-             cxxflags = get_makefile_flags("CXXFLAGS"), 
+             cxxflags = cxxflags,
              .CXXDSOMISC = new.env(parent = emptyenv())) 
   assign("cxxfun", fx, envir = dso@.CXXDSOMISC)
   assign("dso_last_path", dso_last_path, envir = dso@.CXXDSOMISC)
