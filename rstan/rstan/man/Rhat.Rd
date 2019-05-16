@@ -41,7 +41,7 @@ for sampling efficiency in the bulk of the distribution (related e.g. to
 efficiency of mean and median estimates), and is well defined even if
 the chains do not have finite mean or variance.
 
-The \code{ess_bulk} function produces an estimated Tail Effective Sample
+The \code{ess_tail} function produces an estimated Tail Effective Sample
 Size (tail-ESS) by computing the minimum of effective sample sizes for
 5\% and 95\% quantiles. Tail-ESS is useful measure for sampling
 efficiency in the tails of the distribution (related e.g. to efficiency
