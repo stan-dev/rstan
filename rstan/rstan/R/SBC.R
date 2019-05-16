@@ -1,4 +1,4 @@
-SBC <- function(stanmodel, data, M, ...) {
+sbc <- function(stanmodel, data, M, ...) {
   stopifnot(is(stanmodel, "stanmodel"))
   
   # parameter names
@@ -38,7 +38,7 @@ SBC <- function(stanmodel, data, M, ...) {
   }
   pars_names <- try(flatnames(pars_names, post[[1]]@par_dims[pars_names]), silent = TRUE)
   if (!is.character(pars_names)) {
-    warning("parameter names could not be calculated due to non-compliance with conventions; see help(SBC)")
+    warning("parameter names could not be calculated due to non-compliance with conventions; see help(sbc)")
     pars_names <- NULL
   }
   
@@ -61,7 +61,7 @@ SBC <- function(stanmodel, data, M, ...) {
   if (length(pars) > 0L) {
     if (is.null(dim(pars))) pars <- matrix(pars, nrow=1)
     if (dim(pars)[1] != length(pars_names)) {
-      warning("parameter names miscalculated due to non-compliance with conventions; see help(SBC)")
+      warning("parameter names miscalculated due to non-compliance with conventions; see help(sbc)")
       pars_names <- NULL
     }
     if (is.null(dim(pars))) {
@@ -85,11 +85,11 @@ SBC <- function(stanmodel, data, M, ...) {
 
   out <- list(ranks = ranks, Y = Y, pars = pars, sampler_params = sampler_params, 
               pareto_k = if (has_log_lik) pareto_k)
-  class(out) <- "SBC"
+  class(out) <- "sbc"
   return(out)
 }
 
-plot.SBC <- function(x, thin = 4, ...) {
+plot.sbc <- function(x, thin = 4, ...) {
   thinner <- seq(from = 1, to = nrow(x$ranks[[1]]), by = thin)
   u <- t(sapply(x$ranks, FUN = function(r) 1 + colSums(r[thinner, , drop = FALSE])))
   parameter <- as.factor(rep(colnames(u), each = nrow(u)))
@@ -99,7 +99,7 @@ plot.SBC <- function(x, thin = 4, ...) {
     ggplot2::facet_wrap("parameter"))
 }
 
-print.SBC <- function(x, ...) {
+print.sbc <- function(x, ...) {
   divergences <- apply(x$sampler_params, MARGIN = 3, FUN = function(y) sum(y[,"divergent__"]))
   bad <- sum(divergences > 0L)
   cat(paste(bad, "chains had divergent transitions after warmup\n"))

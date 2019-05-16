@@ -18,7 +18,7 @@ importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
 
 export(
-  SBC,
+  sbc,
   stan_model,
   stanc,
   stanc_builder,
@@ -105,5 +105,5 @@ S3method(pairs, stanfit)
 S3method(loo, stanfit)
 importFrom("loo", "loo", "loo.array")
 export("loo")
-S3method(print, SBC)
-S3method(plot, SBC)
+S3method(print, sbc)
+S3method(plot, sbc)

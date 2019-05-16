@@ -1,8 +1,8 @@
-\name{SBC}
-\alias{SBC}
-\alias{print.SBC}
-\alias{plot.SBC}
-\title{Simulation Based Calibration (SBC)}
+\name{sbc}
+\alias{sbc}
+\alias{print.sbc}
+\alias{plot.sbc}
+\title{Simulation Based Calibration (sbc)}
 \description{
 \if{html}{\figure{stanlogo.png}{options: width="25px" alt="http://mc-stan.org/about/logo/"}}
 Check whether a model is well-calibrated with respect to the
@@ -10,9 +10,9 @@ prior distribution and hence possibly amenable to obtaining
 a posterior distribution conditional on observed data.
 }
 \usage{
-  SBC(stanmodel, data, M, ...)
-  \method{plot}{SBC}(x, thin = 4, ...)
-  \method{print}{SBC}(x, ...)
+  sbc(stanmodel, data, M, ...)
+  \method{plot}{sbc}(x, thin = 4, ...)
+  \method{print}{sbc}(x, ...)
 
 }
 \arguments{
@@ -26,9 +26,9 @@ a posterior distribution conditional on observed data.
     The number of times to condition on draws from the prior predictive
     distribution}
   \item{\dots}{Additional arguments that are passed to \code{\link{sampling}},
-    such as \code{refresh = 0} when calling \code{SBC}. For the \code{plot}
+    such as \code{refresh = 0} when calling \code{sbc}. For the \code{plot}
     and \code{print} methods, the additional arguments are not used.}
-  \item{x}{An object produced by \code{SBC}}
+  \item{x}{An object produced by \code{sbc}}
   \item{thin}{An integer vector of length one indicating the thinning interval
     when plotting}
 }
@@ -89,7 +89,7 @@ a posterior distribution conditional on observed data.
   vignette for more details.
 }
 \value{
-  The \code{SBC} function outputs a list of S3 class \code{"SBC"}, which contains the
+  The \code{sbc} function outputs a list of S3 class \code{"sbc"}, which contains the
   following elements:
   \enumerate{
   \item \code{ranks} A list of \code{M} matrices, each with number of 

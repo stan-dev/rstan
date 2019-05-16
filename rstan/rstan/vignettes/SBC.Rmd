@@ -71,9 +71,9 @@ Notice that it adheres to the following conventions:
   is sensitive to particular observations.
 
 Assuming the above is compile to a code `stanmodel` named `beta_binomial`, we can
-then call the `SBC` function
+then call the `sbc` function
 ```{r, eval = FALSE}
-output <- SBC(beta_binomial, data = list(N = 10, a = 1, b = 1), M = 500, refresh = 0)
+output <- sbc(beta_binomial, data = list(N = 10, a = 1, b = 1), M = 500, refresh = 0)
 ```
 ```{r, include = FALSE}
 # This fakes what would happen if we actually took the time to run Stan.
@@ -95,7 +95,7 @@ colnames(sampler_params) <- c("accept_stat__", "stepsize__", "treedepth__",
                               "n_leapfrog__",  "divergent__",   "energy__")
 output <- list(ranks = ranks_, Y = y_, pars = pars_, 
                log_lik = log_lik, sampler_params = sampler_params)
-class(output) <- "SBC"
+class(output) <- "sbc"
 ```
 At which point, we can then call
 ```{r}
