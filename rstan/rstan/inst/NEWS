@@ -1,3 +1,11 @@
+Thu May 15 2019
+1. Bug fixes
+  * Works with R 3.6 on Windows again
+2. Features
+  * New diagnostics: ess_bulk, ess_tail, and rhat calculation
+  * New diagnostics for variational inference
+  * New sbc function (and vignette) for Simulation Based Calibration
+  
 Tue November 06 2018
 1. Bug fixes
   * handing on makefile paths is more robust, especially on Windows
