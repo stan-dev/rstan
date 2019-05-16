@@ -68,7 +68,7 @@ export(
   get_rng,
   get_stream,
   RNG, OUT,
-  rhat, ess_bulk, ess_tail
+  Rhat, ess_bulk, ess_tail
 )
 
 exportClasses(

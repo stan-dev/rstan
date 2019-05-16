@@ -1,5 +1,5 @@
-\name{rhat}
-\alias{rhat}
+\name{Rhat}
+\alias{Rhat}
 \alias{ess_bulk}
 \alias{ess_tail}
 \title{
@@ -11,7 +11,7 @@ Rhat (for convergence) and Effective Sample Size (for
 efficiency).
 }
 \usage{
-rhat(sims)
+Rhat(sims)
 ess_bulk(sims)
 ess_tail(sims)
 }
@@ -25,12 +25,12 @@ ess_tail(sims)
 }
 }
 \value{
-The \code{rhat} function produces R-hat convergence diagnostic, which
+The \code{Rhat} function produces R-hat convergence diagnostic, which
 compares the between- and within-chain estimates for model parameters
 and other univariate quantities of interest. If chains have not mixed
 well (ie, the between- and within-chain estimates don't agree), R-hat is
 larger than 1. We recommend running at least four chains by default and
-only using the sample if R-hat is less than 1.01. Stan reports R-hat
+only using the sample if R-hat is less than 1.05. Stan reports R-hat
 which is the maximum of rank normalized split-R-hat and rank normalized
 folded-split-R-hat, which works for thick tailed distributions and is
 sensitive also to differences in scale.
@@ -66,7 +66,7 @@ Paul-Christian Burkner and Aki Vehtari
 \examples{
 # pretend these draws came from five actual Markov Chins
 sims <- matrix(rnorm(500), nrow = 100, ncol = 5)
-rhat(sims)
+Rhat(sims)
 ess_bulk(sims)
 ess_tail(sims)
 }

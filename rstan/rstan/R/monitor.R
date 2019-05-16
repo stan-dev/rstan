@@ -279,7 +279,7 @@ ess_rfun <- function(sims) {
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 #' 
 #' @export
-rhat <- function(sims) {
+Rhat <- function(sims) {
   bulk_rhat <- rhat_rfun(z_scale(split_chains(sims)))
   sims_folded <- abs(sims - median(sims))
   tail_rhat <- rhat_rfun(z_scale(split_chains(sims_folded)))
@@ -583,7 +583,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
     mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
     mcse_mean <- mcse_mean(sims_i)
     mcse_sd <- mcse_sd(sims_i)
-    rhat <- rhat(sims_i)
+    rhat <- Rhat(sims_i)
     ess_bulk <- round(ess_bulk(sims_i))
     ess_tail <- round(ess_tail(sims_i))
     ess <- round(ess_rfun(sims_i))

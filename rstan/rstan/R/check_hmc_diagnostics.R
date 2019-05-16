@@ -69,7 +69,7 @@ throw_sampler_warnings <- function(object) {
             call. = FALSE, noBreaks. = TRUE)
   
   sims <- as.array(object)
-  rhat <- apply(sims, MARGIN = 3, FUN = rhat)
+  rhat <- apply(sims, MARGIN = 3, FUN = Rhat)
   if (anyNA(rhat) || any(rhat > 1.05))
       warning("The largest R-hat is ", round(max(rhat, digits = 2)),
             ", indicating chains have not mixed.\n",
