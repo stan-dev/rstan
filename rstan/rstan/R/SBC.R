@@ -93,16 +93,6 @@ sbc <- function(stanmodel, data, M, ...) {
   return(out)
 }
 
-plot.sbc <- function(x, thin = 3, ...) {
-  thinner <- seq(from = 1, to = nrow(x$ranks[[1]]), by = thin)
-  u <- t(sapply(x$ranks, FUN = function(r) 1 + colSums(r[thinner, , drop = FALSE])))
-  parameter <- as.factor(rep(colnames(u), each = nrow(u)))
-  d <- data.frame(u = c(u), parameter)
-  suppressWarnings(ggplot2::ggplot(d) + 
-    ggplot2::geom_histogram(ggplot2::aes(x = u), pad = FALSE, ...) + 
-    ggplot2::facet_wrap("parameter"))
-}
-
 print.sbc <- function(x, ...) {
   divergences <- apply(x$sampler_params, MARGIN = 3, FUN = function(y) sum(y[,"divergent__"]))
   bad <- sum(divergences > 0L)

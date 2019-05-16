@@ -11,7 +11,6 @@ a posterior distribution conditional on observed data.
 }
 \usage{
   sbc(stanmodel, data, M, ...)
-  \method{plot}{sbc}(x, thin = 3, ...)
   \method{print}{sbc}(x, ...)
 
 }
@@ -26,11 +25,8 @@ a posterior distribution conditional on observed data.
     The number of times to condition on draws from the prior predictive
     distribution}
   \item{\dots}{Additional arguments that are passed to \code{\link{sampling}},
-    such as \code{refresh = 0} when calling \code{sbc}. For the \code{plot}
-    and \code{print} methods, the additional arguments are not used.}
+    such as \code{refresh = 0} when calling \code{sbc}.}
   \item{x}{An object produced by \code{sbc}}
-  \item{thin}{An integer vector of length one indicating the thinning interval
-    when plotting, which defaults to 3}
 }
 \details{
   This function assumes adherence to the following conventions in the 
@@ -73,9 +69,6 @@ a posterior distribution conditional on observed data.
   \item \code{seed} because a sequence of seeds is used across the \code{M} runs to preserve
     independence across runs
   \item \code{save_warmup = FALSE} because the warmup realizations are not relevant
-  \item \code{thin = 1} because thinning can and should be done after the Markov Chain is
-    finished, as is done by the \code{thin} argument to the \code{plot} method in order to
-    make the histograms consist of approximately independent realizations
   }
   Other arguments will take the default values used by \code{\link{sampling}} unless 
   passed through the \dots. Specifying \code{refresh = 0} is recommended to avoid printing
@@ -85,7 +78,7 @@ a posterior distribution conditional on observed data.
   
   Ideally, users would want to see the absence of divergent transitions (which is shown
   by the \code{print} method) and other warnings, plus an approximately uniform histogram 
-  of the ranks for each parameter (which are shown by the \code{plot} method). See the 
+  of the ranks for each parameter (see \link[bayesplot]{sbc_hist}). See the 
   vignette for more details.
 }
 \value{
@@ -121,8 +114,6 @@ a posterior distribution conditional on observed data.
   }
   The \code{print} method outputs the number of divergent transitions and
   returns \code{NULL} invisibly.
-  The \code{plot} method returns a \code{\link[ggplot2]{ggplot}} object
-  with histograms whose appearance can be further customized.
 }
 
 
