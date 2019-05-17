@@ -1,6 +1,16 @@
-sbc <- function(stanmodel, data, M, ...) {
+sbcFitFile <- function(save_progress, stanmodel, S) {
+  file.path(save_progress, paste0(stanmodel@model_name, '-', S, '.rda'))
+}
+
+sbc <- function(stanmodel, data, M, ..., save_progress) {
   stopifnot(is(stanmodel, "stanmodel"))
   
+  doSave <- !missing(save_progress)
+  if (doSave && !dir.exists(save_progress)) {
+    stop(paste0("Argument save_progress='", save_progress,
+      "' provided but directory does not exist or is not a directory"))
+  }
+
   # parameter names
   stan_code <- get_stancode(stanmodel)
   stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
@@ -18,14 +28,36 @@ sbc <- function(stanmodel, data, M, ...) {
   }
   has_log_lik <- any(grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code))
   
+  todo <- as.integer(seq(from = 0, to = .Machine$integer.max, length.out = M))
   post <- parallel::mclapply(1:M, FUN = function(m) {
-    S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
-    out <- sampling(stanmodel, data, 
-                    pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
-                    chains = 1L, cores = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
+    S <- todo[m]
+    if (doSave) {
+      file <- sbcFitFile(save_progress, stanmodel, S)
+      if (file.exists(file)) return(TRUE)
+    }
+    out <- sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
+      chains = 1L, cores = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
     out@stanmodel <- new("stanmodel")
-    return(out)
+    if (doSave) {
+      save(out, file=file)
+      return(TRUE)
+    }
+    out
   })
+  if (doSave) {
+    bad <- c()
+    for (m in 1:M) {
+      file <- sbcFitFile(save_progress, stanmodel, todo[m])
+      got <- try(load(file), silent=TRUE)
+      if (is(got, "try-error")) {
+        bad <- c(bad, file)
+        next
+      }
+      post[[m]] <- out
+    }
+    if (length(bad)) stop(paste("Remove corrupt files:",
+      paste(bad, collapse=' '), "\nThen try again"))
+  }
   bad <- sapply(post, FUN = function(x) x@mode != 0)
   if (any(bad)) {
     warning(sum(bad), " out of ", M, " runs failed. Try decreasing 'init_r'")

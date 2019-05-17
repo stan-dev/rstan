@@ -10,7 +10,7 @@ prior distribution and hence possibly amenable to obtaining
 a posterior distribution conditional on observed data.
 }
 \usage{
-  sbc(stanmodel, data, M, ...)
+  sbc(stanmodel, data, M, ..., save_progress)
   \method{plot}{sbc}(x, thin = 3, ...)
   \method{print}{sbc}(x, ...)
 
@@ -31,6 +31,9 @@ a posterior distribution conditional on observed data.
   \item{x}{An object produced by \code{sbc}}
   \item{thin}{An integer vector of length one indicating the thinning interval
     when plotting, which defaults to 3}
+  \item{save_progress}{If a directory is provided, stanfit objects
+    are saved to disk making it easy to resume a partial \code{sbc}
+    run after interruption.}
 }
 \details{
   This function assumes adherence to the following conventions in the 
