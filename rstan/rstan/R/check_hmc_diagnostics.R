@@ -71,7 +71,7 @@ throw_sampler_warnings <- function(object) {
   sims <- as.array(object)
   rhat <- apply(sims, MARGIN = 3, FUN = Rhat)
   if (anyNA(rhat) || any(rhat > 1.05))
-      warning("The largest R-hat is ", round(max(rhat, digits = 2)),
+      warning("The largest R-hat is ", round(max(rhat), digits = 2),
             ", indicating chains have not mixed.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#r-hat")
@@ -83,7 +83,7 @@ throw_sampler_warnings <- function(object) {
             "http://mc-stan.org/misc/warnings.html#bulk-ess")
   tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
   if (anyNA(tail_ess) || any(tail_ess < 100 * ncol(sims)))
-    warning("Tail Effective Samples Size (ESS) is too low, indicating",
+    warning("Tail Effective Samples Size (ESS) is too low, indicating ",
             "posterior variances and tail quantiles may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#tail-ess")
