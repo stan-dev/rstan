@@ -20,8 +20,11 @@ sbc <- function(stanmodel, data, M, ...) {
   
   post <- parallel::mclapply(1:M, FUN = function(m) {
     S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
-    sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
-             chains = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
+    out <- sampling(stanmodel, data, 
+                    pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
+                    chains = 1L, cores = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
+    out@stanmodel <- new("stanmodel")
+    return(out)
   })
   bad <- sapply(post, FUN = function(x) x@mode != 0)
   if (any(bad)) {
@@ -77,6 +80,7 @@ sbc <- function(stanmodel, data, M, ...) {
       r <- as.matrix(r)
     }
     colnames(r) <- pars_names
+    r[] <- r > 0
     return(r)
   })
     
@@ -89,13 +93,13 @@ sbc <- function(stanmodel, data, M, ...) {
   return(out)
 }
 
-plot.sbc <- function(x, thin = 4, ...) {
+plot.sbc <- function(x, thin = 3, ...) {
   thinner <- seq(from = 1, to = nrow(x$ranks[[1]]), by = thin)
   u <- t(sapply(x$ranks, FUN = function(r) 1 + colSums(r[thinner, , drop = FALSE])))
   parameter <- as.factor(rep(colnames(u), each = nrow(u)))
   d <- data.frame(u = c(u), parameter)
   suppressWarnings(ggplot2::ggplot(d) + 
-    ggplot2::geom_histogram(ggplot2::aes(x = u), pad = TRUE, ...) + 
+    ggplot2::geom_histogram(ggplot2::aes(x = u), pad = FALSE, ...) + 
     ggplot2::facet_wrap("parameter"))
 }
 

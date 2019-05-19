@@ -11,7 +11,7 @@ a posterior distribution conditional on observed data.
 }
 \usage{
   sbc(stanmodel, data, M, ...)
-  \method{plot}{sbc}(x, thin = 4, ...)
+  \method{plot}{sbc}(x, thin = 3, ...)
   \method{print}{sbc}(x, ...)
 
 }
@@ -30,7 +30,7 @@ a posterior distribution conditional on observed data.
     and \code{print} methods, the additional arguments are not used.}
   \item{x}{An object produced by \code{sbc}}
   \item{thin}{An integer vector of length one indicating the thinning interval
-    when plotting}
+    when plotting, which defaults to 3}
 }
 \details{
   This function assumes adherence to the following conventions in the 
