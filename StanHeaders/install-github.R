@@ -6,7 +6,7 @@ path_rstan <- tempfile(pattern = "git2r-")
 git2r::clone("http://github.com/stan-dev/rstan", path_rstan, branch = "develop")
 git2r::clone("http://github.com/stan-dev/stan",
              file.path(path_rstan, "StanHeaders", "inst", "include", "upstream"), 
-             branch = "develop") # may want to change this branch
+             branch = "stuff_for_2.19") # may want to change this branch
 git2r::clone("http://github.com/stan-dev/math",
              file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"), 
              branch = "develop") # may want to change this branch
