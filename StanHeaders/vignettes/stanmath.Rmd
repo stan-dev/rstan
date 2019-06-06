@@ -250,8 +250,8 @@ better accuracy in this case.
 ```{r}
 A <- matrix(c(0, -1, 1, -runif(1)), nrow = 2, ncol = 2)
 y0 <- rexp(2)
-stopifnot(isTRUE(all.equal(nonstiff(A, y0), c(0, 0), tol = 1e-6)))
-stopifnot(isTRUE(all.equal(   stiff(A, y0), c(0, 0), tol = 1e-8)))
+all.equal(nonstiff(A, y0), c(0, 0), tol = 1e-5)
+all.equal(   stiff(A, y0), c(0, 0), tol = 1e-8)
 ```
 
 # Map and Parellelization
