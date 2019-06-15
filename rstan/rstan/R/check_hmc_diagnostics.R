@@ -18,6 +18,11 @@
 throw_sampler_warnings <- function(object) {
   if (!is(object, "stanfit"))
     stop("'object' must be of class 'stanfit'")
+  
+  if (isTRUE(object@stan_args[[1]][["algorithm"]] == "Fixed_param")) {
+    return(invisible(NULL))
+  }
+  
   sp <- get_sampler_params(object, inc_warmup = FALSE)
   n_d <- sum(sapply(sp, FUN = function(x) {
     if ("divergent__" %in% colnames(x)) return(sum(x[,"divergent__"]))
