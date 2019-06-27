@@ -115,7 +115,7 @@ setMethod("vb", "stanmodel",
                    ...) {
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- parse_data(get_cppcode(object), data = data)
+              parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
@@ -349,7 +349,7 @@ setMethod("optimizing", "stanmodel",
             stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- parse_data(get_cppcode(object), data = data)
+              parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
@@ -503,7 +503,7 @@ setMethod("sampling", "stanmodel",
                               pre_msg = "passing deprecated arguments: ")
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
-              parsed_data <- parse_data(get_cppcode(object), data = data)
+              parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
                 message("failed to get names of data from the model; sampling not done")
                 return(invisible(new_empty_stanfit(object)))
@@ -856,7 +856,7 @@ setMethod("gqs", "stanmodel",
   draws <- as.matrix(draws)
   objects <- ls()
   if (is.list(data) & !is.data.frame(data)) {
-    parsed_data <- parse_data(get_cppcode(object), data = data)
+    parsed_data <- with(data, parse_data(get_cppcode(object)))
     if (!is.list(parsed_data)) {
       message("failed to get names of data from the model; sampling not done")
       return(invisible(new_empty_stanfit(object)))

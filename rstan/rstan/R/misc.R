@@ -1590,7 +1590,7 @@ get_time_from_csv <- function(tlines) {
   t
 }
 
-parse_data <- function(cppcode, data = NULL) {
+parse_data <- function(cppcode) {
   cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
                   text = cppcode)
   private <- grep("^private:$", cppcode) + 1L
@@ -1602,17 +1602,10 @@ parse_data <- function(cppcode, data = NULL) {
   in_data <- grep("context__.vals_", cppcode, fixed = TRUE, value = TRUE)
   in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)  
   
+  # get them from the calling environment
   objects <- intersect(objects, in_data)
-  if (is.null(data)) {
-    # get them from the calling environment
-    stuff <- sapply(objects, simplify = FALSE, FUN = dynGet, 
-                    inherits = FALSE, ifnotfound = NULL) 
-  } else {
-    # get them from 'data', and we know already from sampling() and other
-    # methods that is.list(data) & !is.data.frame(data)
-    stuff <- mget(objects, envir = as.environment(data), inherits = FALSE,
-                  ifnotfound = rep(list(NULL), length(objects)))
-  }
+  stuff <- sapply(objects, simplify = FALSE, FUN = dynGet, 
+                  inherits = FALSE, ifnotfound = NULL)
   for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
     if (exists(objects[i], envir = globalenv(), mode = "numeric"))
       stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
@@ -1621,7 +1614,6 @@ parse_data <- function(cppcode, data = NULL) {
   }
   return(stuff)
 }
-
 
 set_cppo <- function(...) {
   warning("'set_cppo' is defunct; manually edit your Makevars file if necessary")
