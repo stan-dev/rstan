@@ -1604,8 +1604,11 @@ parse_data <- function(cppcode) {
   
   # get them from the calling environment
   objects <- intersect(objects, in_data)
-  stuff <- sapply(objects, simplify = FALSE, FUN = dynGet, 
-                  inherits = FALSE, ifnotfound = NULL)
+  stuff <- list()
+  for (int in seq_along(objects)) {
+   stuff[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
+  }
+  
   for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
     if (exists(objects[i], envir = globalenv(), mode = "numeric"))
       stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
