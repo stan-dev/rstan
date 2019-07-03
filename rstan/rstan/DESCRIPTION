@@ -3,7 +3,7 @@ Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
 Version: 2.19.1
-Date: 2019-05-15
+Date: 2019-07-03
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -28,7 +28,6 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
-    ggplot2 (>= 2.0.0),
     inline,
     gridExtra (>= 2.0.0),
     Rcpp (>= 0.12.0),
@@ -36,11 +35,12 @@ Imports:
     pkgbuild
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.18.0)
+    StanHeaders (> 2.18.1),
+    ggplot2 (>= 2.0.0)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     BH (>= 1.69.0),
-    StanHeaders (>= 2.18.0)
+    StanHeaders (> 2.18.1)
 Suggests:
     RUnit,
     RcppEigen (>= 0.3.3.3.0),
