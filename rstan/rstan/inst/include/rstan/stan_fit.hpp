@@ -49,7 +49,7 @@
 #include <stan/services/sample/hmc_static_diag_e_adapt.hpp>
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
-//#include <stan/services/sample/standalone_gqs.hpp>
+#include <stan/services/sample/standalone_gqs.hpp>
 #include <stan/services/experimental/advi/fullrank.hpp>
 #include <stan/services/experimental/advi/meanfield.hpp>
 
@@ -1207,7 +1207,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-/*
+  
   SEXP standalone_gqs(SEXP pars, SEXP seed) {
     BEGIN_RCPP
     Rcpp::List holder;
@@ -1216,7 +1216,6 @@ public:
     stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
                                           rstan::io::rcerr, rstan::io::rcerr);
     
-    // Eigen::MatrixXd draws = Rcpp::as<Eigen::MatrixXd>(pars);
     const Eigen::Map<Eigen::MatrixXd> draws(Rcpp::as<Eigen::Map<Eigen::MatrixXd> >(pars));
 
     std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
@@ -1249,8 +1248,8 @@ public:
     return __sexp_result;
     END_RCPP
   }
-*/
-  SEXP param_names() const {
+
+   SEXP param_names() const {
     BEGIN_RCPP
     SEXP __sexp_result;
     PROTECT(__sexp_result = Rcpp::wrap(names_));
