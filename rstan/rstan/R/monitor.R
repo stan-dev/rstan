@@ -50,7 +50,7 @@ autocovariance <- function(y) {
   transform <- fft(yc)
   ac <- fft(Conj(transform) * transform, inverse = TRUE)
   # use "biased" estimate as recommended by Geyer (1992)
-  ac <- Re(ac)[1:N] / (N * N * 2)
+  ac <- Re(ac)[1:N] / (N^2 * 2)
   ac
 }
 
