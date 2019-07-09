@@ -109,8 +109,8 @@ model {
 y <- rnorm(20) 
 dat <- list(N = 20, y = y); 
 fit <- stan(model_code = stanmodelcode, model_name = "example", 
-            data = dat, iter = 2012, chains = 3, sample_file = 'norm.csv',
-            verbose = TRUE) 
+            data = dat, iter = 2012, chains = 3, verbose = TRUE,
+            sample_file = file.path(tempdir(), 'norm.csv')) 
 print(fit)
 
 # extract samples 

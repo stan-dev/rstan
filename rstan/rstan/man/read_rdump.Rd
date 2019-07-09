@@ -29,8 +29,9 @@ keys corresponding to variable names.
 }
 \examples{
 x <- 1; y <- 1:10; z <- array(1:10, dim = c(2,5)) 
-stan_rdump(ls(pattern = '^[xyz]'), "xyz.Rdump")
-l <- read_rdump('xyz.Rdump')
-print(l) 
+stan_rdump(ls(pattern = '^[xyz]'), file.path(tempdir(), "xyz.Rdump"))
+l <- read_rdump(file.path(tempdir(), 'xyz.Rdump'))
+print(l)
+unlink(file.path(tempdir(), "xyz.Rdump"))
 }
 \keyword{rstan} 

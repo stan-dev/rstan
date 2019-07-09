@@ -658,3 +658,12 @@ print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
   }
   invisible(x)
 }
+
+# this is needed to make DeLorean's vignette build
+`[.simsummary` <- function (x, i, j, drop = if (missing(i)) TRUE else length(j) == 1) {
+  out <- `[.data.frame`(x, i, j, drop)
+  nms <- rownames(x)[i]
+  if (drop) names(out) <- nms
+  else rownames(out) <- nms
+  return(out)
+}
