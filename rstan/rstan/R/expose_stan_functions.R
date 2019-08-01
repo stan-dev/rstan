@@ -16,9 +16,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 expose_stan_functions_hacks <- function(code, includes = NULL) {
-  code <- paste("#include <exporter.h>\n#include <RcppEigen.h>", code, sep="\n")
+  code <- paste("// [[Rcpp::depends(rstan)]]\n#include <stan/math/prim/mat/fun/Eigen.hpp>\n#include <exporter.h>\n#include <RcppEigen.h>", code, sep="\n")
   code <- gsub("// [[stan::function]]", 
-               "// [[Rcpp::depends(rstan)]]\n// [[Rcpp::export]]", code, fixed = TRUE)
+               "// [[Rcpp::export]]", code, fixed = TRUE)
   code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){", 
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;", 
                code, fixed = TRUE)
