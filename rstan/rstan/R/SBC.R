@@ -2,7 +2,7 @@ sbcFitFile <- function(save_progress, stanmodel, S) {
   file.path(save_progress, paste0(stanmodel@model_name, '-', S, '.rda'))
 }
 
-sbc <- function(stanmodel, data, M, ..., save_progress) {
+sbc <- function(stanmodel, data, M, ..., save_progress, load_incomplete=FALSE) {
   stopifnot(is(stanmodel, "stanmodel"))
   
   doSave <- !missing(save_progress)
@@ -28,9 +28,20 @@ sbc <- function(stanmodel, data, M, ..., save_progress) {
   }
   has_log_lik <- any(grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code))
   
-  todo <- as.integer(seq(from = 0, to = .Machine$integer.max, length.out = M))
-  post <- parallel::mclapply(1:M, FUN = function(m) {
-    S <- todo[m]
+  if (!load_incomplete) {
+    todo <- as.integer(seq(from = 0, to = .Machine$integer.max, length.out = M))
+  } else {
+    mn <- stanmodel@model_name
+    runs <- dir(save_progress)
+    runs <- runs[grepl(paste0("^", mn,'-(\\d+).rda$'), runs)]
+    if (length(runs) == 0) {
+      stop(paste("No completed runs found in", dir,
+                 "matching regular expression", paste0("^", mn,'-(\\d+).rda$'),
+                 "\nDid you use sbc(..., save_progress='/path/to/results')?"))
+    }
+    todo <- as.integer(sub(paste0(mn,'-(\\d+).rda'), "\\1", runs))
+  }
+  post <- parallel::mclapply(todo, FUN = function(S) {
     if (doSave) {
       file <- sbcFitFile(save_progress, stanmodel, S)
       if (file.exists(file)) return(TRUE)
@@ -46,7 +57,7 @@ sbc <- function(stanmodel, data, M, ..., save_progress) {
   })
   if (doSave) {
     bad <- c()
-    for (m in 1:M) {
+    for (m in 1:length(todo)) {
       file <- sbcFitFile(save_progress, stanmodel, todo[m])
       got <- try(load(file), silent=TRUE)
       if (is(got, "try-error")) {
@@ -60,7 +71,7 @@ sbc <- function(stanmodel, data, M, ..., save_progress) {
   }
   bad <- sapply(post, FUN = function(x) x@mode != 0)
   if (any(bad)) {
-    warning(sum(bad), " out of ", M, " runs failed. Try decreasing 'init_r'")
+    warning(sum(bad), " out of ", length(todo), " runs failed. Try decreasing 'init_r'")
     if(all(bad)) stop("cannot continue")
     post <- post[!bad]
   }
