@@ -34,23 +34,22 @@ navbar:
      href: https://github.com/stan-dev/rstan
    - icon: fa-users
      href: https://discourse.mc-stan.org/
-
+     
 home:
   links:
   - text: Ask a question
     href: https://discourse.mc-stan.org/
-
+    
 articles:
   - title: "Using the RStan package"
     desc: >
-      These first two vignettes provide an introduction to fitting a model in 
-      RStan and extracting the important contents from fitted model objects.
+      These vignettes provide an introduction to fitting a model in 
+      RStan, extracting the important contents from fitted model objects, 
+      including external C++ code in a Stan program, and performing simulation
+      based calibration.
     contents:
       - rstan
       - stanfit_objects
-  - title: "Interfacing with C++"
-    desc: >
-      This vignette provides details on how to include external C++ code in your
-      Stan program.
-    contents:
       - external
+      - SBC
+
