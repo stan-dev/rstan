@@ -8,7 +8,7 @@ static const R_CallMethodDef CallEntries[] = {
   {NULL, NULL, 0}
 };
 
-void attribute_visible R_init_rstanarm(DllInfo *dll) {
+void attribute_visible R_init_StanHeaders(DllInfo *dll) {
   // next line is necessary to avoid a NOTE from R CMD check
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, TRUE); // necessary for .onLoad() to work

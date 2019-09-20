@@ -1,24 +1,20 @@
 pipeline {
     agent any
-    environment {
-        MAKEFLAGS="-j${env.PARALLEL}"
-        R_LIBS="~/.RLibs"
-        export USE_CXX14=1
-    }
     stages {
         stage('Install dependencies') {
             steps {
                 sh """
-                    mkdir -p ~/.RLibs
-                    R -e 'install.packages("devtools", repos="http://cran.us.r-project.org")'
-                    R -e 'update(devtools::package_deps("rstan"))'
-                    R -e 'install.packages("RInside", repos="http://cran.us.r-project.org")'
+                    export MAKEFLAGS=-j${env.PARALLEL}
+                    R -e 'install.packages("devtools", repos = "https://cran.r-project.org")'
+                    R -e 'update(devtools::package_deps("rstan"), repos = "https://cran.r-project.org")'
+                    R -e 'install.packages("RInside", repos = "https://cran.r-project.org")'
                 """
             }
         }
         stage('Build') {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     cd StanHeaders
                     git submodule update --init --recursive --remote
                     cd ..
@@ -30,9 +26,10 @@ pipeline {
         stage("Check timings and output") {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     R CMD check --as-cran --timings StanHeaders_*.tar.gz || \
                       cat StanHeaders.Rcheck/00check.log
-                    R CMD INSTALL --library=~/.RLibs StanHeaders_*.tar.gz
+                    R CMD INSTALL StanHeaders_*.tar.gz
                     R CMD check --as-cran --timings --run-donttest --run-dontrun rstan_*.tar.gz || \
                       cat rstan.Rcheck/00check.log
                 """
@@ -41,6 +38,7 @@ pipeline {
         stage("Check additional unit tests") {
             steps {
                 sh """
+                    export MAKEFLAGS=-j${env.PARALLEL}
                     R CMD INSTALL rstan_*.tar.gz
                     cd rstan
                     make test-R || echo "extra unit tests failed"
@@ -51,10 +49,11 @@ pipeline {
         stage("Check rstanarm") {
             steps {
                 sh """
-                    R -e 'update(devtools::package_deps("rstanarm"))'
-                   curl -O https://cran.r-project.org/src/contrib/rstanarm_2.15.3.tar.gz
-#                    R CMD check --as-cran --timings --run-donttest --run-dontrun rstanarm_*.tar.gz || \
-#                      cat rstanarm.Rcheck/00check.log
+                    export MAKEFLAGS=-j${env.PARALLEL}
+                    R -e 'update(devtools::package_deps("rstanarm"), repos = "https://cran.r-project.org")'
+                    wget -Nc https://cran.r-project.org/src/contrib/rstanarm_2.17.4.tar.gz
+                    R CMD check --as-cran --timings --run-donttest --run-dontrun rstanarm_*.tar.gz || \
+                      cat rstanarm.Rcheck/00check.log
                 """
             }
         }

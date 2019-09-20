@@ -3,11 +3,12 @@ useDynLib(rstan, .registration = TRUE)
 
 importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
-importFrom("stats", "acf", "aggregate", "density", "dnorm", "median", "optimHess", "pacf", "quantile", "reshape", "rnorm", "sd", "var")
-importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
+importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "qbeta", "qnorm", "quantile", "reshape", "rnorm", "runif", "sd", "setNames", "var")
+importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "str", "tail", "unzip")
 
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
+importFrom("pkgbuild", with_build_tools)
 #importFrom("Rcpp", cpp_object_initializer)
 import("methods")
 import(Rcpp)
@@ -17,6 +18,7 @@ importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
 
 export(
+  sbc,
   stan_model,
   stanc,
   stanc_builder,
@@ -62,8 +64,11 @@ export(
   get_num_divergent,
   get_num_max_treedepth,
   get_bfmi,
-  get_low_bfmi_chains
-
+  get_low_bfmi_chains,
+  get_rng,
+  get_stream,
+  RNG, OUT,
+  Rhat, ess_bulk, ess_tail
 )
 
 exportClasses(
@@ -72,7 +77,7 @@ exportClasses(
 exportMethods(
 #   print, plot, 
 #   extract, 
-  optimizing, vb,
+  optimizing, vb, gqs,
   get_cppcode, get_cxxflags, # for stanmodel 
   show, sampling, summary, extract,
   traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,
@@ -84,7 +89,8 @@ exportMethods(
   get_logposterior, 
   get_posterior_mean,
   get_elapsed_time,
-  get_stanmodel
+  get_stanmodel,
+  loo
 )
 S3method(print, stanfit)
 S3method(as.array, stanfit)
@@ -96,3 +102,8 @@ S3method(dimnames, stanfit)
 S3method(names, stanfit)
 S3method(`names<-`, stanfit)
 S3method(pairs, stanfit)
+S3method(loo, stanfit)
+importFrom("loo", "loo", "loo.array")
+export("loo")
+S3method(print, sbc)
+S3method(plot, sbc)

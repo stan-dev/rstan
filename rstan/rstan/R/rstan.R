@@ -27,7 +27,8 @@ stan_model <- function(file,
                        auto_write = rstan_options("auto_write"), 
                        obfuscate_model_name = TRUE,
                        allow_undefined = FALSE, 
-                       includes = NULL) {
+                       includes = NULL,
+                       isystem = c(if (!missing(file)) dirname(file), getwd())) {
 
   # Construct a stan model from stan code 
   # 
@@ -57,14 +58,14 @@ stan_model <- function(file,
     stanc_ret <- stanc(file = file, model_code = model_code, 
                        model_name = model_name, verbose = verbose,
                        obfuscate_model_name = obfuscate_model_name, 
-                       allow_undefined = allow_undefined)
+                       allow_undefined = allow_undefined, isystem = isystem)
     
     # find possibly identical stanmodels
     model_re <- "(^[[:alnum:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
     if(!is.null(model_name))
       if(!grepl(model_re, model_name))
         stop("model name must match ", model_re)
-    S4_objects <- apropos(model_re, mode="S4", ignore.case=FALSE)
+    S4_objects <- apropos(model_re, mode="S4", ignore.case = FALSE)
     if (length(S4_objects) > 0) {
       e <- environment()
       stanfits <- sapply(mget(S4_objects, envir = e, inherits = TRUE), 
@@ -80,7 +81,7 @@ stan_model <- function(file,
         if (identical(obj@model_code[1], stanc_ret$model_code[1])) return(obj)
       }
     }
-    
+
     mtime <- file.info(file)$mtime
     file.rds <- gsub("stan$", "rds", file)
     md5 <- tools::md5sum(file)
@@ -113,16 +114,15 @@ stan_model <- function(file,
   }
   
   # check for compilers
-  if (.Platform$OS.type == "windows") find_rtools()
-  else {
+  if (.Platform$OS.type != "windows") {
     CXX <- get_CXX()
-    if (nchar(CXX) == 0) {
+    if (!is.null(attr(CXX, "status")) || nchar(CXX) == 0) {
       WIKI <- "https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started"
       warning(paste("C++ compiler not found on system. If absent, see\n", WIKI))
     }
     else if (grepl("69", CXX, fixed = TRUE))
       warning("You may need to launch Xcode once to accept its license")
-  }
+  } else CXX <- "g++"
   
   model_cppname <- stanc_ret$model_cppname 
   model_name <- stanc_ret$model_name 
@@ -153,17 +153,27 @@ stan_model <- function(file,
   if (!file.exists(rstan_options("eigen_lib")))
     stop("Eigen not found; call install.packages('RcppEigen')")
   
-  if (packageVersion("StanHeaders") > packageVersion("rstan"))
-    stop("StanHeaders version is ahead of rstan version; ",
-         "see https://github.com/stan-dev/rstan/wiki/RStan-Transition-Periods")
-    
 
-  
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
-                         verbose = verbose) 
-               
+                         verbose = verbose)
+  if (FALSE && grepl("#include", model_code, fixed = TRUE)) {
+    model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
+    model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
+    model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
+    unprocessed <- tempfile(fileext = ".stan")
+    processed <- tempfile(fileext = ".stan")
+    on.exit(file.remove(c(unprocessed, processed)))
+    writeLines(model_code, con = unprocessed)
+    ARGS <- paste("-E -nostdinc -x c++ -P -C", paste("-I", isystem, " ", collapse = ""), 
+                  "-o", processed, unprocessed)
+    pkgbuild::with_build_tools(system2(CXX, args = ARGS), 
+                               required = rstan_options("required") && 
+                                  identical(Sys.getenv("WINDOWS"), "TRUE") &&
+                                 !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+    if (file.exists(processed)) model_code <- paste(readLines(processed), collapse = "\n")
+  }
   obj <- new("stanmodel", model_name = model_name, 
              model_code = model_code, 
              dso = dso, # keep a reference to dso

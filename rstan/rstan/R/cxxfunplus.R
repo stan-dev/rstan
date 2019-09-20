@@ -139,10 +139,53 @@ cxxfunctionplus <- function(sig = character(), body = character(),
                             settings = getPlugin(plugin), 
                             save_dso = FALSE, module_name = "MODULE", 
                             ..., verbose = FALSE) {
-  fx <- cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
-                    settings = settings, ..., verbose = verbose)
+  R_version <- with(R.version, paste(major, minor, sep = "."))
+  WINDOWS <- .Platform$OS.type == "windows"
+  if (WINDOWS && R_version < "3.7.0") {
+    has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
+    Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
+    if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+  } else {
+    has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
+    Sys.setenv(USE_CXX14 = 1)
+    if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+  }
+  if (rstan_options("required")) 
+    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+  
+  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
+  if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
+    Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
+    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
+  }
+
+  if (!isTRUE(verbose)) {
+    tf <- tempfile(fileext = ".warn")
+    zz <- file(tf, open = "wt")
+    sink(zz, type = "output")
+    on.exit(close(zz), add = TRUE)
+    on.exit(sink(type = "output"), add = TRUE)
+  }
+  fx <- pkgbuild::with_build_tools(
+    cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
+                settings = settings, ..., verbose = verbose),
+    required = rstan_options("required") &&
+    # workaround for packages with src/install.libs.R
+      !identical(Sys.getenv("WINDOWS"), "TRUE") &&
+      !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+  if (!isTRUE(verbose)) {
+    sink(type = "output")
+    close(zz)
+    try(file.remove(tf), silent = TRUE)
+    on.exit(NULL)
+    if (WINDOWS && R_version < "3.7.0") {
+      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
+    } else {
+      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"), add = TRUE)
+    }
+  }
   dso_last_path <- dso_path(fx)
-  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX())) {
+  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
     cmd <- paste(
       "install_name_tool",
       "-change",
@@ -159,12 +202,14 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   if (!is.list(sig))  { 
     sig <- list(sig) 
     names(sig) <- dso_filename 
-  } 
+  }
+  cxxflags <- try(get_makefile_flags("CXXFLAGS"))
+  if (!is.character(cxxflags)) cxxflags <- NA_character_
   dso <- new('cxxdso', sig = sig, dso_saved = save_dso, 
              dso_filename = dso_filename, 
              modulename = module_name, 
              system = R.version$system, 
-             cxxflags = get_makefile_flags("CXXFLAGS"), 
+             cxxflags = cxxflags,
              .CXXDSOMISC = new.env(parent = emptyenv())) 
   assign("cxxfun", fx, envir = dso@.CXXDSOMISC)
   assign("dso_last_path", dso_last_path, envir = dso@.CXXDSOMISC)

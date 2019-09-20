@@ -1,3 +1,59 @@
+Sun July 7 2019
+1. Bug fixes
+  * Works with R 3.6 on Windows again
+2. Features
+  * New diagnostics: ess_bulk, ess_tail, and rhat calculation
+  * New diagnostics for variational inference
+  * New sbc function (and vignette) for Simulation Based Calibration
+  * Supports standalone generated quantities
+  
+Tue November 06 2018
+1. Bug fixes
+  * handing on makefile paths is more robust, especially on Windows
+  * read_csv_header works again when warmup draws are omitted
+  * matrix of draws after optimizing was transposed wrong when there was
+    only one parameter (reported by ksvanhorn)
+  * log_p and log_g were omitted from optimizing output when constrined
+    was TRUE (reported by ksvanhorn)
+2. Features
+  * Should work on Windows even if CXX14 is not defined in ~/.R/Makevars
+    or if ~/.R/Makevars does not exist
+  * Compiler warnings are not printed to the screen by default
+
+Mon October 09 2018
+1. Bug fixes
+  * Variational Bayes variable names were off-by-one in some circumstances
+  * get_makefile_text() works on multiarch systems
+  * The chain ID is printed in the intermediate output again
+  * Low BFMI threshold is changed to 0.2 from 0.3
+  
+2. Features
+  * Requires the C++14 standard and hence R >= 3.4.0
+  * Calculates effective sample size more correctly, which can result in
+    an effective sample size greater than the nominal sample size due to
+    negative first order autocorrelation for some quantities of interest
+  * Utilizes the pkgbuild R package
+  * Specifying refresh = 0 suppresses all intermediate output
+  * expose_stan_functions() uses a new, more robust procedure to generate
+    the Stan code to be exposed to R
+  * read_stan_csv() is faster with less memory consumed
+  * unconstrain_pars() gains a NULL default to its pars argument, in which
+    case the entire matrix of unconstrained parameters is returned
+  * If the list of initial values passed to Stan has named elements, these
+    names are retained in the output
+  * There is now a loo.stanfit() method
+  * HMC diagnostics can be obtained in a more programmatic way via
+    get_divergent_iterations(), get_max_treedepth_iterations(),
+    get_num_leapfrog_per_iteration(), get_num_divergent(),
+    get_num_max_treedepth()
+
+Fri January 19 2018 (2.17.3)
+1. Bug fixes
+  * Might build on Solaris again
+  * Might propogate exception messages when there are parser errors on a Mac
+  * Propogate error messages when the list of data passed is inconsistent with
+    the data block in a Stan program
+
 Wed December 20 2017 (2.17.2)
 1. Bug fixes
   * Now handles data types consistently when passed by string
@@ -11,7 +67,7 @@ Sun July 2, 2017 (2.16.1)
 2. Features
   * expose_stan_functions() now has a ... argument allowing things to be
     passed to Rcpp::sourceCpp()
-    
+
 Wed April 19, 2017 (2.15.1)
 1. Bug fixes
   * expose_stan_functions() works with functions that return real containers

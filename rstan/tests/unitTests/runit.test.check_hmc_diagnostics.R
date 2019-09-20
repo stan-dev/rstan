@@ -12,7 +12,6 @@ test_getting_diagnostics <- function() {
   expected_max_treedepth[c(1,5)] <- TRUE
   checkEquals(get_max_treedepth_iterations(exfit), expected_max_treedepth)
   checkEquals(get_num_max_treedepth(exfit), 2)
-
+  
   checkEquals(get_num_leapfrog_per_iteration(exfit), c(1,3,5,5,7,5,3,1,1,7))  
 }
-

@@ -16,20 +16,27 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
+RNG <- 0
+OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
-  assignInMyNamespace("rstan_load_time", value = Sys.time())  
+  assignInMyNamespace("rstan_load_time", value = Sys.time())
+  set_rstan_ggplot_defaults()
+  assignInMyNamespace("RNG", value = get_rng(0))
+  assignInMyNamespace("OUT", value = get_stream())
 }
 
-# .onAttach <- function(...) {
-#   rstanLib <- dirname(system.file(package = "rstan"))
-#   pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
-#   builddate <- gsub(';.*$', '', pkgdesc$Date)
-#   gitrev <- substring(git_head(), 0, 12)
-#   packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", packaged: ", builddate, ", GitRev: ", gitrev, ")", sep = ""))
-#   packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
-#                         "rstan_options(auto_write = TRUE)\n",
-#                         "options(mc.cores = parallel::detectCores())")
-# } 
-
-
+.onAttach <- function(...) {
+  rstanLib <- dirname(system.file(package = "rstan"))
+  pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
+  gitrev <- substring(git_head(), 0, 12)
+  packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", GitRev: ", gitrev, ")", sep = ""))
+  packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
+                        "options(mc.cores = parallel::detectCores()).\n",
+                        "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
+                        "rstan_options(auto_write = TRUE)")
+  if (.Platform$OS.type == "windows")
+    packageStartupMessage("For improved execution time, we recommend calling\n",
+                          "Sys.setenv(LOCAL_CPPFLAGS = '-march=native')\n",
+                          "although this causes Stan to throw an error on a few processors.")
+}

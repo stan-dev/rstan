@@ -10,8 +10,8 @@
     lower.panel = NULL, 
     upper.panel = NULL, diag.panel = NULL, text.panel = NULL, 
     label.pos = 0.5 + 1/3, cex.labels = NULL, font.labels = 1, 
-    row1attop = TRUE, gap = 1, log = "", pars = NULL, condition = "accept_stat__", 
-    include = TRUE) 
+    row1attop = TRUE, gap = 1, log = "", pars = NULL, include = TRUE,
+    condition = "accept_stat__") 
 } 
 
 \arguments{
@@ -54,7 +54,7 @@
     corresponding to \code{FALSE} and \code{TRUE} will be plotted in the lower 
     and upper panel respectively. The default is \code{"accept_stat__"}.}
   \item{include}{Logical scalar indicating whether to include (the default) or
-    excldue the parameters named in the \code{pars} argument from the plot.}
+    exclude the parameters named in the \code{pars} argument from the plot.}
 } 
 
 \details{

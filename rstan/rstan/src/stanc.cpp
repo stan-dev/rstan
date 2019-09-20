@@ -26,6 +26,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #include <Rcpp.h>
 #include <rstan/io/r_ostream.hpp>
@@ -131,6 +132,7 @@ SEXP stanfuncs(SEXP model_stancode,
   std::string mcode_ = Rcpp::as<std::string>(model_stancode);
   std::string mname_ = Rcpp::as<std::string>(model_name);
   std::vector<std::string> ns_(0);
+  ns_.push_back(mname_);
   
   std::stringstream out;
   std::istringstream in(mcode_);

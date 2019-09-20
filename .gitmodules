@@ -1,9 +1,0 @@
-[submodule "stan"]
-	path = StanHeaders/inst/include/upstream
-	url = https://github.com/stan-dev/stan.git
-	ignore = dirty
-	branch = develop
-[submodule "StanHeaders/inst/include/mathlib"]
-	path = StanHeaders/inst/include/mathlib
-	url = https://github.com/stan-dev/math.git
-	branch = develop

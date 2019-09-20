@@ -1,3 +1,101 @@
+# This file is part of RStan
+# Copyright (C) 2018 Trustees of Columbia University
+#
+# RStan is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
+#
+# RStan is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+throw_sampler_warnings <- function(object) {
+  if (!is(object, "stanfit"))
+    stop("'object' must be of class 'stanfit'")
+  
+  if (isTRUE(object@stan_args[[1]][["algorithm"]] == "Fixed_param")) {
+    return(invisible(NULL))
+  }
+  
+  sp <- get_sampler_params(object, inc_warmup = FALSE)
+  n_d <- sum(sapply(sp, FUN = function(x) {
+    if ("divergent__" %in% colnames(x)) return(sum(x[,"divergent__"]))
+    else return(0)
+  }))
+  if (n_d > 0) {
+    ad <- object@stan_args[[1]]$control
+    if (is.null(ad)) ad <- 0.8
+    else {
+      ad <- ad$adapt_delta
+      if (is.null(ad)) ad <- 0.8
+    }
+    warning("There were ", n_d, " divergent transitions after warmup.",
+            " Increasing adapt_delta above ", ad, " may help. See\n",
+            "http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup", call. = FALSE)
+  }
+  max_td <- object@stan_args[[1]]$control
+  if (is.null(max_td)) max_td <- 10
+  else {
+    max_td <- max_td$max_treedepth
+    if (is.null(max_td)) max_td <- 10
+  }
+  n_m <- sum(sapply(sp, FUN = function(x) {
+    if ("treedepth__" %in% colnames(x)) return(sum(x[,"treedepth__"] >= max_td))
+    else return(0)
+  }))
+  if (n_m > 0)
+    warning("There were ", n_m,
+            " transitions after warmup that exceeded the maximum treedepth.",
+            " Increase max_treedepth above ", max_td, ". See\n",
+            "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
+  n_e <- 0L
+  if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
+    E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
+    threshold <- 0.2
+    if (nrow(E) > 1) {
+      EBFMI <- get_num_upars(object) / apply(E, 2, var)
+      n_e <- sum(EBFMI < threshold, na.rm = TRUE)
+    }
+    else n_e <- 0L
+    if (n_e > 0)
+      warning("There were ", n_e, 
+              " chains where the estimated Bayesian Fraction of Missing Information",
+              " was low. See\n", 
+              "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
+  }
+  if (n_d > 0 || n_m > 0 || n_e > 0) 
+    warning("Examine the pairs() plot to diagnose sampling problems\n",
+            call. = FALSE, noBreaks. = TRUE)
+  
+  sims <- as.array(object)
+  rhat <- apply(sims, MARGIN = 3, FUN = Rhat)
+  if (anyNA(rhat) || any(rhat > 1.05))
+      warning("The largest R-hat is ", round(max(rhat), digits = 2),
+            ", indicating chains have not mixed.\n",
+            "Running the chains for more iterations may help. See\n",
+            "http://mc-stan.org/misc/warnings.html#r-hat", call. = FALSE)
+  bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
+  if (anyNA(bulk_ess) || any(bulk_ess < 100 * ncol(sims)))
+    warning("Bulk Effective Samples Size (ESS) is too low, ",
+            "indicating posterior means and medians may be unreliable.\n",
+            "Running the chains for more iterations may help. See\n",
+            "http://mc-stan.org/misc/warnings.html#bulk-ess", call. = FALSE)
+  tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
+  if (anyNA(tail_ess) || any(tail_ess < 100 * ncol(sims)))
+    warning("Tail Effective Samples Size (ESS) is too low, indicating ",
+            "posterior variances and tail quantiles may be unreliable.\n",
+            "Running the chains for more iterations may help. See\n",
+            "http://mc-stan.org/misc/warnings.html#tail-ess", call. = FALSE)
+  
+  return(invisible(NULL))
+}
+
 
 # Check divergences, treedepth, and energy diagnostics
 #
@@ -7,11 +105,11 @@
 check_hmc_diagnostics <- function(object) {
   stopifnot(is.stanfit(object))
   cat("\nDivergences:\n")
-    check_divergences(object)
+  check_divergences(object)
   cat("\nTree depth:\n")
-    check_treedepth(object)
+  check_treedepth(object)
   cat("\nEnergy:\n")
-    check_energy(object)
+  check_energy(object)
 }
 
 

@@ -6,6 +6,8 @@
 \title{Run Stan's variational algorithm for approximate posterior sampling}
 \description{
   Approximately draw from a posterior distribution using variational inference.
+  
+  This is still considered an experimental feature.
   We recommend calling \code{\link{stan}} or \code{\link{sampling}} for 
   final inferences and only using \code{vb} to get a rough idea of the parameter
   distributions.
@@ -17,7 +19,9 @@
     seed = sample.int(.Machine$integer.max, 1), 
     init = 'random', check_data = TRUE, 
     sample_file = tempfile(fileext = '.csv'),
-    algorithm = c("meanfield", "fullrank"), \dots)
+    algorithm = c("meanfield", "fullrank"), 
+    importance_resampling = FALSE, keep_every = 1,
+    \dots)
 } 
 
 \section{Methods}{
@@ -37,7 +41,7 @@
   \item{data}{A named \code{list} or \code{environment}
     providing the data for the model or a character vector 
     for all the names of objects used as data. 
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{pars}{If not \code{NA}, then a character vector naming parameters,
     which are included in the output if \code{include = TRUE} and excluded
@@ -62,7 +66,7 @@
       
   \item{check_data}{Logical, defaulting to \code{TRUE}. If \code{TRUE} 
     the data will be preprocessed; otherwise not.
-    See the Note section in \code{\link{stan}}.}
+    See the \strong{Passing data to Stan} section in \code{\link{stan}}.}
     
   \item{sample_file}{A character string of file name for specifying where to 
     write samples for \emph{all} parameters and other saved quantities. 
@@ -74,6 +78,12 @@
     \code{fullrank} option uses a Gaussian with a full-rank covariance matrix 
     for the approximation. Details and additional references are available in 
     the Stan manual.}
+    
+  \item{importance_resampling}{Logical scalar (defaulting to \code{FALSE}) indicating
+    whether to do importance resampling to adjust the draws at the optimum
+    to be more like draws from the posterior distribution}
+  \item{keep_every}{Integer scalar (defaulting to 1) indicating the interval
+    by which to thin the draws when \code{imporance_resampling = TRUE}}
     
   \item{\dots}{Other optional parameters:
     \itemize{
@@ -126,4 +136,3 @@
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
 f <- vb(m)
 }} 
-

@@ -12,8 +12,8 @@ if (!require("RUnit", quietly = TRUE)) {
 if (exists("path")) { 
   reportfile <- file.path(getwd(), "report")
 } else {
-   path <- getwd() 
-   reportfile <- file.path(path, "report") 
+  path <- getwd()
+  reportfile <- file.path(path, "report")
 } 
 
 stopifnot(file.exists(path), file.info(path.expand(path))$isdir)
@@ -24,22 +24,23 @@ if (length(args) > 0)  rstan_lib_loc <- args[1]
 library(package = pkg, character.only = TRUE, lib.loc = rstan_lib_loc)
 
 rstantest <- defineTestSuite("rstantest",
-                             dirs = file.path(path, "unitTests"),
+                             dirs = c(file.path(path, "unitTests"),
+                                      system.file(package = 'rstan', "unitTests")),
                              testFileRegexp = "^runit.+.*\\.R",
                              testFuncRegexp = "^test_+",
                              rngKind = "Marsaglia-Multicarry",
                              rngNormalKind = "Kinderman-Ramage")
 
 testsres <- runTestSuite(rstantest) 
- 
+
 
 printTextProtocol(testsres, showDetails = TRUE)
 printTextProtocol(testsres, showDetails = TRUE,
                   fileName = paste(reportfile, ".txt", sep=""))
- 
+
 printHTMLProtocol(testsres, 
                   fileName = paste(reportfile, ".html", sep = ""))
- 
+
 tmp <- getErrors(testsres)
 if(tmp$nFail > 0 | tmp$nErr > 0) {
   stop(paste("\n\nUnit testing failed (#test failures: ", tmp$nFail,

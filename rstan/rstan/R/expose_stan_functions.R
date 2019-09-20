@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,265 +15,102 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-expose_stan_functions <- function(stanmodel, ...) {
+expose_stan_functions_hacks <- function(code, includes = NULL) {
+  code <- paste("#include <exporter.h>\n#include <RcppEigen.h>", code, sep="\n")
+  code <- gsub("// [[stan::function]]", 
+               "// [[Rcpp::depends(rstan)]]\n// [[Rcpp::export]]", code, fixed = TRUE)
+  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){", 
+               "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;", 
+               code, fixed = TRUE)
+  if(is.null(includes)) return(code)
+  code <- sub("\n\nstan::io::program_reader prog_reader__() {",
+              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"), 
+              code, fixed = TRUE)
+  return(code)
+}
+
+expose_stan_functions <- function(stanmodel, includes = NULL, 
+                                  show_compiler_warnings = FALSE, ...) {
+  mc <- NULL
   if(is(stanmodel, "stanfit")) {
-    stanmodel <- get_stanmodel(stanmodel)
-    stanmodel <- get_cppcode(stanmodel)
+    mc <- get_stancode(get_stanmodel(stanmodel))
   }
   else if(is.list(stanmodel)) {
-    stanmodel <- stanmodel$cppcode
+    mc <- stanmodel$model_code
   }
   else if(is(stanmodel, "stanmodel")) {
-    stanmodel <- get_cppcode(stanmodel)
+    mc <- get_stancode(stanmodel)
   }
   else if(is.character(stanmodel)) {
-    if(length(stanmodel) == 1) 
-      stanmodel <- stanc(file = stanmodel, allow_undefined = TRUE,
-                         obfuscate_model_name = FALSE)$cppcode
-    else stanmodel <- stanc(model_code = stanmodel, allow_undefined = TRUE,
-                            obfuscate_model_name = FALSE)$cppcode
+    if(length(stanmodel) == 1) mc <- get_model_strcode(stanmodel, NULL)
+    else mc <- get_model_strcode(model_code = stanmodel)
   }
   else stop("'stanmodel' is not a valid object")
   
-  if(is.null(stanmodel)) {
-    warning("could not obtain C++ code for this 'stanmodel'")
-    return(invisible(NULL))
-  }
-  
-  lines <- scan(what = character(), sep = "\n", quiet = TRUE, text = stanmodel)
-  end <- grep("^class", lines) - 1L # only care about things before Stan's class declaration
-  
-  # get rid of Stan's local namespace declaration
-  lines <- grep("namespace \\{$", lines[1:end], value = TRUE, invert = TRUE)
+  tf <- tempfile(fileext = ".stan")
+  writeLines(mc, con = tf)
+  md5 <- paste("user", tools::md5sum(tf), sep = "_")
+  stopifnot(stanc(model_code = mc, model_name = "User-defined functions",
+                  allow_undefined = TRUE)$status)
+  r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
+  code <- expose_stan_functions_hacks(r$cppcode, includes)
 
-  # deal with lack of PKG_CFLAGS (necessary stuff is #included in the last step before compilation)
-  lines <- sub("#include <stan/model/model_header.hpp>", "", lines, fixed = TRUE)
-  lines <- sub("#include <stan/services/command.hpp>", "", lines, fixed = TRUE)
-    
-  # get rid of templating and just use double because that is about all R can pass
-  lines <- gsub("typename boost::math::tools::promote_args.*type ", "double ", lines)
-  lines <- gsub("((std::vector<)+)typename boost::math::tools::promote_args.*(>::type)+", "\\1double", lines)
-  lines <- gsub("vector<Eigen::Matrix<.*Eigen::Dynamic,1> >", "vector<vector_d>", lines)
-  lines <- gsub("Eigen::Matrix<.*Eigen::Dynamic,1>", "vector_d", lines)
-  lines <- gsub("vector<Eigen::Matrix<.*1,Eigen::Dynamic> >", "vector<row_vector_d>", lines)
-  lines <- gsub("Eigen::Matrix<.*1,Eigen::Dynamic>", "row_vector_d", lines)
-  lines <- gsub("vector<Eigen::Matrix<.*,Eigen::Dynamic> >", "vector<matrix_d>", lines)
-  lines <- gsub("Eigen::Matrix<.*,Eigen::Dynamic>", "matrix_d", lines)
-  
-  # kill foo_lpdf<false> functions because of templating
-  templated <- grep("_lp[dm]f<false>", lines)
-  if(length(templated) > 0) for(i in rev(templated)) {
-    end <- i + 1L
-    while(!grepl("^}$", lines[end])) end <- end + 1L
-    start <- i - 1L
-    while(!grepl("^template", lines[start])) start <- start - 1L
-    lines <- lines[-c(start:end)]
+  WINDOWS <- .Platform$OS.type == "windows"
+  R_version <- with(R.version, paste(major, minor, sep = "."))
+  if (WINDOWS && R_version < "3.7.0") {
+    has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
+    Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
+    if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+  } else {
+    has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
+    Sys.setenv(USE_CXX14 = 1)
+    if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
-  templated <- grep("_log<false>", lines)
-  if(length(templated) > 0) for(i in rev(templated)) {
-    end <- i + 1L
-    while(!grepl("^}$", lines[end])) end <- end + 1L
-    start <- i - 1L
-    while(!grepl("^template", lines[start])) start <- start - 1L
-    lines <- lines[-c(start:end)]
+
+  if (rstan_options("required"))
+    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+
+  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
+  if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
+    Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
+    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
   }
   
-  # stick using:: inside user-defined functions
-  usings <- grep("^using", lines, value = TRUE)
-  lines <- grep("^using", lines, value = TRUE, invert = TRUE)
-  openings <- grep("std::ostream* pstream__) {", lines, fixed = TRUE)
-  if(length(openings) == 0) {
-    warning("no user-defined functions found")
-    return(invisible(NULL))
+  if (!isTRUE(show_compiler_warnings)) {
+    tf <- tempfile(fileext = ".warn")
+    zz <- file(tf, open = "wt")
+    sink(zz, type = "output")
+    on.exit(close(zz), add = TRUE)
+    on.exit(sink(type = "output"), add = TRUE)
   }
-  for(i in rev(openings)) {
-    # hard-code former arguments that cannot be passed from R
-    if(grepl("_rng", lines[i], fixed = TRUE)) {
-      lines[i] <- gsub("RNG\\&.*\\{$", "const int& seed = 0) {", lines[i])
-      lines <- append(lines, c("static boost::ecuyer1988 base_rng__(seed);", 
-                               "std::ostream* pstream__ = &Rcpp::Rcout;", 
-                               "(void) pstream__;"), i)
+  compiled <- pkgbuild::with_build_tools(suppressWarnings(
+    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),
+    required = rstan_options("required") &&
+    # workaround for packages with src/install.libs.R
+      identical(Sys.getenv("WINDOWS"), "TRUE") &&
+      !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+  if (!isTRUE(show_compiler_warnings)) {
+    sink(type = "output")
+    close(zz)
+    try(file.remove(tf), silent = TRUE)
+    on.exit(NULL)
+    if (WINDOWS && R_version < "3.7.0") {
+      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
+    } else {
+      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"), add = TRUE)
     }
-    else if(grepl("_lp", lines[i], fixed = TRUE)) {
-      lines[i] <- gsub(", T_lp_accum__\\&.*\\{$", ") {", lines[i])
-      lines <- append(lines, c("stan::math::accumulator<double> lp_accum__;",
-                               "std::ostream* pstream__ = &Rcpp::Rcout;", 
-                               "(void) pstream__;"), i)
-    }
-    else if(grepl("(std::ostream* pstream__) {", lines[i], fixed = TRUE)) {
-      lines[i] <- gsub("(std::ostream* pstream__) {", "() {", lines[i], fixed = TRUE)
-      lines <- append(lines, c("std::ostream* pstream__ = &Rcpp::Rcout;", 
-                               "(void) pstream__;"), i)
-    }
-    else {
-      lines[i] <- gsub(", std::ostream* pstream__) {", ") {", lines[i], fixed = TRUE)
-      lines <- append(lines, c("std::ostream* pstream__ = &Rcpp::Rcout;", 
-                               "(void) pstream__;"), i)
-    }
-    lines <- append(lines, usings, i) # make the usings:: local to the function
   }
-  
-  # yank unused using statements
-  lines <- grep("^using stan::io::", lines, value = TRUE, invert = TRUE)
-  lines <- grep("^using stan::model::prob_grad", lines, value = TRUE, invert = TRUE)
-  
-  # convert inline declarations to Rcpp export declarations
-  lines <- gsub("^inline$", "// \\[\\[Rcpp::export\\]\\]", lines)
-  
-  ints <- sort(c(grep("^int$", lines), grep("^std::vector<.*int>", lines)))
-  for (i in rev(ints))
-    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
-  
-  doubles <- sort(c(grep("^double$", lines), grep("^std::vector<.*double>", lines), 
-                    grep("^vector_d$", lines), grep("^matrix_d$", lines),
-                    grep("^std::vector<.*vector_d>", lines),
-                    grep("^std::vector<.*matrix_d>", lines)))
-                    
-  for (i in rev(doubles))
-    lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
-
-  # declare attributes for Rcpp for non-functor user-defined Stan functions
-  templates <- grep("^template .*$", lines)
-  for(i in rev(templates)) {
-    if(!grepl("functor__", lines[i - 1L]) && lines[i + 1L] != "// [[Rcpp::export]]")
-      lines <- append(lines, "// [[Rcpp::export]]", i - 1L)
+  DOTS <- list(...)
+  ENV <- DOTS$env
+  if (is.null(ENV)) ENV <- globalenv()
+  for (x in compiled$functions) {
+    FUN <- get(x, envir = ENV)
+    args <- formals(FUN)
+    args$pstream__ <- get_stream()
+    if ("lp__" %in% names(args)) args$lp__ <- 0
+    if ("base_rng__" %in% names(args)) args$base_rng__ <- get_rng()
+    formals(FUN) <- args
+    assign(x, FUN, envir = ENV)
   }
-  
-  # do not export function declarations created by the user
-  declarations <- grep("std::ostream* pstream__);", lines, fixed = TRUE)
-  if(length(declarations) > 0) for(i in rev(declarations)) { # walk back
-    lines[i] <- gsub(", std::ostream* pstream__);", ");", lines[i], fixed = TRUE)
-    lines[i] <- gsub("RNG& base_rng__", "const int& seed", lines[i], fixed = TRUE)
-    j <- i - 1L
-    while(lines[j] != "// [[Rcpp::export]]") j <- j - 1L
-    lines <- lines[-j]
-  }
-
-  # special cases
-  ODE_lines <- grep("integrate_ode", lines, fixed = TRUE)
-  ODE_statements <- grep("integrate_ode", lines, fixed = TRUE, value = TRUE)
-
-  print_lines <- grep("if (pstream__)", lines, fixed = TRUE)
-  print_statements <- grep("if (pstream__)", lines, fixed = TRUE, value = TRUE)
-  
-  # handle more pstream__ arguments
-  lines <- gsub(", pstream__)", ")", lines, fixed = TRUE)
-  lines <- gsub("(pstream__)", "()", lines, fixed = TRUE)
-  lines <- gsub(", std::ostream* pstream__) const {",
-                ", std::ostream* pstream__ = &Rcpp::Rcout) const {",
-                lines, fixed = TRUE)
-  lines <- gsub("(std::ostream* pstream__)", 
-                "(std::ostream* pstream__ = &Rcpp::Rcout)", 
-                lines, fixed = TRUE)
-  
-  # put back pstream__ arguments
-  if (length(ODE_lines) > 0) lines[ODE_lines] <- ODE_statements
-  if (length(print_lines) > 0) lines[print_lines] <- print_statements
-  
-  lines <- gsub("typename boost::math::tools::promote_args.*(>::type)+", "double", lines)
-  
-  # remove more base_rng__ arguments
-  lines <- gsub(", RNG& base_rng__", "", 
-                lines, fixed = TRUE)
-  lines <- gsub("(RNG& base_rng__,", "(",
-                lines, fixed = TRUE)
-  lines <- gsub("(RNG& base_rng__", "(",
-                lines, fixed = TRUE)
-  lines <- gsub("([[:space:]]+return .*_rng.*), base_rng__\\);",
-                "\\1);", lines)
-  lines <- gsub("([[:space:]]+return .*_rng)\\(base_rng__\\);",
-                "\\1();", lines)
-  lines <- gsub("_rng\\(base_rng__\\)", "_rng\\(seed, base_rng__\\)", lines)
-  RNGs <- grep("_rng\\(.*base_rng__", lines)
-  if (length(RNGs)) {
-    known_RNGs <- lookup("_rng$")[,1]
-    for (i in RNGs) if (!any(sapply(known_RNGs, FUN = grepl, x = lines[i])))
-      lines[i] <- gsub("base_rng__", "seed", lines[i], fixed = TRUE)
-  }
-  
-  
-  # remove line numbering things
-  lines <- grep("current_statement_begin__", lines, 
-                fixed = TRUE, value = TRUE, invert = TRUE)
-                  
-  # replace more templating with doubles
-  lines <- gsub("const T[0-9]+__&", "const double&", lines)
-  lines <- gsub("T_lp__& lp__", "double lp__ = 0.0", lines)
-  lines <- gsub("^typename.*$", "double", lines)
-  lines <- grep("^[[:space:]]*template", lines, invert = TRUE, value = TRUE)
-  lines <- gsub("<T[0-9]+__>", "<double>", lines)
-  
-  # deal with accumulators
-  lines <- gsub(", T_lp_accum__& lp_accum__", "", lines, fixed = TRUE)
-  lines <- gsub(", lp_accum__", "", lines, fixed = TRUE)
-  lines <- gsub("get_lp(lp__)", "get_lp(lp__, lp_accum__)", lines, fixed = TRUE)
-
-  
-  # make propto__ false to not skip anything that is double
-  lines <- gsub("const static bool propto__ = true;",
-                "const static bool propto__ = false;", lines, fixed = TRUE)
-  
-  # avoid catch messages that say to report a bug
-  lines <- gsub('"*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"', "e.what()",
-                lines, fixed = TRUE)
-
-  # restore Stan's Eigen typedefs that were clobbered by the previous lines
-  lines <- sub("typedef vector_d vector_d;", "using stan::math::vector_d;", lines)
-  lines <- sub("typedef row_vector_d row_vector_d;", "using stan::math::row_vector_d;", lines)
-  lines <- sub("typedef matrix_d matrix_d;", "using stan::math::matrix_d;", lines)
-  
-  # add dependencies
-  extras <- dir(rstan_options("boost_lib2"), pattern = "hpp$", 
-                full.names = TRUE, recursive = TRUE)
-  has_model <- any(grepl("stan::model", lines, fixed = TRUE))
-  lines <- c("// [[Rcpp::depends(rstan)]]",
-             "#include <Rcpp.h>",
-             "#include <RcppEigen.h>",
-             if (length(extras) > 0) sapply(extras, FUN = function(x)
-               paste0("#include<", x, ">")),             
-             "#include <stan/math.hpp>",
-             "#include <src/stan/lang/rethrow_located.hpp>",
-             if (has_model) "#include <src/stan/model/indexing.hpp>",
-             "#include <boost/exception/all.hpp>",
-             "#include <boost/random/linear_congruential.hpp>",
-
-             "#include <cmath>",
-             "#include <cstddef>",
-             "#include <fstream>",
-             "#include <iostream>",
-             "#include <sstream>",
-             "#include <stdexcept>",
-             "#include <utility>",
-             "#include <vector>",
-
-             "#include <boost/date_time/posix_time/posix_time_types.hpp>",
-             "#include <boost/math/special_functions/fpclassify.hpp>",
-             "#include <boost/random/additive_combine.hpp>",
-             "#include <boost/random/uniform_real_distribution.hpp>",
-
-             lines)
-  
-  # try to compile
-  on.exit(message("Here is the C++ code that does not compile. Please report bug."))
-  on.exit(print(lines), add = TRUE)
-  compiled <- Rcpp::sourceCpp(code = paste(lines, collapse = "\n"), ...)
-  on.exit(NULL)
   return(invisible(compiled$functions))
 }
-
-# expose_stan_functions <- function(file, ...) {
-#   model_code <- get_model_strcode(file, NULL)
-#   model_cppname <- legitimate_model_name(basename(file), obfuscate_name = TRUE)
-#   r <- .Call("stanfuncs", model_code, model_cppname, allow_undefined = FALSE)
-#   code <- sub("_header.hpp>\n", "_header.hpp>\n#include <stan/model/model_header.hpp>", 
-#               r$cppcode, fixed = TRUE)
-#   code <- sub("// [[Rcpp::export]]", "", code, fixed = TRUE)
-#   code <- sub("// [[Rcpp::depends(rstan)]]", 
-#               "// [[Rcpp::depends(rstan)]]\n#include <Rcpp.h>\n#include <RcppEigen.h>",
-#               code, fixed = TRUE)
-#   code <- gsub("pstream__);", "&Rcpp::Rcout);", code, fixed = TRUE)
-#   code <- gsub(", std::ostream* pstream__ = 0){", "){", code, fixed = TRUE)
-#   code <- gsub("(std::ostream* pstream__ = 0){", "(){", code, fixed = TRUE)
-#   compiled <- Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)
-#   return(invisible(compiled$functions))
-# }
