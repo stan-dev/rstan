@@ -1,10 +1,10 @@
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
-[![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=blue)](http://cran.rstudio.com/package=rstan)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/rstan?color=blue)](https://cran.r-project.org/package=rstan)
+[![Downloads](https://cranlogs.r-pkg.org/badges/rstan?color=blue)](https://cran.rstudio.com/package=rstan)
 [![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](http://depsy.org/package/r/rstan)
 
 <br>
 <div style="text-align:left">
-<span><a href="http://mc-stan.org">
+<span><a href="https://mc-stan.org">
 <img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width=100 alt="Stan Logo"/></a><h2><strong>RStan</strong></h2><h4>The R interface to Stan</h4></span>
 </div>
 
