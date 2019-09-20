@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read data in an <span style="R">R</span> dump file to a list — read_rdump • rstan</title>
+<title>Convergence and efficiency diagnostics for Markov Chains — Rhat • rstan</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,10 @@
 
 
 
-<meta property="og:title" content="Read data in an <span style="R">R</span> dump file to a list — read_rdump" />
-<meta property="og:description" content="Create an R list from an R dump file" />
+<meta property="og:title" content="Convergence and efficiency diagnostics for Markov Chains — Rhat" />
+<meta property="og:description" content="These functions are improved versions of the traditional
+Rhat (for convergence) and Effective Sample Size (for
+efficiency)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -144,76 +146,85 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read data in an <span style="R">R</span> dump file to a list</h1>
+    <h1>Convergence and efficiency diagnostics for Markov Chains</h1>
     
-    <div class="hidden name"><code>read_rdump.Rd</code></div>
+    <div class="hidden name"><code>Rhat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create an <span style="R">R</span> list from an <span style="R">R</span> dump file</p>
+    <p>These functions are improved versions of the traditional
+Rhat (for convergence) and Effective Sample Size (for
+efficiency).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_rdump</span>(<span class='no'>f</span>, <span class='kw'>keep.source</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>Rhat</span>(<span class='no'>sims</span>)
+<span class='fu'>ess_bulk</span>(<span class='no'>sims</span>)
+<span class='fu'>ess_tail</span>(<span class='no'>sims</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>f</th>
-      <td><p>A character string providing the dump file name.</p></td>
-    </tr>
-    <tr>
-      <th>keep.source</th>
-      <td><p>logical: should the source formatting be retained when
-                     echoing expressions, if possible?</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>passed to <code>source</code></p></td>
+      <th>sims</th>
+      <td><p>A two-dimensional array whose rows are equal to the
+  number of iterations of the Markov Chain(s) and whose
+  columns are equal to the number of Markov Chains
+  (preferably more than one). The cells are the realized
+  draws for a particular parameter or function of parameters.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The <span style="R">R</span> dump file can be read directly by <span style="R">R</span> function <code>source</code>, which
-by default would read the data into the user's workspace (the global environment). 
-This function instead read the data to a list, making it convenient to 
-prepare data for the <code>stan</code> model-fitting function.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing all the data defined in the dump file with
-keys corresponding to variable names.</p>
+    <p>The <code>Rhat</code> function produces R-hat convergence diagnostic, which
+compares the between- and within-chain estimates for model parameters
+and other univariate quantities of interest. If chains have not mixed
+well (ie, the between- and within-chain estimates don't agree), R-hat is
+larger than 1. We recommend running at least four chains by default and
+only using the sample if R-hat is less than 1.05. Stan reports R-hat
+which is the maximum of rank normalized split-R-hat and rank normalized
+folded-split-R-hat, which works for thick tailed distributions and is
+sensitive also to differences in scale.</p>
+<p>The <code>ess_bulk</code> function produces an estimated Bulk Effective Sample
+Size (bulk-ESS) using rank normalized draws. Bulk-ESS is useful measure
+for sampling efficiency in the bulk of the distribution (related e.g. to
+efficiency of mean and median estimates), and is well defined even if
+the chains do not have finite mean or variance.</p>
+<p>The <code>ess_tail</code> function produces an estimated Tail Effective Sample
+Size (tail-ESS) by computing the minimum of effective sample sizes for
+5% and 95% quantiles. Tail-ESS is useful measure for sampling
+efficiency in the tails of the distribution (related e.g. to efficiency
+of variance and tail quantile estimates).</p>
+<p>Both bulk-ESS and tail-ESS should be at least \(100\) (approximately)
+per Markov Chain in order to be reliable and indicate that estimates of
+respective posterior quantiles are reliable.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
+Paul-Christian Bürkner (2019). Rank-normalization, folding, and
+localization: An improved R-hat for assessing convergence of MCMC.
+<em>arXiv preprint</em> <code>arXiv:1903.08008</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='stan_rdump.html'>stan_rdump</a></code>; <code><a href='https://rdrr.io/r/base/dump.html'>dump</a></code> 
-<!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><code><a href='monitor.html'>monitor</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>; <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>10</span>; <span class='no'>z</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>5</span>))
-<span class='fu'><a href='stan_rdump.html'>stan_rdump</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/ls.html'>ls</a></span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>'^[xyz]'</span>), <span class='st'>"xyz.Rdump"</span>)
-<span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'>read_rdump</span>(<span class='st'>'xyz.Rdump'</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>l</span>)</div><div class='output co'>#&gt; $x
-#&gt; [1] 1
-#&gt; 
-#&gt; $y
-#&gt;  [1]  1  2  3  4  5  6  7  8  9 10
-#&gt; 
-#&gt; $z
-#&gt;      [,1] [,2] [,3] [,4] [,5]
-#&gt; [1,]    1    3    5    7    9
-#&gt; [2,]    2    4    6    8   10
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='co'># pretend these draws came from five actual Markov Chins</span>
+<span class='no'>sims</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span>(<span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>500</span>), <span class='kw'>nrow</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>ncol</span> <span class='kw'>=</span> <span class='fl'>5</span>)
+<span class='fu'>Rhat</span>(<span class='no'>sims</span>)</div><div class='output co'>#&gt; [1] 1.002301</div><div class='input'><span class='fu'>ess_bulk</span>(<span class='no'>sims</span>)</div><div class='output co'>#&gt; [1] 541.4361</div><div class='input'><span class='fu'>ess_tail</span>(<span class='no'>sims</span>)</div><div class='output co'>#&gt; [1] 485.7733</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#references">References</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
+    <h2>Author</h2>
+    <p>Paul-Christian Burkner and Aki Vehtari</p>
   </div>
 </div>
 

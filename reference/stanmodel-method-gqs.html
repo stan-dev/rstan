@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read data in an <span style="R">R</span> dump file to a list — read_rdump • rstan</title>
+<title>Draw samples of generated quantities from a Stan model — gqs • rstan</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="Read data in an <span style="R">R</span> dump file to a list — read_rdump" />
-<meta property="og:description" content="Create an R list from an R dump file" />
+<meta property="og:title" content="Draw samples of generated quantities from a Stan model — gqs" />
+<meta property="og:description" content="Draw samples from the generated quantities block of a 
+  stanmodel." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -144,71 +145,88 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read data in an <span style="R">R</span> dump file to a list</h1>
+    <h1>Draw samples of generated quantities from a Stan model</h1>
     
-    <div class="hidden name"><code>read_rdump.Rd</code></div>
+    <div class="hidden name"><code>stanmodel-method-gqs.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create an <span style="R">R</span> list from an <span style="R">R</span> dump file</p>
+    <p>Draw samples from the generated quantities block of a 
+  <code><a href='stanmodel-class.html'>stanmodel</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>read_rdump</span>(<span class='no'>f</span>, <span class='kw'>keep.source</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='co'># S4 method for stanmodel</span>
+<span class='fu'>gqs</span>(<span class='no'>object</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(), <span class='no'>draws</span>,
+    <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sample.html'>sample.int</a></span>(<span class='no'>.Machine</span>$<span class='no'>integer.max</span>, <span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>1L</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>f</th>
-      <td><p>A character string providing the dump file name.</p></td>
+      <th>object</th>
+      <td><p>An object of class <code><a href='stanmodel-class.html'>stanmodel</a></code>.</p></td>
     </tr>
     <tr>
-      <th>keep.source</th>
-      <td><p>logical: should the source formatting be retained when
-                     echoing expressions, if possible?</p></td>
+      <th>data</th>
+      <td><p>A named <code>list</code> or <code>environment</code>
+    providing the data for the model or a character vector 
+    for all the names of objects used as data. 
+    See the <strong>Passing data to Stan</strong> section in <code><a href='stan.html'>stan</a></code>.</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>passed to <code>source</code></p></td>
+      <th>draws</th>
+      <td><p>A matrix of posterior draws, typically created by
+    calling <code>as.matrix</code> on a <code><a href='stanfit-class.html'>stanfit</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>seed</th>
+      <td><p>The seed for random number generation. The default is generated 
+    from 1 to the maximum integer supported by <span style="R">R</span> on the machine.
+    When a seed is specified by a number, <code>as.integer</code> will be applied to it. 
+    If <code>as.integer</code> produces <code>NA</code>, the seed is generated randomly. 
+    The seed can also be specified as a character string of digits, such as
+    <code>"12345"</code>, which is converted to integer.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
-    <p>The <span style="R">R</span> dump file can be read directly by <span style="R">R</span> function <code>source</code>, which
-by default would read the data into the user's workspace (the global environment). 
-This function instead read the data to a list, making it convenient to 
-prepare data for the <code>stan</code> model-fitting function.</p>
+    <p></p><dl class='dl-horizontal'>
+    <dt><code>object</code></dt><dd><p><code>signature(object = "stanmodel")</code></p></dd>
+      Evaluate the generated quantities block of a Stan program
+      by supplying <code>data</code> and the <code>draws</code> output from a
+      previous Stan program.
+    
+  
+</dl>
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing all the data defined in the dump file with
-keys corresponding to variable names.</p>
+    <p>An object of S4 class <code><a href='stanmodel-class.html'>stanmodel</a></code> representing
+   the fitted results.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='stan_rdump.html'>stan_rdump</a></code>; <code><a href='https://rdrr.io/r/base/dump.html'>dump</a></code> 
-<!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
+    <div class='dont-index'><p><code><a href='stanmodel-class.html'>stanmodel</a></code>, <code><a href='stanfit-class.html'>stanfit</a></code>, <code><a href='stan.html'>stan</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>; <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>10</span>; <span class='no'>z</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>5</span>))
-<span class='fu'><a href='stan_rdump.html'>stan_rdump</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/ls.html'>ls</a></span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>'^[xyz]'</span>), <span class='st'>"xyz.Rdump"</span>)
-<span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'>read_rdump</span>(<span class='st'>'xyz.Rdump'</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>l</span>)</div><div class='output co'>#&gt; $x
-#&gt; [1] 1
-#&gt; 
-#&gt; $y
-#&gt;  [1]  1  2  3  4  5  6  7  8  9 10
-#&gt; 
-#&gt; $z
-#&gt;      [,1] [,2] [,3] [,4] [,5]
-#&gt; [1,]    1    3    5    7    9
-#&gt; [2,]    2    4    6    8   10
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='no'>m</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan_model.html'>stan_model</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='st'>'parameters {real y;} model {y ~ normal(0,1);}'</span>)
+<span class='no'>f</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanmodel-method-sampling.html'>sampling</a></span>(<span class='no'>m</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>300</span>)
+<span class='no'>mc</span> <span class='kw'>&lt;-</span>
+<span class='st'>'
+parameters {real y;}
+generated quantities {real y_rep = normal_rng(y, 1);}
+'</span>
+<span class='no'>m2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan_model.html'>stan_model</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>mc</span>)
+<span class='no'>f2</span> <span class='kw'>&lt;-</span> <span class='fu'>gqs</span>(<span class='no'>m2</span>, <span class='kw'>draws</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>f</span>))
+<span class='no'>f2</span>
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
+      <li><a href="#methods">Methods</a></li>
       <li><a href="#value">Value</a></li>
       <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>

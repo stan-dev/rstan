@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read data in an <span style="R">R</span> dump file to a list — read_rdump • rstan</title>
+<title>Page not found (404) • rstan</title>
 
 
 <!-- jquery -->
@@ -29,15 +29,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
-<link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script>
+<link href="pkgdown.css" rel="stylesheet">
+<script src="pkgdown.js"></script>
 
 
 
 
-<meta property="og:title" content="Read data in an <span style="R">R</span> dump file to a list — read_rdump" />
-<meta property="og:description" content="Create an R list from an R dump file" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="Page not found (404)" />
 
 
 
@@ -56,7 +54,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-title-body">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -68,7 +66,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">rstan</a>
+        <a class="navbar-link" href="index.html">rstan</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.19.1</span>
       </span>
     </div>
@@ -76,10 +74,10 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../articles/index.html">Vignettes</a>
+  <a href="articles/index.html">Vignettes</a>
 </li>
 <li>
-  <a href="../reference/index.html">Functions</a>
+  <a href="reference/index.html">Functions</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -142,85 +140,22 @@
       </header>
 
 <div class="row">
-  <div class="col-md-9 contents">
+  <div class="contents col-md-9">
     <div class="page-header">
-    <h1>Read data in an <span style="R">R</span> dump file to a list</h1>
-    
-    <div class="hidden name"><code>read_rdump.Rd</code></div>
+      <h1>Page not found (404)</h1>
     </div>
 
-    <div class="ref-description">
-    <p>Create an <span style="R">R</span> list from an <span style="R">R</span> dump file</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>read_rdump</span>(<span class='no'>f</span>, <span class='kw'>keep.source</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>f</th>
-      <td><p>A character string providing the dump file name.</p></td>
-    </tr>
-    <tr>
-      <th>keep.source</th>
-      <td><p>logical: should the source formatting be retained when
-                     echoing expressions, if possible?</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>passed to <code>source</code></p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The <span style="R">R</span> dump file can be read directly by <span style="R">R</span> function <code>source</code>, which
-by default would read the data into the user's workspace (the global environment). 
-This function instead read the data to a list, making it convenient to 
-prepare data for the <code>stan</code> model-fitting function.</p>
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A list containing all the data defined in the dump file with
-keys corresponding to variable names.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='stan_rdump.html'>stan_rdump</a></code>; <code><a href='https://rdrr.io/r/base/dump.html'>dump</a></code> 
-<!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>; <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fl'>1</span>:<span class='fl'>10</span>; <span class='no'>z</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>array</a></span>(<span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>dim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2</span>,<span class='fl'>5</span>))
-<span class='fu'><a href='stan_rdump.html'>stan_rdump</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/ls.html'>ls</a></span>(<span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>'^[xyz]'</span>), <span class='st'>"xyz.Rdump"</span>)
-<span class='no'>l</span> <span class='kw'>&lt;-</span> <span class='fu'>read_rdump</span>(<span class='st'>'xyz.Rdump'</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>l</span>)</div><div class='output co'>#&gt; $x
-#&gt; [1] 1
-#&gt; 
-#&gt; $y
-#&gt;  [1]  1  2  3  4  5  6  7  8  9 10
-#&gt; 
-#&gt; $z
-#&gt;      [,1] [,2] [,3] [,4] [,5]
-#&gt; [1,]    1    3    5    7    9
-#&gt; [2,]    2    4    6    8   10
-#&gt; </div></pre>
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+Content not found. Please use links in the navbar.
 
   </div>
+
 </div>
+
 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Jiqiang Guo.</p>
+  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich.</p>
 </div>
 
 <div class="pkgdown">

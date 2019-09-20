@@ -1,7 +1,8 @@
-pandoc: 1.19.2.1
-pkgdown: 0.1.0.9000
-pkgdown_sha: 3e1bdfaf4ad79f999bb6ab3ddd8e84bd365037b6
+pandoc: 2.3.1
+pkgdown: 1.4.1
+pkgdown_sha: ~
 articles:
+  SBC: SBC.html
   external: external.html
   rstan: rstan.html
   stanfit_objects: stanfit_objects.html
