@@ -81,7 +81,9 @@
   \item{draws}{A non-negative integer (that defaults to zero) indicating how
      many times to draw from a multivariate normal distribution whose parameters
      are the mean vector and the inverse negative Hessian in the unconstrained
-     space.}
+     space. If \code{draws > 0} and \code{importance_resampling=TRUE} 
+     then \code{log_p} and \code{log_g} will be computed and returned 
+     (see description in the \strong{Value} section).}
      
   \item{constrained}{A logical scalar indicating, if \code{draws > 0}, whether
      the draws should be transformed to the constrained space defined in the
@@ -89,7 +91,10 @@
      
   \item{importance_resampling}{A logical scalar (defaulting to \code{FALSE}) 
      indicating whether to do importance resampling to compute diagnostics on the 
-     draws from the normal approximation to the posterior distribution.}
+     draws from the normal approximation to the posterior distribution.
+     If \code{TRUE} and \code{draws > 0} then \code{log_p} 
+     and \code{log_g} will be computed and returned (see description in the 
+     \strong{Value} section).}
      
   \item{\dots}{Other optional parameters:
     \itemize{
@@ -122,6 +127,8 @@
   }
 }
 \value{
+A list with components: 
+
    \item{par}{The point estimate found. Its form (vector or list) 
      is determined by the \code{as_vector} argument.}
    \item{value}{The value of the log-posterior (up to an additive constant, 
@@ -132,11 +139,12 @@
    \item{theta_tilde}{If \code{draws > 0}, the matrix of parameter draws
     in the constrained or unconstrained space, depending on the value of 
     the \code{constrained} argument.}
-   \item{log_p}{If \code{draws > 0}, a vector of length draws that contains
-     the value of the log-posterior evaluated at each row of \code{theta_tilde}.}
-   \item{log_g}{If \code{draws > 0}, a vector of length draws that contains
-     the value of the logarithm of the multivariate normal density evaluated
-     at each row of \code{theta_tilde}.}
+   \item{log_p}{If \code{draws > 0} and \code{importance_resampling=TRUE}, 
+     a vector of length \code{draws} that contains the value of the 
+     log-posterior evaluated at each row of \code{theta_tilde}.}
+   \item{log_g}{If \code{draws > 0}, a vector of length \code{draws} that 
+     contains the value of the logarithm of the multivariate normal density 
+     evaluated at each row of \code{theta_tilde}.}
 
   If the optimization is not completed for reasons such as feeding wrong data,
   it returns \code{NULL}. 
