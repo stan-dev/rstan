@@ -896,9 +896,13 @@ setMethod("gqs", "stanmodel",
   m_pars = sampler$param_names()
   p_dims = sampler$param_dims()
   p_names <- unique(sub("\\..*$", "", sampler$constrained_param_names(TRUE, FALSE)))
-  draws <- draws[ , p_names, drop = FALSE]
   all_names <- sampler$constrained_param_names(TRUE, TRUE)
   some_names <- sampler$constrained_param_names(TRUE, FALSE)
+  draws_colnames <- sub("\\.", "[", some_names)
+  draws_colnames <- gsub("\\.", ",", draws_colnames)
+  draws_colnames[grep("\\[", draws_colnames)] <- 
+    paste0(draws_colnames[grep("\\[", draws_colnames)], "]")
+  draws <- draws[, draws_colnames, drop = FALSE]
   gq_names <- unique(sub("\\..*$", "", setdiff(all_names, some_names)))
   sampler$update_param_oi(gq_names)
   samples <- try(sampler$standalone_gqs(draws, as.integer(seed)))
