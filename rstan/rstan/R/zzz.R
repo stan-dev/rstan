@@ -24,6 +24,8 @@ OUT <- 0
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
+  Rcpp::loadModule("class_model_base", what = TRUE)
+  Rcpp::loadModule("class_stan_fit", what = TRUE)
 }
 
 .onAttach <- function(...) {
