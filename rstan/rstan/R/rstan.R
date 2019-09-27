@@ -130,7 +130,7 @@ stan_model <- function(file,
   inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
                # include, stanc_ret$cppcode,
                if(is.null(includes)) stanc_ret$cppcode else
-                 sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*: public prob_grad \\{)",
+                 sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), stanc_ret$cppcode),
                "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname), 
