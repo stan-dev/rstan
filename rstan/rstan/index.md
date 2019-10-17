@@ -9,11 +9,11 @@
 </div>
 
 -----
-**RStan** is the R interface to [Stan](https://mc-stan.org). It is distributed on
-[CRAN](https://CRAN.R-project.org/package=rstan) as the **rstan** packge and its
-source code is hosted on GitHub. Before installation, make sure you have the
-necessary C++ toolchain for your system by following the instructions in the
-Getting Started documents below.
+**RStan** is the R interface to [Stan](https://mc-stan.org). It is distributed
+on [CRAN](https://CRAN.R-project.org/package=rstan) as the **rstan** package and
+its source code is hosted on [GitHub](https://github.com/stan-dev/rstan). Before
+installation, make sure you have the necessary C++ toolchain for your system by
+following the instructions in the Getting Started documents below.
 
 ## Getting Started
 
@@ -27,7 +27,8 @@ Once you have the package up and running some good places to start are:
 model, extract the contents of a stanfit object, and use external C++ code with
 a Stan program.
 
-* The majority of the [Stan Case Studies](https://mc-stan.org/users/documentation/case-studies.html) include fully worked examples using Rstan.
+* The majority of the [Stan Case Studies](https://mc-stan.org/users/documentation/case-studies.html) 
+include fully worked examples using Rstan.
 
 Several Stan users have also contributed translations of the Getting Started page:
 
