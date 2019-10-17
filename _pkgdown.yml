@@ -13,6 +13,8 @@ navbar:
       href: reference/index.html
     - text: "Other Packages"
       menu:
+        - text: "cmdstanr"
+          href: https://mc-stan.org/cmdstanr
         - text: "rstanarm"
           href: https://mc-stan.org/rstanarm
         - text: "bayesplot"
