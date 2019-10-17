@@ -54,7 +54,7 @@ Suggests:
     rstudioapi,
     Matrix,
     knitr (>= 1.15.1)
-URL: http://discourse.mc-stan.org, http://mc-stan.org
+URL: https://mc-stan.org/rstan, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc
