@@ -185,12 +185,19 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     }
   }
   dso_last_path <- dso_path(fx)
-  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
+  if (grepl("^darwin", R.version$os) && grepl("clang", get_CXX(FALSE))) {
+    CLANG_DIR = tail(n = 1, grep("clang[456789]", value = TRUE,
+                                 x = list.dirs("/usr/local", recursive = FALSE)))
+    Rv <- R.version
+    GOOD <- file.path("/Library", "Frameworks", "R.framework", "Versions", 
+                      paste(Rv$major, substr(Rv$minor, 1, 1), sep = "."), 
+                      "Resources", "lib", "libc++.1.dylib")
+    if (length(CLANG_DIR) == 1L && file.exists(GOOD)                 
     cmd <- paste(
       "install_name_tool",
       "-change",
-      "/usr/local/clang4/lib/libc++.1.dylib",
-      "/usr/lib/libc++.1.dylib",
+      CLANG_DIR,
+      GOOD,
       dso_last_path
     )
     system(cmd)
