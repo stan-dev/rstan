@@ -15,23 +15,30 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-get_Rcpp_module_def_code <- function(model_name) {
-  def_Rcpp_module_hpp_file <- 
-    system.file('include', '/rstan/rcpp_module_def_for_rstan.hpp', package = 'rstan') 
-  if (def_Rcpp_module_hpp_file == '') 
-    stop("Rcpp module definition file for rstan is not found.\n") 
-  src <- paste(readLines(def_Rcpp_module_hpp_file), collapse = '\n')
-  gsub("%model_name%", model_name, src)
-}
+# get_Rcpp_module_def_code <- function(model_name) {
+#   def_Rcpp_module_hpp_file <- 
+#     system.file('include', '/rstan/rcpp_module_def_for_rstan.hpp', package = 'rstan') 
+#   if (def_Rcpp_module_hpp_file == '') 
+#     stop("Rcpp module definition file for rstan is not found.\n") 
+#   src <- paste(readLines(def_Rcpp_module_hpp_file), collapse = '\n')
+#   gsub("%model_name%", model_name, src)
+# }
 
 get_Rcpp_module_def_code <- function(model_name) {
   RCPP_MODULE <- 
 '
+
+auto ptr(stan_model* sm) {
+  Rcpp::XPtr<stan_model> ptr(sm, true);
+  return ptr;  
+}
+  
 RCPP_MODULE(stan_fit4%model_name%_mod){
-  Rcpp::class_<stan_fit4%model_name%>("stan_fit4%model_name%")
-  .constructor<Rcpp::XPtr<stan::model::model_base> model, int>()
-  .method("log_prob", &stan::model::model_base::log_prob)
-  .method("write_array", &stan::model::model_base::write_array)
+  Rcpp::class_<stan_model>("stan_fit4%model_name%")
+  .constructor<const rstan::io::rlist_ref_var_context, unsigned int>()
+  .method("ptr", &ptr)
+//  .method("log_prob", &stan_model::log_prob)
+//  .method("write_array", &stan_model::write_array)
   ;
 }
 '

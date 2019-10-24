@@ -126,12 +126,22 @@ stan_model <- function(file,
   
   model_cppname <- stanc_ret$model_cppname 
   model_name <- stanc_ret$model_name 
-  model_code <- stanc_ret$model_code 
-  inc <- paste("#define STAN__SERVICES__COMMAND_HPP",
-               if(is.null(includes)) stanc_ret$cppcode else
+  model_code <- stanc_ret$model_code
+  model_cppcode <- sub("stan::io::var_context&", 
+                        "rstan::io::rlist_ref_var_context",
+                        stanc_ret$cppcode, fixed = TRUE)
+  model_cppcode <- sub("stan::io::var_context&", 
+                       "rstan::io::rlist_ref_var_context",
+                       model_cppcode, fixed = TRUE)
+  # model_cppcode <- stanc_ret$cppcode
+  inc <- paste("#include <Rcpp.h>\n",
+               "#include <rstan/io/rlist_ref_var_context.hpp>\n",
+               "#include <rstan/io/r_ostream.hpp>\n",
+               "#include <rstan/stan_args.hpp>\n",
+               if(is.null(includes)) model_cppcode else
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
-                     paste(includes, "\\1"), stanc_ret$cppcode),
-               "#include <rstan/rstaninc.hpp>\n", 
+                     paste(includes, "\\1"), model_cppcode),
+               # "#include <rstan/rstaninc.hpp>\n", 
                get_Rcpp_module_def_code(model_cppname),
                sep = '')  
 
@@ -178,7 +188,7 @@ stan_model <- function(file,
              dso = dso, # keep a reference to dso
              mk_cppmodule = mk_cppmodule,  # mk_cppmodule function is defined in file stanmodel-class.R
              model_cpp = list(model_cppname = model_cppname, 
-                              model_cppcode = stanc_ret$cppcode))
+                              model_cppcode = model_cppcode))
   
   if(missing(file) || (file.access(dirname(file), mode = 2) != 0) || !isTRUE(auto_write)) {
     tf <- tempfile()
