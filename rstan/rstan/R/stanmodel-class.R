@@ -148,12 +148,22 @@ setMethod("vb", "stanmodel",
             }
             cxxfun <- grab_cxxfun(object@dso)
             if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
-              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-              if (is(sampler, "try-error")) {
-                message('failed to create the sampler; sampling not done') 
-                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              if (packageVersion("rstan") < "2.21") {
+                sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
+                if (is(sampler, "try-error")) {
+                  message('failed to create the sampler; sampling not done') 
+                  return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+                }
+                message('trying deprecated constructor; please alert package maintainer')
+              } else {
+                sampler <- try(new(stan_fit_cpp_module, 
+                                   object@dso@.CXXDSOMISC$module@.xData$pointer, 
+                                   as.integer(seed)))
+                if (is(sampler, "try-error")) {
+                  message('failed to create the sampler; this should not have happened') 
+                  return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+                }
               }
-              message('trying deprecated constructor; please alert package maintainer')
             } else {
               sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
               if (is(sampler, "try-error")) {

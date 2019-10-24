@@ -48,7 +48,8 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -I"', inc_path_fun("rstan"), '"', 
          ' -DEIGEN_NO_DEBUG ',
          ' -DBOOST_DISABLE_ASSERTS',
-         ifelse (.Platform$OS.type == "windows", ' -std=c++1y', ''),
+         ifelse (.Platform$OS.type == "windows", ' -std=c++1y', 
+                 ' -D_REENTRANT'),
          sep = '')
 }
 
@@ -72,9 +73,14 @@ rstanplugin <- function() {
   rcpp_pkg_path <- system.file(package = 'Rcpp')
   rcpp_pkg_path2 <- legitimate_space_in_path(rcpp_pkg_path) 
  
-  if (.Platform$OS.type == "windows")
+  if (.Platform$OS.type == "windows") {
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
-  else StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
+    RcppParallel_pkg_libs <- system.file("libs", .Platform$r_arch, package = "RcppParallel")
+  }
+  else {
+    StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
+    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
+  }
 
   # In case  we have space (typical on windows though not necessarily)
   # in the file path of Rcpp's library. 
@@ -89,7 +95,9 @@ rstanplugin <- function() {
        body = function(x) x,
        env = list(PKG_LIBS = paste(rcpp_pkg_libs,  
                                    paste0("-L", shQuote(StanHeaders_pkg_libs)),
-                                   "-lStanHeaders"),
+                                   "-lStanHeaders",
+                                   paste0("-L", shQuote(RcppParallel_pkg_libs)),
+                                   "-ltbb"),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }

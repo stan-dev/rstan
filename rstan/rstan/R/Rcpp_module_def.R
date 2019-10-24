@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,5 +22,19 @@ get_Rcpp_module_def_code <- function(model_name) {
     stop("Rcpp module definition file for rstan is not found.\n") 
   src <- paste(readLines(def_Rcpp_module_hpp_file), collapse = '\n')
   gsub("%model_name%", model_name, src)
-} 
+}
+
+get_Rcpp_module_def_code <- function(model_name) {
+  RCPP_MODULE <- 
+'
+RCPP_MODULE(stan_fit4%model_name%_mod){
+  Rcpp::class_<stan_fit4%model_name%>("stan_fit4%model_name%")
+  .constructor<Rcpp::XPtr<stan::model::model_base> model, int>()
+  .method("log_prob", &stan::model::model_base::log_prob)
+  .method("write_array", &stan::model::model_base::write_array)
+  ;
+}
+'
+gsub("%model_name%", model_name, RCPP_MODULE)
+}
 
