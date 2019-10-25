@@ -40,7 +40,8 @@ Depends:
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     BH (>= 1.69.0),
-    StanHeaders (> 2.19.0)
+    StanHeaders (> 2.19.0),
+    RcppParallel
 Suggests:
     RUnit,
     RcppEigen (>= 0.3.3.3.0),
