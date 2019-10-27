@@ -31,6 +31,7 @@ Imports:
     inline,
     gridExtra (>= 2.0.0),
     Rcpp (>= 0.12.0),
+    RcppParallel (>= 4.4.4),
     loo (>= 2.0.0),
     pkgbuild
 Depends:

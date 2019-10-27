@@ -12,6 +12,7 @@ importFrom("pkgbuild", with_build_tools)
 #importFrom("Rcpp", cpp_object_initializer)
 import("methods")
 import(Rcpp)
+importFrom(RcppParallel,RcppParallelLibs)
 import(StanHeaders)
 
 importFrom("gridExtra","arrangeGrob","grid.arrange")
