@@ -1,13 +1,15 @@
 STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" -e "message()" | grep "StanHeaders")
-TBB = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('lib', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
+TBB_LIB = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('lib', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
+TBB_INCLUDE = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
 
 CXX_STD = CXX14
 CXX14STD = -std=c++1y
 
 PKG_CPPFLAGS = -I"../inst/include" -I"." -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -D_REENTRANT
+PKG_CPPFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()")
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
-PKG_LIBS = -L$(TBB) -ltbb
+PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()")
 
 SOURCES = $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
