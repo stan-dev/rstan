@@ -142,7 +142,7 @@ stan_model <- function(file,
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), model_cppcode),
                # "#include <rstan/rstaninc.hpp>\n", 
-               get_Rcpp_module_def_code(model_cppname),
+               # get_Rcpp_module_def_code(model_cppname),
                sep = '')  
 
   if (verbose && interactive())
@@ -163,10 +163,19 @@ stan_model <- function(file,
     stop("Eigen not found; call install.packages('RcppEigen')")
   
 
-  dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
-                         includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
-                         module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
-                         verbose = verbose)
+  # dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''), 
+  #                        includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
+  #                        module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''), 
+  #                        verbose = verbose)
+  bod <- paste0("return Rcpp::XPtr<stan_model>(new stan_model(",
+                "Rcpp::as<rstan::io::rlist_ref_var_context>(context__), ",
+                "Rcpp::as<unsigned int>(seed), ",
+                "&Rcpp::Rcout), true);")
+  dso <- cxxfunctionplus(sig = signature(context__ = "list", seed = "integer"),
+                         body = bod, plugin = "rstan", includes = inc,
+                         save_dso = save_dso | auto_write, verbose = verbose,
+                         module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''))
+
   if (FALSE && grepl("#include", model_code, fixed = TRUE)) {
     model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
     model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
