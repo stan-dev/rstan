@@ -1357,7 +1357,7 @@ log_prob_jacobian(stan::model::model_base* user_model,
   return user_model->log_prob_jacobian(params_r, params_i, &Rcpp::Rcout);
 }
 
-inline double
+inline double // this is always 0 so should we not expose it
 log_prob_propto(stan::model::model_base* user_model, 
                 std::vector<double>& params_r) {
   std::vector<int> params_i;
@@ -1399,11 +1399,34 @@ inline Rcpp::List
 write_list(stan::model::model_base* user_model,
            std::vector<double>& params_r,
            bool include_tparams = true, bool include_gqs = true,
-           unsigned int random_seed = 0, unsigned int id = 0) {
-  Rcpp::Function f("relist");
-  return f(write_array(user_model, params_r, include_tparams,
-                       include_gqs, random_seed, id),
-           get_dims(user_model));
+             unsigned int random_seed = 0, unsigned int id = 0) {
+  std::vector<double> params = 
+    write_array(user_model, params_r, include_tparams,
+                include_gqs, random_seed, id);
+  std::vector<std::vector<size_t> > dims;
+  user_model->get_dims(dims);
+  unsigned int K = dims.size();
+  Rcpp::List out(K);
+  unsigned int pos = 0;
+  for (unsigned int k = 0; k < K; k++) {
+    if (dims[k].empty()) {
+      out[k] = params[pos++];
+    } else {
+      std::vector<size_t> d = dims[k];
+      size_t p = std::accumulate(d.begin(), d.end(),
+                                 1, std::multiplies<size_t>());
+      Rcpp::NumericVector x(p);
+      for (size_t j = 0; j < p; j++) {
+        x[j] = params[pos++];
+      }
+      x.attr("dim") = d;
+      out[k] = x;
+    }
+  }
+  std::vector<std::string> names;
+  user_model->get_param_names(names);
+  out.names() = names;
+  return out;
 }
 
 inline stan::model::model_base* 
@@ -1454,7 +1477,7 @@ RCPP_MODULE(class_model_base) {
           "include_tparams and include_gqs, as well as integers "
           "for id and seed and returns a vector of constrained "
           "parameters")
-  .method("write_list", &write_array,
+  .method("write_list", &write_list,
           "takes a vector of unconstrained parameters, flags for "
           "include_tparams and include_gqs, as well as integers "
           "for id and seed and returns a list of constrained "
