@@ -146,7 +146,7 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            if (packageVersion("StanHeaders") >= "2.21.0") {
+            if (test_221(object@model_cpp$model_cppcode)) {
               ptr <- try(cxxfun(data, as.integer(seed)))
               if (is(ptr, "try-error")) {
                 message('failed to instantiate; sampling not done') 
@@ -385,7 +385,7 @@ setMethod("optimizing", "stanmodel",
             }
             cxxfun <- grab_cxxfun(object@dso)
             sfmiscenv <- new.env(parent = emptyenv())
-            if (packageVersion("StanHeaders") >= "2.21.0") {
+            if (test_221(object@model_cpp$model_cppcode)) {
               ptr <- try(cxxfun(data, as.integer(seed)))
               if (is(ptr, "try-error")) {
                 message('failed to instantiate; sampling not done') 
@@ -555,7 +555,7 @@ setMethod("sampling", "stanmodel",
                   "' NOW.\n", sep = '')
             sfmiscenv <- new.env(parent = emptyenv())
             cxxfun <- grab_cxxfun(object@dso)
-            if (packageVersion("StanHeaders") >= "2.21.0") {
+            if (test_221(object@model_cpp$model_cppcode)) {
               ptr <- try(cxxfun(data, as.integer(seed)))
               if (is(ptr, "try-error")) {
                 message('failed to instantiate; sampling not done') 
