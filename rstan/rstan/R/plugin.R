@@ -50,6 +50,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DEIGEN_NO_DEBUG ',
          ' -DBOOST_DISABLE_ASSERTS ',
          ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
+         ' -include stan/math/prim/mat/fun/Eigen.hpp ',
          ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
                  ' -D_REENTRANT'),
          sep = '')
@@ -78,7 +79,7 @@ rstanplugin <- function() {
   if (.Platform$OS.type == "windows") {
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
     RcppParallel_pkg_libs <- system.file("libs", .Platform$r_arch, package = "RcppParallel")
-    rstan_StanServices <- system.file("libs", "libStanServices.dll", package = "rstan")
+    rstan_StanServices <- system.file("libs", "rstan.so", package = "rstan")
   }
   else {
     StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
@@ -94,10 +95,10 @@ rstanplugin <- function() {
   if (grepl('[^\\\\]\\s', rcpp_pkg_libs, perl = TRUE))
       rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE)
 
-  cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
+  # cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
 
-  list(includes = '// [[Rcpp::plugins(cpp14)]]\n#include <stan/math/prim/mat/fun/Eigen.hpp>\n',
+  list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
        body = function(x) x,
        env = list(PKG_LIBS = paste(rcpp_pkg_libs,
                                    rstan_StanServices,
