@@ -16,7 +16,7 @@ install_StanHeaders <- function(rstan_branch = "develop",
   # writeLines(c(".PHONY: static", readLines(file.path(path_rstan, "StanHeaders", "src", "Makevars.win")),
   #              "static: $(OBJECTS)", "\t@mkdir -p ../lib", "\t$(AR) -rs ../lib/libStanHeaders.a $(OBJECTS)"),
   #            con = file.path(path_rstan, "StanHeaders", "src", "Makevars"))
-  utils::install.packages(file.path(path_rstan, "StanHeaders"), 
+  utils::install.packages(file.path(path_rstan, "StanHeaders"), type = "source",
                           repos = NULL, INSTALL_opts = "--preclean")
 }
 
