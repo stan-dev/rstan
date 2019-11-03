@@ -327,9 +327,9 @@ ess_bulk <- function(sims) {
 #' 
 #' @export
 ess_tail <- function(sims) {
-  I05 <- sims <= quantile(sims, 0.05)
+  I05 <- sims <= quantile(sims, 0.05, na.rm = TRUE)
   q05_ess <- ess_rfun(split_chains(I05))
-  I95 <- sims <= quantile(sims, 0.95)
+  I95 <- sims <= quantile(sims, 0.95, na.rm = TRUE)
   q95_ess <- ess_rfun(split_chains(I95))
   min(q05_ess, q95_ess)
 }
@@ -353,7 +353,7 @@ ess_tail <- function(sims) {
 #' 
 #' @export
 ess_quantile <- function(sims, prob) {
-  I <- sims <= quantile(sims, prob)
+  I <- sims <= quantile(sims, prob, na.rm = TRUE)
   ess_rfun(split_chains(I))
 }
 
@@ -576,8 +576,8 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   for (i in seq_along(out)) {
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
-    quan <- unname(quantile(sims_i, probs = probs))
-    quan2 <- quantile(sims_i, probs = c(0.05, 0.5, 0.95))
+    quan <- unname(quantile(sims_i, probs = probs, na.rm = TRUE))
+    quan2 <- quantile(sims_i, probs = c(0.05, 0.5, 0.95), na.rm = TRUE)
     mean <- mean(sims_i)
     sd <- sd(sims_i)
     mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
@@ -594,7 +594,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   }
   
   out <- as.data.frame(do.call(rbind, out))
-  probs_str <- names(quantile(sims_i, probs = probs))
+  probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
   str_quan <- paste0("Q", probs * 100)
   str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
