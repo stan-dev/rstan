@@ -135,15 +135,14 @@ stan_model <- function(file,
                        ##"rstan::io::rlist_ref_var_context",
                        "rstan::io::rlist_ref_var_context&",
                        model_cppcode, fixed = TRUE)
-  # model_cppcode <- stanc_ret$cppcode
   inc <- paste("#include <Rcpp.h>\n",
                "#include <rstan/io/rlist_ref_var_context.hpp>\n",
                "#include <rstan/io/r_ostream.hpp>\n",
                "#include <rstan/stan_args.hpp>\n",
+               "#include <boost/integer/integer_log2.hpp>\n",
                if(is.null(includes)) model_cppcode else
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), model_cppcode),
-               # "#include <rstan/rstaninc.hpp>\n",
                get_Rcpp_module_def_code(model_cppname),
                sep = '')
 
@@ -164,11 +163,19 @@ stan_model <- function(file,
   if (!file.exists(rstan_options("eigen_lib")))
     stop("Eigen not found; call install.packages('RcppEigen')")
 
-
   dso <- cxxfunctionplus(signature(), body = paste(" return Rcpp::wrap(\"", model_name, "\");", sep = ''),
                          includes = inc, plugin = "rstan", save_dso = save_dso | auto_write,
                          module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''),
                          verbose = verbose)
+  # bod <- paste0("return Rcpp::XPtr<stan_model>(new stan_model(",
+  #               "Rcpp::as<rstan::io::rlist_ref_var_context>(context__), ",
+  #               "Rcpp::as<unsigned int>(seed), ",
+  #               "&Rcpp::Rcout), true);")
+  # dso <- cxxfunctionplus(sig = signature(context__ = "list", seed = "integer"),
+  #                        body = bod, plugin = "rstan", includes = inc,
+  #                        save_dso = save_dso | auto_write, verbose = verbose,
+  #                        module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''))
+
   if (FALSE && grepl("#include", model_code, fixed = TRUE)) {
     model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
     model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)

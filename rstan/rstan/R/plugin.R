@@ -48,7 +48,8 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -I"', file.path(inc_path_fun("RcppParallel"), '" '),
          ' -I"', inc_path_fun("rstan"), '"',
          ' -DEIGEN_NO_DEBUG ',
-         ' -DBOOST_DISABLE_ASSERTS',
+         ' -DBOOST_DISABLE_ASSERTS ',
+         ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
          ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
                  ' -D_REENTRANT'),
          sep = '')

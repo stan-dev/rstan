@@ -113,7 +113,6 @@ setMethod("vb", "stanmodel",
                    importance_resampling = FALSE,
                    keep_every = 1,
                    ...) {
-            stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
@@ -147,11 +146,17 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
-              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            if (test_221(object@model_cpp$model_cppcode)) {
+              mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+              if (is(mod, "try-error")) {
+                message('failed to create the sampler; sampling not done')
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+              sampler <- try(new(stan_fit, mod$fit_ptr()))
               if (is(sampler, "try-error")) {
                 message('failed to create the sampler; sampling not done')
-                return(invisible(list(stanmodel = object)))
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
             } else {
               sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
@@ -345,7 +350,6 @@ setMethod("optimizing", "stanmodel",
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE,
                    draws = 0, constrained = TRUE,
                    importance_resampling = FALSE, ...) {
-            stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -380,11 +384,18 @@ setMethod("optimizing", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
-              sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+            sfmiscenv <- new.env(parent = emptyenv())
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            if (test_221(object@model_cpp$model_cppcode)) {
+              mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+              if (is(mod, "try-error")) {
+                message('failed to create the sampler; sampling not done')
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
+              sampler <- try(new(stan_fit, mod$fit_ptr()))
               if (is(sampler, "try-error")) {
                 message('failed to create the sampler; sampling not done')
-                return(invisible(list(stanmodel = object)))
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
             } else {
               sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
@@ -537,21 +548,20 @@ setMethod("sampling", "stanmodel",
             if (verbose)
               cat('\n', "COMPILING MODEL '", object@model_name,
                   "' NOW.\n", sep = '')
-            stan_fit_cpp_module <- object@mk_cppmodule(object)
-            cxxfun <- grab_cxxfun(object@dso)
             dots <- list(...)
             data$CHAIN_ID <- dots$chain_id
             if (verbose)
               cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name,
                   "' NOW.\n", sep = '')
             sfmiscenv <- new.env(parent = emptyenv())
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            cxxfun <- grab_cxxfun(object@dso)
             if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
               if (is(mod, "try-error")) {
                 message('failed to create the sampler; sampling not done')
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
-              ##sampler <- try(new(stan_fit, mod$ptr(), as.integer(seed)))
               sampler <- try(new(stan_fit, mod$fit_ptr()))
               if (is(sampler, "try-error")) {
                 message('failed to create the sampler; sampling not done')
