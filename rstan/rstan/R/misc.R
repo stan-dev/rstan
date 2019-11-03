@@ -364,7 +364,7 @@ config_argss <- function(chains, iter, warmup, thin,
   if (thin < 1 || thin > iter)
     stop("parameter 'thin' should be a positive integer less than 'iter'")
   warmup <- max(0, as.integer(warmup))
-  if (warmup > iter)
+  if (warmup >= iter)
     stop("parameter 'warmup' should be an integer less than 'iter'")
   chains <- as.integer(chains)
   if (chains < 1)
