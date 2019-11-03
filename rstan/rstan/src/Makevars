@@ -11,10 +11,25 @@ SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
 PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()")
 
-SOURCES = $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp)
+SOURCES_STATIC = stan_fit.cpp
+OBJECTS_STATIC = $(SOURCES_STATIC:.cpp=.o)
+
+SOURCES = $(filter-out stan_fit.cpp, $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp))
 OBJECTS = $(SOURCES:.cpp=.o)
 
-all: $(SHLIB)
-	@if test -e "/usr/bin/install_name_tool" && test -e "/usr/local/clang4/lib/libc++.1.dylib" && test -e "/usr/lib/libc++.1.dylib"; then /usr/bin/install_name_tool -change /usr/local/clang4/lib/libc++.1.dylib /usr/lib/libc++.1.dylib $(SHLIB); fi
+#extra-static: $(OBJECTS_STATIC)
+#	@mkdir -p ../lib
+#	$(AR) -rs ../lib/libStanServices.a $(OBJECTS_STATIC)
+#	@echo $(SHLIB)
 
-.phony: all
+all: $(SHLIB) $(OBJECTS_STATIC)
+	@mkdir -p ../inst/lib-static
+	$(AR) -rs ../inst/lib-static/libStanServices.a $(OBJECTS_STATIC)
+	@if test -e "/usr/bin/install_name_tool" && test -e "/usr/local/clang4/lib/libc++.1.dylib" && test -e "/usr/lib/libc++.1.dylib"; then /usr/bin/install_name_tool -change /usr/local/clang4/lib/libc++.1.dylib /usr/lib/libc++.1.dylib $(SHLIB); fi
+	@echo $(SHLIB)
+
+.phony: all extra-static
+
+.PHONY: print-%
+print-%  : ; @echo $* = $($*)
+

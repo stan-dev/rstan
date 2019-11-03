@@ -1,0 +1,93 @@
+#ifndef STAN_FIT_BASE_HPP
+#define STAN_FIT_BASE_HPP
+
+#include <vector>
+#include <stan/math/prim/mat/fun/Eigen.hpp>
+
+#include <Rcpp.h>
+#include <RcppEigen.h>
+
+namespace rstan {
+
+class stan_fit_base {
+ public:
+  //stan_fit(Rcpp::XPtr<stan::model::model_base> model, int seed);
+  virtual bool update_param_oi(std::vector<std::string> pnames) = 0;
+  virtual std::vector<double> unconstrain_pars(Rcpp::List par) = 0;
+  virtual std::vector<double> constrain_pars(std::vector<double> upar) = 0;
+  virtual std::vector<std::string> unconstrained_param_names(bool include_tparams, 
+                                                             bool include_gqs) = 0;
+  virtual std::vector<std::string> constrained_param_names(bool include_tparams, 
+                                                           bool include_gqs) = 0;
+  virtual Rcpp::NumericVector log_prob(std::vector<double> upar, 
+                                       bool jacobian_adjust_transform, 
+                                       bool gradient) = 0;
+  virtual Rcpp::NumericVector grad_log_prob(std::vector<double> upar, 
+                                            bool jacobian_adjust_transform) = 0;
+  virtual int num_pars_unconstrained() = 0;
+  virtual Rcpp::List call_sampler(Rcpp::List args_) = 0;
+  virtual Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws, 
+                                    unsigned int seed) = 0;
+  virtual std::vector<std::string> param_names() const = 0;
+  virtual std::vector<std::string> param_names_oi() const = 0;
+  virtual Rcpp::List param_oi_tidx(std::vector<std::string> names) = 0;
+  virtual Rcpp::List param_dims() const = 0;
+  virtual Rcpp::List param_dims_oi() const = 0;
+  virtual std::vector<std::string> param_fnames_oi() const = 0;
+};
+
+/*
+class stan_fit_base {
+ public:
+  //stan_fit(Rcpp::XPtr<stan::model::model_base> model, int seed);
+  virtual bool update_param_oi(std::vector<std::string> pnames) {
+    return false;
+  }
+  virtual std::vector<double> unconstrain_pars(Rcpp::List par) {
+    return std::vector<double>();
+  }
+  virtual std::vector<double> constrain_pars(std::vector<double> upar) {
+    return std::vector<double>();
+  }
+  virtual std::vector<std::string> unconstrained_param_names(bool include_tparams, 
+                                                             bool include_gqs) {
+    return std::vector<std::string>();
+  }
+  virtual std::vector<std::string> constrained_param_names(bool include_tparams, 
+                                                           bool include_gqs) {
+    return std::vector<std::string>();
+  }
+  virtual Rcpp::NumericVector log_prob(std::vector<double> upar, 
+                                       bool jacobian_adjust_transform, 
+                                       bool gradient) {
+    return Rcpp::NumericVector();
+  }
+  virtual Rcpp::NumericVector grad_log_prob(std::vector<double> upar, 
+                                            bool jacobian_adjust_transform) {
+    return Rcpp::NumericVector();
+  }
+  virtual int num_pars_unconstrained() {
+    return 0;
+  }
+  virtual Rcpp::List call_sampler(Rcpp::List args_) {
+    return Rcpp::List();
+  }
+  virtual Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws, 
+                                    unsigned int seed) {
+    Rcpp::List();
+  }
+  virtual std::vector<std::string> param_names() {
+    std::vector<std::string>();
+  }
+  virtual std::vector<std::string> param_names_oi() {
+  }
+  virtual Rcpp::List param_oi_tidx(std::vector<std::string> names)
+  virtual Rcpp::List param_dims() = 0;
+  virtual Rcpp::List param_dims_oi() = 0;
+  virtual std::vector<std::string> param_fnames_oi() = 0;
+};
+*/
+
+}
+
+#endif
