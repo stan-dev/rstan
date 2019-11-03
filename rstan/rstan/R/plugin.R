@@ -78,10 +78,12 @@ rstanplugin <- function() {
   if (.Platform$OS.type == "windows") {
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
     RcppParallel_pkg_libs <- system.file("libs", .Platform$r_arch, package = "RcppParallel")
+    rstan_StanServices <- system.file("libs", "libStanServices.dll", package = "rstan")
   }
   else {
     StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
     RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
+    rstan_StanServices <- system.file("lib", "libStanServices.a", package = "rstan")
   }
 
   # In case  we have space (typical on windows though not necessarily)
@@ -90,12 +92,15 @@ rstanplugin <- function() {
   # If rcpp_PKG_LIBS contains space without preceding '\\', add `\\';
   # otherwise keept it intact
   if (grepl('[^\\\\]\\s', rcpp_pkg_libs, perl = TRUE))
-    rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE)
+      rcpp_pkg_libs <- gsub(rcpp_pkg_path, rcpp_pkg_path2, rcpp_pkg_libs, fixed = TRUE)
+
+  cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
 
   list(includes = '// [[Rcpp::plugins(cpp14)]]\n#include <stan/math/prim/mat/fun/Eigen.hpp>\n',
        body = function(x) x,
        env = list(PKG_LIBS = paste(rcpp_pkg_libs,
+                                   rstan_StanServices,
                                    paste0("-L", shQuote(StanHeaders_pkg_libs)),
                                    "-lStanHeaders",
                                    paste0("-L", shQuote(RcppParallel_pkg_libs)),

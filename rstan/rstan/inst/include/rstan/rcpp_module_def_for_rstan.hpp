@@ -1,6 +1,8 @@
 /**
  * Define Rcpp Module to expose stan_fit's functions to R.
  */
+
+/*
 RCPP_MODULE(stan_fit4%model_name%_mod){
   Rcpp::class_<rstan::stan_fit<stan_model,
                boost::random::ecuyer1988> >("stan_fit4%model_name%")
@@ -25,3 +27,4 @@ RCPP_MODULE(stan_fit4%model_name%_mod){
     .method("standalone_gqs", &rstan::stan_fit<stan_model, boost::random::ecuyer1988>::standalone_gqs)
   ;
 }
+*/
