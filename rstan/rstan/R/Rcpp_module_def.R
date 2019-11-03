@@ -28,16 +28,23 @@ get_Rcpp_module_def_code <- function(model_name) {
   RCPP_MODULE <- 
 '
 
-auto ptr(stan_model* sm) {
+auto self_ptr(stan_model* sm) {
   Rcpp::XPtr<stan_model> ptr(sm, true);
   return ptr;  
+}
+
+double log_prob(stan_model* sm, std::vector<double>& params_r__) {
+  std::vector<int> params_i__;
+  return sm->log_prob<false, false, double>(params_r__,
+                                            params_i__, &Rcpp::Rcout);
 }
   
 RCPP_MODULE(stan_fit4%model_name%_mod){
   Rcpp::class_<stan_model>("stan_fit4%model_name%")
   .constructor<const rstan::io::rlist_ref_var_context, unsigned int>()
-  .method("ptr", &ptr)
-//  .method("log_prob", &stan_model::log_prob)
+  .method("this", &self_ptr)
+  .method("log_prob", &log_prob)
+// .method("log_prob", &stan_model::log_prob<false, false, double>)
 //  .method("write_array", &stan_model::write_array)
   ;
 }
@@ -45,3 +52,18 @@ RCPP_MODULE(stan_fit4%model_name%_mod){
 gsub("%model_name%", model_name, RCPP_MODULE)
 }
 
+get_Rcpp_module_def_code <- function(model_name) {
+  
+  code <-
+    '
+// [[Rcpp::export]]
+inline
+Rcpp::XPtr<stan_model>
+new_model(const rstan::io::rlist_ref_var_context context__,
+          const unsigned int seed) {
+  Rcpp::XPtr<stan_model> ptr(new stan_model(context__, seed, &Rcpp::Rcout), true);
+  return ptr;
+}
+'
+return(code)
+}
