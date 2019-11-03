@@ -364,7 +364,7 @@ config_argss <- function(chains, iter, warmup, thin,
   if (thin < 1 || thin > iter)
     stop("parameter 'thin' should be a positive integer less than 'iter'")
   warmup <- max(0, as.integer(warmup))
-  if (warmup > iter)
+  if (warmup >= iter)
     stop("parameter 'warmup' should be an integer less than 'iter'")
   chains <- as.integer(chains)
   if (chains < 1)
@@ -1511,6 +1511,7 @@ read_csv_header <- function(f, comment.char = '#') {
   iter.count <- NA
   save.warmup <- FALSE
   sample.count <- NA_integer_
+  thin <- NULL
   while (length(input <- readLines(con, n = 1)) > 0) {
     niter <- niter + 1
     if (!grepl(comment.char, input)) break;
@@ -1523,6 +1524,9 @@ read_csv_header <- function(f, comment.char = '#') {
       warmup.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
     } else {
       warmup.count <- 0L
+    }
+    if (grepl("#.*thin", input)){
+      thin <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
     }
     if (grepl("#.*save_warmup",input)){
       save.warmup <- !grepl("0",input)
@@ -1538,7 +1542,10 @@ read_csv_header <- function(f, comment.char = '#') {
       iter.count <- warmup.count + sample.count
     else
       iter.count <- sample.count
-  } 
+  }
+  if(!is.null(thin)){
+    iter.count <- iter.count %/% thin
+  }
   attr(header, "iter.count") <- iter.count
   attr(header, "lineno") <- niter
   close(con)

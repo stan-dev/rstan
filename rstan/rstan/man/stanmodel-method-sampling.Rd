@@ -59,7 +59,7 @@
     iterations per chain. If step-size adaptation is on (which it is by default), 
     this also controls the number of iterations for which adaptation is run (and
     hence these warmup samples should not be used for inference). The number of 
-    warmup iterations should not be larger than \code{iter} and the default is 
+    warmup iterations should be smaller than \code{iter} and the default is
     \code{iter/2}.}
 
   \item{thin}{A positive integer specifying the period for saving samples. 
