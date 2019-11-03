@@ -2,7 +2,7 @@
 #define RSTAN_FIT_HPP
 
 
-#include <rstan_next/stan_fit_base.hpp>
+#include "stan_fit_base.hpp"
 
 #include <stan/model/model_base.hpp>
 

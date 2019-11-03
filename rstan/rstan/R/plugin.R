@@ -78,10 +78,12 @@ rstanplugin <- function() {
   if (.Platform$OS.type == "windows") {
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
     RcppParallel_pkg_libs <- system.file("libs", .Platform$r_arch, package = "RcppParallel")
+    rstan_StanServices <- system.file("libs", "libStanServices.dll", package = "rstan")
   }
   else {
     StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
     RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
+    rstan_StanServices <- system.file("lib", "libStanServices.a", package = "rstan")
   }
 
   # In case  we have space (typical on windows though not necessarily)
@@ -94,7 +96,6 @@ rstanplugin <- function() {
 
   cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
-  rstan_StanServices <- system.file("lib-static/libStanServices.a", package = "rstan")
 
   list(includes = '// [[Rcpp::plugins(cpp14)]]\n#include <stan/math/prim/mat/fun/Eigen.hpp>\n',
        body = function(x) x,
