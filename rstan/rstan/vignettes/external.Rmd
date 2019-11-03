@@ -161,7 +161,12 @@ directory and rely on the linker to make them available in its Stan programs,
 which are compiled at (or before) installation time.
 
 In the C++ version, we check if `n` is non-positive, in which case we throw an
-exception. It is unnecessary to prefix `stringstream` with `std::` because of
+exception. The way the MCMC samplers are configured, if there is an exception 
+thrown and it is `std::domain_error`, it will treat that iteration as a rejection 
+but as a recoverable error: set that iteration's log probability value to negative
+infinity and move to the next iteration. If there is a `std::invalid_argument` 
+thrown, MCMC terminates. We treat these as non-recoverable, user programming errors. 
+It is unnecessary to prefix `stringstream` with `std::` because of
 the `using std::stringstream;` line in the _generated_ C++ file. However, there
 is no corresponding `using std::domain_error;` line, so it has to be qualified
 appropriately when the exception is thrown.
