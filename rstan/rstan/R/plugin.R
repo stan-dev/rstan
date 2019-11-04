@@ -77,14 +77,20 @@ rstanplugin <- function() {
   rcpp_pkg_path2 <- legitimate_space_in_path(rcpp_pkg_path)
 
   if (.Platform$OS.type == "windows") {
-    StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
-    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
-    rstan_StanServices <- system.file("libs", .Platform$r_arch, "rstan.dll", package = "rstan")
+    StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, 
+                                        package = "StanHeaders", mustWork = TRUE)
+    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch,
+                                         package = "RcppParallel", mustWork = TRUE)
+    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a", 
+                                      package = "rstan", mustWork = TRUE)
   }
   else {
-    StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
-    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
-    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a", package = "rstan")
+    StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, 
+                                        package = "StanHeaders", mustWork = TRUE)
+    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, 
+                                         package = "RcppParallel", mustWork = TRUE)
+    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a", 
+                                      package = "rstan", mustWork = TRUE)
   }
 
   # In case  we have space (typical on windows though not necessarily)
