@@ -11,6 +11,7 @@ namespace rstan {
 
 class stan_fit_base {
  public:
+  virtual ~stan_fit_base();
   virtual bool update_param_oi(std::vector<std::string> pnames) = 0;
   virtual std::vector<double> unconstrain_pars(Rcpp::List par) = 0;
   virtual std::vector<double> constrain_pars(std::vector<double> upar) = 0;
