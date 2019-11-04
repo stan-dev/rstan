@@ -8,6 +8,7 @@ class stan_fit_proxy : public stan_fit_base {
 
  public:
   stan_fit_proxy(Rcpp::XPtr<rstan::stan_fit_base> fit) : fit_(*fit.get()) {}
+  ~stan_fit_proxy() {}
 
 
   bool update_param_oi(std::vector<std::string> pnames) {
@@ -53,7 +54,7 @@ class stan_fit_proxy : public stan_fit_base {
   
   Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws, 
                             unsigned int seed) {
-    return standalone_gqs(draws, seed);
+    return fit_.standalone_gqs(draws, seed);
   }
   
   std::vector<std::string> param_names() const {

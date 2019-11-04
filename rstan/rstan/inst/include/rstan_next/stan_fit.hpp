@@ -46,6 +46,7 @@ public:
   bool update_param_oi(std::vector<std::string> pnames);
   
   stan_fit(Rcpp::XPtr<stan::model::model_base> model, int seed);
+  ~stan_fit();
   
   /**
    * Transform the parameters from its defined support
