@@ -15,8 +15,8 @@ SOURCES = $(filter-out stan_fit.cpp, $(wildcard *.cpp) stan/lang/ast_def.cpp $(w
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(SHLIB) $(OBJECTS_STATIC)
-	@mkdir -p ../inst/lib
-	$(AR) -rs ../inst/lib/libStanServices.a $(OBJECTS_STATIC)
+	@mkdir -p ../inst/lib/$(R_ARCH)
+	$(AR) -rs ../inst/lib/$(R_ARCH)/libStanServices.a $(OBJECTS_STATIC)
 
 .phony: all
 
