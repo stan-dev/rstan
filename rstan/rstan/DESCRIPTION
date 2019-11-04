@@ -33,7 +33,8 @@ Imports:
     Rcpp (>= 0.12.0),
     RcppParallel (>= 4.4.4),
     loo (>= 2.0.0),
-    pkgbuild
+    pkgbuild,
+    V8
 Depends:
     R (>= 3.4.0),
     StanHeaders (> 2.19.0),
