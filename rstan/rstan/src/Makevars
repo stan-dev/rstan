@@ -21,7 +21,6 @@ all: $(SHLIB) $(OBJECTS_STATIC)
 	@mkdir -p ../inst/lib
 	$(AR) -rs ../inst/lib/libStanServices.a $(OBJECTS_STATIC)
 #	@if test -e "/usr/bin/install_name_tool" && test -e "/usr/local/clang4/lib/libc++.1.dylib" && test -e "/usr/lib/libc++.1.dylib"; then /usr/bin/install_name_tool -change /usr/local/clang4/lib/libc++.1.dylib /usr/lib/libc++.1.dylib $(SHLIB); fi
-	@echo $(SHLIB)
 
 .phony: all
 

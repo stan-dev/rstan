@@ -8,6 +8,15 @@ PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "RcppParallel::R
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)
 
-SOURCES = $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp)
+SOURCES_STATIC = stan_fit.cpp
+OBJECTS_STATIC = $(SOURCES_STATIC:.cpp=.o)
+
+SOURCES = $(filter-out stan_fit.cpp, $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp))
 OBJECTS = $(SOURCES:.cpp=.o)
+
+all: $(SHLIB) $(OBJECTS_STATIC)
+	@mkdir -p ../inst/lib
+	$(AR) -rs ../inst/lib/libStanServices.a $(OBJECTS_STATIC)
+
+.phony: all
 

@@ -79,7 +79,7 @@ rstanplugin <- function() {
   if (.Platform$OS.type == "windows") {
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, package = "StanHeaders")
     RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
-    rstan_StanServices <- system.file("libs", .Platform$r_arch, "rstan.dll", package = "rstan")
+    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a", package = "rstan")
   }
   else {
     StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, package = "StanHeaders")
