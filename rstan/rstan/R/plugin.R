@@ -50,6 +50,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DEIGEN_NO_DEBUG ',
          ' -DBOOST_DISABLE_ASSERTS ',
          ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
+         ' -DSTAN_THREADS ',
          ' -include stan/math/prim/mat/fun/Eigen.hpp ',
          ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
                  ' -D_REENTRANT'),
@@ -77,19 +78,19 @@ rstanplugin <- function() {
   rcpp_pkg_path2 <- legitimate_space_in_path(rcpp_pkg_path)
 
   if (.Platform$OS.type == "windows") {
-    StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch, 
+    StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch,
                                         package = "StanHeaders", mustWork = TRUE)
     RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch,
                                          package = "RcppParallel", mustWork = TRUE)
-    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a", 
+    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a",
                                       package = "rstan", mustWork = TRUE)
   }
   else {
-    StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch, 
+    StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch,
                                         package = "StanHeaders", mustWork = TRUE)
-    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch, 
+    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch,
                                          package = "RcppParallel", mustWork = TRUE)
-    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a", 
+    rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a",
                                       package = "rstan", mustWork = TRUE)
   }
 
@@ -103,6 +104,9 @@ rstanplugin <- function() {
 
   # cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
+  tbb_libs <- "-ltbb"
+  if (!is.null(tbbmalloc_proxyDllInfo))
+      tbb_libs <- paste(tbb_libs, "-ltbbmalloc -ltbbmalloc_proxy")
 
   list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
        body = function(x) x,
@@ -111,9 +115,9 @@ rstanplugin <- function() {
                                    paste0("-L", shQuote(StanHeaders_pkg_libs)),
                                    "-lStanHeaders",
                                    paste0("-L", shQuote(RcppParallel_pkg_libs)),
-                                   "-ltbb"),
+                                   tbb_libs),
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
-                                        PKG_CPPFLAGS_env_fun(), collapse = " ")))
+                                       PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }
 
 
