@@ -407,8 +407,6 @@ int command(stan_args& args,
 
   R_CheckUserInterrupt_Functor interrupt;
 
-  stan::math::ChainableStack ad_stack;
-  
   std::fstream sample_stream;
   std::fstream diagnostic_stream;
   std::stringstream comment_stream;
