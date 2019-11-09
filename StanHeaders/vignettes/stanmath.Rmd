@@ -25,11 +25,13 @@ set.seed(12345)
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
 in other packages, it is often sufficient to specify
 ```
-LinkingTo: StanHeaders (>= 2.21.0)
+LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 4.4.4)
 ```
-in the DESCRIPTION file of another package and
+in the DESCRIPTION file of another package and put something like
 ```
 CXX_STD = CXX14
+PKG_CPPFLAGS = -D_REENTRANT -DSTAN_THREADS `"${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()"`
+PKG_LIBS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()"`
 ```
 in the src/Makevars and src/Makevars.win files. If, in addition, the other package needs to utilize 
 the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is 
@@ -39,7 +41,7 @@ in the src/Makevars and src/Makevars.win files with something like
 STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
   -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" \
   -e "message()" | grep "StanHeaders")
-PKG_CPPFLAGS = -I"$(STANHEADERS_SRC)"
+PKG_CPPFLAGS += -I"$(STANHEADERS_SRC)"
 ```
 and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file. Finally,
 if integrating systems of stiff Ordinary Differential Equations, then you need to link to the
@@ -64,9 +66,8 @@ equal to a vector of zeros. The `stan::math::algebra_solver` function can solve 
 autodifferentiation to obtain the Jacobian, which we know to be the identity matrix in this case.
 
 ```{r}
-Sys.setenv(PKG_CXXFLAGS = "-D_REENTRANT")
-tbb_pkg_libs <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), 
-                                   .Platform$r_arch, package = "RcppParallel")
+Sys.setenv(PKG_CPPFLAGS = paste("-D_REENTRANT -DSTAN_THREADS", RcppParallel::CxxFlags()))
+tbb_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
 Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(tbb_pkg_libs)), "-ltbb"))
 ```
 
@@ -272,7 +273,6 @@ function. However, `map_rect` can also be executed in parallel by defining the p
 directive `STAN_THREADS` and then setting the `STAN_NUM_THREADS` environmental variable to be the 
 number of threads to use, as in
 ```{r}
-Sys.setenv(PKG_CXXFLAGS = "-DSTAN_THREADS -D_REENTRANT")
 Sys.setenv(STAN_NUM_THREADS = 2) # specify -1 to use all available cores
 ```
 
@@ -375,8 +375,7 @@ exposeClass("sparselm_stan",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
       file = tf,
       Rfile = FALSE)
-# don't specify -DSTAN_THREADS if not using them
-Sys.setenv(PKG_CPPFLAGS = paste0("-D_REENTRANT -I",
+Sys.setenv(PKG_CPPFLAGS = paste0("-D_REENTRANT -DSTAN_THREADS -I",
                                  system.file("include", "src", 
                                              package = "StanHeaders", mustWork = TRUE)))
 sourceCpp(tf)
