@@ -1,31 +1,0 @@
-
-R Under development (unstable) (2019-04-20 r76407) -- "Unsuffered Consequences"
-Copyright (C) 2019 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
-
-R is free software and comes with ABSOLUTELY NO WARRANTY.
-You are welcome to redistribute it under certain conditions.
-Type 'license()' or 'licence()' for distribution details.
-
-R is a collaborative project with many contributors.
-Type 'contributors()' for more information and
-'citation()' on how to cite R or R packages in publications.
-
-Type 'demo()' for some demos, 'help()' for on-line help, or
-'help.start()' for an HTML browser interface to help.
-Type 'q()' to quit R.
-
-> library(testthat)
-> library(ctsem)
-Loading required package: Rcpp
-Loading required package: OpenMx
-To take full advantage of multiple cores, use:
-  mxOption(NULL, 'Number of Threads', parallel::detectCores()) #now
-  Sys.setenv(OMP_NUM_THREADS=parallel::detectCores()) #before library(OpenMx)
->  test_check("ctsem")
-══ testthat results  ═══════════════════════════════════════════════════════════
-OK: 9 SKIPPED: 0 WARNINGS: 0 FAILED: 0
-> 
-> proc.time()
-   user  system elapsed 
-143.535   0.542 139.952 

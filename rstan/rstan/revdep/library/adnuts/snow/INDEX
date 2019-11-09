@@ -1,6 +1,0 @@
-clusterSetupRNG         Uniform Random Number Generation in SNOW
-                        Clusters
-clusterSplit            Cluster-Level SNOW Functions
-getMPIcluster           Starting and Stopping SNOW Clusters
-parLapply               Higher Level SNOW Functions
-snow.time               Timing SNOW Clusters

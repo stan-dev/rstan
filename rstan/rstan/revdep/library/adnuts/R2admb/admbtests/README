@@ -1,4 +1,0 @@
-This directory is for tests that actually use AD Model Builder;
-I don't want them to put them in the tests/ directory because they
-will fail in environments that don't have AD Model Builder installed
-(r-forge, CRAN, etc)

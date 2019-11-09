@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec ${R_SNOW_RSCRIPT_CMD:-Rscript} $R_SNOW_LIB/snow/$*

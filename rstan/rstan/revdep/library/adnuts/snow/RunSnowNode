@@ -1,4 +1,0 @@
-#!/bin/sh
-
-export R_LIBS=${R_SNOW_LIB}:${R_LIBS}
-exec $R_SNOW_LIB/snow/$1

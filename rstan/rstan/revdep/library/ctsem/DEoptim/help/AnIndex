@@ -1,8 +1,0 @@
-DEoptim	DEoptim
-DEoptim-methods	DEoptim-methods
-DEoptim.control	DEoptim.control
-plot.DEoptim	DEoptim-methods
-SMI	SMI
-summary.DEoptim	DEoptim-methods
-xrrData	xrrData
-y	SMI
