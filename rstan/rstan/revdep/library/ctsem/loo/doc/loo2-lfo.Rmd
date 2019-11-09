@@ -1,0 +1,674 @@
+---
+title: "Approximate leave-future-out cross-validation for time series models"
+author: "Paul Bürkner, Aki Vehtari, Jonah Gabry"
+date: "`r Sys.Date()`"
+output:
+  html_vignette:
+    toc: yes
+encoding: "UTF-8"
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Approximate leave-future-out cross-validation for time series models}
+-->
+
+```{r settings, child="children/SETTINGS-knitr.txt"}
+```
+
+```{r more-knitr-ops, include=FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE,
+  message = FALSE, 
+  warning = FALSE
+)
+```
+
+## Introduction
+
+One of the most common goals of a time series analysis is to use the observed
+series to inform predictions for future observations. We will refer to this task
+of predicting a sequence of $M$ future observations as $M$-step-ahead prediction
+($M$-SAP). Fortunately, once we have fit a model and can sample from the
+posterior predictive distribution, it is straightforward to generate predictions
+as far into the future as we want. It is also straightforward to evaluate the
+$M$-SAP performance of a time series model by comparing the predictions to the
+observed sequence of $M$ future data points once they become available.
+
+Unfortunately, we are often in the position of having to use a model to inform
+decisions _before_ we can collect the future observations required for assessing
+the predictive performance. If we have many competing models we may also need to
+first decide which of the models (or which combination of the models) we should
+rely on for predictions. In these situations the best we can do is to use
+methods for approximating the expected predictive performance of our models
+using only the observations of the time series we already have.
+
+If there were no time dependence in the data or if the focus is to assess
+the non-time-dependent part of the model, we could use methods like
+leave-one-out cross-validation (LOO-CV). For a data set with $N$ observations,
+we refit the model $N$ times, each time leaving out one of the $N$ observations
+and assessing how well the model predicts the left-out observation. LOO-CV is
+very expensive computationally in most realistic settings, but the Pareto
+smoothed importance sampling (PSIS, Vehtari et al, 2017ab) algorithm provided by
+the *loo* package allows for approximating exact LOO-CV with PSIS-LOO-CV.
+PSIS-LOO-CV requires only a single fit of the full model and comes with
+diagnostics for assessing the validity of the approximation.
+
+With a time series we can do something similar to LOO-CV but, except in a few
+cases, it does not make sense to leave out observations one at a time because
+then we are allowing information from the future to influence predictions of the
+past (i.e., times $t + 1, t+2, \ldots$ should not be used to predict for time
+$t$). To apply the idea of cross-validation to the $M$-SAP case, instead of
+leave-*one*-out cross-validation we need some form of leave-*future*-out
+cross-validation (LFO-CV). As we will demonstrate in this case study, LFO-CV
+does not refer to one particular prediction task but rather to various possible
+cross-validation approaches that all involve some form of prediction for new
+time series data. Like exact LOO-CV, exact LFO-CV requires refitting the model
+many times to different subsets of the data, which is computationally very
+costly for most
+nontrivial examples, in particular for Bayesian analyses where refitting the
+model means estimating a new posterior distribution rather than a point
+estimate.
+
+Although PSIS-LOO-CV provides an efficient approximation to exact LOO-CV, until
+now there has not been an analogous approximation to exact LFO-CV that
+drastically reduces the computational burden while also providing informative
+diagnostics about the quality of the approximation. In this case study we
+present PSIS-LFO-CV, an algorithm that typically only requires refitting the
+time-series model a small number times and will make LFO-CV tractable for many
+more realistic applications than previously possible. 
+
+More details can be found in our paper about approximate LFO-CV
+(Bürkner, Gabry, & Vehtari, 2019), which is available as a preprint on arXiv (https://arxiv.org/abs/1902.06281).
+
+
+## $M$-step-ahead predictions
+
+Assume we have a time series of observations 
+$y = (y_1, y_2, \ldots, y_N)$ 
+and let $L$ be the _minimum_ number of observations from the series that
+we will require before making predictions for future data. Depending on the
+application and how informative the data is, it may not be possible to make
+reasonable predictions for $y_{i}$ based on $(y_1, \dots, y_{i-1})$ until $i$ is
+large enough so that we can learn enough about the time series to predict future
+observations. Setting $L=10$, for example, means that we will only assess
+predictive performance starting with observation $y_{11}$, so that we
+always have at least 10 previous observations to condition on.
+
+In order to assess $M$-SAP performance we would like to compute the 
+predictive densities
+
+$$
+p(y_{i+1:M} \,|\, y_{1:i}) = p(y_i, \ldots, y_{i + M - 1} \,|\, y_{1},...,y_{i-1}) 
+$$ 
+
+for each $i \in \{L + 1, \ldots, N - M + 1\}$. The quantities 
+$p(y_{i+1:M} \,|\, y_{1:i})$ can be computed with the help of the posterior
+distribution $p(\theta \,|\, y_{1:i})$ of the parameters $\theta$ conditional on
+only the first $i-1$ observations of the time-series:
+
+$$
+p(y_{i+1:M} \,| \, y_{1:i}) = 
+  \int p(y_{i+1:M} \,| \, y_{1:i}, \theta) \, p(\theta\,|\,y_{1:i}) \,d\theta. 
+$$
+
+Having obtained $S$ draws $(\theta_{1:i}^{(1)}, \ldots, \theta_{1:i}^{(S)})$ 
+from the posterior distribution $p(\theta\,|\,y_{1:i})$, we can estimate 
+$p(y_{i+1:M} | y_{1:i})$ as
+
+$$
+p(y_{i+1:M} \,|\, y_{1:i}) \approx \frac{1}{S}\sum_{s=1}^S p(y_{i+1:M} \,|\, y_{1:i}, \theta_{1:i}^{(s)}).
+$$
+
+In the following, we consider factorizable models in which the response values
+are conditionally independent given the parameters and the likelihood can be
+written in the familiar form
+
+$$
+p(y \,|\, \theta) = \prod_{i=1}^N p(y_i \,|\, \theta).
+$$
+
+In this case, $p(y_{i+1:M} \,|\, y_{1:i}, \theta)$ reduces to 
+$$
+p(y_{i+1:M} \,|\, \theta) = \prod_{j = i}^{i + M -1} p(y_j \,|\, \theta),
+$$
+due to the assumption of conditional independence between $y_{i+1:M}$ and
+$y_{1:i}$ given $\theta$.
+
+Non-factorizable models, which do not make this assumption, are discussed in a
+separate vignette [_Leave-one-out cross-validation for non-factorizable models_](http://mc-stan.org/loo/articles/loo2-non-factorizable.html).
+
+## Approximate $M$-SAP using importance-sampling {#approximate_MSAP}
+
+Unfortunately, the math above makes use of the posterior distributions from many
+different fits of the model to different subsets of the data. That is, to obtain
+the predictive density $p(y_{i+1:M} \,|\, y_{1:i})$ requires fitting a model to
+only the first $i-1$ data points, and we will need to do this for every value of
+$i$ under consideration (all $i \in \{L + 1, \ldots, N - M + 1\}$).
+
+To reduce the number of models that need to be fit for the purpose of obtaining
+each of the densities $p(y_{i+1:M} \,|\, y_{1:i})$, we propose the following
+algorithm. Starting with $i = N - M + 1$, we approximate each 
+$p(y_{i+1:M} \,|\, y_{1:i})$ using Pareto smoothed importance sampling (PSIS,
+Vehtari et al, 2017ab):
+
+$$
+ p(y_{i+1:M} \,|\, y_{1:i}) \approx
+   \frac{ \sum_{s=1}^S w_i^{(s)}\, p(y_{i+1:M} \,|\, \theta^{(s)})}{ \sum_{s=1}^S w_i^{(s)}},
+$$
+
+where $w_i^{(s)}$ are importance weights and $\theta^{(s)}$ are draws from the
+posterior distribution based on _all_ observations. To obtain $w_i^{(s)}$, we
+first compute the raw importance ratios
+
+$$
+r_i^{(s)} \propto \frac{1}{\prod_{j = i}^N p(y_j \,|\, \,\theta^{(s)})},
+$$
+
+and then stabilize them using PSIS.
+
+We then _decrease_ $i$ by $1$ (i.e., we move backwards in time) and repeat the
+process. At some observation $i$, the variability of importance ratios
+$r_i^{(s)}$ will become too large and importance sampling fails. We will refer
+to this particular value of $i$ as $i^\star_1$. To identify the value of
+$i^\star_1$ we check for which value of $i$ does the estimated shape parameter
+$k$ of the generalized Pareto distribution first crosses a certain threshold.
+Only then do we refit the model using only observations before $i^\star_1$ and
+then restart the process. In some cases we may only need to refit once and in
+other cases we will find a value $i^\star_2$ that requires a second refitting,
+maybe an $i^\star_3$ that requires a third refitting, and so on. We repeat the
+refitting as few times as is required (only if $k > \text{threshold}$) until we
+arrive at $i = L+1$. Recall that $L$ is the minimum number of observations we
+have deemed acceptable for making predictions (setting $L=0$ means predictions
+of all observations should be computed).
+
+For LOO, we recommend to use a threshold of $0.7$ (Vehtari et al, 2017ab), but
+for LFO, the threshold should be smaller as influential observations will affect
+all pointwise LFO approximations until the next refit and thus much stronger
+than in LOO. For the present case study, we choose a threshold of $0.6$, 
+which also seems to be generally reasonable threshold for LFO (Bürkner et al. 2019).
+
+
+## Autoregressive models
+
+Autoregressive (AR) models are some of the most commonly used time-series models. 
+An AR(p) model ---an autoregressive model of order $p$--- can be defined as
+
+$$
+y_i = \eta_i + \sum_{k = 1}^p \varphi_k y_{i - k} + \varepsilon_i,
+$$
+
+where $\eta_i$ is the linear predictor for the $i$th observation, $\phi_k$ are
+the autoregressive parameters and $\varepsilon_i$ are pairwise independent
+errors, which are usually assumed to be normally distributed with equal variance
+$\sigma^2$. The model implies a recursive formula that allows for computing the
+right-hand side of the above equation for observation $i$ based on the values of
+the equations for previous observations.
+
+## Case Study: Annual measurements of the level of Lake Huron
+
+To illustrate the application of PSIS-LFO-CV for estimating expected $M$-SAP
+performance, we will fit a model for 98 annual measurements of the water level
+(in feet) of [Lake Huron](https://en.wikipedia.org/wiki/Lake_Huron) from the
+years 1875--1972. This data set is found in the **datasets** R package, which is
+installed automatically with **R**. 
+
+In addition to the **loo** package, for this analysis we will use the **brms**
+interface to Stan to generate a Stan program and fit the model, and also the
+**bayesplot** and **ggplot2** packages for plotting.
+
+```{r pkgs, cache=FALSE}
+library("loo")
+library("brms")
+library("bayesplot")
+library("ggplot2")
+color_scheme_set("brightblue")
+theme_set(theme_default())
+
+CHAINS <- 4
+SEED <- 1234
+set.seed(SEED)
+```
+
+Before fitting a model, we will first put the data into a data frame and then
+look at the time series.
+
+```{r hurondata}
+N <- length(LakeHuron)
+df <- data.frame(
+  y = as.numeric(LakeHuron),
+  year = as.numeric(time(LakeHuron)),
+  time = 1:N
+)
+
+# save plot labels to reuse them
+plot_labs <- labs(
+  y = "Water Level (ft)", 
+  x = "Year",
+  title = "Water Level in Lake Huron (1875-1972)"
+) 
+
+ggplot(df, aes(x = year, y = y)) + 
+  geom_point(size = 1) +
+  plot_labs
+```
+
+The above plot shows rather strong autocorrelation of the time-series as well as
+some trend towards lower levels for later points in time. 
+
+We can specify an AR(4) model for these data using the **brms** package as
+follows:
+
+```{r fit, results = "hide"}
+control <- list(adapt_delta = 0.95)
+fit <- brm(
+  y ~ 1, 
+  data = df, 
+  autocor = cor_ar(~time, p = 4), 
+  prior = prior(normal(0, 0.5), class = "ar"),
+  control = control, 
+  seed = SEED, 
+  chains = CHAINS
+)
+```
+
+The model implied predictions along with the observed values can be plotted,
+which reveals a rather good fit to the data.
+
+```{r plotpreds, cache = FALSE}
+preds <- posterior_predict(fit)
+preds <- cbind(
+  Estimate = colMeans(preds), 
+  Q5 = apply(preds, 2, quantile, probs = 0.05),
+  Q95 = apply(preds, 2, quantile, probs = 0.95)
+)
+
+ggplot(cbind(df, preds), aes(x = year, y = Estimate)) +
+  geom_smooth(aes(ymin = Q5, ymax = Q95), stat = "identity", size = 0.5) +
+  geom_point(aes(y = y)) + 
+  labs(subtitle = "Mean (blue) and 90% predictive intervals (gray) vs. observed data (black)") +
+  plot_labs
+```
+
+To allow for reasonable predictions of future values, we will require at least
+$L = 20$ historical observations (20 years) to make predictions.
+
+```{r setL}
+L <- 20
+```
+
+We first perform approximate leave-one-out cross-validation (LOO-CV) for the
+purpose of later comparison with exact and approximate LFO-CV for the 1-SAP
+case.
+
+```{r loo1sap, cache = FALSE}
+loo_cv <- loo(log_lik(fit)[, (L + 1):N])
+print(loo_cv)
+```
+
+## 1-step-ahead predictions leaving out all future values
+
+The most basic version of $M$-SAP is 1-SAP, in which we predict only one step
+ahead. In this case, $y_{i+1:M}$ simplifies to $y_{i}$ and the LFO-CV algorithm
+becomes considerably simpler than for larger values of $M$.
+
+### Exact 1-step-ahead predictions
+
+Before we compute approximate LFO-CV using PSIS we will first compute 
+exact LFO-CV for the 1-SAP case so we can use it as a benchmark later. 
+The initial step for the exact computation is to calculate the log-predictive 
+densities by refitting the model many times:
+
+```{r exact_loglik, results="hide"}
+loglik_exact <- matrix(nrow = nsamples(fit), ncol = N)
+for (i in N:max(L + 1, 2)) {
+  fit_i <- update(fit, newdata = df[-(i:N), ], recompile = FALSE)
+  loglik_exact[, i] <- log_lik(fit_i, newdata = df[1:i, ])[, i]
+}
+```
+
+Then we compute the exact expected log predictive density (ELPD):
+
+```{r helpers}
+# some helper functions we'll use throughout
+
+# more stable than log(sum(exp(x))) 
+log_sum_exp <- function(x) {
+  max_x <- max(x)  
+  max_x + log(sum(exp(x - max_x)))
+}
+
+# more stable than log(mean(exp(x)))
+log_mean_exp <- function(x) {
+  log_sum_exp(x) - log(length(x))
+}
+
+# compute log of raw importance ratios
+# sums over observations *not* over posterior samples
+sum_log_ratios <- function(ll, ids = NULL) {
+  if (!is.null(ids)) ll <- ll[, ids, drop = FALSE]
+  - rowSums(ll)
+}
+
+# for printing comparisons later
+rbind_print <- function(...) {
+  round(rbind(...), digits = 2)
+}
+```
+
+
+```{r exact1sap, cache = FALSE}
+exact_elpds_1sap <- apply(loglik_exact, 2, log_mean_exp)
+exact_elpd_1sap <- c(ELPD = sum(exact_elpds_1sap[-(1:L)]))
+
+rbind_print(
+  "LOO" = loo_cv$estimates["elpd_loo", "Estimate"],
+  "LFO" = exact_elpd_1sap
+)
+```
+
+We see that the ELPD from LFO-CV for 1-step-ahead predictions is lower than the
+ELPD estimate from LOO-CV, which should be expected since LOO-CV is making use
+of more of the time series. That is, since the LFO-CV approach only uses
+observations from before the left-out data point but LOO-CV uses _all_ data
+points other than the left-out observation, we should expect to see the larger
+ELPD from LOO-CV.
+
+### Approximate 1-step-ahead predictions
+
+For illustrative purposes, we will first compute approximate 1-SAP without any
+refitting, even when the Pareto $k$ estimate is too large. This will of course
+be a poor approximation to exact 1-SAP, in particular if the Pareto $k$
+estimates increase rather quickly beyond the threshold up to which PSIS tends to
+produce stable results.
+
+```{r loglik}
+approx_elpds_1sap_no_refit <- rep(NA, N)
+loglik <- log_lik(fit)
+ids <- N:(L + 1)
+ks <- NULL
+
+for (i in ids) {
+  logratio <- sum_log_ratios(loglik, i:N)
+  psis_part <- suppressWarnings(psis(logratio))
+  ks <- c(ks, pareto_k_values(psis_part))
+  lw_i <- weights(psis_part, normalize = TRUE)[, 1]
+  approx_elpds_1sap_no_refit[i] <- log_sum_exp(lw_i + loglik[, i])
+}
+```
+
+If we plot the Pareto $k$ estimates we can see that they do start to increase 
+quickly and that once we work backwards to about halfway through the data points 
+we get $k > 0.6$. This is indicated by the vertical line in the plot below, which 
+corresponds to the point $i^\star_1$ discussed in Section
+[Approximate $M$-SAP using importance-sampling](#approximate_MSAP) above.
+
+```{r plot_ks}
+plot_ks <- function(ks, ids, thres = 0.6) {
+  dat_ks <- data.frame(ks = ks, ids = ids)
+  ggplot(dat_ks, aes(x = ids, y = ks)) + 
+    geom_point(aes(color = ks > thres), shape = 3, show.legend = FALSE) + 
+    geom_hline(yintercept = thres, linetype = 2, color = "red2") + 
+    scale_color_manual(values = c("cornflowerblue", "darkblue")) + 
+    labs(x = "Data point", y = "Pareto k") + 
+    ylim(-0.5, 1.5)
+}
+```
+
+```{r plotk1sap, cache = FALSE}
+plot_ks(ks, ids)
+```
+
+Consequently, it is not surprising that the resulting approximate ELPD for 1-SAP 
+is far away from the exact ELPD we computed above:
+
+```{r compare1sap, cache = FALSE}
+approx_elpd_1sap_no_refit <- 
+  c(ELPD = sum(approx_elpds_1sap_no_refit, na.rm = TRUE))
+rbind_print(
+  "approx LFO (no refit)" = approx_elpd_1sap_no_refit,
+  "exact LFO" = exact_elpd_1sap
+)
+```
+
+Next, we compute approximate 1-SAP with refit at observations where 
+the Pareto $k$ estimate exceeds the threshold of $0.6$.
+
+```{r setkthresh}
+k_thres <- 0.6
+```
+
+The code becomes a little bit more involved to handle the refitting procedure.
+Note that we can compute exact 1-SAP at the refitting points, which comes with
+no additional computational costs since we had to refit the model anyway.
+
+```{r refit_loglik, results="hide"}
+loglik <- matrix(nrow = nsamples(fit), ncol = N)
+approx_elpds_1sap <- rep(NA, N)
+
+fit_part <- fit
+ids <- N:(L + 1)
+i_refit <- N
+refits <- NULL
+ks <- NULL
+
+for (i in ids) {
+  loglik[, i] <- log_lik(fit_part)[, i]
+  logratio <- sum_log_ratios(loglik, i:i_refit)
+  psis_part <- suppressWarnings(psis(logratio))
+  k <- pareto_k_values(psis_part)
+  ks <- c(ks, k)
+  if (k > k_thres) {
+    # refit the model based on the first i-1 observations
+    i_refit <- i - 1
+    refits <- c(refits, i)
+    fit_part <- update(fit_part, newdata = df[1:(i - 1), ], recompile = FALSE)
+    loglik[, i] <- log_lik(fit_part, newdata = df[1:i, ])[, i]
+    approx_elpds_1sap[i] <- log_mean_exp(loglik[, i])
+  } else {
+    lw_i <- weights(psis_part, normalize = TRUE)[, 1]
+    approx_elpds_1sap[i] <- log_sum_exp(lw_i + loglik[, i])
+  }
+} 
+```
+
+We see that the final Pareto-$k$-estimates are mostly well below the threshold
+and that we only needed to refit the model a few times:
+
+```{r refitsummary1sap, cache=FALSE}
+cat("Using threshold ", k_thres, 
+    ", model was refit ", length(refits), 
+    " times, at observations", refits)
+
+plot_ks(ks, ids)
+```
+
+The approximate 1-SAP ELPD is remarkably similar to the exact 1-SAP ELPD
+computed above, which indicates our algorithm to compute approximate 1-SAP
+worked well for the present data and model.
+
+```{r lfosummary1sap, cache = FALSE}
+approx_elpd_1sap <- sum(approx_elpds_1sap, na.rm = TRUE)
+rbind_print(
+  "approx LFO (no refits)" = approx_elpd_1sap_no_refit,
+  "approx LFO (with refits)" = approx_elpd_1sap,
+  "exact LFO" = exact_elpd_1sap
+)
+```
+
+Plotting exact against approximate predictions, we see that no approximation
+value deviates far from its exact counterpart, providing further evidence for
+the good quality of our approximation.
+
+```{r plot1sap, cache = FALSE}
+dat_elpd <- data.frame(
+  approx_elpd = approx_elpds_1sap,
+  exact_elpd = exact_elpds_1sap
+)
+
+ggplot(dat_elpd, aes(x = approx_elpd, y = exact_elpd)) +
+  geom_abline(color = "gray30") +
+  geom_point(size = 2) +
+  labs(x = "Approximate ELPDs", y = "Exact ELPDs")
+```
+
+We can also look at the maximum difference and average difference between
+the approximate and exact ELPD calculations, which also indicate a ver close approximation:
+
+```{r diffs1sap}
+max_diff <- with(dat_elpd, max(abs(approx_elpd - exact_elpd), na.rm = TRUE))
+mean_diff <- with(dat_elpd, mean(abs(approx_elpd - exact_elpd), na.rm = TRUE))
+
+rbind_print(
+  "Max diff" = round(max_diff, 2), 
+  "Mean diff" =  round(mean_diff, 3)
+)
+```
+
+
+## $M$-step-ahead predictions leaving out all future values
+
+To illustrate the application of $M$-SAP for $M > 1$, we next compute exact and
+approximate LFO-CV for the 4-SAP case.
+
+### Exact $M$-step-ahead predictions
+
+The necessary steps are the same as for 1-SAP with the exception that the
+log-density values of interest are now the sums of the log predictive densities
+of four consecutive observations. Further, the stability of the PSIS
+approximation actually stays the same for all $M$ as it only depends on the
+number of observations we leave out, not on the number of observations we
+predict.
+
+```{r exact_loglikm, results="hide"}
+M <- 4
+loglikm <- matrix(nrow = nsamples(fit), ncol = N)
+for (i in (N - M + 1):max(L + 1, 2)) {
+  fit_i <- update(fit, newdata = df[-(i:N), ], recompile = FALSE)
+  ll <- log_lik(fit_i, newdata = df[1:(i + M - 1), ], oos = i:(i + M - 1))
+  loglikm[, i] <- rowSums(ll[, i:(i + M - 1)])
+}
+```
+
+```{r exact4sap, cache = FALSE}
+exact_elpds_4sap <- apply(loglikm, 2, log_mean_exp)
+(exact_elpd_4sap <- c(ELPD = sum(exact_elpds_4sap, na.rm = TRUE)))
+```
+
+### Approximate $M$-step-ahead predictions
+
+Computing the approximate PSIS-LFO-CV for the 4-SAP case is a little bit more
+involved than the approximate version for the 1-SAP case, although the
+underlying principles remain the same.
+
+```{r refit_loglikm, results="hide"}
+loglikm <- loglik <- matrix(nrow = nsamples(fit), ncol = N)
+approx_elpds_4sap <- rep(NA, N)
+fit_part <- fit
+ids <- (N - M + 1):(L + 1)
+i_refit <- N - M + 1
+refits <- NULL
+ks <- NULL
+
+loglik[, (N - M + 2):N] <- log_lik(fit_part)[, (N - M + 2):N]
+
+for (i in ids) {
+  oos <- i:(i + M - 1)
+  ll <- log_lik(fit_part, newdata = df[1:(i + M - 1), ], oos = oos)
+  loglikm[, i] <- rowSums(ll[, i:(i + M - 1)])
+  loglik[, i] <- ll[, i]
+  logratio <- sum_log_ratios(loglik, i:i_refit)
+  psis_part <- suppressWarnings(psis(logratio))
+  k <- pareto_k_values(psis_part)
+  ks <- c(ks, k)
+  if (k > k_thres) {
+    # refit the model based on the first i-1 observations
+    i_refit <- i - 1
+    refits <- c(refits, i)
+    fit_part <- update(
+      fit_part, newdata = df[1:(i - 1), ], 
+      recompile = FALSE
+    )
+    ll <- log_lik(fit_part, newdata = df[1:(i + M - 1), ], oos = oos)
+    loglik[, i] <- ll[, i]
+    loglikm[, i] <- rowSums(ll[, i:(i + M - 1)])
+    approx_elpds_4sap[i] <- log_mean_exp(loglikm[, i])
+  } else {
+    lw_i <- weights(psis_part, normalize = TRUE)[, 1]
+    approx_elpds_4sap[i] <- log_sum_exp(lw_i + loglikm[, i])
+  }
+} 
+```
+
+Again, we see that the final Pareto-$k$-estimates are mostly well below the
+threshold and that we only needed to refit the model a few times: 
+
+```{r refitsummary4sap, cache = FALSE}
+cat("Using threshold ", k_thres, 
+    ", model was refit ", length(refits), 
+    " times, at observations", refits)
+
+plot_ks(ks, ids)
+```
+
+The approximate ELPD computed for the 4-SAP case is not as close to its exact
+counterpart as in the 1-SAP case.
+
+```{r lfosummary4sap, cache = FALSE}
+approx_elpd_4sap <- sum(approx_elpds_4sap, na.rm = TRUE)
+rbind_print(
+  "Approx LFO" = approx_elpd_4sap,
+  "Exact LFO" = exact_elpd_4sap
+)
+```
+
+Plotting exact against approximate pointwise predictions confirms that, for a 
+few specific data points, the approximate predictions underestimate the exact
+predictions.
+
+```{r plot4sap, cache = FALSE}
+dat_elpd_4sap <- data.frame(
+  approx_elpd = approx_elpds_4sap,
+  exact_elpd = exact_elpds_4sap
+)
+
+ggplot(dat_elpd_4sap, aes(x = approx_elpd, y = exact_elpd)) +
+  geom_abline(color = "gray30") +
+  geom_point(size = 2) +
+  labs(x = "Approximate ELPDs", y = "Exact ELPDs")
+```
+
+## Conclusion
+
+In this case study we have shown how to do carry out exact and approximate
+leave-future-out cross-validation for $M$-step-ahead prediction tasks. For the
+data and model used in our example, the PSIS-LFO-CV algorithm provides reasonably
+stable and accurate results despite not requiring us to refit the model nearly as
+many times. For more details on approximate LFO-CV, we refer to Bürkner et al. (2019).
+
+<br />
+
+## References
+
+Bürkner P. C., Gabry J., & Vehtari A. (2019). Approximate leave-future-out cross-validation for time series models. [arXiv preprint](https://arxiv.org/abs/1902.06281). 
+
+Vehtari A., Gelman A., & Gabry J. (2017a). Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. *Statistics and Computing*, 27(5), 1413--1432. \doi:10.1007/s11222-016-9696-4. [Online](http://link.springer.com/article/10.1007/s11222-016-9696-4). [arXiv preprint arXiv:1507.04544](https://arxiv.org/abs/1507.04544).
+
+Vehtari A., Gelman A., & Gabry J. (2017b). Pareto smoothed importance sampling. [arXiv preprint arXiv:1507.02646](https://arxiv.org/abs/1507.02646).
+
+<br />
+
+## Appendix
+
+### Appendix: Session information
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+### Appendix: Licenses
+
+* Code &copy; 2018, Paul Bürkner, Aki Vehtari, Jonah Gabry (licensed under BSD-3).
+* Text &copy; 2018, Paul Bürkner, Aki Vehtari, Jonah Gabry (licensed under CC-BY-NC 4.0).

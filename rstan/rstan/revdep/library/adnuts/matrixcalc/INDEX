@@ -1,0 +1,66 @@
+%s%                     Direct sum of two arrays
+D.matrix                Duplication matrix
+E.matrices              List of E Matrices
+H.matrices              List of H Matrices
+K.matrix                K Matrix
+L.matrix                Construct L Matrix
+N.matrix                Construct N Matrix
+T.matrices              List of T Matrices
+commutation.matrix      Commutation matrix for r by c numeric matrices
+creation.matrix         Creation Matrix
+direct.prod             Direct prod of two arrays
+direct.sum              Direct sum of two arrays
+duplication.matrix      Duplication matrix for n by n matrices
+elimination.matrix      Elimination matrix for lower triangular
+                        matrices
+entrywise.norm          Compute the entrywise norm of a matrix
+fibonacci.matrix        Fibonacci Matrix
+frobenius.matrix        Frobenius Matrix
+frobenius.norm          Compute the Frobenius norm of a matrix
+frobenius.prod          Frobenius innter product of matrices
+hadamard.prod           Hadamard product of two matrices
+hankel.matrix           Hankel Matrix
+hilbert.matrix          Hilbert matrices
+hilbert.schmidt.norm    Compute the Hilbert-Schmidt norm of a matrix
+inf.norm                Compute the infinitity norm of a matrix
+is.diagonal.matrix      Test for diagonal square matrix
+is.idempotent.matrix    Test for idempotent square matrix
+is.indefinite           Test matrix for positive indefiniteness
+is.negative.definite    Test matrix for negative definiteness
+is.negative.semi.definite
+                        Test matrix for negative semi definiteness
+is.non.singular.matrix
+                        Test if matrix is non-singular
+is.positive.definite    Test matrix for positive definiteness
+is.positive.semi.definite
+                        Test matrix for positive semi-definiteness
+is.singular.matrix      Test for singular square matrix
+is.skew.symmetric.matrix
+                        Test for a skew-symmetric matrix
+is.square.matrix        Test for square matrix
+is.symmetric.matrix     Test for symmetric numeric matrix
+lower.triangle          Lower triangle portion of a matrix
+lu.decomposition        LU Decomposition of Square Matrix
+matrix.inverse          Inverse of a square matrix
+matrix.power            Matrix Raised to a Power
+matrix.rank             Rank of a square matrix
+matrix.trace            The trace of a matrix
+maximum.norm            Maximum norm of matrix
+one.norm                Compute the one norm of a matrix
+pascal.matrix           Pascal matrix
+set.submatrix           Store matrix inside another matrix
+shift.down              Shift matrix m rows down
+shift.left              Shift a matrix n columns to the left
+shift.right             Shift matrix n columns to the right
+shift.up                Shift matrix m rows up
+spectral.norm           Spectral norm of matrix
+stirling.matrix         Stirling Matrix
+svd.inverse             SVD Inverse of a square matrix
+symmetric.pascal.matrix
+                        Symmetric Pascal matrix
+toeplitz.matrix         Toeplitz Matrix
+u.vectors               u vectors of an identity matrix
+upper.triangle          Upper triangle portion of a matrix
+vandermonde.matrix      Vandermonde matrix
+vec                     Vectorize a matrix
+vech                    Vectorize a matrix

@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>An example of nested downloads using RCurl.</title><link rel="stylesheet" type="text/css" href="../OmegaTech.css"></link><meta name="generator" content="DocBook XSL Stylesheets V1.76.1"></meta></head><body class="yui-skin-sam"><div class="article" title="An example of nested downloads using RCurl."><div class="titlepage"><div><div><h2 class="title"><a id="id1169139840154"></a>
+An example of nested downloads using RCurl.
+</h2></div></div><hr></hr></div><span class="package"></span><div class="section" title="Overview"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id1169139840496"></a>Overview</h2></div></div></div>
+
+This example uses RCurl to download an HTML document and then collect
+the name of each link within that document.  The purpose of the
+example is to illustrate how we can combine the RCurl package to
+download a document and use this directly within the XML (or HTML)
+parser without having the entire content of the document in memory.
+We start the download and pass a function to the <i xmlns="" class="rfunc">xmlEventParse()
+</i> function for processing.  As that
+XML parser needs more input, it fetches more data from the HTTP
+response stream.  This is useful for handling very large data that is
+returned from Web queries.
+
+<p></p>
+
+To do this, we need to use the <span class="emphasis"><em>multi</em></span> interface for libcurl
+in order to have asynchronous  or non-blocking downloading of the document.
+The idea is quite simple.  We initiate the download and associate a
+"writer" to slurp up the body of the HTTP response. This is registered
+with libcurl and is invoked whenever libcurl is in control and is
+processing the HTTP response.  If there is information to be read on
+the HTTP stream from the server, this function reads it and appends it
+to a variable <b xmlns="" class="$" title="">pending</b>.
+
+The second part of this mechanism is that we need a function that is called by
+<i xmlns="" class="rfunc">xmlEventParse()
+</i> which can provide input to  the XML parser.
+Of course, it will use the content coming from the HTTP server that is
+collected in the function getHTTPResponse.  So we create a sibling
+function that shares the state of the getHTTPResponse function and so
+can see the contents of the variable <b xmlns="" class="$" title="">pending</b>.  When the
+XML parser demands some input, our function
+<i xmlns="" class="rfunc">supplyXMLContent()
+</i> checks to see if pending has
+non-trivial content (i.e. is not the empty string).  If it has some
+content, it returns that.  Otherwise, it tells libcurl to read some
+more from the HTTP stream.  When it hands control to libcurl in this
+way, libcurl will invoke our <i xmlns="" class="rfunc">getHTTPResponse()
+</i>
+function, populating the contents of <b xmlns="" class="$" title="">pending</b>.  So when
+libcurl yields control, we will now have content to pass to the XML
+parser.
+
+<p></p>
+
+The only additional issue that we have to deal with in this setup is
+that the XML event parser asks for input up to a certain size. We
+cannot necessarily give it all of the content of
+<b xmlns="" class="$" title="">pending</b>.  If <b xmlns="" class="$" title="">pending</b> has more characters
+than the XML parser wants, we must give it the first
+<i xmlns="" class="rarg">maxLen</i> characters and then leave the remainder in
+<b xmlns="" class="$" title="">pending</b> for the next request from the XML parser.
+
+<p></p>
+The following generator function defines the two 
+functions that do the pulling of the text from libcurl
+and the pushing to the XML parser.
+<a xmlns="" name="HTTPReaderXMLParser"></a><pre xmlns="" class="rfunction">
+
+HTTPReaderXMLParser =
+function(curl, verbose = FALSE, save = FALSE)
+{
+   pending =  ""
+   text = character()
+
+   getHTTPResponse = 
+   function(txt) {
+
+      pending &lt;&lt;- paste(pending, txt, sep = "")
+
+      if(save)
+        text &lt;&lt;- c(text, txt)
+
+      if(verbose) {
+        cat("Getting more information from HTTP response\n")
+        print(pending)
+      }
+
+      ""  # Give back something real.
+   }
+
+  supplyXMLContent = 
+   function(maxLen) {
+      if(verbose)
+        cat("Getting data for XML parser\n")
+
+
+     if(pending == "") {
+
+         if(verbose)
+            cat("Need to fetch more data for XML parser from HTTP response\n")
+
+         while(pending == "") {
+            status = curlMultiPerform(curl, multiple = TRUE)
+            if(status[2] == 0) 
+               break
+         } 
+     }
+
+     if(pending == "") {
+         # There is no more input available from this request.
+       return(character())
+     }
+
+
+      # Now, we have the text, and we return at most maxLen - 1
+      # characters
+     if(nchar(pending) &gt;= maxLen) {
+        ans = substring(pending, 1, maxLen-1)
+        pending &lt;&lt;- substring(pending, maxLen)
+     } else {
+        ans = pending
+        pending &lt;&lt;- ""
+     }
+
+     if(verbose)
+        cat("Sending '", ans, "' to XML\n", sep = "")
+
+     ans
+   }
+
+   list(getHTTPResponse = getHTTPResponse,
+        supplyXMLContent = supplyXMLContent,
+        pending = function() pending,
+        text = function() paste(text, collapse = "")
+       )
+}
+
+</pre>
+<br xmlns=""><p></p>
+The remaining part is how we combine these pieces with
+RCurl and the XML packages to do the parsing in this 
+asynchronous, interleaved manner.
+The code below performs the basic steps
+
+<div xmlns="" class="codeToggle"><div class="unhidden" id="id1169139892496"><div><pre class="" title="R code">
+
+uri = "http://www.omegahat.net/RCurl/philosophy.xml"
+
+
+handle = getCurlMultiHandle()
+streams = HTTPReaderXMLParser(handle)
+
+uri = "http://www.omegahat.net/RDoc/overview.xml"
+handle = getURLAsynchronous(uri, 
+                           write = streams$getHTTPResponse,
+                           multiHandle = handle, 
+                           perform = FALSE)
+
+links = getDocbookLinks() 
+xmlEventParse(streams$supplyXMLContent, handlers = links, saxVersion = 2)
+links$links()
+
+</pre></div></div></div>
+<div xmlns="" class="clearFloat"></div>
+
+The steps in the code are as explained as follows.  We first create a
+'multi handle'. This gives us the asynchronous behavior that returns
+control back to us from libcurl rather than sending the request and
+slurping back all the data in one single atomic action.  Next, we
+create our functions to do the pulling and pushing of text from HTTP
+to the XML parser. These are returned from the call to
+<i xmlns="" class="rfunc">HTTPReaderXMLParser()
+</i>.  And we then setup the request
+to fetch the content of the URI with the call to
+<i xmlns="" class="rfunc">getURLAsynchronous()
+</i>.  Note that we tell it not to
+actually perform the request, i.e. <pre xmlns="" class="S">perform = FALSE</pre>
+<br xmlns="">.
+We are just setting it up to be done when the XML parser requests
+input.  This is important as this call must return so that we can call
+<i xmlns="" class="rfunc">xmlEventParse()
+</i>.  <sup>[<a id="id1169139892521" href="#ftn.id1169139892521" class="footnote">1</a>]</sup> The next step is to establish the XML event parser.
+We provide a collection of handlers that process the XML content in
+the way that we want (see below).  And now we are off, and the XML
+parser will request input and the functions will read from the HTTP
+stream.
+
+
+
+<p></p>
+To process the links within the Docbook document, we are looking for
+each ulink element and fetching its url attribute.  So we can provide
+a collection of handlers that consist of a function only for ulink.
+And it need only look at the attributes it is given and determine if
+there is a url entry.
+If there is, it appends the value to its internal collection of links.
+When we are finished the parsing, we can ask for this collection
+of links using the additional function links.
+<pre xmlns="" class="rfunction">
+
+getDocbookLinks =
+function()
+{
+ links = character()
+
+ ulink = function(name, attrs, ns, namespaces) {
+    if("url" %in% names(attrs))
+      links[length(links) + 1 ] &lt;&lt;- attrs["url"]
+ }
+
+ list(ulink = ulink,
+      links = function() links)
+}
+
+</pre>
+<br xmlns="">
+
+
+To run this code, we need to
+load both the 
+<i xmlns=""><a href="http://cran.r-project.org/web/packages/RCurl/index.html">RCurl</a></i>
+and <i xmlns=""><a href="http://cran.r-project.org/web/packages/XML/index.html">XML</a></i>
+packages.
+
+<div xmlns="" class="codeToggle"><div class="unhidden" id="id1169139892549"><div><pre class="" title="R init">
+library(RCurl)
+library(XML)
+</pre></div></div></div>
+<div xmlns="" class="clearFloat"></div></div><div class="section" title="Test"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id1169139892554"></a>Test</h2></div></div></div>
+This is a test that the basic asynchronous mechanism works generally.
+In this example, we just provide a reader that displays the text from
+the HTTP response on the console.  We create a 'multi handle' and
+setup the HTTP request with our specialized reader.  Then, we call
+<i xmlns="" class="rfunc">curlMultiPerform()
+</i> to start the ball rolling.  This
+will force one or more invocations of the function <i xmlns="" class="rfunc">f()
+</i>.
+We can continue to loop until there is no more data available in the
+'multi handle' by comparing the number of elements in the stack.
+</div><div class="footnotes"><br></br><hr width="100" align="left"></hr><div class="footnote"><p><sup>[<a id="ftn.id1169139892521" href="#id1169139892521" class="para">1</a>] </sup>If we did perform the
+request, we would merely start the download and perhaps slurp up some
+of the response.  This would still be available to the XML parser so
+no data would be lost. It may just marginally spoil the efficiency
+of the approach, but really only marginally if at all.
+</p></div></div></div></body></html>

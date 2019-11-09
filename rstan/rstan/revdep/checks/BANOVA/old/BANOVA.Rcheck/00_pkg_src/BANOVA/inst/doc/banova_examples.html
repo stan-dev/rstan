@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Chen Dong" />
+
+<meta name="date" content="2019-01-26" />
+
+<title>BANOVA examples</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">BANOVA examples</h1>
+<h4 class="author"><em>Chen Dong</em></h4>
+<h4 class="date"><em>2019-01-26</em></h4>
+
+
+
+<p>We illustrate the application of the <strong>BANOVA</strong> package in a study into the influence of color on gist perception of advertising, which is the very rapid identification of ads during brief exposures. Specifically, we analyze the effect of color on the perception of the gist of ads when the advertising exposure is brief and blurred (Wedel and Pieters 2015). In the study, 116 subjects were randomly assigned to one condition of a 5 (<strong>blur</strong>: normal, low, medium, high, very high) x 2 (<strong>color</strong>: full color, grayscale) between-subjects, x 2 (<strong>image</strong>: typical ads, atypical ads) within-subjects, mixed design. Participants were exposed to 40 images, 32 fullpage ads and 8 editorial pages. There were 8 ads per product category, with 4 typical and 4 atypical ones. Blur was manipulated by processing the advertising images with a Gaussian blur filter of different radius. Subjects were flashed an image for 100msec. and then asked to identify whether the image was an ad or not.</p>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(BANOVA)
+<span class="kw">data</span>(colorad)
+<span class="kw">head</span>(colorad)
+<span class="co">#&gt;   id typic  y blurfac color   blur</span>
+<span class="co">#&gt; 1  1     0  8       2     1 3.6889</span>
+<span class="co">#&gt; 2  1     1  6       2     1 3.6889</span>
+<span class="co">#&gt; 3  2     0 12       4     0 4.7875</span>
+<span class="co">#&gt; 4  2     1  6       4     0 4.7875</span>
+<span class="co">#&gt; 5  3     0 11       2     0 3.6889</span>
+<span class="co">#&gt; 6  3     1  9       2     0 3.6889</span></code></pre></div>
+<p>The structure of colorad (data frame) is shown above using the <code>head()</code> function. It is in long format including both within- subjects and between- subjects variables. Here, the within-subjects variable <strong>typic</strong> is a factor with 2 levels ‘0’ (typical ads) and ‘1’(atypical ads); between-subjects variables are: <strong>blur</strong>, a numerical variable representing the blur of the image (the log-radius of a Gaussian blur filter used to produce the images); <strong>blurfac</strong>, a factor variable with the five levels of blur; and <strong>color</strong>, a factor representing the color of the ads with 2 levels ‘0’(full color) and ‘1’(grayscale). id is the subject identification number. The dependent variable is the number of times ads were correctly identified as an ad, out of the 16 ads, for each subject for each level of typic.</p>
+</div>
+<div id="models-results" class="section level2">
+<h2>Models &amp; results</h2>
+<p>We are interested in the effects of within- and between- subjects factors typic and color, and the variable blur, as well as their interactions. The factor typic varies within individuals; the factors blur, color and blur x color interaction vary between subjects.</p>
+<p>The analysis of this experiment is executed with the function <code>BANOVA.run()</code> in the <strong>BANOVA</strong> package (the continuous covariate blur is mean centered by default). The R code to implement the analysis is shown below. For this model, the <code>BANOVA</code> function call needs to include the binomial total (16) as an additional argument.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">700</span>)
+model &lt;-<span class="st"> </span><span class="kw">BANOVA.model</span>(<span class="dt">model_name =</span> <span class="st">'Binomial'</span>)
+banova_fit &lt;-<span class="st"> </span><span class="kw">BANOVA.build</span>(model)
+res &lt;-<span class="st"> </span><span class="kw">BANOVA.run</span>(y<span class="op">~</span>typic, <span class="op">~</span>color<span class="op">*</span>blur, <span class="dt">data =</span> colorad, <span class="dt">fit =</span> banova_fit,
+                  <span class="dt">id =</span> colorad<span class="op">$</span>id, <span class="dt">num_trials =</span> <span class="kw">as.integer</span>(<span class="dv">16</span>), <span class="dt">iter =</span> <span class="dv">1000</span>, <span class="dt">thin =</span> <span class="dv">1</span>, <span class="dt">chains =</span> <span class="dv">2</span>)</code></pre></div>
+<p>The commands above load and build (compile) a Binomial Stan model included in the package. Then, the function <code>BANOVA.run</code> is called to run the simulation using two chains (1000 iterations each with thin = 1). Alternatively, users can set up the <code>model_name</code> argument to run the simulation directly using a precompiled model (note that it might report errors if compiler settings are not correct).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_alt &lt;-<span class="st"> </span><span class="kw">BANOVA.run</span>(y<span class="op">~</span>typic, <span class="op">~</span>color<span class="op">*</span>blur, <span class="dt">data =</span> colorad, <span class="dt">model_name =</span> <span class="st">'Binomial'</span>,
+                     <span class="dt">id =</span> colorad<span class="op">$</span>id, <span class="dt">num_trials =</span> <span class="kw">as.integer</span>(<span class="dv">16</span>), <span class="dt">iter =</span> <span class="dv">1000</span>, <span class="dt">thin =</span> <span class="dv">1</span>, <span class="dt">chains =</span> <span class="dv">2</span>)</code></pre></div>
+<p><strong>ANOVA</strong>-like table of sums of squares, effect sizes and p values, as well as the posterior means, standard deviations, 95% credible intervals and p values of the parameters are produced with the function <code>summary()</code>, the results are presented below. Note that each of these tables now have two rows, one for each between-subject model (intercept and typic).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res)
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; BANOVA.run(l1_formula = y ~ typic, l2_formula = ~color * blur, </span>
+<span class="co">#&gt;     fit = banova_fit, data = colorad, id = colorad$id, iter = 1000, </span>
+<span class="co">#&gt;     num_trials = as.integer(16), thin = 1, chains = 2)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Convergence diagnostics:</span>
+<span class="co">#&gt; Geweke Diag. &amp; Heidelberger and Welch's Diag.</span>
+<span class="co">#&gt;                             Geweke stationarity test</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                   passed</span>
+<span class="co">#&gt; (Intercept)  :  color1                        passed</span>
+<span class="co">#&gt; (Intercept)  :  blur                          passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blur                   passed</span>
+<span class="co">#&gt; typic1  :  (Intercept)                        passed</span>
+<span class="co">#&gt; typic1  :  color1                             passed</span>
+<span class="co">#&gt; typic1  :  blur                               passed</span>
+<span class="co">#&gt; typic1  :  color1:blur                        passed</span>
+<span class="co">#&gt;                             Geweke convergence p value</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                     0.1409</span>
+<span class="co">#&gt; (Intercept)  :  color1                          0.9288</span>
+<span class="co">#&gt; (Intercept)  :  blur                            0.4537</span>
+<span class="co">#&gt; (Intercept)  :  color1:blur                     0.9024</span>
+<span class="co">#&gt; typic1  :  (Intercept)                          0.9642</span>
+<span class="co">#&gt; typic1  :  color1                               0.9105</span>
+<span class="co">#&gt; typic1  :  blur                                 0.1451</span>
+<span class="co">#&gt; typic1  :  color1:blur                          0.4603</span>
+<span class="co">#&gt;                             H. &amp; W. stationarity test</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                    passed</span>
+<span class="co">#&gt; (Intercept)  :  color1                         passed</span>
+<span class="co">#&gt; (Intercept)  :  blur                           passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blur                    passed</span>
+<span class="co">#&gt; typic1  :  (Intercept)                         passed</span>
+<span class="co">#&gt; typic1  :  color1                              passed</span>
+<span class="co">#&gt; typic1  :  blur                                passed</span>
+<span class="co">#&gt; typic1  :  color1:blur                         passed</span>
+<span class="co">#&gt;                             H. &amp; W. convergence p value</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                      0.4819</span>
+<span class="co">#&gt; (Intercept)  :  color1                           0.6041</span>
+<span class="co">#&gt; (Intercept)  :  blur                             0.7871</span>
+<span class="co">#&gt; (Intercept)  :  color1:blur                      0.4488</span>
+<span class="co">#&gt; typic1  :  (Intercept)                           0.8005</span>
+<span class="co">#&gt; typic1  :  color1                                0.8028</span>
+<span class="co">#&gt; typic1  :  blur                                  0.1004</span>
+<span class="co">#&gt; typic1  :  color1:blur                           0.6634</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The Chain has converged.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of sum of squares &amp; effect sizes:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of sum of squares:</span>
+<span class="co">#&gt;             (Intercept)  color    blur color:blur Residuals    Total</span>
+<span class="co">#&gt; (Intercept)     59.5532 2.3591 26.1587     9.0749  138.4249 229.8047</span>
+<span class="co">#&gt; typic1          21.9510 1.9610  5.4139     7.0553   20.1769  50.6221</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of effect sizes (95% credible interval):</span>
+<span class="co">#&gt;                      (Intercept)                 color</span>
+<span class="co">#&gt; (Intercept) 0.3014 (0.249,0.358) 0.0159 (-0.015,0.104)</span>
+<span class="co">#&gt; typic1      0.5215 (0.402,0.638)  0.0781 (-0.015,0.34)</span>
+<span class="co">#&gt;                             blur            color:blur</span>
+<span class="co">#&gt; (Intercept)  0.1590 (0.108,0.21) 0.0581 (-0.006,0.199)</span>
+<span class="co">#&gt; typic1      0.2114 (0.088,0.362)  0.2352 (0.006,0.521)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of p-values (Multidimensional): </span>
+<span class="co">#&gt;             (Intercept)  color    blur color:blur</span>
+<span class="co">#&gt; (Intercept)     &lt;0.0001 0.9560 &lt;0.0001     0.1400</span>
+<span class="co">#&gt; typic           &lt;0.0001 0.4180 &lt;0.0001     0.0280</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of coefficients: </span>
+<span class="co">#&gt;                                mean     SD Quantile0.025 Quantile0.975</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)  0.4975 0.0572        0.3881        0.6101</span>
+<span class="co">#&gt; (Intercept)  :  color1      -0.0069 0.1245       -0.2605        0.2413</span>
+<span class="co">#&gt; (Intercept)  :  blur        -0.1716 0.0307       -0.2333       -0.1133</span>
+<span class="co">#&gt; (Intercept)  :  color1:blur  0.0410 0.0291       -0.0171        0.1001</span>
+<span class="co">#&gt; typic1  :  (Intercept)       0.3011 0.0313        0.2374        0.3580</span>
+<span class="co">#&gt; typic1  :  color1           -0.0596 0.0736       -0.2062        0.0781</span>
+<span class="co">#&gt; typic1  :  blur             -0.0767 0.0170       -0.1087       -0.0439</span>
+<span class="co">#&gt; typic1  :  color1:blur       0.0384 0.0178        0.0052        0.0733</span>
+<span class="co">#&gt;                             p.value Signif.codes</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept) &lt;0.0001          ***</span>
+<span class="co">#&gt; (Intercept)  :  color1       0.9560             </span>
+<span class="co">#&gt; (Intercept)  :  blur        &lt;0.0001          ***</span>
+<span class="co">#&gt; (Intercept)  :  color1:blur  0.1400             </span>
+<span class="co">#&gt; typic1  :  (Intercept)      &lt;0.0001          ***</span>
+<span class="co">#&gt; typic1  :  color1            0.4180             </span>
+<span class="co">#&gt; typic1  :  blur             &lt;0.0001          ***</span>
+<span class="co">#&gt; typic1  :  color1:blur       0.0280            *</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes: 0 *** 0.001 ** 0.01 * 0.05 . 0.1 1 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Multiple R-squared:  0.0664 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of predictions: </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Grand mean: </span>
+<span class="co">#&gt; 9.95</span>
+<span class="co">#&gt;     2.5%   97.5%</span>
+<span class="co">#&gt;   9.5332 10.3673</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  typic mean   2.5%    97.5%  </span>
+<span class="co">#&gt;  0     11.035 10.5818 11.4579</span>
+<span class="co">#&gt;  1     8.7829 8.2705  9.2933 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  color mean   2.5%   97.5%  </span>
+<span class="co">#&gt;  0     9.924  8.7817 10.9414</span>
+<span class="co">#&gt;  1     9.9759 9.0196 10.8926</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  typic color mean    2.5%   97.5%  </span>
+<span class="co">#&gt;  0     0     10.8042 9.4812 11.9297</span>
+<span class="co">#&gt;  0     1     11.26   10.202 12.271 </span>
+<span class="co">#&gt;  1     0     8.9913  7.7188 10.2174</span>
+<span class="co">#&gt;  1     1     8.5735  7.4431 9.6343</span></code></pre></div>
+<p>Based on the above estimates, ad identification is significantly influenced by ad typicality (typic): typical ads are identified more accurately as ads, compared to atypical ads. The accuracy of ad identification is also affected by the degree of blur and its interaction with typic. The three-factor interaction (blur x color x typic) is significant, which reveals that color protects the identification of typical ads against blur, which is in line with the findings of Wedel and Pieters (2015).</p>
+<p>These results are based on the <strong>BANOVA</strong> model with blur as a continuous covariate. To further understand the effects of blur, we can use the discrete variable blur (blurfac) in a two-way <strong>BANOVA</strong> at the between-subjects level (and the factor typic again within-subjects), using the following command:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">900</span>)
+res_fac &lt;-<span class="st"> </span><span class="kw">BANOVA.run</span>(y<span class="op">~</span>typic, <span class="op">~</span>color<span class="op">*</span>blurfac, <span class="dt">data =</span> colorad, <span class="dt">fit =</span> banova_fit,
+                  <span class="dt">id =</span> colorad<span class="op">$</span>id, <span class="dt">num_trials =</span> <span class="kw">as.integer</span>(<span class="dv">16</span>), <span class="dt">iter =</span> <span class="dv">2000</span>, <span class="dt">thin =</span> <span class="dv">1</span>, <span class="dt">chains =</span> <span class="dv">2</span>)</code></pre></div>
+<p>Since the above model involves more parameters, a larger number of iterations is used to ensure the chains for all parameters converge (iter = 2000).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res_fac)
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; BANOVA.run(l1_formula = y ~ typic, l2_formula = ~color * blurfac, </span>
+<span class="co">#&gt;     fit = banova_fit, data = colorad, id = colorad$id, iter = 2000, </span>
+<span class="co">#&gt;     num_trials = as.integer(16), thin = 1, chains = 2)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Convergence diagnostics:</span>
+<span class="co">#&gt; Geweke Diag. &amp; Heidelberger and Welch's Diag.</span>
+<span class="co">#&gt;                                 Geweke stationarity test</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                       passed</span>
+<span class="co">#&gt; (Intercept)  :  color1                            passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac1                          passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac2                          passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac3                          passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac4                          passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac1                   passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac2                   passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac3                   passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac4                   passed</span>
+<span class="co">#&gt; typic1  :  (Intercept)                            passed</span>
+<span class="co">#&gt; typic1  :  color1                                 passed</span>
+<span class="co">#&gt; typic1  :  blurfac1                               passed</span>
+<span class="co">#&gt; typic1  :  blurfac2                               passed</span>
+<span class="co">#&gt; typic1  :  blurfac3                               passed</span>
+<span class="co">#&gt; typic1  :  blurfac4                               passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac1                        passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac2                        passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac3                        passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac4                        passed</span>
+<span class="co">#&gt;                                 Geweke convergence p value</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                         0.0217</span>
+<span class="co">#&gt; (Intercept)  :  color1                              0.4861</span>
+<span class="co">#&gt; (Intercept)  :  blurfac1                            0.7050</span>
+<span class="co">#&gt; (Intercept)  :  blurfac2                            0.5498</span>
+<span class="co">#&gt; (Intercept)  :  blurfac3                            0.4843</span>
+<span class="co">#&gt; (Intercept)  :  blurfac4                            0.6209</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac1                     0.9840</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac2                     0.6900</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac3                     0.2931</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac4                     0.7919</span>
+<span class="co">#&gt; typic1  :  (Intercept)                              0.0159</span>
+<span class="co">#&gt; typic1  :  color1                                   0.5622</span>
+<span class="co">#&gt; typic1  :  blurfac1                                 0.0594</span>
+<span class="co">#&gt; typic1  :  blurfac2                                 0.1408</span>
+<span class="co">#&gt; typic1  :  blurfac3                                 0.0534</span>
+<span class="co">#&gt; typic1  :  blurfac4                                 0.3087</span>
+<span class="co">#&gt; typic1  :  color1:blurfac1                          0.3151</span>
+<span class="co">#&gt; typic1  :  color1:blurfac2                          0.4267</span>
+<span class="co">#&gt; typic1  :  color1:blurfac3                          0.1776</span>
+<span class="co">#&gt; typic1  :  color1:blurfac4                          0.8341</span>
+<span class="co">#&gt;                                 H. &amp; W. stationarity test</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                        passed</span>
+<span class="co">#&gt; (Intercept)  :  color1                             passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac1                           passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac2                           passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac3                           passed</span>
+<span class="co">#&gt; (Intercept)  :  blurfac4                           passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac1                    passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac2                    passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac3                    passed</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac4                    passed</span>
+<span class="co">#&gt; typic1  :  (Intercept)                             passed</span>
+<span class="co">#&gt; typic1  :  color1                                  passed</span>
+<span class="co">#&gt; typic1  :  blurfac1                                passed</span>
+<span class="co">#&gt; typic1  :  blurfac2                                passed</span>
+<span class="co">#&gt; typic1  :  blurfac3                                passed</span>
+<span class="co">#&gt; typic1  :  blurfac4                                passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac1                         passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac2                         passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac3                         passed</span>
+<span class="co">#&gt; typic1  :  color1:blurfac4                         passed</span>
+<span class="co">#&gt;                                 H. &amp; W. convergence p value</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)                          0.2829</span>
+<span class="co">#&gt; (Intercept)  :  color1                               0.8963</span>
+<span class="co">#&gt; (Intercept)  :  blurfac1                             0.5252</span>
+<span class="co">#&gt; (Intercept)  :  blurfac2                             0.8212</span>
+<span class="co">#&gt; (Intercept)  :  blurfac3                             0.5227</span>
+<span class="co">#&gt; (Intercept)  :  blurfac4                             0.9169</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac1                      0.5844</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac2                      0.4926</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac3                      0.7559</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac4                      0.8684</span>
+<span class="co">#&gt; typic1  :  (Intercept)                               0.0515</span>
+<span class="co">#&gt; typic1  :  color1                                    0.0775</span>
+<span class="co">#&gt; typic1  :  blurfac1                                  0.2471</span>
+<span class="co">#&gt; typic1  :  blurfac2                                  0.1948</span>
+<span class="co">#&gt; typic1  :  blurfac3                                  0.0845</span>
+<span class="co">#&gt; typic1  :  blurfac4                                  0.0610</span>
+<span class="co">#&gt; typic1  :  color1:blurfac1                           0.1983</span>
+<span class="co">#&gt; typic1  :  color1:blurfac2                           0.2473</span>
+<span class="co">#&gt; typic1  :  color1:blurfac3                           0.2181</span>
+<span class="co">#&gt; typic1  :  color1:blurfac4                           0.8831</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; The Chain has converged.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of sum of squares &amp; effect sizes:</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of sum of squares:</span>
+<span class="co">#&gt;             (Intercept)  color blurfac color:blurfac Residuals    Total</span>
+<span class="co">#&gt; (Intercept)     59.3470 5.1145 29.5136        1.0276  136.9923 231.8971</span>
+<span class="co">#&gt; typic1          21.3932 2.0202 13.6640        1.9275   16.7336  55.6143</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of effect sizes (95% credible interval):</span>
+<span class="co">#&gt;                     (Intercept)                color              blurfac</span>
+<span class="co">#&gt; (Intercept)  0.3028 (0.25,0.36)  0.0361 (0.01,0.066) 0.1774 (0.123,0.232)</span>
+<span class="co">#&gt; typic1      0.5602 (0.444,0.67) 0.1075 (0.017,0.231) 0.4476 (0.315,0.585)</span>
+<span class="co">#&gt;                     color:blurfac</span>
+<span class="co">#&gt; (Intercept) 0.0075 (-0.028,0.038)</span>
+<span class="co">#&gt; typic1       0.1023 (0.009,0.231)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of p-values (Multidimensional): </span>
+<span class="co">#&gt;             (Intercept)  color blurfac color:blurfac</span>
+<span class="co">#&gt; (Intercept)     &lt;0.0001 0.0100 &lt;0.0001        0.1590</span>
+<span class="co">#&gt; typic           &lt;0.0001 0.0010 &lt;0.0001        0.0200</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of coefficients: </span>
+<span class="co">#&gt;                                    mean     SD Quantile0.025 Quantile0.975</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)      0.4981 0.0574        0.3840        0.6115</span>
+<span class="co">#&gt; (Intercept)  :  color1           0.1532 0.0567        0.0404        0.2683</span>
+<span class="co">#&gt; (Intercept)  :  blurfac1         0.5591 0.1139        0.3470        0.7807</span>
+<span class="co">#&gt; (Intercept)  :  blurfac2         0.0554 0.1168       -0.1731        0.2883</span>
+<span class="co">#&gt; (Intercept)  :  blurfac3         0.0193 0.1036       -0.1775        0.2226</span>
+<span class="co">#&gt; (Intercept)  :  blurfac4        -0.0565 0.1094       -0.2689        0.1672</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac1 -0.1586 0.1146       -0.3897        0.0724</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac2  0.1137 0.1162       -0.1094        0.3347</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac3 -0.0774 0.1096       -0.2961        0.1376</span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac4  0.0125 0.1114       -0.2098        0.2329</span>
+<span class="co">#&gt; typic1  :  (Intercept)           0.3092 0.0318        0.2481        0.3742</span>
+<span class="co">#&gt; typic1  :  color1                0.0906 0.0311        0.0296        0.1532</span>
+<span class="co">#&gt; typic1  :  blurfac1              0.1621 0.0634        0.0379        0.2901</span>
+<span class="co">#&gt; typic1  :  blurfac2              0.3612 0.0692        0.2138        0.4951</span>
+<span class="co">#&gt; typic1  :  blurfac3             -0.0260 0.0642       -0.1543        0.0996</span>
+<span class="co">#&gt; typic1  :  blurfac4             -0.1653 0.0625       -0.2830       -0.0409</span>
+<span class="co">#&gt; typic1  :  color1:blurfac1      -0.1443 0.0645       -0.2727       -0.0231</span>
+<span class="co">#&gt; typic1  :  color1:blurfac2       0.0344 0.0671       -0.1041        0.1637</span>
+<span class="co">#&gt; typic1  :  color1:blurfac3      -0.0238 0.0597       -0.1456        0.0915</span>
+<span class="co">#&gt; typic1  :  color1:blurfac4       0.0956 0.0619       -0.0272        0.2211</span>
+<span class="co">#&gt;                                 p.value Signif.codes</span>
+<span class="co">#&gt; (Intercept)  :  (Intercept)     &lt;0.0001          ***</span>
+<span class="co">#&gt; (Intercept)  :  color1           0.0100           **</span>
+<span class="co">#&gt; (Intercept)  :  blurfac1        &lt;0.0001          ***</span>
+<span class="co">#&gt; (Intercept)  :  blurfac2         0.6400             </span>
+<span class="co">#&gt; (Intercept)  :  blurfac3         0.8430             </span>
+<span class="co">#&gt; (Intercept)  :  blurfac4         0.5910             </span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac1  0.1590             </span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac2  0.3360             </span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac3  0.4850             </span>
+<span class="co">#&gt; (Intercept)  :  color1:blurfac4  0.8890             </span>
+<span class="co">#&gt; typic1  :  (Intercept)          &lt;0.0001          ***</span>
+<span class="co">#&gt; typic1  :  color1                0.0010          ***</span>
+<span class="co">#&gt; typic1  :  blurfac1              0.0080           **</span>
+<span class="co">#&gt; typic1  :  blurfac2             &lt;0.0001          ***</span>
+<span class="co">#&gt; typic1  :  blurfac3              0.6920             </span>
+<span class="co">#&gt; typic1  :  blurfac4              0.0060           **</span>
+<span class="co">#&gt; typic1  :  color1:blurfac1       0.0200            *</span>
+<span class="co">#&gt; typic1  :  color1:blurfac2       0.5940             </span>
+<span class="co">#&gt; typic1  :  color1:blurfac3       0.6940             </span>
+<span class="co">#&gt; typic1  :  color1:blurfac4       0.1150             </span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes: 0 *** 0.001 ** 0.01 * 0.05 . 0.1 1 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Multiple R-squared:  0.0856 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Table of predictions: </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Grand mean: </span>
+<span class="co">#&gt; 9.9522</span>
+<span class="co">#&gt;     2.5%   97.5%</span>
+<span class="co">#&gt;   9.5174 10.3726</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  typic mean    2.5%    97.5%  </span>
+<span class="co">#&gt;  0     11.0645 10.5896 11.4879</span>
+<span class="co">#&gt;  1     8.7534  8.2242  9.2339 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  color mean    2.5%   97.5%  </span>
+<span class="co">#&gt;  0     10.5167 9.9177 11.0551</span>
+<span class="co">#&gt;  1     9.3662  8.7386 9.9471 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  blurfac mean    2.5%    97.5%  </span>
+<span class="co">#&gt;  1       11.8745 11.0664 12.6146</span>
+<span class="co">#&gt;  2       10.1591 9.1897  11.1158</span>
+<span class="co">#&gt;  3       10.0247 9.1808  10.8356</span>
+<span class="co">#&gt;  4       9.7383  8.8491  10.6451</span>
+<span class="co">#&gt;  5       7.6834  6.6721  8.65   </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  typic color mean    2.5%    97.5%  </span>
+<span class="co">#&gt;  0     0     11.8558 11.2628 12.3795</span>
+<span class="co">#&gt;  0     1     10.1961 9.521   10.8499</span>
+<span class="co">#&gt;  1     0     9.0004  8.262   9.6717 </span>
+<span class="co">#&gt;  1     1     8.5049  7.8023  9.2008 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  typic blurfac mean    2.5%    97.5%  </span>
+<span class="co">#&gt;  0     1       13.1487 12.3854 13.7718</span>
+<span class="co">#&gt;  0     2       12.3638 11.4074 13.14  </span>
+<span class="co">#&gt;  0     3       11.0416 10.0703 11.8974</span>
+<span class="co">#&gt;  0     4       10.2774 9.2503  11.2558</span>
+<span class="co">#&gt;  0     5       7.5923  6.4556  8.7182 </span>
+<span class="co">#&gt;  1     1       10.2786 9.1893  11.2832</span>
+<span class="co">#&gt;  1     2       7.533   6.3988  8.7    </span>
+<span class="co">#&gt;  1     3       8.9327  7.9134  9.9488 </span>
+<span class="co">#&gt;  1     4       9.1821  8.1045  10.2629</span>
+<span class="co">#&gt;  1     5       7.7745  6.6116  8.9589 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  color blurfac mean    2.5%    97.5%  </span>
+<span class="co">#&gt;  0     1       11.8576 10.7518 12.8309</span>
+<span class="co">#&gt;  1     1       11.8912 10.7507 12.8908</span>
+<span class="co">#&gt;  0     2       11.1088 9.6862  12.2988</span>
+<span class="co">#&gt;  1     2       9.1388  7.7334  10.5106</span>
+<span class="co">#&gt;  0     3       10.3056 9.0203  11.4538</span>
+<span class="co">#&gt;  1     3       9.7384  8.5515  10.9235</span>
+<span class="co">#&gt;  0     4       10.3571 8.9993  11.6076</span>
+<span class="co">#&gt;  1     4       9.0969  7.7976  10.4325</span>
+<span class="co">#&gt;  0     5       8.7333  7.3643  10.1124</span>
+<span class="co">#&gt;  1     5       6.6442  5.314   8.0042 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  typic color blurfac mean    2.5%    97.5%  </span>
+<span class="co">#&gt;  0     0     1       13.0075 11.8829 13.8698</span>
+<span class="co">#&gt;  0     1     1       13.2845 12.2295 14.1165</span>
+<span class="co">#&gt;  0     0     2       13.3472 12.179  14.2525</span>
+<span class="co">#&gt;  0     1     2       11.1483 9.6802  12.4133</span>
+<span class="co">#&gt;  0     0     3       11.5161 10.1419 12.6794</span>
+<span class="co">#&gt;  0     1     3       10.5408 9.1534  11.8042</span>
+<span class="co">#&gt;  0     0     4       11.4974 10.0861 12.6792</span>
+<span class="co">#&gt;  0     1     4       8.9302  7.4175  10.3435</span>
+<span class="co">#&gt;  0     0     5       9.1508  7.5622  10.651 </span>
+<span class="co">#&gt;  0     1     5       6.0642  4.63    7.6654 </span>
+<span class="co">#&gt;  1     0     1       10.4543 8.9691  11.7715</span>
+<span class="co">#&gt;  1     1     1       10.1005 8.5915  11.5018</span>
+<span class="co">#&gt;  1     0     2       8.0995  6.3761  9.7681 </span>
+<span class="co">#&gt;  1     1     2       6.9711  5.4889  8.5847 </span>
+<span class="co">#&gt;  1     0     3       8.9678  7.3996  10.3327</span>
+<span class="co">#&gt;  1     1     3       8.8976  7.5123  10.3464</span>
+<span class="co">#&gt;  1     0     4       9.1014  7.5952  10.681 </span>
+<span class="co">#&gt;  1     1     4       9.2626  7.7261  10.8305</span>
+<span class="co">#&gt;  1     0     5       8.3118  6.8199  9.9193 </span>
+<span class="co">#&gt;  1     1     5       7.2393  5.6957  8.8424</span></code></pre></div>
+<p>We first inspect the tables of sums of squares and effect sizes. In these tables, the columns denote between-subjects factors and the rows denote the within-subjects factors. The values in the table present the sum-of-squares and effect sizes of the effects of these factors. Again, the accuracy of ad identification is affected by blur, and to a lesser extent by color. From the tables of p values, ad typicality (the value corresponding to the row name ‘typic’ and column name ‘(Intercept)’) and the degree of blur (the value corresponding to the row name ‘(Intercept)’ and column name ‘blurfac’) are again highly significant. There is also support for the main effect of color. The three-factor interaction (blurfac x color x typic) is also significant, which again shows that color protects the identification of typical ads against blur (Wedel and Pieters 2015). The conclusions from the table of estimates are similar to those from the results of the previous model, but this table for nonlinear effects of blur allows us to inspect the effects of each level of bur, and the interactive effects with color and typicality. Through the tables of predictions for all factors and their interactions, we can inspect these effects in more detail. We can see that typical color ads (typic = 0, color = 0) are always more accurately identified than atypical color ads (typic = 1, color = 0). Typical grayscale ads (typic = 0, color = 1, blur = 1,…,5), however, are only more accurately identified than atypical grayscale ads (typic = 1, color = 1, blur = 1,…,5) when there is no blur, or a low level of blur (Wedel and Pieters 2015).</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li>Wedel M and Pieters R (2015). “The Buffer Effect: The Role of Color When Advertising Exposures Are Brief and Blurred.” Marketing Science, 34(1), 134-143.</li>
+<li>Dong C and Wedel M (2017). “BANOVA: An R Package for Hierarchical Bayesian ANOVA.”Journal of Statistical Software, 81(9), pp. 1-46.</li>
+</ul>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

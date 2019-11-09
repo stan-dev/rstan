@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Efficient Leave-One-Out Cross-Validation and WAIC for Bayesian
+Models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Efficient Leave-One-Out Cross-Validation and WAIC for Bayesian
+Models
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;loo&rsquo; version 2.1.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="loo-package.html">loo-package</a></td>
+<td>Efficient LOO-CV and WAIC for Bayesian models</td></tr>
+<tr><td style="width: 25%;"><a href="compare.html">compare</a></td>
+<td>Model comparison</td></tr>
+<tr><td style="width: 25%;"><a href="example_loglik_array.html">example_loglik_array</a></td>
+<td>Objects to use in examples and tests</td></tr>
+<tr><td style="width: 25%;"><a href="example_loglik_array.html">example_loglik_matrix</a></td>
+<td>Objects to use in examples and tests</td></tr>
+<tr><td style="width: 25%;"><a href="extract_log_lik.html">extract_log_lik</a></td>
+<td>Extract pointwise log-likelihood from a Stan model</td></tr>
+<tr><td style="width: 25%;"><a href="E_loo.html">E_loo</a></td>
+<td>Compute weighted expectations</td></tr>
+<tr><td style="width: 25%;"><a href="E_loo.html">E_loo.default</a></td>
+<td>Compute weighted expectations</td></tr>
+<tr><td style="width: 25%;"><a href="E_loo.html">E_loo.matrix</a></td>
+<td>Compute weighted expectations</td></tr>
+<tr><td style="width: 25%;"><a href="gpdfit.html">gpdfit</a></td>
+<td>Estimate parameters of the Generalized Pareto distribution</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-generic.html">is.kfold</a></td>
+<td>Generic function for K-fold cross-validation for developers</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">is.loo</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="psis.html">is.psis</a></td>
+<td>Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">is.psis_loo</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="waic.html">is.waic</a></td>
+<td>Widely applicable information criterion (WAIC)</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-generic.html">kfold</a></td>
+<td>Generic function for K-fold cross-validation for developers</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-generic.html">kfold-generic</a></td>
+<td>Generic function for K-fold cross-validation for developers</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-helpers.html">kfold-helpers</a></td>
+<td>Helper functions for K-fold cross-validation</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-helpers.html">kfold_split_grouped</a></td>
+<td>Helper functions for K-fold cross-validation</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-helpers.html">kfold_split_random</a></td>
+<td>Helper functions for K-fold cross-validation</td></tr>
+<tr><td style="width: 25%;"><a href="kfold-helpers.html">kfold_split_stratified</a></td>
+<td>Helper functions for K-fold cross-validation</td></tr>
+<tr><td style="width: 25%;"><a href="loo-datasets.html">Kline</a></td>
+<td>Datasets for loo examples and vignettes</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">loo</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="loo-datasets.html">loo-datasets</a></td>
+<td>Datasets for loo examples and vignettes</td></tr>
+<tr><td style="width: 25%;"><a href="loo-glossary.html">loo-glossary</a></td>
+<td>LOO package glossary</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">loo.array</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">loo.function</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">loo.matrix</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="loo_compare.html">loo_compare</a></td>
+<td>Model comparison</td></tr>
+<tr><td style="width: 25%;"><a href="loo_compare.html">loo_compare.default</a></td>
+<td>Model comparison</td></tr>
+<tr><td style="width: 25%;"><a href="loo.html">loo_i</a></td>
+<td>Efficient approximate leave-one-out cross-validation (LOO)</td></tr>
+<tr><td style="width: 25%;"><a href="loo_model_weights.html">loo_model_weights</a></td>
+<td>Model averaging/weighting via stacking or pseudo-BMA weighting</td></tr>
+<tr><td style="width: 25%;"><a href="loo_model_weights.html">loo_model_weights.default</a></td>
+<td>Model averaging/weighting via stacking or pseudo-BMA weighting</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">mcse_loo</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="loo-datasets.html">milk</a></td>
+<td>Datasets for loo examples and vignettes</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">pareto-k-diagnostic</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">pareto_k_ids</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">pareto_k_table</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">pareto_k_values</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">plot.loo</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">plot.psis</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">plot.psis_loo</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="loo_compare.html">print.compare.loo</a></td>
+<td>Model comparison</td></tr>
+<tr><td style="width: 25%;"><a href="print.loo.html">print.loo</a></td>
+<td>Print methods</td></tr>
+<tr><td style="width: 25%;"><a href="print.loo.html">print.psis</a></td>
+<td>Print methods</td></tr>
+<tr><td style="width: 25%;"><a href="print.loo.html">print.psis_loo</a></td>
+<td>Print methods</td></tr>
+<tr><td style="width: 25%;"><a href="print.loo.html">print.waic</a></td>
+<td>Print methods</td></tr>
+<tr><td style="width: 25%;"><a href="loo_model_weights.html">pseudobma_weights</a></td>
+<td>Model averaging/weighting via stacking or pseudo-BMA weighting</td></tr>
+<tr><td style="width: 25%;"><a href="psis.html">psis</a></td>
+<td>Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="psis.html">psis.array</a></td>
+<td>Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="psis.html">psis.default</a></td>
+<td>Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="psis.html">psis.matrix</a></td>
+<td>Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="psislw.html">psislw</a></td>
+<td>Pareto smoothed importance sampling (deprecated, old version)</td></tr>
+<tr><td style="width: 25%;"><a href="pareto-k-diagnostic.html">psis_n_eff_values</a></td>
+<td>Diagnostics for Pareto smoothed importance sampling (PSIS)</td></tr>
+<tr><td style="width: 25%;"><a href="relative_eff.html">relative_eff</a></td>
+<td>Convenience function for computing relative efficiencies</td></tr>
+<tr><td style="width: 25%;"><a href="relative_eff.html">relative_eff.array</a></td>
+<td>Convenience function for computing relative efficiencies</td></tr>
+<tr><td style="width: 25%;"><a href="relative_eff.html">relative_eff.default</a></td>
+<td>Convenience function for computing relative efficiencies</td></tr>
+<tr><td style="width: 25%;"><a href="relative_eff.html">relative_eff.function</a></td>
+<td>Convenience function for computing relative efficiencies</td></tr>
+<tr><td style="width: 25%;"><a href="relative_eff.html">relative_eff.matrix</a></td>
+<td>Convenience function for computing relative efficiencies</td></tr>
+<tr><td style="width: 25%;"><a href="loo_model_weights.html">stacking_weights</a></td>
+<td>Model averaging/weighting via stacking or pseudo-BMA weighting</td></tr>
+<tr><td style="width: 25%;"><a href="waic.html">waic</a></td>
+<td>Widely applicable information criterion (WAIC)</td></tr>
+<tr><td style="width: 25%;"><a href="waic.html">waic.array</a></td>
+<td>Widely applicable information criterion (WAIC)</td></tr>
+<tr><td style="width: 25%;"><a href="waic.html">waic.function</a></td>
+<td>Widely applicable information criterion (WAIC)</td></tr>
+<tr><td style="width: 25%;"><a href="waic.html">waic.matrix</a></td>
+<td>Widely applicable information criterion (WAIC)</td></tr>
+<tr><td style="width: 25%;"><a href="psis.html">weights.psis</a></td>
+<td>Pareto smoothed importance sampling (PSIS)</td></tr>
+</table>
+</body></html>

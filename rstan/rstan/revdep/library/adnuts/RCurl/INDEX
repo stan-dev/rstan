@@ -1,0 +1,63 @@
+AUTH_ANY                Constants for identifying Authentication
+                        Schemes
+CFILE                   Create a C-level handle for a file
+CURLHandle-class        Class "CURLHandle" for synchronous HTTP
+                        requests
+CurlFeatureBits         Constants for libcurl
+HTTP_VERSION_1_0        Symbolic constants for specifying HTTP and SSL
+                        versions in libcurl
+MultiCURLHandle-class   Class "MultiCURLHandle" for asynchronous,
+                        concurrent HTTP requests
+base64                  Encode/Decode base64 content
+basicHeaderGatherer     Functions for processing the response header of
+                        a libcurl request
+basicTextGatherer       Cumulate text across callbacks (from an HTTP
+                        response)
+binaryBuffer            Create internal C-level data structure for
+                        collecting binary data
+chunkToLineReader       Utility that collects data from the HTTP reply
+                        into lines and calls user-provided function.
+clone                   Clone/duplicate an object
+coerce,numeric,NetrcEnum-method
+                        Internal functions
+complete                Complete an asynchronous HTTP request
+curlError               Raise a warning or error about a CURL problem
+curlEscape              Handle characters in URL that need to be
+                        escaped
+curlGlobalInit          Start and stop the Curl library
+curlOptions             Constructor and accessors for CURLOptions
+                        objects
+curlPerform             Perform the HTTP query
+curlSetOpt              Set values for the CURL options
+curlVersion             Information describing the Curl library
+dynCurlReader           Dynamically determine content-type of body from
+                        HTTP header and set body reader
+fileUpload              Specify information about a file to upload in
+                        an HTTP request
+findHTTPHeaderEncoding
+                        Find the encoding of the HTTP response from the
+                        HTTP header
+ftpUpload               Upload content via FTP
+getBinaryURL            Download binary content
+getBitIndicators        Operate on bit fields
+getCurlErrorClassNames
+                        Retrieve names of all curl error classes
+getCurlHandle           Create libcurl handles
+getCurlInfo             Access information about a CURL request
+getFormParams           Extract parameters from a form query string
+getURIAsynchronous      Download multiple URIs concurrently, with
+                        inter-leaved downloads
+getURL                  Download a URI
+guessMIMEType           Infer the MIME type from a file name
+httpPUT                 Simple high-level functions for HTTP PUT and
+                        DELETE
+merge.list              Method for merging two lists by name
+mimeTypeExtensions      Mapping from extension to MIME type
+postForm                Submit an HTML form
+reset                   Generic function for resetting an object
+scp                     Retrieve contents of a file from a remote host
+                        via SCP (Secure Copy)
+url.exists              Check if URL exists
+|,BitwiseValue,BitwiseValue-method
+                        Classes and coercion methods for enumerations
+                        in libcurl

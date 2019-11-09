@@ -1,0 +1,386 @@
+## ----setup, include = FALSE----------------------------------------------
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+## ---- message=FALSE------------------------------------------------------
+library(BANOVA)
+data(colorad)
+head(colorad)
+
+## ---- message=FALSE, eval=FALSE------------------------------------------
+#  set.seed(700)
+#  model <- BANOVA.model(model_name = 'Binomial')
+#  banova_fit <- BANOVA.build(model)
+#  res <- BANOVA.run(y~typic, ~color*blur, data = colorad, fit = banova_fit,
+#                    id = colorad$id, num_trials = as.integer(16), iter = 1000, thin = 1, chains = 2)
+
+## ---- message=FALSE, eval=FALSE------------------------------------------
+#  res_alt <- BANOVA.run(y~typic, ~color*blur, data = colorad, model_name = 'Binomial',
+#                       id = colorad$id, num_trials = as.integer(16), iter = 1000, thin = 1, chains = 2)
+
+## ---- message=FALSE, eval=FALSE------------------------------------------
+#  summary(res)
+#  #> Call:
+#  #> BANOVA.run(l1_formula = y ~ typic, l2_formula = ~color * blur,
+#  #>     fit = banova_fit, data = colorad, id = colorad$id, iter = 1000,
+#  #>     num_trials = as.integer(16), thin = 1, chains = 2)
+#  #>
+#  #> Convergence diagnostics:
+#  #> Geweke Diag. & Heidelberger and Welch's Diag.
+#  #>                             Geweke stationarity test
+#  #> (Intercept)  :  (Intercept)                   passed
+#  #> (Intercept)  :  color1                        passed
+#  #> (Intercept)  :  blur                          passed
+#  #> (Intercept)  :  color1:blur                   passed
+#  #> typic1  :  (Intercept)                        passed
+#  #> typic1  :  color1                             passed
+#  #> typic1  :  blur                               passed
+#  #> typic1  :  color1:blur                        passed
+#  #>                             Geweke convergence p value
+#  #> (Intercept)  :  (Intercept)                     0.1409
+#  #> (Intercept)  :  color1                          0.9288
+#  #> (Intercept)  :  blur                            0.4537
+#  #> (Intercept)  :  color1:blur                     0.9024
+#  #> typic1  :  (Intercept)                          0.9642
+#  #> typic1  :  color1                               0.9105
+#  #> typic1  :  blur                                 0.1451
+#  #> typic1  :  color1:blur                          0.4603
+#  #>                             H. & W. stationarity test
+#  #> (Intercept)  :  (Intercept)                    passed
+#  #> (Intercept)  :  color1                         passed
+#  #> (Intercept)  :  blur                           passed
+#  #> (Intercept)  :  color1:blur                    passed
+#  #> typic1  :  (Intercept)                         passed
+#  #> typic1  :  color1                              passed
+#  #> typic1  :  blur                                passed
+#  #> typic1  :  color1:blur                         passed
+#  #>                             H. & W. convergence p value
+#  #> (Intercept)  :  (Intercept)                      0.4819
+#  #> (Intercept)  :  color1                           0.6041
+#  #> (Intercept)  :  blur                             0.7871
+#  #> (Intercept)  :  color1:blur                      0.4488
+#  #> typic1  :  (Intercept)                           0.8005
+#  #> typic1  :  color1                                0.8028
+#  #> typic1  :  blur                                  0.1004
+#  #> typic1  :  color1:blur                           0.6634
+#  #>
+#  #> The Chain has converged.
+#  #>
+#  #> Table of sum of squares & effect sizes:
+#  #>
+#  #> Table of sum of squares:
+#  #>             (Intercept)  color    blur color:blur Residuals    Total
+#  #> (Intercept)     59.5532 2.3591 26.1587     9.0749  138.4249 229.8047
+#  #> typic1          21.9510 1.9610  5.4139     7.0553   20.1769  50.6221
+#  #>
+#  #> Table of effect sizes (95% credible interval):
+#  #>                      (Intercept)                 color
+#  #> (Intercept) 0.3014 (0.249,0.358) 0.0159 (-0.015,0.104)
+#  #> typic1      0.5215 (0.402,0.638)  0.0781 (-0.015,0.34)
+#  #>                             blur            color:blur
+#  #> (Intercept)  0.1590 (0.108,0.21) 0.0581 (-0.006,0.199)
+#  #> typic1      0.2114 (0.088,0.362)  0.2352 (0.006,0.521)
+#  #>
+#  #> Table of p-values (Multidimensional):
+#  #>             (Intercept)  color    blur color:blur
+#  #> (Intercept)     <0.0001 0.9560 <0.0001     0.1400
+#  #> typic           <0.0001 0.4180 <0.0001     0.0280
+#  #>
+#  #> Table of coefficients:
+#  #>                                mean     SD Quantile0.025 Quantile0.975
+#  #> (Intercept)  :  (Intercept)  0.4975 0.0572        0.3881        0.6101
+#  #> (Intercept)  :  color1      -0.0069 0.1245       -0.2605        0.2413
+#  #> (Intercept)  :  blur        -0.1716 0.0307       -0.2333       -0.1133
+#  #> (Intercept)  :  color1:blur  0.0410 0.0291       -0.0171        0.1001
+#  #> typic1  :  (Intercept)       0.3011 0.0313        0.2374        0.3580
+#  #> typic1  :  color1           -0.0596 0.0736       -0.2062        0.0781
+#  #> typic1  :  blur             -0.0767 0.0170       -0.1087       -0.0439
+#  #> typic1  :  color1:blur       0.0384 0.0178        0.0052        0.0733
+#  #>                             p.value Signif.codes
+#  #> (Intercept)  :  (Intercept) <0.0001          ***
+#  #> (Intercept)  :  color1       0.9560
+#  #> (Intercept)  :  blur        <0.0001          ***
+#  #> (Intercept)  :  color1:blur  0.1400
+#  #> typic1  :  (Intercept)      <0.0001          ***
+#  #> typic1  :  color1            0.4180
+#  #> typic1  :  blur             <0.0001          ***
+#  #> typic1  :  color1:blur       0.0280            *
+#  #> ---
+#  #> Signif. codes: 0 *** 0.001 ** 0.01 * 0.05 . 0.1 1
+#  #>
+#  #> Multiple R-squared:  0.0664
+#  #>
+#  #> Table of predictions:
+#  #>
+#  #> Grand mean:
+#  #> 9.95
+#  #>     2.5%   97.5%
+#  #>   9.5332 10.3673
+#  #>
+#  #>
+#  #>  typic mean   2.5%    97.5%
+#  #>  0     11.035 10.5818 11.4579
+#  #>  1     8.7829 8.2705  9.2933
+#  #>
+#  #>
+#  #>  color mean   2.5%   97.5%
+#  #>  0     9.924  8.7817 10.9414
+#  #>  1     9.9759 9.0196 10.8926
+#  #>
+#  #>
+#  #>  typic color mean    2.5%   97.5%
+#  #>  0     0     10.8042 9.4812 11.9297
+#  #>  0     1     11.26   10.202 12.271
+#  #>  1     0     8.9913  7.7188 10.2174
+#  #>  1     1     8.5735  7.4431 9.6343
+
+## ---- message=FALSE, eval=FALSE------------------------------------------
+#  set.seed(900)
+#  res_fac <- BANOVA.run(y~typic, ~color*blurfac, data = colorad, fit = banova_fit,
+#                    id = colorad$id, num_trials = as.integer(16), iter = 2000, thin = 1, chains = 2)
+
+## ---- message=FALSE, eval=FALSE------------------------------------------
+#  summary(res_fac)
+#  #> Call:
+#  #> BANOVA.run(l1_formula = y ~ typic, l2_formula = ~color * blurfac,
+#  #>     fit = banova_fit, data = colorad, id = colorad$id, iter = 2000,
+#  #>     num_trials = as.integer(16), thin = 1, chains = 2)
+#  #>
+#  #> Convergence diagnostics:
+#  #> Geweke Diag. & Heidelberger and Welch's Diag.
+#  #>                                 Geweke stationarity test
+#  #> (Intercept)  :  (Intercept)                       passed
+#  #> (Intercept)  :  color1                            passed
+#  #> (Intercept)  :  blurfac1                          passed
+#  #> (Intercept)  :  blurfac2                          passed
+#  #> (Intercept)  :  blurfac3                          passed
+#  #> (Intercept)  :  blurfac4                          passed
+#  #> (Intercept)  :  color1:blurfac1                   passed
+#  #> (Intercept)  :  color1:blurfac2                   passed
+#  #> (Intercept)  :  color1:blurfac3                   passed
+#  #> (Intercept)  :  color1:blurfac4                   passed
+#  #> typic1  :  (Intercept)                            passed
+#  #> typic1  :  color1                                 passed
+#  #> typic1  :  blurfac1                               passed
+#  #> typic1  :  blurfac2                               passed
+#  #> typic1  :  blurfac3                               passed
+#  #> typic1  :  blurfac4                               passed
+#  #> typic1  :  color1:blurfac1                        passed
+#  #> typic1  :  color1:blurfac2                        passed
+#  #> typic1  :  color1:blurfac3                        passed
+#  #> typic1  :  color1:blurfac4                        passed
+#  #>                                 Geweke convergence p value
+#  #> (Intercept)  :  (Intercept)                         0.0217
+#  #> (Intercept)  :  color1                              0.4861
+#  #> (Intercept)  :  blurfac1                            0.7050
+#  #> (Intercept)  :  blurfac2                            0.5498
+#  #> (Intercept)  :  blurfac3                            0.4843
+#  #> (Intercept)  :  blurfac4                            0.6209
+#  #> (Intercept)  :  color1:blurfac1                     0.9840
+#  #> (Intercept)  :  color1:blurfac2                     0.6900
+#  #> (Intercept)  :  color1:blurfac3                     0.2931
+#  #> (Intercept)  :  color1:blurfac4                     0.7919
+#  #> typic1  :  (Intercept)                              0.0159
+#  #> typic1  :  color1                                   0.5622
+#  #> typic1  :  blurfac1                                 0.0594
+#  #> typic1  :  blurfac2                                 0.1408
+#  #> typic1  :  blurfac3                                 0.0534
+#  #> typic1  :  blurfac4                                 0.3087
+#  #> typic1  :  color1:blurfac1                          0.3151
+#  #> typic1  :  color1:blurfac2                          0.4267
+#  #> typic1  :  color1:blurfac3                          0.1776
+#  #> typic1  :  color1:blurfac4                          0.8341
+#  #>                                 H. & W. stationarity test
+#  #> (Intercept)  :  (Intercept)                        passed
+#  #> (Intercept)  :  color1                             passed
+#  #> (Intercept)  :  blurfac1                           passed
+#  #> (Intercept)  :  blurfac2                           passed
+#  #> (Intercept)  :  blurfac3                           passed
+#  #> (Intercept)  :  blurfac4                           passed
+#  #> (Intercept)  :  color1:blurfac1                    passed
+#  #> (Intercept)  :  color1:blurfac2                    passed
+#  #> (Intercept)  :  color1:blurfac3                    passed
+#  #> (Intercept)  :  color1:blurfac4                    passed
+#  #> typic1  :  (Intercept)                             passed
+#  #> typic1  :  color1                                  passed
+#  #> typic1  :  blurfac1                                passed
+#  #> typic1  :  blurfac2                                passed
+#  #> typic1  :  blurfac3                                passed
+#  #> typic1  :  blurfac4                                passed
+#  #> typic1  :  color1:blurfac1                         passed
+#  #> typic1  :  color1:blurfac2                         passed
+#  #> typic1  :  color1:blurfac3                         passed
+#  #> typic1  :  color1:blurfac4                         passed
+#  #>                                 H. & W. convergence p value
+#  #> (Intercept)  :  (Intercept)                          0.2829
+#  #> (Intercept)  :  color1                               0.8963
+#  #> (Intercept)  :  blurfac1                             0.5252
+#  #> (Intercept)  :  blurfac2                             0.8212
+#  #> (Intercept)  :  blurfac3                             0.5227
+#  #> (Intercept)  :  blurfac4                             0.9169
+#  #> (Intercept)  :  color1:blurfac1                      0.5844
+#  #> (Intercept)  :  color1:blurfac2                      0.4926
+#  #> (Intercept)  :  color1:blurfac3                      0.7559
+#  #> (Intercept)  :  color1:blurfac4                      0.8684
+#  #> typic1  :  (Intercept)                               0.0515
+#  #> typic1  :  color1                                    0.0775
+#  #> typic1  :  blurfac1                                  0.2471
+#  #> typic1  :  blurfac2                                  0.1948
+#  #> typic1  :  blurfac3                                  0.0845
+#  #> typic1  :  blurfac4                                  0.0610
+#  #> typic1  :  color1:blurfac1                           0.1983
+#  #> typic1  :  color1:blurfac2                           0.2473
+#  #> typic1  :  color1:blurfac3                           0.2181
+#  #> typic1  :  color1:blurfac4                           0.8831
+#  #>
+#  #> The Chain has converged.
+#  #>
+#  #> Table of sum of squares & effect sizes:
+#  #>
+#  #> Table of sum of squares:
+#  #>             (Intercept)  color blurfac color:blurfac Residuals    Total
+#  #> (Intercept)     59.3470 5.1145 29.5136        1.0276  136.9923 231.8971
+#  #> typic1          21.3932 2.0202 13.6640        1.9275   16.7336  55.6143
+#  #>
+#  #> Table of effect sizes (95% credible interval):
+#  #>                     (Intercept)                color              blurfac
+#  #> (Intercept)  0.3028 (0.25,0.36)  0.0361 (0.01,0.066) 0.1774 (0.123,0.232)
+#  #> typic1      0.5602 (0.444,0.67) 0.1075 (0.017,0.231) 0.4476 (0.315,0.585)
+#  #>                     color:blurfac
+#  #> (Intercept) 0.0075 (-0.028,0.038)
+#  #> typic1       0.1023 (0.009,0.231)
+#  #>
+#  #> Table of p-values (Multidimensional):
+#  #>             (Intercept)  color blurfac color:blurfac
+#  #> (Intercept)     <0.0001 0.0100 <0.0001        0.1590
+#  #> typic           <0.0001 0.0010 <0.0001        0.0200
+#  #>
+#  #> Table of coefficients:
+#  #>                                    mean     SD Quantile0.025 Quantile0.975
+#  #> (Intercept)  :  (Intercept)      0.4981 0.0574        0.3840        0.6115
+#  #> (Intercept)  :  color1           0.1532 0.0567        0.0404        0.2683
+#  #> (Intercept)  :  blurfac1         0.5591 0.1139        0.3470        0.7807
+#  #> (Intercept)  :  blurfac2         0.0554 0.1168       -0.1731        0.2883
+#  #> (Intercept)  :  blurfac3         0.0193 0.1036       -0.1775        0.2226
+#  #> (Intercept)  :  blurfac4        -0.0565 0.1094       -0.2689        0.1672
+#  #> (Intercept)  :  color1:blurfac1 -0.1586 0.1146       -0.3897        0.0724
+#  #> (Intercept)  :  color1:blurfac2  0.1137 0.1162       -0.1094        0.3347
+#  #> (Intercept)  :  color1:blurfac3 -0.0774 0.1096       -0.2961        0.1376
+#  #> (Intercept)  :  color1:blurfac4  0.0125 0.1114       -0.2098        0.2329
+#  #> typic1  :  (Intercept)           0.3092 0.0318        0.2481        0.3742
+#  #> typic1  :  color1                0.0906 0.0311        0.0296        0.1532
+#  #> typic1  :  blurfac1              0.1621 0.0634        0.0379        0.2901
+#  #> typic1  :  blurfac2              0.3612 0.0692        0.2138        0.4951
+#  #> typic1  :  blurfac3             -0.0260 0.0642       -0.1543        0.0996
+#  #> typic1  :  blurfac4             -0.1653 0.0625       -0.2830       -0.0409
+#  #> typic1  :  color1:blurfac1      -0.1443 0.0645       -0.2727       -0.0231
+#  #> typic1  :  color1:blurfac2       0.0344 0.0671       -0.1041        0.1637
+#  #> typic1  :  color1:blurfac3      -0.0238 0.0597       -0.1456        0.0915
+#  #> typic1  :  color1:blurfac4       0.0956 0.0619       -0.0272        0.2211
+#  #>                                 p.value Signif.codes
+#  #> (Intercept)  :  (Intercept)     <0.0001          ***
+#  #> (Intercept)  :  color1           0.0100           **
+#  #> (Intercept)  :  blurfac1        <0.0001          ***
+#  #> (Intercept)  :  blurfac2         0.6400
+#  #> (Intercept)  :  blurfac3         0.8430
+#  #> (Intercept)  :  blurfac4         0.5910
+#  #> (Intercept)  :  color1:blurfac1  0.1590
+#  #> (Intercept)  :  color1:blurfac2  0.3360
+#  #> (Intercept)  :  color1:blurfac3  0.4850
+#  #> (Intercept)  :  color1:blurfac4  0.8890
+#  #> typic1  :  (Intercept)          <0.0001          ***
+#  #> typic1  :  color1                0.0010          ***
+#  #> typic1  :  blurfac1              0.0080           **
+#  #> typic1  :  blurfac2             <0.0001          ***
+#  #> typic1  :  blurfac3              0.6920
+#  #> typic1  :  blurfac4              0.0060           **
+#  #> typic1  :  color1:blurfac1       0.0200            *
+#  #> typic1  :  color1:blurfac2       0.5940
+#  #> typic1  :  color1:blurfac3       0.6940
+#  #> typic1  :  color1:blurfac4       0.1150
+#  #> ---
+#  #> Signif. codes: 0 *** 0.001 ** 0.01 * 0.05 . 0.1 1
+#  #>
+#  #> Multiple R-squared:  0.0856
+#  #>
+#  #> Table of predictions:
+#  #>
+#  #> Grand mean:
+#  #> 9.9522
+#  #>     2.5%   97.5%
+#  #>   9.5174 10.3726
+#  #>
+#  #>
+#  #>  typic mean    2.5%    97.5%
+#  #>  0     11.0645 10.5896 11.4879
+#  #>  1     8.7534  8.2242  9.2339
+#  #>
+#  #>
+#  #>  color mean    2.5%   97.5%
+#  #>  0     10.5167 9.9177 11.0551
+#  #>  1     9.3662  8.7386 9.9471
+#  #>
+#  #>  blurfac mean    2.5%    97.5%
+#  #>  1       11.8745 11.0664 12.6146
+#  #>  2       10.1591 9.1897  11.1158
+#  #>  3       10.0247 9.1808  10.8356
+#  #>  4       9.7383  8.8491  10.6451
+#  #>  5       7.6834  6.6721  8.65
+#  #>
+#  #>
+#  #>  typic color mean    2.5%    97.5%
+#  #>  0     0     11.8558 11.2628 12.3795
+#  #>  0     1     10.1961 9.521   10.8499
+#  #>  1     0     9.0004  8.262   9.6717
+#  #>  1     1     8.5049  7.8023  9.2008
+#  #>
+#  #>  typic blurfac mean    2.5%    97.5%
+#  #>  0     1       13.1487 12.3854 13.7718
+#  #>  0     2       12.3638 11.4074 13.14
+#  #>  0     3       11.0416 10.0703 11.8974
+#  #>  0     4       10.2774 9.2503  11.2558
+#  #>  0     5       7.5923  6.4556  8.7182
+#  #>  1     1       10.2786 9.1893  11.2832
+#  #>  1     2       7.533   6.3988  8.7
+#  #>  1     3       8.9327  7.9134  9.9488
+#  #>  1     4       9.1821  8.1045  10.2629
+#  #>  1     5       7.7745  6.6116  8.9589
+#  #>
+#  #>
+#  #>  color blurfac mean    2.5%    97.5%
+#  #>  0     1       11.8576 10.7518 12.8309
+#  #>  1     1       11.8912 10.7507 12.8908
+#  #>  0     2       11.1088 9.6862  12.2988
+#  #>  1     2       9.1388  7.7334  10.5106
+#  #>  0     3       10.3056 9.0203  11.4538
+#  #>  1     3       9.7384  8.5515  10.9235
+#  #>  0     4       10.3571 8.9993  11.6076
+#  #>  1     4       9.0969  7.7976  10.4325
+#  #>  0     5       8.7333  7.3643  10.1124
+#  #>  1     5       6.6442  5.314   8.0042
+#  #>
+#  #>
+#  #>  typic color blurfac mean    2.5%    97.5%
+#  #>  0     0     1       13.0075 11.8829 13.8698
+#  #>  0     1     1       13.2845 12.2295 14.1165
+#  #>  0     0     2       13.3472 12.179  14.2525
+#  #>  0     1     2       11.1483 9.6802  12.4133
+#  #>  0     0     3       11.5161 10.1419 12.6794
+#  #>  0     1     3       10.5408 9.1534  11.8042
+#  #>  0     0     4       11.4974 10.0861 12.6792
+#  #>  0     1     4       8.9302  7.4175  10.3435
+#  #>  0     0     5       9.1508  7.5622  10.651
+#  #>  0     1     5       6.0642  4.63    7.6654
+#  #>  1     0     1       10.4543 8.9691  11.7715
+#  #>  1     1     1       10.1005 8.5915  11.5018
+#  #>  1     0     2       8.0995  6.3761  9.7681
+#  #>  1     1     2       6.9711  5.4889  8.5847
+#  #>  1     0     3       8.9678  7.3996  10.3327
+#  #>  1     1     3       8.8976  7.5123  10.3464
+#  #>  1     0     4       9.1014  7.5952  10.681
+#  #>  1     1     4       9.2626  7.7261  10.8305
+#  #>  1     0     5       8.3118  6.8199  9.9193
+#  #>  1     1     5       7.2393  5.6957  8.8424
+

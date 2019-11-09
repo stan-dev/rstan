@@ -1,0 +1,61 @@
+useDynLib(gtools)
+
+export(
+       addLast,
+       asc,
+       ASCIIfy,
+       ask,
+       assert,
+       assignEdgewise,
+       baseOf,
+       binsearch,
+       capture,
+       capwords,
+       chr,
+       checkRVersion,
+       combinations,
+       ddirichlet,
+       defmacro,
+       even,
+       foldchange,
+       foldchange2logratio,
+       getDependencies,
+       inv.logit,
+       invalid,
+       keywords,
+       lastAdd,
+       loadedPackages,
+       logit,
+       logratio2foldchange,
+       mixedorder,
+       mixedsort,
+       na.replace,
+       odd,
+       permutations,
+       permute,
+       quantcut,
+       rdirichlet,
+       roman2int,
+       running,
+       scat,
+       setTCPNoDelay,
+       smartbind,
+       split_path,
+       sprint,
+       stars.pval,
+       strmacro,
+       unByteCode,
+       unByteCodeAssign
+       )
+
+importFrom("methods", "new")
+importFrom("stats", "na.omit", "quantile", "rgamma", "symnum")
+importFrom("utils", "available.packages", "flush.console", "head",
+           "help.search", "installed.packages", "modifyList",
+           "packageVersion")
+
+# Refer to all C routines by their name prefixed by C_
+useDynLib(gtools, .registration = TRUE, .fixes = "C_")
+
+
+

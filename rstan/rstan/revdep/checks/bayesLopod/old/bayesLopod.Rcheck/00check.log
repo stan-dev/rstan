@@ -1,0 +1,20 @@
+* using log directory ‘/home/ben/stan-dev/rstan/rstan/rstan/revdep/checks/bayesLopod/old/bayesLopod.Rcheck’
+* using R Under development (unstable) (2019-04-20 r76407)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* checking for file ‘bayesLopod/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘bayesLopod’ version ‘1.0.1’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘bayesLopod’ can be installed ... ERROR
+Installation failed.
+See ‘/home/ben/stan-dev/rstan/rstan/rstan/revdep/checks/bayesLopod/old/bayesLopod.Rcheck/00install.out’ for details.
+* DONE
+Status: 1 ERROR

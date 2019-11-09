@@ -1,0 +1,335 @@
+pkgname <- "blavaan"
+source(file.path(R.home("share"), "R", "examples-header.R"))
+options(warn = 1)
+library('blavaan')
+
+base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+cleanEx()
+nameEx("bcfa")
+### * bcfa
+
+flush(stderr()); flush(stdout())
+
+### Name: bcfa
+### Title: Fit Confirmatory Factor Analysis Models
+### Aliases: bcfa
+
+### ** Examples
+
+## Not run: 
+##D # The Holzinger and Swineford (1939) example
+##D HS.model <- ' visual  =~ x1 + x2 + x3
+##D               textual =~ x4 + x5 + x6
+##D               speed   =~ x7 + x8 + x9 '
+##D 
+##D fit <- bcfa(HS.model, data=HolzingerSwineford1939,
+##D             bcontrol=list(method="rjparallel"))
+##D summary(fit)
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("bgrowth")
+### * bgrowth
+
+flush(stderr()); flush(stdout())
+
+### Name: bgrowth
+### Title: Fit Growth Curve Models
+### Aliases: bgrowth
+
+### ** Examples
+
+## Not run: 
+##D ## linear growth model with a time-varying covariate
+##D model.syntax <- '
+##D   # intercept and slope with fixed coefficients
+##D     i =~ 1*t1 + 1*t2 + 1*t3 + 1*t4
+##D     s =~ 0*t1 + 1*t2 + 2*t3 + 3*t4
+##D 
+##D   # regressions
+##D     i ~ x1 + x2
+##D     s ~ x1 + x2
+##D 
+##D   # time-varying covariates
+##D     t1 ~ c1
+##D     t2 ~ c2
+##D     t3 ~ c3
+##D     t4 ~ c4
+##D '
+##D 
+##D fit <- bgrowth(model.syntax, data=Demo.growth)
+##D summary(fit)
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("blavCompare")
+### * blavCompare
+
+flush(stderr()); flush(stdout())
+
+### Name: blavCompare
+### Title: Bayesian model comparisons.
+### Aliases: blavCompare BF
+
+### ** Examples
+
+## Not run: 
+##D hsm1 <- ' visual  =~ x1 + x2 + x3 + x4
+##D           textual =~ x4 + x5 + x6
+##D           speed   =~ x7 + x8 + x9 '
+##D 
+##D fit1 <- bcfa(hsm1, data=HolzingerSwineford1939)
+##D 
+##D hsm2 <- ' visual  =~ x1 + x2 + x3
+##D           textual =~ x4 + x5 + x6 + x7
+##D           speed   =~ x7 + x8 + x9 '
+##D 
+##D fit2 <- bcfa(hsm2, data=HolzingerSwineford1939)
+##D 
+##D blavCompare(fit1, fit2)
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("blavFitIndices")
+### * blavFitIndices
+
+flush(stderr()); flush(stdout())
+
+### Name: blavFitIndices
+### Title: SEM Fit Indices for Bayesian SEM
+### Aliases: blavFitIndices blavFitIndices-class show,blavFitIndices-method
+###   summary,blavFitIndices-method
+
+### ** Examples
+ ## Not run: 
+##D HS.model <- ' visual  =~ x1 + x2 + x3
+##D               textual =~ x4 + x5 + x6
+##D               speed   =~ x7 + x8 + x9 '
+##D ## fit target model
+##D fit1 <- bcfa(HS.model, data = HolzingerSwineford1939, cp = "fa",
+##D              n.chains = 2, burnin = 1000, sample = 1000)
+##D 
+##D ## fit null model to calculate CFI, TLI, and NFI 
+##D null.model <- c(paste0("x", 1:9, " ~~ x", 1:9), paste0("x", 1:9, " ~ 1"))
+##D fit0 <- bcfa(null.model, data = HolzingerSwineford1939, cp = "fa",
+##D              n.chains = 2, burnin = 1000, sample = 1000)
+##D 
+##D ## calculate posterior distributions of fit indices
+##D 
+##D ## The default method mimics fit indices derived from ML estimation
+##D ML <- blavFitIndices(fit1, baseline.model = fit0)
+##D ML
+##D summary(ML)
+##D 
+##D ## other options:
+##D 
+##D ## - use Hoofs et al.'s (2017) PPMC-based method
+##D ## - use the estimated number of parameters from WAIC instead of LOO-IC
+##D PPMC <- blavFitIndices(fit1, baseline.model = fit0,
+##D                        pD = "waic", rescale = "PPMC")
+##D ## issues a warning about using rescale="PPMC" with N < 1000 (see Hoofs et al.)
+##D 
+##D ## - specify only the desired measures of central tendency
+##D ## - specify a different "confidence" level for the credible intervals
+##D summary(PPMC, central.tendency = c("mean","mode"), prob = .95)
+##D 
+##D 
+##D 
+##D ## Access the posterior distributions for further investigation
+##D head(distML <- data.frame(ML@indices))
+##D 
+##D ## For example, diagnostic plots using the bayesplot package:
+##D 
+##D ## distinguish chains
+##D nChains <- blavInspect(fit1, "n.chains")
+##D distML$Chain <- rep(1:nChains, each = nrow(distML) / nChains)
+##D 
+##D library(bayesplot)
+##D mcmc_pairs(distML, pars = c("BRMSEA","BMc","BGammaHat","BCFI","BTLI"),
+##D            diag_fun = "hist")
+##D ## Indices are highly correlated across iterations in both chains
+##D 
+##D ## Compare to PPMC method
+##D distPPMC <- data.frame(PPMC@indices)
+##D distPPMC$Chain <- rep(1:nChains, each = nrow(distPPMC) / nChains)
+##D mcmc_pairs(distPPMC, pars = c("BRMSEA","BMc","BGammaHat","BCFI","BTLI"),
+##D            diag_fun = "dens")
+##D ## nonlinear relation between BRMSEA, related to the floor effect of BRMSEA
+##D ## that Hoofs et al. found for larger (12-indicator) models
+##D 
+## End(Not run)
+
+
+cleanEx()
+nameEx("blavInspect")
+### * blavInspect
+
+flush(stderr()); flush(stdout())
+
+### Name: blavInspect
+### Title: Inspect or Extract Information from a fitted blavaan object
+### Aliases: blavInspect blavTech
+
+### ** Examples
+
+## Not run: 
+##D # The Holzinger and Swineford (1939) example
+##D HS.model <- ' visual  =~ x1 + x2 + x3
+##D               textual =~ x4 + x5 + x6
+##D               speed   =~ x7 + x8 + x9 '
+##D 
+##D fit <- bcfa(HS.model, data=HolzingerSwineford1939,
+##D             jagcontrol=list(method="rjparallel"))
+##D 
+##D # extract information
+##D blavInspect(fit, "psrf")
+##D blavInspect(fit, "hpd", level=.9)
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("blavaan")
+### * blavaan
+
+flush(stderr()); flush(stdout())
+
+### Name: blavaan
+### Title: Fit a Bayesian Latent Variable Model
+### Aliases: blavaan blavaan-class
+
+### ** Examples
+
+## Not run: 
+##D # The Holzinger and Swineford (1939) example
+##D HS.model <- ' visual  =~ x1 + x2 + x3
+##D               textual =~ x4 + x5 + x6
+##D               speed   =~ x7 + x8 + x9 '
+##D 
+##D fit <- blavaan(HS.model, data=HolzingerSwineford1939,
+##D                auto.var=TRUE, auto.fix.first=TRUE,
+##D                auto.cov.lv.x=TRUE,
+##D                bcontrol=list(method="rjparallel"))
+##D summary(fit)
+##D coef(fit)
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("bsem")
+### * bsem
+
+flush(stderr()); flush(stdout())
+
+### Name: bsem
+### Title: Fit Structural Equation Models
+### Aliases: bsem
+
+### ** Examples
+
+## Not run: 
+##D ## The industrialization and Political Democracy Example 
+##D ## Bollen (1989), page 332
+##D model <- ' 
+##D   # latent variable definitions
+##D      ind60 =~ x1 + x2 + x3
+##D      dem60 =~ y1 + a*y2 + b*y3 + c*y4
+##D      dem65 =~ y5 + a*y6 + b*y7 + c*y8
+##D 
+##D   # regressions
+##D     dem60 ~ ind60
+##D     dem65 ~ ind60 + dem60
+##D 
+##D   # residual correlations
+##D     y1 ~~ y5
+##D     y2 ~~ y4 + y6
+##D     y3 ~~ y7
+##D     y4 ~~ y8
+##D     y6 ~~ y8
+##D '
+##D 
+##D ## unique priors for mv intercepts; parallel chains
+##D fit <- bsem(model, data=PoliticalDemocracy,
+##D             dp=dpriors(nu="dnorm(5,1e-2)"),
+##D             bcontrol=list(method="rjparallel"))
+##D summary(fit)
+## End(Not run)
+
+
+
+cleanEx()
+nameEx("dpriors")
+### * dpriors
+
+flush(stderr()); flush(stdout())
+
+### Name: dpriors
+### Title: Specify default prior distributions
+### Aliases: dpriors
+
+### ** Examples
+
+dpriors(nu = "dunif(0,10)", lambda = "dnorm(0,1e-2) T(0,)", itheta = "dexp(1)")
+
+
+
+cleanEx()
+nameEx("standardizedPosterior")
+### * standardizedPosterior
+
+flush(stderr()); flush(stdout())
+
+### Name: standardizedPosterior
+### Title: Standardized Posterior
+### Aliases: standardizedPosterior standardizedposterior
+
+### ** Examples
+
+## Not run: 
+##D model <- ' 
+##D   # latent variable definitions
+##D      ind60 =~ x1 + x2 + x3
+##D      dem60 =~ y1 + a*y2 + b*y3 + c*y4
+##D      dem65 =~ y5 + a*y6 + b*y7 + c*y8
+##D 
+##D   # regressions
+##D     dem60 ~ ind60
+##D     dem65 ~ ind60 + dem60
+##D 
+##D   # residual correlations
+##D     y1 ~~ y5
+##D     y2 ~~ y4 + y6
+##D     y3 ~~ y7
+##D     y4 ~~ y8
+##D     y6 ~~ y8
+##D '
+##D 
+##D fit <- bsem(model, data=PoliticalDemocracy,
+##D             dp=dpriors(nu="dnorm(5,1e-2)"),
+##D             bcontrol=list(method="rjparallel"))
+##D 
+##D standardizedPosterior(fit)
+## End(Not run)
+
+
+
+### * <FOOTER>
+###
+cleanEx()
+options(digits = 7L)
+base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+grDevices::dev.off()
+###
+### Local variables: ***
+### mode: outline-minor ***
+### outline-regexp: "\\(> \\)?### [*]+" ***
+### End: ***
+quit('no')

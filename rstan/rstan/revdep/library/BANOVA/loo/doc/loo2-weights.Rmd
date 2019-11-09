@@ -1,0 +1,370 @@
+---
+title: "Bayesian Stacking and Pseudo-BMA weights using the loo package"
+author: "Aki Vehtari and Jonah Gabry"
+date: "`r Sys.Date()`"
+output:
+  html_vignette:
+    toc: yes
+params:
+  EVAL: !r identical(Sys.getenv("NOT_CRAN"), "true")
+---
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Bayesian Stacking and Pseudo-BMA weights}
+-->
+```{r, child="children/SETTINGS-knitr.txt"}
+```
+
+# Introduction
+
+This vignette demonstrates the new functionality in __loo__ v2.0.0 for 
+Bayesian stacking and Pseudo-BMA weighting. In this vignette we can't
+provide all of the necessary background on this topic, so we encourage
+readers to refer to the paper
+
+* Yao, Y., Vehtari, A., Simpson, D., and Gelman, A.  (2018). Using stacking to average Bayesian predictive distributions. In Bayesian Analysis, \doi:10.1214/17-BA1091. [Online](https://projecteuclid.org/euclid.ba/1516093227)
+
+which provides important details on the methods demonstrated in this vignette.
+Here we just quote from the abstract of the paper: 
+
+> **Abstract**: Bayesian model averaging is flawed in the $\mathcal{M}$-open setting in which the true data-generating process is not one of the candidate models being fit. We take the idea of stacking from the point estimation literature and generalize to the combination of predictive distributions. We extend the utility function to any proper scoring rule and use Pareto smoothed importance sampling to efficiently compute the required leave-one-out posterior distributions. We compare stacking of predictive distributions to several alternatives: stacking of means, Bayesian model averaging (BMA), Pseudo-BMA, and a variant of Pseudo-BMA that is stabilized using the Bayesian bootstrap. Based on simulations and real-data applications, we recommend stacking of predictive distributions, with bootstrapped-Pseudo-BMA as an approximate alternative when computation cost is an issue.
+
+Ideally, we would avoid the Bayesian model combination problem by
+extending the model to include the separate models as special cases,
+and preferably as a continuous expansion of the model space.  For
+example, instead of model averaging over different covariate
+combinations, all potentially relevant covariates should be included
+in a predictive model (for causal analysis more  care is needed) 
+and a prior assumption that only some of the covariates are
+relevant can be presented with regularized horseshoe prior (Piironen
+and Vehtari, 2017a). For variable selection we recommend projective
+predictive variable selection (Piironen and Vehtari, 2017a;
+[__projpred__ package](https://cran.r-project.org/package=projpred)).
+
+To demonstrate how to use __loo__ package to compute Bayesian stacking and
+Pseudo-BMA weights, we repeat two simple model averaging examples from Chapters
+6 and 10 of _Statistical Rethinking_ by Richard McElreath. In _Statistical
+Rethinking_ WAIC is used to form weights which are similar to classical "Akaike
+weights". Pseudo-BMA weighting using PSIS-LOO for computation is close to these
+WAIC weights, but named after the Pseudo Bayes Factor by Geisser and Eddy
+(1979). As discussed below, in general we prefer using stacking rather than WAIC
+weights or the similar pseudo-BMA weights.
+
+
+# Setup
+
+In addition to the __loo__ package we will also load the __rstanarm__ package
+for fitting the models.
+
+```{r, setup, message=FALSE}
+library(rstanarm)
+library(loo)
+```
+
+# Example: Primate milk 
+
+In _Statistical Rethinking_, McElreath describes the data for the primate milk
+example as follows:
+
+> A popular hypothesis has it that primates with larger brains produce more energetic milk, so that brains can grow quickly. ... The question here is to what extent energy content of milk, measured here by kilocalories, is related to the percent of the brain mass that is neocortex. ... We'll end up needing female body mass as well, to see the masking that hides the relationships among the variables.
+
+```{r}
+data(milk)
+d <- milk[complete.cases(milk),]
+d$neocortex <- d$neocortex.perc /100
+str(d)
+```
+
+We repeat the analysis in Chapter 6 of _Statistical Rethinking_ using the
+following four models (here we use the default weakly informative priors in __rstanarm__, while flat priors were used in _Statistical Rethinking_).
+
+```{r, results="hide"}
+fit1 <- stan_glm(kcal.per.g ~ 1, data = d, seed = 2030)
+fit2 <- update(fit1, formula = kcal.per.g ~ neocortex)
+fit3 <- update(fit1, formula = kcal.per.g ~ log(mass))
+fit4 <- update(fit1, formula = kcal.per.g ~ neocortex + log(mass))
+```
+
+McElreath uses WAIC for model comparison and averaging, so we'll start by also
+computing WAIC for these models so we can compare the results to the 
+other options presented later in the vignette. The __loo__ package
+provides `waic` methods for log-likelihood arrays, matrices and functions.
+Since we fit our model with rstanarm we can use the `waic` method provided
+by the __rstanarm__ package (a wrapper around `waic` from the __loo__ package), 
+which allows us to just pass in our fitted model objects instead of first 
+extracting the log-likelihood values.
+
+```{r}
+waic1 <- waic(fit1)
+waic2 <- waic(fit2)
+waic3 <- waic(fit3)
+waic4 <- waic(fit4)
+waics <- c(
+  waic1$estimates["elpd_waic", 1],
+  waic2$estimates["elpd_waic", 1],
+  waic3$estimates["elpd_waic", 1],
+  waic4$estimates["elpd_waic", 1]
+)
+```
+
+We get some warnings when computing WAIC for models 3 and 4, indicating that we
+shouldn't trust the WAIC weights we will compute later. Following the
+recommendation in the warning, we next use the `loo` methods to compute PSIS-LOO
+instead. The __loo__ package provides `loo` methods for log-likelihood arrays,
+matrices, and functions, but since we fit our model with __rstanarm__ we can
+just pass the fitted model objects directly and __rstanarm__ will extract the
+needed values to pass to the __loo__ package. (Like __rstanarm__, some other R
+packages for fitting Stan models, e.g. __brms__, also provide similar methods
+for interfacing with the __loo__ package.)
+
+```{r}
+# note: the loo function accepts a 'cores' argument that we recommend specifying
+# when working with bigger datasets
+
+loo1 <- loo(fit1)
+loo2 <- loo(fit2)
+loo3 <- loo(fit3)
+loo4 <- loo(fit4)
+lpd_point <- cbind(
+  loo1$pointwise[,"elpd_loo"], 
+  loo2$pointwise[,"elpd_loo"],
+  loo3$pointwise[,"elpd_loo"], 
+  loo4$pointwise[,"elpd_loo"]
+)
+```
+
+With `loo` we don't get any warnings for models 3 and 4, but for illustration of
+good results, we display the diagnostic details for these models anyway.
+
+```{r}
+print(loo3)
+print(loo4)
+```
+
+One benefit of PSIS-LOO over WAIC is better diagnostics. Here for both models 3
+and 4 all $k<0.7$ and the Monte Carlo SE of `elpd_loo` is 0.1 or less, and we can expect
+the model comparison to be reliable.
+
+Next we compute and compare 1) WAIC weights, 2) Pseudo-BMA weights without
+Bayesian bootstrap, 3) Pseudo-BMA+ weights with Bayesian bootstrap, and 4)
+Bayesian stacking weights.
+
+```{r}
+waic_wts <- exp(waics) / sum(exp(waics))
+pbma_wts <- pseudobma_weights(lpd_point, BB=FALSE)
+pbma_BB_wts <- pseudobma_weights(lpd_point) # default is BB=TRUE
+stacking_wts <- stacking_weights(lpd_point)
+round(cbind(waic_wts, pbma_wts, pbma_BB_wts, stacking_wts), 2)
+```
+
+With all approaches Model 4 with `neocortex` and `log(mass)` gets most of the
+weight. Based on theory, Pseudo-BMA weights without Bayesian bootstrap should be
+close to WAIC weights, and we can also see that here. Pseudo-BMA+ weights with
+Bayesian bootstrap provide more cautious weights further away from 0 and 1 (see
+Yao et al. (2018) for a discussion of why this can be beneficial and results
+from related experiments). In this particular example, the Bayesian stacking
+weights are not much different from the other weights.
+
+One of the benefits of stacking is that it manages well if there are many
+similar models. Consider for example that there could be many irrelevant
+covariates that when included would produce a similar model to one of the
+existing models. To emulate this situation here we simply copy the first model a
+bunch of times, but you can imagine that instead we would have ten alternative
+models with about the same predictive performance. WAIC weights for such a
+scenario would be close to the following:
+
+```{r}
+waic_wts_demo <- 
+  exp(waics[c(1,1,1,1,1,1,1,1,1,1,2,3,4)]) /
+  sum(exp(waics[c(1,1,1,1,1,1,1,1,1,1,2,3,4)]))
+round(waic_wts_demo, 3)
+```
+
+Notice how much the weight for model 4 is lowered now that more models similar
+to model 1 (or in this case identical) have been added. Both WAIC weights and
+Pseudo-BMA approaches first estimate the predictive performance separately for
+each model and then compute weights based on estimated relative predictive
+performances. Similar models share similar weights so the weights of other
+models must be reduced for the total sum of the weights to remain the same.
+
+On the other hand, stacking optimizes the weights _jointly_, allowing for the
+very similar models (in this toy example repeated models) to share their weight
+while more unique models keep their original weights. In our example 
+we can see this difference clearly: 
+
+```{r}
+stacking_weights(lpd_point[,c(1,1,1,1,1,1,1,1,1,1,2,3,4)])
+```
+Using stacking, the weight for the best model stays essentially unchanged.
+
+
+# Example: Oceanic tool complexity
+
+Another example we consider is the Kline oceanic tool complexity data, which
+McElreath describes as follows:
+
+>Different historical island populations possessed tool kits of different size. These kits include fish hooks, axes, boats, hand plows, and many other types of tools. A number of theories predict that larger populations will both develop and sustain more complex tool kits. ... It's also suggested that contact rates among populations effectively increases population [sic, probably should be tool kit] size, as it's relevant to technological evolution.
+
+We build models predicting the total number of tools given the log
+population size and the contact rate (high vs. low).
+
+```{r}
+data(Kline)
+d <- Kline
+d$log_pop <- log(d$population)
+d$contact_high <- ifelse(d$contact=="high", 1, 0)
+str(d)
+```
+
+We start with a Poisson regression model with the log population size,
+the contact rate, and an interaction term between them (priors are
+informative priors as in _Statistical Rethinking_).
+```{r, results="hide"}
+fit10 <-
+  stan_glm(
+    total_tools ~ log_pop + contact_high + log_pop * contact_high,
+    family = poisson(link = "log"),
+    data = d,
+    prior = normal(0, 1, autoscale = FALSE),
+    prior_intercept = normal(0, 100, autoscale = FALSE),
+    seed = 2030
+  )
+```
+
+Before running other models, we check whether Poisson is good choice
+as the conditional observation model.
+
+```{r}
+loo10 <- loo(fit10)
+print(loo10)
+```
+
+We get at least one observation with $k>0.7$ and the estimated effective
+number of parameters `p_loo` is larger than the total number of
+parameters in the model. This indicates that Poisson might be too
+narrow. A negative binomial model might be better, but with so few
+observations it is not so clear.
+
+We can compute LOO more accurately by running Stan again for the
+leave-one-out folds with high $k$ estimates. When using __rstanarm__
+this can be done by specifying the `k_threshold` argument:
+
+```{r}
+loo10 <- loo(fit10, k_threshold=0.7)
+print(loo10)
+```
+
+In this case we see that there is not much difference, and thus it is relatively
+safe to continue.
+
+As a comparison we also compute WAIC:
+```{r}
+waic10 <- waic(fit10)
+print(waic10)
+```
+
+The WAIC computation is giving warnings and the estimated ELPD is slightly more
+optimistic. We recommend using the PSIS-LOO results instead.
+
+To assess whether the contact rate and interaction term are useful, we can make
+a comparison to models without these terms.
+
+```{r, results="hide"}
+fit11 <- update(fit10, formula = total_tools ~ log_pop + contact_high)
+fit12 <- update(fit10, formula = total_tools ~ log_pop)
+```
+```{r}
+(loo11 <- loo(fit11))
+(loo12 <- loo(fit12))
+```
+```{r}
+loo11 <- loo(fit11, k_threshold=0.7)
+loo12 <- loo(fit12, k_threshold=0.7)
+lpd_point <- cbind(
+  loo10$pointwise[, "elpd_loo"], 
+  loo11$pointwise[, "elpd_loo"], 
+  loo12$pointwise[, "elpd_loo"]
+)
+```
+
+For comparison we'll also compute WAIC values for these additional models:
+```{r}
+waic11 <- waic(fit11)
+waic12 <- waic(fit12)
+waics <- c(
+  waic10$estimates["elpd_waic", 1], 
+  waic11$estimates["elpd_waic", 1], 
+  waic12$estimates["elpd_waic", 1]
+)
+```
+The WAIC computation again gives warnings, and we recommend using PSIS-LOO
+instead.
+
+Finally, we compute 1) WAIC weights, 2) Pseudo-BMA weights without
+Bayesian bootstrap, 3) Pseudo-BMA+ weights with Bayesian bootstrap, and
+4) Bayesian stacking weights.
+
+```{r}
+waic_wts <- exp(waics) / sum(exp(waics))
+pbma_wts <- pseudobma_weights(lpd_point, BB=FALSE)
+pbma_BB_wts <- pseudobma_weights(lpd_point) # default is BB=TRUE
+stacking_wts <- stacking_weights(lpd_point)
+round(cbind(waic_wts, pbma_wts, pbma_BB_wts, stacking_wts), 2)
+```
+
+All weights favor the second model with the log population and the contact rate.
+WAIC weights and Pseudo-BMA weights (without Bayesian bootstrap) are similar, while Pseudo-BMA+ is more cautious and closer to stacking weights. 
+
+It may seem surprising that Bayesian stacking is giving zero weight to the first
+model, but this is likely due to the fact that the estimated effect for the
+interaction term is close to zero and thus models 1 and 2 give very similar
+predictions. In other words, incorporating the model with the interaction (model
+1) into the model average doesn't improve the predictions at all and so model 1
+is given a weight of 0. On the other hand, models 2 and 3 are giving slightly
+different predictions and thus their combination may be slightly better than
+either alone. This behavior is related to the repeated similar model illustration
+in the milk example above.
+
+# Simpler coding using `loo_model_weights` function
+
+Although in the examples above we called the `stacking_weights` and 
+`pseudobma_weights` functions directly, we can also use the 
+`loo_model_weights` wrapper, which takes as its input either a list
+of pointwise log-likelihood matrices or a list of precomputed loo objects.
+There are also `loo_model_weights` methods for stanreg objects (fitted
+model objects from __rstanarm__) as well as fitted model objects from 
+other packages (e.g. __brms__) that do the preparation work for the user
+(see, e.g., the examples at `help("loo_model_weights", package = "rstanarm")`).
+
+```{r}
+# using list of loo objects
+loo_list <- list(loo10, loo11, loo12)
+loo_model_weights(loo_list)
+loo_model_weights(loo_list, method = "pseudobma")
+loo_model_weights(loo_list, method = "pseudobma", BB = FALSE)
+```
+
+# References
+
+McElreath, R. (2016). _Statistical rethinking: A Bayesian course with examples in R and Stan_. Chapman & Hall/CRC. http://xcelab.net/rm/statistical-rethinking/
+
+Piironen, J. and Vehtari, A. (2017a). Sparsity information and
+regularization in the horseshoe and other shrinkage priors. In
+Electronic Journal of Statistics,
+11(2):5018-5051. [Online](https://projecteuclid.org/euclid.ejs/1513306866).
+	  
+Piironen, J. and Vehtari, A. (2017b). Comparison of Bayesian predictive
+methods for model selection. Statistics and Computing,
+27(3):711-735. \doi:10.1007/s11222-016-9649-y. [Online](http://link.springer.com/article/10.1007/s11222-016-9649-y).
+
+Vehtari, A., Gelman, A., and Gabry, J. (2017). Practical Bayesian model
+evaluation using leave-one-out cross-validation and WAIC. _Statistics and
+Computing_. 27(5), 1413--1432. \doi:10.1007/s11222-016-9696-4.
+[online](http://link.springer.com/article/10.1007\%2Fs11222-016-9696-4), 
+[arXiv preprint arXiv:1507.04544](http://arxiv.org/abs/1507.04544).
+
+Vehtari, A., Gelman, A., and Gabry, J. (2017). Pareto smoothed importance sampling. [arXiv preprint arXiv:1507.02646](http://arxiv.org/abs/1507.02646).
+
+Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018). Using
+stacking to average Bayesian predictive distributions. In Bayesian
+Analysis, \doi:10.1214/17-BA1091. [Online](https://projecteuclid.org/euclid.ba/1516093227).

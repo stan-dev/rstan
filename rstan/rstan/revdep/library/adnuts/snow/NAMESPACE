@@ -1,0 +1,32 @@
+# Export all names unless they start with a dot
+exportPattern("^[^.]")
+
+importFrom("graphics", "abline", "axis", "plot", "rect", "segments")
+importFrom("stats", "runif")
+importFrom("utils", "flush.console")
+importFrom("parallel", "detectCores") ## really just to get `[,cluster`!
+
+S3method(plot, snowTimingData)
+S3method(print, snowTimingData)
+
+S3method(closeNode, NWSnode)
+S3method(closeNode, SOCKnode)
+S3method(closeNode, default)
+
+S3method(recvData, MPInode)
+S3method(recvData, NWSnode)
+S3method(recvData, SOCKnode)
+
+S3method(recvOneData, MPIcluster)
+S3method(recvOneData, NWScluster)
+S3method(recvOneData, SOCKcluster)
+
+S3method(sendData, MPInode)
+S3method(sendData, NWSnode)
+S3method(sendData, SOCKnode)
+
+S3method(stopCluster, MPIcluster)
+S3method(stopCluster,NWScluster)
+S3method(stopCluster, default)
+S3method(stopCluster, spawnedMPIcluster)
+

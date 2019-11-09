@@ -1,0 +1,209 @@
+Changes in version 2.2-4
+  o Vignette source code included in package.
+  o New option 'cluster' allows passing existing parallel cluster, using 
+    code by Alexey Stukalov.
+  o As pointed out by Jason Thorpe: "paralell:::.onLoad() makes a call
+    to stats::runif(1L) depending on whether or not
+    Sys.getenv("R_PARALLEL_PORT") returns an integer, which appears to
+    be platform dependent.  The result of this bug is that the return
+    value of DEoptim() will differ by platform the first time it is
+    called, even when taking care to call set.seed() prior to calling
+    DEoptim()."  We now require 'parallel' (to ensure it is loaded)
+    to avoid this behaviour.
+Changes in version 2.2-3
+  o DESCRIPTION updated. 
+  o Change to steptol interpretation in C, thanks to Alec Solway.
+  o Change to foreach logic, thanks to Jonathan Owen.
+  o Change to NP setting when initialpop provided, thanks to Tobias KD Weber.
+  o More flexible passing of args to foreach. 
+  o Makefile changed to remove references to shell
+Changes in version 2.2-2
+  o Change to de4_0.c to replace memcpy with memmove
+
+Changes in version 2.2-1
+  o Invisible-to-users changes to evaluate.c to fix misuse of isnan
+
+Changes in version 2.2-0
+  o Thanks to Joshua Ulrich and Kris Boudt, parallel operation is possible, 
+    using foreach.
+  o sandbox directory added, with example parallel code
+  o Kris Boudt added as a contributor
+  o foreach added as suggested package
+  o foreachArgs arguement added to DEoptim.control() function 
+  o Fixed typo in box constraint example in DEoptim.Rd 
+  o VignetteDepends metadata added to .Rnw 
+  o Added mapping function for integer / cardinality constraints
+  o checkWinner and avWinner options have been removed.  If the user desires
+    averaging (to deal with a stochastic objective function) then a wrapper 
+    function may be used to give the average value over several calls.  
+
+Changes in version 2.1-2
+  o Modified CITATION file and Rd files.
+  o Joshua Ulrich fixed the crash caused by a stack overflow when optimizing
+    many parameters.  Thanks to Suraj Gupta for pointing out the problem. 
+
+Changes in version 2.1-1
+  o Added portfolio optimization vignette.
+  o Bug with reltol / steptol stopping criteria fixed.
+  o Changed JADE to be 'on' when c > 0 for *any* strategy and set c=0
+    as default in DEoptim.control (JADE is 'off').
+
+Changes in version 2.1-0
+  o Added documentation of strategy six.
+  o Fixed typos in vignette. 
+  o Modified CITATION file and Rd files.  
+
+Changes in version 2.0-9
+  o Added vignette. 
+
+Changes in version 2.0-8
+  o Many improvements in the C code, thanks to Dirk Eddelbuettel's detailed
+    code review. Dirk's contributions include:
+      - fixed gd_bestmemit and gd_bestval initialization to avoid segfaults
+      - propegate nfeval back to DEoptimC function
+      - allocate parameter vector once, rather than once per evaluate call
+      - allocate ia_urn1 once, rather than once per permute call
+      - replace strategy if/else block with switch statement
+  o More bug fixes and optimizations when bs=TRUE
+  o Fixed bug in initial population check. Thanks to Vinecius Veloso.
+  o Added '...' to objective function call in evaluate rather than in DEoptim
+    R function. This yields a speed gain, since it avoids an extra function
+    call. Thanks to Dirk Eddelbuettel for the idea.
+
+Changes in version 2.0-7
+  o Many improvements in the C code, including removal of all global variables 
+    thanks to Joshua Ulrich.
+  o Thanks to Ralf Tautenhahn and Joshua Ulrich, a bug with bs=TRUE is removed.
+  o Thanks to Dirk Eddelbuettel several bugs (some possibly causing segfaults)
+    removed. 
+  o Added DE/current-to-p-best/1 strategy.
+  o Added ability to only print every "trace" iterations.
+
+Changes in version 2.0-6
+  o Added dataset documentation now required by R CMD check.
+
+Changes in version 2.0-5
+  o CITATION file modified, updated references. 
+  o Removed check on length of parameter vector (it was left over from versions
+    prior to 2.0-3, thanks to Jean-Luc Jannink.
+
+Changes in version 2.0-4
+  o added check to prevent the C code being called with NP<4, thanks to Joshua 
+    Ulrich.  
+  o fixed bug introduced in version 2.0-3 that made the objective function 
+    values associated with the winning population members incorrect
+  o added new options checkWinner and avWinner to the 'control' arguement. 
+
+Changes in version 2.0-3
+  o Re-write of much of the underlying C code.  Now dynamically allocate 
+    storage, so can optimize on parameter vectors of arbitrary size, in a 
+    population of arbitrary size.  Changed the documentation to reflect the
+    new lack of limitations.    
+  o Stop with an error right away if a NaN objective function value occurs.
+  o Default value of CR changed to .9 from .5.     
+  o Added reference and minor changes to documentation.   
+
+Changes in version 2.0-2
+  o The maximum number of parameters that can be optimized (set
+    statically in de.h with #define MAXDIM) was changed from 20 to
+    200.
+  o zzz.R file removed and replaced with call to `useDynLib(DEoptim)' in 
+    NAMESPACE
+  o Brian Peterson pointed out problems occurring when the objective
+    function returns a NaN value.  Error messages are now added to
+    report when this happens. 
+  o permute patched, see below.  Thanks to Hans Werner Borchers for pointing
+    out that the problem was not fixed in the CRAN version. 
+
+Changes in version 2.0-1
+  o Soren Macbeth and Joshua Ulrich pointed out and patched bugs in the 
+    function 'permute'.  Note that the version 2.0-1 on CRAN does not patch
+    these bugs correctly.  The correction is made in the next version.
+
+Changes in version 2.0-0
+  o The R-based implementation of Differential Evolution has been
+    replaced with a C-based implementation similar to the MS Visual C++
+    v5.0 implementation accompanying the book `Differential Evolution -
+    A Practical Approach to Global Optimization',downloaded from
+    http://www.icsi.berkeley.edu/~storn/DeWin.zip.
+
+    The new C implementation is significantly faster. 
+
+  o The S3 method for plotting has been enhanced. It allows now to plot
+    the intermediate populations if provided.
+
+  o The package maintainer has been changed to Katharine Mullen,
+    <katharine.mullen@nist.gov>.
+
+  o A NAMESPACE has been added.
+
+  o Argument FUN for DEoptim is now called fn for compatibility with optim.
+
+  o demo file has been removed
+
+  o CITATION file modified
+
+
+Changes in version 1.3-3
+
+  o CITATION file modified.
+
+
+Changes in Version 1.3-2
+
+  o CITATION file modified.
+
+
+Changes in Version 1.3-1
+
+  o new plotting argument 'storepop' which displays intermediate
+    population locations.
+
+
+Changes in Version 1.3-0
+
+  o the function 'DEoptim' has two arguments: 'storepopfrom' and
+    'storepopfreq', for tracking intermediate populations; the output
+    contains also the list 'storepop' which belongs to the 'member'
+    list's element.
+
+  o small bug fixed for the number of iterations.
+
+
+Changes in Version 1.2-1
+
+  o fix a bug in the optimization procedure. Thanks to Tarmo Leinonen
+    for pointing out this bug.
+
+  o add a demo to show how to increase the number of printed digits
+    while performing the optimization.
+
+
+Changes in Version 1.2-0
+
+  o the function 'DEoptim' has the new argument 'initial', which is an
+    initial or starting population.  You can therefore introduce a
+    starting population in the optimization procedure. This can be
+    useful when the optimization has to be run many times on data sets
+    which differ sligthly. Thanks to Tarmo Leinonen for this nice
+    suggestion.
+
+  o the function 'DEoptim' outputs now 'pop' in the 'member' list's
+    element. This is the population obtained at the last iteration
+    which can be used as a starting population in 'DEoptim' via the
+    argument 'initial'.
+
+  o the function stops if any 'NA' or 'NaN' value is returned by the
+    function 'FUN' to be optimized.
+
+  o the function DEoptim does not handle exponential crossover
+    anymore. This is so to simplify and accelerate the optimization
+    procedure. Thanks to Vladimir Eremeev for pointing out a bug with
+    the exponential crossover.
+
+  o the function 'DEoptim' outputs a list of lists. This is more
+    natural and in the same spirit of usual optimization functions.
+    Thanks to Vladimir Eremeev for proposing this change.
+
+  o documentation for the 'digits'. Thanks to Eugene Demidenko for
+    pointing out this.

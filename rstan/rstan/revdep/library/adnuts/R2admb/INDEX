@@ -1,0 +1,15 @@
+AIC.admb                Standard accessor functions for ADMB model fits
+R2admb-package          ADMB to R interface functions
+admb_version            Query ADMB version
+compile_admb            Compile ADMB files, run, read output
+do_admb                 Compile and/or run an ADMB model, collect
+                        output
+extract_gradient        Extract gradients
+find_large_cor          Find large correlations
+mcmc.control            Control options for MCMC after ADMB fitting
+plot.admb_hist          Plot MCMC histogram
+read_pars               Read in parameters from an AD Model Builder run
+read_plt                Read in ADMB profile file
+run.control             set run options for running ADMB via R
+setup_admb              Set up AD Model Builder environment variables
+write_pin               Write parameter and data files for ADMB

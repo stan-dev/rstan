@@ -1,0 +1,740 @@
+Hmm ... looks like a package
+
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 3 language(s) loaded.
+(./Rd2.tex
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo))
+(/home/ben/r-devel/share/texmf/tex/latex/Rd.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu)))
+Writing index file Rd2.idx
+No file Rd2.aux.
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+Overfull \hbox (113.44089pt too wide) in paragraph at lines 22--23
+\T1/ptm/m/n/10 posed by Chu et al. (2006) <doi:10.1016/j.annepidem.2006.04.001>
+ and Chu et al. (2010) <doi:10.1177/0272989X09353452>.  
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [1{/var/lib/texmf/fonts
+/map/pdftex/updmap/pdftex.map}]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 129--129
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [3]
+Overfull \hbox (1.1072pt too wide) in paragraph at lines 168--169
+[]\T1/ptm/m/n/10 a string of the name of the model. De-fault to "Con-stant Mis-
+clas-si-fi-ca-tion Model". 
+[4]
+Overfull \hbox (14.27168pt too wide) in paragraph at lines 200--200
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}\[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [5]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 285--285
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+
+Overfull \hbox (2.21954pt too wide) in paragraph at lines 287--287
+ []\T1/zi4/m/n/9 diffOR(a = 66, N1 = 11782, c = 243, N0 = 57973, chains = 3, mu
+ = c(1.069, 1.069, 1.126, 1.126),[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 288--288
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 291--291
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [6] [7]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 369--369
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [8]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 449--449
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [9]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [10]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [11]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 592--592
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [12] [13]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 682--682
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [14]
+No file Rd2.ind.
+[15] (/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information){/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
+inconsolata/i4-t1-0.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/incon
+solata/Inconsolata-zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on Rd2.pdf (15 pages, 144150 bytes).
+Transcript written on Rd2.log.
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 3 language(s) loaded.
+(./Rd2.tex
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo))
+(/home/ben/r-devel/share/texmf/tex/latex/Rd.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu)))
+Writing index file Rd2.idx
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+Overfull \hbox (113.44089pt too wide) in paragraph at lines 22--23
+\T1/ptm/m/n/10 posed by Chu et al. (2006) <doi:10.1016/j.annepidem.2006.04.001>
+ and Chu et al. (2010) <doi:10.1177/0272989X09353452>.  
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.toc)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [1{/var/lib/texmf/fonts
+/map/pdftex/updmap/pdftex.map}]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 129--129
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [3]
+Overfull \hbox (1.1072pt too wide) in paragraph at lines 168--169
+[]\T1/ptm/m/n/10 a string of the name of the model. De-fault to "Con-stant Mis-
+clas-si-fi-ca-tion Model". 
+[4]
+Overfull \hbox (14.27168pt too wide) in paragraph at lines 200--200
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}\[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [5]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 285--285
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+
+Overfull \hbox (2.21954pt too wide) in paragraph at lines 287--287
+ []\T1/zi4/m/n/9 diffOR(a = 66, N1 = 11782, c = 243, N0 = 57973, chains = 3, mu
+ = c(1.069, 1.069, 1.126, 1.126),[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 288--288
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 291--291
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [6] [7]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 369--369
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [8]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 449--449
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [9]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [10]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [11]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 592--592
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [12] [13]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 682--682
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [14]
+No file Rd2.ind.
+[15] (/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux) )
+(see the transcript file for additional information){/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
+inconsolata/i4-t1-0.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/incon
+solata/Inconsolata-zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on Rd2.pdf (15 pages, 145395 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [TeX Live 2016] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (13 entries accepted, 0 rejected).
+Sorting entries....done (52 comparisons).
+Generating output file Rd2.ind....done (45 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 3 language(s) loaded.
+(./Rd2.tex
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo))
+(/home/ben/r-devel/share/texmf/tex/latex/Rd.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu)))
+Writing index file Rd2.idx
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+Overfull \hbox (113.44089pt too wide) in paragraph at lines 22--23
+\T1/ptm/m/n/10 posed by Chu et al. (2006) <doi:10.1016/j.annepidem.2006.04.001>
+ and Chu et al. (2010) <doi:10.1177/0272989X09353452>.  
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.toc)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [1{/var/lib/texmf/fonts
+/map/pdftex/updmap/pdftex.map}]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 129--129
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [3]
+Overfull \hbox (1.1072pt too wide) in paragraph at lines 168--169
+[]\T1/ptm/m/n/10 a string of the name of the model. De-fault to "Con-stant Mis-
+clas-si-fi-ca-tion Model". 
+[4]
+Overfull \hbox (14.27168pt too wide) in paragraph at lines 200--200
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}\[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [5]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 285--285
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+
+Overfull \hbox (2.21954pt too wide) in paragraph at lines 287--287
+ []\T1/zi4/m/n/9 diffOR(a = 66, N1 = 11782, c = 243, N0 = 57973, chains = 3, mu
+ = c(1.069, 1.069, 1.126, 1.126),[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 288--288
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 291--291
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [6] [7]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 369--369
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [8]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 449--449
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [9]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [10]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [11]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 592--592
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [12] [13]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 682--682
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [14]
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.ind [15] [16])
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information){/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
+inconsolata/i4-t1-0.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/incon
+solata/Inconsolata-zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on Rd2.pdf (16 pages, 146664 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [TeX Live 2016] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (13 entries accepted, 0 rejected).
+Sorting entries....done (52 comparisons).
+Generating output file Rd2.ind....done (45 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 3 language(s) loaded.
+(./Rd2.tex
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo))
+(/home/ben/r-devel/share/texmf/tex/latex/Rd.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu)))
+Writing index file Rd2.idx
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+Overfull \hbox (113.44089pt too wide) in paragraph at lines 22--23
+\T1/ptm/m/n/10 posed by Chu et al. (2006) <doi:10.1016/j.annepidem.2006.04.001>
+ and Chu et al. (2010) <doi:10.1177/0272989X09353452>.  
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/
+updmap/pdftex.map}]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 129--129
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+[3] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (1.1072pt too wide) in paragraph at lines 168--169
+[]\T1/ptm/m/n/10 a string of the name of the model. De-fault to "Con-stant Mis-
+clas-si-fi-ca-tion Model". 
+[4]
+Overfull \hbox (14.27168pt too wide) in paragraph at lines 200--200
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}\[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [5]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 285--285
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+
+Overfull \hbox (2.21954pt too wide) in paragraph at lines 287--287
+ []\T1/zi4/m/n/9 diffOR(a = 66, N1 = 11782, c = 243, N0 = 57973, chains = 3, mu
+ = c(1.069, 1.069, 1.126, 1.126),[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 288--288
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 291--291
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [6] [7]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 369--369
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [8]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 449--449
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [9]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [10]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [11]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 592--592
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [12] [13]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 682--682
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [14]
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.ind [15] [16])
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux) )
+(see the transcript file for additional information){/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
+inconsolata/i4-t1-0.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/incon
+solata/Inconsolata-zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on Rd2.pdf (16 pages, 147199 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [TeX Live 2016] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (13 entries accepted, 0 rejected).
+Sorting entries....done (52 comparisons).
+Generating output file Rd2.ind....done (45 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2017/01/01> patch level 3
+Babel <3.9r> and hyphenation patterns for 3 language(s) loaded.
+(./Rd2.tex
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo))
+(/home/ben/r-devel/share/texmf/tex/latex/Rd.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.112, 2017/01/04 Text macros for Inconsolata (msharpe)
+(/usr/share/texlive/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/share/texlive/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 377.
+
+) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu)))
+Writing index file Rd2.idx
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux)
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.out)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+Overfull \hbox (113.44089pt too wide) in paragraph at lines 22--23
+\T1/ptm/m/n/10 posed by Chu et al. (2006) <doi:10.1016/j.annepidem.2006.04.001>
+ and Chu et al. (2010) <doi:10.1177/0272989X09353452>.  
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1phv.fd)
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.toc [1{/var/lib/texmf/fonts/map/pdftex/
+updmap/pdftex.map}]) (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [2]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 129--129
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+[3] (/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (1.1072pt too wide) in paragraph at lines 168--169
+[]\T1/ptm/m/n/10 a string of the name of the model. De-fault to "Con-stant Mis-
+clas-si-fi-ca-tion Model". 
+[4]
+Overfull \hbox (14.27168pt too wide) in paragraph at lines 200--200
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}\[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [5]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 285--285
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+
+Overfull \hbox (2.21954pt too wide) in paragraph at lines 287--287
+ []\T1/zi4/m/n/9 diffOR(a = 66, N1 = 11782, c = 243, N0 = 57973, chains = 3, mu
+ = c(1.069, 1.069, 1.126, 1.126),[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 288--288
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+
+Overfull \hbox (3.73181pt too wide) in paragraph at lines 291--291
+ []  \T1/zi4/m/n/9 s.lg.se0 = 0.893, s.lg.se1 = 0.893, s.lg.sp0 = 0.712, s.lg.s
+p1 = 0.712, corr.sesp0 = -0.377,[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [6] [7]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 369--369
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [8]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 449--449
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [9]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [10]
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [11]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 592--592
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [12] [13]
+Overfull \hbox (9.77168pt too wide) in paragraph at lines 682--682
+ []\T1/zi4/m/n/9 # Data from \url{https://www.sciencedirect.com/science/article
+/pii/S0165032715303864#bib13}[] 
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def) [14]
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.ind [15] [16])
+(/tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67/Rd2.aux) )
+(see the transcript file for additional information){/usr/share/texlive/texmf-d
+ist/fonts/enc/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/
+inconsolata/i4-t1-0.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/incon
+solata/Inconsolata-zi4r.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utm
+ri8a.pfb>
+Output written on Rd2.pdf (16 pages, 147213 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘BayesSenMC-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /tmp/Rtmp2Gzxk3/Rd2pdf5c1f5dee5b67'

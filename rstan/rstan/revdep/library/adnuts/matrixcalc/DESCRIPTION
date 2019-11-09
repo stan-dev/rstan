@@ -1,0 +1,19 @@
+Package: matrixcalc
+Version: 1.0-3
+Date: 2012-09-12
+Title: Collection of functions for matrix calculations
+Author: Frederick Novomestky <fnovomes@poly.edu>
+Maintainer: Frederick Novomestky <fnovomes@poly.edu>
+Depends: R (>= 2.0.1)
+Description: A collection of functions to support matrix calculations
+        for probability, econometric and numerical analysis. There are
+        additional functions that are comparable to APL functions which
+        are useful for actuarial models such as pension mathematics.
+        This package is used for teaching and research purposes at the
+        Department of Finance and Risk Engineering, New York
+        University, Polytechnic Institute, Brooklyn, NY 11201.
+License: GPL (>= 2)
+Packaged: 2012-09-14 22:54:49 UTC; fred
+Repository: CRAN
+Date/Publication: 2012-09-15 14:22:14
+Built: R 3.6.0; ; 2018-10-26 03:24:56 UTC; unix

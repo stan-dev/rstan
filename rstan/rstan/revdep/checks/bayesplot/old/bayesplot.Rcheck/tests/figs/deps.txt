@@ -1,0 +1,6 @@
+Fontconfig: 2.11.94
+FreeType: 2.6.0
+Cairo: 1.14.2
+vdiffr: 0.2.2
+svglite: 1.2.1
+ggplot2: 2.2.1

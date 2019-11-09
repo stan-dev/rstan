@@ -1,0 +1,426 @@
+
+R Under development (unstable) (2019-04-20 r76407) -- "Unsuffered Consequences"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> library(beanz)
+Loading required package: Rcpp
+> 
+> test_check("beanz")
+
+SAMPLING FOR MODEL 'sr' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 3.5e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.35 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: There aren't enough warmup iterations to fit the
+Chain 1:          three stages of adaptation as currently configured.
+Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 1:          the given number of warmup iterations:
+Chain 1:            init_buffer = 3
+Chain 1:            adapt_window = 15
+Chain 1:            term_buffer = 2
+Chain 1: 
+Chain 1: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 1: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 1: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 1: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 1: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 1: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 1: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 1: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 1: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 1: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 1: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 1: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.019705 seconds (Warm-up)
+Chain 1:                0.022397 seconds (Sampling)
+Chain 1:                0.042102 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL 'sr' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 1.4e-05 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: WARNING: There aren't enough warmup iterations to fit the
+Chain 2:          three stages of adaptation as currently configured.
+Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 2:          the given number of warmup iterations:
+Chain 2:            init_buffer = 3
+Chain 2:            adapt_window = 15
+Chain 2:            term_buffer = 2
+Chain 2: 
+Chain 2: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 2: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 2: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 2: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 2: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 2: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 2: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 2: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 2: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 2: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 2: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 2: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 0.017036 seconds (Warm-up)
+Chain 2:                0.015354 seconds (Sampling)
+Chain 2:                0.03239 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL 'sr' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 1.4e-05 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: WARNING: There aren't enough warmup iterations to fit the
+Chain 3:          three stages of adaptation as currently configured.
+Chain 3:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 3:          the given number of warmup iterations:
+Chain 3:            init_buffer = 3
+Chain 3:            adapt_window = 15
+Chain 3:            term_buffer = 2
+Chain 3: 
+Chain 3: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 3: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 3: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 3: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 3: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 3: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 3: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 3: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 3: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 3: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 3: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 3: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 0.016272 seconds (Warm-up)
+Chain 3:                0.013554 seconds (Sampling)
+Chain 3:                0.029826 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL 'sr' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 1.4e-05 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.14 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: WARNING: There aren't enough warmup iterations to fit the
+Chain 4:          three stages of adaptation as currently configured.
+Chain 4:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 4:          the given number of warmup iterations:
+Chain 4:            init_buffer = 3
+Chain 4:            adapt_window = 15
+Chain 4:            term_buffer = 2
+Chain 4: 
+Chain 4: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 4: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 4: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 4: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 4: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 4: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 4: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 4: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 4: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 4: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 4: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 4: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 0.012534 seconds (Warm-up)
+Chain 4:                0.015847 seconds (Sampling)
+Chain 4:                0.028381 seconds (Total)
+Chain 4: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 2.1e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.21 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: There aren't enough warmup iterations to fit the
+Chain 1:          three stages of adaptation as currently configured.
+Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 1:          the given number of warmup iterations:
+Chain 1:            init_buffer = 3
+Chain 1:            adapt_window = 15
+Chain 1:            term_buffer = 2
+Chain 1: 
+Chain 1: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 1: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 1: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 1: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 1: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 1: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 1: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 1: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 1: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 1: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 1: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 1: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.009554 seconds (Warm-up)
+Chain 1:                0.015302 seconds (Sampling)
+Chain 1:                0.024856 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 1.2e-05 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: WARNING: There aren't enough warmup iterations to fit the
+Chain 2:          three stages of adaptation as currently configured.
+Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 2:          the given number of warmup iterations:
+Chain 2:            init_buffer = 3
+Chain 2:            adapt_window = 15
+Chain 2:            term_buffer = 2
+Chain 2: 
+Chain 2: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 2: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 2: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 2: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 2: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 2: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 2: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 2: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 2: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 2: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 2: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 2: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 0.010893 seconds (Warm-up)
+Chain 2:                0.01113 seconds (Sampling)
+Chain 2:                0.022023 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 8e-06 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: WARNING: There aren't enough warmup iterations to fit the
+Chain 3:          three stages of adaptation as currently configured.
+Chain 3:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 3:          the given number of warmup iterations:
+Chain 3:            init_buffer = 3
+Chain 3:            adapt_window = 15
+Chain 3:            term_buffer = 2
+Chain 3: 
+Chain 3: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 3: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 3: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 3: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 3: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 3: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 3: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 3: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 3: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 3: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 3: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 3: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 0.010598 seconds (Warm-up)
+Chain 3:                0.009845 seconds (Sampling)
+Chain 3:                0.020443 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 1.1e-05 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: WARNING: There aren't enough warmup iterations to fit the
+Chain 4:          three stages of adaptation as currently configured.
+Chain 4:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 4:          the given number of warmup iterations:
+Chain 4:            init_buffer = 3
+Chain 4:            adapt_window = 15
+Chain 4:            term_buffer = 2
+Chain 4: 
+Chain 4: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 4: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 4: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 4: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 4: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 4: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 4: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 4: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 4: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 4: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 4: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 4: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 0.009984 seconds (Warm-up)
+Chain 4:                0.012256 seconds (Sampling)
+Chain 4:                0.02224 seconds (Total)
+Chain 4: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 1.2e-05 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.12 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: WARNING: There aren't enough warmup iterations to fit the
+Chain 1:          three stages of adaptation as currently configured.
+Chain 1:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 1:          the given number of warmup iterations:
+Chain 1:            init_buffer = 3
+Chain 1:            adapt_window = 15
+Chain 1:            term_buffer = 2
+Chain 1: 
+Chain 1: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 1: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 1: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 1: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 1: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 1: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 1: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 1: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 1: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 1: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 1: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 1: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 0.009477 seconds (Warm-up)
+Chain 1:                0.012262 seconds (Sampling)
+Chain 1:                0.021739 seconds (Total)
+Chain 1: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 1.1e-05 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: WARNING: There aren't enough warmup iterations to fit the
+Chain 2:          three stages of adaptation as currently configured.
+Chain 2:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 2:          the given number of warmup iterations:
+Chain 2:            init_buffer = 3
+Chain 2:            adapt_window = 15
+Chain 2:            term_buffer = 2
+Chain 2: 
+Chain 2: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 2: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 2: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 2: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 2: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 2: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 2: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 2: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 2: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 2: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 2: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 2: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 0.010213 seconds (Warm-up)
+Chain 2:                0.010214 seconds (Sampling)
+Chain 2:                0.020427 seconds (Total)
+Chain 2: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 1.1e-05 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: WARNING: There aren't enough warmup iterations to fit the
+Chain 3:          three stages of adaptation as currently configured.
+Chain 3:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 3:          the given number of warmup iterations:
+Chain 3:            init_buffer = 3
+Chain 3:            adapt_window = 15
+Chain 3:            term_buffer = 2
+Chain 3: 
+Chain 3: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 3: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 3: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 3: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 3: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 3: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 3: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 3: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 3: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 3: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 3: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 3: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 0.010639 seconds (Warm-up)
+Chain 3:                0.0101 seconds (Sampling)
+Chain 3:                0.020739 seconds (Total)
+Chain 3: 
+
+SAMPLING FOR MODEL 'nse' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 1.1e-05 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.11 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: WARNING: There aren't enough warmup iterations to fit the
+Chain 4:          three stages of adaptation as currently configured.
+Chain 4:          Reducing each adaptation stage to 15%/75%/10% of
+Chain 4:          the given number of warmup iterations:
+Chain 4:            init_buffer = 3
+Chain 4:            adapt_window = 15
+Chain 4:            term_buffer = 2
+Chain 4: 
+Chain 4: Iteration:  1 / 40 [  2%]  (Warmup)
+Chain 4: Iteration:  4 / 40 [ 10%]  (Warmup)
+Chain 4: Iteration:  8 / 40 [ 20%]  (Warmup)
+Chain 4: Iteration: 12 / 40 [ 30%]  (Warmup)
+Chain 4: Iteration: 16 / 40 [ 40%]  (Warmup)
+Chain 4: Iteration: 20 / 40 [ 50%]  (Warmup)
+Chain 4: Iteration: 21 / 40 [ 52%]  (Sampling)
+Chain 4: Iteration: 24 / 40 [ 60%]  (Sampling)
+Chain 4: Iteration: 28 / 40 [ 70%]  (Sampling)
+Chain 4: Iteration: 32 / 40 [ 80%]  (Sampling)
+Chain 4: Iteration: 36 / 40 [ 90%]  (Sampling)
+Chain 4: Iteration: 40 / 40 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 0.010062 seconds (Warm-up)
+Chain 4:                0.012137 seconds (Sampling)
+Chain 4:                0.022199 seconds (Total)
+Chain 4: 
+══ testthat results  ═══════════════════════════════════════════════════════════
+OK: 53 SKIPPED: 0 WARNINGS: 13 FAILED: 0
+> ##test_dir("./")
+> ##test_package("beanz");
+> 
+> proc.time()
+   user  system elapsed 
+ 12.285   0.124  12.535 

@@ -1,0 +1,39 @@
+Changes in snowfall 1.84
+===========================
+ o Bugfix sfExport: if exporting a NULL value, no error is raised.
+
+Changes in snowfall 1.83
+===========================
+ o sfIsRunning: new function giving a logical is sfInit() was called or
+   not. Needed, as all other snowfall functions implicitely call sfInit()
+   if it was not called.
+
+Changes in snowfall 1.82
+===========================
+ o Internal refactorings.
+
+Changes in snowfall 1.81
+===========================
+ o Change in sfInit() MPI startup so sfCluster can run with
+   snow > 0.3 now.
+ o sfExport now also works in sequential mode (writing to
+   global environment). This prevented sequential execution
+   in some cases.
+
+Changes in snowfall 1.80
+===========================
+ o snowfall passes packages checks of R 2.10.1 without warning
+   or error. Internal state is now only saved in the namespace
+   itself (thanks to Uwe Ligges for the tipp).
+ o sfExport can now also export objects in a specific namespace
+   (argument 'namespace')
+ o sfExport: behavior in error case manageable (stopOnError)
+ o sfExport: smaller bugfixes.
+ o sfRemoveAll can now also remove hidden names (argument 'hidden')
+ o sfRemoveAll is more robust now (some minor bugfixes, more checks)
+ o sfRemoveAll bugfix for multiple removals (thanks to Greggory Jefferis)
+ o Bugfix on exception list on sfExportAll
+ o Refactorings in sfTest()
+ o snowfall now has a NEWS doc ;)
+ o No warning on Mac OS because of default Mac-R command line arg 'gui'
+   (thanks to Michael Siegel).

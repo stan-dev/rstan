@@ -1,0 +1,631 @@
+%\VignetteEngine{knitr::knitr}
+%\VignetteDepends{ggplot2}
+%\VignetteDepends{bbmle}
+%\VignetteIndexEntry{Basic examples of R2admb/AD Model Builder use}
+\documentclass[11pt]{article}
+\usepackage[american]{babel}
+\usepackage[utf8]{inputenc}
+\newcommand{\R}{{\sf R}}
+\newcommand{\Splus}{{\sf S-PLUS}}
+%\newcommand{\fixme}[1]{\textbf{FIXME: #1}}
+\newcommand{\fixme}[1]{}
+\newcommand{\windows}{\textbf W?}
+\usepackage{url}
+\usepackage{alltt}
+\usepackage{fancyvrb} % with VerbatimFootnotes, allow verb in footnotes
+\usepackage{listings}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{natbib}
+\newcommand{\code}[1]{{\tt #1}}
+\bibliographystyle{ESA1009}
+
+\title{Using AD Model Builder and R together: getting started with the 
+  \code{R2admb} package}
+\author{Ben Bolker}
+\date{\today}
+\begin{document}
+\maketitle
+
+<<opts,echo=FALSE,message=FALSE>>=
+library("knitr")
+opts_chunk$set(tidy=FALSE)
+@ 
+\section{Introduction}
+
+AD Model Builder (ADMB: \url{http://admb-project.org}) is a standalone program, developed by Dave Fournier continuously since the 1980s and released as an open source project in 2007, that takes as input an objective function (typically a negative log-likelihood function) and outputs the coefficients that minimize the objective function, along with various auxiliary information.  AD Model Builder uses \emph{automatic differentiation} (that's what ``AD'' stands for), a powerful algorithm for computing the derivatives of a specified objective function efficiently and without the typical errors due to finite differencing.  Because of this algorithm, and because the objective function is compiled into machine code before optimization, ADMB can solve large, difficult likelihood problems efficiently.  ADMB also has the capability to fit random-effects models (typically via Laplace approximation).
+
+To the average R user, however, ADMB represents a challenge. The first (unavoidable) challenge is that the objective function needs to be written in a superset of C++; the second is learning the particular sequence of steps that need to be followed in order to output data in a suitable format for ADMB; compile and run the ADMB model; and read the data into R for analysis. The \code{R2admb} package aims to eliminate the second challenge by automating the R--ADMB interface as much as possible.
+
+\section{Installation}
+
+The \code{R2admb} package can be installed in R in the
+standard way (with \code{install.packages()} or via a Packages menu,
+depending on your platform.
+
+However, you'll also need to install ADMB: see one of the following links:
+
+\begin{itemize}
+\item \url{http://admb-project.org/}
+\item \url{http://admb-project.org/downloads}
+\end{itemize}
+
+You may also need to install a C++ compiler (in particular, the
+MacOS installation instructions will probably ask you
+to install gcc/g++ from the Xcode package).
+You will need to have the scripts \code{admb}, \code{adcomp},
+and \code{adlink} in the \code{bin} directory of your
+ADMB installation (I hope this Just Works once you have installed ADMB, 
+but there's a chance that things will have to be tweaked).
+
+\section{Quick start (for the impatient)}
+
+\subsection{For non-ADMB users}
+\begin{enumerate}
+\item Write the function that computes your negative log-likelihood
+  function (see the ADMB manual, or below, for examples) and save
+  it in a file with extension \code{.tpl} (hereafter ``the TPL file'') in your working directory.
+\item run \code{setup\_admb()} to set up your ADMB environment appropriately.
+\item run \code{do\_admb(fn,data,params)}, where \code{fn} is the base name (without extension) of your TPL file, \code{data} is a list of the input data, and \code{params} is a list of the starting parameter values; if you want R to generate the PARAMETERS and DATA section of your TPL file automatically, use 
+<<do_admb_fake,eval=FALSE>>=
+fitted.model <- do_admb(fn,data,params,
+                        run.opts=run.control(checkparam="write",
+                        checkdata="write"))
+@ 
+\item use the standard R model accessor methods (\code{coef}, \code{summary}, \code{vcov}, \code{logLik}, \code{AIC} (etc.)) 
+  to explore the results stored as \code{fitted.model}.
+\end{enumerate}
+
+\subsection{For ADMB users}
+If you are already familiar with ADMB (e.g. you already have your TPL files written with
+appropriate PARAMETERS and DATA sections), or if you prefer a more granular approach to
+controlling ADMB (for example, if you are going to compile a TPL file once and then
+run it for lots of different sets of input parameters), you can instead use \code{R2admb}
+as follows:
+\begin{enumerate}
+\item Write your TPL file, set up your input and data files.
+\item \code{setup\_admb()} as above.
+\item \code{compile\_admb(fn)} to compile your TPL file,
+  specifying \code{re=TRUE} if the model has random effects
+  (or do this outside R)
+\item \code{run\_admb(fn)} to run the executable
+\item \code{results <- read\_admb(fn)} to read (and save) the results
+\item \code{clean\_admb(fn)} to clean up the files that have been generated
+\item as before,
+  use the standard R model accessor methods
+  to explore the results.
+\end{enumerate}
+There are more steps this way, but you have a bit more control of the process.
+  
+\section{Basics}
+
+Here's a very simple example that can easily be done
+completely within R; we show how to do it with \code{R2admb} as well.
+
+<<libs,message=FALSE>>=
+library("R2admb")
+library("ggplot2") ## for pictures
+theme_set(theme_bw())  ## cosmetic
+zmargin <- theme(panel.spacing=grid::unit(0,"lines"))
+library("bbmle")
+@ 
+
+The data are from \cite{VoneshBolker2005}, describing the
+numbers of reed frog (\emph{Hyperolius spinigularis})
+tadpoles killed by predators as 
+a function of size (\code{TBL} is total body length,
+\code{Kill} is the number killed out of 10 tadpoles exposed
+to predation). Figure~\ref{fig:rfsp1} shows the data.
+
+So if $p(\mbox{kill}) = c ((S/d) \exp(1-(S/d)))^g$
+(a function for which the peak occurs at $S=d$, peak height=$c$) then
+a reasonable starting set of estimates would be
+$c=0.45$, $d=13$.
+
+<<dat1>>=
+ReedfrogSizepred <- 
+  data.frame(TBL = rep(c(9,12,21,25,37),each=3),
+             Kill = c(0,2,1,3,4,5,0,0,0,0,1,0,0,0,0L))
+@ 
+
+Here is the code to fit a binomial model with
+\code{mle2} using these starting points:
+<<mlefit>>=
+m0 <- mle2(Kill~dbinom(c*((TBL/d)*exp(1-TBL/d))^g,size=10),
+           start=list(c=0.45,d=13,g=1),data=ReedfrogSizepred,
+           method="L-BFGS-B",
+           lower=c(c=0.003,d=10,g=0),
+           upper=c(c=0.8,d=20,g=60),
+           control=list(parscale=c(c=0.5,d=10,g=1)))
+@ 
+
+Generate predicted values:
+<<predvals>>=
+TBLvec = seq(9.5,36,length=100)
+predfr <- 
+  data.frame(TBL=TBLvec,
+             Kill=predict(m0,newdata=data.frame(TBL=TBLvec)))
+@ 
+
+\begin{figure}
+  \begin{center}
+<<fig1,echo=FALSE>>=
+g1  <- ggplot(ReedfrogSizepred,
+              aes(x=TBL,y=Kill/10))+
+    geom_point()+stat_sum(aes(size=..n..))+
+    geom_smooth(method="loess")+
+    labs(size="n",x="Size (total body length",
+         y="Proportion killed")+
+    coord_cartesian(ylim=c(-0.05,0.55))
+startest <- stat_function(fun = function(x) { 0.45*((x/13)*exp(1-x/13)) },
+                          lty=2,colour="red")
+g1+startest+
+    geom_line(data=predfr,colour="purple",lty=2)
+@ 
+\end{center}
+\caption{Proportions of reed frogs killed by predators,
+  as a function of total body length in mm.
+  Red: starting estimate.}
+\label{fig:rfsp1}
+\end{figure}
+
+Here is a \code{minimal} TPL (AD Model Builder definition) file:
+
+\VerbatimInput[frame=single,numbers=left,samepage=true,fontsize=\small]{ReedfrogSizepred0.tpl}
+
+\begin{itemize}
+\item Comments are written in C++ format: everything on a line after \code{//} is ignored. 
+  \item lines 1--4 are the \code{PARAMETER} section; most of the parameters
+    will get filled in automatically by \code{R2admb} based on the
+    input parameters you specify, but you should include
+    this section if you need to define any additional
+    utility variables.
+    In this case we define \code{prob} as a vector indexed from
+    1 to \code{nobs} (we will specify \code{nobs},
+    the number of observations, in our data list).
+  \item most of the complexity of the \code{PROCEDURE} section
+    (lines 7 and 11--14) has to do with making sure that the
+    mortality probabilities do not exceed the range (0,1), which is
+    not otherwise guaranteed by this model specification.  Line 7 defines
+    a utility variable \code{fpen}; lines 11--14 use the built-in
+    ADMB function \code{posfun} to adjust low probabilities
+    up to 0.001 (line 11) and high probabilities down to 0.999
+    (line 13), and add appropriate penalties to the negative
+    log-likelihood to push the optimization away from these
+    boundaries (lines 12 and 14).
+  \item the rest of the \code{PROCEDURE} section
+    simply computes the mortality
+    probabilities as $c ((S/d) \exp(1-(S/d)))^g$
+    as specified above (line 9) and computes the binomial
+    log-likelihood on the basis of these
+    probabilities (lines 16-18). Because this is a log-likelihood
+    and we want to compute a negative log-likelihood, we \emph{subtract} it 
+    from any penalty terms that have already accrued.
+    The code is written in C++ syntax,
+    using \code{=} rather than \verb+<-+ for assignment, \code{+=} to increment
+    a variable and \code{-=} to decrement one. The power operator is 
+    \code{pow(x,y)} rather than \verb+x^y+; elementwise multiplication of
+    two vectors uses \code{elem\_prod} rather than \code{*}.
+  \end{itemize}
+
+   
+<<admbfit_getruns,echo=FALSE>>=
+load_doc <- function(x) {
+    ##    Define a bit of magic to load results from previous runs: 
+    ## would like parent.frame(2) above instead of
+    ## hacking around with global environment
+    ## ... but doesn't work as I thought?
+    load(system.file("doc",x,package="R2admb"),envir=.GlobalEnv) ##
+}
+zz <- load_doc("Reedfrog_runs.RData")
+@ 
+
+
+To run this model, we save it in a text
+file called \code{
+ReedfrogSizepred0.tpl};
+run \verb+setup_admb()+ to tell R where the
+AD Model Builder binaries and libraries are located on
+our system; and run \verb+do_admb+ with appropriate
+arguments.
+
+<<setup_admb,eval=FALSE>>=
+setup_admb()
+@ 
+<<rfs_setup>>=
+rfs_params <- list(c=0.45,d=13,g=1) ## starting parameters
+rfs_bounds <- list(c=c(0,1),d=c(0,50),g=c(-1,25)) ## bounds
+rfs_dat <- c(list(nobs=nrow(ReedfrogSizepred),
+                  nexposed=rep(10,nrow(ReedfrogSizepred))),
+             ReedfrogSizepred)
+@ 
+<<admbfit_fake,eval=FALSE>>=
+m1 <- do_admb("ReedfrogSizepred0",
+              data=rfs_dat,
+              params=rfs_params,
+              bounds=rfs_bounds,
+              run.opts=run.control(checkparam="write",
+              checkdata="write",clean=FALSE))
+unlink(c("reedfrogsizepred0.tpl",
+         "reedfrogsizepred0_gen.tpl",
+         "reedfrogsizepred0")) ## clean up leftovers
+@ 
+
+The \code{data}, \code{params}, and \code{bounds} (parameter bounds)
+arguments should be reasonably self-explanatory.
+When \code{checkparam="write"} and \code{checkdata="write"} are
+specified, \code{R2admb} attempts to write appropriate DATA
+and PARAMETER sections into a modified TPL file, leaving the
+results with the suffix \code{\_gen.tpl} at the end of the run.
+
+Here's the augmented file:
+\VerbatimInput[frame=single,numbers=left,fontsize=\small]{ReedfrogSizepred0_gen.tpl}
+
+Lines 1--7, 10--13 are new and should (I hope) be reasonably self-explanatory.
+
+%You might instead choose to compose the whole TPL file yourself,
+%in which case you can add comments appropriately:
+%\VerbatimInput[frame=single,numbers=left,fontsize=\small]{ReedfrogSizepred.tpl}
+
+If we were very lucky/had really good guesses about the initial parameters
+we could get away with a simplified version of the TPL file
+that didn't use \code{posfun} to constrain the probabilities:
+
+\VerbatimInput[frame=single,numbers=left,fontsize=\small]{ReedfrogSizepred1.tpl}
+
+But I found that if I started with $g=1$ I got a poor fit and warning
+messages: I had to tweak the starting value of $g$ to get a proper fit.
+
+<<rffit2,eval=FALSE>>=
+rfs_params$g <- 2
+m2 <- do_admb("ReedfrogSizepred1",
+              data=rfs_dat,
+              params=rfs_params,
+              bounds=rfs_bounds,
+              run.opts=run.control(checkparam="write",
+              checkdata="write"))
+@
+
+Now that we have fitted the model, here are some of
+the things we can do with it:
+
+\begin{itemize}
+  \item Get basic information about the fit and coefficient estimates:
+<<basic>>=
+m1
+@ 
+\item Get vector of coefficients only:
+<<coef>>=
+coef(m1)
+@
+\item Get a coefficient table including standard errors and $p$ values.
+  (The $p$ values provided are from a Wald test, which is based on an assumption
+  that the log-likelihood surface is quadratic.  Use them with caution.)
+<<summary>>=
+summary(m1)
+@ 
+(you can use \code{coef(summary(m1))} to extract just the table).
+
+\item Variance-covariance matrix of the parameters:
+<<vcov>>=
+vcov(m1)
+@ 
+Log-likelihood, deviance, AIC:
+<<others>>=
+c(logLik(m1),deviance(m1),AIC(m1))
+@ 
+\end{itemize}
+
+\subsection{Profiling}
+
+You can also ask ADMB to compute likelihood profiles for a model.
+If you code it yourself in the TPL file you need to add variables
+of type \code{likeprof\_number} to keep track of the values:
+\code{R2admb} handles these details for you.  You just need to
+specify \code{profile=TRUE} and give a list of the parameters
+you want profiled.
+
+<<profrun,eval=FALSE,tidy=FALSE>>=
+m1P <- do_admb("ReedfrogSizepred0",
+               data=c(list(nobs=nrow(ReedfrogSizepred),
+               nexposed=rep(10,nrow(ReedfrogSizepred))),
+               ReedfrogSizepred),
+               params=rfs_params,
+               bounds=rfs_bounds,
+               run.opts=run.control(checkparam="write",
+               checkdata="write"),
+               profile=TRUE,
+               workdir=".",
+               profile.opts=list(pars=c("c","d","g")))
+@ 
+
+The profile information is stored in a list \verb+m1P$prof+ with entries
+for each variable to be profiled.  Each entry in turn contains a list
+with elements \code{prof} (a 2-column matrix containing the parameter value
+and profile log-likelihood), \code{ci} (confidence intervals derived from
+the profile), \code{prof\_norm} (a profile based on the normal approximation),
+and \code{ci\_norm} (confidence intervals, ditto).
+
+Let's compare ADMB's profiles to those generated from R:
+
+<<mleprof,cache=TRUE>>=
+m0prof <- profile(m0)
+@ 
+
+(A little bit of magic [hidden] gets everything into the same data frame
+and expressed in the same scale that R uses for profiles, which is the square root
+of the change in deviance ($-2L$) between the best fit and the profile:
+this scale provides a quick graphical assessment of the profile
+shape, because quadratic profiles will be {\sf V}-shaped on this scale.)
+
+<<profcalcs2,echo=FALSE,warning=FALSE>>=
+tmpf <- function(p,w="prof") {
+  pp <- log(m1P$prof[[p]][[w]][,2])
+  pp <- max(pp)-pp
+  data.frame(param=p,z=sqrt(2*pp),
+             par.vals.c=NA,par.vals.d=NA,par.vals.g=NA,
+             focal=m1P$prof[[p]][[w]][,1])
+}
+quadf <- function(p) {
+    m <- coef(m0)[p]
+    se <- stdEr(m0)[p]
+    pvec <- seq(m-3*se,m+3*se,length=31)
+    data.frame(param=p,z=abs(pvec-m)/se,
+                focal=pvec,
+                par.vals.c=NA,par.vals.d=NA,par.vals.g=NA)
+}
+proflist <- do.call(rbind,lapply(list("c","d","g"),tmpf))
+profnlist <- do.call(rbind,lapply(list("c","d","g"),tmpf,w="prof_norm"))
+quadlist <- do.call(rbind,lapply(list("c","d","g"),quadf))
+pdat <- rbind(cbind(as.data.frame(m0prof),method="mle2"),
+              cbind(proflist,method="ADMB"),
+              cbind(profnlist,method="ADMB_norm"),
+              cbind(quadlist,method="Wald"))
+@ 
+
+<<profpic,echo=FALSE,fig.width=8,fig.height=3.2,warning=FALSE>>=
+ggplot(pdat,aes(x=focal,y=abs(z),group=method,colour=method))+geom_line()+
+      geom_point(alpha=0.5)+
+  facet_grid(.~param,scale="free_x")+ylim(0,3)+xlab("")+
+      ylab(expression(Delta(sqrt(-2*L))))+
+      geom_hline(yintercept=1.96,lty=2)+zmargin
+@ 
+
+Notice that R evaluates the profile at a smaller number of locations,
+using spline interpolation to compute confidence intervals.
+
+\subsection{MCMC}
+
+Another one of ADMB's features is that it can use Markov chain
+Monte Carlo (starting at the maximum likelihood estimate and
+using a candidate distribution based on the approximate sampling
+distribution of the parameters) to get more information about the
+uncertainty in the estimates.  This procedure is especially helpful
+for complex models (high-dimensional or containing random effects)
+where likelihood profiling becomes problematic.
+
+To use MCMC, just add \code{mcmc=TRUE} and specify the parameters
+for which you want histograms [see below] via \code{mcmcpars} (you must
+specify at least one).
+
+<<admbfakemc,eval=FALSE,tidy=FALSE>>=
+m1MC <- do_admb("ReedfrogSizepred0",
+                data=rfs_dat,
+                params=rfs_params,
+                bounds=rfs_bounds,
+                run.opts=run.control(checkparam="write",
+                  checkdata="write"),
+                mcmc=TRUE,
+                mcmc.opts=mcmc.control(mcmcpars=c("c","d","g")))
+## clean up leftovers:
+unlink(c("reedfrogsizepred0.tpl",
+         "reedfrogsizepred0_gen.tpl",
+         "reedfrogsizepred0"))
+@ 
+
+The output of MCMC is stored in two ways. 
+
+(1) ADMB internally computes a histogram of the MCMC sampled
+densities, for \code{sdreport} parameters only (if you don't
+know what these are, that's OK --- appropriate parameters 
+are auto-generated when you specify \code{mcmcpars}).
+This information is stored in a list element called \verb+$hist+,
+as an object of class \code{admb\_hist}.  
+
+It has its own plot method:
+<<mchistplot,message=FALSE>>=
+plot(m1MC$hist)
+@ 
+
+(2) In addition the full set of samples, sampled as
+frequently as specified in \code{mcsave} (by default,
+the values are sampled at a frequency that gives a total
+of 1000 samples for the full run) is stored as
+a data frame in list element \verb+$mcmc+.  If you load
+the \code{coda} package, you can convert this into an object
+of class \code{mcmc}, and then use the various methods
+implemented in \code{coda} to analyze it.
+
+<<coda>>=
+library("coda")
+mmc <- as.mcmc(m1MC$mcmc)
+@ 
+
+Trace plots give a graphical diagnostic of the behavior
+of the MCMC chain.  In this case the diagnostics are
+\emph{not} good --- you should be looking for traces
+that essentially look like white noise.
+<<mctraceplot>>=
+library("lattice")
+xyplot(mmc)
+@ 
+(for larger sets of parameters you may want to specify
+a layout other than the default 1-row-by-$n$-columns,
+e.g. \code{xyplot(mmc,layout=c(2,2))}).
+
+If you want a numerical summary of the chain behavior
+you can use \code{raftery.diag} or \code{geweke.diag}
+(the most common diagnostic, the Gelman-Rubin statistic
+(\code{gelman.diag}) doesn't work here because it requires
+multiple chains and ADMB only runs a single chain):
+<<rgdiags>>=
+raftery.diag(mmc)
+geweke.diag(mmc)
+@ 
+<<gdiag,echo=FALSE>>=
+gd <- geweke.diag(mmc)
+gd1 <- gd[["z"]][1]
+@ 
+\code{geweke.diag} returns $Z$ scores for the
+equality of (by default) the first 10\% and the
+last 50\% of the chain.  For example, the
+value of \Sexpr{round(gd1,3)} here is slightly
+high: \code{pnorm(abs(v),lower.tail=FALSE)*2} computes
+a two-tailed $Z$-test (with $p$ value
+\Sexpr{round(pnorm(abs(gd1),lower.tail=FALSE)*2,3)}
+in this case).
+
+You can also compute the effective size of the
+sample, i.e. corrected for autocorrelation:
+<<effsize>>=
+effectiveSize(mmc)
+@ 
+This value should be at least 100, and probably
+greater than 200, for reasonable estimation of
+confidence intervals. 
+
+Highest posterior density (i.e. Bayesian credible) intervals:
+<<hpd>>=
+HPDinterval(mmc)
+@ 
+
+Density plots show you the estimated posterior density of the variables:
+<<mcdensplot>>=
+densityplot(mmc)
+@ 
+
+See the documentation for the \code{coda} package for
+more information about these methods.
+(You don't need to use \code{print} to see these plots in 
+an interactive session --- it's just required for generating documents.)
+
+\section{Incorporating random effects}
+
+One of ADMB's big advantages is the capability to fit flexible random-effects
+models --- they need not fit within the generalized linear mixed model (GLMM) framework,
+they can use non-standard distributions, and so forth.
+
+Here, however, we show a very basic example, one of the GLMM examples used
+in the \code{lme4} package.
+
+Here's the \code{lme4} code to fit the model:
+<<lme4,message=FALSE>>=
+library(lme4)
+if (as.numeric(R.version$major)<3) {
+## FIXME
+    gm1 <- glmer(cbind(incidence, size - incidence) ~ period + (1 | herd),
+                 family = binomial, data = cbpp)
+}
+@ 
+
+To adapt this for ADMB, we first construct design matrices for the
+fixed and random effects:
+<<toymats>>=
+X <- model.matrix(~period,data=cbpp)
+Zherd <- model.matrix(~herd-1,data=cbpp)
+@ 
+
+
+Include these design matrices in the list of data to pass to ADMB:
+<<toydat>>=
+tmpdat <- list(X=X,Zherd=Zherd,
+                 incidence=cbpp$incidence,size=cbpp$size,
+                 nobs=nrow(cbpp))
+@ 
+
+Here is the bare-bones TPL file:
+
+\VerbatimInput[frame=single,numbers=left,samepage=true,fontsize=\small]{toy1.tpl}
+
+
+Only a few new things to note here:
+\begin{itemize}
+  \item in the appropriate (matrix $\times$ vector) context,
+    \code{*} denotes matrix multiplication (rather than elementwise
+    multiplication as in R)
+  \item the random effects vector \verb+u_herd+ is unnormalized, i.e.
+    drawn from a standard normal $N(0,1)$.  Line 9 constructs the
+    vector of herd effects by (1) multiplying by the random-effects
+    design matrix \code{Zherd} and (2) scaling by \code{sigma\_herd}.
+    (This approach is not very efficient, especially when the design
+    matrix is sparse, but it's easy to code.)
+  \item line 17 accounts for the random effects in the likelihood.
+  \end{itemize}
+  
+See the ADMB-RE manual (\url{http://admb-project.googlecode.com/files/admb-re.pdf}) for more detail.
+
+<<loadtoy1,echo=FALSE>>=
+zz2 <- load_doc("toy1_runs.RData")
+@ 
+
+The only changes in the \code{do\_admb} call are that 
+we have to use the \code{re}
+argument to specify the names and lengths of each of the random effects vectors --- only one
+(\code{u\_herd}) in this case.
+
+<<fakerun2,eval=FALSE>>=
+d1 <- do_admb("toy1",
+              data=tmpdat,
+              params=list(beta=rep(0,ncol(X)),sigma_herd=0.1),
+              bounds=list(sigma_herd=c(0.0001,20)),
+              re=list(u_herd=ncol(Zherd)),
+              run.opts=run.control(checkdata="write",checkparam="write"),
+              mcmc=TRUE,
+              mcmc.opts=mcmc.control(mcmc=20,mcmcpars=c("beta","sigma_herd")))
+@ 
+
+<<testprofinput,echo=FALSE,eval=FALSE>>=
+do_admb("toy1", data=tmpdat,
+        params=list(beta=rep(0,ncol(X)),sigma_herd=0.1),
+        bounds=list(sigma_herd=c(0.0001,20)),
+        re=list(u_herd=ncol(Zherd)),
+        run.opts=run.control(checkdata="write",checkparam="write",
+          clean=FALSE))
+run_admb("toy1_gen",profile=TRUE)
+read_admb("toy1_gen",profile=TRUE)
+@ 
+
+Comparing \code{glmer} and \code{R2admb} results:
+
+<<coefsumlmer>>=
+## FIXME
+## coef(summary(gm1))
+@ 
+
+<<coefsumadmb>>=
+coef(summary(d1))[1:5,]
+@ 
+(The full table would include the estimates of the random effects as well.)
+
+Confirm that the random effects estimates are the same (note that the
+ADMB estimates are not scaled by the estimated standard deviation, so
+we do that by hand).
+
+<<ranefs>>=
+## FIXME
+## plot(ranef(gm1)$herd[,1],coef(d1)[6:20]*coef(d1)["sigma_herd"],
+##     xlab="glmer estimate",ylab="ADMB estimate")
+## abline(a=0,b=1)
+@ 
+
+We can get confidence (credible) intervals based on the MCMC run:
+<<mcmcconf>>=
+detach("package:lme4") ## HPDinterval definition gets in the way
+HPDinterval(as.mcmc(d1$mcmc[,6:20]))
+@ 
+
+That's all for now.
+
+
+\bibliography{R2admb}
+\end{document}

@@ -1,0 +1,6 @@
+DEoptim                 Differential Evolution Optimization
+DEoptim-methods         DEoptim-methods
+DEoptim.control         Control various aspects of the DEoptim
+                        implementation
+SMI                     Swiss Market Index data
+xrrData                 X-ray reflectometry data

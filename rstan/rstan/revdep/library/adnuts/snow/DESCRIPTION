@@ -1,0 +1,14 @@
+Package: snow
+Title: Simple Network of Workstations
+Version: 0.4-3
+Author: Luke Tierney, A. J. Rossini, Na Li, H. Sevcikova
+Description: Support for simple parallel computing in R.
+Maintainer: Luke Tierney <luke-tierney@uiowa.edu>
+Suggests: Rmpi,rlecuyer,nws
+License: GPL
+Depends: R (>= 2.13.1), utils
+NeedsCompilation: no
+Packaged: 2018-09-03 17:09:39 UTC; luke
+Repository: CRAN
+Date/Publication: 2018-09-14 14:30:03 UTC
+Built: R 3.6.0; ; 2018-10-26 08:34:30 UTC; unix

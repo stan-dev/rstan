@@ -1,0 +1,36 @@
+<article>
+<title>Reading Firefox Cookies</title>
+<para>
+Firefox stores its cookies in an SQLite database.  In the directory
+<dir>~/Library/Application Support/Firefox/Profiles</dir> there is a
+default profile, e.g.  <dir>abcd2efg.default</dir>.
+In this directory, there is a file named <file>cookies.sqlite</file>.
+We can read this in R using the <r:pkg>RSQLite</r:pkg> package.
+We install this in the usual manner. Then we load it and 
+create a connection and read the table.
+<r:code>
+drv = SQLite()
+cookiesDB = sqliteNewConnection(con, "~/Library/Application Support/Firefox/Profiles/abc.default/cookies.sqlite")
+dbListTables(cookiesDB)
+cookies = dbReadTable(cookiesDB, "moz_cookies")
+</r:code>
+</para>
+
+<para>
+This gives us a data frame with 9 columns.
+<r:code>
+names(cookies)
+[1] "id"           "name"         "value"        "host"         "path"        
+[2] "expiry"       "lastAccessed" "isSecure"     "isHttpOnly"  
+</r:code>
+</para>
+<para>
+Now we can use cookies with <omg:pkg>RCurl</omg:pkg> by extracting the
+values from this data frame and then passing them
+in <omg:pkg>RCurl</omg:pkg> calls.
+We use the <r:arg>cookie</r:arg> argument in the form
+<r:code>"name=expr"</r:code>, i.e. a string.
+We can specify multiple cookies by separating the name=value pairs
+by a semi-colon.
+</para>
+</article>

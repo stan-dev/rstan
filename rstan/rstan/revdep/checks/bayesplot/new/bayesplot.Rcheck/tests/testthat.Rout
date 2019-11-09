@@ -1,0 +1,34 @@
+
+R Under development (unstable) (2019-04-20 r76407) -- "Unsuffered Consequences"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(testthat)
+> library(bayesplot)
+This is bayesplot version 1.6.0
+- Online documentation and vignettes at mc-stan.org/bayesplot
+- bayesplot theme set to bayesplot::theme_default()
+   * Does _not_ affect other ggplot2 plots
+   * See ?bayesplot_theme_set for details on theme setting
+> 
+> Sys.unsetenv("R_TESTS")
+> test_check("bayesplot")
+══ testthat results  ═══════════════════════════════════════════════════════════
+OK: 969 SKIPPED: 18 WARNINGS: 7 FAILED: 0
+> 
+> proc.time()
+   user  system elapsed 
+ 38.482   0.264  39.146 
+Error while shutting down parallel: unable to terminate some child processes

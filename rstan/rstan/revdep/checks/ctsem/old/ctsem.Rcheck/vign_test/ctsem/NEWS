@@ -1,0 +1,172 @@
+ctsem news:
+
+12/4/2019
+#### 2.9.0 ####
+- Improved optimizer using stochastic gradient descent.
+- fixed bug introduced re finding start values when binary variables are used.
+- custom calculations can be specified and estimated using both linear and nonlinear dynamics approach.
+- ctStanFit is no longer available for win32 systems.
+- ctStanKalman function extracts system state over time.
+
+6/11/2018
+#### 2.7.3 ####
+- Updated for rstan 2.18.1 compatibility
+- Non-linear dynamics now handled using mixture of extended and unscented filters for improved speed.
+- Priors for hierarchical variance modified so prior for total variance has consistent shape regardless of dimension.
+- Optimization / importance sampling works well for many cases, see arguments using ?ctStanFit.
+- ctStanPostPredict produces a range of posterior predictive plots.
+- Various small non-critical bug fixes / updates. (see github for details)
+
+25/6/2018
+#### 2.6.5 ####
+- Fixed bug in ctStanFit introduced in previous release leading to errors in handling of missing data.
+- ctStanTIpredMarginal function for plotting marginal relationships between predictors and parameters.
+
+1/6/2018
+#### 2.6.0 ####
+- Removed need for compilation of standard models.
+- Unscented Kalman filter for ctStanFit:
+  - Non-linear / time-varying / state dependent specifications now possible. 
+  - Optimization followed by importance sampling can be used instead of sampling via Stan.
+  - Most plotting functions still not working correctly for such models.
+- ctCheckFit function for plotting covariance of data generated from posterior against original.
+- Time independent predictors can now be used independent of random effects.
+- Fix bug in summary preventing display when binary variables were used in fit.
+- Allow data sets to contain both binary and continuous variables.
+- More robust data import, character string id's and jumbled order of rows now manageable.
+- stanWplot no longer requires shiny to be explicitly loaded.
+- Fix bug in ctKalman plotting function preventing interpolation.
+- Fix bug in additional summary matrices introduced in 2.5.0 -- some were transposed.
+- Summary no longer returns errors when partial stationarity is set.
+
+27/9/2017
+#### 2.5.0 ####
+Fixes: 
+- stanWplot function for trace plots while sampling with stan was not working on non windows platforms.
+- ctStan summary reports population standard deviations more accurately -- improved delta approach.
+- various minor plotting improvements
+
+Additions / Changes:
+- ctStanFit now handles correlation matrices differently -- little substantive impact.
+- ctKalman can now be used to plot individual trajectories from ctFit objects and ctStanFit objects (ctStanKalman function no longer exists).
+- ctStanFit now handles missing data on covariate effects -- time dependent predictors are set to zero, time independent predictors are imputed with a normal(0,10) prior (can adjust via the $tipredsimputedprior subobject of the ctStanModel).
+- ctStanFit default population standard deviation prior now changed to a regularised independence Jeffreys -- previous truncated normal approach still possible because...
+- ctStanFit now accepts custom specifications for the population standard deviation -- see the $rawhypersd , $rawhypersdlowerbound, and $hypersdtransform subobjects of the ctStanModel object. 
+- ctStan: Plotting covariate effects via ctStanTIpredeffects function now easier to use and more versatile -- can plot effects on discrete time matrices, for instance.
+- ctFit and ctMultigroupFit data argument changed to 'dat' instead of 'datawide', and now dataform="long" argument can be used to use long format data (as per ctStan) directly. 
+- additional parameter matrices shown for summary of ctStanFit objects.
+- ctStanParMatrices function to compute continuous time matrices for a given model and vector of free population means.
+
+
+16/5/2017
+#### 2.4.0 ####
+Fixes:
+- Time dependent predictors generated errors with the frequentist Kalman filter form since 2.2.0
+- With stationary set to NULL (not the default but offered in help file) for ctFit, 
+t0 matrices were mistakenly set to stationary.
+- Duplicated parameter names now allowed in a ctStanFit model.
+
+Features:
+- ctGenerateFromFit generates data based on a model fitted with ctFit.
+- ctPostPredict generates distributions from data based on a model fitted with ctFit
+and plots this against the original data.
+
+
+6/4/2017
+#### 2.3.1 ####
+Fixes:
+- summary: Standard errors were not reported in some cases
+- ctStanFit: 2.3.0 hierarchical correlation changes were applied too broadly
+- ctFit: discreteTime switch no longer gives errors when traits included
+- ctFit: transformedParams=FALSE argument no longer throwing errors.
+- ctStanKalman: correct handling of missing data for plotting.
+
+3/3/2017
+#### 2.3.0 ####
+Fixes:
+- TRAITVAR in frequentist ctsem was incorrectly accounting for differing time 
+  intervals since v2.0.0. TRAITVAR is now (again) reported as total between subjects
+  variance.
+- Default quantiles on ctStanDiscretePars adjusted to 95%.
+- Hierarchical correlation probabilities adjusted in ctStanFit for more consistent
+  behaviour with high dimensional processes.
+
+Changes:
+- Default to unstandardised cross effects plots.
+
+1/2/2017
+#### 2.2.0 ####
+Changes:
+- Time dependent predictors now have instantaneous effect in both frequentist and 
+  Bayesian approaches, and the documentation is updated to reflect this.
+  Previously, no TDpreds affecting first time point in frequentist.
+  Accordingly, wide data structure is changed, with an extra column 
+  per predictor and predictors now sorted by time point as for indicators. 
+  See vignette for example. 
+- Default to 0 covariance between time dependent predictors and initial (T0) 
+  latents / traits / time independent predictors. Specify matrix as 'free' 
+  in ctModel to estimate instead.
+- Default carefulFit = TRUE for multiple groups frequentist models (ctMultigroupFit)
+- Improve optimization approach for ctStanFit - but still not reliable for random effects.
+
+Fixes:
+- Multiple time dependent predictors with multiple processes resulted in inaccurate
+  estimates for TDPREDEFFECT in frequentist approach of previous versions.
+- Prevent ctGenerate from auto-filling matrices to 0 variance.
+- Correct oscillating example for change in tolerance in OpenMx.
+
+
+6/1/2017
+#### 2.1.1 ####
+Improvements:
+- improved fitting of frequentist models with ctFit and ctRefineTo, due to
+  changes to carefulFit penalisation and refining approach.
+
+Changes:
+- Removed package 'PSM' from suggests field and vignette as requested by CRAN
+
+Fixes:
+- rstan 2.14 caused problems with data import for ctStanFit
+- eliminated spurious warnings for ctStanFit
+
+
+20/12/2016
+#### 2.1.0 ####
+Features:
+- Empirical Bayes, experimental but can now optimize with hierarchical model 
+  (when using the Kalman filter, as per defaults)
+- Easy extraction and plotting of time independent predictor (covariate) effects,
+  see ctStanTIpredEffects for example.
+- Added stationary argument to ctStanFit - much more efficient than setting 
+  priors on stationarity.
+
+Bugs fixed:
+- incorrect number of cores spawned for parallel sessions.
+- optimize and variational bayes switches for ctStanFit did not work.
+- ctKalman would break if only 1 row of data passed in.
+
+
+18/11/2016
+#### 2.0.0 ####
+Features:
+- Hierarchical Bayesian modeling using Stan, see ctStanFit function and 
+  the vignette at https://cran.r-project.org/package=ctsem/vignettes/hierarchical.pdf
+
+Changes:
+- Defaults change: Fix CINT to 0 and free MANIFESTMEANS
+- Reintroduce variable effect of TRAITVAR at T0 (more flexible but more 
+    fitting problems - try MANIFESTTRAITVAR instead if problematic, or 
+    use step-wise fitting approach, automated with ctRefineTo)
+
+
+#### ctsem 1.1.6 ####
+Features added:
+- now with a change log!
+- ctCompareExpectation plots expected means and covariances against model implied.
+- remove log transform of drift matrix diagonal, positive drift diagonals again possible.
+- ctRefineTo allows easy step wise fitting from simple to complex - faster and more robust fitting in many cases.
+- ctPlot is a new function that allows more customization of plots.
+- ctModel now allows time varying means to be specified.
+
+Bugs fixed:
+- corrected handling of Cholesky inputs for ctGenerate

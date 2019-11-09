@@ -1,0 +1,650 @@
+---
+title: "RStan: the R interface to Stan"
+author: "Stan Development Team"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+bibliography: rstan.bib
+vignette: >
+  %\VignetteIndexEntry{RStan}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(rstan)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  comment = NA,
+  fig.align = "center",
+  fig.height = 5,
+  fig.width = 7
+  )
+```
+
+In this vignette we present RStan, the R interface to Stan. Stan is a C++
+library for Bayesian inference using the No-U-Turn sampler (a variant of
+Hamiltonian Monte Carlo) or frequentist inference via optimization. We
+illustrate the features of RStan through an example in
+@GelmanCarlinSternRubin:2003.
+
+
+## Introduction 
+
+Stan is a C++ library for Bayesian modeling and inference that primarily uses
+the No-U-Turn sampler (NUTS) [@hoffman-gelman:2012] to obtain posterior
+simulations given a user-specified model and data. Alternatively, Stan can
+utilize the LBFGS optimization algorithm to maximize an objective function, such
+as a log-likelihood. The R package __rstan__ provides RStan, the R interface to
+Stan. The __rstan__ package allows one to conveniently fit Stan models from R
+[@rprj] and access the output, including posterior inferences and intermediate
+quantities such as evaluations of the log posterior density and its gradients.
+
+In this vignette we provide a concise introduction to the functionality included
+in the __rstan__ package. Stan's website [mc-stan.org](http://mc-stan.org) has 
+additional details and provides up-to-date information about how to operate both
+Stan and its many interfaces including RStan. See, for example, _RStan Getting 
+Started_ [@rstangettingstarted2012].
+
+
+## Prerequisites
+
+Stan has a modeling language, which is similar to but not identical to that of
+the Bayesian graphical modeling package BUGS [@WinBUGS]. A parser translates a
+model expressed in the Stan language to C++ code, whereupon it is compiled to an
+executable program and loaded as a Dynamic Shared Object (DSO) in R which can
+then be called by the user.
+
+A C++ compiler, such as [`g++`](http://gcc.gnu.org) or 
+[`clang++`](http://clang.llvm.org), is required for this process. For
+instructions on installing a C++ compiler for use with RStan see 
+[RStan-Getting-Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
+
+The __rstan__ package also depends heavily on several other R packages:
+
+* __StanHeaders__  (Stan C++ headers)
+* __BH__ (Boost C++ headers)
+* __RcppEigen__ (Eigen C++ headers)
+* __Rcpp__ (facilitates using C++ from R)
+* __inline__ (compiles C++ for use with R)
+
+These dependencies should be automatically installed if you install the 
+__rstan__ package via one of the conventional mechanisms.
+
+## Typical Workflow
+
+The following is a typical workflow for using Stan via RStan for Bayesian
+inference.
+
+1. Represent a statistical model by writing its log posterior density (up to an 
+normalizing constant that does not depend on the unknown parameters in the 
+model) using the Stan modeling language. We recommend using a separate file with
+a `.stan` extension, although it can also be done using a character string
+within R.
+2. Translate the Stan program to C++ code using the `stanc` function.
+3. Compile the C++ code to create a DSO (also called a dynamic link library
+(DLL)) that can be loaded by R.
+4. Run the DSO to sample from the posterior distribution.
+5. Diagnose non-convergence of the MCMC chains.
+6. Conduct inference based on the posterior sample (the MCMC draws from the
+posterior distribution).
+
+Conveniently, steps 2, 3, and 4, above, are all performed implicitly by a single
+call to the `stan` function.
+
+
+## Example
+
+Throughout the rest of the vignette we'll use a hierarchical meta-analysis model
+described in section 5.5 of @GelmanCarlinSternRubin:2003 as a running example. A
+hierarchical model is used to model the effect of coaching programs on college
+admissions tests. The data, shown in the table below, summarize the results of
+experiments conducted in eight high schools, with an estimated standard error
+for each. These data and model are of historical interest as an example of full
+Bayesian inference [@Rubin1981]. For short, we call this the _Eight
+Schools_ examples.
+
+School | Estimate ($y_j$) | Standard Error ($\sigma_j$)
+------ | -------- | --------------
+A      | 28       | 15
+B      | 8        | 10
+C      | -3       | 16
+D      | 7        | 11
+E      | -1       | 9
+F      | 1        | 11
+G      | 18       | 10
+H      | 12       | 18
+
+We use the Eight Schools example here because it is simple but also represents a
+nontrivial Markov chain simulation problem in that there is dependence between
+the parameters of original interest in the study --- the effects of coaching in
+each of the eight schools --- and the hyperparameter representing the variation
+of these effects in the modeled population.  Certain implementations of a Gibbs
+sampler or a Hamiltonian Monte Carlo sampler can be slow to converge in this
+example.
+
+The statistical model of interest is specified as
+
+$$
+\begin{aligned} 
+y_j &\sim \mathsf{Normal}(\theta_j, \sigma_j), \quad j=1,\ldots,8 \\
+\theta_j &\sim \mathsf{Normal}(\mu, \tau), \quad j=1,\ldots,8 \\
+p(\mu, \tau) &\propto 1,
+\end{aligned}
+$$
+
+where each $\sigma_j$ is assumed known.
+
+
+### Write a Stan Program
+
+RStan allows a Stan program to be coded in a text file
+(typically with suffix `.stan`) or in a R character vector (of length one). We
+put the following code for the Eight Schools model into the file `schools.stan`:
+
+```{r, echo=FALSE, comment=""}
+cat(readLines("schools.stan"), sep = "\n")
+```
+
+The first section of the Stan program above, the `data` block, specifies the 
+data that is conditioned upon in Bayes Rule: the number of schools, $J$, the 
+vector of estimates, $(y_1, \ldots, y_J)$, and the vector of standard errors of
+the estimates $(\sigma_{1}, \ldots, \sigma_{J})$. Data are declared as integer
+or real and can be vectors (or, more generally, arrays) if dimensions are 
+specified. Data can also be constrained; for example, in the above model $J$ has
+been restricted to be at least $1$ and the components of $\sigma_y$ must all be 
+positive.
+
+The `parameters` block declares the parameters whose posterior distribution is
+sought. These are the the mean, $\mu$, and standard deviation, $\tau$, of the
+school effects, plus the _standardized_ school-level effects $\eta$. In this
+model, we let the unstandardized school-level effects, $\theta$, be a
+transformed parameter constructed by scaling the standardized effects by
+$\tau$ and shifting them by $\mu$ rather than directly declaring $\theta$ as a
+parameter. By parameterizing the model this way, the sampler runs more 
+efficiently because the resulting multivariate geometry is more amendable to 
+Hamiltonian Monte Carlo [@Neal:2011].
+
+Finally, the `model` block looks similar to standard statistical notation.
+(Just be careful:  the second argument to Stan's normal$(\cdot,\cdot)$
+distribution is the standard deviation, not the variance as is usual in
+statistical notation). We have written the model in vector notation, which
+allows Stan to make use of more efficient algorithmic differentiation (AD). It
+would also be possible --- but less efficient --- to write the model by
+replacing `normal_lpdf(y | theta,sigma)` with a loop over the $J$ schools,
+
+```
+for (j in 1:J) 
+  target += normal_lpdf(y[j] | theta[j],sigma[j]);
+```
+
+Stan has versions of many of the most useful R functions for statistical 
+modeling, including probability distributions, matrix operations, and various
+special functions. However, the names of the Stan functions may differ from
+their R counterparts and, more subtly, the parameterizations of probability
+distributions in Stan may differ from those in R for the same distribution. To
+mitigate this problem, the `lookup` function can be passed an R function or
+character string naming an R function, and RStan will attempt to look up the
+corresponding Stan function, display its arguments, and give the page number in
+@StanManual where the function is discussed.
+
+```{r, lookup}
+lookup("dnorm")
+lookup(dwilcox)   # no corresponding Stan function
+```
+
+If the `lookup` function fails to find an R function that corresponds to a 
+Stan function, it will treat its argument as a regular expression and attempt to
+find matches with the names of Stan functions.
+
+### Preparing the Data
+
+The `stan` function accepts data as a named list, a character vector of object
+names, or an `environment`. Alternatively, the `data` argument can be omitted
+and R will search for objects that have the same names as those declared in the
+`data` block of the Stan program. Here is the data for the Eight Schools
+example:
+
+```{r, schools-data}
+schools_data <- list(
+  J = 8,
+  y = c(28,  8, -3,  7, -1,  1, 18, 12),
+  sigma = c(15, 10, 16, 11,  9, 11, 10, 18)
+)
+```
+
+It would also be possible (indeed, encouraged) to read in the data from a file
+rather than to directly enter the numbers in the R script.
+
+
+### Sample from the Posterior Distribution
+
+Next, we can call the `stan` function to draw posterior samples:
+
+```{r, callstan, results="hide"}
+library(rstan)
+fit1 <- stan(
+  file = "schools.stan",  # Stan program
+  data = schools_data,    # named list of data
+  chains = 4,             # number of Markov chains
+  warmup = 1000,          # number of warmup iterations per chain
+  iter = 2000,            # total number of iterations per chain
+  cores = 2,              # number of cores (could use one per chain)
+  refresh = 0             # no progress shown
+  )
+```
+
+The `stan` function wraps the following three steps: 
+
+* Translate a model in Stan code to C++ code 
+* Compile the C++ code to a dynamic shared object (DSO) and load the DSO
+* Sample given some user-specified data and other settings
+
+A single call to `stan` performs all three steps, but they can also be executed 
+one by one (see the help pages for `stanc`, `stan_model`, and `sampling`), which
+can be useful for debugging. In addition, Stan saves the DSO so that when the 
+same model is fit again (possibly with new data and settings) we can avoid
+recompilation. If an error happens after the model is compiled but before
+sampling (e.g., problems with inputs like data and initial values), we can still
+reuse the compiled model.
+
+The `stan` function returns a stanfit object, which is an S4 object of class 
+`"stanfit"`. For those who are not familiar with the concept of class and S4 
+class in R, refer to @chambers2010software. An S4 class consists of some
+attributes (data) to model an object and some methods to model the behavior of
+the object. From a user's perspective, once a stanfit object is created, we are
+mainly concerned about what methods are defined.
+
+If no error occurs, the returned stanfit object includes the sample drawn from 
+the posterior distribution for the model parameters and other quantities defined
+in the model. If there is an error (e.g. a syntax error in the Stan program),
+`stan` will either quit or return a stanfit object that contains no posterior
+draws.
+
+For class `"stanfit"`, many methods such as `print` and `plot` are defined for
+working with the MCMC sample. For example, the following shows a summary of the
+parameters from the Eight Schools model using the `print` method:
+
+```{r, print}
+print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
+```
+
+The last line of this output, `lp__`, is the logarithm of the (unnormalized)
+posterior density as calculated by Stan.  This log density can be used in
+various ways for model evaluation and comparison (see, e.g., @Vehtari2012).
+
+#### Arguments to the `stan` Function
+
+The primary arguments for sampling (in functions `stan` and `sampling`) include 
+data, initial values, and the options of the sampler such as `chains`, `iter`, 
+and `warmup`. In particular, `warmup` specifies the number of iterations that 
+are used by the NUTS sampler for the adaptation phase before sampling begins. 
+After the warmup, the sampler turns off adaptation and continues until a total 
+of `iter` iterations (including `warmup`) have been completed. There is no 
+theoretical guarantee that the draws obtained during warmup are from the
+posterior distribution, so the warmup draws should only be used for diagnosis
+and not inference. The summaries for the parameters shown by the `print` method
+are calculated using only post-warmup draws.
+
+The optional `init` argument can be used to specify initial values for the
+Markov chains. There are several ways to specify initial values, and the details
+can be found in the documentation of the `stan` function. The vast majority of
+the time it is adequate to allow Stan to generate its own initial values
+randomly. However, sometimes it is better to specify the initial values for at
+least a subset of the objects declared in the `parameters` block of a Stan
+program.
+
+Stan uses a random number generator (RNG) that supports parallelism. The 
+initialization of the RNG is determined by the arguments `seed` and `chain_id`. 
+Even if we are running multiple chains from one call to the `stan` function we 
+only need to specify one seed, which is randomly generated by R if not 
+specified.
+
+#### Data Preprocessing and Passing
+
+The data passed to `stan` will go through a preprocessing procedure. The details
+of this preprocessing are documented in the documentation for the `stan` 
+function. Here we stress a few important steps. First, RStan allows the user to
+pass more objects as data than what is declared in the `data` block (silently 
+omitting any unnecessary objects). In general, an element in the list of data passed
+to Stan from R should be numeric and its dimension should match the declaration
+in the `data` block of the model. So for example, the `factor` type in R is not
+supported as a data element for RStan and must be converted to integer codes via
+`as.integer`. The Stan modeling language distinguishes between integers and
+doubles (type `int` and `real` in Stan modeling language, respectively). The
+`stan` function will convert some R data (which is double-precision usually) to
+integers if possible.
+
+The Stan language has scalars and other types that are sets of scalars, e.g. 
+vectors, matrices, and arrays. As R does not have true scalars, RStan treats
+vectors of length one as scalars. However, consider a model with a `data` block
+defined as
+
+```
+data {                
+  int<lower=1> N;      
+  real y[N];
+} 
+```
+
+in which `N` can be $1$ as a special case. So if we know that `N` is always 
+larger than $1$, we can use a vector of length `N` in R as the data input for 
+`y` (for example, a vector created by `y <- rnorm(N)`). If we want to prevent 
+RStan from treating the input data for `y` as a scalar when $N`$ is $1$, we
+need to explicitly make it an array as the following R code shows:
+
+```
+y <- as.array(y)
+```
+
+Stan cannot handle missing values in data automatically, so no element of the 
+data can contain `NA` values. An important step in RStan's data preprocessing is
+to check missing values and issue an error if any are found. There are, however,
+various ways of writing Stan programs that account for missing data (see
+@StanManual).
+
+
+### Methods for the `"stanfit"` Class
+
+The other vignette included with the __rstan__ package discusses stanfit objects
+in greater detail and gives examples of accessing the most important content 
+contained in the objects (e.g., posterior draws, diagnostic summaries). Also, a
+full list of available methods can be found in the documentation for the 
+`"stanfit"` class at `help("stanfit", "rstan")`. Here we give only a few 
+examples.
+
+The `plot` method for stanfit objects provides various graphical overviews of 
+the output. The default plot shows posterior uncertainty intervals (by default 
+80% (inner) and 95% (outer)) and the posterior median for all the parameters as 
+well as `lp__` (the log of posterior density function up to an additive 
+constant):
+
+```{r, stanfit-plot}
+plot(fit1)
+```
+
+The optional `plotfun` argument can be used to select among the various 
+available plots. See `help("plot,stanfit-method")`.
+
+The `traceplot` method is used to plot the time series of the posterior draws. 
+If we include the warmup draws by setting `inc_warmup=TRUE`, the background
+color of the warmup area is different from the post-warmup phase:
+
+```{r, stanfit-traceplot}
+traceplot(fit1, pars = c("mu", "tau"), inc_warmup = TRUE, nrow = 2)
+```
+
+To assess the convergence of the Markov chains, in addition to visually 
+inspecting traceplots we can calculate the split $\hat{R}$ statistic. Split 
+$\hat{R}$ is an updated version of the $\hat{R}$ statistic proposed in
+@GelmanRubin:1992 that is based on splitting each chain into two halves. See the
+Stan manual for more details. The estimated $\hat{R}$ for each parameter is 
+included as one of the columns in the output from the `summary` and `print`
+methods.
+
+```{r, stanfit-print}
+print(fit1, pars = c("mu", "tau"))
+```
+
+Again, see the additional vignette on stanfit objects for more details.
+
+
+### Sampling Difficulties
+
+The best way to visualize the output of a model is through the ShinyStan 
+interface, which can be accessed via the 
+[__shinystan__](https://cran.r-project.org/package=shinystan) R package. 
+ShinyStan facilitates both the visualization of parameter distributions and
+diagnosing problems with the sampler. The documentation for the __shinystan__
+package provides instructions for using the interface with stanfit objects.
+
+In addition to using ShinyStan, it is also possible to diagnose some 
+sampling problems using functions in the __rstan__ package. The
+`get_sampler_params` function returns information on parameters
+related the performance of the sampler:
+
+```{r, get_sampler_params}
+# all chains combined
+sampler_params <- get_sampler_params(fit1, inc_warmup = TRUE)
+summary(do.call(rbind, sampler_params), digits = 2)
+
+# each chain separately
+lapply(sampler_params, summary, digits = 2)
+```
+
+Here we see that there are a small number of divergent transitions, which are 
+identified by `divergent__` being $1$. Ideally, there should be no divergent 
+transitions after the warmup phase. The best way to try to eliminate divergent 
+transitions is by increasing the target acceptance probability, which by default
+is $0.8$. In this case the mean of `accept_stat__` is close to $0.8$ for all 
+chains, but has a very skewed distribution because the median is near $0.95$. We
+could go back and call `stan` again and specify the optional argument 
+`control=list(adapt_delta=0.9)` to try to eliminate the divergent transitions. 
+However, sometimes when the target acceptance rate is high, the stepsize is very
+small and the sampler hits its limit on the number of leapfrog steps it can take
+per iteration. In this case, it is a non-issue because each chain has a 
+`treedepth__` of at most $7$ and the default is $10$. But if any `treedepth__` 
+were $11$, then it would be wise to increase the limit by passing 
+`control=list(max_treedepth=12)` (for example) to `stan`. See the vignette on
+stanfit objects for more on the structure of the object returned by
+`get_sampler_params`.
+
+We can also make a graphical representation of (much of the) the same 
+information using `pairs`. The "pairs"" plot can be used to get a sense of
+whether any sampling difficulties are occurring in the tails or near the mode:
+
+```{r, pairs-plot}
+pairs(fit1, pars = c("mu", "tau", "lp__"), las = 1)
+```
+
+In the plot above, the marginal distribution of each selected parameter is 
+included as a histogram along the diagonal. By default, draws with below-median 
+`accept_stat__` (MCMC proposal acceptance rate) are plotted below the diagonal 
+and those with above-median `accept_stat__` are plotted above the diagonal (this
+can be changed using the `condition` argument). Each off-diagonal square 
+represents a bivariate distribution of the draws for the intersection of the 
+row-variable and the column-variable. Ideally, the below-diagonal intersection 
+and the above-diagonal intersection of the same two variables should have 
+distributions that are mirror images of each other. Any yellow points would 
+indicate transitions where the maximum `treedepth__` was hit, and red points 
+indicate a divergent transition.
+
+
+## Additional Topics
+
+### User-defined Stan Functions
+
+Stan also permits users to define their own functions that can be used 
+throughout a Stan program. These functions are defined in the `functions` block.
+The `functions` block is optional but, if it exists, it must come before any
+other block. This mechanism allows users to implement statistical distributions
+or other functionality that is not currently available in Stan. However, even if
+the user's function merely wraps calls to existing Stan functions, the code in
+the `model` block can be much more readible if several lines of Stan code that
+accomplish one (or perhaps two) task(s) are replaced by a call to a user-defined
+function.
+
+Another reason to utilize user-defined functions is that RStan provides the 
+`expose_stan_functions` function for exporting such functions to the R global
+environment so that they can be tested in R to ensure they are working
+properly. For example,
+
+```{r, expose_stan_functions}
+model_code <-
+'
+functions {
+  real standard_normal_rng() {
+    return normal_rng(0,1);
+  }
+}
+model {}
+'
+expose_stan_functions(stanc(model_code = model_code))
+standard_normal_rng()
+```
+
+
+### The Log-Posterior (function and gradient)
+
+Stan defines the log of the probability density function of a posterior 
+distribution up to an unknown additive constant. We use `lp__` to represent the 
+realizations of this log kernel at each iteration (and `lp__` is treated as an 
+unknown in the summary and the calculation of split $\hat{R}$ and effective 
+sample size).
+
+A nice feature of the __rstan__ package is that it exposes functions for 
+calculating both `lp__` and its gradients for a given stanfit object. These two 
+functions are `log_prob` and `grad_log_prob`, respectively. Both take parameters
+on the _unconstrained_ space, even if the support of a parameter is not the 
+whole real line. The Stan manual [@StanManual] has full details on the 
+particular transformations Stan uses to map from the entire real line to some 
+subspace of it (and vice-versa).
+
+It maybe the case that the number of unconstrained parameters might be less than
+the total number of parameters. For example, for a simplex parameter of length 
+$K$, there are actually only $K-1$ unconstrained parameters because of the 
+constraint that all elements of a simplex must be nonnegative and sum to one. 
+The `get_num_upars` method is provided to get the number of unconstrained 
+parameters, while the `unconstrain_pars` and `constrain_pars` methods can be 
+used to compute unconstrained and constrained values of parameters respectively.
+The former takes a list of parameters as input and transforms it to an 
+unconstrained vector, and the latter does the opposite. Using these functions, 
+we can implement other algorithms such as maximum a posteriori estimation of 
+Bayesian models.
+
+### Optimization in Stan
+
+RStan also provides an interface to Stan's optimizers, which can be used to
+obtain a point estimate by maximizing the (perhaps penalized) likelihood 
+function defined by a Stan program. We illustrate this feature using a very
+simple example: estimating the mean from samples assumed to be drawn from a
+normal distribution with known standard deviation. That is, we assume
+
+$$y_n \sim \mathsf{Normal}(\mu,1), \quad n = 1, \ldots, N. $$
+
+By specifying a prior $p(\mu) \propto 1$, the maximum a posteriori estimator for
+$\mu$ is just the sample mean. We don't need to explicitly code this prior for
+$\mu$, as $p(\mu) \propto 1$ is the default if no prior is specified.
+
+We first create an object of class `"stanmodel"` and then use the `optimizing`
+method, to which data and other arguments can be fed.
+
+```{r, optimizer, results="hide"}
+ocode <- "
+  data {
+    int<lower=1> N;
+    real y[N];
+  } 
+  parameters {
+    real mu;
+  } 
+  model {
+    target += normal_lpdf(y | mu, 1);
+  } 
+"
+
+sm <- stan_model(model_code = ocode)
+y2 <- rnorm(20)
+```
+
+```{r}
+mean(y2)
+optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)
+```
+
+
+### Model Compilation
+
+As mentioned earlier in the vignette, Stan programs are written in the Stan
+modeling language, translated to C++ code, and then compiled to a dynamic shared
+object (DSO). The DSO is then loaded by R and executed to draw the posterior
+sample. The process of compiling C++ code to DSO sometimes takes a while. When
+the model is the same, we can reuse the DSO from a previous run. The `stan`
+function accepts the optional argument `fit`, which can be used to pass an
+existing fitted model object so that the compiled model is reused. When reusing
+a previous fitted model, we can still specify different values for the other
+arguments to `stan`, including passing different data to the `data` argument.
+
+In addition, if fitted models are saved using functions like `save` and 
+`save.image`, RStan is able to save DSOs, so that they can be used across R 
+sessions. To avoid saving the DSO, specify `save_dso=FALSE` when calling the 
+`stan` function.
+
+If the user executes `rstan_options(auto_write = TRUE)`, then a serialized 
+version of the compiled model will be automatically saved to the hard disk in 
+the same directory as the `.stan` file or in R's temporary directory if the Stan
+program is expressed as a character string. Although this option is not enabled 
+by default due to CRAN policy, it should ordinarily be specified by users in 
+order to eliminate redundant compilation.
+
+Stan runs much faster when the code is compiled at the maximum level of 
+optimization, which is `-O3` on most C++ compilers. However, the default value 
+is `-O2` in R, which is appropriate for most R packages but entails a slight 
+slowdown for Stan. You can change this default locally by following the 
+instructions at 
+[CRAN - Customizing-package-compilation](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Customizing-package-compilation).
+However, you should be advised that setting `CXXFLAGS = -O3` may cause adverse 
+side effects for other R packages.
+
+See the documentation for the `stanc` and `stan_model` functions for more
+details on the parsing and compilation of Stan programs.
+
+### Running Multiple Chains in Parallel
+
+The number of Markov chains to run can be specified using the `chains` argument 
+to the `stan` or `sampling` functions. By default, the chains are executed 
+serially (i.e., one at a time) using the parent R process. There is also an 
+optional `cores` argument that can be set to the number of chains (if the 
+hardware has sufficient processors and RAM), which is appropriate on most 
+laptops. We typically recommend first calling 
+`options(mc.cores=parallel::detectCores())` once per R session so that all
+available cores can be used without needing to manually specify the `cores`
+argument.
+
+For users working with a different parallelization scheme (perhaps with a remote
+cluster), the __rstan__ package provides a function called `sflist2stanfit` for
+consolidating a list of multiple stanfit objects (created from the same Stan
+program and using the same number of warmup and sampling iterations) into a
+single stanfit object. It is important to specify the same seed for all the
+chains and equally important to use a different chain ID (argument `chain_id`),
+the combination of which ensures that the random numbers generated in Stan for
+all chains are essentially independent. This is handled automatically
+(internally) when $`cores` > 1$.
+
+
+## Working with CmdStan
+
+The __rstan__ package provides some functions for creating data for and reading 
+output from CmdStan, the command line interface to Stan.
+
+First, when Stan reads data or initial values, it supports a subset of the 
+syntax of R dump data formats. So if we use the `dump` function in base R to 
+prepare data, Stan might not be able to read the contents. The `stan_rdump` 
+function in __rstan__ is designed to dump the data from R to a format that is 
+supported by Stan, with semantics that are very similar to the `dump` function.
+
+Second, the `read_stan_csv` function creates a stanfit object from reading the 
+CSV files generated by CmdStan. The resulting stanfit object is compatible with
+the various methods for diagnostics and posterior analysis.
+
+
+## See Also
+
+* The [Stan Forums](http://discourse.mc-stan.org/) on Discourse
+* The [other vignettes](http://mc-stan.org/rstan/articles/)
+for the __rstan__ package, which show how to access the contents of stanfit
+objects and use external C++ in a Stan program.
+* The very thorough [Stan manual](http://mc-stan.org/users/documentation/) [@StanManual].
+* The `stan_demo` function, which can be used to fit many of the example models
+in the manual.
+* The [__bayesplot__](http://mc-stan.org/bayesplot/) package for visual MCMC diagnostics, posterior predictive checking, and other 
+plotting (ggplot based).
+* The [__shinystan__](http://mc-stan.org/shinystan/) R
+package, which provides a GUI for exploring MCMC output.
+* The [__loo__](http://mc-stan.org/loo/) R
+package, which is very useful for model comparison using stanfit objects.
+* The [__rstanarm__](http://mc-stan.org/rstanarm/) R
+package, which provides a `glmer`-style interface to Stan.
+
+---------

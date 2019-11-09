@@ -1,0 +1,23 @@
+bibentry(bibtype = "Article",
+  title        = "Continuous Time Structural Equation Modeling with {R} Package {ctsem}",
+  author       = c(person(given = c("Charles", "C."),
+                          family = "Driver"),
+                   person(given = c("Johan", "H.", "L."),
+                          family = "Oud"),
+                   person(given = c("Manuel", "C."),
+                          family = "Voelkle")),
+  journal      = "Journal of Statistical Software",
+  year         = "2017",
+  volume       = "77",
+  number       = "5",
+  pages        = "1--35",
+  doi          = "10.18637/jss.v077.i05",
+
+  header       = "To cite ctsem in publications use:",
+  textVersion  =
+  paste("Charles C. Driver, Johan H. L. Oud, Manuel C. Voelkle (2017).",
+        "Continuous Time Structural Equation Modeling with R Package ctsem.",
+        "Journal of Statistical Software, 77(5), 1-35.",
+        "doi:10.18637/jss.v077.i05")
+)
+

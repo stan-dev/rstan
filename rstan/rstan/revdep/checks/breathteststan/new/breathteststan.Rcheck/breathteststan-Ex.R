@@ -1,0 +1,108 @@
+pkgname <- "breathteststan"
+source(file.path(R.home("share"), "R", "examples-header.R"))
+options(warn = 1)
+library('breathteststan')
+
+base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+cleanEx()
+nameEx("as.matrix.coef_diff_by_group_stan")
+### * as.matrix.coef_diff_by_group_stan
+
+flush(stderr()); flush(stdout())
+
+### Name: as.matrix.coef_diff_by_group_stan
+### Title: S3 as.matrix for result of coef_diff_by_group
+### Aliases: as.matrix.coef_diff_by_group_stan
+
+### ** Examples
+
+
+
+
+cleanEx()
+nameEx("coef_diff_by_group")
+### * coef_diff_by_group
+
+flush(stderr()); flush(stdout())
+
+### Name: coef_diff_by_group
+### Title: Tabulates breath test parameter differences of groups from Stan
+###   group fit
+### Aliases: coef_diff_by_group coef_diff_by_group.breathteststangroupfit
+
+### ** Examples
+
+
+
+
+cleanEx()
+nameEx("stan_fit")
+### * stan_fit
+
+flush(stderr()); flush(stdout())
+
+### Name: stan_fit
+### Title: Bayesian Stan fit to 13C Breath Data
+### Aliases: stan_fit
+
+### ** Examples
+
+library(breathtestcore)
+suppressPackageStartupMessages(library(dplyr))
+d = breathtestcore::simulate_breathtest_data(n_records = 3) # default 3 records
+data = breathtestcore::cleanup_data(d$data)
+# Use more than 80 iterations and 4 chains for serious fits
+fit = stan_fit(data, chains = 1, iter = 80)
+plot(fit) # calls plot.breathtestfit
+# Extract coefficients and compare these with those
+# used to generate the data
+options(digits = 2)
+cf = coef(fit)
+cf %>%
+  filter(grepl("m|k|beta", parameter )) %>%
+  select(-method, -group) %>%
+  tidyr::spread(parameter, value) %>%
+  inner_join(d$record, by = "patient_id") %>%
+  select(patient_id, m_in = m.y, m_out = m.x,
+         beta_in = beta.y, beta_out = beta.x,
+         k_in = k.y, k_out = k.x)
+# For a detailed analysis of the fit, use the shinystan library
+# The following plots are somewhat degenerate because
+# of the few iterations in stan_fit
+suppressPackageStartupMessages(library(rstan))
+stan_plot(fit$stan_fit, pars = c("beta[1]","beta[2]","beta[3]"))
+stan_plot(fit$stan_fit, pars = c("k[1]","k[2]","k[3]"))
+stan_plot(fit$stan_fit, pars = c("m[1]","m[2]","m[3]"))
+
+
+
+
+cleanEx()
+nameEx("stan_group_fit")
+### * stan_group_fit
+
+flush(stderr()); flush(stdout())
+
+### Name: stan_group_fit
+### Title: Bayesian Stan fit to 13C Breath Data in Multiple Groups
+### Aliases: stan_group_fit
+
+### ** Examples
+
+
+
+
+
+### * <FOOTER>
+###
+cleanEx()
+options(digits = 7L)
+base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+grDevices::dev.off()
+###
+### Local variables: ***
+### mode: outline-minor ***
+### outline-regexp: "\\(> \\)?### [*]+" ***
+### End: ***
+quit('no')

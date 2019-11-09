@@ -1,0 +1,38 @@
+if(.Platform$OS.type == "windows") {
+    importFrom(utils, readRegistry, winProgressBar, setWinProgressBar,
+               packageVersion, file_test)
+}
+importFrom(utils, txtProgressBar, setTxtProgressBar)
+importFrom(stats, variable.names, sd, update)
+importFrom(coda, as.mcmc.list, as.mcmc, mcmc.list, mcmc, spectrum0,
+           nvar, "varnames<-")
+export (
+  jags.model,
+  jags.samples,
+  coda.samples,
+  load.module,
+  unload.module,
+  list.modules,
+  dic.samples,
+  diffdic,
+  adapt,
+  list.samplers,
+  list.factories,
+  set.factory,
+  read.data,
+  read.jagsdata,
+  read.bugsdata,
+  parallel.seeds,
+  jags.version
+)
+S3method(print, jags)
+S3method(coef, jags)
+S3method(update, jags)
+S3method(variable.names, jags)
+S3method(print, mcarray)
+S3method(summary, mcarray)
+S3method(print, summary.mcarray)
+S3method(as.mcmc.list, mcarray)
+S3method("-", dic)
+S3method(print, dic)
+S3method(print, diffdic)

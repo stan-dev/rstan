@@ -1,0 +1,52 @@
+Package: dygraphs
+Type: Package
+Title: Interface to 'Dygraphs' Interactive Time Series Charting Library
+Version: 1.1.1.6
+Authors@R: c(
+    person("Dan", "Vanderkam", role = c("aut", "cph"),
+       comment = "dygraphs library in htmlwidgets/lib, http://dygraphs.com/"),
+    person("Petr", "Shevtsov", role = c("cre", "cph"),
+       email = "petr.shevtsov@gmail.com"),
+    person("JJ", "Allaire", role = c("aut")),
+    person(family = "RStudio", role = "cph"),
+    person("Jonathan", "Owen", role = c("aut", "cph")),
+    person("Daniel", "Gromer", role = c("aut", "cph")),
+    person("Benoit", "Thieurmel", role = c("aut", "cph")),
+    person("Kent", "Laukhuf", role = "ctb"),
+    person(family = "jQuery Foundation", role = "cph",
+           comment = "jQuery library"),
+    person(family = "jQuery contributors", role = c("ctb", "cph"),
+           comment = "jQuery library; authors listed in inst/htmlwidgets/lib/jquery/AUTHORS.txt")
+    )
+URL: https://github.com/rstudio/dygraphs
+BugReports: https://github.com/rstudio/dygraphs/issues
+Description: An R interface to the 'dygraphs' JavaScript charting library
+    (a copy of which is included in the package). Provides rich facilities
+    for charting time-series data in R, including highly configurable
+    series- and axis-display and interactive features like zoom/pan and
+    series/point highlighting.
+License: MIT + file LICENSE
+Depends: R (>= 3.0)
+Imports: magrittr, htmlwidgets (>= 0.6), htmltools (>= 0.3.5), zoo (>=
+        1.7-10), xts (>= 0.9-7)
+Suggests: testthat
+Enhances: rmarkdown (>= 0.3.3), shiny (>= 0.10.2.1)
+RoxygenNote: 6.0.1
+NeedsCompilation: no
+Packaged: 2018-07-11 21:29:28 UTC; petr
+Author: Dan Vanderkam [aut, cph] (dygraphs library in htmlwidgets/lib,
+    http://dygraphs.com/),
+  Petr Shevtsov [cre, cph],
+  JJ Allaire [aut],
+  RStudio [cph],
+  Jonathan Owen [aut, cph],
+  Daniel Gromer [aut, cph],
+  Benoit Thieurmel [aut, cph],
+  Kent Laukhuf [ctb],
+  jQuery Foundation [cph] (jQuery library),
+  jQuery contributors [ctb, cph] (jQuery library; authors listed in
+    inst/htmlwidgets/lib/jquery/AUTHORS.txt)
+Maintainer: Petr Shevtsov <petr.shevtsov@gmail.com>
+Repository: CRAN
+Date/Publication: 2018-07-11 22:00:03 UTC
+Built: R 3.6.0; ; 2018-10-26 03:41:02 UTC; unix

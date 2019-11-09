@@ -76,6 +76,7 @@ using the R function `optim` below.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math/fwd/mat/fun/dot_self.hpp>    // stuff from fwd/ must come first
 #include <stan/math/mix/mat/functor/hessian.hpp> // then stuff from mix/ must come next
@@ -183,6 +184,7 @@ Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(StanHeaders_pkg_libs)), "-lStan
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
@@ -281,6 +283,7 @@ and running it in parallel via `map_rect`.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
@@ -370,6 +373,7 @@ exposeClass("sparselm_stan",
       rename = c(log_prob = "log_prob<>", gradient = "gradient<>"),
       header = c("// [[Rcpp::depends(BH)]]",
                  "// [[Rcpp::depends(RcppEigen)]]",
+                 "// [[Rcpp::depends(RcppParallel)]",
                  "// [[Rcpp::depends(StanHeaders)]]",
                  "// [[Rcpp::plugins(cpp14)]]",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),

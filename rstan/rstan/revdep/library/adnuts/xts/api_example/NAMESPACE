@@ -1,0 +1,4 @@
+import("xts")
+useDynLib(linkXTS)
+
+export(checkOrder)

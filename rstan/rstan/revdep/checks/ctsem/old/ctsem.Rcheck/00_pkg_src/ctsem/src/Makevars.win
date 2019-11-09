@@ -1,0 +1,31 @@
+STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "cat(' ', sep = '\n')" -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE), sep = '\n')" | grep "StanHeaders")
+PKG_CPPFLAGS = -I"../inst/include" -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error
+CXX_STD =  CXX14 
+#CXXFLAGS += -DSTAN_THREADS
+
+#SOURCES = $(wildcard stan_files/*.stan)
+ifeq   "$(WIN)" "64" #"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript -e Sys.getenv('R_ARCH')" "/i386" #.Machine$sizeof.pointer" "4" #
+#PKG_CPPFLAGS +=  -large-address-aware 
+	SOURCES = $(wildcard stan_files/*.stan)
+else
+	SOURCES = $(wildcard)
+endif
+
+OBJECTS = $(SOURCES:.stan=.o) init.o
+
+all: $(SHLIB)
+
+clean:
+		RM -rf stan_files/*.o
+		RM -rf *.so *.o
+		RM -rf stan_files/*.cc
+		RM -rf stan_files/*.hpp
+		RM -rf stan_files32/*.o
+		RM -rf stan_files32/*.cc
+		RM -rf stan_files32/*.hpp
+
+%.cc: %.stan
+				"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" $<
+
+				
+.phony: clean

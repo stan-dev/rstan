@@ -1,0 +1,105 @@
+useDynLib(rstan, .registration = TRUE)
+# exportPattern("^[[:alpha:]]+")
+
+importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
+importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
+importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "quantile", "reshape", "rnorm", "sd", "var")
+importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "tail", "unzip")
+
+importFrom("stats4", summary, plot)
+importFrom("inline", cxxfunction, getDynLib, getPlugin)
+importFrom("pkgbuild", with_build_tools)
+#importFrom("Rcpp", cpp_object_initializer)
+import("methods")
+import(Rcpp)
+import(StanHeaders)
+
+importFrom("gridExtra","arrangeGrob","grid.arrange")
+import(ggplot2)
+
+export(
+  stan_model,
+  stanc,
+  stanc_builder,
+  stan_version, 
+  stan,
+  stan_rdump,
+  read_rdump,
+  makeconf_path,
+  sflist2stanfit,
+  read_stan_csv,
+  monitor,
+  lookup,
+  expose_stan_functions,
+  stan_demo,
+  rstan_options,
+  As.mcmc.list,
+  set_cppo,
+  stan_plot, 
+  stan_trace, 
+  stan_hist, 
+  stan_dens, 
+  stan_scat,
+  stan_ac, 
+  stan_diag,
+  stan_par,
+  stan_rhat,
+  stan_ess,
+  stan_mcse,
+  rstan_gg_options,
+  rstan_ggtheme_options,
+  quietgg,
+  extract_sparse_parts,
+  rstan.package.skeleton,
+  cpp_object_initializer,
+# get_rstan.options
+  check_hmc_diagnostics,
+  check_divergences, 
+  check_treedepth, 
+  check_energy,
+  get_divergent_iterations,
+  get_max_treedepth_iterations,
+  get_num_leapfrog_per_iteration,
+  get_num_divergent,
+  get_num_max_treedepth,
+  get_bfmi,
+  get_low_bfmi_chains,
+  get_rng,
+  get_stream,
+  RNG, OUT
+)
+
+exportClasses(
+  stanmodel, stanfit 
+) 
+exportMethods(
+#   print, plot, 
+#   extract, 
+  optimizing, vb,
+  get_cppcode, get_cxxflags, # for stanmodel 
+  show, sampling, summary, extract,
+  traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,
+  log_prob, grad_log_prob, 
+  unconstrain_pars, constrain_pars, get_num_upars,
+  get_seeds,
+  get_adaptation_info,
+  get_sampler_params,
+  get_logposterior, 
+  get_posterior_mean,
+  get_elapsed_time,
+  get_stanmodel,
+  loo
+)
+S3method(print, stanfit)
+S3method(as.array, stanfit)
+S3method(as.matrix, stanfit)
+S3method(as.data.frame, stanfit)
+S3method(is.array, stanfit)
+S3method(dim, stanfit)
+S3method(dimnames, stanfit)
+S3method(names, stanfit)
+S3method(`names<-`, stanfit)
+S3method(pairs, stanfit)
+S3method(loo, stanfit)
+importFrom("loo", "loo", "loo.array")
+export("loo")

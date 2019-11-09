@@ -1,0 +1,60 @@
+% LyX 2.0.6 created this file. For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass{article}
+\usepackage[sc]{mathpazo}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{fancyvrb}
+\usepackage{subfig}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{url}
+\usepackage[unicode=true,pdfusetitle,
+                        bookmarks=true,bookmarksnumbered=true,bookmarksopen=true,bookmarksopenlevel=2,
+                        breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+{hyperref}
+\hypersetup{
+      pdfstartview={XYZ null null 1}}
+\usepackage{breakurl}
+\title{Generating test samples for testing}
+\author{Emma Schwager}
+\begin{document}
+\maketitle
+
+<<setup, include=FALSE, cache=FALSE>>=
+rm(list=ls())
+library(knitr)
+@ 
+
+<<compile-stan-model, cache=TRUE, echo=FALSE>>=
+rerun <- 1
+compiled_banocc_model <- rstan::stan_model(model_code=banocc::banocc_model)
+save(compiled_banocc_model, file="banocc_model_test.RData")
+@ 
+
+<<generate-data, cache=TRUE, echo=FALSE>>=
+C <- read.table("sample_data.txt", header=TRUE)
+Data <- list(C=C, N=nrow(C), P=ncol(C),
+             n=rep(0, ncol(C)), L=10 * diag(ncol(C)),
+             a = 0.5, b=0.01)
+
+save(Data, file="sample_stan_data.RData")
+@ 
+
+<<fit-model, cache=TRUE, dependson=c('compile-stan-model', 'generate-data'), echo=FALSE>>=
+library(rstan)
+Fit <- suppressWarnings(rstan::sampling(compiled_banocc_model, data=Data, 
+                                        chains=2, iter=100, warmup=10, thin=2,
+                                        init=lapply(1:2, function(i){
+                                            list(m=rep(0, Data$P),
+                                                 O=diag(Data$P),
+                                                 lambda=0.02)
+                                        })))
+save(Fit, file="sample_stan_fit.RData")
+@ 
+
+\end{document}

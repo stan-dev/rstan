@@ -1,0 +1,522 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Custom Item Models (HTML)}
+-->
+
+# Overview
+
+This document describes the process of adding custom
+item models to rpf as was done by a contributor to
+the rpf package (Carl F. Falk) with assistance from
+the package author (Joshua N. Pritikin) for the logistic
+function of a monotonic polynomial (LMP)
+item model [(Falk & Cai, in press)](https://dx.doi.org/10.1007/s11336-014-9428-7).
+
+This document assumes experience in editing R and C++ code and
+installing R packages from source. In addition, use of
+versioning control software (e.g., git) is also helpful.
+Not mentioned are platform-specific tools or compilers
+that need to be in place in order to compile/install
+packages from source.
+
+The rpf package is modular in the sense that one
+only needs to write the underlying functions specific
+to the item model, such as the traceline (ICC, IRF, etc.),
+derivatives w.r.t. item parameters and the latent trait(s), and
+a few utility functions. As a byproduct, estimation of a
+measurement model that utilizes the item model may be
+possible via use of an external package
+(e.g., [OpenMx](https://openmx.ssri.psu.edu/))
+
+# Procedure
+
+## Outline
+
+Obtain rpf source code from [CRAN](https://cran.r-project.org/package=rpf)
+or another source such as [GitHub](https://github.com/cran/rpf).
+I used the latter as I wanted to use git to track my own changes
+and then later merge with the rpf package.
+
+Most work needs to be done in C++ using the first file
+mentioned in the subsequent section. Testing appears to be
+easiest from R, however, with some functions in the rpf
+package yielding access to the underlying C++ functions.
+It is therefore possible to also glean some insight into
+what the underyling C++ functions ought to do, and their
+input by examining rpf documentation and experimenting
+with associated functions.
+
+
+## Edit src/libifa-rpf.cpp
+
+The bulk of work that needs to be done to implement an item
+model takes place in the src/libifa-rpf.cpp file.
+
+For example, ```librpf_model[]``` towards the end of the
+file contains available item models with associated C++
+functions required to implement each item model. As a
+concrete example, the following code chunk
+effectively lists all functions used by the
+unidimensional LMP item model:
+
+```
+{"lmp",
+    irt_rpf_1dim_lmp_numSpec,
+    irt_rpf_1dim_lmp_numParam,
+    irt_rpf_1dim_lmp_paramInfo,
+    irt_rpf_1dim_lmp_prob,
+    irt_rpf_logprob_adapter,
+    irt_rpf_1dim_lmp_deriv1,
+    irt_rpf_1dim_lmp_deriv2,
+    irt_rpf_1dim_lmp_dTheta,
+    irt_rpf_1dim_lmp_rescale,
+}
+```
+
+To add a novel item model, one would need to add an
+analogous chunk of code to ```librpf_model[]``` with
+the given functions pertaining to those used by the
+novel item model. Each type of function takes input
+in the same way regardless of the item model. This
+is a feature that helps make rpf modular.
+
+It is easiest to understand the purpose of each function by
+focusing on the suffixes for the functions above. These
+suffixes are referenced below. The prefixes often tell us
+which item model the function pertains to.
+Below also effectively contains stubs that could be
+used to start constructing a new item model.
+
+### ```numSpec```
+Each item model (e.g., when created by R) contains
+a vector that contains a specification for the item
+model. This will contain information such as the
+number of categories, factors, and other item-specific
+information. I will discuss how this specification is
+constructed from R input at a later section of this
+document. I assume the ```numSpec``` function
+merely returns the number of elements of this vector.
+
+For example:
+```
+static int
+irt_rpf_1dim_lmp_numSpec(const double *spec)
+{ return RPF_ISpecCount; }
+```
+
+### ```numParam```
+Based only on information in the item specification,
+return an integer that indicates how many parameters
+the item has. For example, the LMP model has a
+user-specified integer *k* that determines the
+number of parameters and appears as the last element
+in the specification vector.
+
+```
+static int
+irt_rpf_1dim_lmp_numParam(const double *spec)
+{
+  int k = spec[RPF_ISpecCount];
+  return(2+2*k);
+}
+```
+
+### ```paramInfo```
+Returns information (in pointers) regarding a single
+item parameter based on the item specification ```*spec```,
+the index of the item parameter ```param```. This generally assumes
+that the item parameters always appear in a particular
+order for the item model, which can be determined based
+only on the item specification. For instance, a
+two-parameter logistic item model will always have a
+slope and intercept term, which appear in that order,
+and the number of slopes depends on the number of factors.
+
+Returned information may include the type of
+parameter ```**type``` which is a text description of
+the item parameter (e.g., "Slope" or "Intercept"), and
+the upper and lower bounds for the item parameter, ```*upper```
+and ```*lower```, which may be set to ```nan("unset")``` if
+bounds are not applicable. Below is only a stub, not the full
+function for the LMP model.
+
+```
+static void
+irt_rpf_1dim_lmp_paramInfo(const double *spec, const int param,
+			   const char **type, double *upper, double *lower)
+{
+  \\ Code implementing paramInfo goes here
+}
+```
+
+### ```prob```
+
+The traceline (ICC, IRF, etc.) function for the item model.
+This function should compute the probability of response
+to each category (stored in ```*out``` in that order),
+based on a fixed vector of item parameters,```*param```, and
+at a single point of the latent space, ```*th```. That is,
+if the item model is dichotomous, ```*out``` will contain
+two values, and if the latent trait has three dimensions,
+```*th``` will have three values. In unidimensional models,
+```*th``` will have only a single value.
+
+```
+static void
+irt_rpf_1dim_lmp_prob(const double *spec,
+		      const double *param, const double *th,
+		      double *out)
+{
+  \\ Code implementing prob goes here
+}
+```
+
+### ```logprob_adapter``` or ```logprob```
+
+I assume this function computes the log of the traceline,
+which in some cases can be done simply by obtaining
+information from the ```prob``` function corresponding
+to the item model and is what ```logprob_adapter``` does.
+
+```
+irt_rpf_logprob_adapter(const double *spec,
+			const double *param, const double *th,
+			double *out)
+{
+  \\ Code implementing logprob goes here
+}
+```
+
+### ```deriv1```
+
+This function computes first *and* second-order complete
+data derivatives the negative log-likelihood for a
+single item with respect to item parameters.
+e.g., for use in optimization at the M-Step of the EM
+algorithm.
+
+This function assumes complete data on the latent trait as
+is often the case after the E-Step of the EM algorithm
+has effectively computed expected counts for each possible
+category at each quadrature node.
+
+Note that derivatives are at a single point of the latent
+trait, ```*where``` which is analogous to ```*th``` from
+the traceline function. This may represent a single
+quadrature node, or if complete data were available it
+might represent a single respondent's score on the
+latent trait.
+
+```*weight``` is a vector that determines how much
+weight to give to each response category. If input to
+the function were to assume a single respondent, this
+vector is effectively an indicator function that will
+have a "1" in the proper location indicating the
+person's response. In the case of EM, the weight vector
+may contain expected counts at this particular quadrature
+node for each of the item's possible response categories.
+
+```*out``` will contain the derivatives for use
+elsewhere. Note that this vector may not be empty
+when entering the function, e.g., in the case that
+```deriv1``` is repeatedly called to compute
+derivatives summing across multiple
+quadrature points or respondents. From the rpf
+documentation, the order of elements in ```*out``` is...
+"For p parameters, the first p values are the first
+derivative and the next p(p+1)/2 columns are the lower
+triangle of the second derivative."
+
+```
+static void
+irt_rpf_1dim_lmp_deriv1(const double *spec,
+				  const double *param,
+				  const double *where,
+				  const double *weight, double *out)
+{
+  // Code implementing deriv1 goes here
+
+}
+```
+
+### ```deriv2```
+
+This function implements derivatives or computations
+that may occur once any time derivatives are taken,
+regardless of how many quadrature nodes or respondents.
+Whereas ```deriv1``` for example, may be called repeatedly
+(once for for each quadrature node, ```deriv2``` would
+only be called once when computing derivatives across
+such quadrature nodes. That is, currently the
+```rpf.dLL``` function in R from rpf may do ```deriv1```
+multiple times followed by ```deriv2```
+before returning derivatives to the user.
+
+```
+static void irt_rpf_1dim_lmp_deriv2(const double *spec,
+				  const double *param,
+				  double *out)
+{
+   \\ Code implementing deriv2 goes here
+}
+```
+
+### ```dTheta```
+
+Compute derivatives of the traceline w.r.t. the
+latent trait, e.g., for use in computing
+item information.
+
+These derivative computations happen at a single point
+of the latent trait, ```*where```. Derivatives
+for each category response function should appear,
+in order from least to gretest, in ```*grad``` (first-order),
+and ```*hess``` (second-order).
+
+The vector ```*dir``` is a basis vector used in the
+case of multidimensional models.
+
+```
+static void irt_rpf_1dim_lmp_dTheta(const double *spec, const double *param,
+			const double *where, const double *dir,
+			double *grad, double *hess)
+{
+  \\ Code implementing dTheta goes here
+
+}
+```
+
+### ```rescale```
+
+Currently this function is not *yet* used and could go
+unimplemented. However, the intuition behind it was based
+on [Schilling & Bock (2005)](https://dx.doi.org/10.1007/s11336-003-1141-x), equations 22 and 23 for
+implementation of adaptive quadrature.
+
+```
+static void
+irt_rpf_1dim_lmp_rescale(const double *spec, double *param, const int *paramMask,
+			 const double *mean, const double *cov)
+{
+  error("Rescale for LMP model not implemented");
+}
+```
+
+## Edit other, mostly R files
+
+### Add R functions to create item specification
+
+The the R/ subfolder, each item model or class of item
+models has their own associated R file. For example,
+"grm.R" or lmp.R" for the Graded Response model and
+the LMP item model.
+
+A function common to each of these files is one that
+will construct the item specification based on user input.
+An example for the Graded Response Models is:
+
+```
+rpf.grm <- function(outcomes=2, factors=1, multidimensional=TRUE) {
+  if (!multidimensional && factors > 1) {
+    stop("More than 1 dimension must use a multidimensional model")
+  }
+  m <- NULL
+  id <- -1
+  if (!multidimensional) {
+    stop("The old parameterization is no longer available")
+  } else {
+    id <- rpf.id_of("grm")
+    m <- new("rpf.mdim.grm",
+             outcomes=outcomes,
+             factors=factors)
+  }
+  m@spec <- c(id, m@outcomes, m@factors)
+  m
+}
+```
+
+Note that input to the function may be item specific,
+however, what the function returns ought to be in a
+standard format. Specifically, a list containing the id
+of the item model (as determined by ```rpf.id_of```, which
+requires a String that matches that added to the end
+of ```librpf_model[]```), the number of categories (or
+outcomes), and number of factors is required. Additional
+optional elements may be appended to the specification
+as required by the item model. For example, LMP requires
+that *k* be added to the end of the specification to
+determine the order of a polynomial and number of item
+parameters, and does not currently have a multidimensional
+version.
+
+```
+rpf.lmp <- function(k=1, multidimensional=FALSE) {
+  if(!(k%%1==0)){
+    stop("k must be an integer >= 0")
+  }
+  if(multidimensional){
+      stop("Multidimensional LMP model is not yet supported")
+  }
+  m <- NULL
+  id <- -1
+  id <- rpf.id_of("lmp")
+  m <- new("rpf.1dim.lmp",
+           outcomes=2,
+           factors=1)
+  m@spec <- c(id, 2, m@factors, k)
+  m
+}
+```
+
+Other functions in such an .R file appear to be
+optional, but may include those that specify how random
+parameters be generated for the item model, e.g.,
+```rpf.rparam```, or how an item model may be modified
+to create a similar item model ```rpf.modify```
+
+Note also that these functions ought to have documentation
+for the item model that is in a format usable by
+[roxygen2](https://cran.r-project.org/package=roxygen2)
+
+### Edit DESCRIPTION
+Any new files created in the previous step ought to be
+added to the "Collate" statement in the DESCRIPTION file.
+
+### Edit R/Classes.R
+A class ought to be added to this file for the item model.
+This will allow generic functions or wrappers to access
+item specific C++ code. It is difficult to provide specific
+recommendations on how to add the class other than to
+look at other examples. For instance, the following
+code snippet defines the LMP dichotomous response model,
+"rpf.lmp.drm", as a subclass of the unidimensional
+response model superclass, "rpf.1dim".
+
+```
+##' Unidimensional logistic function of a monotonic polynomial
+##'
+##' @export
+##' @name Class rpf.1dim.lmp
+##' @rdname rpf.1dim.lmp-class
+##' @aliases rpf.1dim.lmp-class
+##'
+setClass("rpf.1dim.lmp", contains='rpf.1dim')
+```
+
+Thus, the above is all that was required to add a
+class for the LMP item model. Alternative item
+models may use the multidimensional superclass,
+"rpf.mdim" or a specialized class for graded
+response models.
+
+## Putting things together and testing
+
+To avoid headaches in debugging, it may be useful
+to write code incrementally and test/debug before
+continuing to write more. For instance, after
+writing stubs for C++ code, see if the code will
+compile, perhaps by using ```R CMD check rpf```
+or some such from the command line of the OS.
+
+Not all pieces need to be in place before testing
+in R. For instance, it may make practical sense
+to implement the traceline function in C++, with
+suffix, ```prob```, and test via R (see below)
+before continuing to write ```deriv1```
+and ```dTheta``` functions and so on.
+Examination of the accompanying R functions,
+their documentation in the rpf package,
+and their output for well-known item models
+may also provide insight into how the underlyling
+C++ functions operate.
+
+### Installing and testing from R
+
+To test the underlying C++ from R, all
+modifications to R files as mentioned in the
+previous section ought to be done. However,
+only C++ functions that you want to test
+need to be implemented. Compile and install
+the package for testing, e.g.,
+```R CMD INSTALL rpf```.
+
+Fire up R and begin testing.
+
+```{r, message=FALSE}
+library(rpf)
+
+lmp.item<-rpf.lmp(k=2) # create item w/ 5th order polynomial
+par<-c(.69,.71,-.5,-8.48,.52,-3.32) # item parameters
+theta<-seq(-3,3,.1) # grid for latent trait
+
+## Test the traceline or "prob" C++ function
+P<-rpf.prob(lmp.item, par, theta)
+
+## Prettier plots than this are of course possible
+plot(theta, P[2,], type="l", ylim=c(0,1), xlab="Theta", ylab="P(Theta)")
+
+```
+
+The plot above should look like Example 2 from
+[Falk and Cai (in press)](https://dx.doi.org/10.1007/s11336-014-9428-7).
+
+Access to derivatives w.r.t. item parameters and
+latent traits is also possible. Note that ```rpf.dLL```
+appears to call both ```deriv1``` and ```deriv2```
+C++ functions.
+
+```{r}
+## Derivatives of negative log-likelihood at arbitrary point with arbitrary weights
+## Rounding only for easy reading for tutorial
+round(rpf.dLL(lmp.item, par, theta[1], weight=c(5,7)),2)
+```
+
+For latent traits, with easy ways of testing
+accuracy against numerical derivatives - at
+least for a unidimensional model.
+
+```{r}
+## Analytical derivatives "deriv1" followed by "deriv2"
+rpf.dTheta(lmp.item, par, where=-.5, dir=1)
+
+## Numerical derivatives
+library(numDeriv)
+dTheta.wrap<-function(theta, spec, par, cat=1){
+  rpf.prob(spec, par, theta)[cat]
+}
+
+## should match first element of gradient from rpf.dTheta
+grad(dTheta.wrap, -.5, spec=lmp.item, par=par)
+
+## should match first element of hessian from rpf.dTheta
+hessian(dTheta.wrap, -.5, spec=lmp.item, par=par)
+
+```
+
+One could also test numerical derivatives of the
+log-likelihood w.r.t. item parameters in a similar manner.
+However, this may take a little extra work, and
+note that numerical derivatives may not always
+work well, especially when testing during
+estimation and when parameter estimates are far
+from the MLE.
+
+
+### Add formal testing files
+
+If any formal testing is done that the
+user wishes to be reproducible, which is
+highly encouraged and some may argue is
+necessary, these formal tests can currently
+be added to inst/tests/
+
+### Testing estimation
+
+Forthcoming.
+
+### Generating documentation
+
+Forthcoming.
+
+
+

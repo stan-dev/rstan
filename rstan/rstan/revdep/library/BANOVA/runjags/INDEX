@@ -1,0 +1,41 @@
+add.summary             Summary statistics and plot methods for runjags
+                        class objects
+ask                     Obtain Input from User With Error Handling
+autorun.jags            Run or extend a user-specified Bayesian MCMC
+                        model in JAGS with automatically calculated
+                        run-length and convergence diagnostics
+combine.mcmc            Combining and dividing runjags and MCMC objects
+dump.format             Conversion Between a Named List and a Character
+                        String in the R Dump Format
+extract.runjags         Extract peripheral information from runjags
+                        objects
+findjags                Attempt to Locate a JAGS Install
+load.runjagsmodule      Load the internal JAGS module provided by
+                        runjags
+mutate.functions        Mutate functions to be used with runjags
+                        summary methods
+new_unique              Create a Unique Filename
+read.jagsfile           Extract Any Models, Data, Monitored Variables
+                        or Initial Values As Character Vectors from a
+                        JAGS or WinBUGS Format Textfile
+results.jags            Importing of saved JAGS simulations with
+                        partial error recovery
+run.jags                Run or extend a user-specified Bayesian MCMC
+                        model in JAGS from within R
+run.jags.study          Drop-k and simulated dataset studies using JAGS
+runjags                 Interface Utilities, Model Templates, Parallel
+                        Computing Methods and Additional Distributions
+                        for MCMC Models in JAGS
+runjags-class           The runjags class and available S3 methods
+runjags.options         Options for the runjags package
+runjags.printmethods    Print methods for runjags helper classes
+template.jags           Generate a generalised linear mixed model
+                        (GLMM) specification in JAGS
+testjags                Analyse the System to Check That JAGS Is
+                        Installed
+timestring              Calculate the Elapsed Time in Sensible Units
+write.jagsfile          Write a complete JAGS model to a text file
+xgrid.run               Remote execution of user-specified R functions
+                        on Apple Xgrid distributed computing clusters
+xgrid.run.jags          Run a JAGS Model using an Apple Xgrid
+                        distributed computing cluster from Within R

@@ -1,0 +1,147 @@
+
+R Under development (unstable) (2019-04-20 r76407) -- "Unsuffered Consequences"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "breathteststan"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('breathteststan')
+Loading required package: Rcpp
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("as.matrix.coef_diff_by_group_stan")
+> ### * as.matrix.coef_diff_by_group_stan
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: as.matrix.coef_diff_by_group_stan
+> ### Title: S3 as.matrix for result of coef_diff_by_group
+> ### Aliases: as.matrix.coef_diff_by_group_stan
+> 
+> ### ** Examples
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("coef_diff_by_group")
+> ### * coef_diff_by_group
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: coef_diff_by_group
+> ### Title: Tabulates breath test parameter differences of groups from Stan
+> ###   group fit
+> ### Aliases: coef_diff_by_group coef_diff_by_group.breathteststangroupfit
+> 
+> ### ** Examples
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("stan_fit")
+> ### * stan_fit
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: stan_fit
+> ### Title: Bayesian Stan fit to 13C Breath Data
+> ### Aliases: stan_fit
+> 
+> ### ** Examples
+> 
+> library(breathtestcore)
+> suppressPackageStartupMessages(library(dplyr))
+> d = breathtestcore::simulate_breathtest_data(n_records = 3) # default 3 records
+> data = breathtestcore::cleanup_data(d$data)
+> # Use more than 80 iterations and 4 chains for serious fits
+> fit = stan_fit(data, chains = 1, iter = 80)
+> plot(fit) # calls plot.breathtestfit
+> # Extract coefficients and compare these with those
+> # used to generate the data
+> options(digits = 2)
+> cf = coef(fit)
+> cf %>%
++   filter(grepl("m|k|beta", parameter )) %>%
++   select(-method, -group) %>%
++   tidyr::spread(parameter, value) %>%
++   inner_join(d$record, by = "patient_id") %>%
++   select(patient_id, m_in = m.y, m_out = m.x,
++          beta_in = beta.y, beta_out = beta.x,
++          k_in = k.y, k_out = k.x)
+# A tibble: 3 x 7
+  patient_id  m_in m_out beta_in beta_out    k_in   k_out
+  <chr>      <dbl> <dbl>   <dbl>    <dbl>   <dbl>   <dbl>
+1 rec_01        34  36.1    2.19     2.00 0.0140  0.0125 
+2 rec_02        42  44.6    2.30     2.11 0.0108  0.00969
+3 rec_03        32  40.8    2.23     2.03 0.00795 0.00606
+> # For a detailed analysis of the fit, use the shinystan library
+> # The following plots are somewhat degenerate because
+> # of the few iterations in stan_fit
+> suppressPackageStartupMessages(library(rstan))
+> stan_plot(fit$stan_fit, pars = c("beta[1]","beta[2]","beta[3]"))
+ci_level: 0.8 (80% intervals)
+outer_level: 0.95 (95% intervals)
+> stan_plot(fit$stan_fit, pars = c("k[1]","k[2]","k[3]"))
+ci_level: 0.8 (80% intervals)
+outer_level: 0.95 (95% intervals)
+> stan_plot(fit$stan_fit, pars = c("m[1]","m[2]","m[3]"))
+ci_level: 0.8 (80% intervals)
+outer_level: 0.95 (95% intervals)
+> 
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:rstan’, ‘package:StanHeaders’, ‘package:ggplot2’,
+  ‘package:dplyr’, ‘package:breathtestcore’
+
+> nameEx("stan_group_fit")
+> ### * stan_group_fit
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: stan_group_fit
+> ### Title: Bayesian Stan fit to 13C Breath Data in Multiple Groups
+> ### Aliases: stan_group_fit
+> 
+> ### ** Examples
+> 
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  3.581 0.112 3.725 0.004 0.003 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

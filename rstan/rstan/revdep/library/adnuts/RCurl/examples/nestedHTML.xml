@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="../../../Docs/XSL/Rexample.xsl" ?>
+<?xml-stylesheet type="text/xsl" href="http://www.omegahat.net/XSL/Rexample.xsl" ?>
+
+<article xmlns:r="http://www.r-project.org"
+           xmlns:s="http://cm.bell-labs.com/stat/S4">
+
+<title>Nested HTML Downloads</title>
+
+<section>
+<title>Overview</title> 
+
+The goal of this example is to show how we can parse and HTML document
+and download the files to which it has links, i.e. &lt;a href=...&gt;
+elements. As we process the original document, we arrange to download
+the others.  There are three possible "obvious" approaches.
+<itemizedlist>
+<listitem> One approach is to parse the original document in entirety
+and extract its links (either by fetching the document and then parsing it or 
+ "on the fly" by connecting the output of the curl request directly to the xml parser).
+We then download each of those linked documents.
+</listitem>
+<listitem> Another approach is to start the parsing of the top-level
+document and when we  encounter a link, we immediately
+download that and then continue on with the parsing of the original
+document. In other words, when we encounter a link, we hand control
+to the downloading of that link.
+</listitem>
+<listitem>
+ An intermediate approach is to parse the first document and as we
+ encounter a link, send a request for that document and arrange to
+ have it be processed concurrently with the other documents.
+ Essentially, we arrange for the processing of the links to be done
+ asynchronously.  Having encountered a link, we don't wait until it is completely downloaded
+ and nor do wait to download all of the links after we have processed the original document.
+ Rather, we add a request to download the link as we encounter it and continue processing.
+</listitem>
+</itemizedlist>
+
+
+</section>
+
+
+<section>
+<title>Asynchronous, concurrent link processing</title>
+
+The strategy in this approach is to start the parsing of the original
+document.  We do this in almost exactly the same way that we do in the
+<ulink url="xmlParse.xml">xmlParser</ulink> example.  That is, we
+create a multi CURL handler and we create a function that will feed
+data from the HTTP response to the XML parser when it is required.  We
+then put the downloading of the original/top-level file on the stack
+for the multi handler.
+<s:code id="go">
+<![CDATA[
+uri = "http://www.omegahat.net/index.html"
+uri = "http://www.omegahat.net/RCurl/philosophy.xml"
+
+multiHandle = getCurlMultiHandle()
+streams = HTTPReaderXMLParser(multiHandle, save = TRUE)
+
+curl = getCurlHandle(URL = uri, writefunction = streams$getHTTPResponse)
+multiHandle = push(multiHandle, curl)
+]]>
+</s:code>
+<footnote><para>
+The creation of the regular curl handle and pushing it onto the
+multiHandle stack is equivalent to 
+<s:code>
+handle = getURLAsynchronous(uri, 
+                           write = streams$getHTTPResponse,
+                           multiHandle = multiHandle, perform = FALSE)
+</s:code>
+</para></footnote>
+
+
+At this point, the initial HTTP request has not actually been performed
+and therefore there is  no data. 
+And this is good. We want to start the XML parser.
+So we establish the handlers that will process
+the elements of interest in our document,
+e.g. a &lt;ulink&gt; for a Docbook document, or &lt;a&gt; for an
+HTML document.
+The function <s:func>downloadLinks</s:func> is the 
+function used to do this.
+And now we are ready to start the XML parser
+via a call to <s:func package = "XML">xmlEventParse</s:func>.
+
+<s:code>
+links = downloadLinks(multiHandle, "http://www.omegahat.net", "ulink", "url", verbose = TRUE)
+xmlEventParse(streams$supplyXMLContent, handlers = links, saxVersion = 2)
+</s:code>
+
+At this point, the XML parser asks for some input.  It calls the supplyXMLContent
+and this fetches data from the HTTP reply. In our case, this will
+cause the HTTP request to be sent to the server and we will wait until
+we get the first part of the document.  The XML parser then takes this
+chunk and parses it.  When it encounters an element of interest,
+i.e. a ulink, it calls the approriate handler function given in
+<s:var>links</s:var>.  And this gets the URI of the link and then
+arranges to add to the multi handle an HTTP request to fetch that
+document.  The next time that the multi curl handle is requested to
+get input for the XML parser, it will send that new HTTP request and
+the response will be available.  The write handler for the new HTTP
+request simply collects all the text for the document into a single
+string. We use <s:func>basicTextGatherer</s:func> for this.
+
+<para/>
+There is one last little detail before we can access the results. It
+is possible that the XML event parser will have digested all its input
+before the downloads for the other documents have finished.  There
+will be nothing causing libcurl to return to process those HTTP
+responses.  So they may be stuck in limbo, with input pending but
+nobody paying attention.  To ensure that this doesn't happen, we can
+use the <s:func>complete</s:func> function to complete all the pending
+transactions on the multi handle.
+<s:code>
+complete(multiHandle)
+</s:code>
+
+<para/>
+And now that we have guaranteed that all the processing
+is done (or an error has occurred), we can access the results.
+The result of calling <s:func>downloadLinks</s:func> 
+gives us a function to access the download documents.
+<s:code>
+links$contents()
+</s:code>
+
+<para/>
+To get the original document also, we have to look inside the
+<s:var>streams</s:var> object and ask it for the contents that it
+downloaded.  This is why we called
+<s:func>HTMLReaderXMLParser</s:func> with <s:true/> for the
+<r:param>save</r:param> argument.
+
+
+<para/>
+
+The definition of the XML event handlers is reasonably straightforward
+at this point.  We need a handler function for the link element that
+adds an HTTP request for the link document to the multi curl handle.
+And we need a way to get the resulting text back when the request is
+completed.  We maintain a list of text gatherer objects in the
+variable <s:var>docs</s:var>.  These are indexed by the names of the
+documents being downloaded.
+
+<para/>
+
+The function that processes a link element in the XML document merely
+determines whether the document is already being downloaded (to avoid
+duplicating the work) or not.  If not, it pushes the new request for
+that document onto the curl handle and returns.  This is the function
+<s:func>op</s:func>.
+
+<para/>
+
+There are details about dealing with relative links.  We have ignored
+them here and only dealt with links that have an explicit
+<emphasis>http:</emphasis> prefix.
+
+
+<r:function>
+<![CDATA[
+downloadLinks =
+function(curlm, base, elementName = "a", attr = "href", verbose = FALSE)
+{
+ docs = list()
+
+ contents = function() { 
+    sapply(docs, function(x) x$value())
+ }
+
+ ans =  list(docs = function() docs,
+             contents = contents)
+
+
+ op = function(name, attrs, ns, namespaces) {
+
+   if(attr %in% names(attrs)) {
+
+      u = attrs[attr]
+      if(length(grep("^http:")) == 0)
+         return(FALSE)
+
+      if(!(u %in% names(docs))) {
+         if(verbose)
+            cat("Adding", u, "to document list\n")
+         write = basicTextGatherer()
+         curl = getCurlHandle(URL = u, writefunction = write$update)
+         curlm <<- push(curlm, curl)
+
+         docs[[u]] <<- write
+      }
+   }
+
+   TRUE
+ }
+
+ ans[elementName] = op
+ 
+ ans
+}
+]]>
+</r:function>
+
+</section>
+
+<r:init>
+library(RCurl)
+
+<!-- We can use an XInclude, but then it will be included when we create the HTML document. Instead, we want to 
+     be a link.
+<xi:include href="xmlParse.xml" xpointer="HTTPReaderXMLParser" parse="xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>
+-->
+
+<r:include ref="HTTPReaderXMLParser" doc="xmlParse.xml" />
+<!--
+Works
+<r:include ref="HTTPReaderXMLParser"><doc>xmlParse.xml</doc></r:include>
+<r:segment ref="HTTPReaderXMLParser" doc="/home/duncan/Projects/org/omegahat/R/RCurl/tests/xmlParse.xml"/>
+-->
+</r:init>
+
+</article>

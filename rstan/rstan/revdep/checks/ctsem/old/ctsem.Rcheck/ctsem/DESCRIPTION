@@ -1,0 +1,44 @@
+Package: ctsem
+Type: Package
+Title: Continuous Time Structural Equation Modelling
+Version: 2.9.0
+Date: 2019-4-10
+Authors@R: c(person("Charles", "Driver", role =
+    c("aut","cre","cph"),email="driver@mpib-berlin.mpg.de"),
+    person("Manuel", "Voelkle", role = c("aut","cph")),
+    person("Han", "Oud", role = c("aut","cph") ))
+Description: A hierarchical, multivariate, continuous (and discrete) time dynamic modelling
+    package for panel and time series data, using stochastic differential
+    equations. Contains a faster frequentist set of functions using OpenMx for
+    single subject and mixed-effects (random intercepts only) structural
+    equation models, or a hierarchical Bayesian implementation using Stan that
+    allows for random effects and non-linearity over all model parameters. 
+    Allows for modelling of multiple noisy measurements of multiple stochastic 
+    processes, time varying input / event covariates, and time invariant 
+    covariates used to predict the parameters. Bayesian formulation not available on 
+    32 bit Windows systems.
+License: GPL-3
+Depends: R (>= 3.4.0), Rcpp (>= 0.12.16), OpenMx (>= 2.3.0)
+URL: https://github.com/cdriveraus/ctsem
+Imports: rstan (>= 2.17.1), rstantools (>= 1.5.0), plyr, tools,
+        data.table, Matrix, datasets, stats, graphics, grDevices,
+        parallel, shiny, MASS, methods, utils, corrplot, mvtnorm,
+        DEoptim, KernSmooth, ucminf
+Encoding: UTF-8
+LazyData: true
+ByteCompile: true
+LinkingTo: StanHeaders (>= 2.17.0), rstan (>= 2.17.1), BH (>=
+        1.66.0-1), Rcpp (>= 0.12.16), RcppEigen (>= 0.3.3.4.0)
+SystemRequirements: GNU make
+NeedsCompilation: yes
+Suggests: knitr, testthat
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1
+Packaged: 2019-04-13 15:07:01 UTC; driver
+Author: Charles Driver [aut, cre, cph],
+  Manuel Voelkle [aut, cph],
+  Han Oud [aut, cph]
+Maintainer: Charles Driver <driver@mpib-berlin.mpg.de>
+Repository: CRAN
+Date/Publication: 2019-04-13 22:52:46 UTC
+Built: R 3.7.0; x86_64-pc-linux-gnu; 2019-05-03 09:30:31 UTC; unix

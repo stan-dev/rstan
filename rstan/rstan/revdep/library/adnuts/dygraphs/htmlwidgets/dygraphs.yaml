@@ -1,0 +1,24 @@
+dependencies:
+  - name: jquery
+    version: 1.11.1
+    src: "htmlwidgets/lib/jquery"
+    script: jquery.min.js
+  - name: dygraphs
+    version: 1.1.1
+    src: "htmlwidgets/lib/dygraphs"
+    script:
+      - dygraph-combined.js
+      - shapes.js
+    stylesheet: dygraph.css
+  - name: moment
+    version: 2.8.4
+    src: "htmlwidgets/lib/timezone"
+    script: moment.js
+  - name: moment-timezone
+    version: 0.2.5
+    src: "htmlwidgets/lib/timezone"
+    script: 'moment-timezone-with-data.js'
+  - name: moment-fquarter
+    version: 1.0.0
+    src: "htmlwidgets/lib/fquarter"
+    script: moment-fquarter.min.js

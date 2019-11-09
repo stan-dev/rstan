@@ -1,0 +1,10 @@
+useDynLib(DEoptim)
+export(DEoptim, DEoptim.control)
+S3method("plot", "DEoptim")
+S3method("summary", "DEoptim")
+importFrom("grDevices", "devAskNewPage")
+importFrom("graphics", "abline", "matplot", "par", "plot", "plot.new")
+importFrom("stats", "runif")
+importFrom("parallel", "clusterExport", "parApply", "makeCluster",
+           "clusterCall", "detectCores", "stopCluster")
+

@@ -1,0 +1,17 @@
+LINE                    Linear regression example
+adapt                   Adaptive phase for JAGS models
+coda.samples            Generate posterior samples in mcmc.list format
+dic.samples             Generate penalized deviance samples
+diffdic                 Differences in penalized deviance
+jags.model              Create a JAGS model object
+jags.samples            Generate posterior samples
+jags.version            JAGS version
+list.factories          Advanced control over JAGS
+load.module             Dynamically load JAGS modules
+mcarray.object          Objects for representing MCMC output
+parallel.seeds          Get initial values for parallel RNGs
+read.jagsdata           Read data files for jags models
+rjags-deprecated        Deprecated Functions in the rjags package
+rjags-package           Bayesian graphical models using MCMC
+update.jags             Update jags models
+variable.names.jags     Functions for manipulating jags model objects

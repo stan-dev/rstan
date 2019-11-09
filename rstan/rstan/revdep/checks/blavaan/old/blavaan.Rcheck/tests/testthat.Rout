@@ -1,0 +1,33 @@
+
+R Under development (unstable) (2019-04-20 r76407) -- "Unsuffered Consequences"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library("testthat")
+> library("blavaan")
+Loading required package: lavaan
+This is lavaan 0.6-3
+lavaan is BETA software! Please report any bugs.
+This is blavaan 0.3-4
+> 
+> test_check("blavaan")
+blavaan NOTE: Arguments ov.cp and lv.cp are deprecated. Use cp instead. 
+
+══ testthat results  ═══════════════════════════════════════════════════════════
+OK: 26 SKIPPED: 0 WARNINGS: 2 FAILED: 0
+> 
+> proc.time()
+   user  system elapsed 
+  6.770   0.116   6.879 

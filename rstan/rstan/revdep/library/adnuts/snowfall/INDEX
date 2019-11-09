@@ -1,0 +1,11 @@
+config                  Internal configuration and test data
+snowfall-calculation    Parallel calculation functions
+snowfall-init           Initialisation of cluster usage
+snowfall-package        Toplevel useability wrapper for snow to make
+                        parallel programming even more easy and
+                        comfortable.  All functions are able to run
+                        without cluster in sequential mode.  Also
+                        snowfall works as connector to the cluster
+                        management program sfCluster, but can also run
+                        without it.
+snowfall-tools          Cluster tools

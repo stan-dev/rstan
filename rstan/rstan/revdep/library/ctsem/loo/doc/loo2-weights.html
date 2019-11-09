@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Aki Vehtari and Jonah Gabry" />
+
+<meta name="date" content="2019-03-13" />
+
+<title>Bayesian Stacking and Pseudo-BMA weights using the loo package</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Bayesian Stacking and Pseudo-BMA weights using the loo package</h1>
+<h4 class="author"><em>Aki Vehtari and Jonah Gabry</em></h4>
+<h4 class="date"><em>2019-03-13</em></h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#setup">Setup</a></li>
+<li><a href="#example-primate-milk">Example: Primate milk</a></li>
+<li><a href="#example-oceanic-tool-complexity">Example: Oceanic tool complexity</a></li>
+<li><a href="#simpler-coding-using-loo_model_weights-function">Simpler coding using <code>loo_model_weights</code> function</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Bayesian Stacking and Pseudo-BMA weights}
+-->
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This vignette demonstrates the new functionality in <strong>loo</strong> v2.0.0 for Bayesian stacking and Pseudo-BMA weighting. In this vignette we can’t provide all of the necessary background on this topic, so we encourage readers to refer to the paper</p>
+<ul>
+<li>Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018). Using stacking to average Bayesian predictive distributions. In Bayesian Analysis, :10.1214/17-BA1091. <a href="https://projecteuclid.org/euclid.ba/1516093227">Online</a></li>
+</ul>
+<p>which provides important details on the methods demonstrated in this vignette. Here we just quote from the abstract of the paper:</p>
+<blockquote>
+<p><strong>Abstract</strong>: Bayesian model averaging is flawed in the <span class="math inline">\(\mathcal{M}\)</span>-open setting in which the true data-generating process is not one of the candidate models being fit. We take the idea of stacking from the point estimation literature and generalize to the combination of predictive distributions. We extend the utility function to any proper scoring rule and use Pareto smoothed importance sampling to efficiently compute the required leave-one-out posterior distributions. We compare stacking of predictive distributions to several alternatives: stacking of means, Bayesian model averaging (BMA), Pseudo-BMA, and a variant of Pseudo-BMA that is stabilized using the Bayesian bootstrap. Based on simulations and real-data applications, we recommend stacking of predictive distributions, with bootstrapped-Pseudo-BMA as an approximate alternative when computation cost is an issue.</p>
+</blockquote>
+<p>Ideally, we would avoid the Bayesian model combination problem by extending the model to include the separate models as special cases, and preferably as a continuous expansion of the model space. For example, instead of model averaging over different covariate combinations, all potentially relevant covariates should be included in a predictive model (for causal analysis more care is needed) and a prior assumption that only some of the covariates are relevant can be presented with regularized horseshoe prior (Piironen and Vehtari, 2017a). For variable selection we recommend projective predictive variable selection (Piironen and Vehtari, 2017a; <a href="https://cran.r-project.org/package=projpred"><strong>projpred</strong> package</a>).</p>
+<p>To demonstrate how to use <strong>loo</strong> package to compute Bayesian stacking and Pseudo-BMA weights, we repeat two simple model averaging examples from Chapters 6 and 10 of <em>Statistical Rethinking</em> by Richard McElreath. In <em>Statistical Rethinking</em> WAIC is used to form weights which are similar to classical “Akaike weights”. Pseudo-BMA weighting using PSIS-LOO for computation is close to these WAIC weights, but named after the Pseudo Bayes Factor by Geisser and Eddy (1979). As discussed below, in general we prefer using stacking rather than WAIC weights or the similar pseudo-BMA weights.</p>
+</div>
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<p>In addition to the <strong>loo</strong> package we will also load the <strong>rstanarm</strong> package for fitting the models.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(rstanarm)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(loo)</a></code></pre></div>
+</div>
+<div id="example-primate-milk" class="section level1">
+<h1>Example: Primate milk</h1>
+<p>In <em>Statistical Rethinking</em>, McElreath describes the data for the primate milk example as follows:</p>
+<blockquote>
+<p>A popular hypothesis has it that primates with larger brains produce more energetic milk, so that brains can grow quickly. … The question here is to what extent energy content of milk, measured here by kilocalories, is related to the percent of the brain mass that is neocortex. … We’ll end up needing female body mass as well, to see the masking that hides the relationships among the variables.</p>
+</blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(milk)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">d &lt;-<span class="st"> </span>milk[<span class="kw">complete.cases</span>(milk),]</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">d<span class="op">$</span>neocortex &lt;-<span class="st"> </span>d<span class="op">$</span>neocortex.perc <span class="op">/</span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw">str</span>(d)</a></code></pre></div>
+<pre><code>'data.frame':   17 obs. of  9 variables:
+ $ clade         : Factor w/ 4 levels &quot;Ape&quot;,&quot;New World Monkey&quot;,..: 4 2 2 2 2 2 2 2 3 3 ...
+ $ species       : Factor w/ 29 levels &quot;A palliata&quot;,&quot;Alouatta seniculus&quot;,..: 11 2 1 6 27 5 3 4 21 19 ...
+ $ kcal.per.g    : num  0.49 0.47 0.56 0.89 0.92 0.8 0.46 0.71 0.68 0.97 ...
+ $ perc.fat      : num  16.6 21.2 29.7 53.4 50.6 ...
+ $ perc.protein  : num  15.4 23.6 23.5 15.8 22.3 ...
+ $ perc.lactose  : num  68 55.2 46.9 30.8 27.1 ...
+ $ mass          : num  1.95 5.25 5.37 2.51 0.68 0.12 0.47 0.32 1.55 3.24 ...
+ $ neocortex.perc: num  55.2 64.5 64.5 67.6 68.8 ...
+ $ neocortex     : num  0.552 0.645 0.645 0.676 0.688 ...</code></pre>
+<p>We repeat the analysis in Chapter 6 of <em>Statistical Rethinking</em> using the following four models (here we use the default weakly informative priors in <strong>rstanarm</strong>, while flat priors were used in <em>Statistical Rethinking</em>).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">fit1 &lt;-<span class="st"> </span><span class="kw">stan_glm</span>(kcal.per.g <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> d, <span class="dt">seed =</span> <span class="dv">2030</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">fit2 &lt;-<span class="st"> </span><span class="kw">update</span>(fit1, <span class="dt">formula =</span> kcal.per.g <span class="op">~</span><span class="st"> </span>neocortex)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">fit3 &lt;-<span class="st"> </span><span class="kw">update</span>(fit1, <span class="dt">formula =</span> kcal.per.g <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(mass))</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">fit4 &lt;-<span class="st"> </span><span class="kw">update</span>(fit1, <span class="dt">formula =</span> kcal.per.g <span class="op">~</span><span class="st"> </span>neocortex <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(mass))</a></code></pre></div>
+<p>McElreath uses WAIC for model comparison and averaging, so we’ll start by also computing WAIC for these models so we can compare the results to the other options presented later in the vignette. The <strong>loo</strong> package provides <code>waic</code> methods for log-likelihood arrays, matrices and functions. Since we fit our model with rstanarm we can use the <code>waic</code> method provided by the <strong>rstanarm</strong> package (a wrapper around <code>waic</code> from the <strong>loo</strong> package), which allows us to just pass in our fitted model objects instead of first extracting the log-likelihood values.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">waic1 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit1)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">waic2 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit2)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">waic3 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit3)</a></code></pre></div>
+<pre><code>Warning: 1 (5.9%) p_waic estimates greater than 0.4. We recommend trying
+loo instead.</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">waic4 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit4)</a></code></pre></div>
+<pre><code>Warning: 1 (5.9%) p_waic estimates greater than 0.4. We recommend trying
+loo instead.</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">waics &lt;-<span class="st"> </span><span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">  waic1<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">  waic2<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">  waic3<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">  waic4<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">)</a></code></pre></div>
+<p>We get some warnings when computing WAIC for models 3 and 4, indicating that we shouldn’t trust the WAIC weights we will compute later. Following the recommendation in the warning, we next use the <code>loo</code> methods to compute PSIS-LOO instead. The <strong>loo</strong> package provides <code>loo</code> methods for log-likelihood arrays, matrices, and functions, but since we fit our model with <strong>rstanarm</strong> we can just pass the fitted model objects directly and <strong>rstanarm</strong> will extract the needed values to pass to the <strong>loo</strong> package. (Like <strong>rstanarm</strong>, some other R packages for fitting Stan models, e.g. <strong>brms</strong>, also provide similar methods for interfacing with the <strong>loo</strong> package.)</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># note: the loo function accepts a 'cores' argument that we recommend specifying</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co"># when working with bigger datasets</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">loo1 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit1)</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">loo2 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit2)</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">loo3 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit3)</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">loo4 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit4)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">lpd_point &lt;-<span class="st"> </span><span class="kw">cbind</span>(</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">  loo1<span class="op">$</span>pointwise[,<span class="st">&quot;elpd_loo&quot;</span>], </a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">  loo2<span class="op">$</span>pointwise[,<span class="st">&quot;elpd_loo&quot;</span>],</a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">  loo3<span class="op">$</span>pointwise[,<span class="st">&quot;elpd_loo&quot;</span>], </a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">  loo4<span class="op">$</span>pointwise[,<span class="st">&quot;elpd_loo&quot;</span>]</a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">)</a></code></pre></div>
+<p>With <code>loo</code> we don’t get any warnings for models 3 and 4, but for illustration of good results, we display the diagnostic details for these models anyway.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">print</span>(loo3)</a></code></pre></div>
+<pre><code>
+Computed from 4000 by 17 log-likelihood matrix
+
+         Estimate  SE
+elpd_loo      4.4 2.3
+p_loo         2.2 0.5
+looic        -8.9 4.6
+------
+Monte Carlo SE of elpd_loo is 0.0.
+
+All Pareto k estimates are good (k &lt; 0.5).
+See help('pareto-k-diagnostic') for details.</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">print</span>(loo4)</a></code></pre></div>
+<pre><code>
+Computed from 4000 by 17 log-likelihood matrix
+
+         Estimate  SE
+elpd_loo      8.4 2.8
+p_loo         3.3 0.9
+looic       -16.8 5.5
+------
+Monte Carlo SE of elpd_loo is 0.1.
+
+Pareto k diagnostic values:
+                         Count Pct.    Min. n_eff
+(-Inf, 0.5]   (good)     15    88.2%   1007      
+ (0.5, 0.7]   (ok)        2    11.8%   496       
+   (0.7, 1]   (bad)       0     0.0%   &lt;NA&gt;      
+   (1, Inf)   (very bad)  0     0.0%   &lt;NA&gt;      
+
+All Pareto k estimates are ok (k &lt; 0.7).
+See help('pareto-k-diagnostic') for details.</code></pre>
+<p>One benefit of PSIS-LOO over WAIC is better diagnostics. Here for both models 3 and 4 all <span class="math inline">\(k&lt;0.7\)</span> and the Monte Carlo SE of <code>elpd_loo</code> is 0.1 or less, and we can expect the model comparison to be reliable.</p>
+<p>Next we compute and compare 1) WAIC weights, 2) Pseudo-BMA weights without Bayesian bootstrap, 3) Pseudo-BMA+ weights with Bayesian bootstrap, and 4) Bayesian stacking weights.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">waic_wts &lt;-<span class="st"> </span><span class="kw">exp</span>(waics) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">exp</span>(waics))</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">pbma_wts &lt;-<span class="st"> </span><span class="kw">pseudobma_weights</span>(lpd_point, <span class="dt">BB=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">pbma_BB_wts &lt;-<span class="st"> </span><span class="kw">pseudobma_weights</span>(lpd_point) <span class="co"># default is BB=TRUE</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">stacking_wts &lt;-<span class="st"> </span><span class="kw">stacking_weights</span>(lpd_point)</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="kw">round</span>(<span class="kw">cbind</span>(waic_wts, pbma_wts, pbma_BB_wts, stacking_wts), <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>       waic_wts pbma_wts pbma_BB_wts stacking_wts
+model1     0.02     0.02        0.07         0.01
+model2     0.01     0.01        0.04         0.00
+model3     0.02     0.02        0.04         0.00
+model4     0.96     0.95        0.85         0.99</code></pre>
+<p>With all approaches Model 4 with <code>neocortex</code> and <code>log(mass)</code> gets most of the weight. Based on theory, Pseudo-BMA weights without Bayesian bootstrap should be close to WAIC weights, and we can also see that here. Pseudo-BMA+ weights with Bayesian bootstrap provide more cautious weights further away from 0 and 1 (see Yao et al. (2018) for a discussion of why this can be beneficial and results from related experiments). In this particular example, the Bayesian stacking weights are not much different from the other weights.</p>
+<p>One of the benefits of stacking is that it manages well if there are many similar models. Consider for example that there could be many irrelevant covariates that when included would produce a similar model to one of the existing models. To emulate this situation here we simply copy the first model a bunch of times, but you can imagine that instead we would have ten alternative models with about the same predictive performance. WAIC weights for such a scenario would be close to the following:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">waic_wts_demo &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="st">  </span><span class="kw">exp</span>(waics[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)]) <span class="op">/</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="st">  </span><span class="kw">sum</span>(<span class="kw">exp</span>(waics[<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)]))</a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="kw">round</span>(waic_wts_demo, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code> [1] 0.014 0.014 0.014 0.014 0.014 0.014 0.014 0.014 0.014 0.014 0.006
+[12] 0.014 0.841</code></pre>
+<p>Notice how much the weight for model 4 is lowered now that more models similar to model 1 (or in this case identical) have been added. Both WAIC weights and Pseudo-BMA approaches first estimate the predictive performance separately for each model and then compute weights based on estimated relative predictive performances. Similar models share similar weights so the weights of other models must be reduced for the total sum of the weights to remain the same.</p>
+<p>On the other hand, stacking optimizes the weights <em>jointly</em>, allowing for the very similar models (in this toy example repeated models) to share their weight while more unique models keep their original weights. In our example we can see this difference clearly:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">stacking_weights</span>(lpd_point[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)])</a></code></pre></div>
+<pre><code>Method: stacking
+------
+        weight
+model1  0.001 
+model2  0.001 
+model3  0.001 
+model4  0.001 
+model5  0.001 
+model6  0.001 
+model7  0.001 
+model8  0.001 
+model9  0.001 
+model10 0.001 
+model11 0.000 
+model12 0.000 
+model13 0.990 </code></pre>
+<p>Using stacking, the weight for the best model stays essentially unchanged.</p>
+</div>
+<div id="example-oceanic-tool-complexity" class="section level1">
+<h1>Example: Oceanic tool complexity</h1>
+<p>Another example we consider is the Kline oceanic tool complexity data, which McElreath describes as follows:</p>
+<blockquote>
+<p>Different historical island populations possessed tool kits of different size. These kits include fish hooks, axes, boats, hand plows, and many other types of tools. A number of theories predict that larger populations will both develop and sustain more complex tool kits. … It’s also suggested that contact rates among populations effectively increases population [sic, probably should be tool kit] size, as it’s relevant to technological evolution.</p>
+</blockquote>
+<p>We build models predicting the total number of tools given the log population size and the contact rate (high vs. low).</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">data</span>(Kline)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">d &lt;-<span class="st"> </span>Kline</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">d<span class="op">$</span>log_pop &lt;-<span class="st"> </span><span class="kw">log</span>(d<span class="op">$</span>population)</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">d<span class="op">$</span>contact_high &lt;-<span class="st"> </span><span class="kw">ifelse</span>(d<span class="op">$</span>contact<span class="op">==</span><span class="st">&quot;high&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="kw">str</span>(d)</a></code></pre></div>
+<pre><code>'data.frame':   10 obs. of  7 variables:
+ $ culture     : Factor w/ 10 levels &quot;Chuuk&quot;,&quot;Hawaii&quot;,..: 4 7 6 10 3 9 1 5 8 2
+ $ population  : int  1100 1500 3600 4791 7400 8000 9200 13000 17500 275000
+ $ contact     : Factor w/ 2 levels &quot;high&quot;,&quot;low&quot;: 2 2 2 1 1 1 1 2 1 2
+ $ total_tools : int  13 22 24 43 33 19 40 28 55 71
+ $ mean_TU     : num  3.2 4.7 4 5 5 4 3.8 6.6 5.4 6.6
+ $ log_pop     : num  7 7.31 8.19 8.47 8.91 ...
+ $ contact_high: num  0 0 0 1 1 1 1 0 1 0</code></pre>
+<p>We start with a Poisson regression model with the log population size, the contact rate, and an interaction term between them (priors are informative priors as in <em>Statistical Rethinking</em>).</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">fit10 &lt;-</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="st">  </span><span class="kw">stan_glm</span>(</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">    total_tools <span class="op">~</span><span class="st"> </span>log_pop <span class="op">+</span><span class="st"> </span>contact_high <span class="op">+</span><span class="st"> </span>log_pop <span class="op">*</span><span class="st"> </span>contact_high,</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">    <span class="dt">family =</span> <span class="kw">poisson</span>(<span class="dt">link =</span> <span class="st">&quot;log&quot;</span>),</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">    <span class="dt">data =</span> d,</a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">    <span class="dt">prior =</span> <span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">autoscale =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">    <span class="dt">prior_intercept =</span> <span class="kw">normal</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dt">autoscale =</span> <span class="ot">FALSE</span>),</a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">    <span class="dt">seed =</span> <span class="dv">2030</span></a>
+<a class="sourceLine" id="cb23-9" data-line-number="9">  )</a></code></pre></div>
+<p>Before running other models, we check whether Poisson is good choice as the conditional observation model.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">loo10 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit10)</a></code></pre></div>
+<pre><code>Warning: Found 1 observation(s) with a pareto_k &gt; 0.7. We recommend calling 'loo' again with argument 'k_threshold = 0.7' in order to calculate the ELPD without the assumption that these observations are negligible. This will refit the model 1 times to compute the ELPDs for the problematic observations directly.</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">print</span>(loo10)</a></code></pre></div>
+<pre><code>
+Computed from 4000 by 10 log-likelihood matrix
+
+         Estimate   SE
+elpd_loo    -40.5  6.0
+p_loo         5.3  1.8
+looic        81.0 11.9
+------
+Monte Carlo SE of elpd_loo is NA.
+
+Pareto k diagnostic values:
+                         Count Pct.    Min. n_eff
+(-Inf, 0.5]   (good)     6     60.0%   970       
+ (0.5, 0.7]   (ok)       3     30.0%   209       
+   (0.7, 1]   (bad)      1     10.0%   130       
+   (1, Inf)   (very bad) 0      0.0%   &lt;NA&gt;      
+See help('pareto-k-diagnostic') for details.</code></pre>
+<p>We get at least one observation with <span class="math inline">\(k&gt;0.7\)</span> and the estimated effective number of parameters <code>p_loo</code> is larger than the total number of parameters in the model. This indicates that Poisson might be too narrow. A negative binomial model might be better, but with so few observations it is not so clear.</p>
+<p>We can compute LOO more accurately by running Stan again for the leave-one-out folds with high <span class="math inline">\(k\)</span> estimates. When using <strong>rstanarm</strong> this can be done by specifying the <code>k_threshold</code> argument:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">loo10 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit10, <span class="dt">k_threshold=</span><span class="fl">0.7</span>)</a></code></pre></div>
+<pre><code>1 problematic observation(s) found.
+Model will be refit 1 times.</code></pre>
+<pre><code>
+Fitting model 1 out of 1 (leaving out observation 10)</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">print</span>(loo10)</a></code></pre></div>
+<pre><code>
+Computed from 4000 by 10 log-likelihood matrix
+
+         Estimate   SE
+elpd_loo    -40.9  6.0
+p_loo         5.7  1.9
+looic        81.8 11.9
+------
+Monte Carlo SE of elpd_loo is 0.1.
+
+Pareto k diagnostic values:
+                         Count Pct.    Min. n_eff
+(-Inf, 0.5]   (good)     6     66.7%   970       
+ (0.5, 0.7]   (ok)       3     33.3%   209       
+   (0.7, 1]   (bad)      0      0.0%   &lt;NA&gt;      
+   (1, Inf)   (very bad) 0      0.0%   &lt;NA&gt;      
+
+All Pareto k estimates are ok (k &lt; 0.7).
+See help('pareto-k-diagnostic') for details.</code></pre>
+<p>In this case we see that there is not much difference, and thus it is relatively safe to continue.</p>
+<p>As a comparison we also compute WAIC:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">waic10 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit10)</a></code></pre></div>
+<pre><code>Warning: 4 (40.0%) p_waic estimates greater than 0.4. We recommend trying
+loo instead.</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">print</span>(waic10)</a></code></pre></div>
+<pre><code>
+Computed from 4000 by 10 log-likelihood matrix
+
+          Estimate   SE
+elpd_waic    -40.1  5.9
+p_waic         4.9  1.7
+waic          80.1 11.9</code></pre>
+<pre><code>Warning: 4 (40.0%) p_waic estimates greater than 0.4. We recommend trying
+loo instead.</code></pre>
+<p>The WAIC computation is giving warnings and the estimated ELPD is slightly more optimistic. We recommend using the PSIS-LOO results instead.</p>
+<p>To assess whether the contact rate and interaction term are useful, we can make a comparison to models without these terms.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">fit11 &lt;-<span class="st"> </span><span class="kw">update</span>(fit10, <span class="dt">formula =</span> total_tools <span class="op">~</span><span class="st"> </span>log_pop <span class="op">+</span><span class="st"> </span>contact_high)</a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">fit12 &lt;-<span class="st"> </span><span class="kw">update</span>(fit10, <span class="dt">formula =</span> total_tools <span class="op">~</span><span class="st"> </span>log_pop)</a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">(loo11 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit11))</a></code></pre></div>
+<pre><code>Warning: Found 1 observation(s) with a pareto_k &gt; 0.7. We recommend calling 'loo' again with argument 'k_threshold = 0.7' in order to calculate the ELPD without the assumption that these observations are negligible. This will refit the model 1 times to compute the ELPDs for the problematic observations directly.</code></pre>
+<pre><code>
+Computed from 4000 by 10 log-likelihood matrix
+
+         Estimate   SE
+elpd_loo    -40.2  5.9
+p_loo         5.0  1.7
+looic        80.5 11.8
+------
+Monte Carlo SE of elpd_loo is NA.
+
+Pareto k diagnostic values:
+                         Count Pct.    Min. n_eff
+(-Inf, 0.5]   (good)     6     60.0%   1196      
+ (0.5, 0.7]   (ok)       3     30.0%   219       
+   (0.7, 1]   (bad)      0      0.0%   &lt;NA&gt;      
+   (1, Inf)   (very bad) 1     10.0%   19        
+See help('pareto-k-diagnostic') for details.</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">(loo12 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit12))</a></code></pre></div>
+<pre><code>Warning: Found 1 observation(s) with a pareto_k &gt; 0.7. We recommend calling 'loo' again with argument 'k_threshold = 0.7' in order to calculate the ELPD without the assumption that these observations are negligible. This will refit the model 1 times to compute the ELPDs for the problematic observations directly.</code></pre>
+<pre><code>
+Computed from 4000 by 10 log-likelihood matrix
+
+         Estimate  SE
+elpd_loo    -42.8 4.8
+p_loo         4.3 1.3
+looic        85.6 9.5
+------
+Monte Carlo SE of elpd_loo is NA.
+
+Pareto k diagnostic values:
+                         Count Pct.    Min. n_eff
+(-Inf, 0.5]   (good)     8     80.0%   677       
+ (0.5, 0.7]   (ok)       1     10.0%   489       
+   (0.7, 1]   (bad)      1     10.0%   28        
+   (1, Inf)   (very bad) 0      0.0%   &lt;NA&gt;      
+See help('pareto-k-diagnostic') for details.</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">loo11 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit11, <span class="dt">k_threshold=</span><span class="fl">0.7</span>)</a></code></pre></div>
+<pre><code>1 problematic observation(s) found.
+Model will be refit 1 times.</code></pre>
+<pre><code>
+Fitting model 1 out of 1 (leaving out observation 10)</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">loo12 &lt;-<span class="st"> </span><span class="kw">loo</span>(fit12, <span class="dt">k_threshold=</span><span class="fl">0.7</span>)</a></code></pre></div>
+<pre><code>1 problematic observation(s) found.
+Model will be refit 1 times.
+
+Fitting model 1 out of 1 (leaving out observation 10)</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1">lpd_point &lt;-<span class="st"> </span><span class="kw">cbind</span>(</a>
+<a class="sourceLine" id="cb50-2" data-line-number="2">  loo10<span class="op">$</span>pointwise[, <span class="st">&quot;elpd_loo&quot;</span>], </a>
+<a class="sourceLine" id="cb50-3" data-line-number="3">  loo11<span class="op">$</span>pointwise[, <span class="st">&quot;elpd_loo&quot;</span>], </a>
+<a class="sourceLine" id="cb50-4" data-line-number="4">  loo12<span class="op">$</span>pointwise[, <span class="st">&quot;elpd_loo&quot;</span>]</a>
+<a class="sourceLine" id="cb50-5" data-line-number="5">)</a></code></pre></div>
+<p>For comparison we’ll also compute WAIC values for these additional models:</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1">waic11 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit11)</a></code></pre></div>
+<pre><code>Warning: 4 (40.0%) p_waic estimates greater than 0.4. We recommend trying
+loo instead.</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1">waic12 &lt;-<span class="st"> </span><span class="kw">waic</span>(fit12)</a></code></pre></div>
+<pre><code>Warning: 5 (50.0%) p_waic estimates greater than 0.4. We recommend trying
+loo instead.</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1">waics &lt;-<span class="st"> </span><span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb55-2" data-line-number="2">  waic10<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>], </a>
+<a class="sourceLine" id="cb55-3" data-line-number="3">  waic11<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>], </a>
+<a class="sourceLine" id="cb55-4" data-line-number="4">  waic12<span class="op">$</span>estimates[<span class="st">&quot;elpd_waic&quot;</span>, <span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb55-5" data-line-number="5">)</a></code></pre></div>
+<p>The WAIC computation again gives warnings, and we recommend using PSIS-LOO instead.</p>
+<p>Finally, we compute 1) WAIC weights, 2) Pseudo-BMA weights without Bayesian bootstrap, 3) Pseudo-BMA+ weights with Bayesian bootstrap, and 4) Bayesian stacking weights.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" data-line-number="1">waic_wts &lt;-<span class="st"> </span><span class="kw">exp</span>(waics) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">exp</span>(waics))</a>
+<a class="sourceLine" id="cb56-2" data-line-number="2">pbma_wts &lt;-<span class="st"> </span><span class="kw">pseudobma_weights</span>(lpd_point, <span class="dt">BB=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb56-3" data-line-number="3">pbma_BB_wts &lt;-<span class="st"> </span><span class="kw">pseudobma_weights</span>(lpd_point) <span class="co"># default is BB=TRUE</span></a>
+<a class="sourceLine" id="cb56-4" data-line-number="4">stacking_wts &lt;-<span class="st"> </span><span class="kw">stacking_weights</span>(lpd_point)</a>
+<a class="sourceLine" id="cb56-5" data-line-number="5"><span class="kw">round</span>(<span class="kw">cbind</span>(waic_wts, pbma_wts, pbma_BB_wts, stacking_wts), <span class="dv">2</span>)</a></code></pre></div>
+<pre><code>       waic_wts pbma_wts pbma_BB_wts stacking_wts
+model1     0.38     0.34        0.28         0.00
+model2     0.58     0.63        0.53         0.78
+model3     0.04     0.03        0.19         0.22</code></pre>
+<p>All weights favor the second model with the log population and the contact rate. WAIC weights and Pseudo-BMA weights (without Bayesian bootstrap) are similar, while Pseudo-BMA+ is more cautious and closer to stacking weights.</p>
+<p>It may seem surprising that Bayesian stacking is giving zero weight to the first model, but this is likely due to the fact that the estimated effect for the interaction term is close to zero and thus models 1 and 2 give very similar predictions. In other words, incorporating the model with the interaction (model 1) into the model average doesn’t improve the predictions at all and so model 1 is given a weight of 0. On the other hand, models 2 and 3 are giving slightly different predictions and thus their combination may be slightly better than either alone. This behavior is related to the repeated similar model illustration in the milk example above.</p>
+</div>
+<div id="simpler-coding-using-loo_model_weights-function" class="section level1">
+<h1>Simpler coding using <code>loo_model_weights</code> function</h1>
+<p>Although in the examples above we called the <code>stacking_weights</code> and <code>pseudobma_weights</code> functions directly, we can also use the <code>loo_model_weights</code> wrapper, which takes as its input either a list of pointwise log-likelihood matrices or a list of precomputed loo objects. There are also <code>loo_model_weights</code> methods for stanreg objects (fitted model objects from <strong>rstanarm</strong>) as well as fitted model objects from other packages (e.g. <strong>brms</strong>) that do the preparation work for the user (see, e.g., the examples at <code>help(&quot;loo_model_weights&quot;, package = &quot;rstanarm&quot;)</code>).</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="co"># using list of loo objects</span></a>
+<a class="sourceLine" id="cb58-2" data-line-number="2">loo_list &lt;-<span class="st"> </span><span class="kw">list</span>(loo10, loo11, loo12)</a>
+<a class="sourceLine" id="cb58-3" data-line-number="3"><span class="kw">loo_model_weights</span>(loo_list)</a></code></pre></div>
+<pre><code>Method: stacking
+------
+       weight
+model1 0.000 
+model2 0.779 
+model3 0.221 </code></pre>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">loo_model_weights</span>(loo_list, <span class="dt">method =</span> <span class="st">&quot;pseudobma&quot;</span>)</a></code></pre></div>
+<pre><code>Method: pseudo-BMA+ with Bayesian bootstrap
+------
+       weight
+model1 0.287 
+model2 0.535 
+model3 0.178 </code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="kw">loo_model_weights</span>(loo_list, <span class="dt">method =</span> <span class="st">&quot;pseudobma&quot;</span>, <span class="dt">BB =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>Method: pseudo-BMA
+------
+       weight
+model1 0.340 
+model2 0.633 
+model3 0.027 </code></pre>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>McElreath, R. (2016). <em>Statistical rethinking: A Bayesian course with examples in R and Stan</em>. Chapman &amp; Hall/CRC. <a href="http://xcelab.net/rm/statistical-rethinking/" class="uri">http://xcelab.net/rm/statistical-rethinking/</a></p>
+<p>Piironen, J. and Vehtari, A. (2017a). Sparsity information and regularization in the horseshoe and other shrinkage priors. In Electronic Journal of Statistics, 11(2):5018-5051. <a href="https://projecteuclid.org/euclid.ejs/1513306866">Online</a>.</p>
+<p>Piironen, J. and Vehtari, A. (2017b). Comparison of Bayesian predictive methods for model selection. Statistics and Computing, 27(3):711-735. :10.1007/s11222-016-9649-y. <a href="http://link.springer.com/article/10.1007/s11222-016-9649-y">Online</a>.</p>
+<p>Vehtari, A., Gelman, A., and Gabry, J. (2017). Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. <em>Statistics and Computing</em>. 27(5), 1413–1432. :10.1007/s11222-016-9696-4. <a href="http://link.springer.com/article/10.1007%2Fs11222-016-9696-4">online</a>, <a href="http://arxiv.org/abs/1507.04544">arXiv preprint arXiv:1507.04544</a>.</p>
+<p>Vehtari, A., Gelman, A., and Gabry, J. (2017). Pareto smoothed importance sampling. <a href="http://arxiv.org/abs/1507.02646">arXiv preprint arXiv:1507.02646</a>.</p>
+<p>Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018). Using stacking to average Bayesian predictive distributions. In Bayesian Analysis, :10.1214/17-BA1091. <a href="https://projecteuclid.org/euclid.ba/1516093227">Online</a>.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

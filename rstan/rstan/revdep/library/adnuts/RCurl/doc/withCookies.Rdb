@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<article xmlns:r="http://www.r-project.org"
+         xmlns:xi="http://www.w3.org/2003/XInclude"
+	 xmlns:http="http://www.w3.org/Protocols"
+	 xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	 xmlns:omg="http://www.omegahat.net">
+
+<articleinfo>
+
+<title>Using Cookies for Connected Requests with <omg:pkg>RCurl</omg:pkg></title>
+
+<author><firstname>Duncan</firstname><surname>Temple Lang</surname>
+  <affiliation><orgname>University of California at Davis</orgname>
+               <orgdiv>Department of Statistics</orgdiv>
+  </affiliation>
+</author>
+</articleinfo>
+
+<section>
+<title>The Problem</title>
+
+<para>
+This is an example of using <omg:pkg>RCurl</omg:pkg> with cookies.
+This comes from a question on the R-help mailing list on Sep 18th,
+2012.
+</para>
+<para>
+In a Web browser, we visit the page
+<ulink url="http://www.wateroffice.ec.gc.ca/graph/graph_e.html?mode=text&amp;stn=05ND012&amp;prm1=3&amp;syr=2012&amp;smo=09&amp;sday=15&amp;eyr=2012&amp;emo=09&amp;eday=18"/>.
+Before allowing us access to the data, the Web site presents us with a disclaimer page.
+We have to click on the <guibutton>I Agree</guibutton> button and then we are forwarded to a page with the actual
+data.  We want to read that using, for example, <r:func>readHTMLTable</r:func> in the 
+<omg:pkg>XML</omg:pkg> package.
+</para>
+<para>
+What happens when we click on the <guibutton>I Agree</guibutton> button?
+That sets a cookie. After that, we include that cookie in each request to that server
+and this confirms that we have agreed to the disclaimer. The Web server will process
+each request containing the cookie knowing we have agreed and so give us the data.
+So we need to first make a request in <r/> that emulates clicking the <guibutton>I Agree</guibutton> button.
+We have to arrange for that request to recognize the cookie in the response and
+then use that cookie in all subsequent requests to that server.
+We could do this manually, but there is no need to.
+We simply use the same curl object in all of the requests.
+In the first request, libcurl will process the response and retrieve the cookie.
+By using the same curl handle in subsequent requests, libcurl will automatically
+send the cookie in those requests.
+</para>
+<para>
+We create the curl handle object with
+<r:code>
+library(RCurl)
+curl = getCurlHandle(cookiefile = "", verbose = TRUE)
+</r:code>
+This enables cookies in the handle, but does not arrange to write them to  a file.
+We could store the cookie in a file when the curl handle is deleted.
+We could then use this in subsequent <r/> sessions or other curl handles.
+However, there is no need to do this. We can just agree to the disclaimer each time.
+However, if we do want to store the cookie in a file (when the curl handle is deleted),
+we can do this by specifying a file name as the value for the cookiefile argument.
+</para>
+
+<para>
+The disclaimer page is a <http:post/> form.
+We send the request to 
+<ulink url="http://www.wateroffice.ec.gc.ca/include/disclaimer.php"/>
+with the parameter named disclaimer_action and the value "I Agree".
+We can get this information by reading the <html/> page
+and looking for the <xml:tag>form</xml:tag> element.
+Alternatively, we could use the <omg:pkg>RHTMLForms</omg:pkg> package.
+</para>
+<para>
+We can make the request with 
+<r:code>
+postForm("http://www.wateroffice.ec.gc.ca/include/disclaimer.php",
+           disclaimer_action = "I Agree", curl = curl)
+</r:code>
+We can ignore the result as we just want the side-effect of getting the cookie in the 
+curl handle.
+</para>
+<para>
+We can now access the actual data at the original URL.
+We cannot use <r:func>readHTMLTable</r:func> directly as
+that does not use a curl handle, and does not know about the cookie.
+Instead, we use <r:func>getURLContent</r:func> to get the content of the 
+page.  We can then pass this text to <r:func>readHTMLTable</r:func>.
+So we make the request with
+<r:code><![CDATA[
+u = "http://www.wateroffice.ec.gc.ca/graph/graph_e.html?mode=text&stn=05ND012&prm1=3&syr=2012&smo=09&sday=15&eyr=2012&emo=09&eday=18"
+txt = getURLContent(u, curl = curl, verbose = TRUE)
+]]></r:code>
+Personally, I prefer to use 
+<r:code>
+txt = getForm("http://www.wateroffice.ec.gc.ca/graph/graph_e.html",
+               mode = "text", stn = "05ND012", prm1 = 3, 
+               syr = "2012", smo = "09", sday = "15", eyr = "2012", emo = "09", 
+               eday = "18",  curl = curl)
+</r:code>
+This makes it easier to change individual inputs.
+</para>
+<para>
+
+The result should contain the actual data.
+<r:code>
+library(XML)
+tbl = readHTMLTable(txt, asText = TRUE)
+</r:code>
+We can find the number of rows and columns in  each table with
+<r:code>
+sapply(tbl, dim)
+     dataTable hydroTable
+[1,]       852          1
+[2,]         2          4
+</r:code>
+We want the first one.
+The columns are, by default, strings or factors.
+The numbers have a * on them. We can post-process this
+to get the values.
+<r:code>
+tbl = readHTMLTable(txt, asText = TRUE, which = 1, 
+                    stringsAsFactors = FALSE)
+tbl[[2]] =  as.numeric(gsub("\\*", "", tbl[[2]]))
+tbl[[1]] = strptime(tbl[[1]], "%Y-%m-%d %H:%M:%S")
+</r:code>
+</para>
+
+</section>
+<section>
+<title>Using <omg:pkg>RHTMLForms</omg:pkg> to Find the Disclaimer Form</title>
+
+<para>
+The <omg:pkg>RHTMLForms</omg:pkg> package can both read an <html/> page
+and get a description of all of its forms,
+and also generate an <r/> function corresponding to each form
+so that we can invoke the form as if it were a local function in <r/>.
+We get the descriptions with 
+<r:code>
+library(RHTMLForms)
+forms = getHTMLFormDescription(u, FALSE)
+</r:code>
+We need to keep the buttons in the forms and hence the <r:false/> as the second
+argument to <r:func>getHTMLFormDescription</r:func>.
+</para>
+<para>
+We create the function for this form with 
+<r:code>
+fun = createFunction(forms[[1]])
+</r:code>
+</para>
+<para>
+We can invoke this function using the curl handle we created to capture the cookies:
+<r:code>
+fun(.curl = curl)
+</r:code>
+This will agree to the disclaimer on our behalf.
+</para>
+
+</section>
+</article>

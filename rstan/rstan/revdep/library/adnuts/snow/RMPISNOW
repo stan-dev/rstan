@@ -1,0 +1,56 @@
+#! /bin/sh
+
+# if defined, prepend R_SNOW_LIB to $_LIBS
+if test ! -z "${R_SNOW_LIB}" ; then
+    R_LIBS=${R_SNOW_LIB}:${R_LIBS}; export R_LIBS
+fi
+
+# find the library containing the snow package; should eventually use Rscript
+snowdir=`echo 'invisible(cat(tryCatch(dirname(find.package("snow")), error = function(e) ""),"\n",sep=""))' | R --slave`
+
+# for now this hijacks the R_PROFILE mechanism to start up the R
+# sessions and load snow and Rmpi into them
+R_PROFILE=${snowdir}/snow/RMPISNOWprofile; export R_PROFILE
+
+if test ! -z "${LAMRANK}" ; then
+    # use the LAMRANK environment variable set by LAM-MPI's mpirun to
+    # run R with appropriate arguments for master and workers.
+    if test "${LAMRANK}" -eq 0 ; then
+	exec R $*
+    else
+	exec R --slave > /dev/null 2>&1
+    fi
+elif test ! -z "${MV2_COMM_WORLD_RANK}" ; then
+    # For MVAPICH2
+    if test "${MV2_COMM_WORLD_RANK}" -eq 0 ; then
+        exec R --no-save $*
+    else
+        exec R --slave > /dev/null 2>&1
+    fi
+elif test ! -z "${OMPI_MCA_ns_nds_vpid}" ; then
+    # Similar approach for OpenMPI using the OMPI_MCA_ns_nds_vpid
+    # variable.  This is for backward compatibility with pre-1.3
+    # versions.  The master R process thinks it is non-interactive so
+    # for now --no-save or something like that is needed.
+    if test "${OMPI_MCA_ns_nds_vpid}" -eq 0 ; then
+	exec R --no-save $*
+    else
+	exec R --slave > /dev/null 2>&1
+    fi
+elif test ! -z "${OMPI_COMM_WORLD_RANK}" ; then
+    # Similar approach for OpenMPI using the OMPI_COMM_WORLD_RANK
+    # variable.  This is the correct variable to use as of v1.3+.  The
+    # master R process thinks it is non-interactive so for now
+    # --no-save or something like that is needed.
+    if test "${OMPI_COMM_WORLD_RANK}" -eq 0 ; then
+	exec R --no-save $*
+    else
+	exec R --slave > /dev/null 2>&1
+    fi
+else 
+    # The fallback is to use the same arguments on master and workers,
+    # with --no-save for cases where workers don't have a terminal.
+    # This means that things like CMD batch won't work. It seems to be
+    # important NOT to use exec here, at least when this code runs under LAM.
+    R --no-save $*
+fi

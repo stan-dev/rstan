@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<!-- <?xml-stylesheet type="text/xsl" href="../../../Docs/XSL/Rexample.xsl" ?> -->
+<?xml-stylesheet type="text/xsl" href="http://www.omegahat.net/XSL/Rexample.xsl" ?>
+
+
+<article xmlns:r="http://www.r-project.org"
+           xmlns:s="http://cm.bell-labs.com/stat/S4">
+<package name="RCurl"/>
+<title>
+An example of nested downloads using RCurl.
+</title>
+<section>
+<title>Overview</title>
+
+This example uses RCurl to download an HTML document and then collect
+the name of each link within that document.  The purpose of the
+example is to illustrate how we can combine the RCurl package to
+download a document and use this directly within the XML (or HTML)
+parser without having the entire content of the document in memory.
+We start the download and pass a function to the <r:func
+package="XML">xmlEventParse</r:func> function for processing.  As that
+XML parser needs more input, it fetches more data from the HTTP
+response stream.  This is useful for handling very large data that is
+returned from Web queries.
+
+<para/>
+
+To do this, we need to use the <emphasis>multi</emphasis> interface for libcurl
+in order to have asynchronous  or non-blocking downloading of the document.
+The idea is quite simple.  We initiate the download and associate a
+"writer" to slurp up the body of the HTTP response. This is registered
+with libcurl and is invoked whenever libcurl is in control and is
+processing the HTTP response.  If there is information to be read on
+the HTTP stream from the server, this function reads it and appends it
+to a variable <s:var>pending</s:var>.
+
+The second part of this mechanism is that we need a function that is called by
+<s:func>xmlEventParse</s:func> which can provide input to  the XML parser.
+Of course, it will use the content coming from the HTTP server that is
+collected in the function getHTTPResponse.  So we create a sibling
+function that shares the state of the getHTTPResponse function and so
+can see the contents of the variable <s:var>pending</s:var>.  When the
+XML parser demands some input, our function
+<s:func>supplyXMLContent</s:func> checks to see if pending has
+non-trivial content (i.e. is not the empty string).  If it has some
+content, it returns that.  Otherwise, it tells libcurl to read some
+more from the HTTP stream.  When it hands control to libcurl in this
+way, libcurl will invoke our <s:func>getHTTPResponse</s:func>
+function, populating the contents of <s:var>pending</s:var>.  So when
+libcurl yields control, we will now have content to pass to the XML
+parser.
+
+<para/>
+
+The only additional issue that we have to deal with in this setup is
+that the XML event parser asks for input up to a certain size. We
+cannot necessarily give it all of the content of
+<s:var>pending</s:var>.  If <s:var>pending</s:var> has more characters
+than the XML parser wants, we must give it the first
+<s:arg>maxLen</s:arg> characters and then leave the remainder in
+<s:var>pending</s:var> for the next request from the XML parser.
+
+<para/>
+The following generator function defines the two 
+functions that do the pulling of the text from libcurl
+and the pushing to the XML parser.
+<r:function xml:id="HTTPReaderXMLParser" name="HTTPReaderXMLParser">
+<![CDATA[
+HTTPReaderXMLParser =
+function(curl, verbose = FALSE, save = FALSE)
+{
+   pending =  ""
+   text = character()
+
+   getHTTPResponse = 
+   function(txt) {
+
+      pending <<- paste(pending, txt, sep = "")
+
+      if(save)
+        text <<- c(text, txt)
+
+      if(verbose) {
+        cat("Getting more information from HTTP response\n")
+        print(pending)
+      }
+
+      ""  # Give back something real.
+   }
+
+  supplyXMLContent = 
+   function(maxLen) {
+      if(verbose)
+        cat("Getting data for XML parser\n")
+
+
+     if(pending == "") {
+
+         if(verbose)
+            cat("Need to fetch more data for XML parser from HTTP response\n")
+
+         while(pending == "") {
+            status = curlMultiPerform(curl, multiple = TRUE)
+            if(status[2] == 0) 
+               break
+         } 
+     }
+
+     if(pending == "") {
+         # There is no more input available from this request.
+       return(character())
+     }
+
+
+      # Now, we have the text, and we return at most maxLen - 1
+      # characters
+     if(nchar(pending) >= maxLen) {
+        ans = substring(pending, 1, maxLen-1)
+        pending <<- substring(pending, maxLen)
+     } else {
+        ans = pending
+        pending <<- ""
+     }
+
+     if(verbose)
+        cat("Sending '", ans, "' to XML\n", sep = "")
+
+     ans
+   }
+
+   list(getHTTPResponse = getHTTPResponse,
+        supplyXMLContent = supplyXMLContent,
+        pending = function() pending,
+        text = function() paste(text, collapse = "")
+       )
+}
+]]>
+</r:function>
+
+
+<para/>
+The remaining part is how we combine these pieces with
+RCurl and the XML packages to do the parsing in this 
+asynchronous, interleaved manner.
+The code below performs the basic steps
+
+<r:code>
+<![CDATA[
+uri = "http://www.omegahat.net/RCurl/philosophy.xml"
+
+
+handle = getCurlMultiHandle()
+streams = HTTPReaderXMLParser(handle)
+
+uri = "http://www.omegahat.net/RDoc/overview.xml"
+handle = getURLAsynchronous(uri, 
+                           write = streams$getHTTPResponse,
+                           multiHandle = handle, 
+                           perform = FALSE)
+
+links = getDocbookLinks() 
+xmlEventParse(streams$supplyXMLContent, handlers = links, saxVersion = 2)
+links$links()
+]]>
+</r:code>
+
+The steps in the code are as explained as follows.  We first create a
+'multi handle'. This gives us the asynchronous behavior that returns
+control back to us from libcurl rather than sending the request and
+slurping back all the data in one single atomic action.  Next, we
+create our functions to do the pulling and pushing of text from HTTP
+to the XML parser. These are returned from the call to
+<s:func>HTTPReaderXMLParser</s:func>.  And we then setup the request
+to fetch the content of the URI with the call to
+<s:func>getURLAsynchronous</s:func>.  Note that we tell it not to
+actually perform the request, i.e. <s:code>perform = FALSE</s:code>.
+We are just setting it up to be done when the XML parser requests
+input.  This is important as this call must return so that we can call
+<s:func>xmlEventParse</s:func>.  <footnote><para>If we did perform the
+request, we would merely start the download and perhaps slurp up some
+of the response.  This would still be available to the XML parser so
+no data would be lost. It may just marginally spoil the efficiency
+of the approach, but really only marginally if at all.
+</para></footnote> The next step is to establish the XML event parser.
+We provide a collection of handlers that process the XML content in
+the way that we want (see below).  And now we are off, and the XML
+parser will request input and the functions will read from the HTTP
+stream.
+
+
+
+<para/>
+To process the links within the Docbook document, we are looking for
+each ulink element and fetching its url attribute.  So we can provide
+a collection of handlers that consist of a function only for ulink.
+And it need only look at the attributes it is given and determine if
+there is a url entry.
+If there is, it appends the value to its internal collection of links.
+When we are finished the parsing, we can ask for this collection
+of links using the additional function links.
+<r:function>
+<![CDATA[
+getDocbookLinks =
+function()
+{
+ links = character()
+
+ ulink = function(name, attrs, ns, namespaces) {
+    if("url" %in% names(attrs))
+      links[length(links) + 1 ] <<- attrs["url"]
+ }
+
+ list(ulink = ulink,
+      links = function() links)
+}
+]]>
+</r:function>
+
+
+To run this code, we need to
+load both the 
+<r:package>RCurl</r:package>
+and <r:package>XML</r:package>
+packages.
+
+<r:init>
+library(RCurl)
+library(XML)
+</r:init>
+
+</section>
+
+
+<section>
+<title>Test</title>
+This is a test that the basic asynchronous mechanism works generally.
+In this example, we just provide a reader that displays the text from
+the HTTP response on the console.  We create a 'multi handle' and
+setup the HTTP request with our specialized reader.  Then, we call
+<s:func>curlMultiPerform</s:func> to start the ball rolling.  This
+will force one or more invocations of the function <s:func>f</s:func>.
+We can continue to loop until there is no more data available in the
+'multi handle' by comparing the number of elements in the stack.
+<ignore>
+<r:code>
+<![CDATA[
+library(RCurl)
+
+Content <- character()
+f = function(txt) {
+  Content <<- c(Content, txt)
+}
+
+uri = "http://www.omegahat.net/RCurl/philosophy.xml"
+
+handle = getCurlMultiHandle()
+handle = getURLAsynchronous(uri, 
+                            write = f,
+                            multiHandle = handle, perform = FALSE)
+
+status = curlMultiPerform(handle)
+
+while(status[2] > 0)
+  status = curlMultiPerform(handle)
+
+]]>
+</r:code>
+
+Now we can compare the results with what we get from an direct download.
+<r:code>
+<![CDATA[
+
+txt = paste(Content, collapse = "")
+download.file(uri, "/tmp/dld")
+other = paste(readLines("/tmp/dld"), collapse = "\n")
+
+txt == other
+
+substring(txt, 1, nchar(other)) == other
+]]>
+</r:code>
+</ignore>
+</section>
+
+
+</article>
+
+

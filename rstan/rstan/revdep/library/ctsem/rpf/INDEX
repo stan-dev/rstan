@@ -1,0 +1,106 @@
+An introduction         rpf - Response Probability Functions
+ChenThissen1997         Computes local dependence indices for all pairs
+                        of items
+Class rpf.1dim          The base class for 1 dimensional response
+                        probability functions.
+Class rpf.1dim.drm      Unidimensional dichotomous item models (1PL,
+                        2PL, and 3PL).
+Class rpf.1dim.graded   The base class for 1 dimensional graded
+                        response probability functions.
+Class rpf.1dim.grm      The unidimensional graded response item model.
+Class rpf.1dim.lmp      Unidimensional logistic function of a monotonic
+                        polynomial.
+Class rpf.base          The base class for response probability
+                        functions.
+Class rpf.mdim          The base class for multi-dimensional response
+                        probability functions.
+Class rpf.mdim.drm      Multidimensional dichotomous item models (M1PL,
+                        M2PL, and M3PL).
+Class rpf.mdim.graded   The base class for multi-dimensional graded
+                        response probability functions.
+Class rpf.mdim.grm      The multidimensional graded response item
+                        model.
+Class rpf.mdim.mcm      The multiple-choice response item model (both
+                        unidimensional and multidimensional models have
+                        the same parameterization).
+Class rpf.mdim.nrm      The nominal response item model (both
+                        unidimensional and multidimensional models have
+                        the same parameterization).
+EAPscores               Compute EAP scores
+LSAT6                   Description of LSAT6 data
+LSAT7                   Description of LSAT7 data
+SitemFit                Compute the S fit statistic for a set of items
+SitemFit1               Compute the S fit statistic for 1 item
+as.IFAgroup             Convert an OpenMx MxModel object into an IFA
+                        group
+bestToOmit              Identify the columns with most missing data
+collapseCategoricalCells
+                        Collapse small sample size categorical
+                        frequency counts
+compressDataFrame       Compress a data frame into unique rows and
+                        frequencies
+crosstabTest            Monte-Carlo test for cross-tabulation tables
+expandDataFrame         Expand summary table of patterns and
+                        frequencies
+fromFactorLoading       Convert factor loadings to response function
+                        slopes
+fromFactorThreshold     Convert factor thresholds to response function
+                        intercepts
+itemOutcomeBySumScore   Produce an item outcome by observed sum-score
+                        table
+kct                     Knox Cube Test dataset
+logit                   Transform from [0,1] to the reals
+multinomialFit          Multinomial fit test
+observedSumScore        Compute the observed sum-score
+omitItems               Omit the given items
+omitMostMissing         Omit items with the most missing data
+orderCompletely         Order a data.frame by missingness and all
+                        columns
+ordinal.gamma           Compute the ordinal gamma association statistic
+ptw2011.gof.test        Compute the P value that the observed and
+                        expected tables come from the same distribution
+read.flexmirt           Read a flexMIRT PRM file
+rpf.1dim.fit            Calculate item and person Rasch fit statistics
+rpf.1dim.moment         Calculate cell central moments
+rpf.1dim.residual       Calculate residuals
+rpf.1dim.stdresidual    Calculate standardized residuals
+rpf.dLL                 Item parameter derivatives
+rpf.dTheta              Item derivatives with respect to the location
+                        in the latent space
+rpf.drm                 Create a dichotomous response model
+rpf.grm                 Create a graded response model
+rpf.id_of               Convert an rpf item model name to an ID
+rpf.info                Map an item model, item parameters, and person
+                        trait score into a information vector
+rpf.lmp                 Create logistic function of a monotonic
+                        polynomial (LMP) model
+rpf.logprob             Map an item model, item parameters, and person
+                        trait score into a probability vector
+rpf.mcm                 Create a multiple-choice response model
+rpf.mean.info           Find the point where an item provides mean
+                        maximum information
+rpf.mean.info1          Find the point where an item provides mean
+                        maximum information
+rpf.modify              Create a similar item specification with the
+                        given number of factors
+rpf.nrm                 Create a nominal response model
+rpf.numParam            Length of the item parameter vector
+rpf.numSpec             Length of the item model vector
+rpf.ogive               The ogive constant
+rpf.paramInfo           Retrieve a description of the given parameter
+rpf.prob                Map an item model, item parameters, and person
+                        trait score into a probability vector
+rpf.rescale             Rescale item parameters
+rpf.rparam              Generates item parameters
+rpf.sample              Randomly sample response patterns given a list
+                        of items
+science                 Liking for Science dataset
+stripData               Strip data and scores from an IFA group
+sumScoreEAP             Compute the sum-score EAP table
+sumScoreEAPTest         Conduct the sum-score EAP distribution test
+tabulateRows            Tabulate data.frame rows
+toFactorLoading         Convert response function slopes to factor
+                        loadings
+toFactorThreshold       Convert response function intercepts to factor
+                        thresholds
+write.flexmirt          Write a flexMIRT PRM file

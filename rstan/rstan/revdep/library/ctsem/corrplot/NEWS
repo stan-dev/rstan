@@ -1,0 +1,77 @@
+		CHANGES IN corrplot VERSION 0.81
+
+CHANGES
+  * Fixed #79: added parameter `win.asp` to control aspect ratio
+  * Fixed #18: parameter `outline` combined with `method="pie"` controls
+    the color of the otline circle of each pie.
+  * updated vignette
+
+
+		CHANGES IN corrplot VERSION 0.80
+
+CHANGES
+  * Fixed #70: Enable to plot a matrix with NA when 'is.corr = F'
+
+
+		CHANGES IN corrplot VERSION 0.77
+
+CHANGES
+  * Fixed #58: make sure the margin is correct in corrplot.mixed().
+  * Revised document.
+
+
+		CHANGES IN corrplot VERSION 0.76
+
+CHANGES
+  * In corrplot(), added parameters na.label and na.label.col that define how NA values inside a matrix should be rendered.
+  * In corrplot(), na.label can now use one or two characters, default is "?" (issue #55)
+  * Fixed #17: restore par() settings on exit  (thanks, #yihui)
+  * Fixed #16: checks for [-1, 1] interval are too strict.
+  * Fixed #15: error with correlation plot using insig argument when all values are significant.
+  * Fixed #9: added ward.D and ward.D2 hclust methods (thanks, #jeffzemla)
+
+
+		CHANGES IN corrplot VERSION 0.70
+
+CHANGES
+  *  In corrplot(), parameter insig add a  option "p-value", now p-values can be conveniently added on the glyph.
+  *  Return value changes, corrplot() now returns a reordered correlation matrix.
+
+		CHANGES IN corrplot VERSION 0.66
+
+CHANGES
+  *  Add html vignette, which was generated from markdown file by knitr.
+  *  In corrplot(), remove parameter "zoom", add "is.corr"; now it is more convenient to
+     visualize  non-correlation matrix. Parameter "addtextlabel" was renamed as "tl.pos",
+     and "addcolorlabel" was renamed as "cl.pos".
+
+
+		CHANGES IN corrplot VERSION 0.60
+
+NEW FEATURES
+  *  Now corrplot() can deal with the matrix not in [-1,1] by parameter "zoom" now.
+     Warning: please make sure the visualization you take after data zoom is meaningful!
+
+CHANGES
+  *  Function corr.rect() was renamed as corrRect().
+  *  Revise document. (THANKS, Tao Gao)
+  *  In function corrplot(), "order"'s choice "PCA" was precisely renamed as "AOE".
+	 and "FPC" was added for the first principal component order.
+  *  Add function corrMatOrder(), and corrplot.mixed().
+  *  Remove seldom used functions: corrplot.circle(), corrplot.ellipse(),
+     corrplot.square(), corrplot.shade(), corrplot.color(), corrplot.number().
+  *  In corrplot(), remove parameter "assign.col" and "cl.range",
+     add "zoom", "cl.lim" and "addCoefasPercent".
+
+
+
+
+		CHANGES IN corrplot VERSION 0.54
+
+CHANGES
+  *  Parameter "tl.cex" in function corrplot() is more sensitive.
+
+BUG FIXES
+  *  The issue that too much space adding to the margins (especially using a longer text label
+     or a larger font size) has been fixed.
+  *  Specifying wrong color to the glyphs has been fixed.

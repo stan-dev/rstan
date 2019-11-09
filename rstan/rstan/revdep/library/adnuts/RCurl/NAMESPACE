@@ -1,0 +1,86 @@
+import(methods)
+importFrom(bitops, bitAnd, bitOr)
+importFrom(utils, data)
+
+export(getURL, getURI, postForm, getForm, getURLContent)
+export(.postForm)
+export(curlGlobalInit,curlVersion)
+export(curlOptions)
+export(getCurlInfoConstants, getCurlOptionsConstants, listCurlOptions)
+export(curlSetOpt, curlPerform, getCurlInfo)
+export(getCurlHandle, dupCurlHandle)
+export(CurlFeatureBits, CurlGlobalBits, CurlNetrc)
+export(curlOptions)
+export(basicTextGatherer, debugGatherer, basicHeaderGatherer)
+export(curlEscape, curlUnescape, curlPercentEncode)
+export(getBitIndicators, setBitIndicators)
+export(parseHTTPHeader)
+
+export(chunkToLineReader)
+
+S3method("[<-",  CURLOptions)
+S3method("[[<-",  CURLOptions)
+
+exportMethods("pop", "push")
+export(curlMultiPerform, getCurlMultiHandle, getURLAsynchronous, getURIAsynchronous,
+       multiTextGatherer)
+
+export(complete)
+
+exportClasses(MultiCURLHandle, CURLHandle)
+
+export(merge.list)
+
+export(binaryBuffer)
+exportMethods("coerce")
+
+export(base64, base64Encode, base64Decode)
+
+useDynLib(RCurl, R_curl_BinaryData_new, R_curl_BinaryData_to_raw, R_base64_decode, R_base64_encode)
+
+export(fileUpload)
+
+
+export(findHTTPHeaderEncoding)
+export(getBinaryURL)
+
+export(reset)
+exportMethods('reset')
+
+export(ftpUpload)
+
+
+export(dynCurlReader)
+
+export(getCurlOptionTypes)
+exportPattern("HTTP_VERSION_.*")
+exportPattern("SSLVERSION_.*")
+
+exportClass("CFILE")
+export(CFILE)
+exportMethods(close)
+
+
+
+export(scp)
+
+export(guessMIMEType)
+
+ # do we want a httpPOST.
+export(httpPUT, httpDELETE, httpGET, httpPOST, httpHEAD)
+export(httpOPTIONS)
+
+export(getFormParams)
+
+
+export(url.exists)
+export(curlError)
+
+export(AUTH_ONLY, AUTH_ANY, AUTH_NTLM, AUTH_ANYSAFE, AUTH_NTLM_WB, AUTH_DIGEST_IE, AUTH_BASIC, AUTH_DIGEST, AUTH_GSSNEGOTIATE, AUTH_NONE)
+
+#export(CURLAUTH_ONLY, CURLAUTH_ANY, CURLAUTH_NTLM, CURLAUTH_ANYSAFE, CURLAUTH_NTLM_WB,
+#       CURLAUTH_DIGEST_IE, CURLAUTH_BASIC, CURLAUTH_DIGEST, CURLAUTH_GSSNEGOTIATE, CURLAUTH_NONE)
+
+export(clone)
+exportMethods(clone)
+export(getCurlErrorClassNames)

@@ -1,0 +1,347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Response Probability Functions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Response Probability Functions
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;rpf&rsquo; version 0.62</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="# "> </a>
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#I">I</a>
+<a href="#K">K</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#O">O</a>
+<a href="#P">P</a>
+<a href="#R">R</a>
+<a href="#S">S</a>
+<a href="#T">T</a>
+<a href="#W">W</a>
+<a href="#misc">misc</a>
+</p>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="rpf.introduction.html">An introduction-package</a></td>
+<td>rpf - Response Probability Functions</td></tr>
+</table>
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="rpf.introduction.html">An introduction</a></td>
+<td>rpf - Response Probability Functions</td></tr>
+<tr><td style="width: 25%;"><a href="as.IFAgroup.html">as.IFAgroup</a></td>
+<td>Convert an OpenMx MxModel object into an IFA group</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="bestToOmit.html">bestToOmit</a></td>
+<td>Identify the columns with most missing data</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ChenThissen1997.html">chen.thissen.1997</a></td>
+<td>Computes local dependence indices for all pairs of items</td></tr>
+<tr><td style="width: 25%;"><a href="ChenThissen1997.html">ChenThissen1997</a></td>
+<td>Computes local dependence indices for all pairs of items</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim-class.html">Class rpf.1dim</a></td>
+<td>The base class for 1 dimensional response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.drm-class.html">Class rpf.1dim.drm</a></td>
+<td>Unidimensional dichotomous item models (1PL, 2PL, and 3PL).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.graded-class.html">Class rpf.1dim.graded</a></td>
+<td>The base class for 1 dimensional graded response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.grm-class.html">Class rpf.1dim.grm</a></td>
+<td>The unidimensional graded response item model.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.lmp-class.html">Class rpf.1dim.lmp</a></td>
+<td>Unidimensional logistic function of a monotonic polynomial.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.base-class.html">Class rpf.base</a></td>
+<td>The base class for response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim-class.html">Class rpf.mdim</a></td>
+<td>The base class for multi-dimensional response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.drm-class.html">Class rpf.mdim.drm</a></td>
+<td>Multidimensional dichotomous item models (M1PL, M2PL, and M3PL).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.graded-class.html">Class rpf.mdim.graded</a></td>
+<td>The base class for multi-dimensional graded response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.grm-class.html">Class rpf.mdim.grm</a></td>
+<td>The multidimensional graded response item model.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.mcm-class.html">Class rpf.mdim.mcm</a></td>
+<td>The multiple-choice response item model (both unidimensional and multidimensional models have the same parameterization).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.nrm-class.html">Class rpf.mdim.nrm</a></td>
+<td>The nominal response item model (both unidimensional and multidimensional models have the same parameterization).</td></tr>
+<tr><td style="width: 25%;"><a href="collapseCategoricalCells.html">collapseCategoricalCells</a></td>
+<td>Collapse small sample size categorical frequency counts</td></tr>
+<tr><td style="width: 25%;"><a href="compressDataFrame.html">compressDataFrame</a></td>
+<td>Compress a data frame into unique rows and frequencies</td></tr>
+<tr><td style="width: 25%;"><a href="crosstabTest.html">crosstabTest</a></td>
+<td>Monte-Carlo test for cross-tabulation tables</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="EAPscores.html">EAPscores</a></td>
+<td>Compute EAP scores</td></tr>
+<tr><td style="width: 25%;"><a href="expandDataFrame.html">expandDataFrame</a></td>
+<td>Expand summary table of patterns and frequencies</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="fromFactorLoading.html">fromFactorLoading</a></td>
+<td>Convert factor loadings to response function slopes</td></tr>
+<tr><td style="width: 25%;"><a href="fromFactorThreshold.html">fromFactorThreshold</a></td>
+<td>Convert factor thresholds to response function intercepts</td></tr>
+</table>
+
+<h2><a name="I">-- I --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="itemOutcomeBySumScore.html">itemOutcomeBySumScore</a></td>
+<td>Produce an item outcome by observed sum-score table</td></tr>
+</table>
+
+<h2><a name="K">-- K --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="kct.html">kct</a></td>
+<td>Knox Cube Test dataset</td></tr>
+<tr><td style="width: 25%;"><a href="kct.html">kct.items</a></td>
+<td>Knox Cube Test dataset</td></tr>
+<tr><td style="width: 25%;"><a href="kct.html">kct.people</a></td>
+<td>Knox Cube Test dataset</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="logit.html">logit</a></td>
+<td>Transform from [0,1] to the reals</td></tr>
+<tr><td style="width: 25%;"><a href="LSAT6.html">LSAT6</a></td>
+<td>Description of LSAT6 data</td></tr>
+<tr><td style="width: 25%;"><a href="LSAT7.html">LSAT7</a></td>
+<td>Description of LSAT7 data</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="multinomialFit.html">multinomialFit</a></td>
+<td>Multinomial fit test</td></tr>
+</table>
+
+<h2><a name="O">-- O --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="observedSumScore.html">observedSumScore</a></td>
+<td>Compute the observed sum-score</td></tr>
+<tr><td style="width: 25%;"><a href="omitItems.html">omitItems</a></td>
+<td>Omit the given items</td></tr>
+<tr><td style="width: 25%;"><a href="omitMostMissing.html">omitMostMissing</a></td>
+<td>Omit items with the most missing data</td></tr>
+<tr><td style="width: 25%;"><a href="orderCompletely.html">orderCompletely</a></td>
+<td>Order a data.frame by missingness and all columns</td></tr>
+<tr><td style="width: 25%;"><a href="ordinal.gamma.html">ordinal.gamma</a></td>
+<td>Compute the ordinal gamma association statistic</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ptw2011.gof.test.html">ptw2011.gof.test</a></td>
+<td>Compute the P value that the observed and expected tables come from the same distribution</td></tr>
+</table>
+
+<h2><a name="R">-- R --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="read.flexmirt.html">read.flexmirt</a></td>
+<td>Read a flexMIRT PRM file</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim-class.html">rpf.1dim-class</a></td>
+<td>The base class for 1 dimensional response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.drm-class.html">rpf.1dim.drm-class</a></td>
+<td>Unidimensional dichotomous item models (1PL, 2PL, and 3PL).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.fit.html">rpf.1dim.fit</a></td>
+<td>Calculate item and person Rasch fit statistics</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.graded-class.html">rpf.1dim.graded-class</a></td>
+<td>The base class for 1 dimensional graded response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.grm-class.html">rpf.1dim.grm-class</a></td>
+<td>The unidimensional graded response item model.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.lmp-class.html">rpf.1dim.lmp-class</a></td>
+<td>Unidimensional logistic function of a monotonic polynomial.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.moment.html">rpf.1dim.moment</a></td>
+<td>Calculate cell central moments</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.residual.html">rpf.1dim.residual</a></td>
+<td>Calculate residuals</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.1dim.stdresidual.html">rpf.1dim.stdresidual</a></td>
+<td>Calculate standardized residuals</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.base-class.html">rpf.base-class</a></td>
+<td>The base class for response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.dLL.html">rpf.dLL</a></td>
+<td>Item parameter derivatives</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.dLL.html">rpf.dLL-method</a></td>
+<td>Item parameter derivatives</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.drm.html">rpf.drm</a></td>
+<td>Create a dichotomous response model</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.dTheta.html">rpf.dTheta</a></td>
+<td>Item derivatives with respect to the location in the latent space</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.dTheta.html">rpf.dTheta-method</a></td>
+<td>Item derivatives with respect to the location in the latent space</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.grm.html">rpf.grm</a></td>
+<td>Create a graded response model</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.id_of.html">rpf.id_of</a></td>
+<td>Convert an rpf item model name to an ID</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.info.html">rpf.info</a></td>
+<td>Map an item model, item parameters, and person trait score into a information vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.lmp.html">rpf.lmp</a></td>
+<td>Create logistic function of a monotonic polynomial (LMP) model</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.logprob.html">rpf.logprob</a></td>
+<td>Map an item model, item parameters, and person trait score into a probability vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.logprob.html">rpf.logprob-method</a></td>
+<td>Map an item model, item parameters, and person trait score into a probability vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mcm.html">rpf.mcm</a></td>
+<td>Create a multiple-choice response model</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim-class.html">rpf.mdim-class</a></td>
+<td>The base class for multi-dimensional response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.drm-class.html">rpf.mdim.drm-class</a></td>
+<td>Multidimensional dichotomous item models (M1PL, M2PL, and M3PL).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.graded-class.html">rpf.mdim.graded-class</a></td>
+<td>The base class for multi-dimensional graded response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.grm-class.html">rpf.mdim.grm-class</a></td>
+<td>The multidimensional graded response item model.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.mcm-class.html">rpf.mdim.mcm-class</a></td>
+<td>The multiple-choice response item model (both unidimensional and multidimensional models have the same parameterization).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mdim.nrm-class.html">rpf.mdim.nrm-class</a></td>
+<td>The nominal response item model (both unidimensional and multidimensional models have the same parameterization).</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mean.info.html">rpf.mean.info</a></td>
+<td>Find the point where an item provides mean maximum information</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.mean.info1.html">rpf.mean.info1</a></td>
+<td>Find the point where an item provides mean maximum information</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.modify.html">rpf.modify</a></td>
+<td>Create a similar item specification with the given number of factors</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.modify.html">rpf.modify-method</a></td>
+<td>Create a similar item specification with the given number of factors</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.nrm.html">rpf.nrm</a></td>
+<td>Create a nominal response model</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.numParam.html">rpf.numParam</a></td>
+<td>Length of the item parameter vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.numParam.html">rpf.numParam-method</a></td>
+<td>Length of the item parameter vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.numSpec.html">rpf.numSpec</a></td>
+<td>Length of the item model vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.numSpec.html">rpf.numSpec-method</a></td>
+<td>Length of the item model vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.ogive.html">rpf.ogive</a></td>
+<td>The ogive constant</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.paramInfo.html">rpf.paramInfo</a></td>
+<td>Retrieve a description of the given parameter</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.paramInfo.html">rpf.paramInfo-method</a></td>
+<td>Retrieve a description of the given parameter</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.prob.html">rpf.prob</a></td>
+<td>Map an item model, item parameters, and person trait score into a probability vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.prob.html">rpf.prob-method</a></td>
+<td>Map an item model, item parameters, and person trait score into a probability vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.rescale.html">rpf.rescale</a></td>
+<td>Rescale item parameters</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.rescale.html">rpf.rescale-method</a></td>
+<td>Rescale item parameters</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.rparam.html">rpf.rparam</a></td>
+<td>Generates item parameters</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.rparam.html">rpf.rparam-method</a></td>
+<td>Generates item parameters</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.sample.html">rpf.sample</a></td>
+<td>Randomly sample response patterns given a list of items</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.dLL.html">rpf_dLL_wrapper</a></td>
+<td>Item parameter derivatives</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.dTheta.html">rpf_dTheta_wrapper</a></td>
+<td>Item derivatives with respect to the location in the latent space</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.logprob.html">rpf_logprob_wrapper</a></td>
+<td>Map an item model, item parameters, and person trait score into a probability vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.numParam.html">rpf_numParam_wrapper</a></td>
+<td>Length of the item parameter vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.numSpec.html">rpf_numSpec_wrapper</a></td>
+<td>Length of the item model vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.paramInfo.html">rpf_paramInfo_wrapper</a></td>
+<td>Retrieve a description of the given parameter</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.prob.html">rpf_prob_wrapper</a></td>
+<td>Map an item model, item parameters, and person trait score into a probability vector</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.rescale.html">rpf_rescale_wrapper</a></td>
+<td>Rescale item parameters</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="science.html">science</a></td>
+<td>Liking for Science dataset</td></tr>
+<tr><td style="width: 25%;"><a href="science.html">sfif</a></td>
+<td>Liking for Science dataset</td></tr>
+<tr><td style="width: 25%;"><a href="science.html">sfpf</a></td>
+<td>Liking for Science dataset</td></tr>
+<tr><td style="width: 25%;"><a href="science.html">sfsf</a></td>
+<td>Liking for Science dataset</td></tr>
+<tr><td style="width: 25%;"><a href="science.html">sfxf</a></td>
+<td>Liking for Science dataset</td></tr>
+<tr><td style="width: 25%;"><a href="SitemFit.html">SitemFit</a></td>
+<td>Compute the S fit statistic for a set of items</td></tr>
+<tr><td style="width: 25%;"><a href="SitemFit1.html">SitemFit1</a></td>
+<td>Compute the S fit statistic for 1 item</td></tr>
+<tr><td style="width: 25%;"><a href="stripData.html">stripData</a></td>
+<td>Strip data and scores from an IFA group</td></tr>
+<tr><td style="width: 25%;"><a href="sumScoreEAP.html">sumScoreEAP</a></td>
+<td>Compute the sum-score EAP table</td></tr>
+<tr><td style="width: 25%;"><a href="sumScoreEAPTest.html">sumScoreEAPTest</a></td>
+<td>Conduct the sum-score EAP distribution test</td></tr>
+</table>
+
+<h2><a name="T">-- T --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="tabulateRows.html">tabulateRows</a></td>
+<td>Tabulate data.frame rows</td></tr>
+<tr><td style="width: 25%;"><a href="toFactorLoading.html">toFactorLoading</a></td>
+<td>Convert response function slopes to factor loadings</td></tr>
+<tr><td style="width: 25%;"><a href="toFactorThreshold.html">toFactorThreshold</a></td>
+<td>Convert response function intercepts to factor thresholds</td></tr>
+</table>
+
+<h2><a name="W">-- W --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="write.flexmirt.html">write.flexmirt</a></td>
+<td>Write a flexMIRT PRM file</td></tr>
+</table>
+
+<h2><a name="misc">-- misc --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="rpf.base-class.html">$-method</a></td>
+<td>The base class for response probability functions.</td></tr>
+<tr><td style="width: 25%;"><a href="rpf.base-class.html">$&lt;--method</a></td>
+<td>The base class for response probability functions.</td></tr>
+</table>
+</body></html>

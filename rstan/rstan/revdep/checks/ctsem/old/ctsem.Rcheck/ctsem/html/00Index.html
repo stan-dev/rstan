@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Continuous Time Structural Equation Modelling</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Continuous Time Structural Equation Modelling
+<img class="toplogo" src="../../../doc/html/Rlogo.svg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;ctsem&rsquo; version 2.9.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+<li><a href="../NEWS">Package NEWS</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="ctsem.html">ctsem-package</a></td>
+<td>ctsem</td></tr>
+<tr><td style="width: 25%;"><a href="AnomAuth.html">AnomAuth</a></td>
+<td>AnomAuth</td></tr>
+<tr><td style="width: 25%;"><a href="ctCheckFit.html">ctCheckFit</a></td>
+<td>Check absolute fit of ctFit or ctStanFit object.</td></tr>
+<tr><td style="width: 25%;"><a href="ctCI.html">ctCI</a></td>
+<td>ctCI Computes confidence intervals on specified parameters / matrices for already fitted ctsem fit object.</td></tr>
+<tr><td style="width: 25%;"><a href="ctCollapse.html">ctCollapse</a></td>
+<td>ctCollapse Easily collapse an array margin using a specified function.</td></tr>
+<tr><td style="width: 25%;"><a href="ctCompareExpected.html">ctCompareExpected</a></td>
+<td>ctCompareExpected Compares model implied to observed means and covariances for panel data fit with ctsem.</td></tr>
+<tr><td style="width: 25%;"><a href="ctDeintervalise.html">ctDeintervalise</a></td>
+<td>ctDeintervalise</td></tr>
+<tr><td style="width: 25%;"><a href="ctDensity.html">ctDensity</a></td>
+<td>ctDensity</td></tr>
+<tr><td style="width: 25%;"><a href="ctDiscretePars.html">ctDiscretePars</a></td>
+<td>ctDiscretePars</td></tr>
+<tr><td style="width: 25%;"><a href="ctDiscretiseData.html">ctDiscretiseData</a></td>
+<td>Discretise long format continuous time (ctsem) data to specific timestep.</td></tr>
+<tr><td style="width: 25%;"><a href="ctExample1.html">ctExample1</a></td>
+<td>ctExample1</td></tr>
+<tr><td style="width: 25%;"><a href="ctExample1TIpred.html">ctExample1TIpred</a></td>
+<td>ctExample1TIpred</td></tr>
+<tr><td style="width: 25%;"><a href="ctExample2.html">ctExample2</a></td>
+<td>ctExample2</td></tr>
+<tr><td style="width: 25%;"><a href="ctExample2level.html">ctExample2level</a></td>
+<td>ctExample2level</td></tr>
+<tr><td style="width: 25%;"><a href="ctExample3.html">ctExample3</a></td>
+<td>ctExample3</td></tr>
+<tr><td style="width: 25%;"><a href="ctExample4.html">ctExample4</a></td>
+<td>ctExample4</td></tr>
+<tr><td style="width: 25%;"><a href="ctFit.html">ctFit</a></td>
+<td>Fit a ctsem object</td></tr>
+<tr><td style="width: 25%;"><a href="ctGenerate.html">ctGenerate</a></td>
+<td>ctGenerate</td></tr>
+<tr><td style="width: 25%;"><a href="ctGenerateFromFit.html">ctGenerateFromFit</a></td>
+<td>Generates data according to the model estimated in a ctsemFit object.#'</td></tr>
+<tr><td style="width: 25%;"><a href="ctIndplot.html">ctIndplot</a></td>
+<td>ctIndplot</td></tr>
+<tr><td style="width: 25%;"><a href="ctIntervalise.html">ctIntervalise</a></td>
+<td>Converts absolute times to intervals for wide format ctsem panel data</td></tr>
+<tr><td style="width: 25%;"><a href="ctKalman.html">ctKalman</a></td>
+<td>ctKalman</td></tr>
+<tr><td style="width: 25%;"><a href="ctKalmanPlot.html">ctKalmanPlot</a></td>
+<td>ctKalmanPlot</td></tr>
+<tr><td style="width: 25%;"><a href="ctLongToWide.html">ctLongToWide</a></td>
+<td>ctLongToWide Restructures time series / panel data from long format to wide format for ctsem analysis</td></tr>
+<tr><td style="width: 25%;"><a href="ctModel.html">ctModel</a></td>
+<td>Define a ctsem model</td></tr>
+<tr><td style="width: 25%;"><a href="ctModelFromFit.html">ctModelFromFit</a></td>
+<td>Extract a ctsem model structure with parameter values from a ctsem fit object.</td></tr>
+<tr><td style="width: 25%;"><a href="ctMultigroupFit.html">ctMultigroupFit</a></td>
+<td>Fits a multiple group continuous time model.</td></tr>
+<tr><td style="width: 25%;"><a href="ctPlot.html">ctPlot</a></td>
+<td>ctPlot</td></tr>
+<tr><td style="width: 25%;"><a href="ctPlotArray.html">ctPlotArray</a></td>
+<td>Plots three dimensional y values for quantile plots</td></tr>
+<tr><td style="width: 25%;"><a href="ctPoly.html">ctPoly</a></td>
+<td>Plots uncertainty bands with shading</td></tr>
+<tr><td style="width: 25%;"><a href="ctPostPredict.html">ctPostPredict</a></td>
+<td>Posterior predictive type check for ctsemFit.</td></tr>
+<tr><td style="width: 25%;"><a href="ctRefineTo.html">ctRefineTo</a></td>
+<td>ctRefineTo</td></tr>
+<tr><td style="width: 25%;"><a href="ctsem.html">ctsem</a></td>
+<td>ctsem</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanContinuousPars.html">ctStanContinuousPars</a></td>
+<td>ctStanContinuousPars</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanDiscretePars.html">ctStanDiscretePars</a></td>
+<td>ctStanDiscretePars</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanDiscreteParsPlot.html">ctStanDiscreteParsPlot</a></td>
+<td>ctStanDiscreteParsPlot</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanFit.html">ctStanFit</a></td>
+<td>ctStanFit</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanGenerateData.html">ctStanGenerateData</a></td>
+<td>Add a $generated object to ctstanfit object, with random data generated from posterior of ctstanfit object</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanKalman.html">ctStanKalman</a></td>
+<td>Get Kalman filter estimates from a ctStanFit object</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanModel.html">ctStanModel</a></td>
+<td>Convert a frequentist (omx) ctsem model specification to Bayesian (Stan).</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanParMatrices.html">ctStanParMatrices</a></td>
+<td>Returns population system matrices from a ctStanFit object, and vector of values for free parameters.</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanParnames.html">ctStanParnames</a></td>
+<td>ctStanParnames</td></tr>
+<tr><td style="width: 25%;"><a href="plot.ctStanFit.html">ctStanPlot</a></td>
+<td>plot.ctStanFit</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanPlotPost.html">ctStanPlotPost</a></td>
+<td>ctStanPlotPost</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanPostPredict.html">ctStanPostPredict</a></td>
+<td>Compares model implied density and values to observed, for a ctStanFit object.</td></tr>
+<tr><td style="width: 25%;"><a href="ctstantestdat.html">ctstantestdat</a></td>
+<td>ctstantestdat</td></tr>
+<tr><td style="width: 25%;"><a href="ctstantestfit.html">ctstantestfit</a></td>
+<td>ctstantestfit</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanTIpredeffects.html">ctStanTIpredeffects</a></td>
+<td>Get time independent predictor effect estimates</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanTIpredMarginal.html">ctStanTIpredMarginal</a></td>
+<td>Plot marginal relationships between covariates and parameters for a ctStanFit object.</td></tr>
+<tr><td style="width: 25%;"><a href="ctStanUpdModel.html">ctStanUpdModel</a></td>
+<td>Update an already compiled and fit ctStanFit object</td></tr>
+<tr><td style="width: 25%;"><a href="ctWideNames.html">ctWideNames</a></td>
+<td>ctWideNames sets default column names for wide ctsem datasets. Primarily intended for internal ctsem usage.</td></tr>
+<tr><td style="width: 25%;"><a href="ctWideToLong.html">ctWideToLong</a></td>
+<td>ctWideToLong Convert ctsem wide to long format</td></tr>
+<tr><td style="width: 25%;"><a href="datastructure.html">datastructure</a></td>
+<td>datastructure</td></tr>
+<tr><td style="width: 25%;"><a href="extract.html">extract</a></td>
+<td>Extract samples from a ctStanFit object</td></tr>
+<tr><td style="width: 25%;"><a href="inv_logit.html">inv_logit</a></td>
+<td>Inverse logit</td></tr>
+<tr><td style="width: 25%;"><a href="isdiag.html">isdiag</a></td>
+<td>Diagnostics for ctsem importance sampling</td></tr>
+<tr><td style="width: 25%;"><a href="Kalman.html">Kalman</a></td>
+<td>Kalman</td></tr>
+<tr><td style="width: 25%;"><a href="longexample.html">longexample</a></td>
+<td>longexample</td></tr>
+<tr><td style="width: 25%;"><a href="msquare.html">msquare</a></td>
+<td>Right multiply a matrix by its transpose.</td></tr>
+<tr><td style="width: 25%;"><a href="optimstan.html">optimstan</a></td>
+<td>Optimize / importance sample a stan or ctStan model.</td></tr>
+<tr><td style="width: 25%;"><a href="Oscillating.html">Oscillating</a></td>
+<td>Oscillating</td></tr>
+<tr><td style="width: 25%;"><a href="plot.ctsemFit.html">plot.ctsemFit</a></td>
+<td>Plotting function for object class ctsemFit</td></tr>
+<tr><td style="width: 25%;"><a href="plot.ctsemFitMeasure.html">plot.ctsemFitMeasure</a></td>
+<td>Misspecification plot using ctCheckFit output</td></tr>
+<tr><td style="width: 25%;"><a href="plot.ctsemMultigroupFit.html">plot.ctsemMultigroupFit</a></td>
+<td>Plot function for ctsemMultigroupFit object</td></tr>
+<tr><td style="width: 25%;"><a href="plot.ctStanFit.html">plot.ctStanFit</a></td>
+<td>plot.ctStanFit</td></tr>
+<tr><td style="width: 25%;"><a href="plot.ctStanModel.html">plot.ctStanModel</a></td>
+<td>Prior plotting</td></tr>
+<tr><td style="width: 25%;"><a href="sdpcor2cov.html">sdpcor2cov</a></td>
+<td>sdcor2cov</td></tr>
+<tr><td style="width: 25%;"><a href="stanWplot.html">stanWplot</a></td>
+<td>Runs stan, and plots sampling information while sampling.</td></tr>
+<tr><td style="width: 25%;"><a href="stan_checkdivergences.html">stan_checkdivergences</a></td>
+<td>Analyse divergences in a stanfit object</td></tr>
+<tr><td style="width: 25%;"><a href="stan_confidenceRegion.html">stan_confidenceRegion</a></td>
+<td>Extract functions of multiple variables from a stanfit object</td></tr>
+<tr><td style="width: 25%;"><a href="stan_postcalc.html">stan_postcalc</a></td>
+<td>Compute functions of matrices from samples of a stanfit object</td></tr>
+<tr><td style="width: 25%;"><a href="stan_unconstrainsamples.html">stan_unconstrainsamples</a></td>
+<td>Convert samples from a stanfit object to the unconstrained scale</td></tr>
+<tr><td style="width: 25%;"><a href="summary.ctsemFit.html">summary.ctsemFit</a></td>
+<td>Summary function for ctsemFit object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.ctsemMultigroupFit.html">summary.ctsemMultigroupFit</a></td>
+<td>Summary function for ctsemMultigroupFit object</td></tr>
+<tr><td style="width: 25%;"><a href="summary.ctStanFit.html">summary.ctStanFit</a></td>
+<td>summary.ctStanFit</td></tr>
+</table>
+</body></html>

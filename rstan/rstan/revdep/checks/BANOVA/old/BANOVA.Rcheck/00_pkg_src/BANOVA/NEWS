@@ -1,0 +1,65 @@
+BANOVA v1.1.2 (Release date: 2019-01-21)
+==============
+* Fixed the problem with large effect sizes by including the level-1 error term
+* Enable the calculation of the posterior distribution of planned comparisons
+* Output the distribution of indirect effects in mediation across respondents
+* Fixed the bug related to id input and output 
+
+BANOVA v1.1.1 (Release date: 2018-01-21)
+==============
+* Added vignettes
+
+BANOVA v1.1.0 (Release date: 2018-01-04)
+==============
+* Added R2 measure of fit
+* Added level-1 variance term to the calculation of R2 and effect sizes
+* Added p values and effect sizes for indirect effects 
+* BANOVA mediation only prints indirect effects, users can still access direct effects through the dir_effects element
+* BANOVA mediation for Multinomial models is under development
+* Use 3 decimals for the 95%CI of the effect sizes
+* Default settings for MCMC burn-in=5000, sample=2000, thin=10
+* Other variables in the model are included in the output of floodlight analysis
+* Users can set up values for other numeric variables for the floodlight analysis
+
+BANOVA v1.0.0 (Release date: 2017-11-02)
+==============
+* add seeds for replications 
+
+BANOVA v0.9.1 (Release date: 2017-08-26)
+==============
+* single level models are supported for old models except Binomial and Bernoulli
+* fix the bug that the interaction between the mediator and moderators is missing in the mediation output
+* The names in the table of indirect effets are reordered (alphabetically)
+
+BANOVA v0.9 (Release date: 2017-06-27)
+==============
+* BANOVA uses Stan!
+* all two-level models are moved into a simple function call: BANOVA.run 
+* old two-level models (e.g. BANOVA.Normal, BANOVA.Bin, etc.) are still kept, but will be removed gradually
+* single level models are included
+
+BANOVA v0.8 (Release date: 2016-12-12)
+==============
+* change the name 'table of means' to 'table of predictions'
+* column names of the data goalstudy are changed to make more sense
+* add floodlight analysis
+* add mediation analysis (single mediator, multiple moderators)
+
+BANOVA v0.7 (Release date: 2016-08-24)
+==============
+* Exclude numeric variables for predictions
+* Change the format of convergence diag.
+* Change the calculations in the table of means and predictions to exp(mu + sigma^2/2) instead of exp(mu) for the Poisson model
+* Table of means is now included in the summary
+* Use 4 digits for the outputs in the summary except the table of means
+* Median is changed to mean in the output of table of means
+* Predictors that have 3 levels or fewer will be automatically considered as factors
+
+BANOVA v0.6 (Release date: 2016-08-01)
+==============
+* Check missing data for independent variables
+* Fix typos
+* Add warnings for mean centering of numeric variables
+* Print full convergence diag. for the Heidelberg and Welch diagnostic.
+* Table of means can now print any level of interactions
+

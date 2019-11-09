@@ -1,0 +1,48 @@
+ASCIIfy                 Convert Characters to ASCII
+ELISA                   Data from an ELISA assay
+asc                     Convert between characters and ASCII codes
+ask                     Display a prompt and collect the user's
+                        response
+badDend                 Dataset That Crashes Base:::Plot.Dendogram with
+                        'Node Stack Overflow'
+baseOf                  Transform an integer to an array of base-n
+                        digits
+binsearch               Binary Search
+capwords                Capitalize Words for Titles
+checkRVersion           Check if a newer version of R is available
+combinations            Enumerate the Combinations or Permutations of
+                        the Elements of a Vector
+defmacro                Define a macro
+foldchange              Compute fold-change or convert between
+                        log-ratio and fold-change.
+getDependencies         Get package dependencies
+gtools-defunct          Defunct Functions in package 'gtools'
+gtools-deprecated       Deprecated Functions in the gtools package
+invalid                 Test if a value is missing, empty, or contains
+                        only NA or NULL values
+keywords                List valid keywords for R man pages
+lastAdd                 Non-destructively construct a .Last function to
+                        be executed when R exits.
+loadedPackages          Provide Name, Version, and Path of Loaded
+                        Package Namespaces
+logit                   Generalized logit and inverse logit function
+mixedsort               Order or Sort strings with embedded numbers so
+                        that the numbers are in the correct order
+na.replace              Replace Missing Values
+odd                     Detect odd/even integers
+permute                 Randomly Permute the Elements of a Vector
+quantcut                Create a Factor Variable Using the Quantiles of
+                        a Continuous Variable
+rdirichlet              Functions for the Dirichlet Distribution
+roman2int               Convert Roman Numerals to Integers
+running                 Apply a Function Over Adjacent Subsets of a
+                        Vector
+scat                    Display debugging text
+setTCPNoDelay           Modify the TCP\_NODELAY ('de-Nagle') flag for
+                        socket objects
+smartbind               Efficient rbind of data frames, even if the
+                        column names don't match
+split_path              Split a File Path into Components
+stars.pval              Generate significance stars from p-values
+unByteCode              Convert a Byte-Code Function to an
+                        Interpreted-Code Function

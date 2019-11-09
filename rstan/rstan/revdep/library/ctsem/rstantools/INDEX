@@ -1,0 +1,23 @@
+bayes_R2                Generic function and default method for
+                        Bayesian R-squared
+init_cpp                Register functions implemented in C++
+log_lik                 Generic function for pointwise log-likelihood
+loo-prediction          Generic functions for LOO predictions
+nsamples                Generic function for extracting the number of
+                        posterior samples
+posterior_interval      Generic function and default method for
+                        posterior uncertainty intervals
+posterior_linpred       Generic function for accessing the posterior
+                        distribution of the linear predictor
+posterior_predict       Generic function for drawing from the posterior
+                        predictive distribution
+predictive_error        Generic function and default method for
+                        predictive errors
+predictive_interval     Generic function for predictive intervals
+prior_summary           Generic function for extracting information
+                        about prior distributions
+rstan_package_skeleton
+                        Create the skeleton of a new R package with
+                        Stan programs
+rstantools-package      Tools for Developing R Packages Interfacing
+                        with Stan

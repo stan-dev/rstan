@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Yihui Xie" />
+
+<meta name="date" content="2019-04-01" />
+
+<title>An Introduction to xfun</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 800px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 20px;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 0;
+padding: 4px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table:not([class]) {
+margin: auto;
+min-width: 40%;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table[summary="R argblock"] {
+width: 100%;
+border: none;
+}
+table:not([class]) th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table:not([class]) td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table:not([class]), table:not([class]) th, table:not([class]) td {
+border-left-style: none;
+border-right-style: none;
+}
+table:not([class]) tr.odd {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 13px;
+padding-bottom: 1px;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f5f5f5;
+border-radius: 3px;
+color: #333;
+}
+pre {
+overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0 10px 0;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: white;
+border: #f5f5f5 1px solid;
+}
+pre:not([class]) code {
+color: #444;
+background-color: white;
+}
+code {
+font-family: monospace;
+font-size: 90%;
+}
+p > code, li > code {
+padding: 2px 4px;
+color: #d14;
+border: 1px solid #e1e1e8;
+white-space: inherit;
+}
+div.figure {
+text-align: center;
+}
+table > caption, div.figure p.caption {
+font-style: italic;
+}
+table > caption span, div.figure p.caption span {
+font-style: normal;
+font-weight: bold;
+}
+p {
+margin: 0 0 10px;
+}
+table:not([class]) {
+margin: auto auto 10px auto;
+}
+img:not([class]) {
+background-color: #FFFFFF;
+padding: 2px;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+max-width: 100%;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f5f5f5;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f5f5f5;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f5f5f5;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+div.r-help-page {
+background-color: #f9f9f9;
+border-bottom: #ddd 1px solid;
+margin-bottom: 10px;
+padding: 10px;
+}
+div.r-help-page:hover {
+background-color: #f4f4f4;
+}
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">An Introduction to xfun</h1>
+<h3 class="subtitle">A Collection of Miscellaneous Functions</h3>
+<h4 class="author">Yihui Xie</h4>
+<h4 class="date">2019-04-01</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#no-more-partial-matching-for-lists">No more partial matching for lists!</a></li>
+<li><a href="#output-character-vectors-for-human-eyes">Output character vectors for human eyes</a></li>
+<li><a href="#print-the-content-of-a-text-file">Print the content of a text file</a></li>
+<li><a href="#search-and-replace-strings-in-files">Search and replace strings in files</a></li>
+<li><a href="#manipulate-filename-extensions">Manipulate filename extensions</a></li>
+<li><a href="#types-of-operating-systems">Types of operating systems</a></li>
+<li><a href="#loading-and-attaching-packages">Loading and attaching packages</a></li>
+<li><a href="#readwrite-files-in-utf-8">Read/write files in UTF-8</a></li>
+<li><a href="#convert-numbers-to-english-words">Convert numbers to English words</a></li>
+<li><a href="#check-reverse-dependencies-of-a-package">Check reverse dependencies of a package</a></li>
+<li><a href="#input-a-character-vector-into-the-rstudio-source-editor">Input a character vector into the RStudio source editor</a></li>
+<li><a href="#print-session-information">Print session information</a></li>
+</ul>
+</div>
+
+<p>After writing about 20 R packages, I found I had accumulated several utility functions that I used across different packages, so I decided to extract them into a separate package. Previously I had been using the evil triple-colon <code>:::</code> to access these internal utility functions. Now with <strong>xfun</strong>, these functions have been exported, and more importantly, documented. It should be better to use them under the sun instead of in the dark.</p>
+<p>This page shows examples of a subset of functions in this package. For a full list of functions, see the help page <code>help(package = 'xfun')</code>. The source package is available on Github: <a href="https://github.com/yihui/xfun" class="uri">https://github.com/yihui/xfun</a>.</p>
+<div id="no-more-partial-matching-for-lists" class="section level2">
+<h2>No more partial matching for lists!</h2>
+<p>I have been bitten many times by partial matching in lists, e.g., when I want <code>x$a</code> but the element <code>a</code> does not exist in the list <code>x</code>, it returns the value <code>x$abc</code> if <code>abc</code> exists in <code>x</code>. This is <a href="https://twitter.com/xieyihui/status/782462926862954496">very annoying to me</a>. The function <code>xfun::strict_list()</code> makes a list “strict” by disabling the partial matching of the <code>$</code> operator, e.g.,</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(xfun)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">(<span class="dt">z =</span> <span class="kw">strict_list</span>(<span class="dt">aaa =</span> <span class="st">&quot;I am aaa&quot;</span>, <span class="dt">b =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>))</a></code></pre></div>
+<pre><code>## $aaa
+## [1] &quot;I am aaa&quot;
+## 
+## $b
+## [1] 1 2 3 4 5</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">z<span class="op">$</span>a  <span class="co"># NULL (strict matching)</span></a></code></pre></div>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">z<span class="op">$</span>aaa  <span class="co"># I am aaa</span></a></code></pre></div>
+<pre><code>## [1] &quot;I am aaa&quot;</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">z<span class="op">$</span>b</a></code></pre></div>
+<pre><code>## [1] 1 2 3 4 5</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">z<span class="op">$</span>c =<span class="st"> &quot;you can create a new element&quot;</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">z2 =<span class="st"> </span><span class="kw">unclass</span>(z)  <span class="co"># a normal list</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">z2<span class="op">$</span>a  <span class="co"># partial matching</span></a></code></pre></div>
+<pre><code>## [1] &quot;I am aaa&quot;</code></pre>
+<p>Similarly, the default partial matching in <code>attr()</code> can be annoying, too. The function <code>xfun::attr()</code> is simply a shorthand of <code>attr(..., exact = TRUE)</code>.</p>
+<p>I want it, or I do not want. There is no “I probably want”.</p>
+</div>
+<div id="output-character-vectors-for-human-eyes" class="section level2">
+<h2>Output character vectors for human eyes</h2>
+<p>When R prints a character vector, your eyes may be distracted by the indices like <code>[1]</code>, double quotes, and escape sequences. To see a character vector in its “raw” form, you can use <code>cat(..., sep = '\n')</code>. The function <code>raw_string()</code> marks a character vector as “raw”, and the corresponding printing function will call <code>cat(sep = '\n')</code> to print the character vector to the console.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">library</span>(xfun)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">raw_string</span>(<span class="kw">head</span>(LETTERS))</a></code></pre></div>
+<pre><code>A
+B
+C
+D
+E
+F</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;a </span><span class="ch">\&quot;</span><span class="st">b</span><span class="ch">\&quot;</span><span class="st">&quot;</span>, <span class="st">&quot;hello</span><span class="ch">\t</span><span class="st">world!&quot;</span>))</a></code></pre></div>
+<pre><code>[1] &quot;a \&quot;b\&quot;&quot;       &quot;hello\tworld!&quot;</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">raw_string</span>(x)  <span class="co"># this is more likely to be what you want to see</span></a></code></pre></div>
+<pre><code>a &quot;b&quot;
+hello   world!</code></pre>
+</div>
+<div id="print-the-content-of-a-text-file" class="section level2">
+<h2>Print the content of a text file</h2>
+<p>I have used <code>paste(readLines('foo'), collapse = '\n')</code> many times before I decided to write a simple wrapper function <code>xfun::file_string()</code>. This function also makes use of <code>raw_string()</code>, so you can see the content of a file in the console as a side-effect, e.g.,</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">f =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;LICENSE&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;xfun&quot;</span>)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">xfun<span class="op">::</span><span class="kw">file_string</span>(f)</a></code></pre></div>
+<pre><code>YEAR: 2018
+COPYRIGHT HOLDER: Yihui Xie</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">as.character</span>(xfun<span class="op">::</span><span class="kw">file_string</span>(f))  <span class="co"># essentially a character string</span></a></code></pre></div>
+<pre><code>[1] &quot;YEAR: 2018\nCOPYRIGHT HOLDER: Yihui Xie&quot;</code></pre>
+</div>
+<div id="search-and-replace-strings-in-files" class="section level2">
+<h2>Search and replace strings in files</h2>
+<p>I can never remember how to properly use <code>grep</code> or <code>sed</code> to search and replace strings in multiple files. My favorite IDE, RStudio, has not provided this feature yet (you can only search and replace in the currently opened file). Therefore I did a quick and dirty implementation in R, including functions <code>gsub_files()</code>, <code>gsub_dir()</code>, and <code>gsub_ext()</code>, to search and replace strings in multiple files under a directory. Note that the files are assumed to be encoded in UTF-8. If you do not use UTF-8, we cannot be friends. Seriously.</p>
+<p>All functions are based on <code>gsub_file()</code>, which performs searching and replacing in a single file, e.g.,</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">library</span>(xfun)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">f =<span class="st"> </span><span class="kw">tempfile</span>()</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="kw">writeLines</span>(<span class="kw">c</span>(<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>), f)</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="kw">gsub_file</span>(f, <span class="st">&quot;world&quot;</span>, <span class="st">&quot;woRld&quot;</span>, <span class="dt">fixed =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="kw">file_string</span>(f)</a></code></pre></div>
+<pre><code>hello
+woRld</code></pre>
+<p>The function <code>gsub_dir()</code> is very flexible: you can limit the list of files by MIME types, or extensions. For example, if you want to do substitution in text files, you may use <code>gsub_dir(..., mimetype = '^text/')</code>.</p>
+<p><strong>WARNING</strong>: Before using these functions, make sure that you have backed up your files, or version control your files. The files will be modified in-place. If you do not back up or use version control, there is no chance to regret.</p>
+</div>
+<div id="manipulate-filename-extensions" class="section level2">
+<h2>Manipulate filename extensions</h2>
+<p>Functions <code>file_ext()</code> and <code>sans_ext()</code> are based on functins in <strong>tools</strong>. The function <code>with_ext()</code> adds or replaces extensions of filenames, and it is vectorized.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">library</span>(xfun)</a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">p =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;abc.doc&quot;</span>, <span class="st">&quot;def123.tex&quot;</span>, <span class="st">&quot;path/to/foo.Rmd&quot;</span>)</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="kw">file_ext</span>(p)</a></code></pre></div>
+<pre><code>## [1] &quot;doc&quot; &quot;tex&quot; &quot;Rmd&quot;</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">sans_ext</span>(p)</a></code></pre></div>
+<pre><code>## [1] &quot;abc&quot;         &quot;def123&quot;      &quot;path/to/foo&quot;</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">with_ext</span>(p, <span class="st">&quot;.txt&quot;</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;abc.txt&quot;         &quot;def123.txt&quot;      &quot;path/to/foo.txt&quot;</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">with_ext</span>(p, <span class="kw">c</span>(<span class="st">&quot;.ppt&quot;</span>, <span class="st">&quot;.sty&quot;</span>, <span class="st">&quot;.Rnw&quot;</span>))</a></code></pre></div>
+<pre><code>## [1] &quot;abc.ppt&quot;         &quot;def123.sty&quot;      &quot;path/to/foo.Rnw&quot;</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">with_ext</span>(p, <span class="st">&quot;html&quot;</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;abc.html&quot;         &quot;def123.html&quot;      &quot;path/to/foo.html&quot;</code></pre>
+</div>
+<div id="types-of-operating-systems" class="section level2">
+<h2>Types of operating systems</h2>
+<p>The series of functions <code>is_linux()</code>, <code>is_macos()</code>, <code>is_unix()</code>, and <code>is_windows()</code> test the types of the OS, using the information from <code>.Platform</code> and <code>Sys.info()</code>, e.g.,</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">is_macos</span>()</a></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">is_unix</span>()</a></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">is_linux</span>()</a></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">is_windows</span>()</a></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="loading-and-attaching-packages" class="section level2">
+<h2>Loading and attaching packages</h2>
+<p>Often times I see users attach a series of packages in the beginning of their scripts by repeating <code>library()</code> multiple times. This could be easily vectorized, and the function <code>xfun::pkg_attach()</code> does this job. For example,</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">library</span>(testit)</a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="kw">library</span>(parallel)</a>
+<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="kw">library</span>(tinytex)</a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="kw">library</span>(mime)</a></code></pre></div>
+<p>is equivalent to</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">pkg_attach</span>(<span class="kw">c</span>(<span class="st">&quot;testit&quot;</span>, <span class="st">&quot;parallel&quot;</span>, <span class="st">&quot;tinytex&quot;</span>, <span class="st">&quot;mime&quot;</span>))</a></code></pre></div>
+<p>I also see scripts that contain code to install a package if it is not available, e.g.,</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">requireNamespace</span>(<span class="st">&quot;tinytex&quot;</span>)) <span class="kw">install.packages</span>(<span class="st">&quot;tinytex&quot;</span>)</a>
+<a class="sourceLine" id="cb43-2" data-line-number="2"><span class="kw">library</span>(tinytex)</a></code></pre></div>
+<p>This could be done via</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">pkg_attach2</span>(<span class="st">&quot;tinytex&quot;</span>)</a></code></pre></div>
+<p>The function <code>pkg_attach2()</code> is a shorthand of <code>pkg_attach(..., install = TRUE)</code>, which means if a package is not available, install it. This function can also deal with multiple packages.</p>
+<p>The function <code>loadable()</code> tests if a package is loadable.</p>
+</div>
+<div id="readwrite-files-in-utf-8" class="section level2">
+<h2>Read/write files in UTF-8</h2>
+<p>Functions <code>read_utf8()</code> and <code>write_utf8()</code> can be used to read/write files in UTF-8. They are simple wrappers of <code>readLines()</code> and <code>writeLines()</code>.</p>
+</div>
+<div id="convert-numbers-to-english-words" class="section level2">
+<h2>Convert numbers to English words</h2>
+<p>The function <code>numbers_to_words()</code> (or <code>n2w()</code> for short) converts numbers to English words.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">n2w</span>(<span class="dv">0</span>, <span class="dt">cap =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;Zero&quot;</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="kw">n2w</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">121</span>, <span class="dv">11</span>), <span class="dt">and =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>##  [1] &quot;zero&quot;                       &quot;eleven&quot;                    
+##  [3] &quot;twenty-two&quot;                 &quot;thirty-three&quot;              
+##  [5] &quot;forty-four&quot;                 &quot;fifty-five&quot;                
+##  [7] &quot;sixty-six&quot;                  &quot;seventy-seven&quot;             
+##  [9] &quot;eighty-eight&quot;               &quot;ninety-nine&quot;               
+## [11] &quot;one hundred and ten&quot;        &quot;one hundred and twenty-one&quot;</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">n2w</span>(<span class="fl">1e+06</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;one million&quot;</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">n2w</span>(<span class="fl">1e+11</span> <span class="op">+</span><span class="st"> </span><span class="dv">12345678</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;one hundred billion, twelve million, three hundred forty-five thousand, six hundred seventy-eight&quot;</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="kw">n2w</span>(<span class="op">-</span><span class="dv">987654321</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;minus nine hundred eighty-seven million, six hundred fifty-four thousand, three hundred twenty-one&quot;</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw">n2w</span>(<span class="fl">1e+15</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;nine hundred ninety-nine trillion, nine hundred ninety-nine billion, nine hundred ninety-nine million, nine hundred ninety-nine thousand, nine hundred ninety-nine&quot;</code></pre>
+</div>
+<div id="check-reverse-dependencies-of-a-package" class="section level2">
+<h2>Check reverse dependencies of a package</h2>
+<p>Running <code>R CMD check</code> on the reverse dependencies of <strong>knitr</strong> and <strong>rmarkdown</strong> is my least favorite thing in developing R packages, because the numbers of their reverse dependencies are huge. The function <code>rev_check()</code> reflects some of my past experience in this process. I think I have automated it as much as possible, and made it as easy as possible to discover possible new problems introduced by the current version of the package (compared to the CRAN version). Finally I can just sit back and let it run.</p>
+</div>
+<div id="input-a-character-vector-into-the-rstudio-source-editor" class="section level2">
+<h2>Input a character vector into the RStudio source editor</h2>
+<p>The function <code>rstudio_type()</code> inputs characters in the RStudio source editor as if they were typed by a human. I came up with the idea when preparing my talk for rstudio::conf 2018 (<a href="https://yihui.name/en/2018/03/blogdown-video-rstudio-conf/">see this post</a> for more details).</p>
+</div>
+<div id="print-session-information" class="section level2">
+<h2>Print session information</h2>
+<p>Since I have never been fully satisfied by the output of <code>sessionInfo()</code>, I tweaked it to make it more useful in my use cases. For example, it is rarely useful to print out the names of base R packages, or information about the matrix products / BLAS / LAPACK. Often times I want additional information in the session information, such as the Pandoc version when <strong>rmarkdown</strong> is used. The function <code>session_info()</code> tweaks the output of <code>sessionInfo()</code>, and makes it possible for other packages to append information in the output of <code>session_info()</code>.</p>
+<p>You can choose to print out the versions of only the packages you specify, e.g.,</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">xfun<span class="op">::</span><span class="kw">session_info</span>(<span class="kw">c</span>(<span class="st">&quot;xfun&quot;</span>, <span class="st">&quot;rmarkdown&quot;</span>, <span class="st">&quot;knitr&quot;</span>, <span class="st">&quot;tinytex&quot;</span>), <span class="dt">dependencies =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<pre><code>## R version 3.5.3 (2019-03-11)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.4
+## 
+## Locale: C / en_US.UTF-8 / en_US.UTF-8 / C / en_US.UTF-8 / en_US.UTF-8
+## 
+## Package version:
+##   knitr_1.22     rmarkdown_1.12 tinytex_0.11   xfun_0.6      
+## 
+## Pandoc version: 2.3.1</code></pre>
+</div>
+
+<script type="text/javascript">
+window.onload = function() {
+  var i, fig = 1, caps = document.getElementsByClassName('caption');
+  for (i = 0; i < caps.length; i++) {
+    var cap = caps[i];
+    if (cap.parentElement.className !== 'figure' || cap.nodeName !== 'P')
+      continue;
+    cap.innerHTML = '<span>Figure ' + fig + ':</span> ' + cap.innerHTML;
+    fig++;
+  }
+  fig = 1;
+  caps = document.getElementsByTagName('caption');
+  for (i = 0; i < caps.length; i++) {
+    var cap = caps[i];
+    if (cap.parentElement.nodeName !== 'TABLE') continue;
+    cap.innerHTML = '<span>Table ' + fig + ':</span> ' + cap.innerHTML;
+    fig++;
+  }
+}
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

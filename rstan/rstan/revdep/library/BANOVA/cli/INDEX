@@ -1,0 +1,21 @@
+ansi-styles             ANSI colored text
+ansi_hide_cursor        Hide/show cursor in a terminal
+cat_line                'cat()' helpers
+cli_sitrep              cli situation report
+combine_ansi_styles     Combine two or more ANSI styles
+console_width           Determine the width of the console
+demo_spinners           Show a demo of some (by default all) spinners
+get_spinner             Character vector to put a spinner on the screen
+is_ansi_tty             Detect if a stream support ANSI escape
+                        characters
+is_dynamic_tty          Detect whether a stream supports '\r' (Carriage
+                        return)
+is_utf8_output          Whether cli is emitting UTF-8 characters
+list_border_styles      Draw a banner-like box in the console
+list_spinners           List all available spinners
+make_ansi_style         Create a new ANSI style
+make_spinner            Create a spinner
+rule                    Make a rule with one or two text labels
+symbol                  Various handy symbols to use in a command line
+                        UI
+tree                    Draw a tree

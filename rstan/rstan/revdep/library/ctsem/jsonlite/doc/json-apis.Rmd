@@ -1,0 +1,295 @@
+---
+title: "Fetching JSON data from REST APIs"
+date: "2018-12-05"
+output:
+  html_document
+vignette: >
+  %\VignetteIndexEntry{Fetching JSON data from REST APIs}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+
+
+This section lists some examples of public HTTP APIs that publish data in JSON format. These are great to get a sense of the complex structures that are encountered in real world JSON data. All services are free, but some require registration/authentication. Each example returns lots of data, therefore not all output is printed in this document.
+
+
+```r
+library(jsonlite)
+```
+
+## Github
+
+Github is an online code repository and has APIs to get live data on almost all activity. Below some examples from a well known R package and author:
+
+
+```r
+hadley_orgs <- fromJSON("https://api.github.com/users/hadley/orgs")
+hadley_repos <- fromJSON("https://api.github.com/users/hadley/repos")
+gg_commits <- fromJSON("https://api.github.com/repos/hadley/ggplot2/commits")
+gg_issues <- fromJSON("https://api.github.com/repos/hadley/ggplot2/issues")
+
+#latest issues
+paste(format(gg_issues$user$login), ":", gg_issues$title)
+```
+
+```
+ [1] "sebneus         : geom_raster plots differently to geom_tile"                                                         
+ [2] "clauswilke      : fix nudging with multiple values. closes #2977"                                                     
+ [3] "slowkow         : text is misplaced with position_dodge()"                                                            
+ [4] "wongjingping    : Allow ggsave to create directory if path doesn't exist"                                             
+ [5] "llrs            : Updating a theme to remove panel.grid.major.x"                                                      
+ [6] "IndrajeetPatil  : feature request: `layer_data` returns a tibble"                                                     
+ [7] "danielsjf       : Invalid filename error with ggsave after saving in a folder with a percentage sign (%)"             
+ [8] "thomasp85       : No plyr"                                                                                            
+ [9] "PaulLantos      : geom_sf layers do not align"                                                                        
+[10] "dpseidel        : Fix tick misalignment with secondary axes (#2978)"                                                  
+[11] "blueskypie      : possible bug in resolution() causes wrong height and width in geom_jitter()"                        
+[12] "jarauh          : Documentation of geom_bar: aesthetics \"weight\" is not mentioned"                                  
+[13] "clauswilke      : coord_sf() doesn't adjust line size for graticule lines"                                            
+[14] "anthonytw       : Secondary axis doesn't show axis ticks or labels with coord_trans"                                  
+[15] "lionel-         : Should we compact facet grid specs?"                                                                
+[16] "clauswilke      : coord_sf() drops axis labels if graticules don't extend all the way to the plot boundary"           
+[17] "ptoche          : breaks = NULL drops axis altogether"                                                                
+[18] "mbertolacci     : Ticks misaligned for sec_axis with some scale transformations and data in 3.1.0"                    
+[19] "steffilazerte   : Multiple nudge arguments results in warning"                                                        
+[20] "ptoche          : scale_x_discrete with numeric drops axis with no warning"                                           
+[21] "danielsjf       : geom_curve with curvature aesthetic"                                                                
+[22] "felipegerard    : Reference lines break facet_wrap when facets are the product of a function"                         
+[23] "hadley          : Update economics data"                                                                              
+[24] "hadley          : Ensure core developers are listed in chronological order"                                           
+[25] "RichardJActon   : Warn when a supplied mapping is going to be overwritten by geom_hline / vline / abline"             
+[26] "mkoohafkan      : using `stat_ydensity` with `geom = \"density\"`---scaling the density line similar to `geom_violin`"
+[27] "earthcli        : strange behavior with the margin of legend.text for R3.5"                                           
+[28] "rharfoot        : Vertical line and crossbar jitter being applied differently."                                       
+[29] "yutannihilation : Use .ignore_empty=\"all\" for enquos()"                                                             
+[30] "pank            : theme: Add different ticks length for different axes"                                               
+```
+
+## CitiBike NYC
+
+A single public API that shows location, status and current availability for all stations in the New York City bike sharing imitative.
+
+
+```r
+citibike <- fromJSON("http://citibikenyc.com/stations/json")
+stations <- citibike$stationBeanList
+colnames(stations)
+```
+
+```
+ [1] "id"                    "stationName"          
+ [3] "availableDocks"        "totalDocks"           
+ [5] "latitude"              "longitude"            
+ [7] "statusValue"           "statusKey"            
+ [9] "availableBikes"        "stAddress1"           
+[11] "stAddress2"            "city"                 
+[13] "postalCode"            "location"             
+[15] "altitude"              "testStation"          
+[17] "lastCommunicationTime" "landMark"             
+```
+
+```r
+nrow(stations)
+```
+
+```
+[1] 813
+```
+
+## Ergast
+
+The Ergast Developer API is an experimental web service which provides a historical record of motor racing data for non-commercial purposes.
+
+
+```r
+res <- fromJSON('http://ergast.com/api/f1/2004/1/results.json')
+drivers <- res$MRData$RaceTable$Races$Results[[1]]$Driver
+colnames(drivers)
+```
+
+```
+[1] "driverId"        "code"            "url"             "givenName"      
+[5] "familyName"      "dateOfBirth"     "nationality"     "permanentNumber"
+```
+
+```r
+drivers[1:10, c("givenName", "familyName", "code", "nationality")]
+```
+
+```
+   givenName    familyName code nationality
+1    Michael    Schumacher  MSC      German
+2     Rubens   Barrichello  BAR   Brazilian
+3   Fernando        Alonso  ALO     Spanish
+4       Ralf    Schumacher  SCH      German
+5       Juan Pablo Montoya  MON   Colombian
+6     Jenson        Button  BUT     British
+7      Jarno        Trulli  TRU     Italian
+8      David     Coulthard  COU     British
+9     Takuma          Sato  SAT    Japanese
+10 Giancarlo    Fisichella  FIS     Italian
+```
+
+
+## ProPublica
+
+Below an example from the [ProPublica Nonprofit Explorer API](https://projects.propublica.org/nonprofits/api) where we retrieve the first 10 pages of tax-exempt organizations in the USA, ordered by revenue. The `rbind_pages` function is used to combine the pages into a single data frame.
+
+
+
+```r
+#store all pages in a list first
+baseurl <- "https://projects.propublica.org/nonprofits/api/v2/search.json?order=revenue&sort_order=desc"
+pages <- list()
+for(i in 0:10){
+  mydata <- fromJSON(paste0(baseurl, "&page=", i), flatten=TRUE)
+  message("Retrieving page ", i)
+  pages[[i+1]] <- mydata$organizations
+}
+
+#combine all into one
+organizations <- rbind_pages(pages)
+
+#check output
+nrow(organizations)
+```
+
+```
+[1] 1100
+```
+
+```r
+organizations[1:10, c("name", "city", "strein")]
+```
+
+```
+                           name         city     strein
+1                   00295 LOCAL        MEDIA 23-6420101
+2               007 BENEFIT LTD       RESTON 47-4146355
+3                   00736 LOCAL     BARTLETT 42-1693318
+4               03XX FOUNDATION       SANTEE 38-3915658
+5  05-THE FILSON CLUB ET AL TUW PHILADELPHIA 61-6125263
+6     06 UNITED SOCCER CLUB INC    REGO PARK 35-2518301
+7                 08 CHURCH INC  BAKERSFIELD 27-3924877
+8                1 1 FOUNDATION    PLACENTIA 47-4335155
+9                     1 BOX LLC     SOMERSET 81-3408531
+10       1 FAMILY 2GETHER 4EVER   PLAINFIELD 81-1287436
+```
+
+
+## New York Times
+
+The New York Times has several APIs as part of the NYT developer network. These interface to data from various departments, such as news articles, book reviews, real estate, etc. Registration is required (but free) and a key can be obtained at [here](http://developer.nytimes.com/signup). The code below includes some example keys for illustration purposes.
+
+
+```r
+#search for articles
+article_key <- "&api-key=b75da00e12d54774a2d362adddcc9bef"
+url <- "http://api.nytimes.com/svc/search/v2/articlesearch.json?q=obamacare+socialism"
+req <- fromJSON(paste0(url, article_key))
+articles <- req$response$docs
+colnames(articles)
+```
+
+```
+ [1] "web_url"          "snippet"          "print_page"      
+ [4] "blog"             "source"           "multimedia"      
+ [7] "headline"         "keywords"         "pub_date"        
+[10] "document_type"    "news_desk"        "byline"          
+[13] "type_of_material" "_id"              "word_count"      
+[16] "score"            "uri"              "section_name"    
+```
+
+```r
+#search for best sellers
+books_key <- "&api-key=76363c9e70bc401bac1e6ad88b13bd1d"
+url <- "http://api.nytimes.com/svc/books/v2/lists/overview.json?published_date=2013-01-01"
+req <- fromJSON(paste0(url, books_key))
+bestsellers <- req$results$list
+category1 <- bestsellers[[1, "books"]]
+subset(category1, select = c("author", "title", "publisher"))
+```
+
+```
+           author                title                  publisher
+1   Gillian Flynn            GONE GIRL           Crown Publishing
+2    John Grisham        THE RACKETEER Knopf Doubleday Publishing
+3       E L James FIFTY SHADES OF GREY Knopf Doubleday Publishing
+4 Nicholas Sparks           SAFE HAVEN   Grand Central Publishing
+5  David Baldacci        THE FORGOTTEN   Grand Central Publishing
+```
+
+```r
+#movie reviews
+movie_key <- "&api-key=b75da00e12d54774a2d362adddcc9bef"
+url <- "http://api.nytimes.com/svc/movies/v2/reviews/dvd-picks.json?order=by-date"
+req <- fromJSON(paste0(url, movie_key))
+reviews <- req$results
+colnames(reviews)
+```
+
+```
+ [1] "display_title"    "mpaa_rating"      "critics_pick"    
+ [4] "byline"           "headline"         "summary_short"   
+ [7] "publication_date" "opening_date"     "date_updated"    
+[10] "link"             "multimedia"      
+```
+
+```r
+reviews[1:5, c("display_title", "byline", "mpaa_rating")]
+```
+
+```
+       display_title        byline mpaa_rating
+1        Ben Is Back    A.O. SCOTT           R
+2              Tyrel   BILGE EBIRI            
+3        The Charmer WESLEY MORRIS            
+4 Head Full of Honey   BILGE EBIRI       PG-13
+5   Happy as Lazzaro    A.O. SCOTT       PG-13
+```
+
+## Twitter
+
+The twitter API requires OAuth2 authentication. Some example code:
+
+
+```r
+#Create your own appication key at https://dev.twitter.com/apps
+consumer_key = "EZRy5JzOH2QQmVAe9B4j2w";
+consumer_secret = "OIDC4MdfZJ82nbwpZfoUO4WOLTYjoRhpHRAWj6JMec";
+
+#Use basic auth
+secret <- jsonlite::base64_enc(paste(consumer_key, consumer_secret, sep = ":"))
+req <- httr::POST("https://api.twitter.com/oauth2/token",
+  httr::add_headers(
+    "Authorization" = paste("Basic", gsub("\n", "", secret)),
+    "Content-Type" = "application/x-www-form-urlencoded;charset=UTF-8"
+  ),
+  body = "grant_type=client_credentials"
+);
+
+#Extract the access token
+httr::stop_for_status(req, "authenticate with twitter")
+token <- paste("Bearer", httr::content(req)$access_token)
+
+#Actual API call
+url <- "https://api.twitter.com/1.1/statuses/user_timeline.json?count=10&screen_name=Rbloggers"
+req <- httr::GET(url, httr::add_headers(Authorization = token))
+json <- httr::content(req, as = "text")
+tweets <- fromJSON(json)
+substring(tweets$text, 1, 100)
+```
+
+```
+ [1] "Trust in ML models. Slides from TWiML &amp; AI EMEA Meetup + iX Articles https://t.co/XUVyu5D5gW #rs"
+ [2] "Solving #AdventOfCode day 3 and 4 with R https://t.co/lvZlUqMZhS #rstats #DataScience"               
+ [3] "Automated Dashboard with various correlation visualizations in R https://t.co/hC36eeFQLR #rstats #Da"
+ [4] "New R job: Adjunct Professor https://t.co/2K75pHzPey #rstats #DataScience #jobs"                     
+ [5] "ggQC | ggplot Quality Control Charts – New Release https://t.co/ctfhMzMf3z #rstats #DataScience"     
+ [6] "A Tidy Text Analysis of R Weekly Posts https://t.co/EAleVu4tjo #rstats #DataScience"                 
+ [7] "Day 05 – little helper get_network https://t.co/whv74exvQS #rstats #DataScience"                     
+ [8] "Community Call – Governance strategies for open source research software projects https://t.co/tkBpz"
+ [9] "NBA Team Twitter Analysis Flexdashboard https://t.co/uSL2myAK0W #rstats #DataScience"                
+[10] "Bayesian Nonparametric Models in NIMBLE, Part 1: Density Estimation https://t.co/GZS0w3MwAI #rstats "
+```
