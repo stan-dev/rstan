@@ -969,7 +969,9 @@ stan_fit::stan_fit(Rcpp::XPtr<stan::model::model_base> model, int seed) :
     calc_starts(dims_oi_, starts_oi_);
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
   }
-  
+
+stan_fit::~stan_fit() {}
+
   /**
    * Transform the parameters from its defined support
    * to unconstrained space
