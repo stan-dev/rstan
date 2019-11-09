@@ -379,7 +379,8 @@ exposeClass("sparselm_stan",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
       file = tf,
       Rfile = FALSE)
-Sys.setenv(PKG_CPPFLAGS = paste0("-D_REENTRANT -DSTAN_THREADS -I",
+Sys.setenv(PKG_CPPFLAGS = paste0("-D_REENTRANT -DSTAN_THREADS ",
+                                 RcppParallel::CxxFlags(), " -I",
                                  system.file("include", "src", 
                                              package = "StanHeaders", mustWork = TRUE)))
 sourceCpp(tf)
