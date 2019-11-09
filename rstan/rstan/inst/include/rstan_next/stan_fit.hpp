@@ -24,9 +24,6 @@ private:
   unsigned int num_params2_;                         // total number of POI's.
   std::vector<std::string> fnames_oi_;               // flatnames of
                                                      // interest
-
-  stan::math::ChainableStack ad_stack_;
-
 private:
   /**
    * Tell if a parameter name is an element of an array parameter.
