@@ -5,7 +5,7 @@ TBB_INCLUDE = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "ca
 CXX_STD = CXX14
 CXX14STD = -std=c++1y
 
-PKG_CPPFLAGS = -I"../inst/include" -I"." -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -D_REENTRANT -DSTAN_THREADS
+PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"." -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -D_REENTRANT -DSTAN_THREADS
 PKG_CPPFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()")
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
