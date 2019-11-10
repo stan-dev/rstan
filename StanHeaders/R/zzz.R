@@ -1,4 +1,4 @@
-.onAttach(libname, pkgname) {
+.onAttach <- function(libname, pkgname) {
   pkg_cppflags <- Sys.getenv("PKG_CPPFLAGS")
   plugin <- system.file("include", "stan", "math", "prim", "mat", "fun", "Eigen.hpp",
                         package = "StanHeaders", mustWork = TRUE)
@@ -6,7 +6,7 @@
   return(invisible(NULL))  
 }
 
-.onDetach(libpath) {
+.onDetach <- function(libpath) {
   pkg_cppflags <- Sys.getenv("PKG_CPPFLAGS")
   plugin <- system.file("include", "stan", "math", "prim", "mat", "fun", "Eigen.hpp",
                         package = "StanHeaders", mustWork = TRUE)
