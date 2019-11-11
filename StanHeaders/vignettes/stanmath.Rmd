@@ -84,7 +84,7 @@ using the R function `optim` below.
 #include <stan/math/mix/mat/functor/hessian.hpp> // then stuff from mix/ must come next
 #include <stan/math.hpp>                         // finally pull in everything from rev/ & prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
@@ -190,7 +190,7 @@ Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(StanHeaders_pkg_libs)), "-lStan
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
@@ -289,7 +289,7 @@ and running it in parallel via `map_rect`.
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
