@@ -30,18 +30,18 @@ LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 4.4.4)
 in the DESCRIPTION file of another package and put something like
 ```
 CXX_STD = CXX14
-PKG_CPPFLAGS = -D_REENTRANT -DSTAN_THREADS `"${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()"`
+PKG_CXXFLAGS = -D_REENTRANT -DSTAN_THREADS `"${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()"`
 PKG_LIBS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()"`
 ```
 in the src/Makevars and src/Makevars.win files. If, in addition, the other package needs to utilize 
 the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is 
-also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CPPFLAGS`
+also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CXXFLAGS`
 in the src/Makevars and src/Makevars.win files with something like
 ```
 STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
   -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" \
   -e "message()" | grep "StanHeaders")
-PKG_CPPFLAGS += -I"$(STANHEADERS_SRC)"
+PKG_CXXFLAGS += -I"$(STANHEADERS_SRC)"
 ```
 and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file. Finally,
 if integrating systems of stiff Ordinary Differential Equations, then you need to link to the
@@ -66,7 +66,7 @@ equal to a vector of zeros. The `stan::math::algebra_solver` function can solve 
 autodifferentiation to obtain the Jacobian, which we know to be the identity matrix in this case.
 
 ```{r}
-Sys.setenv(PKG_CPPFLAGS = paste("-D_REENTRANT -DSTAN_THREADS", 
+Sys.setenv(PKG_CXXFLAGS = paste("-D_REENTRANT -DSTAN_THREADS", 
                                 RcppParallel::CxxFlags(), "-I", 
                                 system.file("include", package = "RcppParallel", mustWork = TRUE)))
 tbb_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
@@ -381,7 +381,7 @@ exposeClass("sparselm_stan",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
       file = tf,
       Rfile = FALSE)
-Sys.setenv(PKG_CPPFLAGS = paste0(Sys.getenv("PKG_CPPFLAGS"), " -I",
+Sys.setenv(PKG_CXXFLAGS = paste0(Sys.getenv("PKG_CXXFLAGS"), " -I",
                                  system.file("include", "src", 
                                              package = "StanHeaders", mustWork = TRUE)))
 sourceCpp(tf)
