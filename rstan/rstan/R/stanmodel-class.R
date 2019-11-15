@@ -147,7 +147,8 @@ setMethod("vb", "stanmodel",
             }
             cxxfun <- grab_cxxfun(object@dso)
             stan_fit_cpp_module <- object@mk_cppmodule(object)
-            if (test_221(object@model_cpp$model_cppcode)) {
+            if (test_221(object@model_cpp$model_cppcode) &&
+                stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
               if (is(mod, "try-error")) {
                 message('failed to create the sampler; sampling not done')
@@ -386,7 +387,8 @@ setMethod("optimizing", "stanmodel",
             cxxfun <- grab_cxxfun(object@dso)
             sfmiscenv <- new.env(parent = emptyenv())
             stan_fit_cpp_module <- object@mk_cppmodule(object)
-            if (test_221(object@model_cpp$model_cppcode)) {
+            if (test_221(object@model_cpp$model_cppcode) &&
+                stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
               if (is(mod, "try-error")) {
                 message('failed to create the sampler; sampling not done')
@@ -556,7 +558,8 @@ setMethod("sampling", "stanmodel",
             sfmiscenv <- new.env(parent = emptyenv())
             stan_fit_cpp_module <- object@mk_cppmodule(object)
             cxxfun <- grab_cxxfun(object@dso)
-            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+            if (test_221(object@model_cpp$model_cppcode) &&
+                stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
               mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
               if (is(mod, "try-error")) {
                 message('failed to create the sampler; sampling not done')
