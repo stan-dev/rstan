@@ -1060,11 +1060,14 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
     }
     std::vector<int> par_i(model_->num_params_i(), 0);
     if (!gradient) {
+      double lp;
       if (jacobian_adjust_transform) {
-        return model_->log_prob(upar, par_i, &rstan::io::rcout);
+        lp = model_->log_prob(upar, par_i, &rstan::io::rcout);
       } else {
-        return model_->log_prob_propto(upar, par_i, &rstan::io::rcout);
+        lp = model_->log_prob_propto(upar, par_i, &rstan::io::rcout);
       }
+      Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
+      return lp2;
     }
     
     std::vector<double> grad;
