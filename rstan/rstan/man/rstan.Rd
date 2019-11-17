@@ -30,7 +30,7 @@
   
 }
 \section{Other \R packages from the Stan Development Team}{
-  Various related \R packages are also available from the Stan Development Team: 
+  Various related \R packages are also available from the Stan Development Team including these and more:
   \tabular{llll}{
   \strong{Package} \tab \strong{Description} \tab \strong{Doc} \tab \strong{Website} \cr
   \pkg{bayesplot} 
