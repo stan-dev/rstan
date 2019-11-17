@@ -7,7 +7,7 @@ Date: 2019-10-24
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
-             person("Sebastian", "Weber", email = "sdw.post@gmail.com", role = "aut"),
+             person("Sebastian", "Weber", email = "sdw.post@waebers.de", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
              person("Krzysztof", "Sakrejda", role = "ctb"),
              person("Modrak", "Martin", role = "ctb"),
