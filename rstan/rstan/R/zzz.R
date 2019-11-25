@@ -27,7 +27,8 @@ tbbmalloc_proxyDllInfo <- NULL
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
   ##Rcpp::loadModule("class_model_base", what = TRUE)
-  # Rcpp::loadModule("class_stan_fit", what = TRUE)
+  if (!("package:DrBats" %in% search()))
+    Rcpp::loadModule("class_stan_fit", what = TRUE)
   ## the tbbmalloc_proxy is not loaded by RcppParallel which is linked
   ## in by default on macOS
   if(Sys.info()["sysname"] == "Darwin") {

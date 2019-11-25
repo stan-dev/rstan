@@ -29,7 +29,6 @@ setGeneric(name = 'optimizing',
                if (interactive()) stop(msg, " Run in batch mode to test.")
                else message(msg)
              }
-             Rcpp::loadModule("class_stan_fit", what = TRUE)
              standardGeneric("optimizing")
 })
 
@@ -41,15 +40,11 @@ setGeneric(name = 'vb',
                if (interactive()) stop(msg, " Run in batch mode to test.")
                else message(msg)
              }
-             Rcpp::loadModule("class_stan_fit", what = TRUE)
              standardGeneric("vb")
 })
 
 setGeneric(name = "sampling",
-           def = function(object, ...) {
-             Rcpp::loadModule("class_stan_fit", what = TRUE)
-             standardGeneric("sampling")}
-           )
+           def = function(object, ...) { standardGeneric("sampling")})
 
 setMethod('get_stancode', signature = "stanmodel",
           function(object, print = FALSE) {
