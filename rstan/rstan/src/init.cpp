@@ -33,7 +33,7 @@
 
 using namespace Rcpp;
 
-//RcppExport SEXP _rcpp_module_boot_class_model_base();
+RcppExport SEXP _rcpp_module_boot_class_model_base();
 RcppExport SEXP _rcpp_module_boot_class_stan_fit();
 
 #ifdef __cplusplus
@@ -77,7 +77,7 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(extract_sparse_components, 1),
   CALLDEF(get_rng_, 1),
   CALLDEF(get_stream_, 0),
-  //  {"_rcpp_module_boot_class_model_base", (DL_FUNC) &_rcpp_module_boot_class_model_base, 0},
+  {"_rcpp_module_boot_class_model_base", (DL_FUNC) &_rcpp_module_boot_class_model_base, 0},
   {"_rcpp_module_boot_class_stan_fit", (DL_FUNC) &_rcpp_module_boot_class_stan_fit, 0},
   {NULL, NULL, 0}
 };

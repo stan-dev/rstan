@@ -26,7 +26,7 @@ tbbmalloc_proxyDllInfo <- NULL
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
-  ##Rcpp::loadModule("class_model_base", what = TRUE)
+  Rcpp::loadModule("class_model_base", what = TRUE)
   if (!("package:DrBats" %in% search()))
     Rcpp::loadModule("class_stan_fit", what = TRUE)
   ## the tbbmalloc_proxy is not loaded by RcppParallel which is linked
