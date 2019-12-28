@@ -44,8 +44,9 @@ class stan_fit_proxy : public stan_fit_base {
     return fit_.grad_log_prob(upar, jacobian_adjust_transform);
   }
   
-  int num_pars_unconstrained() {
-    return fit_.num_pars_unconstrained();
+  double num_pars_unconstrained() {
+    auto npu = fit_.num_pars_unconstrained();
+    return static_cast<double>(npu);
   }
 
   Rcpp::List call_sampler(Rcpp::List args_) {

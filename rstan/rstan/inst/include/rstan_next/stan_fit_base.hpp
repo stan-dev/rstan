@@ -24,7 +24,7 @@ class stan_fit_base {
                                        bool gradient) = 0;
   virtual Rcpp::NumericVector grad_log_prob(std::vector<double> upar,
                                             bool jacobian_adjust_transform) = 0;
-  virtual int num_pars_unconstrained() = 0;
+  virtual double num_pars_unconstrained() = 0;
   virtual Rcpp::List call_sampler(Rcpp::List args_) = 0;
   virtual Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws,
                                     unsigned int seed) = 0;

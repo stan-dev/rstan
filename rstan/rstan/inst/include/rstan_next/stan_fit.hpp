@@ -22,8 +22,8 @@ private:
   std::vector<size_t> names_oi_tidx_;                // total indexes of names2
   std::vector<unsigned int> starts_oi_;              // do not know what this is
   unsigned int num_params2_;                         // total number of POI's.
-  std::vector<std::string> fnames_oi_;               // flatnames of
-                                                     // interest
+  std::vector<std::string> fnames_oi_;               // flatnames of interest
+
 private:
   /**
    * Tell if a parameter name is an element of an array parameter.
@@ -110,7 +110,7 @@ public:
   /**
    * Return the number of unconstrained parameters
    */
-  int num_pars_unconstrained();
+  double num_pars_unconstrained();
 
   /**
    * Drive the sampler / optimizer / approximator
