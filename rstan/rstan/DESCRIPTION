@@ -46,13 +46,13 @@ Depends:
     ggplot2 (>= 2.0.0)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
-    BH (>= 1.69.0),
+    BH (>= 1.72.0-2),
     StanHeaders (>= 2.19.0),
     RcppParallel
 Suggests:
     RUnit,
     RcppEigen (>= 0.3.3.3.0),
-    BH (>= 1.66),
+    BH (>= 1.72.0-2),
     parallel,
     KernSmooth,
     shinystan (>= 2.3.0),
