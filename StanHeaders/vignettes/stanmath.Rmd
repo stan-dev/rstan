@@ -30,8 +30,10 @@ LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 4.4.4)
 in the DESCRIPTION file of another package and put something like
 ```
 CXX_STD = CXX14
-PKG_CXXFLAGS = -D_REENTRANT -DSTAN_THREADS `"${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()"`
-PKG_LIBS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()"`
+PKG_CXXFLAGS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()"` \
+               `"${R_HOME}/bin/Rscript" -e "StanHeaders::CxxFlags()"`
+PKG_LIBS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()"` \
+           `"${R_HOME}/bin/Rscript" -e "StanHeaders::LdFlags()"`
 ```
 in the src/Makevars and src/Makevars.win files. If, in addition, the other package needs to utilize 
 the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is 
@@ -43,9 +45,7 @@ STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
   -e "message()" | grep "StanHeaders")
 PKG_CXXFLAGS += -I"$(STANHEADERS_SRC)"
 ```
-and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file. Finally,
-if integrating systems of stiff Ordinary Differential Equations, then you need to link to the
-shared library of StanHeaders as is shown below.
+and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file.
 
 # Using Higher-Order Functions in the **StanHeaders** Package
 
@@ -66,11 +66,9 @@ equal to a vector of zeros. The `stan::math::algebra_solver` function can solve 
 autodifferentiation to obtain the Jacobian, which we know to be the identity matrix in this case.
 
 ```{r}
-Sys.setenv(PKG_CXXFLAGS = paste("-D_REENTRANT -DSTAN_THREADS", 
-                                RcppParallel::CxxFlags(), "-I", 
-                                system.file("include", package = "RcppParallel", mustWork = TRUE)))
-tbb_pkg_libs <- system.file("lib", .Platform$r_arch, package = "RcppParallel")
-Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(tbb_pkg_libs)), "-ltbb"))
+Sys.setenv(PKG_CXXFLAGS = paste(StanHeaders::CxxFlags(as_character = TRUE), 
+                                "-I", system.file("include", package = "RcppParallel", mustWork = TRUE)))
+Sys.setenv(PKG_LIBS = StanHeaders::LdFlags(as_character = TRUE))
 ```
 
 Here is C++ code that does all of the above, except for the part of finding the optimum, which is done
@@ -173,16 +171,7 @@ solution(a = 1:3, guess = rnorm(3))
 
 The Stan Math library can do one-dimensional numerical integration and can solve stiff
 and non-stiff systems of differential equations, such as the harmonic oscillator example
-below. Solving stiff systems utilizes the CVODES package, which is included in **StanHeaders**, 
-but requires linking against its shared library with the following R code.
-
-```{r}
-StanHeaders_pkg_libs <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), 
-                                    .Platform$r_arch, package = "StanHeaders")
-Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(StanHeaders_pkg_libs)), "-lStanHeaders",
-                            paste0("-L", shQuote(tbb_pkg_libs)), "-ltbb"))
-```
-
+below. Solving stiff systems utilizes the CVODES library, which is included in **StanHeaders**.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
