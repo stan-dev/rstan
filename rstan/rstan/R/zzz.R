@@ -19,11 +19,22 @@ rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
 RNG <- 0
 OUT <- 0
 
+tbbmalloc_proxyDllInfo <- NULL
+
 .onLoad <- function(libname, pkgname) {
-  assignInMyNamespace("rstan_load_time", value = Sys.time())  
+  assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
+  Rcpp::loadModule("class_model_base", what = TRUE)
+  if (!("package:DrBats" %in% search()))
+    Rcpp::loadModule("class_stan_fit", what = TRUE)
+  ## the tbbmalloc_proxy is not loaded by RcppParallel which is linked
+  ## in by default on macOS
+  if(Sys.info()["sysname"] == "Darwin") {
+      tbbmalloc_proxy  <- system.file("lib/libtbbmalloc_proxy.dylib", package="RcppParallel", mustWork=FALSE)
+      tbbmalloc_proxyDllInfo <<- dyn.load(tbbmalloc_proxy, local = FALSE, now = TRUE)
+  }
 }
 
 .onAttach <- function(...) {
@@ -37,6 +48,17 @@ OUT <- 0
                         "rstan_options(auto_write = TRUE)")
   if (.Platform$OS.type == "windows")
     packageStartupMessage("For improved execution time, we recommend calling\n",
-                          "Sys.setenv(LOCAL_CPPFLAGS = '-march=native')\n",
-                          "although this causes Stan to throw an error on a few processors.")
+                          "Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')\n",
+                          "although this causes Stan problems on a few processors.")
+}
+
+.onUnload <- function(libpath) {
+   # unload the package library
+   library.dynam.unload("rstan", libpath)
+
+   # unload tbbmalloc_proxy if we loaded it
+   if (!is.null(tbbmalloc_proxyDllInfo)) {
+       dyn.unload(tbbmalloc_proxyDllInfo[["path"]])
+       tbbmalloc_proxyDllInfo <<- NULL
+   }
 }

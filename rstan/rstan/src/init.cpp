@@ -22,11 +22,19 @@
  * But it seems not to work as it is supposed to be in that
  * they are still working if not registered.
  */
+#include <RcppEigen.h>
+#include <Rcpp.h>
 #include <R.h>
 #include <Rinternals.h>
 #include <R_ext/Rdynload.h>
 #include <R_ext/Visibility.h>
 #include <Rversion.h>
+
+
+using namespace Rcpp;
+
+RcppExport SEXP _rcpp_module_boot_class_model_base();
+RcppExport SEXP _rcpp_module_boot_class_stan_fit();
 
 #ifdef __cplusplus
 extern "C"  {
@@ -51,6 +59,7 @@ SEXP get_stream_();
 }
 #endif
 
+
 #define CALLDEF(name, n)  {#name, (DL_FUNC) &name, n}
 
 static const R_CallMethodDef CallEntries[] = {
@@ -68,6 +77,8 @@ static const R_CallMethodDef CallEntries[] = {
   CALLDEF(extract_sparse_components, 1),
   CALLDEF(get_rng_, 1),
   CALLDEF(get_stream_, 0),
+  {"_rcpp_module_boot_class_model_base", (DL_FUNC) &_rcpp_module_boot_class_model_base, 0},
+  {"_rcpp_module_boot_class_stan_fit", (DL_FUNC) &_rcpp_module_boot_class_stan_fit, 0},
   {NULL, NULL, 0}
 };
 
@@ -85,9 +96,6 @@ void attribute_visible R_init_rstan(DllInfo *dll) {
   // all routines in your library, then you should set this to FALSE
   // as done in the stats package. [copied from `R Programming for
   // Bioinformatics' // by Robert Gentleman]
-#if defined(R_VERSION) && R_VERSION >= R_Version(2, 16, 0)
-  R_forceSymbols(dll, TRUE); // copied from package stats, don't know what it does.
-#endif
 }
 #ifdef __cplusplus
 }

@@ -17,13 +17,13 @@
 
 setMethod("show", "stanmodel",
           function(object) {
-            cat("S4 class stanmodel '", object@model_name, "' coded as follows:\n" ,sep = '') 
+            cat("S4 class stanmodel '", object@model_name, "' coded as follows:\n" ,sep = '')
             cat(object@model_code, "\n")
-          }) 
+          })
 
 setGeneric(name = 'optimizing',
            def = function(object, ...) {
-             
+
              if (is.sparc()) {
                msg <- "optimizing() will likely crash on SPARC."
                if (interactive()) stop(msg, " Run in batch mode to test.")
@@ -33,8 +33,8 @@ setGeneric(name = 'optimizing',
 })
 
 setGeneric(name = 'vb',
-           def = function(object, ...) { 
-             
+           def = function(object, ...) {
+
              if (is.sparc()) {
                msg <- "vb() will likely crash on SPARC."
                if (interactive()) stop(msg, " Run in batch mode to test.")
@@ -46,54 +46,54 @@ setGeneric(name = 'vb',
 setGeneric(name = "sampling",
            def = function(object, ...) { standardGeneric("sampling")})
 
-setMethod('get_stancode', signature = "stanmodel", 
+setMethod('get_stancode', signature = "stanmodel",
           function(object, print = FALSE) {
             code <- object@model_code
-            if (print) cat(code, "\n") 
+            if (print) cat(code, "\n")
             return(code)
-          }) 
+          })
 
-setGeneric(name = "get_cppcode", 
+setGeneric(name = "get_cppcode",
            def = function(object, ...) { standardGeneric("get_cppcode") })
 
-setMethod("get_cppcode", "stanmodel", 
+setMethod("get_cppcode", "stanmodel",
           function(object) {
-            object@model_cpp$model_cppcode  
-          }) 
+            object@model_cpp$model_cppcode
+          })
 
-setGeneric(name = "get_cxxflags", 
+setGeneric(name = "get_cxxflags",
            def = function(object, ...) { standardGeneric("get_cxxflags") })
-setMethod("get_cxxflags", "stanmodel", function(object) { object@dso@cxxflags }) 
+setMethod("get_cxxflags", "stanmodel", function(object) { object@dso@cxxflags })
 
-new_empty_stanfit <- function(stanmodel, miscenv = new.env(parent = emptyenv()), 
-                              model_pars = character(0), par_dims = list(), 
-                              mode = 2L, sim = list(), 
-                              inits = list(), stan_args = list()) { 
+new_empty_stanfit <- function(stanmodel, miscenv = new.env(parent = emptyenv()),
+                              model_pars = character(0), par_dims = list(),
+                              mode = 2L, sim = list(),
+                              inits = list(), stan_args = list()) {
   new("stanfit",
       model_name = stanmodel@model_name,
-      model_pars = model_pars, 
-      par_dims = par_dims, 
+      model_pars = model_pars,
+      par_dims = par_dims,
       mode = mode,
-      sim = sim, 
-      inits = inits, 
-      stan_args = stan_args, 
-      stanmodel = stanmodel, 
+      sim = sim,
+      inits = inits,
+      stan_args = stan_args,
+      stanmodel = stanmodel,
       date = date(),
-      .MISC = miscenv) 
-} 
+      .MISC = miscenv)
+}
 
 
 prep_call_sampler <- function(object) {
   if (!is_sm_valid(object))
     stop(paste("the compiled object from C++ code for this model is invalid, possible reasons:\n",
-               "  - compiled with save_dso=FALSE;\n", 
-               "  - compiled on a different platform;\n", 
-               "  - does not exist (created from reading csv files).", sep = '')) 
+               "  - compiled with save_dso=FALSE;\n",
+               "  - compiled on a different platform;\n",
+               "  - does not exist (created from reading csv files).", sep = ''))
   if (!is_dso_loaded(object@dso)) {
-    # load the dso if available 
-    grab_cxxfun(object@dso) 
-  } 
-} 
+    # load the dso if available
+    grab_cxxfun(object@dso)
+  }
+}
 
 # This function gets used when a stanmodel instance is created
 # in function stan_model.
@@ -104,7 +104,7 @@ mk_cppmodule <- function(object) {
   eval(call("$", mod, paste('stan_fit4', model_cppname, sep = '')))
 }
 
-setMethod("vb", "stanmodel", 
+setMethod("vb", "stanmodel",
           function(object, data = list(), pars = NA, include = TRUE,
                    seed = sample.int(.Machine$integer.max, 1),
                    init = 'random',
@@ -113,7 +113,6 @@ setMethod("vb", "stanmodel",
                    importance_resampling = FALSE,
                    keep_every = 1,
                    ...) {
-            stan_fit_cpp_module <- object@mk_cppmodule(object)
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
@@ -147,21 +146,27 @@ setMethod("vb", "stanmodel",
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
-              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-              if (is(sampler, "try-error")) {
-                message('failed to create the sampler; sampling not done') 
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            if (test_221(object@model_cpp$model_cppcode) &&
+                stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+              mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+              if (is(mod, "try-error")) {
+                message('failed to create the sampler; sampling not done')
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
-              message('trying deprecated constructor; please alert package maintainer')
+              sampler <- try(new(stan_fit, mod$fit_ptr()))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done')
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
             } else {
               sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
               if (is(sampler, "try-error")) {
-                message('failed to create the model; variational Bayes not done')
-                return(invisible(new_empty_stanfit(object)))
+                message('failed to create the optimizer; optimization not done')
+                return(invisible(list(stanmodel = object)))
               }
             }
-            
+
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) init <- init()
             if (!is.list(init) && !is.character(init)) {
@@ -200,7 +205,7 @@ setMethod("vb", "stanmodel",
 
             sfmiscenv <- new.env(parent = emptyenv())
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
-            
+
             m_pars <- sampler$param_names()
             p_dims <- sampler$param_dims()
             if(!include) {
@@ -208,13 +213,13 @@ setMethod("vb", "stanmodel",
               else pars <- setdiff(m_pars, pars)
               if (length(pars) == 0) pars <- "lp__"
             }
-            
+
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)
               if (length(m) > 0) {
-                message("no parameter ", paste(pars[m], collapse = ', '), "; sampling not done") 
-                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L))) 
+                message("no parameter ", paste(pars[m], collapse = ', '), "; sampling not done")
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L)))
               }
             }
             else pars <- m_pars
@@ -243,7 +248,7 @@ setMethod("vb", "stanmodel",
             assign("posterior_mean_4all", means, envir = sfmiscenv)
             inits_used <- rstan_relist(attr(vbres, "inits"), skeleton)
             if ("lp__" %in% names(inits_used))  inits_used$lp__ <- NULL
-            samples <- cbind(samples[-1,-1,drop=FALSE], 
+            samples <- cbind(samples[-1,-1,drop=FALSE],
                              "lp__" = samples[-1,1])[,unlist(cC)]
             cC <- cC[sapply(cC, any)] # any(logical()) is FALSE
             count <- 1L
@@ -264,22 +269,22 @@ setMethod("vb", "stanmodel",
               p <- suppressWarnings(loo::psis(lr, r_eff = 1))
               p$log_weights <- p$log_weights - log_sum_exp(p$log_weights)
               theta_pareto_k <- suppressWarnings(apply(samples, 2L, function(col) {
-                if (all(is.finite(col))) loo::psis(log1p(col^2) / 2 + lr, r_eff = 1)$diagnostics$pareto_k 
+                if (all(is.finite(col))) loo::psis(log1p(col^2) / 2 + lr, r_eff = 1)$diagnostics$pareto_k
                 else NaN
               }))
               ## todo: change fixed threshold to an option
               if (p$diagnostics$pareto_k > 1) {
-                warning("Pareto k diagnostic value is ", 
+                warning("Pareto k diagnostic value is ",
                         round(p$diagnostics$pareto_k,2),
                         ". Resampling is disabled.",
-                        " Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely.", 
+                        " Decreasing tol_rel_obj may help if variational algorithm has terminated prematurely.",
                         " Otherwise consider using sampling instead.", call. = FALSE, immediate. = TRUE)
                 #importance_resampling <- FALSE
-              } else if (p$diagnostics$pareto_k > 0.7) { 
-                warning("Pareto k diagnostic value is ", 
-                        round(p$diagnostics$pareto_k,2), 
-                        ". Resampling is unreliable.", 
-                        " Increasing the number of draws or decreasing tol_rel_obj may help.", 
+              } else if (p$diagnostics$pareto_k > 0.7) {
+                warning("Pareto k diagnostic value is ",
+                        round(p$diagnostics$pareto_k,2),
+                        ". Resampling is unreliable.",
+                        " Increasing the number of draws or decreasing tol_rel_obj may help.",
                         call. = FALSE, immediate. = TRUE)
               }
               psis <- loo::nlist(pareto_k = p$diagnostics$pareto_k,
@@ -293,7 +298,7 @@ setMethod("vb", "stanmodel",
                 ## SIR mcse and n_eff
                 w_sir <- as.numeric(table(ir_idx)) / length(ir_idx)
                 mcse <- apply(samples[!duplicated(ir_idx),], 2L, function(col) {
-                  if (all(is.finite(col))) sqrt(sum(w_sir^2*(col-mean(col))^2)) 
+                  if (all(is.finite(col))) sqrt(sum(w_sir^2*(col-mean(col))^2))
                   else NaN
                 })
                 n_eff <- round(apply(samples[!duplicated(ir_idx),], 2L, var) / (mcse^2), digits = 0)
@@ -327,10 +332,10 @@ setMethod("vb", "stanmodel",
                         par_dims = p_dims,
                         mode = 0L,
                         sim = sim,
-                        # keep a record of the initial values 
+                        # keep a record of the initial values
                         inits = inits_used,
                         stan_args = list(args),
-                        stanmodel = object, 
+                        stanmodel = object,
                         # keep a ref to avoid garbage collection
                         # (see comments in fun stan_model)
                         date = date(),
@@ -339,14 +344,13 @@ setMethod("vb", "stanmodel",
           })
 
 setMethod("optimizing", "stanmodel",
-          function(object, data = list(), 
+          function(object, data = list(),
                    seed = sample.int(.Machine$integer.max, 1),
-                   init = 'random', check_data = TRUE, sample_file = NULL, 
+                   init = 'random', check_data = TRUE, sample_file = NULL,
                    algorithm = c("LBFGS", "BFGS", "Newton"),
-                   verbose = FALSE, hessian = FALSE, as_vector = TRUE, 
-                   draws = 0, constrained = TRUE, 
+                   verbose = FALSE, hessian = FALSE, as_vector = TRUE,
+                   draws = 0, constrained = TRUE,
                    importance_resampling = FALSE, ...) {
-            stan_fit_cpp_module <- object@mk_cppmodule(object)
 
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -364,39 +368,46 @@ setMethod("optimizing", "stanmodel",
                 return(invisible(new_empty_stanfit(object)))
               }
             }
-            
+
             if (check_data) {
               data <- try(force(data))
               if (is(data, "try-error")) {
                 message("failed to evaluate the data; sampling not done")
                 return(invisible(NULL))
               }
-              
+
               if (!missing(data) && length(data) > 0) {
                 data <- try(data_preprocess(data))
                 if (is(data, "try-error")) {
-                  message("failed to preprocess the data; optimization not done") 
+                  message("failed to preprocess the data; optimization not done")
                   return(invisible(list(stanmodel = object)))
                 }
               } else data <- list()
             }
             cxxfun <- grab_cxxfun(object@dso)
-            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
-              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-              if (is(sampler, "try-error")) {
-                message('failed to create the sampler; sampling not done') 
-                return(invisible(list(stanmodel = object)))
+            sfmiscenv <- new.env(parent = emptyenv())
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            if (test_221(object@model_cpp$model_cppcode) &&
+                stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+              mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+              if (is(mod, "try-error")) {
+                message('failed to create the sampler; sampling not done')
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
-              message('trying deprecated constructor; please alert package maintainer')
+              sampler <- try(new(stan_fit, mod$fit_ptr()))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done')
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
             } else {
               sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
               if (is(sampler, "try-error")) {
-                message('failed to create the optimizer; optimization not done') 
+                message('failed to create the optimizer; optimization not done')
                 return(invisible(list(stanmodel = object)))
               }
             }
-            
-            m_pars <- sampler$param_names() 
+
+            m_pars <- sampler$param_names()
             idx_wo_lp <- which(m_pars != "lp__")
             m_pars <- m_pars[idx_wo_lp]
             p_dims <- sampler$param_dims()[idx_wo_lp]
@@ -405,19 +416,19 @@ setMethod("optimizing", "stanmodel",
             if (!is.list(init) && !is.character(init)) {
               message("wrong specification of initial values")
               return(invisible(list(stanmodel = object)))
-            } 
-            seed <- check_seed(seed, warn = 1)    
+            }
+            seed <- check_seed(seed, warn = 1)
             if (is.null(seed))
               return(invisible(list(stanmodel = object)))
-            args <- list(init = init, 
-                         seed = seed, 
-                         method = "optim", 
-                         algorithm = match.arg(algorithm)) 
-         
-            if (!is.null(sample_file) && !is.na(sample_file)) 
-              args$sample_file <- writable_sample_file(sample_file) 
+            args <- list(init = init,
+                         seed = seed,
+                         method = "optim",
+                         algorithm = match.arg(algorithm))
+
+            if (!is.null(sample_file) && !is.na(sample_file))
+              args$sample_file <- writable_sample_file(sample_file)
             dotlist <- list(...)
-            is_arg_recognizable(names(dotlist), 
+            is_arg_recognizable(names(dotlist),
                                 c("iter",
                                   "save_iterations",
                                   "refresh",
@@ -476,7 +487,7 @@ setMethod("optimizing", "stanmodel",
             }
             if (constrained) {
               theta_tilde <- t(apply(theta_tilde, 1, FUN = function(theta) {
-                sampler$constrain_pars(theta)  
+                sampler$constrain_pars(theta)
               }))
               if (NCOL(theta_tilde) != length(optim$par)) theta_tilde <- t(theta_tilde)
             }
@@ -484,19 +495,19 @@ setMethod("optimizing", "stanmodel",
             optim$theta_tilde <- theta_tilde
             if (!as_vector) optim$par <- rstan_relist(optim$par, skeleton)
             return(optim)
-          }) 
+          })
 
 setMethod("sampling", "stanmodel",
           function(object, data = list(), pars = NA, chains = 4, iter = 2000,
                    warmup = floor(iter / 2),
                    thin = 1, seed = sample.int(.Machine$integer.max, 1),
-                   init = "random", check_data = TRUE, 
-                   sample_file = NULL, diagnostic_file = NULL, verbose = FALSE, 
-                   algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"), 
+                   init = "random", check_data = TRUE,
+                   sample_file = NULL, diagnostic_file = NULL, verbose = FALSE,
+                   algorithm = c("NUTS", "HMC", "Fixed_param"), #, "Metropolis"),
                    control = NULL, include = TRUE,
-                   cores = getOption("mc.cores", 1L), 
+                   cores = getOption("mc.cores", 1L),
                    open_progress = interactive() && !isatty(stdout()) &&
-                     !identical(Sys.getenv("RSTUDIO"), "1"), 
+                     !identical(Sys.getenv("RSTUDIO"), "1"),
                    show_messages = TRUE, ...) {
             is_arg_deprecated(names(list(...)),
                               c("enable_random_init"),
@@ -520,7 +531,7 @@ setMethod("sampling", "stanmodel",
             }
             # check data and preprocess
             if (verbose)
-              cat('\n', "CHECKING DATA AND PREPROCESSING FOR MODEL '", object@model_name, 
+              cat('\n', "CHECKING DATA AND PREPROCESSING FOR MODEL '", object@model_name,
                     "' NOW.\n", sep = '')
             if (check_data) {
               data <- try(force(data))
@@ -537,37 +548,42 @@ setMethod("sampling", "stanmodel",
               } else data <- list()
             }
             if (verbose)
-              cat('\n', "COMPILING MODEL '", object@model_name, 
+              cat('\n', "COMPILING MODEL '", object@model_name,
                   "' NOW.\n", sep = '')
-            stan_fit_cpp_module <- object@mk_cppmodule(object)
-            cxxfun <- grab_cxxfun(object@dso)
             dots <- list(...)
-            data$CHAIN_ID <- dots$chain_id            
+            data$CHAIN_ID <- dots$chain_id
             if (verbose)
-              cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name, 
+              cat('\n', "STARTING SAMPLER FOR MODEL '", object@model_name,
                   "' NOW.\n", sep = '')
             sfmiscenv <- new.env(parent = emptyenv())
-            if (stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
-              sampler <- try(new(stan_fit_cpp_module, data, cxxfun))
-              if (is(sampler, "try-error")) {
-                message('failed to create the sampler; sampling not done') 
+            stan_fit_cpp_module <- object@mk_cppmodule(object)
+            cxxfun <- grab_cxxfun(object@dso)
+            if (test_221(object@model_cpp$model_cppcode) &&
+                stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+              mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+              if (is(mod, "try-error")) {
+                message('failed to create the sampler; sampling not done')
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
-              message('trying deprecated constructor; please alert package maintainer')
+              sampler <- try(new(stan_fit, mod$fit_ptr()))
+              if (is(sampler, "try-error")) {
+                message('failed to create the sampler; sampling not done')
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+              }
             } else {
               sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
               if (is(sampler, "try-error")) {
-                message('failed to create the sampler; sampling not done') 
+                message('failed to create the sampler; sampling not done')
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
               }
             }
-            
+
             assign("stan_fit_instance", sampler, envir = sfmiscenv)
             m_pars = sampler$param_names()
             p_dims = sampler$param_dims()
-            mode <- if (!is.null(dots$test_grad) && dots$test_grad) 
+            mode <- if (!is.null(dots$test_grad) && dots$test_grad)
               "TESTING GRADIENT" else "SAMPLING"
-            
+
             if (is.numeric(init)) init <- as.character(init)
             if (is.function(init)) {
               if ("chain_id" %in% names(formals(init)))
@@ -592,9 +608,9 @@ setMethod("sampling", "stanmodel",
                 if(is.list(.dotlist$init)) .dotlist$init <- .dotlist$init[i]
                 if(is.character(.dotlist$sample_file)) {
                   if (grepl("\\.csv$", .dotlist$sample_file))
-                    .dotlist$sample_file <- sub("\\.csv$", paste0("_", i, ".csv"), 
+                    .dotlist$sample_file <- sub("\\.csv$", paste0("_", i, ".csv"),
                                                 .dotlist$sample_file)
-                  else .dotlist$sample_file <- paste0(.dotlist$sample_file, 
+                  else .dotlist$sample_file <- paste0(.dotlist$sample_file,
                                                       "_", i, ".csv")
                 }
                 if(is.character(.dotlist$diagnostic_file)) {
@@ -602,23 +618,23 @@ setMethod("sampling", "stanmodel",
                     .dotlist$diagnostic_file <- sub("\\.csv$", paste0("_", i, ".csv"),
                                                     .dotlist$diagnostic_file)
                   else
-                    .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file, 
+                    .dotlist$diagnostic_file <- paste0(.dotlist$diagnostic_file,
                                                        "_", i, ".csv")
                 }
                 out <- do.call(rstan::sampling, args = .dotlist)
                 return(out)
               }
-              if ( .Platform$OS.type == "unix" && 
+              if ( .Platform$OS.type == "unix" &&
                    (!interactive() || isatty(stdout())) ) {
-                nfits <- parallel::mclapply(1:chains, FUN = callFun, 
-                                            mc.preschedule = FALSE, 
+                nfits <- parallel::mclapply(1:chains, FUN = callFun,
+                                            mc.preschedule = FALSE,
                                             mc.cores = min(chains, cores))
               }
               else {
                 tfile <- tempfile()
                 sinkfile <- paste0(tfile, "_StanProgress.txt")
                 cat("Click the Refresh button to see progress of the chains\n", file = sinkfile)
-                if (open_progress && 
+                if (open_progress &&
                     !identical(browser <- getOption("browser"), "false")) {
                   if (identical(Sys.getenv("RSTUDIO"), "1"))
                     stop("you cannot specify 'open_progress = TRUE' when using RStudio")
@@ -626,7 +642,7 @@ setMethod("sampling", "stanmodel",
                   create_progress_html_file(sinkfile_html, sinkfile)
                   utils::browseURL(paste0("file://", sinkfile_html))
                 }
-                else if (identical(Sys.getenv("RSTUDIO"), "1") && 
+                else if (identical(Sys.getenv("RSTUDIO"), "1") &&
                          .Platform$OS.type == "windows" && interactive()) {
                   if (!requireNamespace("rstudioapi"))
                     stop("must install the rstudioapi package when using RStan in parallel via RStudio")
@@ -638,7 +654,7 @@ setMethod("sampling", "stanmodel",
                   else sinkfile <- ""
                 }
                 else sinkfile <- ""
-                if (!is.null(dots$refresh) && dots$refresh == 0) 
+                if (!is.null(dots$refresh) && dots$refresh == 0)
                   cl <- parallel::makeCluster(min(cores, chains), useXDR = FALSE)
                 else
                   cl <- parallel::makeCluster(min(cores, chains), outfile = sinkfile, useXDR = FALSE)
@@ -650,7 +666,7 @@ setMethod("sampling", "stanmodel",
                 .paths <- .paths[.paths != ""]
                 parallel::clusterExport(cl, varlist = ".paths", envir = environment())
                 parallel::clusterEvalQ(cl, expr = .libPaths(.paths))
-                parallel::clusterEvalQ(cl, expr = 
+                parallel::clusterEvalQ(cl, expr =
                                       suppressPackageStartupMessages(require(rstan, quietly = TRUE)))
                 parallel::clusterExport(cl, varlist = ".dotlist", envir = environment())
                 data_e <- as.environment(data)
@@ -675,7 +691,7 @@ setMethod("sampling", "stanmodel",
                   throw_sampler_warnings(nfits)
                   return(nfits)
                 }
-                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, 
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
                                                    m_pars, p_dims, 2L)))
               }
             }
@@ -685,9 +701,9 @@ setMethod("sampling", "stanmodel",
                                   c("chain_id", "init_r", "test_grad",
                                     "obfuscate_model_name",
                                     "enable_random_init",
-                                    "append_samples", "refresh", "control", 
+                                    "append_samples", "refresh", "control",
                                     "include", "cores", "open_progress",
-                                    "save_warmup"), 
+                                    "save_warmup"),
                                   pre_msg = "passing unknown arguments: ",
                                   call. = FALSE)
             }
@@ -696,30 +712,30 @@ setMethod("sampling", "stanmodel",
               else pars <- setdiff(m_pars, pars)
               if (length(pars) == 0) pars <- "lp__"
             }
-            
+
             if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)
               if (length(m) > 0) {
-                message("no parameter ", paste(pars[m], collapse = ', '), "; sampling not done") 
-                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L))) 
+                message("no parameter ", paste(pars[m], collapse = ', '), "; sampling not done")
+                return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L)))
               }
             }
 
             if (chains < 1) {
-              message("the number of chains is less than 1; sampling not done") 
-              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L))) 
+              message("the number of chains is less than 1; sampling not done")
+              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L)))
             }
 
             args_list <- try(config_argss(chains = chains, iter = iter,
                                           warmup = warmup, thin = thin,
-                                          init = init, seed = seed, sample_file = sample_file, 
-                                          diagnostic_file = diagnostic_file, 
+                                          init = init, seed = seed, sample_file = sample_file,
+                                          diagnostic_file = diagnostic_file,
                                           algorithm = match.arg(algorithm), control = control, ...))
-   
+
             if (is(args_list, "try-error")) {
-              message('error in specifying arguments; sampling not done') 
-              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L))) 
+              message('error in specifying arguments; sampling not done')
+              return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv, m_pars, p_dims, 2L)))
             }
 
             # number of samples saved after thinning
@@ -727,17 +743,17 @@ setMethod("sampling", "stanmodel",
             if (!is.null(dots$save_warmup) && !dots$save_warmup)
               warmup2 <- 0L
             n_kept <- 1 + (iter - warmup - 1) %/% thin
-            n_save <- n_kept + warmup2 
+            n_save <- n_kept + warmup2
 
             samples <- vector("list", chains)
 
             for (i in 1:chains) {
               cid <- args_list[[i]]$chain_id
               if (is.null(dots$refresh) || dots$refresh > 0) {
-                cat('\n', mode, " FOR MODEL '", object@model_name, 
+                cat('\n', mode, " FOR MODEL '", object@model_name,
                     "' NOW (CHAIN ", cid, ").\n", sep = '')
               }
-              if (is.character(show_messages)) 
+              if (is.character(show_messages))
                 messages <- normalizePath(show_messages, mustWork = FALSE)
               else messages <- tempfile()
               mfile <- file(messages, open = "wt")
@@ -759,7 +775,7 @@ setMethod("sampling", "stanmodel",
                 if (.Platform$OS.type == "windows") print(msg)
                 else message(msg)
                 return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
-                                                   m_pars, p_dims, 2L))) 
+                                                   m_pars, p_dims, 2L)))
               }
               if (length(report) > 0 && isTRUE(show_messages)) {
                 end <- unique(grep("if ", report, ignore.case = TRUE, value = TRUE))
@@ -771,7 +787,7 @@ setMethod("sampling", "stanmodel",
                 if (length(report) > 0) {
                   tab <- sort(table(report), decreasing = TRUE)
                   msg <- paste("The following numerical problems occurred",
-                               "the indicated number of times on chain", 
+                               "the indicated number of times on chain",
                                cid)
                   if (.Platform$OS.type == "windows") print(msg)
                   else message(msg)
@@ -801,26 +817,26 @@ setMethod("sampling", "stanmodel",
             inits_used = lapply(lapply(samples, function(x) attr(x, "inits")),
                                 function(y) rstan_relist(y, skeleton))
 
-            # test_gradient mode: no sample 
+            # test_gradient mode: no sample
             if (attr(samples[[1]], 'test_grad')) {
               sim = list(num_failed = sapply(samples, function(x) x$num_failed))
               return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
-                                                 m_pars, p_dims, 1L, sim = sim, 
-                                                 inits = inits_used, 
+                                                 m_pars, p_dims, 1L, sim = sim,
+                                                 inits = inits_used,
                                                  stan_args = args_list)))
-            } 
+            }
 
-            # perm_lst <- lapply(1:chains, function(id) rstan_seq_perm(n_kept, chains, seed, chain_id = id)) 
-            ## sample_int is a little bit faster than our own rstan_seq_perm (one 
+            # perm_lst <- lapply(1:chains, function(id) rstan_seq_perm(n_kept, chains, seed, chain_id = id))
+            ## sample_int is a little bit faster than our own rstan_seq_perm (one
             ## reason is that the RNG used in R is faster),
-            ## but without controlling the seed 
+            ## but without controlling the seed
             perm_lst <- lapply(1:chains, function(id) sample.int(n_kept))
 
             fnames_oi <- sampler$param_fnames_oi()
             n_flatnames <- length(fnames_oi)
             sim = list(samples = samples,
-                       iter = iter, thin = thin, 
-                       warmup = warmup, 
+                       iter = iter, thin = thin,
+                       warmup = warmup,
                        chains = chains,
                        n_save = rep(n_save, chains),
                        warmup2 = rep(warmup2, chains), # number of warmup iters in n_save
@@ -828,30 +844,30 @@ setMethod("sampling", "stanmodel",
                        pars_oi = sampler$param_names_oi(),
                        dims_oi = sampler$param_dims_oi(),
                        fnames_oi = fnames_oi,
-                       n_flatnames = n_flatnames) 
+                       n_flatnames = n_flatnames)
             nfit <- new("stanfit",
                         model_name = object@model_name,
-                        model_pars = m_pars, 
-                        par_dims = p_dims, 
-                        mode = 0L, 
+                        model_pars = m_pars,
+                        par_dims = p_dims,
+                        mode = 0L,
                         sim = sim,
-                        # keep a record of the initial values 
-                        inits = inits_used, 
+                        # keep a record of the initial values
+                        inits = inits_used,
                         stan_args = args_list,
-                        stanmodel = object, 
+                        stanmodel = object,
                           # keep a ref to avoid garbage collection
                           # (see comments in fun stan_model)
                         date = date(),
                         .MISC = sfmiscenv)
             if (cores > 0) throw_sampler_warnings(nfit)
             return(nfit)
-          }) 
+          })
 
 
-setGeneric(name = "gqs", 
+setGeneric(name = "gqs",
            def = function(object, ...) { standardGeneric("gqs") })
-setMethod("gqs", "stanmodel", 
-          function(object, data = list(), draws, 
+setMethod("gqs", "stanmodel",
+          function(object, data = list(), draws,
                 seed = sample.int(.Machine$integer.max, size = 1L)) {
   draws <- as.matrix(draws)
   objects <- ls()
@@ -888,7 +904,7 @@ setMethod("gqs", "stanmodel",
   sfmiscenv <- new.env(parent = emptyenv())
   sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
   if (is(sampler, "try-error")) {
-    message('failed to create the sampler; sampling not done') 
+    message('failed to create the sampler; sampling not done')
     return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
   }
 
@@ -910,18 +926,18 @@ setMethod("gqs", "stanmodel",
     msg <- "error occurred during calling the sampler; sampling not done"
     message(msg)
     return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv,
-                                       m_pars, p_dims, 2L))) 
+                                       m_pars, p_dims, 2L)))
   }
-  
+
   skeleton <- create_skeleton(gq_names, p_dims[gq_names])
 
   perm_lst <- list(1:nrow(draws)) # not actually permuted
-  
+
   fnames_oi <- setdiff(sampler$param_fnames_oi(), "lp__")
   n_flatnames <- length(fnames_oi)
   sim = list(samples = list(samples),
-             iter = nrow(draws), thin = 1L, 
-             warmup = 0L, 
+             iter = nrow(draws), thin = 1L,
+             warmup = 0L,
              chains = 1L,
              n_save = nrow(draws),
              warmup2 = 0L, # number of warmup iters in n_save
@@ -929,17 +945,17 @@ setMethod("gqs", "stanmodel",
              pars_oi = gq_names,
              dims_oi = sampler$param_dims_oi()[gq_names],
              fnames_oi = fnames_oi,
-             n_flatnames = n_flatnames) 
+             n_flatnames = n_flatnames)
   nfit <- new("stanfit",
               model_name = object@model_name,
               model_pars = gq_names,
               par_dims = p_dims[gq_names],
               mode = 0L,
               sim = sim,
-              # keep a record of the initial values 
-              inits = list(), 
+              # keep a record of the initial values
+              inits = list(),
               stan_args = list(list(seed = seed)),
-              stanmodel = object, 
+              stanmodel = object,
               # keep a ref to avoid garbage collection
               # (see comments in fun stan_model)
               date = date(),

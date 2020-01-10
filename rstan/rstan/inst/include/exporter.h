@@ -1,3 +1,6 @@
+#ifndef RSTAN_EXPORTER_H
+#define RSTAN_EXPORTER_H
+
 #include <RcppCommon.h>
 #include <boost/random/additive_combine.hpp>
 #include <iostream>
@@ -73,3 +76,4 @@ namespace Rcpp {
 
 }
 
+#endif
