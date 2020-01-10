@@ -21,19 +21,15 @@ package
   }
 }
 \details{
-  These functions are typically called from a Makevars or a Makevars.win file
-  as follows:
+  These functions are currently not exported and are typically called from a Makevars 
+  or a Makevars.win file of another package as follows:
   
-  PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders::CxxFlags()")
-  PKG_LDLIBS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders::LdFlags()")
+  PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders:::CxxFlags()")
+  PKG_LDLIBS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders:::LdFlags()")
 }
 \value{
   If \code{as_character} is \code{\link{TRUE}}, then these functions return
   a character vector of length one. Otherwise, (which is the default) these
   functions return \code{\link{NULL}} invisibly after outputing the compiler
   or linker flags to the screen.
-}
-\examples{
-  CxxFlags(as_character = TRUE)
-  LdFlags(as_character = TRUE)
 }
