@@ -208,7 +208,8 @@ auto nonstiff(Eigen::MatrixXd A, Eigen::VectorXd y0) {
                                    auto theta, auto x_r, auto x_i, std::ostream *msgs) {
     return to_array_1d( (A * to_vector(y)).eval() );
   }, to_array_1d(y0), 0, times, theta, {}, {});
-  return to_vector(y[0]) - (stan::math::matrix_exp(A) * y0).eval(); // should be "zero"
+  Eigen::VectorXd truth = stan::math::matrix_exp(A) * y0;
+  return (to_vector(y[0]) - truth).eval(); // should be "zero"
 }
 
 // [[Rcpp::export]]
@@ -222,7 +223,8 @@ auto stiff(Eigen::MatrixXd A, Eigen::VectorXd y0) { // not actually stiff
                                   auto theta, auto x_r, auto x_i, std::ostream *msgs) {
     return to_array_1d( (A * to_vector(y)).eval() );
   }, to_array_1d(y0), 0, times, theta, {}, {});
-  return to_vector(y[0]) - stan::math::matrix_exp(A) * y0; // should be numerically zero
+  Eigen::VectorXd truth = stan::math::matrix_exp(A) * y0;
+  return (to_vector(y[0]) - truth).eval(); // should be "zero"
 }
 ```
 
