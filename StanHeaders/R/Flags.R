@@ -12,8 +12,9 @@ LdFlags <- function(as_character = FALSE) {
   } else {
     SH <- system.file("lib", .Platform$r_arch, package = "StanHeaders", mustWork = TRUE)
   }
-  PKG_LIBS <- paste(paste0("-L", shQuote(TBB)), "-ltbb",
-                    paste0("-L", shQuote(SH)), "-lStanHeaders")
+  PKG_LIBS <- paste("-Wl,-rpath", shQuote(TBB),
+                    paste0("-L", shQuote(TBB)), 
+                    paste0("-L", shQuote(SH)), "-ltbb -ltbbmalloc -lStanHeaders")
   if (isTRUE(as_character)) return(PKG_LIBS)
   cat(PKG_LIBS, " ")
   return(invisible(NULL))
