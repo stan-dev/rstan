@@ -83,6 +83,7 @@ z_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
   z <- qnorm((r - 1 / 2) / S)
+  z[is.na(x)] <- NA
   if (!is.null(dim(x))) {
     # output should have the input dimension
     z <- array(z, dim = dim(x), dimnames = dimnames(x))
@@ -107,6 +108,7 @@ u_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
   u <- (r - 1 / 2) / S
+  u[is.na(x)] <- NA
   if (!is.null(dim(x))) {
     # output should have the input dimension
     u <- array(u, dim = dim(x), dimnames = dimnames(x))
@@ -129,6 +131,7 @@ u_scale <- function(x) {
 r_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
+  r[is.na(x)] <- NA
   if (!is.null(dim(x))) {
     # output should have the input dimension
     r <- array(r, dim = dim(x), dimnames = dimnames(x))
@@ -168,10 +171,15 @@ is_constant <- function(x, tol = .Machine$double.eps) {
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 rhat_rfun <- function(sims) {
-  if (any(!is.finite(sims)))
+  if (anyNA(sims)) {
+    return(NA)
+  }
+  if (any(!is.finite(sims))) {
     return(NaN)
-  else if (is_constant(sims))
-    return(1)
+  }
+  if (is_constant(sims)) {
+    return(NA)
+  }
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
@@ -208,10 +216,15 @@ ess_rfun <- function(sims) {
   }
   chains <- ncol(sims)
   n_samples <- nrow(sims)
-  if (any(!is.finite(sims)) || n_samples < 3L)
+  if (n_samples < 3L || anyNA(sims)) {
+    return(NA)
+  }
+  if (any(!is.finite(sims))) {
     return(NaN)
-  else if (is_constant(sims))
-    return(chains*n_samples)
+  }
+  if (is_constant(sims)) {
+    return(NA)
+  }
   acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i]))
   acov <- do.call(cbind, acov)
   chain_mean <- apply(sims, 2, mean)
