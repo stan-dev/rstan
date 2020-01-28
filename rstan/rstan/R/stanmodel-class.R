@@ -214,7 +214,7 @@ setMethod("vb", "stanmodel",
               if (length(pars) == 0) pars <- "lp__"
             }
 
-            if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
+            if (!missing(pars) && !any(is.na(pars)) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)
               if (length(m) > 0) {
@@ -713,7 +713,7 @@ setMethod("sampling", "stanmodel",
               if (length(pars) == 0) pars <- "lp__"
             }
 
-            if (!missing(pars) && !is.na(pars) && length(pars) > 0) {
+            if (!missing(pars) && !any(is.na(pars)) && length(pars) > 0) {
               sampler$update_param_oi(pars)
               m <- which(match(pars, m_pars, nomatch = 0) == 0)
               if (length(m) > 0) {
