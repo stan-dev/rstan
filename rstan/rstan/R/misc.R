@@ -1084,7 +1084,6 @@ summary_sim <- function(sim, pars, probs = default_summary_probs()) {
 }
 
 summary_sim_quan <- function(sim, pars, probs = default_summary_probs()) {
-  # cat("summary_sim is called.\n")
   probs_len <- length(probs)
   pars <- if (missing(pars)) sim$pars_oi else check_pars_second(sim, pars)
   tidx <- pars_total_indexes(sim$pars_oi, sim$dims_oi, sim$fnames_oi, pars)
@@ -1092,7 +1091,7 @@ summary_sim_quan <- function(sim, pars, probs = default_summary_probs()) {
   tidx <- unlist(tidx, use.names = FALSE)
   tidx_len <- length(tidx)
   tidx_rowm <- unlist(tidx_rowm, use.names = FALSE)
-  lquan <- lapply(tidx, function(n) get_par_summary_quantile(sim, n, probs, na.rm = TRUE))
+  lquan <- lapply(tidx, function(n) get_par_summary_quantile(sim, n, probs))
   quan <- do.call(rbind, lapply(lquan, function(x) x$quan))
   probs_str <- colnames(quan)
   dim(quan) <- c(tidx_len, probs_len)
