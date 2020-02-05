@@ -1,5 +1,5 @@
 Package: StanHeaders
-Date: 2020-01-22
+Date: 2020-02-04
 Title: C++ Header Files for Stan
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),

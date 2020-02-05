@@ -68,7 +68,11 @@ autodifferentiation to obtain the Jacobian, which we know to be the identity mat
 ```{r}
 Sys.setenv(PKG_CXXFLAGS = paste(StanHeaders:::CxxFlags(as_character = TRUE), 
                                 "-I", system.file("include", package = "RcppParallel", mustWork = TRUE)))
-Sys.setenv(PKG_LIBS = StanHeaders:::LdFlags(as_character = TRUE))
+SH <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), .Platform$r_arch,
+                  package = "StanHeaders", mustWork = TRUE)
+Sys.setenv(PKG_LIBS = paste0(StanHeaders:::LdFlags(as_character = TRUE),
+                             " -L", shQuote(SH), " -lStanHeaders"))
+                            
 ```
 
 Here is C++ code that does all of the above, except for the part of finding the optimum, which is done

@@ -6,8 +6,8 @@
   RcppEigen <- system.file("include", package = "RcppEigen", mustWork = FALSE)
   new_pkg_cxxflags <- paste(old_pkg_cxxflags, 
                             "-include", plugin,
-                            "-I", StanMath,
-                            "-I", RcppEigen)
+                            "-I", shQuote(StanMath),
+                            "-I", shQuote(RcppEigen))
   Sys.setenv(PKG_CXXFLAGS = new_pkg_cxxflags)
   return(invisible(NULL))  
 }
@@ -19,8 +19,8 @@
   StanMath <- system.file("include", package = "StanHeaders", mustWork = FALSE)
   RcppEigen <- system.file("include", package = "RcppEigen", mustWork = FALSE)
   old_pkg_cxxflags <- sub(paste("-include", plugin, 
-                                "-I", StanMath,
-                                "-I", RcppEigen), "", new_pkg_cxxflags)
+                                "-I", shQuote(StanMath),
+                                "-I", shQuote(RcppEigen)), "", new_pkg_cxxflags)
   Sys.setenv(PKG_CPPFLAGS = old_pkg_cxxflags)
   return(invisible(NULL))
 }
