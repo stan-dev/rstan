@@ -1,6 +1,8 @@
 #ifndef RSTAN__STAN_FIT_HPP
 #define RSTAN__STAN_FIT_HPP
 
+// this file gets included from old packages not using the new linking scheme
+
 #include <cstring>
 #include <iomanip>
 #include <fstream>
@@ -390,6 +392,9 @@ template <class Model, class RNG_t>
 int command(stan_args& args, Model& model, Rcpp::List& holder,
             const std::vector<size_t>& qoi_idx,
             const std::vector<std::string>& fnames_oi, RNG_t& base_rng) {
+
+  stan::math::ChainableStack ad_stack;
+
   if (args.get_method() == SAMPLING
         && model.num_params_r() == 0
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
