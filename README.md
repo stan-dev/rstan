@@ -28,7 +28,7 @@ Several Stan users have also contributed translations of the _RStan Getting Star
 * [RStan Getting Started (French)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Français))
 * [RStan Getting Started (Japanese)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Japanese))
 * [RStan Getting Started (繁體中文)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87))
-* [RStan Getting Started (Portuguese)]https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Portugu%C3%AAs)
+* [RStan Getting Started (Portuguese)](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Portugu%C3%AAs))
 
 ### Source Repository
 
