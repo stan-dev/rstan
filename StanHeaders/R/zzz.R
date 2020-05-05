@@ -1,6 +1,6 @@
 .onAttach <- function(libname, pkgname) {
   old_pkg_cxxflags <- Sys.getenv("PKG_CXXFLAGS")
-  plugin <- system.file("include", "stan", "math", "prim", "mat", "fun", "Eigen.hpp",
+  plugin <- system.file("include", "stan", "math", "prim", "fun", "Eigen.hpp",
                         package = "StanHeaders", mustWork = TRUE)
   StanMath <- system.file("include", package = "StanHeaders", mustWork = FALSE)
   RcppEigen <- system.file("include", package = "RcppEigen", mustWork = FALSE)
@@ -14,7 +14,7 @@
 
 .onDetach <- function(libpath) {
   new_pkg_cxxflags <- Sys.getenv("PKG_CXXFLAGS")
-  plugin <- system.file("include", "stan", "math", "prim", "mat", "fun", "Eigen.hpp",
+  plugin <- system.file("include", "stan", "math", "prim", "mat", "Eigen.hpp",
                         package = "StanHeaders", mustWork = FALSE)
   StanMath <- system.file("include", package = "StanHeaders", mustWork = FALSE)
   RcppEigen <- system.file("include", package = "RcppEigen", mustWork = FALSE)
