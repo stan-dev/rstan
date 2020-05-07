@@ -25,7 +25,7 @@ set.seed(12345)
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
 in other packages, it is often sufficient to specify
 ```
-LinkingTo: StanHeaders (>= 2.23.0), RcppParallel (>= 4.4.4)
+LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 4.4.4)
 ```
 in the DESCRIPTION file of another package and put something like
 ```
@@ -82,10 +82,11 @@ using the R function `optim` below.
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
-#include <stan/math/mix/functor/hessian.hpp> // stuff from mix/ must come first
-#include <stan/math.hpp>                     // finally pull in everything from rev/ & prim/
+#include <stan/math/fwd/mat/fun/dot_self.hpp>    // stuff from fwd/ must come first
+#include <stan/math/mix/mat/functor/hessian.hpp> // then stuff from mix/ must come next
+#include <stan/math.hpp>                         // finally pull in everything from rev/ & prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>                       // do this AFTER including stan/math
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
