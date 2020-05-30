@@ -35,14 +35,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   
   # model_name in C++, to avoid names that would be problematic in C++. 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
-  tf <- tempfile(fileext = ".parser")
-  zz <- base::file(tf, open = "wt")
-  on.exit(close(zz), add = TRUE)
-  sink(zz, type = "message")
   r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
-  sink(type = "message")
-  close(zz)
-  on.exit(NULL)
   # from the cpp code of stanc,
   # returned is a named list with element 'status', 'model_cppname', and 'cppcode' 
   r$model_name <- model_name  
@@ -62,15 +55,8 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   if (r$status == SUCCESS_RC && verbose)
     cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
-  msg <- readLines(tf)
-  msg <- grep("Unknown variable", msg, value = TRUE, invert = TRUE)
-  msg <- grep("aliasing", msg, value = TRUE, invert = TRUE)
-  if (length(msg) > 2L) {
-    cat(msg, sep = "\n")
-  } else {
-    try(file.remove(tf), silent = TRUE)
-  }
   r$status = !as.logical(r$status)
+  if (interactive()) try(stanc_beta(model_code, model_name, isystem))
   return(r)
 }
 
@@ -124,7 +110,8 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
 stanc_beta <- function(model_code, model_name, isystem) {
   model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
   model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
-  model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
+  if (any(!grepl("#include[[:space:]]+<", model_code)))
+    model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
   unprocessed <- tempfile(fileext = ".stan")
   processed <- tempfile(fileext = ".stan")
   on.exit(file.remove(c(unprocessed, processed)))
@@ -168,11 +155,11 @@ stanc_beta <- function(model_code, model_name, isystem) {
   
   return(model_cppcode)
   
-  PKG_CXXFLAGS <- Sys.getenv("PKG_CXXFLAGS")
-  on.exit(Sys.setenv(PKG_CXXFLAGS = PKG_CXXFLAGS), add = TRUE)
-  Sys.setenv(PKG_CXXFLAGS = paste(PKG_CXXFLAGS, "-fsyntax-only"))
-  writeLines(paste0("Rcpp::cppFunction(code = '", model_cppcode, 
-                   "', depends = 'rstan', plugins = 'cpp14', showOutput = FALSE, verbose = FALSE)"),
-             con = file.path(tempdir(), "stanc_beta.R"))
-  hmm <- rstudioapi::jobRunScript(file.path(tempdir(), "stanc_beta.R"))
+  # PKG_CXXFLAGS <- Sys.getenv("PKG_CXXFLAGS")
+  # on.exit(Sys.setenv(PKG_CXXFLAGS = PKG_CXXFLAGS), add = TRUE)
+  # Sys.setenv(PKG_CXXFLAGS = paste(PKG_CXXFLAGS, "-fsyntax-only"))
+  # writeLines(paste0("Rcpp::cppFunction(code = '", model_cppcode, 
+  #                  "', depends = 'rstan', plugins = 'cpp14', showOutput = FALSE, verbose = FALSE)"),
+  #            con = file.path(tempdir(), "stanc_beta.R"))
+  # hmm <- rstudioapi::jobRunScript(file.path(tempdir(), "stanc_beta.R"))
 }

@@ -625,7 +625,8 @@ setMethod("sampling", "stanmodel",
                 return(out)
               }
               if ( .Platform$OS.type == "unix" &&
-                   (!interactive() || isatty(stdout())) ) {
+                   (!interactive() || isatty(stdout()) || 
+                    identical(Sys.getenv("RSTUDIO"), "1")) ) {
                 nfits <- parallel::mclapply(1:chains, FUN = callFun,
                                             mc.preschedule = FALSE,
                                             mc.cores = min(chains, cores))

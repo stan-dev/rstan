@@ -27,8 +27,7 @@ tbbmalloc_proxyDllInfo <- NULL
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
   Rcpp::loadModule("class_model_base", what = TRUE)
-  if (!("package:DrBats" %in% search()))
-    Rcpp::loadModule("class_stan_fit", what = TRUE)
+  Rcpp::loadModule("class_stan_fit", what = TRUE)
   ## the tbbmalloc_proxy is not loaded by RcppParallel which is linked
   ## in by default on macOS
   if(Sys.info()["sysname"] == "Darwin") {
@@ -46,10 +45,13 @@ tbbmalloc_proxyDllInfo <- NULL
                         "options(mc.cores = parallel::detectCores()).\n",
                         "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
                         "rstan_options(auto_write = TRUE)")
-  if (.Platform$OS.type == "windows")
-    packageStartupMessage("For improved execution time, we recommend calling\n",
-                          "Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')\n",
-                          "although this causes Stan problems on a few processors.")
+  if (.Platform$OS.type == "windows") {
+    R_version <- as.integer(R.version$major)
+    processor_msg <- ifelse(R_version >= 4, 
+                            "Sys.setenv(LOCAL_CPPFLAGS = '-march=native -mtune=native')", 
+                            "Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')")
+    packageStartupMessage("For improved execution time, we recommend calling\n", processor_msg)
+  }
 }
 
 .onUnload <- function(libpath) {

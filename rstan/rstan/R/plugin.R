@@ -38,6 +38,9 @@ boost_path_fun2 <- function() {
 }
 
 PKG_CPPFLAGS_env_fun <- function() {
+   Eigen <- dir(system.file("include", "stan", "math", "prim", 
+                            package = "StanHeaders", mustWork = TRUE), 
+                pattern = "Eigen.hpp$", full.names = TRUE, recursive = TRUE)[1]
    paste(' -I"', file.path(inc_path_fun("Rcpp"), '" '),
          ' -I"', file.path(eigen_path_fun(), '" '),
          ' -I"', file.path(eigen_path_fun(), 'unsupported" '),
@@ -51,9 +54,9 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DBOOST_DISABLE_ASSERTS ',
          ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
          ' -DSTAN_THREADS ',
-         ' -include stan/math/prim/mat/fun/Eigen.hpp ',
+         ' -include', Eigen, ' ',
          ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
-                 ' -D_REENTRANT'),
+                 ' -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 '),
          sep = '')
 }
 
