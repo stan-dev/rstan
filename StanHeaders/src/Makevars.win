@@ -14,7 +14,7 @@ SUNDIALS_IDAS := \
   $(wildcard idas/*.c)
 
 SUNDIALS_KINSOL := $(patsubst %.c,%.o, \
-  $(wildcard $(SUNDIALS)/src/kinsol/[^f]*.c) \
+  $(wildcard $(SUNDIALS)/src/kinsol/[^f]*.c))
 
 SUNDIALS_NVECSERIAL := nvector/serial/nvector_serial.c
 
