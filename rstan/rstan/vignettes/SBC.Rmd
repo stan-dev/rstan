@@ -44,6 +44,7 @@ generated quantities { // these adhere to the conventions above
 }
 ```
 Notice that it adheres to the following conventions:
+
 * Realizations of the unknown parameters are drawn in the `transformed data`
   block are postfixed with an underscore, such as `pi_`.
   These are considered the "true" parameters being estimated by
