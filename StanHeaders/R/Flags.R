@@ -8,7 +8,7 @@ CxxFlags <- function(as_character = FALSE) {
 
 LdFlags <- function(as_character = FALSE) {
   TBB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
-  PKG_LIBS <- paste0("-L", shQuote(TBB), " -Wl,-rpath,", TBB, " -ltbb -ltbbmalloc")
+  PKG_LIBS <- paste0("-L", TBB, " -Wl,-rpath,", TBB, " -ltbb -ltbbmalloc")
   if (isTRUE(as_character)) return(PKG_LIBS)
   cat(PKG_LIBS, " ")
   return(invisible(NULL))
