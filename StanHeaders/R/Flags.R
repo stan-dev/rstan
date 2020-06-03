@@ -1,5 +1,5 @@
 CxxFlags <- function(as_character = FALSE) {
-  TBB <- system.file("include", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
+  TBB <- system.file("include", package = "RcppParallel", mustWork = TRUE)
   CXXFLAGS <- paste0("-I", shQuote(TBB), " -D_REENTRANT -DSTAN_THREADS")
   if (isTRUE(as_character)) return(CXXFLAGS)
   cat(CXXFLAGS, " ")
