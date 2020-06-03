@@ -173,7 +173,8 @@ stan_ac <- function(object, pars, include = TRUE,
   if (!separate_chains) {
     dots$position <- "dodge"
     dots$stat <- "summary"
-    dots$fun.y <- "mean"
+    dots$fun <- "mean"
+    dots$fun.data <- "mean_se"
     y_lab <- paste("Avg.", if (partial) "partial", "autocorrelation")
     ac_labs <- ggplot2::labs(x = "Lag", y = y_lab)
     y_scale <- ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25))
