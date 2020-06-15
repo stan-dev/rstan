@@ -25,17 +25,18 @@ set.seed(12345)
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
 in other packages, it is often sufficient to specify
 ```
-LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 4.4.4)
+LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 5.0.1)
 ```
 in the DESCRIPTION file of another package and put something like
 ```
 CXX_STD = CXX14
-PKG_CXXFLAGS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()"` \
-               `"${R_HOME}/bin/Rscript" -e "StanHeaders:::CxxFlags()"`
-PKG_LIBS = `"${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()"` \
-           `"${R_HOME}/bin/Rscript" -e "StanHeaders:::LdFlags()"`
+PKG_CXXFLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::CxxFlags()") \
+               $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::CxxFlags()")
+PKG_LIBS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::RcppParallelLibs()") \
+           $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::LdFlags()")
 ```
-in the src/Makevars and src/Makevars.win files. If, in addition, the other package needs to utilize 
+in the src/Makevars and src/Makevars.win files and put `GNU make` in the `SystemRequirements:` 
+field of the package's DESCRIPTION file. If, in addition, the other package needs to utilize 
 the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is 
 also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CXXFLAGS`
 in the src/Makevars and src/Makevars.win files with something like
@@ -45,7 +46,6 @@ STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
   -e "message()" | grep "StanHeaders")
 PKG_CXXFLAGS += -I"$(STANHEADERS_SRC)"
 ```
-and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file.
 
 # Using Higher-Order Functions in the **StanHeaders** Package
 
@@ -66,8 +66,7 @@ equal to a vector of zeros. The `stan::math::algebra_solver` function can solve 
 autodifferentiation to obtain the Jacobian, which we know to be the identity matrix in this case.
 
 ```{r}
-Sys.setenv(PKG_CXXFLAGS = paste(StanHeaders:::CxxFlags(as_character = TRUE), 
-                                "-I", system.file("include", package = "RcppParallel", mustWork = TRUE)))
+Sys.setenv(PKG_CXXFLAGS = StanHeaders:::CxxFlags(as_character = TRUE))
 SH <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), .Platform$r_arch,
                   package = "StanHeaders", mustWork = TRUE)
 Sys.setenv(PKG_LIBS = paste0(StanHeaders:::LdFlags(as_character = TRUE),
