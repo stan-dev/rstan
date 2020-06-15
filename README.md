@@ -1,11 +1,11 @@
-[<img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width=100 alt="Stan Logo"/>](http://mc-stan.org)
+# RStan <img src="man/figures/logo.png" align="right" width="120" />
 
-# RStan
-
-[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
+<!-- badges: start -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
 [![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=blue)](http://cran.rstudio.com/package=rstan)
 [![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](http://depsy.org/package/r/rstan)
+[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
+<!-- badges: end -->
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 
 

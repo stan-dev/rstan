@@ -43,7 +43,7 @@ Imports:
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.19.0),
-    ggplot2 (>= 2.0.0)
+    ggplot2 (>= 3.0.0)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     BH (>= 1.72.0-2),
