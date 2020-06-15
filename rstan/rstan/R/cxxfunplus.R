@@ -82,7 +82,8 @@ cxxfun_from_dso_bin <- function(dso) {
   # write the raw vector containing the dso file to temporary file
   writeBin(dso@.CXXDSOMISC$dso_bin, libLFile) 
   cleanup <- function(env) {
-    if (f %in% names(getLoadedDLLs())) dyn.unload(libLFile)
+    if (file.exists(libLFile) && f %in% names(getLoadedDLLs()))
+      dyn.unload(libLFile)
     unlink(libLFile)
   }
   reg.finalizer(environment(), cleanup, onexit = FALSE)
