@@ -1,4 +1,4 @@
-# RStan <img src="man/figures/logo.png" align="right" width="120" />
+# RStan <img src="rstan/rstan/man/figures/stanlogo.png" align="right" width="120" />
 
 <!-- badges: start -->
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
