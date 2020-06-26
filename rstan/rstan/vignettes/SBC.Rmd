@@ -12,11 +12,12 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
-# Nothing
+library(rstan)
+knitr::opts_chunk$set(eval = .Platform$OS.type != "windows")
 ```
 
 Here is a Stan program for a beta-binomial model
-```{stan output.var="beta_binomial"}
+```{stan output.var="beta_binomial", eval = FALSE}
 data {
   int<lower = 1> N;
   real<lower = 0> a;

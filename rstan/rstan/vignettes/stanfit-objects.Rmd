@@ -14,7 +14,7 @@ vignette: >
 ```{r setup, include=FALSE}
 library(rstan)
 knitr::opts_chunk$set(
-  echo = TRUE,
+  echo = TRUE, error = TRUE,
   comment = NA,
   fig.align = "center",
   fig.height = 5,
