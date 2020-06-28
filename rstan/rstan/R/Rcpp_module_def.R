@@ -26,7 +26,9 @@ struct stan_model_holder {
     : rcontext_(rcontext), random_seed_(random_seed),
       model_raw_(new stan_model(rcontext_, random_seed_)),
       model_(model_raw_, false)
-     {}
+     {
+       R_PreserveObject(model_);
+     }
 
    //stan::math::ChainableStack ad_stack;
    rstan::io::rlist_ref_var_context rcontext_;
@@ -48,6 +50,7 @@ std::string model_name(stan_model_holder* smh) {
 }
 
 void finalize_stan_model_holder(stan_model_holder* smh) {
+//   R_ReleaseObject(smh->model_raw_);
    delete smh->model_raw_;
 }
 
