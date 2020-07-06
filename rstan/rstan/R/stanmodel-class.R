@@ -903,12 +903,28 @@ setMethod("gqs", "stanmodel",
   stan_fit_cpp_module <- object@mk_cppmodule(object)
   cxxfun <- grab_cxxfun(object@dso)
   sfmiscenv <- new.env(parent = emptyenv())
-  sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
-  if (is(sampler, "try-error")) {
-    message('failed to create the sampler; sampling not done')
-    return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+  stan_fit_cpp_module <- object@mk_cppmodule(object)
+  cxxfun <- grab_cxxfun(object@dso)
+  if (test_221(object@model_cpp$model_cppcode) &&
+      stan_fit_cpp_module@constructors[[1]]$nargs == 2L) {
+    mod <- try(new(stan_fit_cpp_module, data, as.integer(seed)))
+    if (is(mod, "try-error")) {
+      message('failed to create the sampler; sampling not done')
+      return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+    }
+    sampler <- try(new(stan_fit, mod$fit_ptr()))
+    if (is(sampler, "try-error")) {
+      message('failed to create the sampler; sampling not done')
+      return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+    }
+  } else {
+    sampler <- try(new(stan_fit_cpp_module, data, as.integer(seed), cxxfun))
+    if (is(sampler, "try-error")) {
+      message('failed to create the sampler; sampling not done')
+      return(invisible(new_empty_stanfit(object, miscenv = sfmiscenv)))
+    }
   }
-
+  
   assign("stan_fit_instance", sampler, envir = sfmiscenv)
   m_pars = sampler$param_names()
   p_dims = sampler$param_dims()
