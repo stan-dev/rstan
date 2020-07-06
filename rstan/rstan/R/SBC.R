@@ -142,7 +142,7 @@ sbc <- function(stanmodel, data, M, ..., save_progress, load_incomplete=FALSE) {
     parameter <- as.factor(rep(colnames(u), each = nrow(u)))
     d <- data.frame(u = c(u), parameter)
     suppressWarnings(ggplot2::ggplot(d) + 
-      ggplot2::geom_histogram(ggplot2::aes(x = u), ...) + 
+      ggplot2::geom_freqpoly(ggplot2::aes(x = u), ...) + 
       ggplot2::facet_wrap("parameter"))
   }
 
