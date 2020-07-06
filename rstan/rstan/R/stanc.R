@@ -146,7 +146,7 @@ stanc_beta <- function(model_code, model_name, isystem) {
             "share or at least describe your Stan program. This will help ensure that Stan\n",
             "continues to work on your Stan programs in the future. Thank you!\n",
             "This message can be avoided by wrapping your function call inside suppressMessages().\n",
-            model_cppcode)
+            model_cppcode$errors[2])
     return(FALSE)
   }
   
