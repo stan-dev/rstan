@@ -19,6 +19,8 @@ import(StanHeaders)
 importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
 
+importFrom("loo", "loo", "loo_moment_match")
+
 export(
   sbc,
   stan_model,
@@ -70,8 +72,11 @@ export(
   get_rng,
   get_stream,
   RNG, OUT,
-  Rhat, ess_bulk, ess_tail
+  Rhat, ess_bulk, ess_tail,
+  loo,
+  loo_moment_match
 )
+
 
 exportClasses(
   stanmodel, stanfit 
@@ -91,8 +96,7 @@ exportMethods(
   get_logposterior, 
   get_posterior_mean,
   get_elapsed_time,
-  get_stanmodel,
-  loo
+  get_stanmodel
 )
 S3method(print, stanfit)
 S3method(as.array, stanfit)
@@ -105,8 +109,7 @@ S3method(names, stanfit)
 S3method(`names<-`, stanfit)
 S3method(pairs, stanfit)
 S3method(loo, stanfit)
-importFrom("loo", "loo", "loo.array")
-export("loo")
+S3method(loo_moment_match, stanfit)
 S3method(print, sbc)
 S3method(plot, sbc)
 S3method(`[`, simsummary)
