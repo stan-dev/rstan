@@ -1,4 +1,3 @@
-STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" -e "message()" | grep "StanHeaders")
 TBB_LIB = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('lib', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
 TBB_INCLUDE = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
 

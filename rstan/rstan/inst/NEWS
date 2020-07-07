@@ -1,3 +1,11 @@
+Tue July 7 2020
+1. Bug fixes (presumably incomplete)
+  * Better handling of NAs in monitor() and functions it calls
+2. Features (presumably incomplete)
+  * The sbc() function now has a save_progress argument thanks to jpritikin
+  * The code compilation now uses the Curiously Recurring Template Pattern
+    (CRTP) thanks to wds15
+
 Sun July 7 2019
 1. Bug fixes
   * Works with R 3.6 on Windows again
