@@ -10,14 +10,14 @@ A \code{\link[loo_moment_match]{loo_moment_match}} method that
 is customized for stanfit objects.
 The \code{loo_moment_match} method for stanfit objects ---a wrapper around the
 \code{\link[loo_moment_match]{loo_moment_match.default}} (\pkg{loo} package)--- updates
-a loo object using moment matching (Paananen et al., 2019).
+a loo object using moment matching (Paananen et al., 2020).
 }
 
 
 \usage{
 \method{loo_moment_match}{stanfit}(x,
     loo = loo,
-    \dots) 
+    \dots)
 }
 \arguments{
 \item{x}{An object of S4 class \code{stanfit}.}
@@ -33,10 +33,9 @@ The \code{loo_moment_match()} methods return an updated \code{loo} object.
 
 
 
-
 \references{
-Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2019).
-Pushing the Limits of Importance Sampling through Iterative Moment Matching.
+Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
+Implicitly Adaptive Importance Sampling.
 \href{https://arxiv.org/abs/1906.08850/}{preprint arXiv:1906.08850}
 }
 \seealso{
