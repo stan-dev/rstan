@@ -7,8 +7,8 @@
 
 \description{
 A \code{\link[loo]{loo}} method that is customized for stanfit objects.
-The \code{loo} method for stanfit objects ---a wrapper around the
-\code{\link[loo]{loo.array}} (\pkg{loo} package)--- computes PSIS-LOO CV,
+The \code{loo} method for stanfit objects ---a wrapper around the \code{array}
+method for \code{\link[loo]{loo}} in the  \pkg{loo} package --- computes PSIS-LOO CV,
 approximate leave-one-out cross-validation using Pareto smoothed importance 
 sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
 } 
@@ -72,7 +72,7 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
 
 \value{
   A list with class \code{c("psis_loo", "loo")}, as detailed in the
-  \code{\link[loo]{loo.array}} documentation.
+  \code{\link[loo]{loo}} documentation.
 }
 
 \references{

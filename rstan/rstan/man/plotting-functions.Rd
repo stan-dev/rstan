@@ -16,7 +16,7 @@
   \item{Rhat}{\code{\link{stan_rhat}}}
   \item{Ratio of effective sample size to total posterior sample size}{\code{\link{stan_ess}}}
   \item{Ratio of Monte Carlo standard error to posterior standard deviation}{\code{\link{stan_mcse}}}
-  \item{Autocorrelation}{\code{\link[rstan]{stan_ac}}}
+  \item{Autocorrelation}{\code{\link[rstan]{stan_plot}}}
 }
 }
 \seealso{

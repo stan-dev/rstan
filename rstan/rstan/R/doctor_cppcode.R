@@ -219,7 +219,8 @@ doctor_cppcode <- function(stanc_ret,
   }
 
   necessary_headers <- c("#include <rstan/boost_random_R.hpp>",
-                         "#include <rstan/io/rlist_ref_var_context.hpp>")
+                         "#include <rstan/io/rlist_ref_var_context.hpp>",
+                         "#include <stan/model/model_base_crtp.hpp>")
   if (check_logical_scalar_first(drop_model_header)) {
     lines <- grep("#include <stan/model/model_header.hpp>", lines,
                   fixed = TRUE, invert = TRUE, value = TRUE)
@@ -423,8 +424,6 @@ doctor_cppcode <- function(stanc_ret,
   namespace_name <- sub(" {", "", namespace_name, fixed = TRUE)
   if (check_logical_scalar_first(methods_for_user_defined_functions)) {
     mark <- grep(paste0("^", valid, "+\\("), lines)
-    if (length(mark) == 0L)
-      stop("'methods_for_user_defined_functions' is TRUE but no functions found")
     for (i in rev(mark)) {
       end <- i
       while (!grepl("{", lines[end], fixed = TRUE)) end <- end + 1L
@@ -483,11 +482,9 @@ doctor_cppcode <- function(stanc_ret,
   lines <- lines[-c(mark:(mark + 2L))]
 
   # deal with constructor
-  mark <- grep(paste0("^class[[:space:]]+",
-                      "[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz]",
-                      valid, "*[[:space:]]*: public prob_grad \\{"), lines)
-  class_name <- sub("^class (.*) : public prob_grad \\{", "\\1", lines[mark])
-  lines <- append(lines, after = mark,
+  mark <- grep("^class[[:space:]]+", lines)
+  class_name <- sub("^class (.*)", "\\1", lines[mark])
+  lines <- append(lines, after = mark + 1L,
                   values = c("protected:", unlist(protected)))
   lines <- append(lines, after = mark - 1L,
                   values = includes_for_user_defined_functions)
@@ -507,9 +504,8 @@ doctor_cppcode <- function(stanc_ret,
     ctor <- paste0(four_spaces, class_name, "() : prob_grad(0) { }")
   } else {
     ctor <- c(paste0(four_spaces, class_name,
-                     ##"(rstan::io::rlist_ref_var_context context__) ",
                      "(rstan::io::rlist_ref_var_context& context__) ",
-                     ": prob_grad(0) {"),
+                     ": model_base_crtp(0) {"),
               paste0(four_spaces, four_spaces,
                      "ctor_body(context__, 0, ", pstream__, ");"),
               paste0(four_spaces, "}"))

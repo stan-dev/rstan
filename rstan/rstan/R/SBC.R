@@ -1,6 +1,16 @@
-sbc <- function(stanmodel, data, M, ...) {
+sbcFitFile <- function(save_progress, stanmodel, S) {
+  file.path(save_progress, paste0(stanmodel@model_name, '-', S, '.rda'))
+}
+
+sbc <- function(stanmodel, data, M, ..., save_progress, load_incomplete=FALSE) {
   stopifnot(is(stanmodel, "stanmodel"))
   
+  doSave <- !missing(save_progress)
+  if (doSave && !dir.exists(save_progress)) {
+    stop(paste0("Argument save_progress='", save_progress,
+      "' provided but directory does not exist or is not a directory"))
+  }
+
   # parameter names
   stan_code <- get_stancode(stanmodel)
   stan_code <- scan(what = character(), sep = "\n", quiet = TRUE, text = stan_code)
@@ -18,17 +28,50 @@ sbc <- function(stanmodel, data, M, ...) {
   }
   has_log_lik <- any(grepl("log_lik[[:space:]]*;[[:space:]]*", stan_code))
   
-  post <- parallel::mclapply(1:M, FUN = function(m) {
-    S <- seq(from = 0, to = .Machine$integer.max, length.out = M)[m]
-    out <- sampling(stanmodel, data, 
-                    pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
-                    chains = 1L, cores = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
+  if (!load_incomplete) {
+    todo <- as.integer(seq(from = 0, to = .Machine$integer.max, length.out = M))
+  } else {
+    mn <- stanmodel@model_name
+    runs <- dir(save_progress)
+    runs <- runs[grepl(paste0("^", mn,'-(\\d+).rda$'), runs)]
+    if (length(runs) == 0) {
+      stop(paste("No completed runs found in", dir,
+                 "matching regular expression", paste0("^", mn,'-(\\d+).rda$'),
+                 "\nDid you use sbc(..., save_progress='/path/to/results')?"))
+    }
+    todo <- as.integer(sub(paste0(mn,'-(\\d+).rda'), "\\1", runs))
+  }
+  post <- parallel::mclapply(todo, FUN = function(S) {
+    if (doSave) {
+      file <- sbcFitFile(save_progress, stanmodel, S)
+      if (file.exists(file)) return(TRUE)
+    }
+    out <- sampling(stanmodel, data, pars = c("ranks_", if (has_log_lik) "log_lik"), include = TRUE,
+      chains = 1L, cores = 1L, seed = S, save_warmup = FALSE, thin = 1L, ...)
     out@stanmodel <- new("stanmodel")
-    return(out)
+    if (doSave) {
+      save(out, file=file)
+      return(TRUE)
+    }
+    out
   })
+  if (doSave) {
+    bad <- c()
+    for (m in 1:length(todo)) {
+      file <- sbcFitFile(save_progress, stanmodel, todo[m])
+      got <- try(load(file), silent=TRUE)
+      if (is(got, "try-error")) {
+        bad <- c(bad, file)
+        next
+      }
+      post[[m]] <- out
+    }
+    if (length(bad)) stop(paste("Remove corrupt files:",
+      paste(bad, collapse=' '), "\nThen try again"))
+  }
   bad <- sapply(post, FUN = function(x) x@mode != 0)
   if (any(bad)) {
-    warning(sum(bad), " out of ", M, " runs failed. Try decreasing 'init_r'")
+    warning(sum(bad), " out of ", length(todo), " runs failed. Try decreasing 'init_r'")
     if(all(bad)) stop("cannot continue")
     post <- post[!bad]
   }
@@ -99,7 +142,7 @@ sbc <- function(stanmodel, data, M, ...) {
     parameter <- as.factor(rep(colnames(u), each = nrow(u)))
     d <- data.frame(u = c(u), parameter)
     suppressWarnings(ggplot2::ggplot(d) + 
-      ggplot2::geom_histogram(ggplot2::aes(x = u), ...) + 
+      ggplot2::geom_freqpoly(ggplot2::aes(x = u), ...) + 
       ggplot2::facet_wrap("parameter"))
   }
 

@@ -2,7 +2,7 @@
 #define RSTAN_FIT_HPP
 
 
-#include "stan_fit_base.hpp"
+#include <rstan_next/stan_fit_base.hpp>
 
 #include <stan/model/model_base.hpp>
 
@@ -11,6 +11,8 @@ namespace rstan {
 class stan_fit : public stan_fit_base {
   
 private:
+  SEXP model_sexp_;
+  Rcpp::XPtr<stan::model::model_base> model_xptr_;
   stan::model::model_base* model_;
   boost::ecuyer1988 base_rng;
   const std::vector<std::string> names_;
@@ -42,7 +44,7 @@ private:
 public:
   bool update_param_oi(std::vector<std::string> pnames);
   
-  stan_fit(Rcpp::XPtr<stan::model::model_base> model, int seed);
+  stan_fit(SEXP model_sexp, int seed);
   ~stan_fit();
   
   /**

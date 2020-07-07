@@ -954,26 +954,28 @@ bool stan_fit::update_param_oi(std::vector<std::string> pnames) {
     return true;
   }
   
-stan_fit::stan_fit(Rcpp::XPtr<stan::model::model_base> model, int seed) :
-  model_(model.get()),
-  base_rng(static_cast<boost::uint32_t>(seed)),
-  names_(get_param_names(model_)),
-  dims_(get_param_dims(model_)),
-  num_params_(calc_total_num_params(dims_)),
-  names_oi_(names_),
-  dims_oi_(dims_),
-  num_params2_(num_params_)
-  {
-    for (size_t j = 0; j < num_params2_ - 1; j++)
-      names_oi_tidx_.push_back(j);
-    names_oi_tidx_.push_back(-1); // lp__
-    calc_starts(dims_oi_, starts_oi_);
-    get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
-    R_PreserveObject(model);
-  }
+stan_fit::stan_fit(SEXP model_sexp, int seed) :
+    model_sexp_(model_sexp),
+    model_xptr_(model_sexp),
+    model_(model_xptr_.get()),
+    base_rng(static_cast<boost::uint32_t>(seed)),
+    names_(get_param_names(model_)),
+    dims_(get_param_dims(model_)),
+    num_params_(calc_total_num_params(dims_)),
+    names_oi_(names_),
+    dims_oi_(dims_),
+    num_params2_(num_params_)
+{
+  for (size_t j = 0; j < num_params2_ - 1; j++)
+    names_oi_tidx_.push_back(j);
+  names_oi_tidx_.push_back(-1); // lp__
+  calc_starts(dims_oi_, starts_oi_);
+  get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
+  Rcpp::Rcpp_PreserveObject(model_sexp_);
+}
 
 stan_fit::~stan_fit() {
-  // R_ReleaseObject(model_);
+   Rcpp::Rcpp_ReleaseObject(model_sexp_);
 }
 
   /**

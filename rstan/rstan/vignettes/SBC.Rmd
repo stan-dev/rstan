@@ -12,11 +12,12 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
-# Nothing
+library(rstan)
+knitr::opts_chunk$set(eval = .Platform$OS.type != "windows")
 ```
 
 Here is a Stan program for a beta-binomial model
-```{stan output.var="beta_binomial"}
+```{stan output.var="beta_binomial", eval = FALSE}
 data {
   int<lower = 1> N;
   real<lower = 0> a;
@@ -44,6 +45,7 @@ generated quantities { // these adhere to the conventions above
 }
 ```
 Notice that it adheres to the following conventions:
+
 * Realizations of the unknown parameters are drawn in the `transformed data`
   block are postfixed with an underscore, such as `pi_`.
   These are considered the "true" parameters being estimated by

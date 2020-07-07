@@ -23,28 +23,26 @@ get_Rcpp_module_def_code <- function(model_name) {
 struct stan_model_holder {
     stan_model_holder(rstan::io::rlist_ref_var_context rcontext,
                       unsigned int random_seed)
-    : rcontext_(rcontext), random_seed_(random_seed),
-      model_(new stan_model(rcontext_, random_seed_), true),
-      fit_(new rstan::stan_fit(model_, random_seed_), true) {
-    }
+    : rcontext_(rcontext), random_seed_(random_seed)
+     {
+     }
 
    //stan::math::ChainableStack ad_stack;
    rstan::io::rlist_ref_var_context rcontext_;
    unsigned int random_seed_;
-   Rcpp::XPtr<stan::model::model_base> model_;
-   Rcpp::XPtr<rstan::stan_fit_base> fit_;
 };
 
 Rcpp::XPtr<stan::model::model_base> model_ptr(stan_model_holder* smh) {
-  return smh->model_;
+  Rcpp::XPtr<stan::model::model_base> model_instance(new stan_model(smh->rcontext_, smh->random_seed_), true);
+  return model_instance;
 }
 
 Rcpp::XPtr<rstan::stan_fit_base> fit_ptr(stan_model_holder* smh) {
-  return smh->fit_;
+  return Rcpp::XPtr<rstan::stan_fit_base>(new rstan::stan_fit(model_ptr(smh), smh->random_seed_), true);
 }
 
 std::string model_name(stan_model_holder* smh) {
-  return smh->model_.get()->model_name();
+  return model_ptr(smh).get()->model_name();
 }
 
 RCPP_MODULE(stan_fit4%model_name%_mod){

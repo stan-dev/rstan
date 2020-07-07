@@ -855,6 +855,7 @@ as.mcmc.list.stanfit <- function(object, pars, ...) {
     warmup2 <- object@sim$warmup2[ic] 
     if (warmup2 > 0) x <- x[-(1:warmup2), ]
     x <- as.matrix(x)
+    if (is.null(colnames(x))) colnames(x) <- pars
     end <- object@sim$iter
     thin <- object@sim$thin
     start <- end - (nrow(x) - 1) * thin
