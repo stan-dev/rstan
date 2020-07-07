@@ -49,7 +49,7 @@ gqs_light <- function(stanc_ret) {
   
   stanc_ret_ <- doctor_cppcode(stanc_ret, use_R_PRNG = TRUE, use_Rcout = TRUE,
                                detemplate = TRUE, double_only = TRUE, propto__ = TRUE,
-                               make_data_public = TRUE, drop_Eigen = TRUE,
+                               make_data_public = FALSE, drop_Eigen = TRUE,
                                drop_log_prob = TRUE, drop_model_header = TRUE,
                                return_names = TRUE, return_dims = TRUE, 
                                add_methods = list(gqs = gqs),

@@ -8,9 +8,11 @@ exposeStanClass <- function(stanc_ret,
   if (field_access != "none" && length(fields) == 0L) {
     public <- grep("^public:", stanc_ret$cppcode)
     if (length(public) == 1L) public <- c(grep("^private:", stanc_ret$cppcode), public)
-    public[1] <- public[1] + 1L
-    public[2] <- public[2] - 1L
-    fields <- sub("^.* (.*);$", "\\1", stanc_ret$cppcode[public[1]:public[2]])
+    if (diff(public) > 1L) {
+      public[1] <- public[1] + 1L
+      public[2] <- public[2] - 1L
+      fields <- sub("^.* (.*);$", "\\1", stanc_ret$cppcode[public[1]:public[2]])
+    } else fields <- NULL
   }
   if (identical("src", where)) {
     tf <- paste0(stanc_ret$model_cppname, "Module.cc")
@@ -39,6 +41,7 @@ exposeStanClass <- function(stanc_ret,
                     methods = meth,
                     file = tf,
                     header = c("// [[Rcpp::depends(rstan)]]",
+                               "// [[Rcpp::plugins(cpp14)]]",
                                "#include <RcppEigen.h>",
                                paste0('#include "', header, '"')),
                     CppClass = "stan_model",
