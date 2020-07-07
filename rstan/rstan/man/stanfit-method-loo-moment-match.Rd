@@ -6,10 +6,10 @@
 \title{Moment matching for efficient approximate leave-one-out cross-validation (LOO)}
 
 \description{
-A \code{\link[loo_moment_match]{loo_moment_match}} method that
+A \code{\link[loo]{loo_moment_match}} method that
 is customized for stanfit objects.
 The \code{loo_moment_match} method for stanfit objects ---a wrapper around the
-\code{\link[loo_moment_match]{loo_moment_match.default}} (\pkg{loo} package)--- updates
+\code{\link[loo]{loo_moment_match}} (\pkg{loo} package)--- updates
 a loo object using moment matching (Paananen et al., 2020).
 }
 

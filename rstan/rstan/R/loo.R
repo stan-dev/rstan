@@ -89,7 +89,7 @@ setMethod("loo", "stanfit", loo.stanfit)
 
 
 # wrapper around loo_moment_match.default from loo package
-loo_moment_match.stanfit <- function(x, loo, ...) {
+loo_moment_match.stanfit <- function(x, loo = loo, ...) {
   loo::loo_moment_match.default(
     x = x, loo = loo,
     post_draws = post_draws_stanfit,
