@@ -54,6 +54,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DBOOST_DISABLE_ASSERTS ',
          ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
          ' -DSTAN_THREADS ',
+         ' -DBOOST_NO_AUTO_PTR ',
          ' -include ', shQuote(Eigen), ' ',
          ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
                  ' -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 '),
