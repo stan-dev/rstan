@@ -112,14 +112,17 @@ rstanplugin <- function() {
   if (!is.null(tbbmalloc_proxyDllInfo))
       tbb_libs <- paste(tbb_libs, "-ltbbmalloc -ltbbmalloc_proxy")
 
+  PL <- paste(rcpp_pkg_libs,
+              rstan_StanServices,
+              paste0("-L", shQuote(StanHeaders_pkg_libs)),
+              "-lStanHeaders",
+              paste0("-L", shQuote(RcppParallel_pkg_libs)),
+              tbb_libs)
+
   list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
        body = function(x) x,
-       env = list(PKG_LIBS = paste(rcpp_pkg_libs,
-                                   rstan_StanServices,
-                                   paste0("-L", shQuote(StanHeaders_pkg_libs)),
-                                   "-lStanHeaders",
-                                   paste0("-L", shQuote(RcppParallel_pkg_libs)),
-                                   tbb_libs),
+       env = list(PKG_LIBS = PL,
+                  LOCAL_LIBS = if (.Platform$OS.type == "windows") PL,
                   PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                        PKG_CPPFLAGS_env_fun(), collapse = " ")))
 }

@@ -120,6 +120,7 @@ stanc_beta <- function(model_code, model_name, isystem) {
                 paste("-I", isystem, " ", collapse = ""), 
                 "-o", processed, unprocessed)
   CXX <- get_CXX()
+  CXX <- sub("[[:space:]]+-.*$", "", CXX)
   pkgbuild::with_build_tools(system2(CXX, args = ARGS), 
                              required = rstan_options("required") && 
                                identical(Sys.getenv("WINDOWS"), "TRUE") &&
