@@ -118,13 +118,19 @@ rstanplugin <- function() {
               "-lStanHeaders",
               paste0("-L", shQuote(RcppParallel_pkg_libs)),
               tbb_libs)
-
-  list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
-       body = function(x) x,
-       env = list(PKG_LIBS = PL,
-                  LOCAL_LIBS = if (.Platform$OS.type == "windows") PL,
-                  PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
-                                       PKG_CPPFLAGS_env_fun(), collapse = " ")))
+  if (.Platform$OS.type == "windows") {
+    list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
+         body = function(x) x,
+         env = list(LOCAL_LIBS = PL,
+                    PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
+                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
+  } else {
+    list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
+         body = function(x) x,
+         env = list(PKG_LIBS = PL,
+                    PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
+                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
+  }
 }
 
 
