@@ -625,8 +625,7 @@ setMethod("sampling", "stanmodel",
                 return(out)
               }
               if ( .Platform$OS.type == "unix" &&
-                   (!interactive() || isatty(stdout()) || 
-                    identical(Sys.getenv("RSTUDIO"), "1")) ) {
+                   (!interactive() || isatty(stdout())) ) {
                 nfits <- parallel::mclapply(1:chains, FUN = callFun,
                                             mc.preschedule = FALSE,
                                             mc.cores = min(chains, cores))
@@ -656,9 +655,11 @@ setMethod("sampling", "stanmodel",
                 }
                 else sinkfile <- ""
                 if (!is.null(dots$refresh) && dots$refresh == 0)
-                  cl <- parallel::makeCluster(min(cores, chains), useXDR = FALSE)
+                  cl <- parallel::makeCluster(min(cores, chains), useXDR = FALSE,
+                                              setup_strategy = "sequential")
                 else
-                  cl <- parallel::makeCluster(min(cores, chains), outfile = sinkfile, useXDR = FALSE)
+                  cl <- parallel::makeCluster(min(cores, chains), outfile = sinkfile, 
+                                              useXDR = FALSE, setup_strategy = "sequential")
                 on.exit(parallel::stopCluster(cl))
                 dependencies <- c("rstan", "Rcpp", "ggplot2")
                 .paths <- unique(c(.libPaths(), sapply(dependencies, FUN = function(d) {
