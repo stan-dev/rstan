@@ -127,14 +127,7 @@ stanc_beta <- function(model_code, model_name, isystem) {
                               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
   if (file.exists(processed)) {
     model_code <- paste(readLines(processed), collapse = "\n")
-  } else {
-    message("The NEXT version of Stan will not be able to pre-process your Stan program.\n", 
-            "Please open an issue at\n https://github.com/stan-dev/stanc3/issues \nif you can ",
-            "share or at least describe your Stan program. This will help ensure that Stan\n",
-            "continues to work on your Stan programs in the future. Thank you!\n",
-            "This message can be avoided by wrapping your function call inside suppressMessages().")
-    return(character())
-  }
+  } else return(FALSE)
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
   options(timeout = 5)
@@ -147,7 +140,7 @@ stanc_beta <- function(model_code, model_name, isystem) {
             "share or at least describe your Stan program. This will help ensure that Stan\n",
             "continues to work on your Stan programs in the future. Thank you!\n",
             "This message can be avoided by wrapping your function call inside suppressMessages().\n",
-            model_cppcode$errors[2])
+            if (is.list(model_cppcode)) model_cppcode$errors[2] else model_cppcode)
     return(FALSE)
   }
   
