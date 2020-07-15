@@ -79,6 +79,15 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (rstan_options("required"))
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
 
+  old_LOCAL_LIBS <- Sys.getenv("LOCAL_LIBS")
+  if (WINDOWS) {
+    TBB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
+    SH  <- system.file("libs", .Platform$r_arch, package = "StanHeaders",  mustWork = TRUE)
+    Sys.setenv(LOCAL_LIBS = paste0("-L", shQuote(TBB), " -tbb -tbbmalloc", 
+                                   "-L", shQuote(SH) , " -lStanHeaders"))
+    on.exit(Sys.setenv(LOCAL_LIBS = old_LOCAL_LIBS))
+  }
+
   has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
   if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
     Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
