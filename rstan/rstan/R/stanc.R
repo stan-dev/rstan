@@ -135,10 +135,14 @@ stanc_beta <- function(model_code, model_name, isystem) {
   ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
   model_cppcode <- try(ctx$call("stanc", model_name, paste(model_code, collapse = "\n")), silent = TRUE)
   if (inherits(model_cppcode, "try-error") || length(model_cppcode$errors)) {
-    message("The NEXT version of Stan will not be able to parse your Stan program.\n", 
-            "Please open an issue at\n https://github.com/stan-dev/stanc3/issues \nif you can ",
-            "share or at least describe your Stan program. This will help ensure that Stan\n",
-            "continues to work on your Stan programs in the future. Thank you!\n",
+        message("When you compile models, you are also contributing to development of the NEXT\n",
+            "Stan compiler. In this version of rstan, we compile your model as usual, but\n",
+            "also test our new compiler on your syntactically correct model. In this case,\n", 
+            "the new compiler did not work like we hoped. By filing an issue at\n",
+            "https://github.com/stan-dev/stanc3/issues with your model\n",
+            "or a minimal example that shows this warning you will be contributing\n",
+            "valuable information to Stan and ensuring your models continue working.",
+            " Thank you!\n",
             "This message can be avoided by wrapping your function call inside suppressMessages().\n",
             if (is.list(model_cppcode)) model_cppcode$errors[2] else model_cppcode)
     return(FALSE)
