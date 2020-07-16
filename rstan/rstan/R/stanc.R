@@ -130,10 +130,12 @@ stanc_beta <- function(model_code, model_name, isystem) {
   } else {
     message("When you compile models, you are also contributing to development of the NEXT\n",
             "Stan compiler. In this version of rstan, we compile your model as usual, but\n",
-            "also beta test our next compiler on your syntactically correct model. In this case,\n", 
-            "the anticipated, future compiler didn’t work like we hoped. By submitting the error\n",
-            "as an issue at https://github.com/stan-dev/stanc3/issues, you’ll be contributing\n",
-            "valuable information to the project and ensuring your models keep working. Thank you!\n",
+            "also test our new compiler on your syntactically correct model. In this case,\n", 
+            "the new compiler did not work like we hoped. By filing an issue at\n",
+            "https://github.com/stan-dev/stanc3/issues with your model\n",
+            "or a minimal example that shows this warning you will be contributing\n",
+            "valuable information to Stan and ensuring your models continue working.",
+            " Thank you!\n",
             "This message can be avoided by wrapping your function call inside suppressMessages().")
     return(character())
   }
