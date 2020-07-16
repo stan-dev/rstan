@@ -127,18 +127,7 @@ stanc_beta <- function(model_code, model_name, isystem) {
                               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
   if (file.exists(processed)) {
     model_code <- paste(readLines(processed), collapse = "\n")
-  } else {
-    message("When you compile models, you are also contributing to development of the NEXT\n",
-            "Stan compiler. In this version of rstan, we compile your model as usual, but\n",
-            "also test our new compiler on your syntactically correct model. In this case,\n", 
-            "the new compiler did not work like we hoped. By filing an issue at\n",
-            "https://github.com/stan-dev/stanc3/issues with your model\n",
-            "or a minimal example that shows this warning you will be contributing\n",
-            "valuable information to Stan and ensuring your models continue working.",
-            " Thank you!\n",
-            "This message can be avoided by wrapping your function call inside suppressMessages().")
-    return(character())
-  }
+  } else return(FALSE)
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
   options(timeout = 5)
@@ -146,14 +135,16 @@ stanc_beta <- function(model_code, model_name, isystem) {
   ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
   model_cppcode <- try(ctx$call("stanc", model_name, paste(model_code, collapse = "\n")), silent = TRUE)
   if (inherits(model_cppcode, "try-error") || length(model_cppcode$errors)) {
-    message("When you compile models, you are also contributing to development of the NEXT\n",
+        message("When you compile models, you are also contributing to development of the NEXT\n",
             "Stan compiler. In this version of rstan, we compile your model as usual, but\n",
-            "also beta test our next compiler on your syntactically correct model. In this case,\n", 
-            "the anticipated, future compiler didn’t work like we hoped. By submitting the error\n",
-            "as an issue at https://github.com/stan-dev/stanc3/issues, you’ll be contributing\n",
-            "valuable information to the project and ensuring your models keep working. Thank you!\n",
+            "also test our new compiler on your syntactically correct model. In this case,\n", 
+            "the new compiler did not work like we hoped. By filing an issue at\n",
+            "https://github.com/stan-dev/stanc3/issues with your model\n",
+            "or a minimal example that shows this warning you will be contributing\n",
+            "valuable information to Stan and ensuring your models continue working.",
+            " Thank you!\n",
             "This message can be avoided by wrapping your function call inside suppressMessages().\n",
-            model_cppcode$errors[2])
+            if (is.list(model_cppcode)) model_cppcode$errors[2] else model_cppcode)
     return(FALSE)
   }
   
