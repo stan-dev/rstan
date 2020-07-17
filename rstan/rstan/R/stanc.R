@@ -145,7 +145,8 @@ stanc_beta <- function(model_code, model_name, isystem) {
             "or a minimal example that shows this warning you will be contributing\n",
             "valuable information to Stan and ensuring your models continue working.",
             " Thank you!\n",
-            "This message can be avoided by wrapping your function call inside suppressMessages().\n",
+            "This message can be avoided by wrapping your function call inside suppressMessages()\n",
+            " or by first calling rstan_options(javascript = FALSE).\n",
             if (is.list(model_cppcode)) model_cppcode$errors[2] else model_cppcode)
     return(FALSE)
   }
