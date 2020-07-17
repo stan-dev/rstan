@@ -79,6 +79,8 @@ init_rstan_opt_env <- function(e) {
   
   assign('required', TRUE, e)
   
+  assign('javascript', TRUE, e)
+  
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
 }

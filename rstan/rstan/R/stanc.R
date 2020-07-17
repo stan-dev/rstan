@@ -56,7 +56,8 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   if (r$status == SUCCESS_RC && verbose)
     cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
   r$status = !as.logical(r$status)
-  if (interactive() && !allow_undefined) try(stanc_beta(model_code, model_name, isystem))
+  if (interactive() && !allow_undefined && rstan_options("javascript")) 
+    try(stanc_beta(model_code, model_name, isystem))
   return(r)
 }
 
@@ -114,7 +115,7 @@ stanc_beta <- function(model_code, model_name, isystem) {
     model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
   unprocessed <- tempfile(fileext = ".stan")
   processed <- tempfile(fileext = ".stan")
-  on.exit(file.remove(c(unprocessed, processed)))
+  on.exit(file.remove(unprocessed))
   writeLines(model_code, con = unprocessed)
   ARGS <- paste("-E -nostdinc -x c++ -P -C", 
                 paste("-I", isystem, " ", collapse = ""), 
@@ -126,8 +127,9 @@ stanc_beta <- function(model_code, model_name, isystem) {
                                identical(Sys.getenv("WINDOWS"), "TRUE") &&
                               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
   if (file.exists(processed)) {
+    on.exit(file.remove(processed), add = TRUE)
     model_code <- paste(readLines(processed), collapse = "\n")
-  } else return(FALSE)
+  }
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
   options(timeout = 5)
