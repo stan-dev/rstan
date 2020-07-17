@@ -113,7 +113,7 @@ rstanplugin <- function() {
       tbb_libs <- paste(tbb_libs, "-ltbbmalloc -ltbbmalloc_proxy")
 
   PL <- paste(rcpp_pkg_libs,
-              rstan_StanServices,
+              shQuote(rstan_StanServices),
               paste0("-L", shQuote(StanHeaders_pkg_libs)),
               "-lStanHeaders",
               paste0("-L", shQuote(RcppParallel_pkg_libs)),
