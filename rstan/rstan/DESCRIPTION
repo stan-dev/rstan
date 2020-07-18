@@ -2,8 +2,8 @@ Package: rstan
 Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
-Version: 2.21.1
-Date: 2020-01-09
+Version: 2.21.2
+Date: 2020-07-09
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -36,19 +36,19 @@ Imports:
     inline,
     gridExtra (>= 2.0.0),
     Rcpp (>= 0.12.0),
-    RcppParallel (>= 4.4.4),
-    loo (>= 2.0.0),
+    RcppParallel (>= 5.0.1),
+    loo (>= 2.3.0),
     pkgbuild,
     withr,
     V8
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.19.0),
-    ggplot2 (>= 2.0.0)
+    StanHeaders (>= 2.21.0),
+    ggplot2 (>= 3.0.0)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     BH (>= 1.72.0-2),
-    StanHeaders (>= 2.19.0),
+    StanHeaders (>= 2.21.0),
     RcppParallel
 Suggests:
     RUnit,

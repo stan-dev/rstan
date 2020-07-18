@@ -128,13 +128,8 @@ stan_model <- function(file,
   model_name <- stanc_ret$model_name
   model_code <- stanc_ret$model_code
   model_cppcode <- sub("stan::io::var_context&",
-                       ##"rstan::io::rlist_ref_var_context",
                        "rstan::io::rlist_ref_var_context&",
                         stanc_ret$cppcode, fixed = TRUE)
-  model_cppcode <- sub("stan::io::var_context&",
-                       ##"rstan::io::rlist_ref_var_context",
-                       "rstan::io::rlist_ref_var_context&",
-                       model_cppcode, fixed = TRUE)
   inc <- paste("#include <Rcpp.h>\n",
                "#include <rstan/io/rlist_ref_var_context.hpp>\n",
                "#include <rstan/io/r_ostream.hpp>\n",
@@ -143,6 +138,7 @@ stan_model <- function(file,
                if(is.null(includes)) model_cppcode else
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), model_cppcode),
+               "\n",
                get_Rcpp_module_def_code(model_cppname),
                sep = '')
 
@@ -176,22 +172,6 @@ stan_model <- function(file,
   #                        save_dso = save_dso | auto_write, verbose = verbose,
   #                        module_name = paste('stan_fit4', model_cppname, '_mod', sep = ''))
 
-  if (FALSE && grepl("#include", model_code, fixed = TRUE)) {
-    model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
-    model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
-    model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
-    unprocessed <- tempfile(fileext = ".stan")
-    processed <- tempfile(fileext = ".stan")
-    on.exit(file.remove(c(unprocessed, processed)))
-    writeLines(model_code, con = unprocessed)
-    ARGS <- paste("-E -nostdinc -x c++ -P -C", paste("-I", isystem, " ", collapse = ""),
-                  "-o", processed, unprocessed)
-    pkgbuild::with_build_tools(system2(CXX, args = ARGS),
-                               required = rstan_options("required") &&
-                                  identical(Sys.getenv("WINDOWS"), "TRUE") &&
-                                 !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-    if (file.exists(processed)) model_code <- paste(readLines(processed), collapse = "\n")
-  }
   obj <- new("stanmodel", model_name = model_name,
              model_code = model_code,
              dso = dso, # keep a reference to dso
