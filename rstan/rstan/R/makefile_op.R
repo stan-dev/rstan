@@ -200,3 +200,72 @@ rm_rstan_makefile_flags <- function() {
   message("compiler flags set by rstan are removed.") 
   invisible(NULL)
 } 
+
+
+#' Set environment variables
+#' @param new a named vector of names and values to assign as 
+#'  environment variables.
+#' @param action should new values "replace", "prefix" or "suffix"
+#'  existing variables with the same name.
+.set_enviro_var <- function (envs, action = "replace") {
+  if (length(envs) == 0) 
+    return()
+  stopifnot(!is.null(names(envs)) && all(names(envs) != ""))
+  stopifnot(is.character(action), length(action) == 1)
+  action <- match.arg(action, c("replace", "prefix", "suffix"))
+  envs <- envs[!duplicated(names(envs), fromLast = TRUE)]
+  old <- Sys.getenv(names(envs), names = TRUE, unset = NA)
+  set <- !is.na(envs)
+  both_set <- set & !is.na(old)
+  if (any(both_set)) {
+    if (action == "prefix") {
+      envs[both_set] <- paste(envs[both_set], old[both_set])
+    }
+    else if (action == "suffix") {
+      envs[both_set] <- paste(old[both_set], envs[both_set])
+    }
+  }
+  if (any(set)) 
+    do.call("Sys.setenv", as.list(envs[set]))
+  if (any(!set)) 
+    Sys.unsetenv(names(envs)[!set])
+  invisible(old)
+}
+
+#' Create a local version of makevars which is cleaned up after exiting
+#'  the parent frame. 
+#'  @note Has the same behavior as `withr::with_makevars` but closes the 
+#'   temporary makevar file after the result object leaves scope.
+#'  @param new a named vector of names and values to assign to the makevars values.
+#'  @param path Path to Makevars. By default is `withr::makevars_user()`.
+#'  @param assignment Assignment type to use.
+#'  @param local_env The environment that when exited will cleanup the temp Makevars.
+.local_makevars <- function(new, path = withr::makevars_user(),
+                            assignment = c("=", ":=", "?=", "+="), local_env = parent.frame()) {
+  assignment <- match.arg(assignment)
+  makevars_file <- tempfile()
+  setup_makevar = function(state) {
+    withr::set_makevars(new, path, state, assignment = assignment)
+    old <- .set_enviro_var(envs = c(R_MAKEVARS_USER = state), action = "replace")
+    withr::defer(.set_enviro_var(old), envir = local_env)
+    invisible(old)
+  }
+  cleanup_makevar = function(state) {
+    unlink(state)
+    Sys.unsetenv(R_MAKEVARS_USER)
+  }
+  return(withr::local_(setup_makevar, cleanup_makevar)(makevars_file))
+}
+
+
+#' Remove march flag from Makevars
+.remove_march_makevars = function() {
+  makevar_files <- withr::makevars_user()
+  cxx_flags <- grep("^CXX.*FLAGS", readLines(file.path(makevar_files)), value = TRUE)
+  trimmed_flag <- trimws(gsub("-march=native", "", substr(cxx_flags, regexpr("-", cxx_flags), nchar(cxx_flags))))
+  cxxflag_locations <- attr(regexpr("CXX.*FLAGS", cxx_flags), "match.length")
+  cxx_flag_name <- substr(cxx_flags, 0, cxxflag_locations)
+  names(trimmed_flag) <- cxx_flag_name
+  no_march_makevar <- .local_makevars(trimmed_flag, local_env = parent.frame())
+  return(no_march_makevar)
+}

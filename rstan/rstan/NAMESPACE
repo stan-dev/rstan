@@ -5,12 +5,12 @@ importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segme
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
 importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "qbeta", "qnorm", "quantile", "reshape", "rnorm", "runif", "sd", "setNames", "var")
 importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "str", "tail", "unzip")
-
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
 importFrom("pkgbuild", with_build_tools)
 #importFrom("Rcpp", cpp_object_initializer)
 importFrom("V8", v8)
+importFrom("withr", "set_makevars", "defer", "local_")
 import("methods")
 import(Rcpp)
 importFrom(RcppParallel,RcppParallelLibs)
