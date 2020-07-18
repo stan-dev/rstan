@@ -18,7 +18,8 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
              person("John", "Maddock", role = "cph", comment = "gamma.hpp"),
              person("Paul", "Bristow", role = "cph", comment = "gamma.hpp"),
              person("Nikhar", "Agrawal", role = "cph", comment = "gamma.hpp"),
-             person("Christopher", "Kormanyos", role = "cph", comment = "gamma.hpp"))
+             person("Christopher", "Kormanyos", role = "cph", comment = "gamma.hpp"),
+             person("Bronder", "Steve", role = "ctb"))
 Description: User-facing R functions are provided to parse, compile, test,
     estimate, and analyze Stan models by accessing the header-only Stan library
     provided by the 'StanHeaders' package. The Stan project develops a probabilistic
