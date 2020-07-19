@@ -208,8 +208,9 @@ rm_rstan_makefile_flags <- function() {
 #' @param action should new values "replace", "prefix" or "suffix"
 #'  existing variables with the same name.
 .set_enviro_var <- function (envs, action = "replace") {
-  if (length(envs) == 0) 
+  if (length(envs) == 0) {
     return()
+  }
   stopifnot(!is.null(names(envs)) && all(names(envs) != ""))
   stopifnot(is.character(action), length(action) == 1)
   action <- match.arg(action, c("replace", "prefix", "suffix"))
@@ -244,13 +245,13 @@ rm_rstan_makefile_flags <- function() {
                             assignment = c("=", ":=", "?=", "+="), local_env = parent.frame()) {
   assignment <- match.arg(assignment)
   makevars_file <- tempfile()
-  setup_makevar = function(state) {
+  setup_makevar <- function(state) {
     withr::set_makevars(new, path, state, assignment = assignment)
     old <- .set_enviro_var(envs = c(R_MAKEVARS_USER = state), action = "replace")
     withr::defer(.set_enviro_var(old), envir = local_env)
     invisible(old)
   }
-  cleanup_makevar = function(state) {
+  cleanup_makevar <- function(state) {
     unlink(state)
     Sys.unsetenv(R_MAKEVARS_USER)
   }
@@ -259,7 +260,7 @@ rm_rstan_makefile_flags <- function() {
 
 
 #' Remove march flag from Makevars
-.remove_march_makevars = function() {
+.remove_march_makevars <- function() {
   makevar_files <- withr::makevars_user()
   cxx_flags <- grep("^CXX.*FLAGS", readLines(file.path(makevar_files)), value = TRUE)
   trimmed_flag <- trimws(gsub("-march=native", "", substr(cxx_flags, regexpr("-", cxx_flags), nchar(cxx_flags))))
