@@ -243,19 +243,24 @@ rm_rstan_makefile_flags <- function() {
 #'  @param local_env The environment that when exited will cleanup the temp Makevars.
 .local_makevars <- function(new, path = withr::makevars_user(),
                             assignment = c("=", ":=", "?=", "+="), local_env = parent.frame()) {
+  RMU <- Sys.getenv("R_MAKEVARS_USER")
   assignment <- match.arg(assignment)
-  makevars_file <- tempfile()
-  setup_makevar <- function(state) {
+  makevars_file <- tempfile(pattern = "Makevars")
+  setup_makevar <- function(state, RMU) {
     withr::set_makevars(new, path, state, assignment = assignment)
     old <- .set_enviro_var(envs = c(R_MAKEVARS_USER = state), action = "replace")
     withr::defer(.set_enviro_var(old), envir = local_env)
     invisible(old)
   }
-  cleanup_makevar <- function(state) {
+  cleanup_makevar <- function(state, RMU) {
     unlink(state)
-    Sys.unsetenv(R_MAKEVARS_USER)
+    if (RMU == "") {
+      Sys.unsetenv("R_MAKEVARS_USER")
+    } else {
+      Sys.setenv(R_MAKE_VARS_USER = RMU)
+    }
   }
-  return(withr::local_(setup_makevar, cleanup_makevar)(makevars_file))
+  return(withr::local_(setup_makevar, cleanup_makevar)(makevars_file, RMU))
 }
 
 
@@ -263,7 +268,8 @@ rm_rstan_makefile_flags <- function() {
 .remove_march_makevars <- function() {
   makevar_files <- withr::makevars_user()
   cxx_flags <- grep("^CXX.*FLAGS", readLines(file.path(makevar_files)), value = TRUE)
-  trimmed_flag <- trimws(gsub("-march=native", "", substr(cxx_flags, regexpr("-", cxx_flags), nchar(cxx_flags))))
+  trimmed_flag <- trimws(gsub("-march[[:space:]]*=[[:space:]]*native", "",
+    substr(cxx_flags, regexpr("-", cxx_flags), nchar(cxx_flags))))
   cxxflag_locations <- attr(regexpr("CXX.*FLAGS", cxx_flags), "match.length")
   cxx_flag_name <- substr(cxx_flags, 0, cxxflag_locations)
   names(trimmed_flag) <- cxx_flag_name
