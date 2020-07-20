@@ -155,7 +155,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
   
   # compiling with -march=native on windows can cause segfaults
-  if (TRUE) {
+  if (WINDOWS) {
     no_march_flags <- .remove_march_makevars()
   }
   if (!isTRUE(verbose)) {
