@@ -257,7 +257,7 @@ rm_rstan_makefile_flags <- function() {
     if (RMU == "") {
       Sys.unsetenv("R_MAKEVARS_USER")
     } else {
-      Sys.setenv(R_MAKE_VARS_USER = RMU)
+      Sys.setenv(R_MAKEVARS_USER = RMU)
     }
   }
   return(withr::local_(setup_makevar, cleanup_makevar)(makevars_file, RMU))
