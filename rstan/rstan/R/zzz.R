@@ -46,11 +46,7 @@ tbbmalloc_proxyDllInfo <- NULL
                         "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
                         "rstan_options(auto_write = TRUE)")
   if (.Platform$OS.type == "windows") {
-    R_version <- as.integer(R.version$major)
-    processor_msg <- ifelse(R_version >= 4, 
-                            "Sys.setenv(LOCAL_CPPFLAGS = '-march=native -mtune=native')", 
-                            "Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')")
-    packageStartupMessage("For improved execution time, we recommend calling\n", processor_msg)
+    packageStartupMessage("Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file")
   }
 }
 
