@@ -154,12 +154,10 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   if (rstan_options("required")) 
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
   
-  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
-  if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
-    Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
-    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
+  # compiling with -march=native on windows can cause segfaults
+  if (WINDOWS) {
+    no_march_flags <- .remove_march_makevars()
   }
-
   if (!isTRUE(verbose)) {
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
