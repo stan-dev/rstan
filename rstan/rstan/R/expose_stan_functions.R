@@ -84,8 +84,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (WINDOWS) {
     TBB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
     SH  <- system.file("libs", .Platform$r_arch, package = "StanHeaders",  mustWork = TRUE)
-    Sys.setenv(LOCAL_LIBS = paste0("-L", shQuote(TBB), " -tbb -tbbmalloc", 
-                                   "-L", shQuote(SH) , " -lStanHeaders"))
+    Sys.setenv(LOCAL_LIBS = paste0("-L", shQuote(TBB), " -tbb -tbbmalloc ", 
+                                   "-L", shQuote(SH) , " -lStanHeaders "))
     on.exit(Sys.setenv(LOCAL_LIBS = old_LOCAL_LIBS))
     no_march_flags <- .remove_march_makevars()
   }
