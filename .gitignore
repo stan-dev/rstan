@@ -27,11 +27,11 @@ stan.kdev4
 # For the Mac
 *.DS_Store
 
-# 
+#
 *.swp
 
 rstan/rstan/rstan.Rproj
-
 rstan/rstan/.Rhistory
+rstan/rstan/revdep
 
 .Rhistory

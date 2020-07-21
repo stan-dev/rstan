@@ -16,20 +16,29 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 expose_stan_functions_hacks <- function(code, includes = NULL) {
-  code <- paste("#include <exporter.h>\n#include <RcppEigen.h>", code, sep="\n")
-  code <- gsub("// [[stan::function]]", 
-               "// [[Rcpp::depends(rstan)]]\n// [[Rcpp::export]]", code, fixed = TRUE)
-  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){", 
-               "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;", 
+  code <- paste("// [[Rcpp::depends(StanHeaders)]]",
+                "// [[Rcpp::depends(rstan)]]",
+                "// [[Rcpp::depends(RcppEigen)]]",
+                "// [[Rcpp::depends(BH)]]",
+                "#include <stan/math/prim/mat/fun/Eigen.hpp>",
+                "#include <boost/integer/integer_log2.hpp>",
+                "#include <exporter.h>",
+                "#include <RcppEigen.h>",
+                code, sep = "\n")
+  code <- gsub("// [[stan::function]]",
+               "// [[Rcpp::export]]", code, fixed = TRUE)
+  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
+               "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
+  code <- gsub("= nullptr", "= 0", code, fixed = TRUE)
   if(is.null(includes)) return(code)
   code <- sub("\n\nstan::io::program_reader prog_reader__() {",
-              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"), 
+              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"),
               code, fixed = TRUE)
   return(code)
 }
 
-expose_stan_functions <- function(stanmodel, includes = NULL, 
+expose_stan_functions <- function(stanmodel, includes = NULL,
                                   show_compiler_warnings = FALSE, ...) {
   mc <- NULL
   if(is(stanmodel, "stanfit")) {
@@ -46,7 +55,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     else mc <- get_model_strcode(model_code = stanmodel)
   }
   else stop("'stanmodel' is not a valid object")
-  
+
   tf <- tempfile(fileext = ".stan")
   writeLines(mc, con = tf)
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
@@ -70,12 +79,21 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (rstan_options("required"))
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
 
+  old_LOCAL_LIBS <- Sys.getenv("LOCAL_LIBS")
+  if (WINDOWS) {
+    TBB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
+    SH  <- system.file("libs", .Platform$r_arch, package = "StanHeaders",  mustWork = TRUE)
+    Sys.setenv(LOCAL_LIBS = paste0("-L", shQuote(TBB), " -tbb -tbbmalloc",
+                                   "-L", shQuote(SH) , " -lStanHeaders"))
+    on.exit(Sys.setenv(LOCAL_LIBS = old_LOCAL_LIBS))
+  }
+
   has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
   if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
     Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
     on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
   }
-  
+
   if (!isTRUE(show_compiler_warnings)) {
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
@@ -83,8 +101,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
   }
-  compiled <- pkgbuild::with_build_tools(suppressWarnings(
-    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)),
+  compiled <- pkgbuild::with_build_tools(try(suppressWarnings(
+    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)), silent = TRUE),
     required = rstan_options("required") &&
     # workaround for packages with src/install.libs.R
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
@@ -101,6 +119,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     }
   }
   DOTS <- list(...)
+  if (isTRUE(DOTS$dryRun)) return(code)
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()
   for (x in compiled$functions) {

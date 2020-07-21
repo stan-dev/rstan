@@ -5,24 +5,28 @@ importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segme
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
 importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "qbeta", "qnorm", "quantile", "reshape", "rnorm", "runif", "sd", "setNames", "var")
 importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "str", "tail", "unzip")
-
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
 importFrom("pkgbuild", with_build_tools)
 #importFrom("Rcpp", cpp_object_initializer)
+importFrom("V8", v8)
+importFrom("withr", "set_makevars", "defer", "local_")
 import("methods")
 import(Rcpp)
+importFrom(RcppParallel,RcppParallelLibs)
 import(StanHeaders)
 
 importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
+
+importFrom("loo", "loo", "loo_moment_match")
 
 export(
   sbc,
   stan_model,
   stanc,
   stanc_builder,
-  stan_version, 
+  stan_version,
   stan,
   stan_rdump,
   read_rdump,
@@ -36,12 +40,12 @@ export(
   rstan_options,
   As.mcmc.list,
   set_cppo,
-  stan_plot, 
-  stan_trace, 
-  stan_hist, 
-  stan_dens, 
+  stan_plot,
+  stan_trace,
+  stan_hist,
+  stan_dens,
   stan_scat,
-  stan_ac, 
+  stan_ac,
   stan_diag,
   stan_par,
   stan_rhat,
@@ -55,8 +59,8 @@ export(
   cpp_object_initializer,
 # get_rstan.options
   check_hmc_diagnostics,
-  check_divergences, 
-  check_treedepth, 
+  check_divergences,
+  check_treedepth,
   check_energy,
   get_divergent_iterations,
   get_max_treedepth_iterations,
@@ -68,25 +72,28 @@ export(
   get_rng,
   get_stream,
   RNG, OUT,
-  Rhat, ess_bulk, ess_tail
+  Rhat, ess_bulk, ess_tail,
+  loo,
+  loo_moment_match
 )
 
+
 exportClasses(
-  stanmodel, stanfit 
-) 
+  stanmodel, stanfit
+)
 exportMethods(
-#   print, plot, 
-#   extract, 
+#   print, plot,
+#   extract,
   optimizing, vb, gqs,
-  get_cppcode, get_cxxflags, # for stanmodel 
+  get_cppcode, get_cxxflags, # for stanmodel
   show, sampling, summary, extract,
   traceplot, plot, get_stancode, get_inits, get_seed, get_cppo_mode,
-  log_prob, grad_log_prob, 
+  log_prob, grad_log_prob,
   unconstrain_pars, constrain_pars, get_num_upars,
   get_seeds,
   get_adaptation_info,
   get_sampler_params,
-  get_logposterior, 
+  get_logposterior,
   get_posterior_mean,
   get_elapsed_time,
   get_stanmodel,
@@ -103,7 +110,7 @@ S3method(names, stanfit)
 S3method(`names<-`, stanfit)
 S3method(pairs, stanfit)
 S3method(loo, stanfit)
-importFrom("loo", "loo", "loo.array")
-export("loo")
+S3method(loo_moment_match, stanfit)
 S3method(print, sbc)
 S3method(plot, sbc)
+S3method(`[`, simsummary)

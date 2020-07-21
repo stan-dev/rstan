@@ -24,7 +24,7 @@ gqs_light <- function(stanc_ret) {
       "for (size_t j = 0; j < num_gqs; ++j)",
         "cn(j) = gq_names[j];",
       "Rcpp::colnames(output) = cn;",
-      
+
       "for (size_t i = 0; i < draws.rows(); ++i) {",
         "dummy_params_i.clear();",
         "unconstrained_params_r.clear();",
@@ -46,12 +46,12 @@ gqs_light <- function(stanc_ret) {
       "}",
       "return output;",
     "}")
-  
+
   stanc_ret_ <- doctor_cppcode(stanc_ret, use_R_PRNG = TRUE, use_Rcout = TRUE,
                                detemplate = TRUE, double_only = TRUE, propto__ = TRUE,
-                               make_data_public = TRUE, drop_Eigen = TRUE,
+                               make_data_public = FALSE, drop_Eigen = TRUE,
                                drop_log_prob = TRUE, drop_model_header = TRUE,
-                               return_names = TRUE, return_dims = TRUE, 
+                               return_names = TRUE, return_dims = TRUE,
                                add_methods = list(gqs = gqs),
                                methods_for_user_defined_functions = TRUE)
   out <- exposeStanClass(stanc_ret_, field_access = "read_write")

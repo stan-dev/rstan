@@ -83,6 +83,7 @@ z_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
   z <- qnorm((r - 1 / 2) / S)
+  z[is.na(x)] <- NA
   if (!is.null(dim(x))) {
     # output should have the input dimension
     z <- array(z, dim = dim(x), dimnames = dimnames(x))
@@ -95,18 +96,19 @@ z_scale <- function(x) {
 #' Compute rank uniformization for a numeric array. First replace each
 #' value by its rank. Average rank for ties are used to conserve the
 #' number of unique values of discrete quantities. Second, uniformize
-#' ranks to scale \code{[1/(2S), 1-1/(2S)]}, where \code{S} is the the number 
+#' ranks to scale \code{[1/(2S), 1-1/(2S)]}, where \code{S} is the the number
 #' of values.
 #'
 #' @param x A numeric array of values.
 #'
 #' @return A numeric array of rank uniformized values with the same
 #'     size as input.
-#'     
+#'
 u_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
   u <- (r - 1 / 2) / S
+  u[is.na(x)] <- NA
   if (!is.null(dim(x))) {
     # output should have the input dimension
     u <- array(u, dim = dim(x), dimnames = dimnames(x))
@@ -125,10 +127,11 @@ u_scale <- function(x) {
 #'
 #' @return A numeric array of ranked values with the same
 #'     size as input.
-#'     
+#'
 r_scale <- function(x) {
   S <- length(x)
   r <- rank(x, ties.method = 'average')
+  r[is.na(x)] <- NA
   if (!is.null(dim(x))) {
     # output should have the input dimension
     r <- array(r, dim = dim(x), dimnames = dimnames(x))
@@ -161,17 +164,22 @@ is_constant <- function(x, tol = .Machine$double.eps) {
 #' @param sims A 2D array _without_ warmup samples (# iter * # chains).
 #'
 #' @return A single numeric value for Rhat.
-#' 
+#'
 #' @references
 #' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 rhat_rfun <- function(sims) {
-  if (any(!is.finite(sims)))
+  if (anyNA(sims)) {
+    return(NA)
+  }
+  if (any(!is.finite(sims))) {
     return(NaN)
-  else if (is_constant(sims))
-    return(1)
+  }
+  if (is_constant(sims)) {
+    return(NA)
+  }
   if (is.vector(sims)) {
     dim(sims) <- c(length(sims), 1)
   }
@@ -208,10 +216,15 @@ ess_rfun <- function(sims) {
   }
   chains <- ncol(sims)
   n_samples <- nrow(sims)
-  if (any(!is.finite(sims)) || n_samples < 3L)
+  if (n_samples < 3L || anyNA(sims)) {
+    return(NA)
+  }
+  if (any(!is.finite(sims))) {
     return(NaN)
-  else if (is_constant(sims))
-    return(chains*n_samples)
+  }
+  if (is_constant(sims)) {
+    return(NA)
+  }
   acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i]))
   acov <- do.call(cbind, acov)
   chain_mean <- apply(sims, 2, mean)
@@ -241,7 +254,7 @@ ess_rfun <- function(sims) {
   # this is used in the improved estimate
   if (rho_hat_even>0)
       rho_hat_t[max_t + 1] <- rho_hat_even
-  
+
   # Geyer's initial monotone sequence
   t <- 0
   while (t <= max_t - 4) {
@@ -277,7 +290,7 @@ ess_rfun <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 Rhat <- function(sims) {
   bulk_rhat <- rhat_rfun(z_scale(split_chains(sims)))
@@ -302,7 +315,7 @@ Rhat <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 ess_bulk <- function(sims) {
   ess_rfun(z_scale(split_chains(sims)))
@@ -324,12 +337,12 @@ ess_bulk <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 ess_tail <- function(sims) {
-  I05 <- sims <= quantile(sims, 0.05)
+  I05 <- sims <= quantile(sims, 0.05, na.rm = TRUE)
   q05_ess <- ess_rfun(split_chains(I05))
-  I95 <- sims <= quantile(sims, 0.95)
+  I95 <- sims <= quantile(sims, 0.95, na.rm = TRUE)
   q95_ess <- ess_rfun(split_chains(I95))
   min(q05_ess, q95_ess)
 }
@@ -350,10 +363,10 @@ ess_tail <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 ess_quantile <- function(sims, prob) {
-  I <- sims <= quantile(sims, prob)
+  I <- sims <= quantile(sims, prob, na.rm = TRUE)
   ess_rfun(split_chains(I))
 }
 
@@ -372,7 +385,7 @@ ess_quantile <- function(sims, prob) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 ess_mean <- function(sims) {
   ess_rfun(split_chains(sims))
@@ -394,7 +407,7 @@ ess_mean <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 ess_sd <- function(sims) {
   min(ess_rfun(split_chains(sims)), ess_rfun(split_chains(sims^2)))
@@ -451,7 +464,7 @@ conv_quantile <- function(sims, prob) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 mcse_quantile <- function(sims, prob) {
   conv_quantile(sims, prob)$mcse
@@ -472,13 +485,13 @@ mcse_quantile <- function(sims, prob) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @references
 #' Aki Vehtari, Andrew Gelman, Daniel Simpson, Bob Carpenter, and
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 mcse_mean <- function(sims) {
   sd(sims) / sqrt(ess_mean(sims))
@@ -500,7 +513,7 @@ mcse_mean <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
 mcse_sd <- function(sims) {
   # assumes normality of sims and uses Stirling's approximation
@@ -536,11 +549,11 @@ mcse_sd <- function(sims) {
 #' Paul-Christian Bürkner (2019). Rank-normalization, folding, and
 #' localization: An improved R-hat for assessing convergence of
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
-#' 
+#'
 #' @export
-monitor <- function(sims, warmup = floor(dim(sims)[1] / 2), 
-                    probs = c(0.025, 0.25, 0.50, 0.75, 0.975), 
-                    digits_summary = 1, print = TRUE, ...) { 
+monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
+                    probs = c(0.025, 0.25, 0.50, 0.75, 0.975),
+                    digits_summary = 1, print = TRUE, ...) {
   if (inherits(sims, "stanfit")) {
     chains <- sims@sim$chains
     iter <- sims@sim$iter
@@ -576,8 +589,8 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   for (i in seq_along(out)) {
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
-    quan <- unname(quantile(sims_i, probs = probs))
-    quan2 <- quantile(sims_i, probs = c(0.05, 0.5, 0.95))
+    quan <- unname(quantile(sims_i, probs = probs, na.rm = TRUE))
+    quan2 <- quantile(sims_i, probs = c(0.05, 0.5, 0.95), na.rm = TRUE)
     mean <- mean(sims_i)
     sd <- sd(sims_i)
     mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
@@ -592,9 +605,9 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
       valid, quan2, mcse_quan, mcse_sd, ess_bulk, ess_tail
     )
   }
-  
+
   out <- as.data.frame(do.call(rbind, out))
-  probs_str <- names(quantile(sims_i, probs = probs))
+  probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
   str_quan <- paste0("Q", probs * 100)
   str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
@@ -612,7 +625,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   for (v in SE_vars) {
   	out[valid & !is.finite(out[, v]), v] <- 0
   }
-  
+
   out <- structure(
     out,
     chains = chains,
@@ -637,7 +650,7 @@ print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
     px <- cbind(px[ , quan2], Mean = px$mean, SD = px$sd, " Rhat" = px$Rhat,
                 Bulk_ESS = px$Bulk_ESS, Tail_ESS = px$Tail_ESS)
   }
-  
+
   decimal_places <- max(1, digits - 1)
   px$` Rhat` <- round(px$` Rhat`, digits = max(2, decimal_places))
   estimates <- setdiff(names(px), c(" Rhat", "Bulk_ESS", "Tail_ESS"))
@@ -657,4 +670,13 @@ print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
   	)
   }
   invisible(x)
+}
+
+# this is needed to make DeLorean's vignette build
+`[.simsummary` <- function (x, i, j, drop = if (missing(i)) TRUE else length(j) == 1) {
+  out <- `[.data.frame`(x, i, j, drop)
+  nms <- rownames(x)[i]
+  if (drop) names(out) <- nms
+  else rownames(out) <- nms
+  return(out)
 }

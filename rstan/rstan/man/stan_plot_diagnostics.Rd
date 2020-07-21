@@ -33,7 +33,8 @@
   
   \item{...}{For \code{stan_diag} and \code{stan_par}, optional arguments to 
     \code{\link[gridExtra]{arrangeGrob}}. For \code{stan_rhat}, \code{stan_ess}, 
-    and \code{stan_mcse}, optional arguments to \code{\link[ggplot2]{stat_bin}}.}
+    and \code{stan_mcse}, optional arguments to \code{stat_bin} in the 
+    \pkg{ggplot2} package.}
 }
 \value{
   For \code{stan_diag} and \code{stan_par}, a list containing the ggplot objects for 

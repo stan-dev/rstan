@@ -1,15 +1,26 @@
-STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" -e "message()" | grep "StanHeaders")
+TBB_LIB = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('lib', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
+TBB_INCLUDE = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" -e "cat(system.file('include', package = 'RcppParallel', mustWork = TRUE))" -e "message()" | grep "RcppParallel")
+
 CXX_STD = CXX14
 CXX14STD = -std=c++1y
 
-PKG_CPPFLAGS = -I"../inst/include" -I"." -I"$(STANHEADERS_SRC)" -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION
-SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
+PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"." -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -DBOOST_NO_AUTO_PTR -D_REENTRANT -DSTAN_THREADS
+PKG_CPPFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()")
+SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
+PKG_LIBS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::LdFlags()")
 
-SOURCES = $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp)
+SOURCES_STATIC = stan_fit.cpp stan_fit_base.cpp
+OBJECTS_STATIC = $(SOURCES_STATIC:.cpp=.o)
+
+SOURCES = $(filter-out stan_fit.cpp, $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp))
 OBJECTS = $(SOURCES:.cpp=.o)
 
-all: $(SHLIB)
-	@if test -e "/usr/bin/install_name_tool" && test -e "/usr/local/clang4/lib/libc++.1.dylib" && test -e "/usr/lib/libc++.1.dylib"; then /usr/bin/install_name_tool -change /usr/local/clang4/lib/libc++.1.dylib /usr/lib/libc++.1.dylib $(SHLIB); fi
+all: $(SHLIB) $(OBJECTS_STATIC)
+	@mkdir -p ../inst/lib/$(R_ARCH)
+	$(AR) -rs ../inst/lib/$(R_ARCH)/libStanServices.a $(OBJECTS_STATIC)
 
 .phony: all
+
+.PHONY: print-%
+print-%  : ; @echo $* = $($*)

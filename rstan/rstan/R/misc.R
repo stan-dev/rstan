@@ -364,7 +364,7 @@ config_argss <- function(chains, iter, warmup, thin,
   if (thin < 1 || thin > iter)
     stop("parameter 'thin' should be a positive integer less than 'iter'")
   warmup <- max(0, as.integer(warmup))
-  if (warmup > iter)
+  if (warmup >= iter)
     stop("parameter 'warmup' should be an integer less than 'iter'")
   chains <- as.integer(chains)
   if (chains < 1)
@@ -598,10 +598,10 @@ stan_rdump <- function(list, file = "", append = FALSE,
       l2 <- c(l2, v)
       vvdim <- dim(vv)
       cat(v, " <- \n", file = file, sep = '')
-      if (length(vv) == 0) { 
+      if (length(vv) == 0) {
         str <- paste0("structure(integer(0), ")
       } else {
-        str <- paste0("structure(c(", paste(as.vector(vv), collapse = ', '), "),") 
+        str <- paste0("structure(c(", paste(as.vector(vv), collapse = ', '), "),")
       }
       str <- gsub(addnlpat, '\\1\n', str)
       cat(str,
@@ -668,7 +668,7 @@ read_rdump <- function(f, keep.source = FALSE, ...) {
   # Args:
   #   f: the file to be sourced
   #   keep.source: see doc of function source
-  # 
+  #
   # Returns:
   #   A list
 
@@ -954,8 +954,8 @@ get_par_summary <- function(sim, n, probs = default_summary_probs()) {
                  if (sim$warmup2[i] == 0) sim$samples[[i]][[n]]
                  else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
                })
-  msdfun <- function(chain) c(mean(chain), sd(chain))
-  qfun <- function(chain) quantile(chain, probs = probs)
+  msdfun <- function(chain) c(mean(chain, na.rm = TRUE), sd(chain, na.rm = TRUE))
+  qfun <- function(chain) quantile(chain, probs = probs, na.rm = TRUE)
   c_msd <- unlist(lapply(ss, msdfun), use.names = FALSE)
   c_quan <- unlist(lapply(ss, qfun), use.names = FALSE)
   ass <- do.call(c, ss)
@@ -984,7 +984,7 @@ get_par_summary_quantile <- function(sim, n, probs = default_summary_probs()) {
                  if (sim$warmup2[i] == 0) sim$samples[[i]][[n]]
                  else sim$samples[[i]][[n]][-(1:sim$warmup2[i])]
                })
-  sumfun <- function(chain) quantile(chain, probs = probs)
+  sumfun <- function(chain) quantile(chain, probs = probs, na.rm = TRUE)
   cs <- lapply(ss, sumfun)
   as <- sumfun(do.call(c, ss))
   list(quan = as, c_quan = unlist(cs, use.names = FALSE))
@@ -1084,7 +1084,6 @@ summary_sim <- function(sim, pars, probs = default_summary_probs()) {
 }
 
 summary_sim_quan <- function(sim, pars, probs = default_summary_probs()) {
-  # cat("summary_sim is called.\n")
   probs_len <- length(probs)
   pars <- if (missing(pars)) sim$pars_oi else check_pars_second(sim, pars)
   tidx <- pars_total_indexes(sim$pars_oi, sim$dims_oi, sim$fnames_oi, pars)
@@ -1511,6 +1510,7 @@ read_csv_header <- function(f, comment.char = '#') {
   iter.count <- NA
   save.warmup <- FALSE
   sample.count <- NA_integer_
+  thin <- NULL
   while (length(input <- readLines(con, n = 1)) > 0) {
     niter <- niter + 1
     if (!grepl(comment.char, input)) break;
@@ -1523,6 +1523,9 @@ read_csv_header <- function(f, comment.char = '#') {
       warmup.count <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
     } else {
       warmup.count <- 0L
+    }
+    if (grepl("#.*thin", input)){
+      thin <- as.integer(gsub("[^0-9]*([0-9]*).*","\\1",input))
     }
     if (grepl("#.*save_warmup",input)){
       save.warmup <- !grepl("0",input)
@@ -1538,7 +1541,10 @@ read_csv_header <- function(f, comment.char = '#') {
       iter.count <- warmup.count + sample.count
     else
       iter.count <- sample.count
-  } 
+  }
+  if(!is.null(thin)){
+    iter.count <- iter.count %/% thin
+  }
   attr(header, "iter.count") <- iter.count
   attr(header, "lineno") <- niter
   close(con)
@@ -1598,17 +1604,17 @@ parse_data <- function(cppcode) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
-  
+
   in_data <- grep("context__.vals_", cppcode, fixed = TRUE, value = TRUE)
-  in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)  
-  
+  in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)
+
   # get them from the calling environment
   objects <- intersect(objects, in_data)
   stuff <- list()
   for (int in seq_along(objects)) {
    stuff[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
   }
-  
+
   for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
     if (exists(objects[i], envir = globalenv(), mode = "numeric"))
       stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
@@ -1664,7 +1670,7 @@ is.sparc <- function() {
 
 avoid_crash <- function(mod) {
   file.exists(get("packageName", envir = mod)[["path"]]) &&
-  as(get("packageName", envir = mod)["info"][1], "character") %in% 
+  as(get("packageName", envir = mod)["info"][1], "character") %in%
     c("<pointer: (nil)>", "<pointer: 0x0>")
 }
 
@@ -1701,4 +1707,9 @@ sample_indices <- function(wts, n_draws) {
     }
   }
   return(idx)
+}
+
+test_221 <- function(cppcode) {
+  grepl("Code generated by Stan version 2.2", cppcode, fixed = TRUE) ||
+  grepl("Code generated by Stan version 3", cppcode, fixed = TRUE)
 }

@@ -1,5 +1,7 @@
 \name{monitor}
 \alias{monitor}
+\alias{print.simsummary}
+\alias{[.simsummary}
 \title{Compute summaries of MCMC draws and monitor convergence} 
 \description{
   Similar to the \code{print} method for \code{stanfit} objects, but \code{monitor}
@@ -14,6 +16,9 @@
 monitor(sims, warmup = floor(dim(sims)[1]/2), 
         probs = c(0.025, 0.25, 0.5, 0.75, 0.975), 
         digits_summary = 1, print = TRUE, ...)
+\method{print}{simsummary}(x, digits = 3, se = FALSE, ...)
+\method{[}{simsummary}(x, i, j, drop = if (missing(i)) TRUE else length(j) == 1)
+        
 }
 \arguments{
   \item{sims}{A 3-D array (iterations * chains * parameters) of MCMC 
@@ -30,11 +35,22 @@ monitor(sims, warmup = floor(dim(sims)[1]/2),
   \item{print}{Logical, indicating whether to print the summary after the 
     computations are performed.} 
   \item{\dots}{Additional arguments passed to the underlying \code{print} method.}
+  \item{x}{An object of class \code{simsummary} created by \code{monitor}}
+  \item{digits}{An integer scalar defaulting to 3 for the number of decimal
+    places to print}
+  \item{se}{A logical scalar defaulting to \code{FALSE} indicating whether
+    to print the estimated standard errors of the estimates}
+  \item{i}{A vector indicating which rows of the object created by \code{monitor}
+    to select}
+  \item{j}{A vector indicating which columns of the object crated by \code{monitor}
+    to select}
+  \item{drop}{A logical scalar indicating whether the resulting object 
+    should return a vector where possible}
 }
 
 \value{
   A 2-D array with rows corresponding to parameters and columns to the 
-  summary statistics.
+  summary statistics that can be printed and subset.
 }
 
 \references{

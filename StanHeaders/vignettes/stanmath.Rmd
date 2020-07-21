@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Using the Stan Math C++ Library}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -25,25 +25,27 @@ set.seed(12345)
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
 in other packages, it is often sufficient to specify
 ```
-LinkingTo: StanHeaders (>= 2.19.0)
+LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 5.0.1)
 ```
-in the DESCRIPTION file of another package and
+in the DESCRIPTION file of another package and put something like
 ```
 CXX_STD = CXX14
+PKG_CXXFLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::CxxFlags()") \
+               $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::CxxFlags()")
+PKG_LIBS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::RcppParallelLibs()") \
+           $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::LdFlags()")
 ```
-in the src/Makevars and src/Makevars.win files. If, in addition, the other package needs to utilize 
-the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is 
-also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CPPFLAGS`
+in the src/Makevars and src/Makevars.win files and put `GNU make` in the `SystemRequirements:`
+field of the package's DESCRIPTION file. If, in addition, the other package needs to utilize
+the MCMC, optimization, variational inference, or parsing facilities of the Stan Library, then it is
+also necessary to include the `src` directory of **StanHeaders** in the other package's `PKG_CXXFLAGS`
 in the src/Makevars and src/Makevars.win files with something like
 ```
 STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
   -e "cat(system.file('include', 'src', package = 'StanHeaders', mustWork = TRUE))" \
   -e "message()" | grep "StanHeaders")
-PKG_CPPFLAGS = -I"$(STANHEADERS_SRC)"
+PKG_CXXFLAGS += -I"$(STANHEADERS_SRC)"
 ```
-and put `GNU make` in the `SystemRequirements:` field of the package's DESCRIPTION file. Finally,
-if integrating systems of stiff Ordinary Differential Equations, then you need to link to the
-shared library of StanHeaders as is shown below.
 
 # Using Higher-Order Functions in the **StanHeaders** Package
 
@@ -52,28 +54,38 @@ This section will demonstrate how to use some of the C++ functions in the **Stan
 ## Derivatives and Minimization
 
 The following is a toy example of using the Stan Math library via `Rcpp::sourceCpp`:
-to minimize the function 
+to minimize the function
 $$\left(\mathbf{x} - \mathbf{a}\right)^\top \left(\mathbf{x} - \mathbf{a}\right)$$
-which has a global minimum when $\mathbf{x} = \mathbf{a}$. To find this minimum with autodifferentiation, 
-we need to define the objective function. Then, its gradient with respect to $\mathbf{x}$, which we know is 
-$2\left(\mathbf{x} - \mathbf{a}\right)$ in this case, can be calculated by autodifferentiation. At the 
-optimum (or on the way to the optimum), we might want to evaluate the Hessian matrix, which we know is 
-$2\mathbf{I}$, but would need an additional function to evaluate it via autodifferentiation. Finally, one 
-could reconceptualize the problem as solving a homogeneous system of equations where the gradient is set 
-equal to a vector of zeros. The `stan::math::algebra_solver` function can solve such a system using 
+which has a global minimum when $\mathbf{x} = \mathbf{a}$. To find this minimum with autodifferentiation,
+we need to define the objective function. Then, its gradient with respect to $\mathbf{x}$, which we know is
+$2\left(\mathbf{x} - \mathbf{a}\right)$ in this case, can be calculated by autodifferentiation. At the
+optimum (or on the way to the optimum), we might want to evaluate the Hessian matrix, which we know is
+$2\mathbf{I}$, but would need an additional function to evaluate it via autodifferentiation. Finally, one
+could reconceptualize the problem as solving a homogeneous system of equations where the gradient is set
+equal to a vector of zeros. The `stan::math::algebra_solver` function can solve such a system using
 autodifferentiation to obtain the Jacobian, which we know to be the identity matrix in this case.
+
+```{r}
+Sys.setenv(PKG_CXXFLAGS = StanHeaders:::CxxFlags(as_character = TRUE))
+SH <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), .Platform$r_arch,
+                  package = "StanHeaders", mustWork = TRUE)
+Sys.setenv(PKG_LIBS = paste0(StanHeaders:::LdFlags(as_character = TRUE),
+                             " -L", shQuote(SH), " -lStanHeaders"))
+
+```
 
 Here is C++ code that does all of the above, except for the part of finding the optimum, which is done
 using the R function `optim` below.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math/fwd/mat/fun/dot_self.hpp>    // stuff from fwd/ must come first
 #include <stan/math/mix/mat/functor/hessian.hpp> // then stuff from mix/ must come next
 #include <stan/math.hpp>                         // finally pull in everything from rev/ & prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
@@ -145,9 +157,9 @@ auto solution(Eigen::VectorXd a, Eigen::VectorXd guess) {
 }
 ```
 
-In this compiled RMarkdown document, the **knitr** package has exported functions `f`, `g`, `H`, `J` 
-and `solution` (but not `equations_functor`) to R's global environment using the `sourceCpp` function 
-in the **Rcpp** package, so that they can now be called from R. Here we find the optimum starting from 
+In this compiled RMarkdown document, the **knitr** package has exported functions `f`, `g`, `H`, `J`
+and `solution` (but not `equations_functor`) to R's global environment using the `sourceCpp` function
+in the **Rcpp** package, so that they can now be called from R. Here we find the optimum starting from
 a random point in three dimensions:
 ```{r}
 x <- optim(rnorm(3), fn = f, gr = g, a = 1:3, method = "BFGS", hessian = TRUE)
@@ -162,22 +174,15 @@ solution(a = 1:3, guess = rnorm(3))
 
 The Stan Math library can do one-dimensional numerical integration and can solve stiff
 and non-stiff systems of differential equations, such as the harmonic oscillator example
-below. Solving stiff systems utilizes the CVODES package, which is included in **StanHeaders**, 
-but requires linking against its shared library with the following R code.
-
-```{r}
-StanHeaders_pkg_libs <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), 
-                                    .Platform$r_arch, package = "StanHeaders")
-Sys.setenv(PKG_LIBS = paste(paste0("-L", shQuote(StanHeaders_pkg_libs)), "-lStanHeaders"))
-```
-
+below. Solving stiff systems utilizes the CVODES library, which is included in **StanHeaders**.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
@@ -201,11 +206,13 @@ auto nonstiff(Eigen::MatrixXd A, Eigen::VectorXd y0) {
   using stan::math::to_vector;
   using stan::math::to_array_1d;
   std::vector<double> theta;
-  auto y = integrate_ode_rk45([&A](auto t, auto y, 
+  std::vector<double> times = {1, 2};
+  auto y = integrate_ode_rk45([&A](auto t, auto y,
                                    auto theta, auto x_r, auto x_i, std::ostream *msgs) {
     return to_array_1d( (A * to_vector(y)).eval() );
-  }, to_array_1d(y0), 0, {1, 2}, theta, {}, {});
-  return to_vector(y[0]) - stan::math::matrix_exp(A) * y0; // should be numerically zero
+  }, to_array_1d(y0), 0, times, theta, {}, {});
+  Eigen::VectorXd truth = stan::math::matrix_exp(A) * y0;
+  return (to_vector(y[0]) - truth).eval(); // should be "zero"
 }
 
 // [[Rcpp::export]]
@@ -214,11 +221,13 @@ auto stiff(Eigen::MatrixXd A, Eigen::VectorXd y0) { // not actually stiff
   using stan::math::to_vector;
   using stan::math::to_array_1d;
   std::vector<double> theta;
-  auto y = integrate_ode_bdf([&A](auto t, auto y, 
+  std::vector<double> times = {1, 2};
+  auto y = integrate_ode_bdf([&A](auto t, auto y,
                                   auto theta, auto x_r, auto x_i, std::ostream *msgs) {
     return to_array_1d( (A * to_vector(y)).eval() );
-  }, to_array_1d(y0), 0, {1, 2}, theta, {}, {});
-  return to_vector(y[0]) - stan::math::matrix_exp(A) * y0; // should be numerically zero
+  }, to_array_1d(y0), 0, times, theta, {}, {});
+  Eigen::VectorXd truth = stan::math::matrix_exp(A) * y0;
+  return (to_vector(y[0]) - truth).eval(); // should be "zero"
 }
 ```
 
@@ -239,9 +248,9 @@ $$\frac{d}{dt}\mathbf{y} = \mathbf{A}\mathbf{y}$$
 where $\mathbf{A}$ is a square matrix such as that for a simple harmonic oscillator
 
 $$\mathbf{A} = \begin{bmatrix}0 & 1 \\ -1 & -\theta\end{bmatrix}$$
-for $\theta \in \left(0,1\right)$. The solution for $\mathbf{y}_t = e^{t\mathbf{A}}\mathbf{y}_0$ can 
+for $\theta \in \left(0,1\right)$. The solution for $\mathbf{y}_t = e^{t\mathbf{A}}\mathbf{y}_0$ can
 be obtained via the matrix exponential function, which is available in the Stan Math Library, but it
-can also be obtained numerically using a fourth-order Runge-Kutta solver, which is 
+can also be obtained numerically using a fourth-order Runge-Kutta solver, which is
 appropriate for non-stiff systems of ODEs, such as this one. However, it is possible,
 albeit less efficient in this case, to use the backward-differentiation formula solver
 for stiff systems of ODEs. In both cases, we calculate the difference between the
@@ -257,12 +266,11 @@ all.equal(   stiff(A, y0), c(0, 0), tol = 1e-8)
 # Map and Parellelization
 
 The Stan Math Library includes the `map_rect` function, which applies a function to each element
-of rectangular arrays and returns a vector, making it a bit like a restricted version of R's `sapply` 
+of rectangular arrays and returns a vector, making it a bit like a restricted version of R's `sapply`
 function. However, `map_rect` can also be executed in parallel by defining the pre-processor
-directive `STAN_THREADS` and then setting the `STAN_NUM_THREADS` environmental variable to be the 
+directive `STAN_THREADS` and then setting the `STAN_NUM_THREADS` environmental variable to be the
 number of threads to use, as in
 ```{r}
-Sys.setenv(PKG_CXXFLAGS = "-DSTAN_THREADS")
 Sys.setenv(STAN_NUM_THREADS = 2) # specify -1 to use all available cores
 ```
 
@@ -271,10 +279,11 @@ and running it in parallel via `map_rect`.
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
 #include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
@@ -332,10 +341,10 @@ Thus, $2^{26} - 5 = 67,108,859$ is a prime number.
 # Defining a Stan Model in C++
 
 The Stan _language_ does not have much support for sparse matrices for a variety of
-reasons. Essentially the only applicable function is `csr_matrix_times_vector`, which 
-pre-multiplies a vector by a sparse matrix in compressed row storage by taking as arguments 
+reasons. Essentially the only applicable function is `csr_matrix_times_vector`, which
+pre-multiplies a vector by a sparse matrix in compressed row storage by taking as arguments
 its number of rows, columns, non-zero values, column indices of non-zero values, and
-locations where the non-zero values start in each row. While the 
+locations where the non-zero values start in each row. While the
 `csr_matrix_times_vector` function could be used to implement the example below,
 we illustrate how to use the sparse data structures in the **Matrix** and **RcppEigen**
 packages in a Stan model written in C++, which could easily be extended to more complicated
@@ -353,21 +362,21 @@ temporary directory:
 library(Rcpp)
 tf <- tempfile(fileext = "Module.cpp")
 exposeClass("sparselm_stan",
-      constructors = list(c("Eigen::Map<Eigen::SparseMatrix<double> >", 
+      constructors = list(c("Eigen::Map<Eigen::SparseMatrix<double> >",
                             "Eigen::VectorXd")),
       fields = c("X", "y"),
       methods = c("log_prob<>", "gradient<>"),
       rename = c(log_prob = "log_prob<>", gradient = "gradient<>"),
       header = c("// [[Rcpp::depends(BH)]]",
                  "// [[Rcpp::depends(RcppEigen)]]",
+                 "// [[Rcpp::depends(RcppParallel)]",
                  "// [[Rcpp::depends(StanHeaders)]]",
                  "// [[Rcpp::plugins(cpp14)]]",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
       file = tf,
       Rfile = FALSE)
-Sys.unsetenv("PKG_CXXFLAGS") # don't specify -DSTAN_THREADS if you are not using them
-Sys.setenv(PKG_CPPFLAGS = paste0("-I",
-                                 system.file("include", "src", 
+Sys.setenv(PKG_CXXFLAGS = paste0(Sys.getenv("PKG_CXXFLAGS"), " -I",
+                                 system.file("include", "src",
                                              package = "StanHeaders", mustWork = TRUE)))
 sourceCpp(tf)
 sparselm_stan
@@ -389,4 +398,3 @@ sm <- new(sparselm_stan, X = X, y = rnorm(nrow(X)))
 sm$log_prob(c(beta = rnorm(ncol(X)), log_sigma = log(pi)))
 round(sm$gradient(c(beta = rnorm(ncol(X)), log_sigma = log(pi))), digits = 4)
 ```
-

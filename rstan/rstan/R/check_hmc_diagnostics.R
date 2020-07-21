@@ -18,11 +18,11 @@
 throw_sampler_warnings <- function(object) {
   if (!is(object, "stanfit"))
     stop("'object' must be of class 'stanfit'")
-  
+
   if (isTRUE(object@stan_args[[1]][["algorithm"]] == "Fixed_param")) {
     return(invisible(NULL))
   }
-  
+
   sp <- get_sampler_params(object, inc_warmup = FALSE)
   n_d <- sum(sapply(sp, FUN = function(x) {
     if ("divergent__" %in% colnames(x)) return(sum(x[,"divergent__"]))
@@ -64,35 +64,35 @@ throw_sampler_warnings <- function(object) {
     }
     else n_e <- 0L
     if (n_e > 0)
-      warning("There were ", n_e, 
+      warning("There were ", n_e,
               " chains where the estimated Bayesian Fraction of Missing Information",
-              " was low. See\n", 
+              " was low. See\n",
               "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
   }
-  if (n_d > 0 || n_m > 0 || n_e > 0) 
+  if (n_d > 0 || n_m > 0 || n_e > 0)
     warning("Examine the pairs() plot to diagnose sampling problems\n",
             call. = FALSE, noBreaks. = TRUE)
-  
+
   sims <- as.array(object)
   rhat <- apply(sims, MARGIN = 3, FUN = Rhat)
-  if (anyNA(rhat) || any(rhat > 1.05))
+  if (any(rhat > 1.05, na.rm = TRUE))
       warning("The largest R-hat is ", round(max(rhat), digits = 2),
             ", indicating chains have not mixed.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#r-hat", call. = FALSE)
   bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
-  if (anyNA(bulk_ess) || any(bulk_ess < 100 * ncol(sims)))
+  if (any(bulk_ess < 100 * ncol(sims), na.rm = TRUE))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
             "indicating posterior means and medians may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#bulk-ess", call. = FALSE)
   tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
-  if (anyNA(tail_ess) || any(tail_ess < 100 * ncol(sims)))
+  if (any(tail_ess < 100 * ncol(sims), na.rm = TRUE))
     warning("Tail Effective Samples Size (ESS) is too low, indicating ",
             "posterior variances and tail quantiles may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "http://mc-stan.org/misc/warnings.html#tail-ess", call. = FALSE)
-  
+
   return(invisible(NULL))
 }
 
@@ -137,7 +137,7 @@ get_num_divergent <- function(object) {
 # Check transitions that ended with a divergence
 #
 # @param object A stanfit object.
-# @return nothing, just prints the number (and percentage) of iterations that 
+# @return nothing, just prints the number (and percentage) of iterations that
 #   ended with a divergence and, if any, suggests increasing adapt_delta.
 #
 check_divergences <- function(object) {
@@ -145,7 +145,7 @@ check_divergences <- function(object) {
   divergent <- get_divergent_iterations(object)
   n <- sum(divergent)
   N <- length(divergent)
-  
+
   if (n == 0) {
     message(
       sprintf("%s of %s iterations ended with a divergence.", n, N)
@@ -153,7 +153,7 @@ check_divergences <- function(object) {
   } else {
     message(
       sprintf("%s of %s iterations ended with a divergence (%s%%).",
-              n, N, 100 * n / N), 
+              n, N, 100 * n / N),
       "\nTry increasing 'adapt_delta' to remove the divergences."
     )
   }
@@ -168,7 +168,7 @@ get_treedepth_threshold <- function(object) {
   max_depth
 }
 
-# Get a logical vector indicating transitions that ended prematurely 
+# Get a logical vector indicating transitions that ended prematurely
 # due to maximum tree depth limit
 #
 # @param object A stanfit object.
@@ -178,7 +178,7 @@ get_max_treedepth_iterations <- function(object) {
   stopifnot(is.stanfit(object))
   max_depth <- get_treedepth_threshold(object)
   treedepths <- sampler_param_vector(object, "treedepth__") >= max_depth
-  
+
   treedepths
 }
 
@@ -204,16 +204,16 @@ check_treedepth <- function(object) {
   treedepths <- get_max_treedepth_iterations(object)
   n <- sum(treedepths)
   N <- length(treedepths)
-  
+
   if (n == 0) {
     message(
-      sprintf("%s of %s iterations saturated the maximum tree depth of %s.", 
+      sprintf("%s of %s iterations saturated the maximum tree depth of %s.",
               n, N, max_depth)
     )
   } else {
     message(
       sprintf('%s of %s iterations saturated the maximum tree depth of %s (%s%%).',
-              n, N, max_depth, 100 * n / N), 
+              n, N, max_depth, 100 * n / N),
       "\nTry increasing 'max_treedepth' to avoid saturation."
     )
   }
@@ -232,14 +232,14 @@ get_bfmi <- function(object) {
     denom <- var(x)
     numer / denom
   })
-  
+
   EBFMIs
 }
 
 # Get the chains with low Bayesian fraction of missing information (E-BFMI)
 #
 # @param object A stanfit object.
-# @return a vector of IDs of chains with low E-BFMI 
+# @return a vector of IDs of chains with low E-BFMI
 #
 get_low_bfmi_chains <- function(object) {
   stopifnot(is.stanfit(object))
@@ -249,19 +249,19 @@ get_low_bfmi_chains <- function(object) {
 # Check the energy Bayesian fraction of missing information (E-BFMI)
 #
 # @param object A stanfit object.
-# @return Nothing, just prints E-BFMI for chains with low E-BFMI and suggests 
+# @return Nothing, just prints E-BFMI for chains with low E-BFMI and suggests
 #   reparameterizing.
 #
 check_energy <- function(object) {
   stopifnot(is.stanfit(object))
   EBFMIs <- get_bfmi(object)
-  
+
   bad_chains <- which(EBFMIs < 0.2)
   if (!length(bad_chains)) {
     message("E-BFMI indicated no pathological behavior.")
   } else {
     message(
-      "E-BFMI indicated possible pathological behavior:\n", 
+      "E-BFMI indicated possible pathological behavior:\n",
       sprintf("  Chain %s: E-BFMI = %.3f\n", bad_chains, EBFMIs[bad_chains]),
       "E-BFMI below 0.2 indicates you may need to reparameterize your model."
     )
@@ -299,4 +299,3 @@ sampler_param_matrix <- function(object, param) {
   sampler_params <- get_sampler_params(object, inc_warmup=FALSE)
   sapply(sampler_params, function(x) x[, param])
 }
-

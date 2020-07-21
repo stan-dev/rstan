@@ -90,12 +90,13 @@ stan_rdump(list, file = "", append = FALSE,
 # set variables in global environment
 a <- 17.5
 b <- c(1,2,3)
-# write variables a and b to file ab.data.R in working directory
-stan_rdump(c('a','b'), "ab.data.R")
+# write variables a and b to file ab.data.R in temporary directory
+stan_rdump(c('a','b'), file.path(tempdir(), "ab.data.R"))
+unlink(file.path(tempdir(), "ab.data.R"))
 
 x <- 1; y <- 1:10; z <- array(1:10, dim = c(2,5)) 
-stan_rdump(ls(pattern = '^[xyz]'), "xyz.Rdump")
-cat(paste(readLines("xyz.Rdump"), collapse = '\n'), '\n')
-unlink("xyz.Rdump")
+stan_rdump(ls(pattern = '^[xyz]'), file.path(tempdir(), "xyz.Rdump"))
+cat(paste(readLines(file.path(tempdir(), "xyz.Rdump")), collapse = '\n'), '\n')
+unlink(file.path(tempdir(), "xyz.Rdump"))
 }
 \keyword{rstan} 

@@ -11,6 +11,8 @@ vignettes/.*\.toc$
 tests/.*[.]html$
 tests/.*[.]txt$
 inst/doc/.install_extras
+lib/
+libs/
 \.gitignore$
 Rbuildignore.*$
 .*\.new$

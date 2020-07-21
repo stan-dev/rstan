@@ -1,3 +1,6 @@
+#ifndef RSTAN_EXPORTER_H
+#define RSTAN_EXPORTER_H
+
 #include <RcppCommon.h>
 #include <boost/random/additive_combine.hpp>
 #include <iostream>
@@ -39,13 +42,13 @@ namespace Rcpp {
 
   template <> boost::ecuyer1988 as(SEXP ptr_RNG) {
     Rcpp::XPtr<boost::ecuyer1988> ptr(ptr_RNG);
-    boost::ecuyer1988& RNG = *ptr; 
+    boost::ecuyer1988& RNG = *ptr;
  		return RNG;
   }
 
   template <> boost::ecuyer1988& as(SEXP ptr_RNG) {
     Rcpp::XPtr<boost::ecuyer1988> ptr(ptr_RNG);
-    boost::ecuyer1988& RNG = *ptr; 
+    boost::ecuyer1988& RNG = *ptr;
  		return RNG;
   }
 
@@ -62,7 +65,7 @@ namespace Rcpp {
       inline boost::ecuyer1988& get(){ return t ; }
     private:
       boost::ecuyer1988& t ;
-    } ; 
+    } ;
 
     template <>
     struct input_parameter<boost::ecuyer1988&> {
@@ -73,3 +76,4 @@ namespace Rcpp {
 
 }
 
+#endif

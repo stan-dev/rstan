@@ -16,27 +16,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-cxxfun_from_dll <- function(sig, code, DLL, check_dll = TRUE) { 
+cxxfun_from_dll <- function(sig, code, DLL, check_dll = TRUE) {
   # Create function objects from dll (most of the code are copied from
-  # cxxfunction in package inline). 
-  # 
+  # cxxfunction in package inline).
+  #
   # Args:
-  #  sig: a list of function signatures 
+  #  sig: a list of function signatures
   #  DLL: object of class "DLLInfo"
-  #  check_dll: check if the dll is loaded: When it is not 
-  #    loaded, the function call might result in a segfault. 
+  #  check_dll: check if the dll is loaded: When it is not
+  #    loaded, the function call might result in a segfault.
 
-  f <- DLL[['name']] 
+  f <- DLL[['name']]
   if (check_dll) {
     dlls <- getLoadedDLLs()
-    if (!f %in% names(dlls)) 
+    if (!f %in% names(dlls))
       stop(paste("dso ", DLL[['path']], " is not loaded", sep = ''))
-  } 
+  }
 
   res <- vector("list", length(sig))
   names(res) <- names(sig)
   res <- new("CFuncList", res)
- 
+
   for(i in seq_along(sig)) {
     res[[i]] <- new("CFunc", code = code)
     fn <- function(arg) { NULL }
@@ -61,38 +61,39 @@ cxxfun_from_dll <- function(sig, code, DLL, check_dll = TRUE) {
   rm(j)
   convention <- ".Call"
   if (identical(length(sig), 1L)) res[[1L]] else res
-} 
+}
 
 cxxfun_from_dso_bin <- function(dso) {
   # Create function objects from dll (most of the code are copied from
-  # cxxfunction in package inline). 
-  # 
+  # cxxfunction in package inline).
+  #
   # Args:
-  #  dso: object of class cxxdso 
-  # 
+  #  dso: object of class cxxdso
+  #
   # Note: we are assuming that the dso is not loaded so
-  #   we create the dso file from the raw vector 
-  #   and then loaded the dso. . 
+  #   we create the dso file from the raw vector
+  #   and then loaded the dso. .
 
-  sig <- dso@sig 
+  sig <- dso@sig
   code <- dso@.CXXDSOMISC$cxxfun@code
-  tfile <- tempfile() 
-  f <- basename(tfile) 
-  libLFile <- paste(tfile, ".", filename_ext(dso@.CXXDSOMISC$dso_last_path), sep = '') 
+  tfile <- tempfile()
+  f <- basename(tfile)
+  libLFile <- paste(tfile, ".", filename_ext(dso@.CXXDSOMISC$dso_last_path), sep = '')
   # write the raw vector containing the dso file to temporary file
-  writeBin(dso@.CXXDSOMISC$dso_bin, libLFile) 
+  writeBin(dso@.CXXDSOMISC$dso_bin, libLFile)
   cleanup <- function(env) {
-    if (f %in% names(getLoadedDLLs())) dyn.unload(libLFile)
+    if (file.exists(libLFile) && f %in% names(getLoadedDLLs()))
+      dyn.unload(libLFile)
     unlink(libLFile)
   }
-  reg.finalizer(environment(), cleanup, onexit = FALSE)
-  DLL <- dyn.load(libLFile) 
-  assign('dso_last_path', libLFile, dso@.CXXDSOMISC) 
+#  reg.finalizer(environment(), cleanup, onexit = FALSE)
+  DLL <- dyn.load(libLFile)
+  assign('dso_last_path', libLFile, dso@.CXXDSOMISC)
   res <- vector("list", length(sig))
   names(res) <- names(sig)
   res <- new("CFuncList", res)
   for(i in seq_along(sig)) {
-    res[[i]] <- new("CFunc", code = code) 
+    res[[i]] <- new("CFunc", code = code)
     fn <- function(arg) { NULL }
 
     ## Modify the function formals to give the right argument list
@@ -113,31 +114,31 @@ cxxfun_from_dso_bin <- function(dso) {
   }
   ## clear the environment
   rm(j)
-  rm(tfile) 
+  rm(tfile)
   convention <- ".Call"
   if (identical(length(sig), 1L)) res[[1L]] else res
-} 
+}
 
 
 dso_path <- function(fx) {
-  # find the path for the dynamic shared objects associated with 
-  # the returned object from cxxfunction 
-  # 
+  # find the path for the dynamic shared objects associated with
+  # the returned object from cxxfunction
+  #
   # Args:
-  #   fx: returned object from cxxfunction in package inline 
+  #   fx: returned object from cxxfunction in package inline
   dllinfo <- getDynLib(fx)
-  dllinfo[['path']] 
-} 
+  dllinfo[['path']]
+}
 
 read_dso <- function(path) {
   n <- file.info(path)$size
   readBin(path, what = 'raw', n = n)
-} 
+}
 
 cxxfunctionplus <- function(sig = character(), body = character(),
                             plugin = "default", includes = "",
-                            settings = getPlugin(plugin), 
-                            save_dso = FALSE, module_name = "MODULE", 
+                            settings = getPlugin(plugin),
+                            save_dso = FALSE, module_name = "MODULE",
                             ..., verbose = FALSE) {
   R_version <- with(R.version, paste(major, minor, sep = "."))
   WINDOWS <- .Platform$OS.type == "windows"
@@ -150,15 +151,13 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     Sys.setenv(USE_CXX14 = 1)
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
-  if (rstan_options("required")) 
+  if (rstan_options("required"))
     pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
-  
-  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
-  if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
-    Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
-    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
-  }
 
+  # compiling with -march=native on windows can cause segfaults
+  if (WINDOWS) {
+    no_march_flags <- .remove_march_makevars()
+  }
   if (!isTRUE(verbose)) {
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
@@ -167,7 +166,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     on.exit(sink(type = "output"), add = TRUE)
   }
   fx <- pkgbuild::with_build_tools(
-    cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes, 
+    cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes,
                 settings = settings, ..., verbose = verbose),
     required = rstan_options("required") &&
     # workaround for packages with src/install.libs.R
@@ -185,36 +184,38 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     }
   }
   dso_last_path <- dso_path(fx)
-  if (grepl("^darwin", R.version$os) && grepl("clang4", get_CXX(FALSE))) {
-    cmd <- paste(
-      "install_name_tool",
-      "-change",
-      "/usr/local/clang4/lib/libc++.1.dylib",
-      "/usr/lib/libc++.1.dylib",
-      dso_last_path
-    )
-    system(cmd)
-    dyn.unload(dso_last_path)
-    dyn.load(dso_last_path)
+  if (grepl("^darwin", R.version$os) && grepl("clang", get_CXX(FALSE))) {
+    CLANG_DIR = tail(n = 1, grep("clang[456789]", value = TRUE,
+                                 x = list.dirs("/usr/local", recursive = FALSE)))
+    Rv <- R.version
+    GOOD <- file.path("/Library", "Frameworks", "R.framework", "Versions",
+                      paste(Rv$major, substr(Rv$minor, 1, 1), sep = "."),
+                      "Resources", "lib", "libc++.1.dylib")
+    if (length(CLANG_DIR) == 1L && file.exists(GOOD)) {
+      cmd <- paste("install_name_tool", "-change", CLANG_DIR, GOOD, dso_last_path)
+      system(cmd)
+      dyn.unload(dso_last_path)
+      dyn.load(dso_last_path)
+    }
   }
   dso_bin <- if (save_dso) read_dso(dso_last_path) else raw(0)
-  dso_filename <- sub("\\.[^.]*$", "", basename(dso_last_path)) 
-  if (!is.list(sig))  { 
-    sig <- list(sig) 
-    names(sig) <- dso_filename 
+  dso_filename <- sub("\\.[^.]*$", "", basename(dso_last_path))
+  if (!is.list(sig))  {
+    sig <- list(sig)
+    names(sig) <- dso_filename
   }
   cxxflags <- try(get_makefile_flags("CXXFLAGS"))
   if (!is.character(cxxflags)) cxxflags <- NA_character_
-  dso <- new('cxxdso', sig = sig, dso_saved = save_dso, 
-             dso_filename = dso_filename, 
-             modulename = module_name, 
-             system = R.version$system, 
+  dso <- new('cxxdso', sig = sig, dso_saved = save_dso,
+             dso_filename = dso_filename,
+             modulename = module_name,
+             system = R.version$system,
              cxxflags = cxxflags,
-             .CXXDSOMISC = new.env(parent = emptyenv())) 
+             .CXXDSOMISC = new.env(parent = emptyenv()))
   assign("cxxfun", fx, envir = dso@.CXXDSOMISC)
   assign("dso_last_path", dso_last_path, envir = dso@.CXXDSOMISC)
   assign("dso_bin", dso_bin, envir = dso@.CXXDSOMISC)
-  if (!is.null(module_name) && module_name != '') 
+  if (!is.null(module_name) && module_name != '')
     assign("module", Module(module_name, getDynLib(fx)), envir = dso@.CXXDSOMISC)
   return(dso)
-} 
+}

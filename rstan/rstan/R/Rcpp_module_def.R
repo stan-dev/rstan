@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,11 +16,43 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 get_Rcpp_module_def_code <- function(model_name) {
-  def_Rcpp_module_hpp_file <- 
-    system.file('include', '/rstan/rcpp_module_def_for_rstan.hpp', package = 'rstan') 
-  if (def_Rcpp_module_hpp_file == '') 
-    stop("Rcpp module definition file for rstan is not found.\n") 
-  src <- paste(readLines(def_Rcpp_module_hpp_file), collapse = '\n')
-  gsub("%model_name%", model_name, src)
-} 
+  RCPP_MODULE <-
+'
+#include <rstan_next/stan_fit.hpp>
 
+struct stan_model_holder {
+    stan_model_holder(rstan::io::rlist_ref_var_context rcontext,
+                      unsigned int random_seed)
+    : rcontext_(rcontext), random_seed_(random_seed)
+     {
+     }
+
+   //stan::math::ChainableStack ad_stack;
+   rstan::io::rlist_ref_var_context rcontext_;
+   unsigned int random_seed_;
+};
+
+Rcpp::XPtr<stan::model::model_base> model_ptr(stan_model_holder* smh) {
+  Rcpp::XPtr<stan::model::model_base> model_instance(new stan_model(smh->rcontext_, smh->random_seed_), true);
+  return model_instance;
+}
+
+Rcpp::XPtr<rstan::stan_fit_base> fit_ptr(stan_model_holder* smh) {
+  return Rcpp::XPtr<rstan::stan_fit_base>(new rstan::stan_fit(model_ptr(smh), smh->random_seed_), true);
+}
+
+std::string model_name(stan_model_holder* smh) {
+  return model_ptr(smh).get()->model_name();
+}
+
+RCPP_MODULE(stan_fit4%model_name%_mod){
+  Rcpp::class_<stan_model_holder>("stan_fit4%model_name%")
+  .constructor<rstan::io::rlist_ref_var_context, unsigned int>()
+  .method("model_ptr", &model_ptr)
+  .method("fit_ptr", &fit_ptr)
+  .method("model_name", &model_name)
+  ;
+}
+'
+gsub("%model_name%", model_name, RCPP_MODULE)
+}
