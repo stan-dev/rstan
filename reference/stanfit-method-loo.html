@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,11 +41,10 @@
 
 <meta property="og:title" content="Approximate leave-one-out cross-validation — loo.stanfit" />
 <meta property="og:description" content="A loo method that is customized for stanfit objects.
-The loo method for stanfit objects ---a wrapper around the
-loo.array (loo package)--- computes PSIS-LOO CV,
-approximate leave-one-out cross-validation using Pareto smoothed importance 
+The loo method for stanfit objects ---a wrapper around the array
+method for loo in the  loo package --- computes PSIS-LOO CV,
+approximate leave-one-out cross-validation using Pareto smoothed importance
 sampling (Vehtari, Gelman, and Gabry, 2017a,2017b)." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,7 +62,7 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b)." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -73,7 +76,7 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rstan</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.19.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
@@ -154,17 +157,21 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b)." />
     </div>
 
     <div class="ref-description">
-    <p>A <code><a href='https://rdrr.io/pkg/loo/man/loo.html'>loo</a></code> method that is customized for stanfit objects.
-The <code>loo</code> method for stanfit objects ---a wrapper around the
-<code><a href='https://rdrr.io/pkg/loo/man/loo.html'>loo.array</a></code> (<span class="pkg">loo</span> package)--- computes PSIS-LOO CV,
-approximate leave-one-out cross-validation using Pareto smoothed importance 
+    <p>A <code><a href='https://mc-stan.org/loo/reference/loo.html'>loo</a></code> method that is customized for stanfit objects.
+The <code>loo</code> method for stanfit objects ---a wrapper around the <code>array</code>
+method for <code><a href='https://mc-stan.org/loo/reference/loo.html'>loo</a></code> in the  <span class="pkg">loo</span> package --- computes PSIS-LOO CV,
+approximate leave-one-out cross-validation using Pareto smoothed importance
 sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for stanfit</span>
-<span class='fu'>loo</span>(<span class='no'>x</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='st'>"log_lik"</span>,
-    <span class='no'>...</span>, <span class='kw'>save_psis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-    <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span>(<span class='st'>"mc.cores"</span>, <span class='fl'>1</span>))</pre>
+<span class='fu'>loo</span>(<span class='no'>x</span>,
+    <span class='kw'>pars</span> <span class='kw'>=</span> <span class='st'>"log_lik"</span>,
+    <span class='kw'>save_psis</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <span class='kw'>cores</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span>(<span class='st'>"mc.cores"</span>, <span class='fl'>1</span>),
+    <span class='kw'>moment_match</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+    <span class='kw'>k_threshold</span> <span class='kw'>=</span> <span class='fl'>0.7</span>,
+    <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,17 +187,28 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).</p>
   specified the default behavior is to look for <code>"log_lik"</code>.</p></td>
     </tr>
     <tr>
-      <th>cores</th>
-      <td><p>Number of cores to use for parallelization. The default is 1 unless
-  <code>cores</code> is specified or the <code>mc.cores</code> <a href='https://rdrr.io/r/base/options.html'>option</a> 
-  has been set.</p></td>
-    </tr>
-    <tr>
       <th>save_psis</th>
-      <td><p>Should the intermediate results from <code><a href='https://rdrr.io/pkg/loo/man/psis.html'>psis</a></code>
+      <td><p>Should the intermediate results from <code><a href='https://mc-stan.org/loo/reference/psis.html'>psis</a></code>
   be saved in the returned object? The default is <code>FALSE</code>. This can be
   useful to avoid repeated computation when using other functions in the
   <span class="pkg">loo</span> and <span class="pkg">bayesplot</span> packages.</p></td>
+    </tr>
+    <tr>
+      <th>cores</th>
+      <td><p>Number of cores to use for parallelization. The default is 1 unless
+  <code>cores</code> is specified or the <code>mc.cores</code> <a href='https://rdrr.io/r/base/options.html'>option</a>
+  has been set.</p></td>
+    </tr>
+    <tr>
+      <th>moment_match</th>
+      <td><p>Logical; Whether to use the moment matching algorithm for
+  observations with high Pareto k values to improve accuracy.</p></td>
+    </tr>
+    <tr>
+      <th>k_threshold</th>
+      <td><p>Threshold value for Pareto k values above which
+  the moment matching algorithm is used. If <code>moment_match</code> is <code>FALSE</code>,
+  this is ignored.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -210,36 +228,46 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).</p>
   rather than once per HMC leapfrog step.</p>
 <p>For example, the following is the <code>generated quantities</code> block for
   computing and saving the log-likelihood for a linear regression model with
-  <code>N</code> data points, outcome <code>y</code>, predictor matrix <code>X</code> (including 
-  column of 1s for intercept), coefficients <code>beta</code>, 
+  <code>N</code> data points, outcome <code>y</code>, predictor matrix <code>X</code> (including
+  column of 1s for intercept), coefficients <code>beta</code>,
   and standard deviation <code>sigma</code>:</p>
 <p><code>vector[N] log_lik;</code></p>
 <p><code>for (n in 1:N) log_lik[n] = normal_lpdf(y[n] | X[n, ] * beta, sigma);</code></p>
+<p>This function automatically uses Pareto k diagnostics for assessing
+  the accuracy of importance sampling for each observation. When the
+  diagnostics indicate that importance sampling for certain observations
+  is inaccurate, a moment matching algorithm can be used, which can
+  improve the accuracy (Paananen et al., 2020).</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list with class <code><a href='https://rdrr.io/r/base/c.html'>c("psis_loo", "loo")</a></code>, as detailed in the
-  <code><a href='https://rdrr.io/pkg/loo/man/loo.html'>loo.array</a></code> documentation.</p>
+  <code><a href='https://mc-stan.org/loo/reference/loo.html'>loo</a></code> documentation.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Vehtari, A., Gelman, A., and Gabry, J. (2017a). 
-Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC. 
-<em>Statistics and Computing</em>. 27(5), 1413-1432. 
-<code>doi:10.1007/s11222-016-9696-4</code>. 
+    <p>Vehtari, A., Gelman, A., and Gabry, J. (2017a).
+Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC.
+<em>Statistics and Computing</em>. 27(5), 1413-1432.
+<code>doi:10.1007/s11222-016-9696-4</code>.
 <a href='http://arxiv.org/abs/1507.04544'>http://arxiv.org/abs/1507.04544</a>,
 <a href='http://link.springer.com/article/10.1007%2Fs11222-016-9696-4'>http://link.springer.com/article/10.1007%2Fs11222-016-9696-4</a></p>
-<p>Vehtari, A., Gelman, A., and Gabry, J. (2017b). 
-Pareto smoothed importance sampling. arXiv preprint: 
+<p>Vehtari, A., Gelman, A., and Gabry, J. (2017b).
+Pareto smoothed importance sampling. arXiv preprint:
 <a href='http://arxiv.org/abs/1507.02646/'>http://arxiv.org/abs/1507.02646/</a></p>
-<p>Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018). 
-Using stacking to average Bayesian predictive distributions. 
-Bayesian Analysis, advance publication, <code>doi:10.1214/17-BA1091</code>. 
+<p>Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018).
+Using stacking to average Bayesian predictive distributions.
+Bayesian Analysis, advance publication, <code>doi:10.1214/17-BA1091</code>.
 <a href='https://projecteuclid.org/euclid.ba/1516093227'>https://projecteuclid.org/euclid.ba/1516093227</a>.</p>
+<p>Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
+Implicitly Adaptive Importance Sampling.
+arXiv preprint:
+<a href='https://arxiv.org/abs/1906.08850'>https://arxiv.org/abs/1906.08850</a>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p></p><ul>
-<li><p>The <span class="pkg"><a href='https://rdrr.io/pkg/loo/man/loo.html'>loo</a></span> package documentation, including the vignettes for 
+<li><p>The <span class="pkg"><a href='https://mc-stan.org/loo/reference/loo.html'>loo</a></span> package documentation, including the vignettes for
  many examples (<a href='http://mc-stan.org/loo'>http://mc-stan.org/loo</a>).</p></li>
-<li><p><code><a href='https://rdrr.io/pkg/loo/man/loo_model_weights.html'>loo_model_weights</a></code> for model averaging/weighting via 
+<li><p><code><a href='https://mc-stan.org/loo/reference/loo_moment_match.html'>loo_moment_match</a></code> for the moment matching algorithm.</p></li>
+<li><p><code><a href='https://mc-stan.org/loo/reference/loo_model_weights.html'>loo_model_weights</a></code> for model averaging/weighting via
  stacking or pseudo-BMA weighting.</p></li>
 </ul>
 </div>
@@ -250,11 +278,11 @@ Bayesian Analysis, advance publication, <code>doi:10.1214/17-BA1091</code>.
 <span class='no'>N</span> <span class='kw'>&lt;-</span> <span class='fl'>100</span>
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='no'>N</span>, <span class='fl'>0</span>, <span class='fl'>1</span>)
 
-<span class='co'># Suppose we have three models for y: </span>
-<span class='co'>#  1) y ~ N(-1, sigma) </span>
+<span class='co'># Suppose we have three models for y:</span>
+<span class='co'>#  1) y ~ N(-1, sigma)</span>
 <span class='co'>#  2) y ~ N(0.5, sigma)</span>
 <span class='co'>#  3) y ~ N(0.6,sigma)</span>
-<span class='co'># </span>
+<span class='co'>#</span>
 <span class='no'>stan_code</span> <span class='kw'>&lt;-</span> <span class='st'>"
 data {
   int N;
@@ -264,7 +292,7 @@ data {
   parameters {
   real&lt;lower=0&gt; sigma;
 }
-model { 
+model {
   sigma ~ exponential(1);
   y ~ normal(mu_fixed, sigma);
 }
@@ -282,10 +310,10 @@ generated quantities {
 <span class='no'>loo1</span> <span class='kw'>&lt;-</span> <span class='fu'>loo</span>(<span class='no'>fit1</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='st'>"log_lik"</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>loo1</span>)
 
-<span class='co'># which is equivalent to </span>
+<span class='co'># which is equivalent to</span>
 <span class='no'>LL</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>as.array</a></span>(<span class='no'>fit1</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='st'>"log_lik"</span>)
-<span class='no'>r_eff</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>loo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/loo/man/relative_eff.html'>relative_eff</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='no'>LL</span>))
-<span class='no'>loo1b</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>loo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/loo/man/loo.html'>loo.array</a></span>(<span class='no'>LL</span>, <span class='kw'>r_eff</span> <span class='kw'>=</span> <span class='no'>r_eff</span>)
+<span class='no'>r_eff</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>loo</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/loo/reference/relative_eff.html'>relative_eff</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span>(<span class='no'>LL</span>))
+<span class='no'>loo1b</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>loo</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/loo/reference/loo.html'>loo.array</a></span>(<span class='no'>LL</span>, <span class='kw'>r_eff</span> <span class='kw'>=</span> <span class='no'>r_eff</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>loo1b</span>)
 
 <span class='co'># compute loo for the other models</span>
@@ -293,32 +321,29 @@ generated quantities {
 <span class='no'>loo3</span> <span class='kw'>&lt;-</span> <span class='fu'>loo</span>(<span class='no'>fit3</span>)
 
 <span class='co'># stacking weights</span>
-<span class='no'>wts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>loo</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/loo/man/loo_model_weights.html'>loo_model_weights</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>loo1</span>, <span class='no'>loo2</span>, <span class='no'>loo3</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"stacking"</span>)
+<span class='no'>wts</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>loo</span><span class='kw ns'>::</span><span class='fu'><a href='https://mc-stan.org/loo/reference/loo_model_weights.html'>loo_model_weights</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='no'>loo1</span>, <span class='no'>loo2</span>, <span class='no'>loo3</span>), <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"stacking"</span>)
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>wts</span>)
+
+<span class='co'># use the moment matching for loo with a stanfit object</span>
+<span class='no'>loo_mm</span> <span class='kw'>&lt;-</span> <span class='fu'>loo</span>(<span class='no'>fit1</span>, <span class='kw'>pars</span> <span class='kw'>=</span> <span class='st'>"log_lik"</span>, <span class='kw'>moment_match</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>loo_mm</span>)
 }</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#references">References</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Jiqiang Guo.</p>
+  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Sebastian Weber.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

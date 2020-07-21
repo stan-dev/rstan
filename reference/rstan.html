@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -38,24 +42,23 @@
 <meta property="og:title" content="RStan --- the <span style="R">R</span> interface to Stan — rstan-package" />
 <meta property="og:description" content="
    Stan Development Team
-RStan is the R interface to the Stan C++ package. 
+RStan is the R interface to the Stan C++ package.
   The RStan interface (rstan R package) provides:
-Full Bayesian inference using the No-U-Turn sampler (NUTS), 
+Full Bayesian inference using the No-U-Turn sampler (NUTS),
     a variant of Hamiltonian Monte Carlo (HMC)
-Approximate Bayesian inference using automatic differentiation 
+Approximate Bayesian inference using automatic differentiation
     variational inference (ADVI)
 Penalized maximum likelihood estimation using L-BFGS optimization
 
-  
+
 For documentation on Stan itself, including the manual and user guide
   for the modeling language, case studies and worked examples, and other
-  tutorial information visit the Users section of the Stan website:  
+  tutorial information visit the Users section of the Stan website:
 
 mc-stan.org/users/documentation
 
-  
+
 " />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -73,7 +76,7 @@ mc-stan.org/users/documentation
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -87,7 +90,7 @@ mc-stan.org/users/documentation
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rstan</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.19.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
@@ -170,22 +173,22 @@ mc-stan.org/users/documentation
     <div class="ref-description">
     <p><img src='figures/stanlogo.png' width="50px" alt="mc-stan.org" />
    <em>Stan Development Team</em></p>
-<p>RStan is the <span style="R">R</span> interface to the <a href='http://mc-stan.org/'>Stan</a> C++ package. 
+<p>RStan is the <span style="R">R</span> interface to the <a href='http://mc-stan.org/'>Stan</a> C++ package.
   The RStan interface (<span class="pkg">rstan</span> <span style="R">R</span> package) provides:</p><ul>
-<li><p>Full Bayesian inference using the No-U-Turn sampler (NUTS), 
+<li><p>Full Bayesian inference using the No-U-Turn sampler (NUTS),
     a variant of Hamiltonian Monte Carlo (HMC)</p></li>
-<li><p>Approximate Bayesian inference using automatic differentiation 
+<li><p>Approximate Bayesian inference using automatic differentiation
     variational inference (ADVI)</p></li>
 <li><p>Penalized maximum likelihood estimation using L-BFGS optimization</p></li>
 </ul>
-  
+
 <p>For documentation on Stan itself, including the manual and user guide
   for the modeling language, case studies and worked examples, and other
-  tutorial information visit the Users section of the Stan website:</p>  
+  tutorial information visit the Users section of the Stan website:</p>
 <p></p><ul>
 <li><p><a href='http://mc-stan.org/users/documentation/'>mc-stan.org/users/documentation</a></p></li>
 </ul>
-  
+
 
     </div>
 
@@ -193,12 +196,12 @@ mc-stan.org/users/documentation
 
     <h2 class="hasAnchor" id="other-r-packages-from-the-stan-development-team"><a class="anchor" href="#other-r-packages-from-the-stan-development-team"></a>Other <span style="R">R</span> packages from the Stan Development Team</h2>
 
-    <p>Various related <span style="R">R</span> packages are also available from the Stan Development Team:</p><table class='table'>
+    <p>Various related <span style="R">R</span> packages are also available from the Stan Development Team including these and more:</p><table class='table'>
 <tr><td><strong>Package</strong></td><td><strong>Description</strong></td><td><strong>Doc</strong></td><td><strong>Website</strong></td></tr>
 <tr><td><span class="pkg">bayesplot</span></td><td>ggplot-based plotting of parameter estimates, diagnostics, and posterior predictive checks.</td><td><a href='https://mc-stan.org/bayesplot/reference/bayesplot-package.html'>bayesplot-package</a></td><td><a href='http://mc-stan.org/bayesplot/'>mc-stan.org/bayesplot</a></td></tr>
 <tr><td><span class="pkg">shinystan</span></td><td>Interactive GUI for exploring MCMC output.</td><td><a href='https://rdrr.io/pkg/shinystan/man/shinystan-package.html'>shinystan-package</a></td><td><a href='http://mc-stan.org/shinystan/'>mc-stan.org/shinystan</a></td></tr>
-<tr><td><span class="pkg">loo</span></td><td>Out-of-sample predictive performance estimates and model comparison.</td><td><a href='https://rdrr.io/pkg/loo/man/loo-package.html'>loo-package</a></td><td><a href='http://mc-stan.org/loo/'>mc-stan.org/loo</a></td></tr>
-<tr><td><span class="pkg">rstanarm</span></td><td><span style="R">R</span> formula interface for applied regression modeling.</td><td><a href='https://rdrr.io/pkg/rstanarm/man/rstanarm-package.html'>rstanarm-package</a></td><td><a href='http://mc-stan.org/rstanarm/'>mc-stan.org/rstanarm</a></td></tr>
+<tr><td><span class="pkg">loo</span></td><td>Out-of-sample predictive performance estimates and model comparison.</td><td><a href='https://mc-stan.org/loo/reference/loo-package.html'>loo-package</a></td><td><a href='http://mc-stan.org/loo/'>mc-stan.org/loo</a></td></tr>
+<tr><td><span class="pkg">rstanarm</span></td><td><span style="R">R</span> formula interface for applied regression modeling.</td><td><a href='https://mc-stan.org/rstanarm/reference/rstanarm-package.html'>rstanarm-package</a></td><td><a href='http://mc-stan.org/rstanarm/'>mc-stan.org/rstanarm</a></td></tr>
 <tr><td><span class="pkg">rstantools</span></td><td>Tools for developers of <span style="R">R</span> packages interfacing with Stan.</td><td><a href='https://mc-stan.org/rstantools/reference/rstantools-package.html'>rstantools-package</a></td><td><a href='http://mc-stan.org/rstantools/'>mc-stan.org/rstantools</a></td></tr>
 </table>
 
@@ -208,13 +211,13 @@ mc-stan.org/users/documentation
     <div class='dont-index'>
 <ul>
 <li><p>The RStan vignettes: <a href='http://mc-stan.org/rstan/articles/'>http://mc-stan.org/rstan/articles/</a>.</p></li>
-<li><p><code><a href='stan.html'>stan</a></code> for details on fitting models and 
+<li><p><code><a href='stan.html'>stan</a></code> for details on fitting models and
   <code><a href='stanfit-class.html'>stanfit</a></code> for information on the fitted model objects.</p></li>
-<li><p>The <code><a href='lookup.html'>lookup</a></code> for finding a function in the Stan language 
+<li><p>The <code><a href='lookup.html'>lookup</a></code> for finding a function in the Stan language
   that corresponds to a <span style="R">R</span> function or name.</p></li>
 <li><p><a href='https://github.com/stan-dev/rstan/issues/'>https://github.com/stan-dev/rstan/issues/</a> to submit a bug
   report or feature request.</p></li>
-<li><p><a href='http://discourse.mc-stan.org'>http://discourse.mc-stan.org</a> to ask a 
+<li><p><a href='http://discourse.mc-stan.org'>http://discourse.mc-stan.org</a> to ask a
   question on the Stan Forums.</p></li>
 </ul>
 </div>
@@ -226,68 +229,51 @@ mc-stan.org/users/documentation
 data {
   int&lt;lower=0&gt; N;
   real y[N];
-} 
+}
 
 parameters {
   real mu;
-} 
+}
 
 model {
   target += normal_lpdf(mu | 0, 10);
   target += normal_lpdf(y  | mu, 1);
-} 
+}
 "</span>
 
 <span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span>(<span class='fl'>20</span>)
 <span class='no'>dat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>N</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>y</span>);
 <span class='no'>fit</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stan.html'>stan</a></span>(<span class='kw'>model_code</span> <span class='kw'>=</span> <span class='no'>stanmodelcode</span>, <span class='kw'>model_name</span> <span class='kw'>=</span> <span class='st'>"example"</span>,
-            <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>2012</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>sample_file</span> <span class='kw'>=</span> <span class='st'>'norm.csv'</span>,
-            <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+            <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>dat</span>, <span class='kw'>iter</span> <span class='kw'>=</span> <span class='fl'>2012</span>, <span class='kw'>chains</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+            <span class='kw'>sample_file</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span>(), <span class='st'>'norm.csv'</span>))
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>fit</span>)
 
-<span class='co'># extract samples </span>
-<span class='no'>e</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-extract.html'>extract</a></span>(<span class='no'>fit</span>, <span class='kw'>permuted</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># return a list of arrays </span>
+<span class='co'># extract samples</span>
+<span class='no'>e</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='stanfit-method-extract.html'>extract</a></span>(<span class='no'>fit</span>, <span class='kw'>permuted</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>) <span class='co'># return a list of arrays</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>e</span>)
 
-<span class='no'>arr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>as.array</a></span>(<span class='no'>fit</span>) <span class='co'># return an array </span>
+<span class='no'>arr</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/array.html'>as.array</a></span>(<span class='no'>fit</span>) <span class='co'># return an array</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>arr</span>)
 
 <span class='no'>mat</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span>(<span class='no'>fit</span>) <span class='co'># return a matrix</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>(<span class='no'>mat</span>)
 }</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#other-r-packages-from-the-stan-development-team">Other <span style="R">R</span> packages from the Stan Development Team</a></li>
-      <li><a href="#see-also">See also</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p></p><table class='table'>
-<tr><td>Jonah Gabry (author)</td><td>&lt;jonah.sol.gabry@columbia.edu&gt;</td></tr>
-<tr><td>Ben Goodrich (maintainer, author)</td><td>&lt;benjamin.goodrich@columbia.edu&gt;</td></tr>
-<tr><td>Jiqiang Guo (author)</td><td>&lt;guojq28@gmail.com&gt;</td></tr>
-</table>
-
-
-<p>There are also many other important contributors to RStan 
-  (<a href='https://github.com/stan-dev/rstan'>github.com/rstan</a>). 
-  Please use 'Stan Development Team' whenever citing the R interface to Stan. 
-  A BibTex entry is available from <a href='http://mc-stan.org/rstan/authors'>http://mc-stan.org/rstan/authors</a> 
-  or <code><a href='https://rdrr.io/r/utils/citation.html'>citation("rstan")</a></code>.</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
 
       <footer>
       <div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Jiqiang Guo.</p>
+  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Sebastian Weber.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>

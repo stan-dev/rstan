@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Obtain the full path of file <code>Makeconf</code> — makeconf_path • rstan</title>
+<title>Moment matching for efficient approximate leave-one-out cross-validation (LOO) — loo_moment_match.stanfit • rstan</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,12 @@
 
 
 
-<meta property="og:title" content="Obtain the full path of file <code>Makeconf</code> — makeconf_path" />
-<meta property="og:description" content="Obtain the full path of file Makeconf, in which, for example
-  the flags for compiling C/C++ code are configured." />
+<meta property="og:title" content="Moment matching for efficient approximate leave-one-out cross-validation (LOO) — loo_moment_match.stanfit" />
+<meta property="og:description" content="A loo_moment_match method that
+is customized for stanfit objects.
+The loo_moment_match method for stanfit objects ---a wrapper around the
+loo_moment_match (loo package)--- updates
+a loo object using moment matching (Paananen et al., 2020)." />
 
 
 
@@ -148,38 +151,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Obtain the full path of file <code>Makeconf</code></h1>
+    <h1>Moment matching for efficient approximate leave-one-out cross-validation (LOO)</h1>
     
-    <div class="hidden name"><code>makeconf_path.Rd</code></div>
+    <div class="hidden name"><code>stanfit-method-loo-moment-match.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Obtain the full path of file <code>Makeconf</code>, in which, for example
-  the flags for compiling C/C++ code are configured.</p>
+    <p>A <code><a href='https://mc-stan.org/loo/reference/loo_moment_match.html'>loo_moment_match</a></code> method that
+is customized for stanfit objects.
+The <code>loo_moment_match</code> method for stanfit objects ---a wrapper around the
+<code><a href='https://mc-stan.org/loo/reference/loo_moment_match.html'>loo_moment_match</a></code> (<span class="pkg">loo</span> package)--- updates
+a loo object using moment matching (Paananen et al., 2020).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>makeconf_path</span>()</pre>
+    <pre class="usage"><span class='co'># S3 method for stanfit</span>
+<span class='fu'>loo_moment_match</span>(<span class='no'>x</span>,
+    <span class='kw'>loo</span> <span class='kw'>=</span> <span class='no'>loo</span>,
+    <span class='no'>...</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>An object of S4 class <code>stanfit</code>.</p></td>
+    </tr>
+    <tr>
+      <th>loo</th>
+      <td><p>A loo object that is modified.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An character string for the full path of file <code>Makeconf</code>.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>The <code>loo_moment_match()</code> methods return an updated <code>loo</code> object.</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>The configuration for compiling shared objects using <code>R CMD SHLIB</code> 
-  are set in file <code>Makeconf</code>. To change how the C++ code is
-  compiled, modify this file. For RStan, package <span class="pkg">inline</span> 
-  compiles the C++ code using <code>R CMD SHLIB</code>. To speed up compiled
-  Stan models, increase the optimization level to <code>-O3</code> defined
-  in property <code>CXXFLAGS</code> in the file <code>Makeconf</code>.
-  This file may also be modified to specify alternative C++ compilers,
-  such as clang++ or later versions of g++.</p>
+    <p>Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
+Implicitly Adaptive Importance Sampling.
+<a href='https://arxiv.org/abs/1906.08850/'>preprint arXiv:1906.08850</a></p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='stan.html'>stan</a></code></p></div>
+    <div class='dont-index'><p><code><a href='stanfit-method-loo.html'>loo()</a></code>, <code><a href='stanfit-method-loo.html'>loo_moment_match()</a></code></p></div>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>makeconf_path</span>()</div><div class='output co'>#&gt; [1] "/Library/Frameworks/R.framework/Resources/etc/Makeconf"</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

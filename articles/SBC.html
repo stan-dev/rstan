@@ -6,19 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulation Based Calibration • rstan</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Simulation Based Calibration">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="rstan">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rstan</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.19.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
       </span>
     </div>
 
@@ -103,15 +103,15 @@
 
       
 
-      </header><div class="row">
+      </header><script src="SBC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Simulation Based Calibration</h1>
+      <h1 data-toc-skip>Simulation Based Calibration</h1>
                         <h4 class="author">Stan Development Team</h4>
             
-            <h4 class="date">2019-09-20</h4>
+            <h4 class="date">2020-07-21</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/master/vignettes/SBC.Rmd"><code>vignettes/SBC.Rmd</code></a></small>
       <div class="hidden name"><code>SBC.Rmd</code></div>
 
     </div>
@@ -144,13 +144,22 @@ generated quantities { // these adhere to the conventions above
   for (n in 1:y) log_lik[n] = bernoulli_lpmf(1 | pi);
   for (n in (y + 1):N) log_lik[n] = bernoulli_lpmf(0 | pi);
 }</code></pre>
-<p>Notice that it adheres to the following conventions: * Realizations of the unknown parameters are drawn in the <code>transformed data</code> block are postfixed with an underscore, such as <code>pi_</code>. These are considered the “true” parameters being estimated by the corresponding symbol declared in the <code>parameters</code> block, which have the same names except for the trailing underscore, such as <code>pi</code>. * The realizations of the unknown parameters are then conditioned on when drawing from the prior predictive distribution in <code>transformed data</code> block, which in this case is <code>int y = binomial_rng(N, pi_);</code>. To avoid confusion, <code>y</code> does not have a training underscore. * The realizations of the unknown parameters are copied into a <code>vector</code> in the <code>generated quantities</code> block named <code>pars_</code> * The realizations from the prior predictive distribution are copied into an object (of the same type) in the <code>generated quantities</code> block named <code>y_. This is optional. * The</code>generated quantities<code>block contains an integer array named</code>ranks_<code>whose only values are zero or one, depending on whether the realization of a    parameter from the posterior distribution exceeds the corresponding "true"   realization, which in this case is</code>ranks_[1] = {pi &gt; pi_};<code>. These are not actually "ranks"   but can be used afterwards to reconstruct (thinned) ranks. * The</code>generated quantities<code>block contains a vector named</code>log_lik` whose values are the contribution to the log-likelihood by each observation. In this case, the “observations” are the implicit successes and failures that are aggregated into a binomial likelihood. This is optional but facilitates calculating the Pareto k shape parameter estimates that indicate whether the posterior distribution is sensitive to particular observations.</p>
+<p>Notice that it adheres to the following conventions:</p>
+<ul>
+<li>Realizations of the unknown parameters are drawn in the <code>transformed data</code> block are postfixed with an underscore, such as <code>pi_</code>. These are considered the “true” parameters being estimated by the corresponding symbol declared in the <code>parameters</code> block, which have the same names except for the trailing underscore, such as <code>pi</code>.</li>
+<li>The realizations of the unknown parameters are then conditioned on when drawing from the prior predictive distribution in <code>transformed data</code> block, which in this case is <code>int y = binomial_rng(N, pi_);</code>. To avoid confusion, <code>y</code> does not have a training underscore.</li>
+<li>The realizations of the unknown parameters are copied into a <code>vector</code> in the <code>generated quantities</code> block named <code>pars_</code>
+</li>
+<li>The realizations from the prior predictive distribution are copied into an object (of the same type) in the <code>generated quantities</code> block named `y_. This is optional.</li>
+<li>The <code>generated quantities</code> block contains an integer array named <code>ranks_</code> whose only values are zero or one, depending on whether the realization of a parameter from the posterior distribution exceeds the corresponding “true” realization, which in this case is <code>ranks_[1] = {pi &gt; pi_};</code>. These are not actually “ranks” but can be used afterwards to reconstruct (thinned) ranks.</li>
+<li>The <code>generated quantities</code> block contains a vector named <code>log_lik</code> whose values are the contribution to the log-likelihood by each observation. In this case, the “observations” are the implicit successes and failures that are aggregated into a binomial likelihood. This is optional but facilitates calculating the Pareto k shape parameter estimates that indicate whether the posterior distribution is sensitive to particular observations.</li>
+</ul>
 <p>Assuming the above is compile to a code <code>stanmodel</code> named <code>beta_binomial</code>, we can then call the <code>sbc</code> function</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">output &lt;-<span class="st"> </span><span class="kw">sbc</span>(beta_binomial, <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">N =</span> <span class="dv">10</span>, <span class="dt">a =</span> <span class="dv">1</span>, <span class="dt">b =</span> <span class="dv">1</span>), <span class="dt">M =</span> <span class="dv">500</span>, <span class="dt">refresh =</span> <span class="dv">0</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">output</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sbc.html">sbc</a></span>(<span class="no">beta_binomial</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">N</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">b</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">M</span> <span class="kw">=</span> <span class="fl">500</span>, <span class="kw">refresh</span> <span class="kw">=</span> <span class="fl">0</span>)</pre></body></html></div>
 <p>At which point, we can then call</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(output)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">output</span>)</pre></body></html></div>
 <pre><code>## 0 chains had divergent transitions after warmup</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(output, <span class="dt">bins =</span> <span class="dv">10</span>) <span class="co"># it is best to specify the bins argument yourself</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">output</span>, <span class="kw">bins</span> <span class="kw">=</span> <span class="fl">10</span>) <span class="co"># it is best to specify the bins argument yourself</span></pre></body></html></div>
 <p><img src="SBC_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
@@ -159,27 +168,22 @@ generated quantities { // these adhere to the conventions above
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#references">References</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
 
 
       <footer><div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Jiqiang Guo.</p>
+  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Sebastian Weber.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
 
       </footer>
