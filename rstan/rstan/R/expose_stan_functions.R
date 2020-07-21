@@ -77,7 +77,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
 
   if (rstan_options("required"))
-    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+    pkgbuild::has_build_tools(debug = FALSE) || 
+    pkgbuild::has_build_tools(debug = TRUE)
 
   old_LOCAL_LIBS <- Sys.getenv("LOCAL_LIBS")
   if (WINDOWS) {
@@ -86,6 +87,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     Sys.setenv(LOCAL_LIBS = paste0("-L", shQuote(TBB), " -tbb -tbbmalloc", 
                                    "-L", shQuote(SH) , " -lStanHeaders"))
     on.exit(Sys.setenv(LOCAL_LIBS = old_LOCAL_LIBS))
+    no_march_flags <- .remove_march_makevars()
   }
 
   has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""

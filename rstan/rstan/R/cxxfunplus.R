@@ -152,7 +152,8 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
   if (rstan_options("required")) 
-    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+    pkgbuild::has_build_tools(debug = FALSE) || 
+    pkgbuild::has_build_tools(debug = TRUE)
   
   # compiling with -march=native on windows can cause segfaults
   if (WINDOWS) {
