@@ -29,8 +29,9 @@ tbbmalloc_proxyDllInfo <- NULL
   Rcpp::loadModule("class_model_base", what = TRUE)
   Rcpp::loadModule("class_stan_fit", what = TRUE)
   ## the tbbmalloc_proxy is not loaded by RcppParallel which is linked
-  ## in by default on macOS
-  if(Sys.info()["sysname"] == "Darwin") {
+  ## in by default on macOS; unloading only works under R >= 4.0 so that
+  ## this is only done for R >= 4.0
+  if(R.version$major >= 4 && Sys.info()["sysname"] == "Darwin") {
       tbbmalloc_proxy  <- system.file("lib/libtbbmalloc_proxy.dylib", package="RcppParallel", mustWork=FALSE)
       tbbmalloc_proxyDllInfo <<- dyn.load(tbbmalloc_proxy, local = FALSE, now = TRUE)
   }
