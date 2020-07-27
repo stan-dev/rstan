@@ -1,3 +1,9 @@
+Fri July 24 2020
+
+1. Bug fixes
+  * Compilation problems
+  * log_prob with adjust_transform = TRUE is correct again
+
 Tue July 7 2020
 1. Bug fixes (presumably incomplete)
   * Better handling of NAs in monitor() and functions it calls
