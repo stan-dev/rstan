@@ -35,9 +35,9 @@ throw_sampler_warnings <- function(object) {
       ad <- ad$adapt_delta
       if (is.null(ad)) ad <- 0.8
     }
-    warning("There were ", n_d, " divergent transitions after warmup.",
-            " Increasing adapt_delta above ", ad, " may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup", call. = FALSE)
+    warning("There were ", n_d, " divergent transitions after warmup. See\n",
+            "http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup\n", 
+            "to find out why this is a problem and how to eliminate them.", call. = FALSE)
   }
   max_td <- object@stan_args[[1]]$control
   if (is.null(max_td)) max_td <- 10
