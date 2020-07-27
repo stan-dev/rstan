@@ -1068,7 +1068,7 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
     if (!gradient) {
       double lp = 0;
       if (jacobian_adjust_transform) {
-        lp = model_->log_prob(upar, par_i, &rstan::io::rcout);
+        lp = model_->log_prob_jacobian(upar, par_i, &rstan::io::rcout);
       } else {
         lp = model_->log_prob_propto(upar, par_i, &rstan::io::rcout);
       }
