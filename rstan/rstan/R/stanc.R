@@ -122,7 +122,8 @@ stanc_beta <- function(model_code, model_name, isystem) {
                 "-o", processed, unprocessed)
   CXX <- get_CXX()
   CXX <- sub("[[:space:]]+-.*$", "", CXX)
-  pkgbuild::with_build_tools(system2(CXX, args = ARGS), 
+  pkgbuild::with_build_tools(system(paste(CXX, ARGS), 
+                                    ignore.stdout = TRUE, ignore.stderr = TRUE),
                              required = rstan_options("required") && 
                                identical(Sys.getenv("WINDOWS"), "TRUE") &&
                               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
