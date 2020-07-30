@@ -57,7 +57,10 @@ namespace rstan {
       values_(tmp);
     }
 
-    const std::vector<InternalVector>& x() {
+    const std::vector<InternalVector>& x() const {
+      return values_.x();
+    }
+    std::vector<InternalVector>& x() {
       return values_.x();
     }
   };

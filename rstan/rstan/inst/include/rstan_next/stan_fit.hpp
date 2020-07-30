@@ -9,7 +9,7 @@
 namespace rstan {
 
 class stan_fit : public stan_fit_base {
-  
+
 private:
   SEXP model_sexp_;
   Rcpp::XPtr<stan::model::model_base> model_xptr_;
@@ -18,7 +18,7 @@ private:
   const std::vector<std::string> names_;
   const std::vector<std::vector<unsigned int> > dims_;
   const unsigned int num_params_;
-  
+
   std::vector<std::string> names_oi_;                // parameters of interest
   std::vector<std::vector<unsigned int> > dims_oi_;  // and their dimensions
   std::vector<size_t> names_oi_tidx_;                // total indexes of names2
@@ -40,13 +40,13 @@ private:
    * updated.
    */
   void update_param_oi0(const std::vector<std::string>& pnames);
-  
+
 public:
   bool update_param_oi(std::vector<std::string> pnames);
-  
+
   stan_fit(SEXP model_sexp, int seed);
   ~stan_fit();
-  
+
   /**
    * Transform the parameters from its defined support
    * to unconstrained space
@@ -56,7 +56,7 @@ public:
    * @return A standard vector of doubles
    */
   std::vector<double> unconstrain_pars(Rcpp::List par);
-  
+
   /**
    * Contrary to unconstrain_pars, transform parameters
    * from unconstrained support to the constrained.
@@ -65,21 +65,21 @@ public:
    * @return A standard vector of doubles on the constrained space
    */
   std::vector<double> constrain_pars(std::vector<double> upar);
-  
+
   /**
    * Get the unconstrained or constrained parameter names
-   * 
+   *
    * @param include_tparams Flag to include transformed parameter names
    * @param include_gqs Flag to include generated quantitiy names
    * @return A standard vector of standard strings
    */
-  
-  std::vector<std::string> unconstrained_param_names(bool include_tparams, 
+
+  std::vector<std::string> unconstrained_param_names(bool include_tparams,
                                                      bool include_gqs);
-  
-  std::vector<std::string> constrained_param_names(bool include_tparams, 
+
+  std::vector<std::string> constrained_param_names(bool include_tparams,
                                                    bool include_gqs);
-  
+
   /**
    * Expose the log_prob of the model to stan_fit so R users
    * can call this function.
@@ -90,12 +90,12 @@ public:
    *   the Jacobian adjustment is included
    * @param gradient A flag to indicate whether to return the
    *   gradient as an attribute
-   * @param A numeric vector of size 1, possibly with a grad attribute      
+   * @param A numeric vector of size 1, possibly with a grad attribute
    */
-  Rcpp::NumericVector log_prob(std::vector<double> upar, 
-                               bool jacobian_adjust_transform, 
+  Rcpp::NumericVector log_prob(std::vector<double> upar,
+                               bool jacobian_adjust_transform,
                                bool gradient);
-  
+
   /**
    * Expose the grad_log_prob of the model to stan_fit so R user
    * can call this function.
@@ -104,11 +104,11 @@ public:
    *  space.
    * @param jacobian_adjust_transform A flag to indicate whether
    *   the Jacobian adjustment is included
-   * @return A numeric vector whose size is equal to the size of upar 
+   * @return A numeric vector whose size is equal to the size of upar
    */
-  Rcpp::NumericVector grad_log_prob(std::vector<double> upar, 
+  Rcpp::NumericVector grad_log_prob(std::vector<double> upar,
                                     bool jacobian_adjust_transform);
-  
+
   /**
    * Return the number of unconstrained parameters
    */
@@ -116,58 +116,58 @@ public:
 
   /**
    * Drive the sampler / optimizer / approximator
-   * 
+   *
    * @param args_ A R(cpp) list of arguments
    * @return A R(cpp) list of fit stuff
    */
-  
+
   Rcpp::List call_sampler(Rcpp::List args_);
-  
+
   /**
    * Drive the generated quantities
-   * 
+   *
    * @param draws A matrix of posterior draws
-   * @param seed An unsigned integer to seed the PRNG 
+   * @param seed An unsigned integer to seed the PRNG
    * @return A R(cpp) list of realizations from generated quantities
    */
-  
-  Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws, 
+
+  Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws,
                             unsigned int seed);
-  
+
   /**
    * Return names (of interest)
-   * 
+   *
    * @return A standard vector of standard strings
    */
   std::vector<std::string> param_names() const;
-  
+
   std::vector<std::string> param_names_oi() const;
-  
+
   /**
-   * Return the indices among those parameters of interest, 
+   * Return the indices among those parameters of interest,
    * rather than all the parameters
-   * 
+   *
    * @param names A standard vector of standard strings naming POIs
    * @return A R(cpp) list of indices thereof
    */
-  Rcpp::List param_oi_tidx(std::vector<std::string> names);
-  
+  Rcpp::List param_oi_tidx(const std::vector<std::string>& names);
+
   /**
    * Get dimensions
-   * 
+   *
    * @return A R(cpp) list of dimensions (of interest)
    */
-  
+
   Rcpp::List param_dims() const;
-  
+
   Rcpp::List param_dims_oi() const;
 
   /**
    * Get flatnames of interest
-   * 
+   *
    * @return A standard vector of standard strings of FOIs
    */
-  
+
   std::vector<std::string> param_fnames_oi() const;
 };
 

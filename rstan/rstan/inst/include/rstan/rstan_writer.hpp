@@ -82,9 +82,7 @@ namespace rstan {
      @param      M  number of iterations to be saved
      @param      warmup number of warmup iterations to be saved
   */
-  inline
-  rstan_sample_writer*
-  sample_writer_factory(std::ostream *csv_fstream,
+  inline auto sample_writer_factory(std::ostream *csv_fstream,
                         std::ostream& comment_stream,
                         const std::string& prefix,
                         size_t N_sample_names, size_t N_sampler_names,
@@ -113,8 +111,7 @@ namespace rstan {
     filtered_values<Rcpp::NumericVector> values(N, N_iter_save, filter);
     filtered_values<Rcpp::NumericVector> sampler_values(N, N_iter_save, filter_sampler_values);
     sum_values sum(N, warmup);
-
-    return new rstan_sample_writer(csv, comments, values, sampler_values, sum);
+    return std::make_unique<rstan_sample_writer>(csv, comments, values, sampler_values, sum);
   }
 
 }

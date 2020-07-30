@@ -203,16 +203,15 @@ template <class T> void
     std::vector<std::vector<T> > idx;
     expand_indices(dim, idx, col_major);
     size_t first = first_is_one ? 1 : 0;
-    for (typename std::vector<std::vector<T> >::const_iterator it = idx.begin();
-         it != idx.end();
-         ++it) {
+    for (auto&& it : idx) {
       std::stringstream stri;
       stri << name << "[";
 
-      size_t lenm1 = it -> size() - 1;
-      for (size_t i = 0; i < lenm1; i++)
-        stri << ((*it)[i] + first) << ",";
-      stri << ((*it)[lenm1] + first) << "]";
+      size_t lenm1 = it.size() - 1;
+      for (size_t i = 0; i < lenm1; i++) {
+        stri << (it[i] + first) << ",";
+      }
+      stri << (it[lenm1] + first) << "]";
       fnames.push_back(stri.str());
     }
   }
@@ -367,12 +366,11 @@ struct R_CheckUserInterrupt_Functor : public stan::callbacks::interrupt {
 std::vector<double> unconstrained_to_constrained(stan::model::model_base* model,
                                                  unsigned int random_seed,
                                                  unsigned int id,
-                                                 const std::vector<double>& params) {
+                                                 std::vector<double>& params) {
   std::vector<int> params_i;
   std::vector<double> constrained_params;
   boost::ecuyer1988 rng = stan::services::util::create_rng(random_seed, id);
-  model->write_array(rng, const_cast<std::vector<double>&>(params), params_i,
-                     constrained_params);
+  model->write_array(rng, params, params_i, constrained_params);
   return constrained_params;
 }
 /**
@@ -390,7 +388,7 @@ int command(stan_args& args,
             const std::vector<size_t>& qoi_idx,
             const std::vector<std::string>& fnames_oi,
             boost::ecuyer1988& base_rng) {
-  
+
   if (args.get_method() == SAMPLING
         && model->num_params_r() == 0
         && args.get_ctrl_sampling_algorithm() != Fixed_param)
@@ -398,12 +396,12 @@ int command(stan_args& args,
                                    "model that has no parameters.");
   int refresh = args.get_refresh();
   unsigned int id = args.get_chain_id();
-  
+
   std::ostream nullout(nullptr);
   std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
   std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
 
-  stan::callbacks::stream_logger_with_chain_id 
+  stan::callbacks::stream_logger_with_chain_id
     logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
@@ -570,7 +568,7 @@ int command(stan_args& args,
                                                     constrained_param_names.size(),
                                                     num_iter_save,
                                                     num_warmup_save,
-                                                    qoi_idx));
+                                                    qoi_idx).release());
       return_code
         = stan::services::sample::fixed_param(*model, *init_context_ptr,
                                               random_seed, id, init_radius,
@@ -596,7 +594,7 @@ int command(stan_args& args,
                                                     constrained_param_names.size(),
                                                     num_iter_save,
                                                     num_warmup_save,
-                                                    qoi_idx));
+                                                    qoi_idx).release());
 
       double stepsize = args.get_ctrl_sampling_stepsize();
       double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
@@ -703,7 +701,7 @@ int command(stan_args& args,
                                                     constrained_param_names.size(),
                                                     num_iter_save,
                                                     num_warmup_save,
-                                                    qoi_idx));
+                                                    qoi_idx).release());
 
       double stepsize = args.get_ctrl_sampling_stepsize();
       double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
@@ -912,7 +910,7 @@ int command(stan_args& args,
 bool stan_fit::is_flatname(const std::string& name) {
     return name.find('[') != name.npos && name.find(']') != name.npos;
   }
-  
+
   /*
    * Update the parameters we are interested for the model->
    * As well, the dimensions vector for the parameters are
@@ -922,7 +920,7 @@ void stan_fit::update_param_oi0(const std::vector<std::string>& pnames) {
     names_oi_.clear();
     dims_oi_.clear();
     names_oi_tidx_.clear();
-    
+
     std::vector<unsigned int> starts;
     calc_starts(dims_, starts);
     for (std::vector<std::string>::const_iterator it = pnames.begin();
@@ -945,7 +943,7 @@ void stan_fit::update_param_oi0(const std::vector<std::string>& pnames) {
     calc_starts(dims_oi_, starts_oi_);
     num_params2_ = names_oi_tidx_.size();
   }
-  
+
 bool stan_fit::update_param_oi(std::vector<std::string> pnames) {
     if (std::find(pnames.begin(), pnames.end(), "lp__") == pnames.end())
       pnames.push_back("lp__");
@@ -953,7 +951,7 @@ bool stan_fit::update_param_oi(std::vector<std::string> pnames) {
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     return true;
   }
-  
+
 stan_fit::stan_fit(SEXP model_sexp, int seed) :
     model_sexp_(model_sexp),
     model_xptr_(model_sexp),
@@ -993,8 +991,8 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
     model_->transform_inits(par_context, params_i, params_r, &rstan::io::rcout);
     return params_r;
   }
-  
-  
+
+
   /**
    * Contrary to unconstrain_pars, transform parameters
    * from unconstrained support to the constrained.
@@ -1017,29 +1015,29 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
     model_->write_array(base_rng, upar, params_i, par);
     return par;
   }
-  
+
   /**
    * Get the unconstrained or constrained parameter names
-   * 
+   *
    * @param include_tparams Flag to include transformed parameter names
    * @param include_gqs Flag to include generated quantitiy names
    * @return A standard vector of standard strings
    */
-  
-  std::vector<std::string> stan_fit::unconstrained_param_names(bool include_tparams, 
+
+  std::vector<std::string> stan_fit::unconstrained_param_names(bool include_tparams,
                                                      bool include_gqs) {
     std::vector<std::string> n;
     model_->unconstrained_param_names(n, include_tparams, include_gqs);
     return n;
   }
-  
-  std::vector<std::string> stan_fit::constrained_param_names(bool include_tparams, 
+
+  std::vector<std::string> stan_fit::constrained_param_names(bool include_tparams,
                                                    bool include_gqs) {
     std::vector<std::string> n;
     model_->constrained_param_names(n, include_tparams, include_gqs);
     return n;
   }
-  
+
   /**
    * Expose the log_prob of the model to stan_fit so R users
    * can call this function.
@@ -1050,10 +1048,10 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
    *   the Jacobian adjustment is included
    * @param gradient A flag to indicate whether to return the
    *   gradient as an attribute
-   * @param A numeric vector of size 1, possibly with a grad attribute      
+   * @param A numeric vector of size 1, possibly with a grad attribute
    */
-  Rcpp::NumericVector stan_fit::log_prob(std::vector<double> upar, 
-                               bool jacobian_adjust_transform, 
+  Rcpp::NumericVector stan_fit::log_prob(std::vector<double> upar,
+                               bool jacobian_adjust_transform,
                                bool gradient) {
     if (upar.size() != model_->num_params_r()) {
       std::stringstream msg;
@@ -1075,16 +1073,16 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
       Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
       return lp2;
     }
-    
+
     std::vector<double> grad;
-    double lp = jacobian_adjust_transform ? 
+    double lp = jacobian_adjust_transform ?
       stan::model::log_prob_grad<true,true >(*model_, upar, par_i, grad, &rstan::io::rcout) :
       stan::model::log_prob_grad<true,false>(*model_, upar, par_i, grad, &rstan::io::rcout);
     Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
     lp2.attr("gradient") = grad;
     return lp2;
   }
-  
+
   /**
    * Expose the grad_log_prob of the model to stan_fit so R user
    * can call this function.
@@ -1093,9 +1091,9 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
    *  space.
    * @param jacobian_adjust_transform A flag to indicate whether
    *   the Jacobian adjustment is included
-   * @return A numeric vector whose size is equal to the size of upar 
+   * @return A numeric vector whose size is equal to the size of upar
    */
-  Rcpp::NumericVector stan_fit::grad_log_prob(std::vector<double> upar, 
+  Rcpp::NumericVector stan_fit::grad_log_prob(std::vector<double> upar,
                                     bool jacobian_adjust_transform) {
     if (upar.size() != model_->num_params_r()) {
       std::stringstream msg;
@@ -1108,14 +1106,14 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
     }
     std::vector<int> par_i(model_->num_params_i(), 0);
     std::vector<double> gradient;
-    double lp = jacobian_adjust_transform ? 
+    double lp = jacobian_adjust_transform ?
       stan::model::log_prob_grad<true,true >(*model_, upar, par_i, gradient, &rstan::io::rcout) :
       stan::model::log_prob_grad<true,false>(*model_, upar, par_i, gradient, &rstan::io::rcout);
     Rcpp::NumericVector grad = Rcpp::wrap(gradient);
     grad.attr("log_prob") = lp;
     return grad;
   }
-  
+
   /**
    * Return the number of unconstrained parameters
    */
@@ -1125,37 +1123,37 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
 
   /**
    * Drive the sampler / optimizer / approximator
-   * 
+   *
    * @param args_ A R(cpp) list of arguments
    * @return A R(cpp) list of fit stuff
    */
-  
+
   Rcpp::List stan_fit::call_sampler(Rcpp::List args_) {
     stan_args args(args_);
     Rcpp::List holder;
-    
+
     int ret = command(args, model_, holder, names_oi_tidx_,
                       fnames_oi_, base_rng);
     holder.attr("return_code") = ret;
     return holder;
   }
-  
+
   /**
    * Drive the generated quantities
-   * 
+   *
    * @param draws A matrix of posterior draws
-   * @param seed An unsigned integer to seed the PRNG 
+   * @param seed An unsigned integer to seed the PRNG
    * @return A R(cpp) list of realizations from generated quantities
    */
-  
-  Rcpp::List stan_fit::standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws, 
+
+  Rcpp::List stan_fit::standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws,
                             unsigned int seed) {
     Rcpp::List holder;
-    
+
     R_CheckUserInterrupt_Functor interrupt;
     stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
                                           rstan::io::rcerr, rstan::io::rcerr);
-    
+
     std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
     std::fstream sample_stream;
     std::stringstream comment_stream;
@@ -1171,58 +1169,56 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
                                                   0, 0,
                                                   gq_size,
                                                   draws.rows(), 0,
-                                                  gq_idx));
-    
+                                                  gq_idx).release());
+
     int ret = stan::services::error_codes::CONFIG;
     ret = stan::services::standalone_generate(*model_, draws,
-                                              seed, interrupt, 
+                                              seed, interrupt,
                                               logger, *sample_writer_ptr);
-    
+
     holder = Rcpp::List(sample_writer_ptr->values_.x().begin(),
                         sample_writer_ptr->values_.x().end());
-    
+
     return holder;
   }
-  
+
   /**
    * Return names (of interest)
-   * 
+   *
    * @return A standard vector of standard strings
    */
   std::vector<std::string> stan_fit::param_names() const {
     return names_;
   }
-  
+
   std::vector<std::string> stan_fit::param_names_oi() const {
     return names_oi_;
   }
-  
+
   /**
-   * Return the indices among those parameters of interest, 
+   * Return the indices among those parameters of interest,
    * rather than all the parameters
-   * 
+   *
    * @param names A standard vector of standard strings naming POIs
    * @return A R(cpp) list of indices thereof
    */
-  Rcpp::List stan_fit::param_oi_tidx(std::vector<std::string> names) {
+  Rcpp::List stan_fit::param_oi_tidx(const std::vector<std::string>& names) {
     std::vector<std::string> names2;
     std::vector<std::vector<unsigned int> > indexes;
-    for (std::vector<std::string>::const_iterator it = names.begin();
-         it != names.end();
-         ++it) {
-      if (is_flatname(*it)) { // an element of an array
+    for (auto& it : names) {
+      if (is_flatname(it)) { // an element of an array
         size_t ts = std::distance(fnames_oi_.begin(),
                                   std::find(fnames_oi_.begin(),
-                                            fnames_oi_.end(), *it));
+                                            fnames_oi_.end(), it));
         if (ts == fnames_oi_.size()) // not found
           continue;
-        names2.push_back(*it);
+        names2.push_back(it);
         indexes.push_back(std::vector<unsigned int>(1, ts));
         continue;
       }
       size_t j = std::distance(names_oi_.begin(),
                                std::find(names_oi_.begin(),
-                                         names_oi_.end(), *it));
+                                         names_oi_.end(), it));
       if (j == names_oi_.size()) // not found
         continue;
       unsigned int j_size = calc_num_params(dims_oi_[j]);
@@ -1231,26 +1227,26 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
       for (unsigned int k = 0; k < j_size; k++) {
         j_idx.push_back(j_start + k);
       }
-      names2.push_back(*it);
+      names2.push_back(it);
       indexes.push_back(j_idx);
     }
     Rcpp::List lst = Rcpp::wrap(indexes);
     lst.names() = names2;
     return lst;
   }
-  
+
   /**
    * Get dimensions
-   * 
+   *
    * @return A R(cpp) list of dimensions (of interest)
    */
-  
+
   Rcpp::List stan_fit::param_dims() const {
     Rcpp::List lst = Rcpp::wrap(dims_);
     lst.names() = names_;
     return lst;
   }
-  
+
   Rcpp::List stan_fit::param_dims_oi() const {
     Rcpp::List lst = Rcpp::wrap(dims_oi_);
     lst.names() = names_oi_;
@@ -1259,10 +1255,10 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
 
   /**
    * Get flatnames of interest
-   * 
+   *
    * @return A standard vector of standard strings of FOIs
    */
-  
+
   std::vector<std::string> stan_fit::param_fnames_oi() const {
     std::vector<std::string> fnames;
     get_all_flatnames(names_oi_, dims_oi_, fnames, true);

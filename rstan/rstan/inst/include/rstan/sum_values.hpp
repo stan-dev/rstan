@@ -34,15 +34,18 @@ namespace rstan {
       m_++;
     }
 
-    const std::vector<double>& sum() const {
+    inline const std::vector<double>& sum() const {
+      return sum_;
+    }
+    inline std::vector<double>& sum() {
       return sum_;
     }
 
-    const size_t called() const {
+    inline const size_t called() const {
       return m_;
     }
 
-    const size_t recorded() const {
+    inline const size_t recorded() const {
       if (m_ >= skip_)
         return m_ - skip_;
       else

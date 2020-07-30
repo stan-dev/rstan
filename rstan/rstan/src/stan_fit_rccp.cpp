@@ -8,42 +8,41 @@ class stan_fit_proxy : public stan_fit_base {
 
  public:
   stan_fit_proxy(Rcpp::XPtr<rstan::stan_fit_base> fit) : fit_(*fit.get()) {}
-  ~stan_fit_proxy() {}
 
 
   bool update_param_oi(std::vector<std::string> pnames) {
     return fit_.update_param_oi(pnames);
   }
-  
+
   std::vector<double> unconstrain_pars(Rcpp::List par) {
     return fit_.unconstrain_pars(par);
   }
-  
+
   std::vector<double> constrain_pars(std::vector<double> upar) {
     return fit_.constrain_pars(upar);
   }
-  
-  std::vector<std::string> unconstrained_param_names(bool include_tparams, 
+
+  std::vector<std::string> unconstrained_param_names(bool include_tparams,
                                                      bool include_gqs) {
     return fit_.unconstrained_param_names(include_tparams, include_gqs);
   }
-  
-  std::vector<std::string> constrained_param_names(bool include_tparams, 
+
+  std::vector<std::string> constrained_param_names(bool include_tparams,
                                                    bool include_gqs) {
     return fit_.constrained_param_names(include_tparams, include_gqs);
   }
-  
-  Rcpp::NumericVector log_prob(std::vector<double> upar, 
-                               bool jacobian_adjust_transform, 
+
+  Rcpp::NumericVector log_prob(std::vector<double> upar,
+                               bool jacobian_adjust_transform,
                                bool gradient) {
     return fit_.log_prob(upar, jacobian_adjust_transform, gradient);
   }
-  
-  Rcpp::NumericVector grad_log_prob(std::vector<double> upar, 
+
+  Rcpp::NumericVector grad_log_prob(std::vector<double> upar,
                                     bool jacobian_adjust_transform) {
     return fit_.grad_log_prob(upar, jacobian_adjust_transform);
   }
-  
+
   double num_pars_unconstrained() {
     auto npu = fit_.num_pars_unconstrained();
     return static_cast<double>(npu);
@@ -52,28 +51,28 @@ class stan_fit_proxy : public stan_fit_base {
   Rcpp::List call_sampler(Rcpp::List args_) {
     return fit_.call_sampler(args_);
   }
-  
-  Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws, 
+
+  Rcpp::List standalone_gqs(const Eigen::Map<Eigen::MatrixXd> draws,
                             unsigned int seed) {
     return fit_.standalone_gqs(draws, seed);
   }
-  
+
   std::vector<std::string> param_names() const {
     return fit_.param_names();
   }
-  
+
   std::vector<std::string> param_names_oi() const {
     return fit_.param_names_oi();
   }
-  
-  Rcpp::List param_oi_tidx(std::vector<std::string> names) {
+
+  Rcpp::List param_oi_tidx(const std::vector<std::string>& names) {
     return fit_.param_oi_tidx(names);
   }
-  
+
   Rcpp::List param_dims() const {
     return fit_.param_dims();
   }
-  
+
   Rcpp::List param_dims_oi() const {
     return fit_.param_dims_oi();
   }
@@ -81,7 +80,7 @@ class stan_fit_proxy : public stan_fit_base {
   std::vector<std::string> param_fnames_oi() const {
     return fit_.param_fnames_oi();
   }
-  
+
 };
 
 }
