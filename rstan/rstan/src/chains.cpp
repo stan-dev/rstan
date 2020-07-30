@@ -326,7 +326,7 @@ SEXP effective_sample_size(SEXP sim, SEXP n_) {
   for (size_t i = 0; i < ns_kept.size(); i++)
     ns_kept[i] -= ns_warmup2[i];
 
-  const unsigned int n_samples = ns_kept[0];
+  unsigned int n_samples = ns_kept[0];
   for (size_t chain = 1; chain < m; chain++) {
     n_samples = std::min(n_samples, ns_kept[chain]);
   }
