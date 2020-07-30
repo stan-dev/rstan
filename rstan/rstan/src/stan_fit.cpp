@@ -207,7 +207,7 @@ template <class T> void
       std::stringstream stri;
       stri << name << "[";
 
-      size_t lenm1 = it.size() - 1;
+      const size_t lenm1 = it.size() - 1;
       for (size_t i = 0; i < lenm1; i++) {
         stri << (it[i] + first) << ",";
       }
