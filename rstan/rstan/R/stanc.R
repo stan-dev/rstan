@@ -18,7 +18,7 @@
 stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE,
                   allow_undefined = FALSE, 
-                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
+                  isystem = c(if (!missing(file)) dirname(file.path(file)), getwd())) {
 
   # Call stanc, written in C++ 
   model_name2 <- deparse(substitute(model_code))  

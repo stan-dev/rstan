@@ -264,7 +264,7 @@ get_model_strcode <- function(file, model_code = '') {
 
   if (!missing(file)) {
     if (is.character(file)) {
-      fname <- file
+      fname <- file.path(file)
       model_name2 <- sub("\\.[^.]*$", "", filename_rm_ext(basename(fname)))
       file <- try(file(fname, "rt"))
       if (inherits(file, "try-error")) {
@@ -315,8 +315,9 @@ check_args <- function(argss) {
 
 
 append_id <- function(file, id, suffix = '.csv') {
-  fname <- basename(file)
-  fpath <- dirname(file)
+  file_name <- file.path(file)
+  fname <- basename(file_name)
+  fpath <- dirname(file_name)
   fname2 <- gsub("\\.csv[[:space:]]*$",
                  paste("_", id, ".csv", sep = ''),
                  fname)
@@ -484,7 +485,7 @@ config_argss <- function(chains, iter, warmup, thin,
 }
 
 is_dir_writable <- function(path) {
-  (file.access(path, mode = 2) == 0) && (file.access(path, mode = 1) == 0)
+  (file.access(file.path(path), mode = 2) == 0) && (file.access(file.path(path), mode = 1) == 0)
 }
 
 writable_sample_file <-
@@ -504,12 +505,12 @@ function(file, warn = TRUE,
   #  If the specified file is writable, return itself.
   #  Otherwise, change the path to tempdir().
 
-  dir <- dirname(file)
-  if (is_dir_writable(dir)) return(file)
+  dir <- dirname(file.path(file))
+  if (is_dir_writable(dir)) return(file.path(file))
 
   dir2 <- tempdir()
   if (warn) warning(wfun(dir, dir2))
-  file.path(dir2, basename(file))
+  file.path(dir2, basename(file.path(file)))
 }
 
 
@@ -529,8 +530,8 @@ stan_rdump <- function(list, file = "", append = FALSE,
   #   quiet: no warning if TRUE
   #
   # Return:
-
-  if (is.character(file)) {
+  file_name = file.path(file)
+  if (is.character(file_name)) {
     ex <- sapply(list, exists, envir = envir)
     if (!all(ex)) {
       notfound_list <- list[!ex]
@@ -541,11 +542,11 @@ stan_rdump <- function(list, file = "", append = FALSE,
     if (!any(ex))
       return(invisible(character()))
 
-    if (nzchar(file)) {
-      file <- file(file, ifelse(append, "a", "w"))
-      on.exit(close(file), add = TRUE)
+    if (nzchar(file_name)) {
+      file_name <- file(file_name, ifelse(append, "a", "w"))
+      on.exit(close(file_name), add = TRUE)
     } else {
-      file <- stdout()
+      file_name <- stdout()
     }
   }
 
@@ -580,16 +581,16 @@ stan_rdump <- function(list, file = "", append = FALSE,
 
     if (is.vector(vv)) {
       if (length(vv) == 0) {
-        cat(v, " <- integer(0)\n", file = file, sep = '')
+        cat(v, " <- integer(0)\n", file = file_name, sep = '')
         next
       }
       if (length(vv) == 1) {
-        cat(v, " <- ", as.character(vv), "\n", file = file, sep = '')
+        cat(v, " <- ", as.character(vv), "\n", file = file_name, sep = '')
         next
       }
       str <- paste0(v, " <- \nc(", paste(vv, collapse = ', '), ")")
       str <-  gsub(addnlpat, '\\1\n', str)
-      cat(str, file = file)
+      cat(str, file = file_name)
       l2 <- c(l2, v)
       next
     }
@@ -597,7 +598,7 @@ stan_rdump <- function(list, file = "", append = FALSE,
     if (is.matrix(vv) || is.array(vv)) {
       l2 <- c(l2, v)
       vvdim <- dim(vv)
-      cat(v, " <- \n", file = file, sep = '')
+      cat(v, " <- \n", file = file_name, sep = '')
       if (length(vv) == 0) { 
         str <- paste0("structure(integer(0), ")
       } else {
@@ -605,7 +606,7 @@ stan_rdump <- function(list, file = "", append = FALSE,
       }
       str <- gsub(addnlpat, '\\1\n', str)
       cat(str,
-          ".Dim = c(", paste(vvdim, collapse = ', '), "))\n", file = file, sep = '')
+          ".Dim = c(", paste(vvdim, collapse = ', '), "))\n", file = file_name, sep = '')
       next
     }
   }
@@ -675,7 +676,7 @@ read_rdump <- function(f, keep.source = FALSE, ...) {
   if (missing(f))
     stop("no file specified.")
   e <- new.env()
-  source(file = f, local = e, keep.source = keep.source, ...)
+  source(file = file.path(f), local = e, keep.source = keep.source, ...)
   as.list(e)
 }
 
@@ -1424,7 +1425,8 @@ read_comments <- function(f, n = -1) {
   #   n: max number of line; -1 means all
   # Returns:
   #   a vector of strings
-  con <- file(f, 'r')
+  con <- file(file.path(f), 'r')
+  on.exit(close(con))
   comments <- list()
   iter <- 0
   while (length(input <- readLines(con, n = 1)) > 0) {
@@ -1434,7 +1436,6 @@ read_comments <- function(f, n = -1) {
       iter <- iter + 1
     }
   }
-  close(con)
   do.call(c, comments)
 }
 
@@ -1502,10 +1503,13 @@ all_int_eq <- function(is) {
   min(is) == max(is)
 }
 
+#' Read the header of a csv file (the first line not beginning with
+#' comment.char). And the line number is return as attribute of name 'lineno'.
+#' @param f The file name and path
+#' @param comment.char The character that comments start with
 read_csv_header <- function(f, comment.char = '#') {
-  # Read the header of a csv file (the first line not beginning with
-  # comment.char). And the line number is return as attribute of name 'lineno'.
-  con <- file(f, 'r')
+  con <- file(file.path(f), 'r')
+  on.exit(close(con))
   niter <- 0
   iter.count <- NA
   save.warmup <- FALSE
@@ -1547,7 +1551,6 @@ read_csv_header <- function(f, comment.char = '#') {
   }
   attr(header, "iter.count") <- iter.count
   attr(header, "lineno") <- niter
-  close(con)
   header
 }
 
