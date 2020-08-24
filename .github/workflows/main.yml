@@ -85,7 +85,7 @@ jobs:
             dotR <- file.path(Sys.getenv("HOME"), ".R")
             if (!file.exists(dotR)) dir.create(dotR)
             path_makevars <- ifelse(.Platform$OS.type == "windows", "Makevars.win", "Makevars")
-            M <- file.path(dotR, )
+            M <- file.path(dotR, path_makevars)
             if (!file.exists(M)) file.create(M)
             write("CXX14=g++ -std=c++1y", file = path_makevars)
           }

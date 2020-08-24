@@ -35,8 +35,8 @@ read_stan_csv(csvfiles, col_major = TRUE)
 \seealso{
   \code{\linkS4class{stanfit}} 
 } 
-\examples{
+\examples{\dontrun{
 csvfiles <- dir(system.file('misc', package = 'rstan'),
                 pattern = 'rstan_doc_ex_[0-9].csv', full.names = TRUE)
 fit <- read_stan_csv(csvfiles)
-}
+}}

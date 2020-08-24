@@ -64,7 +64,7 @@ monitor(sims, warmup = floor(dim(sims)[1]/2),
   \code{\link[=print.stanfit]{print}} method.
 }
 
-\examples{\dontrun{ 
+\examples{\dontrun{
 csvfiles <- dir(system.file('misc', package = 'rstan'),
                 pattern = 'rstan_doc_ex_[0-9].csv', full.names = TRUE)
 fit <- read_stan_csv(csvfiles)
