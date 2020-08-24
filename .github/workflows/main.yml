@@ -84,9 +84,10 @@ jobs:
           if (R.version$major < 4 && isTRUE(.Platform$OS.type == "windows")) {
             dotR <- file.path(Sys.getenv("HOME"), ".R")
             if (!file.exists(dotR)) dir.create(dotR)
-            M <- file.path(dotR, ifelse(.Platform$OS.type == "windows", "Makevars.win", "Makevars"))
+            path_makevars <- ifelse(.Platform$OS.type == "windows", "Makevars.win", "Makevars")
+            M <- file.path(dotR, )
             if (!file.exists(M)) file.create(M)
-            write("CXX14=g++ -std=c++1y", file = file.path("~", ".R", "Makevars"))
+            write("CXX14=g++ -std=c++1y", file = path_makevars)
           }
           rcmdcheck::rcmdcheck(path = "./rstan/rstan", args = c("--no-manual", "--as-cran", "--ignore-vignettes"), build_args = c("--no-build-vignettes"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
