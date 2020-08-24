@@ -81,7 +81,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
         run: |
-          if (R.version$major < 4 && isTRUE(.Platform$OS.type == "windows")) write(""CXX14=g++ -std=c++1y", file = "~/.R/Makevars", append = TRUE)
+          if (R.version$major < 4 && isTRUE(.Platform$OS.type == "windows")) write("CXX14=g++ -std=c++1y", file = "~/.R/Makevars", append = TRUE)
           rcmdcheck::rcmdcheck(path = "./rstan/rstan", args = c("--no-manual", "--as-cran", "--ignore-vignettes"), build_args = c("--no-build-vignettes"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
