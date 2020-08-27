@@ -214,7 +214,7 @@ data_preprocess <- function(data) { # , varnames) {
                    } else if (is.list(x)) {
                      x <- data_list2array(x) # list to array
                    } else if (is.logical(x)) {
-                     x <- as.integer(x)
+                     storage.mode(x) <- "integer"
                    }
 
                    ## Now we stop whenever we have NA in the data
