@@ -141,51 +141,19 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
   cs_lst2 <- vector("list", length(csvfiles))
 
   for (i in seq_along(csvfiles)) {
-    header <- read_csv_header(csvfiles[i])
+    f = csvfiles[i]    
+    header <- read_csv_header(f)
     lineno <- attr(header, 'lineno')
     vnames <- strsplit(header, ",")[[1]]
     iter.count <- attr(header,"iter.count")
     variable.count <- length(vnames)
-    df <- structure(replicate(variable.count,list(numeric(iter.count))),
-                    names = vnames,
-                    row.names = c(NA,-iter.count),
-                    class = "data.frame")
-    comments = character()
-    con <- file(csvfiles[[i]],"rb")
-    buffer.size <- min(ceiling(1000000/variable.count),iter.count)
-    row.buffer <- matrix(ncol=variable.count,nrow=buffer.size)
-    row <- 1
-    buffer.pointer <- 1  
-    while(length(char <- readBin(con,'int',size=1L)) > 0) {
-      # back up 1 character, since we already looked at one to check for comment
-      seek(con,origin="current",-1)
-      if(char == 35){ #35 is '#'
-        line <- readLines(con, n = 1)
-        comments <- c(comments, line)
-        next
-      }
-      if(char == 108){ #start of lp__ in header 108
-        readLines(con, n = 1)
-        next
-      }
-      if(char == 10){ #empty line
-        readLines(con, n = 1)
-        next
-      }
-      row.buffer[buffer.pointer,] <- scan(con, nlines=1, sep="," ,quiet=TRUE)
-      if(buffer.pointer == buffer.size){
-        df[row:(row + buffer.size - 1), ] <- row.buffer
-        row <- row + buffer.size
-        buffer.pointer <- 0
-      }
-      buffer.pointer <- buffer.pointer + 1
-      
-    }
-    if(buffer.pointer > 1){
-      df[row:(row + buffer.pointer - 2), ] <- row.buffer[1:(buffer.pointer-1), ]
-    }
 
-    close(con)
+    lines = readLines(f)
+    comment_lines = grep("^#", lines)
+    comments = gsub("^#", "", lines[comment_lines])
+    con = textConnection(lines[-comment_lines])
+    on.exit(close(con))
+    df = read.csv(con, colClasses = "numeric")
     cs_lst2[[i]] <- parse_stancsv_comments(comments)
     if("output_samples" %in% names(cs_lst2[[i]])) 
       df <- df[-1,] # remove the means 
