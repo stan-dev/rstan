@@ -150,7 +150,7 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
     lines = readLines(f)
     comment_lines = grep("^#", lines)
-    comments = gsub("^#", "", lines[comment_lines])
+    comments = lines[comment_lines]
     con = textConnection(lines[-comment_lines])
     on.exit(close(con))
     df = read.csv(con, colClasses = "numeric")
