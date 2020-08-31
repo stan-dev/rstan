@@ -2,8 +2,8 @@ Package: rstan
 Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
-Version: 2.21.2
-Date: 2020-07-27
+Version: 2.21.3
+Date: 2020-09-01
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -40,8 +40,7 @@ Imports:
     RcppParallel (>= 5.0.1),
     loo (>= 2.3.0),
     pkgbuild,
-    withr,
-    V8
+    withr
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.21.0),
@@ -63,7 +62,8 @@ Suggests:
     rstantools,
     rstudioapi,
     Matrix,
-    knitr (>= 1.15.1)
+    knitr (>= 1.15.1),
+    V8
 URL: https://mc-stan.org/rstan, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
