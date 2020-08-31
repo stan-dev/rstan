@@ -12,10 +12,21 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
+options(width = 100)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
 Sys.setenv(USE_CXX14 = "1")
 set.seed(12345)
 ```
@@ -47,9 +58,37 @@ STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
 PKG_CXXFLAGS += -I"$(STANHEADERS_SRC)"
 ```
 
+# Calling functions in the **StanHeaders** Package from R
+
+The only exposed R function in the in the **StanHeaders** package is `stanFunction`, which
+can be used to call most functions in the Stan Math Library.
+
+```{r}
+example(stanFunction, package = "StanHeaders", run.dontrun = TRUE)
+```
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 100px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+The `functions` object defined in this example lists the many Stan functions that could be called
+(if all their arguments are numeric, see `help(stanFunction, package = "StanHeaders")` for details)
+```{r, echo = FALSE, warning = FALSE, class.output="scroll-100"}
+if (length(functions) %% 2 == 1) {
+  functions <- c(functions, "")
+}
+functions <- matrix(functions, ncol = 2, byrow = TRUE)
+print(functions)
+```
+
+
 # Using Higher-Order Functions in the **StanHeaders** Package
 
-This section will demonstrate how to use some of the C++ functions in the **StanHeaders** package.
+This section will demonstrate how to use some of the C++ functions in the **StanHeaders** package
+whose first argument is another C++ function, in which case the `stanFunction` in the previous
+section will not work and you have to write your own C++.
 
 ## Derivatives and Minimization
 
