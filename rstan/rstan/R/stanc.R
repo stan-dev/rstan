@@ -117,12 +117,12 @@ stanc_beta <- function(model_code, model_name, isystem) {
   processed <- tempfile(fileext = ".stan")
   on.exit(file.remove(unprocessed))
   writeLines(model_code, con = unprocessed)
-  ARGS <- paste("-E -nostdinc -x c++ -P -C", 
+  ARGS <- paste("-nostdinc -x c++ -P -C", 
                 paste("-I", isystem, " ", collapse = ""), 
                 "-o", processed, unprocessed)
-  CXX <- get_CXX()
-  CXX <- sub("[[:space:]]+-.*$", "", CXX)
-  pkgbuild::with_build_tools(system(paste(CXX, ARGS), 
+  CPP <- system2(file.path(R.home(component = "bin"), "R"), 
+                 args = "CMD config CPP")
+  pkgbuild::with_build_tools(system(paste(CPP, ARGS), 
                                     ignore.stdout = TRUE, ignore.stderr = TRUE),
                              required = rstan_options("required") && 
                                identical(Sys.getenv("WINDOWS"), "TRUE") &&
