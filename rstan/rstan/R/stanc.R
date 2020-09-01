@@ -134,7 +134,6 @@ stanc_beta <- function(model_code, model_name, isystem) {
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
   options(timeout = 5)
-  }
   if (suppressMessages({suppressWarnings({require("V8", character.only = TRUE)})})) {
   ctx <- V8::v8()
   ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
