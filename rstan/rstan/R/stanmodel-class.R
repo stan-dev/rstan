@@ -234,7 +234,7 @@ setMethod("vb", "stanmodel",
 
             vbres <- sampler$call_sampler(c(args, dotlist))
             samples <- read_one_stan_csv(attr(vbres, "args")$sample_file)
-            diagnostic_columns <- which(grepl('__',colnames(samples)))[-1]
+            diagnostic_columns <- which(grepl('__$',colnames(samples)))[-1]
             if (length(diagnostic_columns)>0) {
               diagnostics <- samples[-1,diagnostic_columns]
               samples <- samples[,-diagnostic_columns]
