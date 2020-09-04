@@ -212,7 +212,7 @@ stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
                              file.path(getwd(), 'sinc.hpp'), '"\n'))
 ```
 The sinc.hpp file reads as
-```{r, echo = FALSE, comment=""}
+```{r, echo = FALSE, eval = TRUE, comment=""}
 cat(readLines("sinc.hpp"), sep = "\n")
 ```
 The body of the first `sinc` function is simply its mathematical definition in the 
