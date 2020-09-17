@@ -1587,10 +1587,8 @@ get_time_from_csv <- function(tlines) {
   t <- rep(NA, 2)
   names(t) <- c("warmup", "sample")
   if (length(tlines) < 2) return(t)
-  warmupt <- gsub(".*#\\s*Elapsed.*:\\s*", "", tlines[1])
-  warmupt <- gsub("\\s*seconds.*$", "", warmupt)
-  samplet <- gsub(".*#\\s*", "", tlines[2])
-  samplet <- gsub("\\s*seconds.*$", "", samplet)
+  warmupt <- gsub("[^0-9.]", "", tlines[1])
+  samplet <- gsub("[^0-9.]", "", tlines[2])
   t[1] <- as.double(warmupt)
   t[2] <- as.double(samplet)
   t
