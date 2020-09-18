@@ -1,16 +1,6 @@
 pipeline {
-    agent any
+    agent { dockerfile true }
     stages {
-        stage('Install dependencies') {
-            steps {
-                sh """
-                    export MAKEFLAGS=-j${env.PARALLEL}
-                    R -e 'install.packages("devtools", repos = "https://cran.r-project.org")'
-                    R -e 'update(devtools::package_deps("rstan"), repos = "https://cran.r-project.org")'
-                    R -e 'install.packages("RInside", repos = "https://cran.r-project.org")'
-                """
-            }
-        }
         stage('Build') {
             steps {
                 sh """
