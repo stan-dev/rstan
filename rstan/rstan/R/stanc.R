@@ -120,10 +120,8 @@ stanc_beta <- function(model_code, model_name, isystem) {
   ARGS <- paste("-nostdinc -x c++ -P -C",
                 paste("-I", isystem, " ", collapse = ""),
                 "-o", processed, unprocessed)
-  CPP <- system2(file.path(R.home(component = "bin"), "R"),
-                 args = "CMD config CPP")
-  pkgbuild::with_build_tools(system(paste(CPP, ARGS),
-                                    ignore.stdout = TRUE, ignore.stderr = TRUE),
+  CPP <- get_CXX()
+  pkgbuild::with_build_tools(system2(CPP, ARGS, stdout = NULL, stderr = NULL),
                              required = rstan_options("required") &&
                                identical(Sys.getenv("WINDOWS"), "TRUE") &&
                               !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
@@ -134,7 +132,6 @@ stanc_beta <- function(model_code, model_name, isystem) {
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
   options(timeout = 5)
-  if (suppressMessages({suppressWarnings({require("V8", character.only = TRUE)})})) {
   ctx <- V8::v8()
   ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
   model_cppcode <- try(ctx$call("stanc", model_name, paste(model_code, collapse = "\n")), silent = TRUE)
@@ -151,7 +148,6 @@ stanc_beta <- function(model_code, model_name, isystem) {
             " or by first calling rstan_options(javascript = FALSE).\n",
             if (is.list(model_cppcode)) model_cppcode$errors[2] else model_cppcode)
     return(FALSE)
-  }
   }
   return(TRUE)
 }
