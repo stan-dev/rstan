@@ -269,8 +269,10 @@ rm_rstan_makefile_flags <- function() {
   makevar_files <- withr::makevars_user()
   if (length(makevar_files)) {
     cxx_flags <- grep("^CXX.*FLAGS", readLines(file.path(makevar_files)), value = TRUE)
-  } else cxx_flags <- character()
-  if (length(cxx_flags)) {
+  } else {
+    cxx_flags <- character(0)
+  }
+  if (length(cxx_flags) != 0) {
     trimmed_flag <- trimws(gsub("-march[[:space:]]*=[[:space:]]*native", "",
       substr(cxx_flags, regexpr("-", cxx_flags), nchar(cxx_flags))))
     cxxflag_locations <- attr(regexpr("CXX.*FLAGS", cxx_flags), "match.length")
