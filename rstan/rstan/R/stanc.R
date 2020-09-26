@@ -111,25 +111,26 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
 stanc_beta <- function(model_code, model_name, isystem) {
   model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
   model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
-  if (any(!grepl("#include[[:space:]]+<", model_code)))
+  if (any(!grepl("#include[[:space:]]+<", model_code))) {
     model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
-  unprocessed <- tempfile(fileext = ".stan")
-  processed <- tempfile(fileext = ".stan")
-  on.exit(file.remove(unprocessed))
-  writeLines(model_code, con = unprocessed)
-  ARGS <- paste("-nostdinc -x c++ -P -C", 
-                paste("-I", isystem, " ", collapse = ""), 
-                "-o", processed, unprocessed)
-  CPP <- system2(file.path(R.home(component = "bin"), "R"), 
-                 args = "CMD config CPP")
-  pkgbuild::with_build_tools(system(paste(CPP, ARGS), 
-                                    ignore.stdout = TRUE, ignore.stderr = TRUE),
-                             required = rstan_options("required") && 
-                               identical(Sys.getenv("WINDOWS"), "TRUE") &&
-                              !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-  if (file.exists(processed)) {
-    on.exit(file.remove(processed), add = TRUE)
-    model_code <- paste(readLines(processed), collapse = "\n")
+    unprocessed <- tempfile(fileext = ".stan")
+    processed <- tempfile(fileext = ".stan")
+    on.exit(file.remove(unprocessed))
+    writeLines(model_code, con = unprocessed)
+    ARGS <- paste("-nostdinc -x c++ -P -C", 
+                  paste("-I", isystem, " ", collapse = ""), 
+                  "-o", processed, unprocessed)
+    CPP <- system2(file.path(R.home(component = "bin"), "R"), 
+                   args = "CMD config CPP")
+    pkgbuild::with_build_tools(system(paste(CPP, ARGS), 
+                                      ignore.stdout = TRUE, ignore.stderr = TRUE),
+                               required = rstan_options("required") && 
+                                 identical(Sys.getenv("WINDOWS"), "TRUE") &&
+                                !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+    if (file.exists(processed)) {
+      on.exit(file.remove(processed), add = TRUE)
+      model_code <- paste(readLines(processed), collapse = "\n")
+    }
   }
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
