@@ -94,8 +94,8 @@ Call a function defined in the Stan Math Library from R using this wrapper aroun
     # nullary functions work but are not that interesting
     stanFunction("negative_infinity")
     
-    # PRNG functions works but you cannot change the seed
+    # PRNG functions work by adding a seed argument
     stanFunction("lkj_corr_rng", K = 3L, eta = 1)
-    lkj_corr_rng(K = 3L, eta = 1)
+    args(lkj_corr_rng) # has a seed argument
   }
 }
