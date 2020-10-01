@@ -155,6 +155,10 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     pkgbuild::has_build_tools(debug = FALSE) ||
     pkgbuild::has_build_tools(debug = TRUE)
 
+  # compiling with -march=native on windows can cause segfaults
+  if (WINDOWS) {
+    .warn_march_makevars()
+  }
   if (!isTRUE(verbose)) {
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")

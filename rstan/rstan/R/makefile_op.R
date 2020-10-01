@@ -200,3 +200,62 @@ rm_rstan_makefile_flags <- function() {
   message("compiler flags set by rstan are removed.")
   invisible(NULL)
 }
+
+#' Shim for tools::makevars_user()
+#' @keywords internal
+#' @export
+makevars_user <- function() {
+  if (getRversion() >= "3.3") {
+    return(tools::makevars_user())
+  }
+  # Below is tools::makevars_user() from R 3.6.2
+  m <- character()
+  if (.Platform$OS.type == "windows") {
+    if (!is.na(f <- Sys.getenv("R_MAKEVARS_USER", NA_character_))) {
+      if (file.exists(f))
+        m <- f
+    }
+    else if ((Sys.getenv("R_ARCH") == "/x64") && file.exists(f <- path.expand("~/.R/Makevars.win64")))
+      m <- f
+    else if (file.exists(f <- path.expand("~/.R/Makevars.win")))
+      m <- f
+    else if (file.exists(f <- path.expand("~/.R/Makevars")))
+      m <- f
+  }
+  else {
+    if (!is.na(f <- Sys.getenv("R_MAKEVARS_USER", NA_character_))) {
+      if (file.exists(f))
+        m <- f
+    }
+    else if (file.exists(f <- path.expand(paste0("~/.R/Makevars-",
+            Sys.getenv("R_PLATFORM")))))
+      m <- f
+    else if (file.exists(f <- path.expand("~/.R/Makevars")))
+      m <- f
+  }
+  m
+}
+
+
+#' Remove march flag from Makevars
+.warn_march_makevars <- function() {
+  makevar_files <- makevars_user()
+  if (length(makevar_files)) {
+    cxx_flags <- grep("^CXX.*FLAGS", readLines(file.path(makevar_files)), value = TRUE)
+  } else {
+    cxx_flags <- character(0)
+  }
+  if (length(cxx_flags) != 0) {
+    has_march_native <- any(grepl("-march[[:space:]]*=[[:space:]]*native",
+                                substr(cxx_flags, regexpr("-", cxx_flags), nchar(cxx_flags))))
+    if (has_march_native && !rstan_options("disable_march_warning")) {
+      warning(paste0("Detected -march=native in the Makevars file at '", makevar_files,
+                     "'. Compiling with the -march=native flag on windows with Rtools",
+                     " can cause crashes because of the compiler implementation. It's",
+                     " recommended you remove -march=native from your Makevar file.",
+                     " You can disable this warning by setting ",
+                     'rstan_options(disable_march_warning = TRUE)'))
+    }
+  }
+  return(NULL)
+}
