@@ -80,6 +80,10 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     pkgbuild::has_build_tools(debug = FALSE) ||
     pkgbuild::has_build_tools(debug = TRUE)
 
+  if (WINDOWS) {
+    .warn_march_makevars()
+  }
+
   if (!isTRUE(show_compiler_warnings)) {
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
