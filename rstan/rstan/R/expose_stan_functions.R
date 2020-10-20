@@ -81,7 +81,12 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     pkgbuild::has_build_tools(debug = TRUE)
 
   if (WINDOWS) {
-    .warn_march_makevars()
+    has_march = .warn_march_makevars()
+    if (has_march) {
+      user_makevar = Sys.getenv("R_MAKEVARS_USER")
+      Sys.setenv(R_MAKEVARS_USER = NULL)
+      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+    }
   }
 
   if (!isTRUE(show_compiler_warnings)) {

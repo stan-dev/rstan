@@ -157,7 +157,12 @@ cxxfunctionplus <- function(sig = character(), body = character(),
 
   # compiling with -march=native on windows can cause segfaults
   if (WINDOWS) {
-    .warn_march_makevars()
+    has_march = .warn_march_makevars()
+    if (has_march) {
+      user_makevar = Sys.getenv("R_MAKEVARS_USER")
+      Sys.setenv(R_MAKEVARS_USER = NULL)
+      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+    }
   }
   if (!isTRUE(verbose)) {
     tf <- tempfile(fileext = ".warn")

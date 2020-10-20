@@ -251,11 +251,12 @@ makevars_user <- function() {
     if (has_march_native && !rstan_options("disable_march_warning")) {
       warning(paste0("Detected -march=native in the Makevars file at '", makevar_files,
                      "'. Compiling with the -march=native flag on windows with Rtools",
-                     " can cause crashes because of the compiler implementation. It's",
-                     " recommended you remove -march=native from your Makevar file.",
-                     " You can disable this warning by setting ",
+                     " can cause crashes because of the compiler implementation. rstan",
+                     " will ignore the Makevars file until -march=native is removed.",
+                     " You can disable this by setting ",
                      'rstan_options(disable_march_warning = TRUE)'))
+      return(TRUE)
     }
   }
-  return(NULL)
+  return(FALSE)
 }
