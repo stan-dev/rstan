@@ -42,6 +42,7 @@ jobs:
 
       - name: Query dependencies
         run: |
+          options(install.packages.check.source = "no")
           install.packages('remotes')
           install.packages('V8')
           saveRDS(remotes::dev_package_deps(pkg = "./rstan/rstan", dependencies = TRUE), ".github/depends.Rds", version = 2)
