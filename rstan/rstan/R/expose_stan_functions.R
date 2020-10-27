@@ -20,25 +20,25 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "// [[Rcpp::depends(rstan)]]",
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
-                "#include <stan/math/prim/mat/fun/Eigen.hpp>", 
+                "#include <stan/math/prim/mat/fun/Eigen.hpp>",
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
                 code, sep = "\n")
-  code <- gsub("// [[stan::function]]", 
+  code <- gsub("// [[stan::function]]",
                "// [[Rcpp::export]]", code, fixed = TRUE)
-  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){", 
-               "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;", 
+  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
+               "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
   code <- gsub("= nullptr", "= 0", code, fixed = TRUE)
   if(is.null(includes)) return(code)
   code <- sub("\n\nstan::io::program_reader prog_reader__() {",
-              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"), 
+              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"),
               code, fixed = TRUE)
   return(code)
 }
 
-expose_stan_functions <- function(stanmodel, includes = NULL, 
+expose_stan_functions <- function(stanmodel, includes = NULL,
                                   show_compiler_warnings = FALSE, ...) {
   mc <- NULL
   if(is(stanmodel, "stanfit")) {
@@ -55,7 +55,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     else mc <- get_model_strcode(model_code = stanmodel)
   }
   else stop("'stanmodel' is not a valid object")
-  
+
   tf <- tempfile(fileext = ".stan")
   writeLines(mc, con = tf)
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
@@ -77,11 +77,16 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
 
   if (rstan_options("required"))
-    pkgbuild::has_build_tools(debug = FALSE) || 
+    pkgbuild::has_build_tools(debug = FALSE) ||
     pkgbuild::has_build_tools(debug = TRUE)
 
   if (WINDOWS) {
-    no_march_flags <- .remove_march_makevars()
+    has_march = .warn_march_makevars()
+    if (has_march) {
+      user_makevar = Sys.getenv("R_MAKEVARS_USER")
+      Sys.setenv(R_MAKEVARS_USER = NULL)
+      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+    }
   }
 
   if (!isTRUE(show_compiler_warnings)) {

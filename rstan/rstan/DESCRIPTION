@@ -40,7 +40,6 @@ Imports:
     RcppParallel (>= 5.0.1),
     loo (>= 2.3.0),
     pkgbuild,
-    withr,
     V8
 Depends:
     R (>= 3.4.0),
