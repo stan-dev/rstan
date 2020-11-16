@@ -40,11 +40,11 @@ Imports:
     RcppParallel (>= 5.0.1),
     loo (>= 2.3.0),
     pkgbuild,
-    V8
+    V8,
+    ggplot2 (>= 3.0.0)
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.21.0),
-    ggplot2 (>= 3.0.0)
 LinkingTo: Rcpp (>= 0.12.0),
     RcppEigen (>= 0.3.3.3.0),
     BH (>= 1.72.0-2),
