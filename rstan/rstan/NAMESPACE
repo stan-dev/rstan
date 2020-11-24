@@ -73,7 +73,8 @@ export(
   RNG, OUT,
   Rhat, ess_bulk, ess_tail,
   loo,
-  loo_moment_match
+  loo_moment_match,
+  nlist
 )
 
 
