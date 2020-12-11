@@ -18,7 +18,7 @@ import(StanHeaders)
 importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
 
-importFrom("loo", "loo", "loo_moment_match")
+importFrom("loo", "loo", "loo_moment_match", "nlist")
 
 export(
   sbc,
