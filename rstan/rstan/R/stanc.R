@@ -100,7 +100,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
                   paste("-I", isystem, " ", collapse = ""), 
                   "-o", processed, unprocessed, "-Wno-invalid-pp-token")
     CPP <- system2(file.path(R.home(component = "bin"), "R"), 
-                   args = "CMD config CC")
+                   args = "CMD config CC", stdout = TRUE)
     pkgbuild::with_build_tools(system(paste(CPP, ARGS), 
                                       ignore.stdout = TRUE, ignore.stderr = TRUE),
                                required = rstan_options("required") && 
