@@ -116,7 +116,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
   
-  stanc_ctx <- V8::v8(typed_arrays = FALSE)
+  stanc_ctx <- V8::v8()
   stanc_ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
   stopifnot(stanc_ctx$validate("stanc"))
   model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code, 

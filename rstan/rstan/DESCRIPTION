@@ -40,7 +40,7 @@ Imports:
     RcppParallel (>= 5.0.1),
     loo (>= 2.3.0),
     pkgbuild,
-    V8,
+    V8 (>= 3.4.0),
     ggplot2 (>= 3.0.0)
 Depends:
     R (>= 3.4.0),
