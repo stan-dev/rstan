@@ -80,7 +80,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
                     showOutput = showOutput, verbose = verbose)
   if (grepl("_rng$", function_name)) {
     fun <- get(function_name, envir = env, mode = "function")
-    formals(fun, envir = env)$random_seed <- quote(sample.int(.Machine$integer.max, size = 1L))
+    formals(fun)$random_seed <- quote(sample.int(.Machine$integer.max, size = 1L))
     assign(function_name, value = fun, envir = env)
   }
   return(do.call(function_name, args = DOTS, envir = env))
