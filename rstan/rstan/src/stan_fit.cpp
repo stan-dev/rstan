@@ -7,7 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 
-//#include <stan/math/prim/mat/fun/Eigen.hpp>
+//#include <stan/math/prim/fun/Eigen.hpp>
 #include <stan/version.hpp>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>

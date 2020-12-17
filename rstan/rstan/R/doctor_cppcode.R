@@ -226,7 +226,7 @@ doctor_cppcode <- function(stanc_ret,
                   fixed = TRUE, invert = TRUE, value = TRUE)
     necessary_headers <- c(necessary_headers,
                            ifelse(double_only,
-                                  "#include <stan/math/prim/mat.hpp>",
+                                  "#include <stan/math/prim/fun.hpp>",
                                   "#include <stan/math/math.hpp>"),
                            "#include <stan/model/prob_grad.hpp>",
                            "#include <stan/io/array_var_context.hpp>",
