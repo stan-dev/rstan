@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017 Trustees of Columbia University
+# Copyright (C) 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020 Trustees of Columbia University
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,61 +15,31 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-stanc <- function(file, model_code = '', model_name = "anon_model",
-                  verbose = FALSE, obfuscate_model_name = TRUE,
-                  allow_undefined = FALSE,
-                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
-
-  # Call stanc, written in C++
-  model_name2 <- deparse(substitute(model_code))
-  if (is.null(attr(model_code, "model_name2")))
-    attr(model_code, "model_name2") <- model_name2
-  model_code <- get_model_strcode(file, model_code)
-  if (missing(model_name) || is.null(model_name))
-    model_name <- attr(model_code, "model_name2")
-  if (verbose)
-    cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
-  SUCCESS_RC <- 0
-  EXCEPTION_RC <- -1
-  PARSE_FAIL_RC <- -2
-
-  # model_name in C++, to avoid names that would be problematic in C++.
-  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
-  r <- .Call(CPP_stanc280, model_code, model_cppname, allow_undefined, isystem)
-  # from the cpp code of stanc,
-  # returned is a named list with element 'status', 'model_cppname', and 'cppcode'
-  r$model_name <- model_name
-  r$model_code <- model_code
-  if (is.null(r)) {
-    stop(paste("failed to run stanc for model '", model_name,
-               "' and no error message provided", sep = ''))
-  } else if (r$status == PARSE_FAIL_RC) {
-    stop(paste("failed to parse Stan model '", model_name,
-               "' and no error message provided"), sep = '')
-  } else if (r$status == EXCEPTION_RC) {
-    lapply(r$msg, function(x) message(x))
-    error_msg <- paste("failed to parse Stan model '", model_name,
-                       "' due to the above error.", sep = '')
-    stop(error_msg)
-  }
-
-  if (r$status == SUCCESS_RC && verbose)
-    cat("successful in parsing the Stan model '", model_name, "'.\n", sep = '')
-  r$status = !as.logical(r$status)
-  if (interactive() && !allow_undefined && rstan_options("javascript"))
-    try(stanc_beta(model_code, model_name, isystem))
-  return(r)
-}
-
-
 stan_version <- function() {
   .Call(CPP_stan_version)
 }
 
 rstudio_stanc <- function(filename) {
   output <- stanc(filename, allow_undefined = TRUE)
-  message(filename, " is syntactically correct.")
-  return(invisible(output))
+  if (!output$status) {
+    msg <- output$errors[2]
+    line <- as.integer(sub("^.*line ([[:digit:]]+),.*$", "\\1", msg))
+    column <- as.integer(sub("^.*column ([[:digit:]]+),.*$", "\\1", msg))
+    msg <- gsub("\n", "", msg, fixed = TRUE)
+    msg <- sub("^.*:", "", msg)
+    rstudioapi::sourceMarkers(name = "Stan",
+                              markers = data.frame(type = "error",
+                                                   file = filename,
+                                                   line = line,
+                                                   column = column, 
+                                                   message = msg,
+                                                   stringsAsFactors = FALSE),
+                              basePath = dirname(filename),
+                              autoSelect = "none")
+  } else {
+    message(filename, " is syntactically correct.")
+    return(invisible(output))
+  }
 }
 
 stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
@@ -107,21 +77,30 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
   return(out)
 }
 
-# only call this AFTER having called stanc() or stanc_builder()
-stanc_beta <- function(model_code, model_name, isystem) {
+stanc <- function(file, model_code = '', model_name = "anon_model", 
+                  verbose = FALSE, obfuscate_model_name = TRUE,
+                  allow_undefined = FALSE,
+                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
+  model_name2 <- deparse(substitute(model_code))
+  if (is.null(attr(model_code, "model_name2")))
+    attr(model_code, "model_name2") <- model_name2
+  model_code <- get_model_strcode(file, model_code)
+  if (missing(model_name) || is.null(model_name))
+    model_name <- attr(model_code, "model_name2")
+  
   model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
-  model_code <- gsub('#include /', '#include ', model_code, fixed = TRUE)
-  if (any(!grepl("#include[[:space:]]+<", model_code))) {
-    model_code <- gsub('#include (.*$)', '#include "\\1"', model_code)
+  model_code <- gsub('#include /(.*$)', '#include "\\1"', model_code)
+  has_pound <- any(grepl("#", model_code, fixed = TRUE))
+  if (has_pound) {
     unprocessed <- tempfile(fileext = ".stan")
     processed <- tempfile(fileext = ".stan")
     on.exit(file.remove(unprocessed))
     writeLines(model_code, con = unprocessed)
-    ARGS <- paste("-nostdinc -x c++ -P -C", 
+    ARGS <- paste("-E -nostdinc -x c++ -P -C", 
                   paste("-I", isystem, " ", collapse = ""), 
-                  "-o", processed, unprocessed)
+                  "-o", processed, unprocessed, "-Wno-invalid-pp-token")
     CPP <- system2(file.path(R.home(component = "bin"), "R"), 
-                   args = "CMD config CPP")
+                   args = "CMD config CC")
     pkgbuild::with_build_tools(system(paste(CPP, ARGS), 
                                       ignore.stdout = TRUE, ignore.stderr = TRUE),
                                required = rstan_options("required") && 
@@ -131,26 +110,24 @@ stanc_beta <- function(model_code, model_name, isystem) {
       on.exit(file.remove(processed), add = TRUE)
       model_code <- paste(readLines(processed), collapse = "\n")
     }
+  } else model_code <- paste(model_code, collapse = "\n")
+
+  if (verbose)
+    cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
+  
+  stanc_ctx <- V8::v8(typed_arrays = FALSE)
+  stanc_ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
+  stopifnot(stanc_ctx$validate("stanc"))
+  model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code, 
+                                      as.array(ifelse(allow_undefined, "allow_undefined", ""))), 
+                       silent = TRUE)
+  if (inherits(model_cppcode, "try-error")) {
+    stop("parser failed badly")
+  } else if (length(model_cppcode$errors)) {
+    model_cppcode$status <- FALSE
+    return(model_cppcode)
   }
-  timeout <- options()$timeout
-  on.exit(options(timeout = timeout), add = TRUE)
-  options(timeout = 5)
-  ctx <- V8::v8()
-  ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
-  model_cppcode <- try(ctx$call("stanc", model_name, paste(model_code, collapse = "\n")), silent = TRUE)
-  if (inherits(model_cppcode, "try-error") || length(model_cppcode$errors)) {
-        message("When you compile models, you are also contributing to development of the NEXT\n",
-            "Stan compiler. In this version of rstan, we compile your model as usual, but\n",
-            "also test our new compiler on your syntactically correct model. In this case,\n",
-            "the new compiler did not work like we hoped. By filing an issue at\n",
-            "https://github.com/stan-dev/stanc3/issues with your model\n",
-            "or a minimal example that shows this warning you will be contributing\n",
-            "valuable information to Stan and ensuring your models continue working.",
-            " Thank you!\n",
-            "This message can be avoided by wrapping your function call inside suppressMessages()\n",
-            " or by first calling rstan_options(javascript = FALSE).\n",
-            if (is.list(model_cppcode)) model_cppcode$errors[2] else model_cppcode)
-    return(FALSE)
-  }
-  return(TRUE)
+  return(list(status = TRUE, model_cppname = model_cppname, cppcode = model_cppcode$result,
+              model_name = model_name, model_code = model_code))
 }
