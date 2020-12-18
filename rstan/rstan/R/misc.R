@@ -1597,22 +1597,17 @@ get_time_from_csv <- function(tlines) {
 parse_data <- function(cppcode) {
   cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
                   text = cppcode)
-  private <- grep("^private:$", cppcode) + 1L
-  public <- grep("^public:$", cppcode) - 1L
+  private <- grep("^private:$| private:$", cppcode) + 1L
+  public <- grep("^public:$| public:$", cppcode) - 1L
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
-  
-  in_data <- grep("context__.vals_", cppcode, fixed = TRUE, value = TRUE)
-  in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)  
-  
   # get them from the calling environment
-  objects <- intersect(objects, in_data)
+  objects <- objects[nzchar(trimws(objects))]
   stuff <- list()
   for (int in seq_along(objects)) {
    stuff[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
   }
-  
   for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
     if (exists(objects[i], envir = globalenv(), mode = "numeric"))
       stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
