@@ -31,7 +31,7 @@ rstudio_stanc <- function(filename) {
                               markers = data.frame(type = "error",
                                                    file = filename,
                                                    line = line,
-                                                   column = column, 
+                                                   column = column,
                                                    message = msg,
                                                    stringsAsFactors = FALSE),
                               basePath = dirname(filename),
@@ -42,16 +42,26 @@ rstudio_stanc <- function(filename) {
   }
 }
 
-stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
-                          verbose = FALSE, obfuscate_model_name = FALSE,
-                          allow_undefined = FALSE) {
-  stopifnot(is.character(file), length(file) == 1, file.exists(file))
-  model_cppname <- sub("\\.stan$", "", basename(file))
-  program <- readLines(file)
-  includes <- grep("^[[:blank:]]*#include ", program)
+stanc_process <- function(file, model_code = '', model_name = "anon_model",
+                          isystem = c(dirname(file), getwd())) {
+  model_name2 <- deparse(substitute(model_code))
+  if (is.null(attr(model_code, "model_name2")))
+    attr(model_code, "model_name2") <- model_name2
+
+  model_code <- get_model_strcode(file, model_code)
+  if (missing(model_name) || is.null(model_name))
+    model_name <- attr(model_code, "model_name2")
+
+  model_attr <- attributes(model_code)
+  model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
+
+  # Remove trailing whitespaces
+  model_code <- trimws(model_code, "r")
+
+  includes <- grep("^[[:blank:]]*#include ", model_code)
   while(length(includes) > 0) {
     for (i in rev(includes)) {
-      header <- sub("^[[:blank:]]*#include[[:blank:]]+", "", program[i])
+      header <- sub("^[[:blank:]]*#include[[:blank:]]+", "", model_code[i])
       header <- gsub('\\"', '', header)
       header <- gsub("\\'", '', header)
       header <- sub("<", "", header, fixed = TRUE)
@@ -63,47 +73,30 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
       files <- file.path(isystem, header)
       existent <- file.exists(files)
       if (any(existent))
-        program <- append(program, values = readLines(files[which(existent)[1]]),
+        model_code <- append(model_code, values = readLines(files[which(existent)[1]]),
                           after = i)
-      else program <- append(program, values = readLines(header), after = 1)
-      program[i] <- ""
+      else model_code <- append(model_code, values = readLines(header), after = 1)
+      model_code[i] <- ""
     }
-    includes <- grep("^[[:blank:]]*#include ", program)
+    includes <- grep("^[[:blank:]]*#include ", model_code)
   }
-  out <- stanc(model_code = paste(program, collapse = "\n"),
-               model_name = model_cppname, verbose = verbose,
-               obfuscate_model_name = obfuscate_model_name,
-               allow_undefined = allow_undefined)
-  return(out)
-}
 
-stanc <- function(file, model_code = '', model_name = "anon_model", 
-                  verbose = FALSE, obfuscate_model_name = TRUE,
-                  allow_undefined = FALSE,
-                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
-  model_name2 <- deparse(substitute(model_code))
-  if (is.null(attr(model_code, "model_name2")))
-    attr(model_code, "model_name2") <- model_name2
-  model_code <- get_model_strcode(file, model_code)
-  if (missing(model_name) || is.null(model_name))
-    model_name <- attr(model_code, "model_name2")
-  
-  model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
   model_code <- gsub('#include /(.*$)', '#include "\\1"', model_code)
   has_pound <- any(grepl("#", model_code, fixed = TRUE))
+
   if (has_pound) {
     unprocessed <- tempfile(fileext = ".stan")
     processed <- tempfile(fileext = ".stan")
     on.exit(file.remove(unprocessed))
     writeLines(model_code, con = unprocessed)
-    ARGS <- paste("-E -nostdinc -x c++ -P -C", 
-                  paste("-I", isystem, " ", collapse = ""), 
+    ARGS <- paste("-E -nostdinc -x c++ -P -C",
+                  paste("-I", isystem, " ", collapse = ""),
                   "-o", processed, unprocessed, "-Wno-invalid-pp-token")
-    CPP <- system2(file.path(R.home(component = "bin"), "R"), 
+    CPP <- system2(file.path(R.home(component = "bin"), "R"),
                    args = "CMD config CC", stdout = TRUE)
-    pkgbuild::with_build_tools(system(paste(CPP, ARGS), 
+    pkgbuild::with_build_tools(system(paste(CPP, ARGS),
                                       ignore.stdout = TRUE, ignore.stderr = TRUE),
-                               required = rstan_options("required") && 
+                               required = rstan_options("required") &&
                                  identical(Sys.getenv("WINDOWS"), "TRUE") &&
                                 !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
     if (file.exists(processed)) {
@@ -112,15 +105,49 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     }
   } else model_code <- paste(model_code, collapse = "\n")
 
+  mostattributes(model_code) <- model_attr
+
+  return(model_code)
+}
+
+stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
+                          verbose = FALSE, obfuscate_model_name = FALSE,
+                          allow_undefined = FALSE) {
+  stopifnot(is.character(file), length(file) == 1, file.exists(file))
+  model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
+
+  model_code <- stanc_process(file = file,
+                              model_name = model_name,
+                              isystem = c(dirname(file), getwd()))
+
+  out <- stanc(model_code = model_code,
+               model_name = model_name, verbose = verbose,
+               obfuscate_model_name = obfuscate_model_name,
+               allow_undefined = allow_undefined)
+  return(out)
+}
+
+stanc <- function(file, model_code = '', model_name = "anon_model",
+                  verbose = FALSE, obfuscate_model_name = TRUE,
+                  allow_undefined = FALSE,
+                  isystem = c(if (!missing(file)) dirname(file), getwd())) {
+  if (missing(model_name) && is.character(file) && length(file) == 1 && file.exists(file))
+    model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
+
+  model_code <- stanc_process(file = file,
+                              model_code = model_code,
+                              model_name = model_name,
+                              isystem = c(dirname(file), getwd()))
+
   if (verbose)
     cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
-  
+
   stanc_ctx <- V8::v8()
   stanc_ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
   stopifnot(stanc_ctx$validate("stanc"))
-  model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code, 
-                                      as.array(ifelse(allow_undefined, "allow_undefined", ""))), 
+  model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code,
+                                      as.array(ifelse(allow_undefined, "allow_undefined", ""))),
                        silent = TRUE)
   if (inherits(model_cppcode, "try-error")) {
     stop("parser failed badly")
