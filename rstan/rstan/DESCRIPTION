@@ -1,9 +1,8 @@
 Package: rstan
-Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
-Version: 2.21.3
-Date: 2020-09-01
+Version: 2.25.0.9000
+Date: 2020-12-20
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -11,6 +10,9 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
              person("Daniel", "Lee", role = "ctb"),
              person("Krzysztof", "Sakrejda", role = "ctb"),
              person("Modrak", "Martin", role = "ctb"),
+             person("Hamada S.", "Badr", role = c("ctb"),
+                    email = "badr@jhu.edu",
+                    comment = c(ORCID = "0000-0002-9808-2344")),
              person("Trustees of", "Columbia University", role = "cph"),
              person("Oleg", "Sklyar", role = "cph", comment = "R/cxxfunplus.R"),
              person("The R", "Core Team", role = "cph", comment = "R/pairs.R, R/dynGet.R"),
@@ -67,4 +69,5 @@ URL: https://mc-stan.org/rstan, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc
-RoxygenNote: 5.0.1
+Encoding: UTF-8
+RoxygenNote: 7.1.1
