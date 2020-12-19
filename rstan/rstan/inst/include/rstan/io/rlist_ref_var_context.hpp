@@ -13,6 +13,7 @@
 
 #include <boost/throw_exception.hpp>
 #include <stan/io/var_context.hpp>
+#include <stan/io/validate_dims.hpp>
 #include <Rcpp.h>
 
 namespace rstan {
@@ -180,6 +181,23 @@ namespace rstan {
           return Rcpp::as<std::vector<double> >(ee);
         }
         return empty_vec_r_;
+      }
+
+      /**
+       * Check variable dimensions against variable declaration.
+       * This context has no variables.
+       *
+       * @param stage stan program processing stage
+       * @param name variable name
+       * @param base_type declared stan variable type
+       * @param dims variable dimensions
+       * @throw std::runtime_error if mismatch between declared
+       *        dimensions and dimensions found in context.
+       */
+      void validate_dims(const std::string& stage, const std::string& name,
+                         const std::string& base_type,
+                         const std::vector<size_t>& dims_declared) const {
+        stan::io::validate_dims(*this, stage, name, base_type, dims_declared);
       }
 
       /**
