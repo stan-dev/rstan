@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/rstan?color=blue)](https://cran.r-project.org/package=rstan)
 [![Downloads](https://cranlogs.r-pkg.org/badges/rstan?color=blue)](https://cran.rstudio.com/package=rstan)
-[![Research software impact](https://depsy.org/api/package/cran/rstan/badge.svg)](https://depsy.org/package/r/rstan)
+[![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](https://depsy.org/package/r/rstan)
 [![R-CMD-check](https://github.com/stan-dev/rstan/workflows/R-CMD-check/badge.svg)](https://github.com/stan-dev/rstan/actions)
 <!-- badges: end -->
 
