@@ -158,6 +158,9 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     model_cppcode$status <- TRUE
   }
 
+  # Make sure that the model name is not NULL
+  if (is.null(model_name)) model_name <- "anon_model"
+
   return(list(status = model_cppcode$status,
               model_cppname = model_cppname, cppcode = model_cppcode$result,
               model_name = model_name, model_code = model_code))
