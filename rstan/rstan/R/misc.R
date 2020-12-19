@@ -310,7 +310,7 @@ check_args <- function(argss) {
 }
 
 #
-# model_code <- read_model_from_con('http://stan.googlecode.com/git/src/models/bugs_examples/vol1/dyes/dyes.stan')
+# model_code <- read_model_from_con('https://stan.googlecode.com/git/src/models/bugs_examples/vol1/dyes/dyes.stan')
 # cat(model_code)
 
 
@@ -934,7 +934,7 @@ rstancolgrey <- rgb(matrix(c(247, 247, 247, 204, 204, 204, 150, 150, 150, 82, 82
                     alpha = 100,
                     names = paste(1:4), maxColorValue = 255)
 
-# from http://colorbrewer2.org/, colorblind safe,
+# from https://colorbrewer2.org/, colorblind safe,
 # 6 different colors, diverging
 rstancolc <- rgb(matrix(c(230, 97, 1,
                           153, 142, 195,
@@ -1380,7 +1380,7 @@ legitimate_model_name <- function(name, obfuscate_name = TRUE) {
   # take advantage of tools such as ccache
 }
 
-boost_url <- function() {"http://www.boost.org/users/download/"}
+boost_url <- function() {"https://www.boost.org/users/download/"}
 
 makeconf_path <- function() {
   RMU <- Sys.getenv("R_MAKEVARS_USER")

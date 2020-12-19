@@ -21,7 +21,7 @@ install_rstan <- function() {
   if(inherits(test, "try-error")) stop("hello world failed; ask for help on Rcpp list")
 
   options(repos = c(getOption("repos"), 
-          rstan = "http://rstan.org/repo/"))
+          rstan = "https://rstan.org/repo/"))
   install.packages("rstan", type = 'source')
   library(rstan)
   set_cppo("fast")

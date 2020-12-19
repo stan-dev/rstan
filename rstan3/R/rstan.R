@@ -42,7 +42,7 @@
 #' constitutes a valid Stan program or you can write a valid
 #' Stan program as a \R \code{\link{character}} vector. A simple illustration 
 #' of a Stan program is given in the examples section below. More details about 
-#' the Stan language are at \url{http://mc-stan.org/documentation}, but in brief 
+#' the Stan language are at \url{https://mc-stan.org/documentation}, but in brief
 #' a Stan program has one or more of the following blocks contained within curly 
 #' braces:
 #' \itemize{

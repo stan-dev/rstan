@@ -18,7 +18,7 @@
 //#include <Rcpp.h>
 //#include <RcppEigen.h>
 
-//http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
+//https://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
 // void R_CheckUserInterrupt(void);
 

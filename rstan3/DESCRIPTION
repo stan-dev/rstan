@@ -25,6 +25,6 @@ Enhances:
     rstan
 Suggests:
     roxygen2
-URL: http://mc-stan.org
+URL: https://mc-stan.org
 Encoding: UTF-8
 RoxygenNote: 7.1.1

@@ -6,11 +6,11 @@ install_StanHeaders <- function(rstan_branch = "develop",
                                 math_branch = "master",
                                 library_branch = "master") {
   path_rstan <- tempfile(pattern = "git2r-")
-  git2r::clone("http://github.com/stan-dev/rstan", path_rstan, branch = rstan_branch)
-  git2r::clone("http://github.com/stan-dev/stan",
+  git2r::clone("https://github.com/stan-dev/rstan", path_rstan, branch = rstan_branch)
+  git2r::clone("https://github.com/stan-dev/stan",
                file.path(path_rstan, "StanHeaders", "inst", "include", "upstream"), 
                branch = library_branch)
-  git2r::clone("http://github.com/stan-dev/math",
+  git2r::clone("https://github.com/stan-dev/math",
                file.path(path_rstan, "StanHeaders", "inst", "include", "mathlib"), 
                branch = math_branch)
   # writeLines(c(".PHONY: static", readLines(file.path(path_rstan, "StanHeaders", "src", "Makevars.win")),
