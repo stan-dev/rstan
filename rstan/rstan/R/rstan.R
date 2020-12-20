@@ -127,14 +127,17 @@ stan_model <- function(file,
   model_cppname <- stanc_ret$model_cppname
   model_name <- stanc_ret$model_name
   model_code <- stanc_ret$model_code
-  model_cppcode <- sub("stan::io::var_context&",
-                       "rstan::io::rlist_ref_var_context&",
-                        stanc_ret$cppcode, fixed = TRUE)
+  model_cppcode <- stanc_ret$cppcode
+  model_cppcode <- paste("#ifndef MODELS_HPP",
+                         "#define MODELS_HPP",
+                         "#define STAN__SERVICES__COMMAND_HPP",
+                         "#include <rstan/rstaninc.hpp>",
+                         model_cppcode,
+                         "#endif",
+                         sep = '\n')
+
   inc <- paste("#include <Rcpp.h>\n",
-               "#include <rstan/io/rlist_ref_var_context.hpp>\n",
-               "#include <rstan/io/r_ostream.hpp>\n",
-               "#include <rstan/stan_args.hpp>\n",
-               "#include <boost/integer/integer_log2.hpp>\n",
+               "using namespace Rcpp ;\n",
                if(is.null(includes)) model_cppcode else
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), model_cppcode),
