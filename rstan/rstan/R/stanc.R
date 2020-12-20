@@ -161,7 +161,13 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   # Make sure that the model name is not NULL
   if (is.null(model_name)) model_name <- "anon_model"
 
+  # Use model_name in locations_array__
+  cppcode <- model_cppcode$result
+  cppcode <- gsub(paste0(" (in ", shQuote('string'), ", line "),
+                  paste0(" (in ", shQuote(model_name), ", line "),
+                  cppcode, fixed = TRUE)
+
   return(list(status = model_cppcode$status,
-              model_cppname = model_cppname, cppcode = model_cppcode$result,
+              model_cppname = model_cppname, cppcode = cppcode,
               model_name = model_name, model_code = model_code))
 }
