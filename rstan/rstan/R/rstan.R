@@ -137,7 +137,7 @@ stan_model <- function(file,
                          sep = '\n')
 
   inc <- paste("#include <Rcpp.h>\n",
-               "using namespace Rcpp ;\n",
+               "using namespace Rcpp;\n",
                if(is.null(includes)) model_cppcode else
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), model_cppcode),
