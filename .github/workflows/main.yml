@@ -70,6 +70,14 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
+          try(system("git submodule update --init --recursive --remote --force"))
+          try(system("rm -Rf StanHeaders/inst/include/upstream StanHeaders/inst/include/src StanHeaders/inst/include/mathlib StanHeaders/inst/include/stan StanHeaders/inst/include/libsundials"))
+          try(system("cp -Rpv --remove-destination stan/ StanHeaders/inst/include/upstream"))
+          try(system("cp -Rpv --remove-destination stan/src StanHeaders/inst/include/src"))
+          try(system("cp -Rpv --remove-destination stan/lib/stan_math StanHeaders/inst/include/mathlib"))
+          try(system("cp -Rpv --remove-destination stan/lib/stan_math/stan StanHeaders/inst/include/stan"))
+          try(system("cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.5.0 StanHeaders/inst/include/libsundials"))
+          remotes::install_local('StanHeaders', dependencies = TRUE, type = "source")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
