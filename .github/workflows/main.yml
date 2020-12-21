@@ -70,7 +70,6 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
-          remotes::install_local('StanHeaders_2.25.0.9000.tar.gz', dependencies = TRUE, type = "source")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
