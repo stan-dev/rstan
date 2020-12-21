@@ -10,17 +10,17 @@ if [ -z "$grepstanbranch" ]; then
     exit 20
 fi
 
-STAN_MATH_REPO_BRANCH=develop
-grepstanmathbranch=`git ls-remote --heads https://github.com/stan-dev/math.git | grep "/${STAN_MATH_REPO_BRANCH}"`
-if [ -z "$grepstanmathbranch" ]; then
-    echo -e "${red}ERROR:${NC} stan math repo does not have {STAN_MATH_REPO_BRANCH}"
-    exit 20
-fi
-
+git config --file=.gitmodules -l
 git config -f .gitmodules submodule.stan.branch ${STAN_REPO_BRANCH}
-git config -f .gitmodules submodule.StanHeaders/inst/include/mathlib.branch ${STAN_MATH_REPO_BRANCH}
-git submodule update --init --remote
+git submodule update --init --recursive --remote --force
 git submodule status
+
+rm -Rf StanHeaders/inst/include/upstream StanHeaders/inst/include/src StanHeaders/inst/include/mathlib StanHeaders/inst/include/stan StanHeaders/inst/include/libsundials
+cp -Rpv --remove-destination stan/ StanHeaders/inst/include/upstream
+cp -Rpv --remove-destination stan/src StanHeaders/inst/include/src
+cp -Rpv --remove-destination stan/lib/stan_math StanHeaders/inst/include/mathlib
+cp -Rpv --remove-destination stan/lib/stan_math/stan StanHeaders/inst/include/stan
+cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.5.0 StanHeaders/inst/include/libsundials
 
 R CMD build StanHeaders/
 
