@@ -43,7 +43,7 @@ Imports:
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
     V8 (>= 3.4.0),
-    ggplot2 (>= 3.3.3)
+    ggplot2 (>= 3.3.2)
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.25.0)
