@@ -75,7 +75,7 @@ jobs:
 
       - name: Install StanHeaders
         run: |
-          try(system("sh sh_b.sh --no-build-vignettes"))
+          try(system("sh sh_b.sh --no-build-vignettes --no-manual"))
         shell: Rscript {0}
 
       - name: Session info
