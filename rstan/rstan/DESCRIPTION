@@ -36,35 +36,34 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
-    inline,
-    gridExtra (>= 2.0.0),
-    Rcpp (>= 0.12.0),
-    RcppParallel (>= 5.0.1),
-    loo (>= 2.3.0),
-    pkgbuild,
+    inline (>= 0.3.17),
+    gridExtra (>= 2.3),
+    Rcpp (>= 1.0.5),
+    RcppParallel (>= 5.0.2),
+    loo (>= 2.4.1),
+    pkgbuild (>= 1.2.0),
     V8 (>= 3.4.0),
-    ggplot2 (>= 3.0.0)
+    ggplot2 (>= 3.3.3)
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.25.0)
-LinkingTo: Rcpp (>= 0.12.0),
-    RcppEigen (>= 0.3.3.3.0),
-    BH (>= 1.72.0-2),
+LinkingTo:
+    Rcpp (>= 1.0.5),
+    RcppEigen (>= 0.3.3.9.1),
+    BH (>= 1.72.0-3),
     StanHeaders (>= 2.25.0),
-    RcppParallel
+    RcppParallel (>= 5.0.2)
 Suggests:
     RUnit,
-    RcppEigen (>= 0.3.3.3.0),
-    BH (>= 1.72.0-2),
     parallel,
     KernSmooth,
-    shinystan (>= 2.3.0),
-    bayesplot (>= 1.5.0),
+    shinystan,
+    bayesplot,
     rmarkdown,
     rstantools,
     rstudioapi,
     Matrix,
-    knitr (>= 1.15.1)
+    knitr
 URL: https://mc-stan.org/rstan/, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
