@@ -20,7 +20,7 @@ cp -Rpv --remove-destination stan/ StanHeaders/inst/include/upstream
 cp -Rpv --remove-destination stan/src StanHeaders/inst/include/src
 cp -Rpv --remove-destination stan/lib/stan_math StanHeaders/inst/include/mathlib
 cp -Rpv --remove-destination stan/lib/stan_math/stan StanHeaders/inst/include/stan
-cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.5.0 StanHeaders/inst/include/libsundials
+cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.6.1 StanHeaders/inst/include/libsundials
 
 R CMD build StanHeaders/
 

@@ -76,7 +76,7 @@ jobs:
           try(system("cp -Rpv --remove-destination stan/src StanHeaders/inst/include/src"))
           try(system("cp -Rpv --remove-destination stan/lib/stan_math StanHeaders/inst/include/mathlib"))
           try(system("cp -Rpv --remove-destination stan/lib/stan_math/stan StanHeaders/inst/include/stan"))
-          try(system("cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.5.0 StanHeaders/inst/include/libsundials"))
+          try(system("cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.6.1 StanHeaders/inst/include/libsundials"))
           remotes::install_local('StanHeaders', dependencies = TRUE, type = "source")
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
