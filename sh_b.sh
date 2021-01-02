@@ -22,7 +22,7 @@ cp -Rf stan/lib/stan_math StanHeaders/inst/include/mathlib || true
 cp -Rf stan/lib/stan_math/stan StanHeaders/inst/include/stan || true
 cp -Rf stan/lib/stan_math/lib/sundials_* StanHeaders/inst/include/libsundials || true
 
-R CMD build StanHeaders/
+R CMD build "$@" StanHeaders/
 
 stanheadtargz=`find StanHeaders*.tar.gz | sort | tail -n 1`
 
