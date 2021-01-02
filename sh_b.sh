@@ -16,11 +16,11 @@ git submodule update --init --recursive --remote --force
 git submodule status
 
 rm -Rf StanHeaders/inst/include/upstream StanHeaders/inst/include/src StanHeaders/inst/include/mathlib StanHeaders/inst/include/stan StanHeaders/inst/include/libsundials
-cp -Rpv --remove-destination stan/ StanHeaders/inst/include/upstream
-cp -Rpv --remove-destination stan/src StanHeaders/inst/include/src
-cp -Rpv --remove-destination stan/lib/stan_math StanHeaders/inst/include/mathlib
-cp -Rpv --remove-destination stan/lib/stan_math/stan StanHeaders/inst/include/stan
-cp -Rpv --remove-destination stan/lib/stan_math/lib/sundials_5.6.1 StanHeaders/inst/include/libsundials
+cp -Rf stan StanHeaders/inst/include/upstream || true
+cp -Rf stan/src StanHeaders/inst/include/src || true
+cp -Rf stan/lib/stan_math StanHeaders/inst/include/mathlib || true
+cp -Rf stan/lib/stan_math/stan StanHeaders/inst/include/stan || true
+cp -Rf stan/lib/stan_math/lib/sundials_* StanHeaders/inst/include/libsundials || true
 
 R CMD build StanHeaders/
 
@@ -36,4 +36,4 @@ fi
 git checkout .gitmodules
 # git submodule deinit -f .
 
-R CMD INSTALL ${stanheadtargz}
+R CMD INSTALL ${stanheadtargz} || Rscript -e 'remotes::install_local(rev(list.files(pattern = Sys.glob("StanHeaders")))[1], dependencies = TRUE, type = "source")'
