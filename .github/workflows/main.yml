@@ -70,8 +70,12 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
-          try(system("sh sh_b.sh"))
           remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
+
+      - name: Install StanHeaders
+        run: |
+          try(system("sh sh_b.sh"))
         shell: Rscript {0}
 
       - name: Session info
