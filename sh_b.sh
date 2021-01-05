@@ -15,16 +15,14 @@ git config -f .gitmodules submodule.stan.branch ${STAN_REPO_BRANCH}
 git submodule update --init --recursive --remote --force
 git submodule status
 
-rm -Rf StanHeaders/inst/include/upstream \
-       StanHeaders/inst/include/src \
+rm -Rf StanHeaders/inst/include/src \
        StanHeaders/inst/include/mathlib \
        StanHeaders/inst/include/stan \
        StanHeaders/inst/include/libsundials || true
-cp -Rf stan StanHeaders/inst/include/upstream || true
-cp -Rf stan/src StanHeaders/inst/include/src || true
-cp -Rf stan/lib/stan_math StanHeaders/inst/include/mathlib || true
-cp -Rf stan/lib/stan_math/stan StanHeaders/inst/include/stan || true
-cp -Rf stan/lib/stan_math/lib/sundials_* StanHeaders/inst/include/libsundials || true
+cp -Rf StanHeaders/inst/include/upstream/src StanHeaders/inst/include/src || true
+cp -Rf StanHeaders/inst/include/upstream/lib/stan_math StanHeaders/inst/include/mathlib || true
+cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/stan StanHeaders/inst/include/stan || true
+cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_* StanHeaders/inst/include/libsundials || true
 
 R CMD build "$@" StanHeaders/
 
