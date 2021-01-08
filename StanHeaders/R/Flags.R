@@ -5,11 +5,7 @@ CxxFlags <- function(as_character = FALSE) {
     TBB_INC <- system.file("include", package = "RcppParallel", mustWork = TRUE)
   }
 
-  if (file.exists(file.path(TBB_INC, "tbb", "version.h"))) {
-    CXXFLAGS <- paste0("-I", shQuote(TBB_INC), " -D_REENTRANT -DSTAN_THREADS -DTBB_INTERFACE_NEW")
-  } else {
-    CXXFLAGS <- paste0("-I", shQuote(TBB_INC), " -D_REENTRANT -DSTAN_THREADS")
-  }
+  CXXFLAGS <- paste0("-I", shQuote(TBB_INC), " -D_REENTRANT -DSTAN_THREADS")
 
   if (isTRUE(as_character)) return(CXXFLAGS)
   cat(CXXFLAGS, " ")
