@@ -1,9 +1,9 @@
 CXX_STD = CXX14
 CXX14STD = -std=c++1y
 STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'src', package = 'StanHeaders'))" | tail -n 1)
-PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"${STANHEADERS_SRC}" -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -DBOOST_NO_AUTO_PTR -D_REENTRANT -DSTAN_THREADS 
+PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"${STANHEADERS_SRC}" -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -DBOOST_NO_AUTO_PTR -D_REENTRANT -DSTAN_THREADS -DSTRICT_R_HEADERS
 PKG_CPPFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()" | tail -n 1)
-PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1
+PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DSTRICT_R_HEADERS
 PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "RcppParallel::RcppParallelLibs()" | tail -n 1)
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS) 
 SHLIB_LD = $(SHLIB_CXXLD)
