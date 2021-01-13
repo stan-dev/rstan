@@ -3,11 +3,12 @@
 # including its submodules. This requires the git2r and devtools packages
 
 install_StanHeaders <- function(branch = "develop") {
+  path_wd <- getwd()
   path_rstan <- tempfile(pattern = "git2r-")
 
   git2r::clone("https://github.com/stan-dev/rstan", path_rstan, branch = branch)
 
-  on.exit(setwd(getwd()))
+  on.exit(setwd(path_wd))
   setwd(path_rstan)
 
   try(system("sh sh_b.sh --no-build-vignettes --no-manual"))
