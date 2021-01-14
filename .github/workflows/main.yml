@@ -16,12 +16,11 @@ jobs:
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         config:
-          #- {os: macOS-latest,   r: 'devel'}
           - {os: macOS-latest,   r: 'release'}
-          #- {os: windows-latest, r: 'devel'}
+          - {os: windows-latest, r: 'devel'}
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: 'oldrel'}
           - {os: ubuntu-20.04,   r: 'devel'}
@@ -34,11 +33,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
 
-      - uses: r-lib/actions/setup-pandoc@master
+      - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Query dependencies
         run: |
@@ -110,7 +109,23 @@ jobs:
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
+
+      - name: Build source packages
+        if: runner.os == 'macOS'
+        run: |
+          src1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
+          src2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
+          dir.create("build")
+          file.copy(c(src1, src2), "build")
+        shell: Rscript {0}
+
+      - name: Upload source packages
+        if: success() && runner.os == 'macOS'
+        uses: actions/upload-artifact@v2
+        with:
+          name: rstan-${{ github.sha }}
+          path: build
