@@ -123,9 +123,23 @@ jobs:
           file.copy(c(src1, src2), "build")
         shell: Rscript {0}
 
-      - name: Upload source packages
+      - name: Extract package versions
+        run: |
+          set -x
+          echo "STANHEADERS_VERSION=$(grep '^Version' StanHeaders/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Upload StanHeaders source package
         if: success() && runner.os == 'macOS'
         uses: actions/upload-artifact@v2
         with:
-          name: rstan-${{ github.sha }}
-          path: build
+          name: StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
+          path: build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
+
+      - name: Upload RStan source package
+        if: success() && runner.os == 'macOS'
+        uses: actions/upload-artifact@v2
+        with:
+          name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
+          path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
