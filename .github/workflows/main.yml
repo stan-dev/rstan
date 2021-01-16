@@ -115,7 +115,7 @@ jobs:
           path: check
 
       - name: Build source packages
-        if: runner.os == 'macOS'
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
         run: |
           src1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
           src2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
@@ -131,14 +131,14 @@ jobs:
         shell: bash
 
       - name: Upload StanHeaders source package
-        if: success() && runner.os == 'macOS'
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
         uses: actions/upload-artifact@v2
         with:
           name: StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
           path: build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
 
       - name: Upload RStan source package
-        if: success() && runner.os == 'macOS'
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
         uses: actions/upload-artifact@v2
         with:
           name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
