@@ -12,7 +12,6 @@ importFrom("pkgbuild", with_build_tools)
 importFrom("V8", v8)
 import("methods")
 import(Rcpp)
-importFrom(RcppParallel,RcppParallelLibs)
 import(StanHeaders)
 
 importFrom("gridExtra","arrangeGrob","grid.arrange")
