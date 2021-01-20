@@ -118,30 +118,34 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
 
-      - name: Build source packages
+      - name: Extract version and check StanHeaders source package
+        run: |
+          set -x
+          echo "STANHEADERS_VERSION=$(grep '^Version' StanHeaders/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          if [[ ! -f StanHeaders_*.tar.gz ]]; then
+            sh sh_b.sh --no-build-vignettes --no-manual || true
+          fi
+          mkdir -p build || true
+          cp -v StanHeaders_*.tar.gz build/ || true
+          ls -R build/
+        shell: bash
+
+      - name: Build RStan source package
         if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
         run: |
-          src1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
-          src2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
-          dir.create("build")
-          file.copy(c(src1, src2), "build")
+          src_rstan <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
+          file.copy(src_rstan, "build")
         shell: Rscript {0}
 
       - name: Build binary packages
         if: matrix.config.r != 'oldrel'
         run: |
-          bin1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
+          bin1 <- pkgbuild::build("./build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
           bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
           dir.create("build_bin")
           file.copy(c(bin1, bin2), "build_bin")
         shell: Rscript {0}
-
-      - name: Extract package versions
-        run: |
-          set -x
-          echo "STANHEADERS_VERSION=$(grep '^Version' StanHeaders/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
-          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
-        shell: bash
 
       - name: Upload StanHeaders source package
         if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
