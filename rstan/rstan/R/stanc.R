@@ -131,6 +131,12 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE,
                   allow_undefined = FALSE,
                   isystem = c(if (!missing(file)) dirname(file), getwd())) {
+  if (missing(file)) {
+    file <- tempfile(fileext = ".stan")
+    on.exit(file.remove(file))
+    writeLines(model_code, con = file)
+  }
+
   if (missing(model_name) && is.character(file) && length(file) == 1 && file.exists(file))
     model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
 
