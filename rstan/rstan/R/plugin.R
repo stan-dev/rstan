@@ -48,6 +48,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -I"', boost_path_fun(), '"',  # before BH/include
          ' -I"', file.path(inc_path_fun("StanHeaders"), "src", '" '),
          ' -I"', file.path(inc_path_fun("StanHeaders"), '" '),
+         ' -I"', file.path(inc_path_fun("RcppParallel"), '" '),
          utils::capture.output(RcppParallel::CxxFlags()),
          ' -I"', inc_path_fun("rstan"), '"',
          ' -DEIGEN_NO_DEBUG ',
