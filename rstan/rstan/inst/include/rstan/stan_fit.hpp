@@ -7,6 +7,8 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <stan/version.hpp>
 
@@ -18,6 +20,13 @@
 #include <rstan/io/rlist_ref_var_context.hpp>
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
+#include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
+#include <rstan/value.hpp>
+#include <rstan/values.hpp>
+#include <rstan/rstan_writer.hpp>
+#include <rstan/logger.hpp>
+
 #include <Rcpp.h>
 #include <RcppEigen.h>
 
@@ -25,14 +34,22 @@
 #include <R_ext/Utils.h>
 // void R_CheckUserInterrupt(void);
 
-
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
+#include <stan/callbacks/logger.hpp>
 #include <stan/callbacks/stream_logger.hpp>
 #include <stan/callbacks/stream_writer.hpp>
 #include <stan/callbacks/writer.hpp>
+#include <stan/io/dump.hpp>
 #include <stan/io/empty_var_context.hpp>
+#include <stan/io/ends_with.hpp>
+#include <stan/io/stan_csv_reader.hpp>
+#include <stan/math/prim/core/init_threadpool_tbb.hpp>
+#include <stan/math/prim/fun/Eigen.hpp>
+#include <stan/model/model_base.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
+#include <stan/services/experimental/advi/fullrank.hpp>
+#include <stan/services/experimental/advi/meanfield.hpp>
 #include <stan/services/optimize/bfgs.hpp>
 #include <stan/services/optimize/lbfgs.hpp>
 #include <stan/services/optimize/newton.hpp>
@@ -50,8 +67,6 @@
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
 #include <stan/services/sample/standalone_gqs.hpp>
-#include <stan/services/experimental/advi/fullrank.hpp>
-#include <stan/services/experimental/advi/meanfield.hpp>
 
 #include <rstan/filtered_values.hpp>
 #include <rstan/sum_values.hpp>
