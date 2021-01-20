@@ -127,6 +127,15 @@ jobs:
           file.copy(c(src1, src2), "build")
         shell: Rscript {0}
 
+      - name: Build binary packages
+        if: matrix.config.r != 'oldrel'
+        run: |
+          bin1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
+          bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
+          dir.create("build_bin")
+          file.copy(c(bin1, bin2), "build_bin")
+        shell: Rscript {0}
+
       - name: Extract package versions
         run: |
           set -x
@@ -147,3 +156,10 @@ jobs:
         with:
           name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
           path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
+
+      - name: Upload binary packages
+        if: matrix.config.r != 'oldrel'
+        uses: actions/upload-artifact@v2
+        with:
+          name: R-${{ matrix.config.r }}_${{ matrix.config.os }}
+          path: build_bin
