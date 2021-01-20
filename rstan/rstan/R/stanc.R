@@ -150,7 +150,12 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
   stanc_ctx <- V8::v8()
-  stanc_ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
+  stanc_js <- system.file("stanc.js", package="rstan")
+  if (!file.exists(stanc_js)) {
+    message("stanc java script not found, using the online version!")
+    stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js"
+  }
+  stanc_ctx$source(stanc_js)
   stopifnot(stanc_ctx$validate("stanc"))
   model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code,
                                       as.array(ifelse(allow_undefined, "allow_undefined", ""))),
