@@ -1,6 +1,7 @@
 Package: StanHeaders
-Date: 2021-01-18
 Title: C++ Header Files for Stan
+Version: 2.26.0.9000
+Date: 2021-01-20
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),
              person("Andrew", "Gelman", role = "aut"),
@@ -39,7 +40,6 @@ LinkingTo: RcppEigen, RcppParallel (>= 5.0.1)
 VignetteBuilder: knitr
 SystemRequirements: pandoc
 Depends: R (>= 3.4.0)
-Version: 2.25.0.9000
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.1
