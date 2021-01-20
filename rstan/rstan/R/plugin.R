@@ -87,12 +87,16 @@ rstanplugin <- function() {
   if (.Platform$OS.type == "windows") {
     StanHeaders_pkg_libs <- system.file("libs", .Platform$r_arch,
                                         package = "StanHeaders", mustWork = TRUE)
+    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch,
+                                         package = "RcppParallel", mustWork = TRUE)
     rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a",
                                       package = "rstan", mustWork = TRUE)
   }
   else {
     StanHeaders_pkg_libs <- system.file("lib", .Platform$r_arch,
                                         package = "StanHeaders", mustWork = TRUE)
+    RcppParallel_pkg_libs <- system.file("lib", .Platform$r_arch,
+                                         package = "RcppParallel", mustWork = TRUE)
     rstan_StanServices <- system.file("lib", .Platform$r_arch, "libStanServices.a",
                                       package = "rstan", mustWork = TRUE)
   }
@@ -107,10 +111,16 @@ rstanplugin <- function() {
 
   # cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
+  tbb_libs <- "-ltbb"
+  if (!is.null(tbbmalloc_proxyDllInfo))
+      tbb_libs <- paste(tbb_libs, "-ltbbmalloc -ltbbmalloc_proxy")
+
   PL <- paste(rcpp_pkg_libs,
               shQuote(rstan_StanServices),
               paste0("-L", shQuote(StanHeaders_pkg_libs)),
               "-lStanHeaders",
+              paste0("-L", shQuote(RcppParallel_pkg_libs)),
+              tbb_libs,
               utils::capture.output(RcppParallel::LdFlags()))
   if (.Platform$OS.type == "windows") {
     list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
