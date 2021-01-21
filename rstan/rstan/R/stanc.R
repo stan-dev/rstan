@@ -166,7 +166,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     stop("parser failed badly")
   } else if (length(model_cppcode$errors)) {
     model_cppcode$status <- FALSE
-    message(paste(model_cppcode$errors, collapse = "\n"))
+    stop(paste(model_cppcode$errors, collapse = "\n"))
   } else {
     model_cppcode$status <- TRUE
   }
