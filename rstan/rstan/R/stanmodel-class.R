@@ -113,6 +113,20 @@ setMethod("vb", "stanmodel",
                    importance_resampling = FALSE,
                    keep_every = 1,
                    ...) {
+            if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+              if (!exists("rstan_threading")) {
+                message("\nrstan version ",
+                        utils::packageVersion("rstan"),
+                        " (Stan version ",
+                        stan_version(), ")\n",
+                        "Using threads_per_chain = ",
+                        rstan_options("threads_per_chain"),
+                        " for within-chain threading.\n")
+                rstan_threading <<- TRUE
+              }
+              Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+            }
+
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
@@ -351,6 +365,19 @@ setMethod("optimizing", "stanmodel",
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE,
                    draws = 0, constrained = TRUE,
                    importance_resampling = FALSE, ...) {
+            if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+              if (!exists("rstan_threading")) {
+                message("\nrstan version ",
+                        utils::packageVersion("rstan"),
+                        " (Stan version ",
+                        stan_version(), ")\n",
+                        "Using threads_per_chain = ",
+                        rstan_options("threads_per_chain"),
+                        " for within-chain threading.\n")
+                rstan_threading <<- TRUE
+              }
+              Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+            }
 
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -512,6 +539,21 @@ setMethod("sampling", "stanmodel",
             is_arg_deprecated(names(list(...)),
                               c("enable_random_init"),
                               pre_msg = "passing deprecated arguments: ")
+
+            if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+              if (!exists("rstan_threading")) {
+                message("\nrstan version ",
+                        utils::packageVersion("rstan"),
+                        " (Stan version ",
+                        stan_version(), ")\n",
+                        "Using threads_per_chain = ",
+                        rstan_options("threads_per_chain"),
+                        " for within-chain threading.\n")
+                rstan_threading <<- TRUE
+              }
+              Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+            }
+
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))

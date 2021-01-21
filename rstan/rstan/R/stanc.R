@@ -147,6 +147,20 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
                               model_name = model_name,
                               isystem = c(dirname(file), getwd()))
 
+  if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+    if (!exists("rstan_threading")) {
+      message("\nrstan version ",
+              utils::packageVersion("rstan"),
+              " (Stan version ",
+              stan_version(), ")\n",
+              "Using threads_per_chain = ",
+              rstan_options("threads_per_chain"),
+              " for within-chain threading.\n")
+      rstan_threading <<- TRUE
+    }
+    Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+  }
+
   if (verbose)
     cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
@@ -179,6 +193,14 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   cppcode <- gsub(paste0(" (in ", shQuote('string'), ", line "),
                   paste0(" (in ", shQuote(model_name), ", line "),
                   cppcode, fixed = TRUE)
+
+  # Initialize Stan/math TBB arena and global control
+  cppcode <- paste("#ifdef STAN_THREADS",
+                   "#include <stan/math/prim/core/init_threadpool_tbb.hpp>",
+                   "auto tbb_init = stan::math::init_threadpool_tbb();",
+                   "#endif",
+                   cppcode,
+                   sep = "\n")
 
   return(list(status = model_cppcode$status,
               model_cppname = model_cppname, cppcode = cppcode,

@@ -29,6 +29,19 @@ stan_model <- function(file,
                        allow_undefined = FALSE,
                        includes = NULL,
                        isystem = c(if (!missing(file)) dirname(file), getwd())) {
+  if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+    if (!exists("rstan_threading")) {
+      message("\nrstan version ",
+              utils::packageVersion("rstan"),
+              " (Stan version ",
+              stan_version(), ")\n",
+              "Using threads_per_chain = ",
+              rstan_options("threads_per_chain"),
+              " for within-chain threading.\n")
+      rstan_threading <<- TRUE
+    }
+    Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+  }
 
   # Construct a stan model from stan code
   #
@@ -258,6 +271,19 @@ stan <- function(file, model_name = "anon_model",
   #
   # Returns:
   #   A S4 class stanfit object
+  if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+    if (!exists("rstan_threading")) {
+      message("\nrstan version ",
+              utils::packageVersion("rstan"),
+              " (Stan version ",
+              stan_version(), ")\n",
+              "Using threads_per_chain = ",
+              rstan_options("threads_per_chain"),
+              " for within-chain threading.\n")
+      rstan_threading <<- TRUE
+    }
+    Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+  }
 
   dot_arg_names <- names(list(...))
   is_arg_recognizable(dot_arg_names,
