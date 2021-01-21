@@ -135,6 +135,8 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     file <- tempfile(fileext = ".stan")
     on.exit(file.remove(file))
     writeLines(model_code, con = file)
+  } else if (!nzchar(file)) {
+    stop("Empty or invalid filename!")
   }
 
   if (missing(model_name) && is.character(file) && length(file) == 1 && file.exists(file))
