@@ -194,13 +194,19 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
                   paste0(" (in ", shQuote(model_name), ", line "),
                   cppcode, fixed = TRUE)
 
-  # Initialize Stan/math TBB arena and global control
-  cppcode <- paste("#ifdef STAN_THREADS",
-                   "#include <stan/math/prim/core/init_threadpool_tbb.hpp>",
-                   "auto tbb_init = stan::math::init_threadpool_tbb();",
-                   "#endif",
-                   cppcode,
-                   sep = "\n")
+
+  if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+    # Initialize Stan/math TBB arena and global control
+    cppcode <- paste("#ifdef STAN_THREADS",
+                     "#ifndef RSTAN_THREADING",
+                     "#define RSTAN_THREADING",
+                     "#include <stan/math/prim/core/init_threadpool_tbb.hpp>",
+                     "auto tbb_init = stan::math::init_threadpool_tbb();",
+                     "#endif",
+                     "#endif",
+                     cppcode,
+                     sep = "\n")
+  }
 
   return(list(status = model_cppcode$status,
               model_cppname = model_cppname, cppcode = cppcode,
