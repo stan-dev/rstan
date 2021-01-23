@@ -83,9 +83,7 @@ init_rstan_opt_env <- function(e) {
 
   assign('disable_march_warning', FALSE, e)
 
-  assign('threads_per_chain', max(1L,
-                                  as.integer(Sys.getenv("STAN_NUM_THREADS")),
-                                  na.rm = TRUE), e)
+  assign('threads_per_chain', 1L, e)
 
   # cat("init_rstan_opt_env called.\n")
   invisible(e)

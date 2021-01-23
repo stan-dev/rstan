@@ -48,7 +48,8 @@ tbbmalloc_proxyDllInfo <- NULL
                         "rstan_options(auto_write = TRUE)",
                         "\nFor within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,\n",
                         "change `threads_per_chain` option:\n",
-                        "rstan_options(threads_per_chain = as.integer(Sys.getenv('STAN_NUM_THREADS')))\n")
+                        paste0("rstan_options(threads_per_chain = ",
+                               rstan_options("threads_per_chain"), ")\n"))
   if (.Platform$OS.type == "windows") {
     packageStartupMessage("Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file")
   }
