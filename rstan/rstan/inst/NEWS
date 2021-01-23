@@ -31,6 +31,7 @@ Fri January 22, 2021
     rstan::rstan_options(threads_per_chain = n)
     ```
     - If the model is compiled with threading support, the number of threads to use in parallelized sections _within_ an MCMC chain (e.g., when using the `Stan` functions `reduce_sum()` or `map_rect()`). The actual number of CPU cores used is `chains * threads_per_chain` where `chains` is the number of parallel chains. For an example of using threading, see [Reduce Sum: A Minimal Example](https://mc-stan.org/users/documentation/case-studies/reduce_sum_tutorial.html).
+27. Initialize TBB arena and global control only if `threads_per_chain > 1`.
 
 Fri July 24 2020
 
