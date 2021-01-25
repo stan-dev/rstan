@@ -16,11 +16,7 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 // #include <stan/mcmc/chains.hpp>
-#include <stan/math/prim/fun/mean.hpp>
-#include <stan/math/prim/fun/sum.hpp>
-#include <stan/math/prim/fun/variance.hpp>
-#include <stan/math/prim/fun/autocorrelation.hpp>
-#include <stan/math/prim/fun/autocovariance.hpp>
+#include <stan/math/prim.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>

@@ -43,8 +43,7 @@
 #include <stan/io/empty_var_context.hpp>
 #include <stan/io/ends_with.hpp>
 #include <stan/io/stan_csv_reader.hpp>
-#include <stan/math/prim/core/init_threadpool_tbb.hpp>
-#include <stan/math/prim/fun/Eigen.hpp>
+#include <stan/math/prim.hpp>
 #include <stan/model/model_base.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
 #include <stan/services/experimental/advi/fullrank.hpp>
