@@ -125,16 +125,6 @@ rstan_options <- function(...) {
     if (n == 'plot_rhat_breaks') {
       assign(n, sort(a[[n]]), e)
     } else if (n == 'threads_per_chain') {
-      if (!exists("rstan_threading")) {
-        message("\nrstan version ",
-                utils::packageVersion("rstan"),
-                " (Stan version ",
-                stan_version(), ")\n",
-                "Using threads_per_chain = ",
-                rstan_options("threads_per_chain"),
-                " for within-chain threading.\n")
-        rstan_threading <<- TRUE
-      }
       assign(n, max(1L, as.integer(a[[n]]), na.rm = TRUE), e)
       Sys.setenv("STAN_NUM_THREADS" = max(1L, as.integer(a[[n]]), na.rm = TRUE))
     } else {
