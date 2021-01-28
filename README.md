@@ -4,7 +4,7 @@
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
 [![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=blue)](http://cran.rstudio.com/package=rstan)
 [![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](http://depsy.org/package/r/rstan)
-[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
+[![R-CMD-check](https://github.com/stan-dev/rstan/workflows/R-CMD-check/badge.svg)](https://github.com/stan-dev/rstan/actions)
 <!-- badges: end -->
 
 **RStan** is the R interface to [Stan](http://mc-stan.org). 
