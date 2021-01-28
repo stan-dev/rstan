@@ -19,7 +19,7 @@ extract_sparse_parts <- function(A) {
   if (!requireNamespace("Matrix")) 
     stop("You have to install the Matrix package to call 'extract_sparse_parts'")
   if (!is(A, 'Matrix')) 
-    A <- Matrix::Matrix(A, sparse=TRUE)
+    A <- Matrix::Matrix(A, sparse=TRUE, doDiag=FALSE)
   A <- Matrix::t(A)
   A <- as(A, "dgCMatrix")
   return(.Call(extract_sparse_components, A))
