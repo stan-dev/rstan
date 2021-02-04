@@ -49,7 +49,7 @@ Depends:
 LinkingTo:
     Rcpp (>= 1.0.5),
     RcppEigen (>= 0.3.3.9.1),
-    BH (>= 1.72.0-3),
+    BH (>= 1.75.0-0),
     StanHeaders (>= 2.25.0),
     RcppParallel (>= 5.0.2)
 Suggests:
