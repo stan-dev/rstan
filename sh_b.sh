@@ -18,11 +18,13 @@ git submodule status
 rm -Rf StanHeaders/inst/include/src \
        StanHeaders/inst/include/mathlib \
        StanHeaders/inst/include/stan \
+       StanHeaders/inst/include/CL \
        StanHeaders/inst/include/libsundials || true
 
 cp -Rf StanHeaders/inst/include/upstream/src StanHeaders/inst/include/src || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math StanHeaders/inst/include/mathlib || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/stan StanHeaders/inst/include/stan || true
+cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/opencl_*/CL StanHeaders/inst/include/CL || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_* StanHeaders/inst/include/libsundials || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/include/* StanHeaders/inst/include/ || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/src/* StanHeaders/src/ || true
