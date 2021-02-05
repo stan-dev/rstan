@@ -61,7 +61,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
   stopifnot(stanc(model_code = mc, model_name = "User-defined functions",
                   allow_undefined = TRUE)$status)
-  r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
+  r <- stanc(model_code = mc, model_name = "User-defined functions",
+             allow_undefined = TRUE,
+             standalone_functions = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
 
   WINDOWS <- .Platform$OS.type == "windows"
