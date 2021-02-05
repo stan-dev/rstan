@@ -27,6 +27,11 @@ stan_model <- function(file,
                        auto_write = rstan_options("auto_write"),
                        obfuscate_model_name = TRUE,
                        allow_undefined = FALSE,
+                       allow_optimizations = FALSE,
+                       standalone_functions = FALSE,
+                       use_opencl = FALSE,
+                       warn_pedantic = FALSE,
+                       warn_uninitialized = FALSE,
                        includes = NULL,
                        isystem = c(if (!missing(file)) dirname(file), getwd())) {
   if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
@@ -61,7 +66,13 @@ stan_model <- function(file,
     stanc_ret <- stanc(file = file, model_code = model_code,
                        model_name = model_name, verbose = verbose,
                        obfuscate_model_name = obfuscate_model_name,
-                       allow_undefined = allow_undefined, isystem = isystem)
+                       allow_undefined = allow_undefined,
+                       allow_optimizations = allow_optimizations,
+                       standalone_functions = standalone_functions,
+                       use_opencl = use_opencl,
+                       warn_pedantic = warn_pedantic,
+                       warn_uninitialized = warn_uninitialized,
+                       isystem = isystem)
 
     # find possibly identical stanmodels
     model_re <- "(^[[:alnum:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
