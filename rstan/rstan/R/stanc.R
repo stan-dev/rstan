@@ -112,7 +112,12 @@ stanc_process <- function(file, model_code = '', model_name = "anon_model",
 
 stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
                           verbose = FALSE, obfuscate_model_name = FALSE,
-                          allow_undefined = FALSE) {
+                          allow_undefined = FALSE,
+                          allow_optimizations = FALSE,
+                          standalone_functions = FALSE,
+                          use_opencl = FALSE,
+                          warn_pedantic = FALSE,
+                          warn_uninitialized = FALSE) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
 
@@ -123,13 +128,23 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
   out <- stanc(model_code = model_code,
                model_name = model_name, verbose = verbose,
                obfuscate_model_name = obfuscate_model_name,
-               allow_undefined = allow_undefined)
+               allow_undefined = allow_undefined,
+               allow_optimizations = allow_optimizations,
+               standalone_functions = standalone_functions,
+               use_opencl = use_opencl,
+               warn_pedantic = warn_pedantic,
+               warn_uninitialized = warn_uninitialized)
   return(out)
 }
 
 stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE,
                   allow_undefined = FALSE,
+                  allow_optimizations = FALSE,
+                  standalone_functions = FALSE,
+                  use_opencl = FALSE,
+                  warn_pedantic = FALSE,
+                  warn_uninitialized = FALSE,
                   isystem = c(if (!missing(file)) dirname(file), getwd())) {
   if (missing(file)) {
     file <- tempfile(fileext = ".stan")
@@ -162,8 +177,24 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   }
   stanc_ctx$source(stanc_js)
   stopifnot(stanc_ctx$validate("stanc"))
-  model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code,
-                                      as.array(ifelse(allow_undefined, "allow_undefined", ""))),
+  stanc_flags <- c("allow-undefined",
+                   "O",
+                   "standalone-functions",
+                   "use-opencl",
+                   "warn-pedantic",
+                   "warn-uninitialized")
+  istanc_flags <- c(allow_undefined,
+                    allow_optimizations,
+                    standalone_functions,
+                    use_opencl,
+                    warn_pedantic,
+                    warn_uninitialized)
+  if (sum(istanc_flags) >= 1) {
+    stanc_flags <- as.array(stanc_flags[istanc_flags])
+  } else {
+    stanc_flags <- as.array("")
+  }
+  model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code, stanc_flags),
                        silent = TRUE)
   if (inherits(model_cppcode, "try-error")) {
     stop("parser failed badly")
