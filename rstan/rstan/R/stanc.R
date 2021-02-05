@@ -158,7 +158,6 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   stanc_ctx <- V8::v8()
   stanc_js <- system.file("stanc.js", package = "rstan")
   if (!file.exists(stanc_js)) {
-    message("stanc java script not found, using the online version!")
     stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js"
   }
   stanc_ctx$source(stanc_js)
