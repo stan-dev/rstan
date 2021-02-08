@@ -55,6 +55,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DBOOST_DISABLE_ASSERTS ',
          ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
          ' -DSTAN_THREADS ',
+         ' -DUSE_STANC3',
          ' -DSTRICT_R_HEADERS ',
          ' -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION ',
          ' -DBOOST_NO_AUTO_PTR ',

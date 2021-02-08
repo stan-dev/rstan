@@ -214,6 +214,10 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
                   paste0(" (in ", shQuote(model_name), ", line "),
                   cppcode, fixed = TRUE)
 
+  # Define USE_STANC3 for StanHeaders 2.26
+  cppcode <- paste("#define USE_STANC3",
+                   cppcode,
+                   sep = "\n")
 
   if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
     # Initialize Stan/math TBB arena and global control
