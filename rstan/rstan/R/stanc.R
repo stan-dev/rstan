@@ -228,7 +228,9 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   }
 
   # Define USE_STANC3 for StanHeaders 2.26
-  cppcode <- paste("#define USE_STANC3",
+  cppcode <- paste("#ifndef USE_STANC3",
+                   "#define USE_STANC3",
+                   "#endif",
                    cppcode,
                    sep = "\n")
 
