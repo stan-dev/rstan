@@ -83,6 +83,7 @@ jobs:
                 file = M, sep = "\n", append = TRUE)
           }
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
+          remotes::install_cran("sessioninfo")
         shell: Rscript {0}
 
       - name: Install StanHeaders (GitHub)
