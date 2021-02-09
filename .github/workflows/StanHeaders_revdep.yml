@@ -121,3 +121,21 @@ jobs:
           pkgs <- installed.packages()[, "Package"]
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
+
+      - name: Build StanHeaders source package
+        run: |
+          set -x
+          echo "STANHEADERS_VERSION=$(grep '^Version' StanHeaders/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          if [[ ! -f StanHeaders_*.tar.gz ]]; then
+            sh sh_b.sh --no-build-vignettes --no-manual || true
+          fi
+          mkdir -p build || true
+          cp -v StanHeaders_*.tar.gz build/ || true
+          ls -R build/
+        shell: bash
+
+      - name: Upload StanHeaders source package
+        uses: actions/upload-artifact@v2
+        with:
+          name: StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
+          path: build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
