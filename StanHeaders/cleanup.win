@@ -8,11 +8,16 @@ rm -Rf inst/include/src \
 
 mkdir -p inst/include/src || true
 cp -Rf inst/include/upstream/src/stan inst/include/src/stan || true
-cp -Rf inst/include/upstream/lib/stan_math/lib/tbb_*/include/* inst/include/src/ || true
 cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/opencl_*/CL inst/include/CL || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
+
+if [ ! -z $TBB_INC ] && [ -d $TBB_INC/tbb ]; then
+  cp -Rf $TBB_INC/* StanHeaders/inst/include/src/ || true
+else
+  cp -Rf inst/include/upstream/lib/stan_math/lib/tbb_*/include/* inst/include/src/ || true
+fi
 
 rm -Rf inst/include/upstream || true
 
