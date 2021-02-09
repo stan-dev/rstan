@@ -83,7 +83,6 @@ jobs:
                 file = M, sep = "\n", append = TRUE)
           }
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
-          remotes::install_github("r-lib/revdepcheck", dependencies = TRUE)
         shell: Rscript {0}
 
       - name: Install StanHeaders (GitHub)
@@ -120,18 +119,4 @@ jobs:
           options(width = 100)
           pkgs <- installed.packages()[, "Package"]
           sessioninfo::session_info(pkgs, include_base = TRUE)
-        shell: Rscript {0}
-
-      - name: Check all reverse dependencies
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
-        run: |
-          revdepcheck::revdep_check(pkg = "./StanHeaders", quiet = FALSE, timeout = as.difftime(72, units = "hours"), num_workers = 4, bioc = FALSE)
-        shell: Rscript {0}
-
-      - name: Show revdep_check output
-        if: always()
-        run: |
-          revdepcheck::revdep_summary()
-          revdepcheck::revdep_details()
         shell: Rscript {0}
