@@ -126,7 +126,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
         run: |
-          revdepcheck::revdep_check(pkg = "./StanHeaders", quiet = FALSE, timeout = as.difftime(60, units = "mins"), num_workers = 4, bioc = FALSE)
+          revdepcheck::revdep_check(pkg = "./StanHeaders", quiet = FALSE, timeout = as.difftime(72, units = "hours"), num_workers = 4, bioc = FALSE)
         shell: Rscript {0}
 
       - name: Show revdep_check output
