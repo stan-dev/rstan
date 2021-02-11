@@ -98,6 +98,18 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
+      - name: Install OpenMx (CRAN)
+        run: |
+          remotes::install_cran("OpenMx")
+        shell: Rscript {0}
+
+      - name: Session info
+        run: |
+          options(width = 100)
+          pkgs <- installed.packages()[, "Package"]
+          sessioninfo::session_info(pkgs, include_base = TRUE)
+        shell: Rscript {0}
+
       - name: Install baggr (CRAN)
         run: |
           remotes::install_cran("baggr")
