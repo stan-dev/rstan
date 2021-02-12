@@ -8,9 +8,11 @@ name: R-CMD-check
   push:
     branches:
       - develop
+      - StanHeaders_*
   pull_request:
     branches:
       - develop
+      - StanHeaders_*
 
 jobs:
   R-CMD-check:
