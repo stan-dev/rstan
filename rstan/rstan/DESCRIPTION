@@ -45,12 +45,12 @@ Imports:
     ggplot2 (>= 3.3.2)
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.25.0)
+    StanHeaders (>= 2.26.1)
 LinkingTo:
     Rcpp (>= 1.0.5),
     RcppEigen (>= 0.3.3.9.1),
     BH (>= 1.75.0-0),
-    StanHeaders (>= 2.25.0),
+    StanHeaders (>= 2.26.1),
     RcppParallel (>= 5.0.2)
 Suggests:
     RUnit,
