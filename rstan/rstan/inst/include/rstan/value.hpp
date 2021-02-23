@@ -20,7 +20,10 @@ namespace rstan {
       x_ = x;
     }
 
-    const std::vector<double> x() const {
+    const std::vector<double>& x() const {
+      return x_;
+    }
+    std::vector<double>& x() {
       return x_;
     }
   };

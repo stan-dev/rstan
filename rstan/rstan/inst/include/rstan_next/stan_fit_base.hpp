@@ -30,7 +30,7 @@ class stan_fit_base {
                                     unsigned int seed) = 0;
   virtual std::vector<std::string> param_names() const = 0;
   virtual std::vector<std::string> param_names_oi() const = 0;
-  virtual Rcpp::List param_oi_tidx(std::vector<std::string> names) = 0;
+  virtual Rcpp::List param_oi_tidx(const std::vector<std::string>& names) = 0;
   virtual Rcpp::List param_dims() const = 0;
   virtual Rcpp::List param_dims_oi() const = 0;
   virtual std::vector<std::string> param_fnames_oi() const = 0;

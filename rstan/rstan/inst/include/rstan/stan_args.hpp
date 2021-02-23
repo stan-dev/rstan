@@ -23,24 +23,24 @@ namespace rstan {
      * @param v0 The default value if not found in the list
      */
     template <class T>
-    bool get_rlist_element(const Rcpp::List& lst, const char* n, T& t, const T& v0) {
+    bool get_rlist_element(Rcpp::List& lst, const char* n, T& t, const T& v0) {
       bool b = lst.containsElementNamed(n);
-      if (b)  t = Rcpp::as<T>(const_cast<Rcpp::List&>(lst)[n]);
+      if (b)  t = Rcpp::as<T>(lst[n]);
       else  t = T(v0);
       return b;
     }
 
     template <class T>
-    bool get_rlist_element(const Rcpp::List& lst, const char* n, T& t) {
+    bool get_rlist_element(Rcpp::List& lst, const char* n, T& t) {
       bool b = lst.containsElementNamed(n);
-      if (b) t = Rcpp::as<T>(const_cast<Rcpp::List&>(lst)[n]);
+      if (b) t = Rcpp::as<T>(lst[n]);
       return b;
     }
 
     template <>
-    bool get_rlist_element(const Rcpp::List& lst, const char* n, SEXP& t) {
+    bool get_rlist_element(Rcpp::List& lst, const char* n, SEXP& t) {
       bool b = lst.containsElementNamed(n);
-      if (b) t = const_cast<Rcpp::List&>(lst)[n];
+      if (b) t = lst[n];
       return b;
     }
 
@@ -95,7 +95,7 @@ namespace rstan {
     SEXP init_list;
     double init_radius;
     // FIXME(syclik): remove `enable_random_init`
-    bool enable_random_init; // enable randomly partially specifying inits 
+    bool enable_random_init; // enable randomly partially specifying inits
     std::string sample_file; // the file for outputting the samples
     bool append_samples;
     bool sample_file_flag; // true: write out to a file; false, do not
@@ -280,7 +280,7 @@ namespace rstan {
     }
 
   public:
-    stan_args(const Rcpp::List& in) : init_list(R_NilValue) {
+    stan_args(Rcpp::List& in) : init_list(R_NilValue) {
 
       std::string t_str;
       SEXP t_sexp;
@@ -338,7 +338,7 @@ namespace rstan {
           ctrl.sampling.iter_save
             = ctrl.sampling.iter_save_wo_warmup;
           if (ctrl.sampling.save_warmup)
-            ctrl.sampling.iter_save += 
+            ctrl.sampling.iter_save +=
               1 + (ctrl.sampling.warmup - 1) / ctrl.sampling.thin;
 
           ctrl.sampling.refresh = (ctrl.sampling.iter >= 20) ?
@@ -623,7 +623,7 @@ namespace rstan {
     inline int get_ctrl_variational_adapt_iter() const {
       return ctrl.variational.adapt_iter;
     }
-    
+
     inline int get_ctrl_sampling_refresh() const {
       return ctrl.sampling.refresh;
     }
@@ -848,4 +848,3 @@ namespace rstan {
 }
 
 #endif
-

@@ -47,6 +47,10 @@ namespace rstan {
     const std::vector<InternalVector>& x() const {
       return x_;
     }
+
+    std::vector<InternalVector>& x() {
+      return x_;
+    }
   };
 
 }

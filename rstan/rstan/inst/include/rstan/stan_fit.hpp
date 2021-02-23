@@ -117,24 +117,26 @@ T calc_total_num_params(const std::vector<std::vector<T> >& dims) {
 */
 
 template <class T>
-void expand_indices(std::vector<T> dim,
-                    std::vector<std::vector<T> >& idx,
+void expand_indices(const std::vector<T>& dim, std::vector<std::vector<T>>& idx,
                     bool col_major = false) {
   size_t len = dim.size();
   idx.resize(0);
   size_t total = calc_num_params(dim);
-  if (0 >= total) return;
+  if (0 >= total) return; // Should this happen before idx.resize(0)?
   std::vector<size_t> loopj;
-  for (size_t i = 1; i <= len; ++i)
+  for (size_t i = 1; i <= len; ++i) {
     loopj.push_back(len - i);
+  }
 
-  if (col_major)
-    for (size_t i = 0; i < len; ++i)
+  if (col_major) {
+    for (size_t i = 0; i < len; ++i) { // Should this be i <= len?
       loopj[i] = len - 1 - loopj[i];
+    }
+  }
 
   idx.push_back(std::vector<T>(len, 0));
   for (size_t i = 1; i < total; i++) {
-    std::vector<T>  v(idx.back());
+    std::vector<T> v(idx.back());
     for (size_t j = 0; j < len; ++j) {
       size_t k = loopj[j];
       if (v[k] < dim[k] - 1) {
@@ -185,31 +187,25 @@ void expand_indices(std::vector<T> dim,
 *
 */
 template <class T> void
-  get_flatnames(const std::string& name,
-                const std::vector<T>& dim,
-                std::vector<std::string>& fnames,
-                bool col_major = true,
+  get_flatnames(const std::string& name, const std::vector<T>& dim,
+                std::vector<std::string>& fnames, bool col_major = true,
                 bool first_is_one = true) {
-
     fnames.clear();
     if (0 == dim.size()) {
       fnames.push_back(name);
       return;
     }
-
-    std::vector<std::vector<T> > idx;
+    std::vector<std::vector<T>> idx;
     expand_indices(dim, idx, col_major);
     size_t first = first_is_one ? 1 : 0;
-    for (typename std::vector<std::vector<T> >::const_iterator it = idx.begin();
-         it != idx.end();
-         ++it) {
+    for (auto&& it : idx) {
       std::stringstream stri;
       stri << name << "[";
-
-      size_t lenm1 = it -> size() - 1;
-      for (size_t i = 0; i < lenm1; i++)
-        stri << ((*it)[i] + first) << ",";
-      stri << ((*it)[lenm1] + first) << "]";
+      size_t lenm1 = it.size() - 1;
+      for (size_t i = 0; i < lenm1; i++) {
+        stri << (it[i] + first) << ",";
+      }
+      stri << (it[lenm1] + first) << "]";
       fnames.push_back(stri.str());
     }
   }
@@ -347,10 +343,9 @@ std::vector<std::vector<unsigned int> > get_param_dims(Model& m) {
   m.get_dims(dims);
 
   std::vector<std::vector<unsigned int> > uintdims;
-  for (std::vector<std::vector<size_t> >::const_iterator it = dims.begin();
-       it != dims.end();
-       ++it)
-    uintdims.push_back(sizet_to_uint(*it));
+  for (auto&& it : dims) {
+    uintdims.push_back(sizet_to_uint(it));
+  }
 
   std::vector<unsigned int> scalar_dim; // for lp__
   uintdims.push_back(scalar_dim);
@@ -367,12 +362,11 @@ template <class Model>
 std::vector<double> unconstrained_to_constrained(Model& model,
                                                  unsigned int random_seed,
                                                  unsigned int id,
-                                                 const std::vector<double>& params) {
+                                                 std::vector<double>& params) {
   std::vector<int> params_i;
   std::vector<double> constrained_params;
   boost::ecuyer1988 rng = stan::services::util::create_rng(random_seed, id);
-  model.write_array(rng, const_cast<std::vector<double>&>(params), params_i,
-                    constrained_params);
+  model.write_array(rng, params, params_i, constrained_params);
   return constrained_params;
 }
 /**
@@ -397,12 +391,12 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                    "model that has no parameters.");
   int refresh = args.get_refresh();
   unsigned int id = args.get_chain_id();
-  
+
   std::ostream nullout(nullptr);
   std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
   std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
 
-  stan::callbacks::stream_logger_with_chain_id 
+  stan::callbacks::stream_logger_with_chain_id
     logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
@@ -445,10 +439,11 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
 
   stan::callbacks::stream_writer diagnostic_writer(diagnostic_stream, "# ");
   std::unique_ptr<stan::io::var_context> init_context_ptr;
-  if (args.get_init() == "user")
-    init_context_ptr.reset(new io::rlist_ref_var_context(args.get_init_list()));
-  else
-    init_context_ptr.reset(new stan::io::empty_var_context());
+  if (args.get_init() == "user") {
+    init_context_ptr.reset(std::make_unique<io::rlist_ref_var_context>(args.get_init_list()));
+  } else {
+    init_context_ptr.reset(std::make_unique<stan::io::empty_var_context>());
+  }
 
   std::vector<std::string> constrained_param_names;
   model.constrained_param_names(constrained_param_names);
@@ -569,7 +564,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     constrained_param_names.size(),
                                                     num_iter_save,
                                                     num_warmup_save,
-                                                    qoi_idx));
+                                                    qoi_idx).release());
       return_code
         = stan::services::sample::fixed_param(model, *init_context_ptr,
                                               random_seed, id, init_radius,
@@ -595,7 +590,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     constrained_param_names.size(),
                                                     num_iter_save,
                                                     num_warmup_save,
-                                                    qoi_idx));
+                                                    qoi_idx).release());
 
       double stepsize = args.get_ctrl_sampling_stepsize();
       double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
@@ -702,7 +697,7 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                                     constrained_param_names.size(),
                                                     num_iter_save,
                                                     num_warmup_save,
-                                                    qoi_idx));
+                                                    qoi_idx).release());
 
       double stepsize = args.get_ctrl_sampling_stepsize();
       double stepsize_jitter = args.get_ctrl_sampling_stepsize_jitter();
@@ -1002,7 +997,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     // get_all_indices_col2row(dims_, midx_for_col2row);
   }
-  
+
   stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
   model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),
@@ -1207,7 +1202,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP standalone_gqs(SEXP pars, SEXP seed) {
     BEGIN_RCPP
     Rcpp::List holder;
@@ -1215,7 +1210,7 @@ public:
     R_CheckUserInterrupt_Functor interrupt;
     stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
                                           rstan::io::rcerr, rstan::io::rcerr);
-    
+
     const Eigen::Map<Eigen::MatrixXd> draws(Rcpp::as<Eigen::Map<Eigen::MatrixXd> >(pars));
 
     std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
@@ -1233,8 +1228,8 @@ public:
                                                   0, 0,
                                                   gq_size,
                                                   draws.rows(), 0,
-                                                  gq_idx));
-    
+                                                  gq_idx).release());
+
     int ret = stan::services::error_codes::CONFIG;
     ret = stan::services::standalone_generate(model_, draws,
             Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);
