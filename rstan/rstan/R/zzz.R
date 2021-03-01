@@ -38,10 +38,10 @@ tbbmalloc_proxyDllInfo <- NULL
 }
 
 .onAttach <- function(...) {
-  rstanLib <- dirname(system.file(package = "rstan"))
-  pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
-  gitrev <- substring(git_head(), 0, 12)
-  packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", GitRev: ", gitrev, ")", sep = ""))
+  packageStartupMessage("\nrstan version ",
+                        utils::packageVersion("rstan"),
+                        " (Stan version ",
+                        stan_version(), ")\n")
   packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
                         "options(mc.cores = parallel::detectCores()).\n",
                         "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
