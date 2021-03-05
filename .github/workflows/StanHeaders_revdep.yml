@@ -98,10 +98,12 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-      - name: Install OpenMx (CRAN)
+      - name: Install OpenMx (GitHub)
         run: |
-          remotes::install_cran("OpenMx")
-        shell: Rscript {0}
+          git clone https://github.com/hsbadr/OpenMx.git
+          cd OpenMx
+          make cran-install
+        shell: bash
 
       - name: Session info
         run: |
