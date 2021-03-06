@@ -100,7 +100,7 @@ jobs:
 
       - name: Install OpenMx (GitHub)
         run: |
-          git clone https://github.com/hsbadr/OpenMx.git
+          git clone https://github.com/OpenMx/OpenMx.git
           cd OpenMx
           make cran-install
         shell: bash
