@@ -67,6 +67,7 @@ jobs:
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('./rstan/rstan/DESCRIPTION'))")
           sudo -s eval "$sysreqs"
+        shell: bash
 
       - name: Install dependencies
         run: |
