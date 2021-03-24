@@ -74,6 +74,11 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
+      - name: Install RcppParallel
+        run: |
+          remotes::install_git('https://github.com/RcppCore/RcppParallel', dependencies = TRUE)
+        shell: Rscript {0}
+
       - name: Install StanHeaders
         run: |
           try(system("sh sh_b.sh --no-build-vignettes --no-manual"))
