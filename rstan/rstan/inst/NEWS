@@ -16,7 +16,7 @@ Fri February 5, 2021
 14. Added support for `stan::io::validate_dims`.
 15. Introducing a new `stanc_process()` helper function to process Stan code.
 16. Updated `stanc` to print errors and return code for debugging.
-17. Linking the newest version of Sundials form [`math`](https://github.com/stan-dev/math) (currently, `sundials 5.6.1`).
+17. Linking the newest version of Sundials form [`math`](https://github.com/stan-dev/math) (currently, `sundials 5.7.0`).
 18. Fixed `rstan` dependency on the development version of `StanHeaders`.
 19. Fixed automatic installation of `StanHeaders` in the GitHub workflows.
 20. Fixed `no valid constructor` errors and rebuilt the `Rcpp` module to expose C++ classes in R.
