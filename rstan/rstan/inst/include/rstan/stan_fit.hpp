@@ -411,12 +411,12 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                    "model that has no parameters.");
   int refresh = args.get_refresh();
   unsigned int id = args.get_chain_id();
-  
+
   std::ostream nullout(nullptr);
   std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
   std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
 
-  stan::callbacks::stream_logger_with_chain_id 
+  stan::callbacks::stream_logger_with_chain_id
     logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
@@ -1016,7 +1016,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     // get_all_indices_col2row(dims_, midx_for_col2row);
   }
-  
+
   stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
   model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),
@@ -1221,7 +1221,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP standalone_gqs(SEXP pars, SEXP seed) {
     BEGIN_RCPP
     Rcpp::List holder;
@@ -1229,7 +1229,7 @@ public:
     R_CheckUserInterrupt_Functor interrupt;
     stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
                                           rstan::io::rcerr, rstan::io::rcerr);
-    
+
     const Eigen::Map<Eigen::MatrixXd> draws(Rcpp::as<Eigen::Map<Eigen::MatrixXd> >(pars));
 
     std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
@@ -1248,7 +1248,7 @@ public:
                                                   gq_size,
                                                   draws.rows(), 0,
                                                   gq_idx));
-    
+
     int ret = stan::services::error_codes::CONFIG;
     ret = stan::services::standalone_generate(model_, draws,
             Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);

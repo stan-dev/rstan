@@ -1604,6 +1604,10 @@ parse_data <- function(cppcode) {
                   cppcode[private:public])
   # get them from the calling environment
   objects <- objects[nzchar(trimws(objects))]
+  # Remove model internal name underscores in case of Eigen::Maps
+  objects = gsub("([0-9A-Za-z_]+)__", "\\1", objects)
+  # Remove any bad regex matches that found the end of an Eigen::Map.
+  objects = objects[suppressWarnings(is.na(as.numeric(objects)))]
   stuff <- list()
   for (int in seq_along(objects)) {
    stuff[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
