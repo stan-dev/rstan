@@ -1603,12 +1603,12 @@ parse_data <- function(cppcode) {
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
   # Remove model internal name underscores in case of Eigen::Maps
-  objects <- gsub("([0-9A-Za-z_]+)__", "\\1", objects)
+  objects <- gsub("__$", "\\1", objects)
   # Remove any bad regex matches that found the end of an Eigen::Map.
   objects <- gsub("^[[:digit:]]+", "\\1", objects)
   # Remove empty characters and trim whitespaces
   objects <- objects[nzchar(trimws(objects))]
-  
+
   # Get them from the calling environment
   stuff <- list()
   for (int in seq_along(objects)) {
