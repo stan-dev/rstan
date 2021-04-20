@@ -42,6 +42,7 @@ Fri February 5, 2021
     - `warn_uninitialized`: Emit warnings about uninitialized variables. Currently an experimental feature.
 31. Fixed `expose_stan_functions` with `stanc3`.
 32. Updated and cleaned up `rstan` startup messages.
+33. Updated `parse_data()` to remove trailing double underscores and invalid regex matches for working with `Eigen::Map` types.
 
 Fri July 24 2020
 
