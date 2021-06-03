@@ -1,7 +1,7 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.26.1.9000
+Version: 2.27.0.9000
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -35,23 +35,23 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
-    inline (>= 0.3.17),
+    inline (>= 0.3.18),
     gridExtra (>= 2.3),
-    Rcpp (>= 1.0.5),
-    RcppParallel (>= 5.0.2),
+    Rcpp (>= 1.0.6),
+    RcppParallel (>= 5.1.4),
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
-    V8 (>= 3.4.0),
-    ggplot2 (>= 3.3.2)
+    V8 (>= 3.4.2),
+    ggplot2 (>= 3.3.3)
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.26.1)
+    StanHeaders (>= 2.27.0)
 LinkingTo:
-    Rcpp (>= 1.0.5),
+    Rcpp (>= 1.0.6),
     RcppEigen (>= 0.3.3.9.1),
     BH (>= 1.75.0-0),
-    StanHeaders (>= 2.26.1),
-    RcppParallel (>= 5.0.2)
+    StanHeaders (>= 2.27.0),
+    RcppParallel (>= 5.1.4)
 Suggests:
     RUnit,
     parallel,
