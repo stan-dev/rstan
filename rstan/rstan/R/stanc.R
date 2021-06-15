@@ -135,8 +135,6 @@ stanc_beta <- function(model_code, model_name, isystem) {
   timeout <- options()$timeout
   on.exit(options(timeout = timeout), add = TRUE)
   options(timeout = 5)
-  ctx <- V8::v8()
-  ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
   model_cppcode <- try(ctx$call("stanc", model_name, paste(model_code, collapse = "\n")), silent = TRUE)
   if (inherits(model_cppcode, "try-error") || length(model_cppcode$errors)) {
         message("When you compile models, you are also contributing to development of the NEXT\n",

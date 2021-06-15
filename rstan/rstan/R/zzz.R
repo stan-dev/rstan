@@ -16,12 +16,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
+ctx <- V8::v8()
 RNG <- 0
 OUT <- 0
 
 tbbmalloc_proxyDllInfo <- NULL
 
 .onLoad <- function(libname, pkgname) {
+  assignInMyNamespace("ctx", value = V8::v8())
+  ctx$source("https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js")
+  
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
