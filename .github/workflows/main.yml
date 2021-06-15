@@ -8,9 +8,11 @@ name: R-CMD-check
   push:
     branches:
       - develop
+      - experimental
   pull_request:
     branches:
       - develop
+      - experimental
 
 jobs:
   R-CMD-check:
