@@ -35,7 +35,6 @@ Fri February 5, 2021
 28. Linking to Boost C++ headers (BH >= 1.75).
 29. Added `OpenCL` headers to `StanHeaders`.
 30. Exposed stanc3 flags in `stanc` and `stan_model`:
-    - `allow_optimizations`: Allow the compiler to apply all optimizations to the Stan code. Currently not implemented.
     - `standalone_functions`: If set, the generated `C++` will be the standalone functions `C++` code.
     - `use_opencl`: If set, try to use `matrix_cl` signatures.
     - `warn_pedantic`: Emit warnings about common mistakes in Stan programs.
