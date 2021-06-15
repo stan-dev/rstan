@@ -1,3 +1,49 @@
+Fri February 5, 2021
+
+1. Using Stan transpiler ([`stanc3`](https://github.com/stan-dev/stanc3)) to generate C++ code from Stan code.
+2. Reorganized directory structure and removed redundant [`math`](https://github.com/stan-dev/math) submodule.
+3. Updated the symlinks in `StanHeaders/inst/include` for the reorganized directory structure.
+4. Updated the [`stan`](https://github.com/stan-dev/stan) and [`math`](https://github.com/stan-dev/math) submodules, recursively, and fixed related issues.
+5. Updated the [`stan`](https://github.com/stan-dev/stan) and [`math`](https://github.com/stan-dev/math) headers.
+6. Updated package dependencies.
+7. Updated `StanHeaders` build script.
+8. Fixed `rstan` compilation errors on Windows:
+     - Addressed symlinks-related issues.
+     - Defined STRICT_R_HEADERS.
+11. Supported the new TBB interface.
+12. Respecting `RcppParallel` flags for `rstan` plugin.
+     - `RcppParallel` now supports the new interface of Intel TBB and allows using external library, including oneTBB which uses a new interface. This requires specific compiler flags to link to the correct version of TBB library.
+14. Added support for `stan::io::validate_dims`.
+15. Introducing a new `stanc_process()` helper function to process Stan code.
+16. Updated `stanc` to print errors and return code for debugging.
+17. Linking the newest version of Sundials form [`math`](https://github.com/stan-dev/math) (currently, `sundials 5.7.0`).
+18. Fixed `rstan` dependency on the development version of `StanHeaders`.
+19. Fixed automatic installation of `StanHeaders` in the GitHub workflows.
+20. Fixed `no valid constructor` errors and rebuilt the `Rcpp` module to expose C++ classes in R.
+21. Fixed Stan and C++ code preprocessing and parsing issues.
+22. Fixed V8 (Embedded JavaScript and WebAssembly Engine for R) issues.
+23. Fixed (possibly) invalid URLs and used HTTPS.
+24. Formatted `Rcpp` module C++ code using `clang-format`.
+25. Updated DESCRIPTION, bumped version, and added contributor.
+26. Added support for within-chain threading.
+    - A new `rsran` option `threads_per_chain` has been added to control the within-chain number of threads (`n`):
+    ```r
+    rstan::rstan_options(threads_per_chain = n)
+    ```
+    - If the model is compiled with threading support, the number of threads to use in parallelized sections _within_ an MCMC chain (e.g., when using the `Stan` functions `reduce_sum()` or `map_rect()`). The actual number of CPU cores used is `chains * threads_per_chain` where `chains` is the number of parallel chains. For an example of using threading, see [Reduce Sum: A Minimal Example](https://mc-stan.org/users/documentation/case-studies/reduce_sum_tutorial.html).
+27. Initialize TBB arena and global control only if `threads_per_chain > 1`.
+28. Linking to Boost C++ headers (BH >= 1.75).
+29. Added `OpenCL` headers to `StanHeaders`.
+30. Exposed stanc3 flags in `stanc` and `stan_model`:
+    - `allow_optimizations`: Allow the compiler to apply all optimizations to the Stan code. Currently not implemented.
+    - `standalone_functions`: If set, the generated `C++` will be the standalone functions `C++` code.
+    - `use_opencl`: If set, try to use `matrix_cl` signatures.
+    - `warn_pedantic`: Emit warnings about common mistakes in Stan programs.
+    - `warn_uninitialized`: Emit warnings about uninitialized variables. Currently an experimental feature.
+31. Fixed `expose_stan_functions` with `stanc3`.
+32. Updated and cleaned up `rstan` startup messages.
+33. Updated `parse_data()` to remove trailing double underscores and invalid regex matches for working with `Eigen::Map` types.
+
 Fri July 24 2020
 
 1. Bug fixes

@@ -113,6 +113,10 @@ setMethod("vb", "stanmodel",
                    importance_resampling = FALSE,
                    keep_every = 1,
                    ...) {
+            if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+              Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+            }
+
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
               if (!is.list(parsed_data)) {
@@ -351,6 +355,9 @@ setMethod("optimizing", "stanmodel",
                    verbose = FALSE, hessian = FALSE, as_vector = TRUE,
                    draws = 0, constrained = TRUE,
                    importance_resampling = FALSE, ...) {
+            if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+              Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+            }
 
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -512,6 +519,11 @@ setMethod("sampling", "stanmodel",
             is_arg_deprecated(names(list(...)),
                               c("enable_random_init"),
                               pre_msg = "passing deprecated arguments: ")
+
+            if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+              Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+            }
+
             objects <- ls()
             if (is.list(data) & !is.data.frame(data)) {
               parsed_data <- with(data, parse_data(get_cppcode(object)))
@@ -798,14 +810,14 @@ setMethod("sampling", "stanmodel",
                   if (.Platform$OS.type == "windows") {
                     print(mat)
                     print("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
-                    print("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
+                    print("See https://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     print(paste("If the number in the 'count' column is small, ",
                                 "there is no need to ask about this message on stan-users."))
                   }
                   else {
                     message(paste(capture.output(print(mat)), collapse = "\n"))
                     message("When a numerical problem occurs, the Hamiltonian proposal gets rejected.")
-                    message("See http://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
+                    message("See https://mc-stan.org/misc/warnings.html#exception-hamiltonian-proposal-rejected")
                     message("If the number in the 'count' column is small, ",
                             "there is no need to ask about this message on stan-users.")
                   }

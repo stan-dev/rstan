@@ -30,7 +30,7 @@ setClass(Class = "cxxdso",
                                  #  3. The binary dso with name dso_bin, which is a raw vector.  
                                  #     We put it here since the environment is not copied 
                                  #     when assigned to another 
-                                 #     http://cran.r-project.org/doc/manuals/R-lang.html#Environment-objects
+                                 #     https://cran.r-project.org/doc/manuals/R-lang.html#Environment-objects
          ),
          validity = function(object) {
            length(object@sig) > 0 && identical(object@system, R.version$system)

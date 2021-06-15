@@ -27,8 +27,16 @@ stan_model <- function(file,
                        auto_write = rstan_options("auto_write"),
                        obfuscate_model_name = TRUE,
                        allow_undefined = FALSE,
+                       allow_optimizations = FALSE,
+                       standalone_functions = FALSE,
+                       use_opencl = FALSE,
+                       warn_pedantic = FALSE,
+                       warn_uninitialized = FALSE,
                        includes = NULL,
                        isystem = c(if (!missing(file)) dirname(file), getwd())) {
+  if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+    Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+  }
 
   # Construct a stan model from stan code
   #
@@ -58,7 +66,13 @@ stan_model <- function(file,
     stanc_ret <- stanc(file = file, model_code = model_code,
                        model_name = model_name, verbose = verbose,
                        obfuscate_model_name = obfuscate_model_name,
-                       allow_undefined = allow_undefined, isystem = isystem)
+                       allow_undefined = allow_undefined,
+                       allow_optimizations = allow_optimizations,
+                       standalone_functions = standalone_functions,
+                       use_opencl = use_opencl,
+                       warn_pedantic = warn_pedantic,
+                       warn_uninitialized = warn_uninitialized,
+                       isystem = isystem)
 
     # find possibly identical stanmodels
     model_re <- "(^[[:alnum:]]{2,}.*$)|(^[A-E,G-S,U-Z,a-z].*$)|(^[F,T].+)"
@@ -127,14 +141,17 @@ stan_model <- function(file,
   model_cppname <- stanc_ret$model_cppname
   model_name <- stanc_ret$model_name
   model_code <- stanc_ret$model_code
-  model_cppcode <- sub("stan::io::var_context&",
-                       "rstan::io::rlist_ref_var_context&",
-                        stanc_ret$cppcode, fixed = TRUE)
+  model_cppcode <- stanc_ret$cppcode
+  model_cppcode <- paste("#ifndef MODELS_HPP",
+                         "#define MODELS_HPP",
+                         "#define STAN__SERVICES__COMMAND_HPP",
+                         "#include <rstan/rstaninc.hpp>",
+                         model_cppcode,
+                         "#endif",
+                         sep = '\n')
+
   inc <- paste("#include <Rcpp.h>\n",
-               "#include <rstan/io/rlist_ref_var_context.hpp>\n",
-               "#include <rstan/io/r_ostream.hpp>\n",
-               "#include <rstan/stan_args.hpp>\n",
-               "#include <boost/integer/integer_log2.hpp>\n",
+               "using namespace Rcpp;\n",
                if(is.null(includes)) model_cppcode else
                  sub("(class[[:space:]]+[A-Za-z_][A-Za-z0-9_]*[[:space:]]*)",
                      paste(includes, "\\1"), model_cppcode),
@@ -255,6 +272,9 @@ stan <- function(file, model_name = "anon_model",
   #
   # Returns:
   #   A S4 class stanfit object
+  if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
+    Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
+  }
 
   dot_arg_names <- names(list(...))
   is_arg_recognizable(dot_arg_names,

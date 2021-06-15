@@ -38,14 +38,18 @@ tbbmalloc_proxyDllInfo <- NULL
 }
 
 .onAttach <- function(...) {
-  rstanLib <- dirname(system.file(package = "rstan"))
-  pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
-  gitrev <- substring(git_head(), 0, 12)
-  packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", GitRev: ", gitrev, ")", sep = ""))
+  packageStartupMessage("\nrstan version ",
+                        utils::packageVersion("rstan"),
+                        " (Stan version ",
+                        stan_version(), ")\n")
   packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
                         "options(mc.cores = parallel::detectCores()).\n",
                         "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
-                        "rstan_options(auto_write = TRUE)")
+                        "rstan_options(auto_write = TRUE)",
+                        "\nFor within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,\n",
+                        "change `threads_per_chain` option:\n",
+                        paste0("rstan_options(threads_per_chain = ",
+                               rstan_options("threads_per_chain"), ")\n"))
   if (.Platform$OS.type == "windows") {
     packageStartupMessage("Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file")
   }
