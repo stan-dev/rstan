@@ -170,13 +170,6 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
-  stanc_ctx <- V8::v8()
-  stanc_js <- system.file("stanc.js", package = "rstan")
-  if (!file.exists(stanc_js)) {
-    stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/nightly/stanc.js"
-  }
-  stanc_ctx$source(stanc_js)
-  stopifnot(stanc_ctx$validate("stanc"))
   stanc_flags <- c("allow-undefined",
                    "O",
                    "standalone-functions",
