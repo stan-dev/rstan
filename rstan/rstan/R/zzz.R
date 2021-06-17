@@ -18,19 +18,18 @@
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
 RNG <- 0
 OUT <- 0
-stanc_ctx <- V8::v8()
 
 tbbmalloc_proxyDllInfo <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  assignInMyNamespace("stanc_ctx",  value= V8::v8())
+  assign("stanc_ctx", V8::v8())
   stanc_js <- system.file("stanc.js", package = "rstan")
   if (!file.exists(stanc_js)) {
     warning(paste0("Default stancjs compiler not found, ",
                    "downloading the current version from github."))
     stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/v2.27.0/stanc.js"
   }
-  rstan:::stanc_ctx$source(stanc_js)
+  stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
