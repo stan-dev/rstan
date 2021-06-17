@@ -16,14 +16,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
-stanc_ctx = V8::v8()
 RNG <- 0
 OUT <- 0
 
 tbbmalloc_proxyDllInfo <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  assign("stanc_ctx", V8::v8())
+  assign("stanc_ctx", V8::v8(), envir = topenv())
   stanc_js <- system.file("stanc.js", package = "rstan")
   if (!file.exists(stanc_js)) {
     warning(paste0("Default stancjs compiler not found, ",
