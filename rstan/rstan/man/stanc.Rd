@@ -13,7 +13,6 @@ Translate Stan model specification to C++ code
   stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE,
         obfuscate_model_name = TRUE,
         allow_undefined = FALSE,
-        allow_optimizations = FALSE,
         standalone_functions = FALSE,
         use_opencl = FALSE,
         warn_pedantic = FALSE,
@@ -22,7 +21,6 @@ Translate Stan model specification to C++ code
   stanc_builder(file, isystem = c(dirname(file), getwd()),
                 verbose = FALSE, obfuscate_model_name = FALSE,
                 allow_undefined = FALSE,
-                allow_optimizations = FALSE,
                 standalone_functions = FALSE,
                 use_opencl = FALSE,
                 warn_pedantic = FALSE,
@@ -53,9 +51,6 @@ Translate Stan model specification to C++ code
     whether to allow Stan functions to be declared but not defined in \code{file}
     or \code{model_code}. If \code{TRUE}, then it is the caller's responsibility
     to provide a function definition in another header file or linked shared object.}
-  \item{allow_optimizations}{A logical scalar defaulting to \code{FALSE} indicating
-    whether to allow the compiler to apply all optimizations to the \pkg{Stan} code.
-    This is currently unimplemented.}
   \item{standalone_functions}{A logical scalar defaulting to \code{FALSE} indicating
     whether to generate the standalone functions \pkg{C++} code.}
   \item{use_opencl}{A logical scalar defaulting to \code{FALSE} indicating

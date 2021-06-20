@@ -20,7 +20,6 @@
              auto_write = rstan_options("auto_write"), 
              obfuscate_model_name = TRUE, 
              allow_undefined = FALSE,
-             allow_optimizations = FALSE,
              standalone_functions = FALSE,
              use_opencl = FALSE,
              warn_pedantic = FALSE,
@@ -72,8 +71,6 @@
   \item{obfuscate_model_name}{A logical scalar that is \code{TRUE} by default and
     passed to \code{\link{stanc}}.}
   \item{allow_undefined}{A logical scalar that is \code{FALSE} by default and
-    passed to \code{\link{stanc}}.}
-  \item{allow_optimizations}{A logical scalar that is \code{FALSE} by default and
     passed to \code{\link{stanc}}.}
   \item{standalone_functions}{A logical scalar that is \code{FALSE} by default and
     passed to \code{\link{stanc}}.}
