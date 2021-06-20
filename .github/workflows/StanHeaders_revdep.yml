@@ -100,10 +100,8 @@ jobs:
 
       - name: Install OpenMx (GitHub)
         run: |
-          git clone https://github.com/OpenMx/OpenMx.git
-          cd OpenMx
-          make cran-install
-        shell: bash
+          remotes::install_cran("OpenMx")
+        shell: Rscript {0}
 
       - name: Session info
         run: |
