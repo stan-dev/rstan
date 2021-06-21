@@ -29,12 +29,6 @@ cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_* StanHeader
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/include/* StanHeaders/inst/include/ || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/src/* StanHeaders/src/ || true
 
-if [ ! -z $TBB_INC ] && [ -d $TBB_INC/tbb ]; then
-  cp -Rf $TBB_INC/* StanHeaders/inst/include/ || true
-else
-  cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/* StanHeaders/inst/include/ || true
-fi
-
 R CMD build "$@" StanHeaders/
 
 stanheadtargz=`find StanHeaders*.tar.gz | sort | tail -n 1`
