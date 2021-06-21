@@ -1,20 +1,22 @@
-test_paridx_fun <- function() {
-  names <- c("alpha", "beta.1", "beta.2", "lp__", "treedepth__", "stepsize__") 
+
+test_that("paridx_fun works", {
+  names <- c("alpha", "beta.1", "beta.2", "lp__", "treedepth__", "stepsize__")
   paridx <- rstan:::paridx_fun(names)
-  meta <- 4:6; names(meta) <- c("lp__", "treedepth__", "stepsize__")
+  meta <- 4:6
+  names(meta) <- c("lp__", "treedepth__", "stepsize__")
   exp <- c(1, 2, 3); attr(exp, 'meta') <- meta
-  checkEquals(paridx, exp)
+  expect_equal(paridx, exp)
   paridx2 <- rstan:::paridx_fun(names[-5])
   meta <- 4:5; names(meta) <- c("lp__", "stepsize__")
   attr(exp, 'meta') <- meta
-  checkEquals(paridx2, exp)
+  expect_equal(paridx2, exp)
   paridx3 <- rstan:::paridx_fun(names[-(4:6)])
   meta <- integer(0); names(meta) <- character(0)
-  attr(exp, 'meta') <- meta 
-  checkEquals(paridx3, exp)
-}
+  attr(exp, 'meta') <- meta
+  expect_equal(paridx3, exp)
+})
 
-test_parse_stancsv_comments3 <- function() {
+test_that("parse_stancsv works", {
   comments <- c("# stan_version_major = 1",
                 "# stan_version_minor = 3",
                 "# stan_version_patch = 0",
@@ -58,13 +60,13 @@ test_parse_stancsv_comments3 <- function() {
                 "#                5.68831 seconds (Sampling)",
                 "#                11.6099 seconds (Total)")
   lst <- rstan:::parse_stancsv_comments(comments)
-  checkEquals(lst$chain_id, 0)
-  existence <- c("seed", "chain_id", "iter", "warmup", "thin", 
+  expect_equal(lst$chain_id, 0)
+  existence <- c("seed", "chain_id", "iter", "warmup", "thin",
                  "save_warmup", "stepsize", "time_info", "has_time",
                  "adaptation_info") %in% names(lst)
-  checkTrue(all(existence))
-  checkEquals(lst$seed, "3086139456")
-  checkEquals(lst$stepsize, 1)
-  checkEquals(lst$sampler_t, "NUTS(diag_e)")
-  checkEquals(lst$has_time, TRUE)
-}
+  expect_true(all(existence))
+  expect_equal(lst$seed, "3086139456")
+  expect_equal(lst$stepsize, 1)
+  expect_equal(lst$sampler_t, "NUTS(diag_e)")
+  expect_equal(lst$has_time, TRUE)
+})
