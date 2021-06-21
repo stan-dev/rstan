@@ -53,7 +53,7 @@ LinkingTo:
     StanHeaders (>= 2.27.0),
     RcppParallel (>= 5.1.4)
 Suggests:
-    RUnit,
+    testthat (>= 3.0.0),
     parallel,
     KernSmooth,
     shinystan,
@@ -69,3 +69,4 @@ VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc
 Encoding: UTF-8
 RoxygenNote: 7.1.1
+Config/testthat/edition: 3
