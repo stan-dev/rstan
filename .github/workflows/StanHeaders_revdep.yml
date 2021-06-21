@@ -98,7 +98,7 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-      - name: Install OpenMx (GitHub)
+      - name: Install OpenMx (CRAN)
         run: |
           remotes::install_cran("OpenMx")
         shell: Rscript {0}
