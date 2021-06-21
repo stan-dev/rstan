@@ -13,6 +13,12 @@ cp -Rf inst/include/upstream/lib/stan_math/lib/opencl_*/CL inst/include/CL || tr
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
+if [ ! -z $TBB_INC ] && [ -d $TBB_INC/tbb ]; then
+  cp -Rf $TBB_INC/* StanHeaders/inst/include/ || true
+else
+  cp -Rf inst/include/upstream/lib/stan_math/lib/tbb_*/include/* inst/include/ || true
+fi
+
 rm -Rf inst/include/upstream || true
 
 exit $?
