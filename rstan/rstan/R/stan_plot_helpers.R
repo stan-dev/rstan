@@ -53,7 +53,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 
 .vb_check <- function(x) {
   if (is.stanreg(x)) x <- x$stanfit
-  if (x@stan_args[[1L]]$method == "variational")
+  if (isTRUE(x@stan_args[[1]]$method == "variational"))
     stop("Plot only available for models estimated using MCMC", call. = FALSE)
 }
 

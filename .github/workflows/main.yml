@@ -1,12 +1,18 @@
-on:
+---
+# Github Actions workflow to check and build StanHeaders and RStan
+# yamllint disable rule:line-length
+
+name: R-CMD-check
+
+'on':
   push:
     branches:
       - develop
+      - StanHeaders_*
   pull_request:
     branches:
       - develop
-
-name: R-CMD-check
+      - StanHeaders_*
 
 jobs:
   R-CMD-check:
@@ -16,17 +22,14 @@ jobs:
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         config:
-          #- {os: macOS-latest,   r: 'devel'}
-          - {os: macOS-latest,   r: 'release'}
-          #- {os: windows-latest, r: 'devel'}
+          - {os: macOS-latest, r: 'release'}
           - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: 'oldrel'}
-          - {os: ubuntu-20.04,   r: 'devel'}
-          - {os: ubuntu-20.04,   r: 'release'}
-          - {os: ubuntu-20.04,   r: 'oldrel'}
+          - {os: ubuntu-20.04, r: 'devel'}
+          - {os: ubuntu-20.04, r: 'release'}
+          - {os: ubuntu-20.04, r: 'oldrel'}
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -34,11 +37,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
+      - uses: r-lib/actions/setup-r@v1
         with:
           r-version: ${{ matrix.config.r }}
 
-      - uses: r-lib/actions/setup-pandoc@master
+      - uses: r-lib/actions/setup-pandoc@v1
 
       - name: Query dependencies
         run: |
@@ -52,7 +55,7 @@ jobs:
 
       - name: Cache R packages
         if: runner.os != 'Windows'
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
@@ -71,6 +74,11 @@ jobs:
         run: |
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
+
+      - name: Install StanHeaders
+        run: |
+          try(system("sh sh_b.sh --no-build-vignettes --no-manual"))
         shell: Rscript {0}
 
       - name: Session info
@@ -105,7 +113,57 @@ jobs:
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
+
+      - name: Extract version and check StanHeaders source package
+        run: |
+          set -x
+          echo "STANHEADERS_VERSION=$(grep '^Version' StanHeaders/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          if [[ ! -f StanHeaders_*.tar.gz ]]; then
+            sh sh_b.sh --no-build-vignettes --no-manual || true
+          fi
+          mkdir -p build || true
+          cp -v StanHeaders_*.tar.gz build/ || true
+          ls -R build/
+        shell: bash
+
+      - name: Build RStan source package
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
+        run: |
+          src_rstan <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
+          file.copy(src_rstan, "build")
+        shell: Rscript {0}
+
+      - name: Build binary packages
+        if: matrix.config.r != 'oldrel'
+        run: |
+          bin1 <- pkgbuild::build("./build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
+          bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
+          dir.create("build_bin")
+          file.copy(c(bin1, bin2), "build_bin")
+        shell: Rscript {0}
+
+      - name: Upload StanHeaders source package
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
+        uses: actions/upload-artifact@v2
+        with:
+          name: StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
+          path: build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
+
+      - name: Upload RStan source package
+        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
+        uses: actions/upload-artifact@v2
+        with:
+          name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
+          path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
+
+      - name: Upload binary packages
+        if: matrix.config.r != 'oldrel'
+        uses: actions/upload-artifact@v2
+        with:
+          name: R-${{ matrix.config.r }}_${{ matrix.config.os }}
+          path: build_bin

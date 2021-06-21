@@ -58,7 +58,7 @@
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
+  \url{https://mc-stan.org/}.
 } 
 
 \seealso{

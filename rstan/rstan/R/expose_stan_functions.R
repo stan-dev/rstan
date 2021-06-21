@@ -20,7 +20,7 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "// [[Rcpp::depends(rstan)]]",
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
-                "#include <stan/math/prim/mat/fun/Eigen.hpp>",
+                "#include <stan/math/prim/fun/Eigen.hpp>",
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
@@ -61,7 +61,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
   stopifnot(stanc(model_code = mc, model_name = "User-defined functions",
                   allow_undefined = TRUE)$status)
-  r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
+  r <- stanc(model_code = mc, model_name = "User-defined functions",
+             allow_undefined = TRUE,
+             standalone_functions = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
 
   WINDOWS <- .Platform$OS.type == "windows"

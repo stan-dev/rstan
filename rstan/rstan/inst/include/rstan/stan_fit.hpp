@@ -7,6 +7,8 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include <stan/version.hpp>
 
@@ -18,21 +20,35 @@
 #include <rstan/io/rlist_ref_var_context.hpp>
 #include <rstan/io/r_ostream.hpp>
 #include <rstan/stan_args.hpp>
+#include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
+#include <rstan/value.hpp>
+#include <rstan/values.hpp>
+#include <rstan/rstan_writer.hpp>
+#include <rstan/logger.hpp>
+
 #include <Rcpp.h>
 #include <RcppEigen.h>
 
-//http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
+//https://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
 // void R_CheckUserInterrupt(void);
 
-
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
+#include <stan/callbacks/logger.hpp>
 #include <stan/callbacks/stream_logger.hpp>
 #include <stan/callbacks/stream_writer.hpp>
 #include <stan/callbacks/writer.hpp>
+#include <stan/io/dump.hpp>
 #include <stan/io/empty_var_context.hpp>
+#include <stan/io/ends_with.hpp>
+#include <stan/io/stan_csv_reader.hpp>
+#include <stan/math/prim.hpp>
+#include <stan/model/model_base.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
+#include <stan/services/experimental/advi/fullrank.hpp>
+#include <stan/services/experimental/advi/meanfield.hpp>
 #include <stan/services/optimize/bfgs.hpp>
 #include <stan/services/optimize/lbfgs.hpp>
 #include <stan/services/optimize/newton.hpp>
@@ -50,8 +66,6 @@
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
 #include <stan/services/sample/standalone_gqs.hpp>
-#include <stan/services/experimental/advi/fullrank.hpp>
-#include <stan/services/experimental/advi/meanfield.hpp>
 
 #include <rstan/filtered_values.hpp>
 #include <rstan/sum_values.hpp>
@@ -397,12 +411,12 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
                                    "model that has no parameters.");
   int refresh = args.get_refresh();
   unsigned int id = args.get_chain_id();
-  
+
   std::ostream nullout(nullptr);
   std::ostream& c_out = refresh ? Rcpp::Rcout : nullout;
   std::ostream& c_err = refresh ? rstan::io::rcerr : nullout;
 
-  stan::callbacks::stream_logger_with_chain_id 
+  stan::callbacks::stream_logger_with_chain_id
     logger(c_out, c_out, c_out, c_err, c_err, id);
 
   R_CheckUserInterrupt_Functor interrupt;
@@ -1002,7 +1016,7 @@ public:
     get_all_flatnames(names_oi_, dims_oi_, fnames_oi_, true);
     // get_all_indices_col2row(dims_, midx_for_col2row);
   }
-  
+
   stan_fit(SEXP data, SEXP seed, SEXP cxxf) :
   data_(data),
   model_(data_, Rcpp::as<boost::uint32_t>(seed), &rstan::io::rcout),
@@ -1207,7 +1221,7 @@ public:
     return __sexp_result;
     END_RCPP
   }
-  
+
   SEXP standalone_gqs(SEXP pars, SEXP seed) {
     BEGIN_RCPP
     Rcpp::List holder;
@@ -1215,7 +1229,7 @@ public:
     R_CheckUserInterrupt_Functor interrupt;
     stan::callbacks::stream_logger logger(Rcpp::Rcout, Rcpp::Rcout, Rcpp::Rcout,
                                           rstan::io::rcerr, rstan::io::rcerr);
-    
+
     const Eigen::Map<Eigen::MatrixXd> draws(Rcpp::as<Eigen::Map<Eigen::MatrixXd> >(pars));
 
     std::unique_ptr<rstan_sample_writer> sample_writer_ptr;
@@ -1234,7 +1248,7 @@ public:
                                                   gq_size,
                                                   draws.rows(), 0,
                                                   gq_idx));
-    
+
     int ret = stan::services::error_codes::CONFIG;
     ret = stan::services::standalone_generate(model_, draws,
             Rcpp::as<unsigned int>(seed), interrupt, logger, *sample_writer_ptr);
