@@ -1,3 +1,17 @@
+Tue August 3, 2021
+
+1. Updated package dependencies.
+2. Updated Stan to C++ compiler v2.26.1
+3. Built libsundials_kinsol into `libStanHeaders.a`.
+4. Fixed variational method checks.
+5. Fixed Fix elt_divide() ambiguity with the old version of Stan to C++ compiler.
+6. Converted unit testing to use `testthat`.
+7. Cleaned up and update startup messages.
+
+Thu February 18, 2021
+
+1. Updated to Stan v2.26.1
+
 Fri February 5, 2021
 
 1. Using Stan transpiler ([`stanc3`](https://github.com/stan-dev/stanc3)) to generate C++ code from Stan code.
