@@ -98,9 +98,9 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
-      - name: Install OncoBayes2 (CRAN)
+      - name: Install OncoBayes2 (GitHub)
         run: |
-          remotes::install_cran("OncoBayes2")
+          remotes::install_github("hsbadr/OncoBayes2")
         shell: Rscript {0}
 
       - name: Session info
