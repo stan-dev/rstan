@@ -149,6 +149,7 @@ auto g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
 
 /* Hessian */
 
+/*
 // [[Rcpp::export]]
 auto H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
   double fx;
@@ -160,6 +161,7 @@ auto H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
                       x, fx, grad_fx, H);
   return H;
 }
+*/
 
 /* Jacobian */
 
@@ -203,7 +205,7 @@ a random point in three dimensions:
 x <- optim(rnorm(3), fn = f, gr = g, a = 1:3, method = "BFGS", hessian = TRUE)
 x$par
 x$hessian
-H(x$par, a = 1:3)
+#H(x$par, a = 1:3)
 J(x$par, a = 1:3)
 solution(a = 1:3, guess = rnorm(3))
 ```
@@ -232,7 +234,7 @@ double Cauchy(double scale) {
   auto half = stan::math::integrate_1d([](auto x, auto xc, auto theta,
                                           auto x_r, auto x_i, auto msgs) {
     return exp(stan::math::cauchy_lpdf(x, 0, x_r[0]));
-  }, -scale, scale, theta, {scale}, {}, Rcpp::Rcout, 1e-7);
+  }, -scale, scale, theta, {scale}, {}, nullptr, 1e-7);
   return half * 2; // should equal 1 for any positive scale
 }
 
