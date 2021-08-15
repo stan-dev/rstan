@@ -71,6 +71,7 @@ namespace rstan {
       std::map<std::string, std::vector<size_t> > vars_r_dim_;
       std::map<std::string, std::vector<size_t> > vars_i_dim_;
       std::vector<double> const empty_vec_r_;
+      std::vector<std::complex<double>> const empty_vec_c_;
       std::vector<int> const empty_vec_i_;
       std::vector<size_t> const empty_vec_ui_;
       /**
@@ -229,6 +230,21 @@ namespace rstan {
           return Rcpp::as<std::vector<int> >(ee);
         }
         return empty_vec_i_;
+      }
+
+      /**
+       * Return the double values for the variable with the specified
+       * name.
+       *
+       * @param name Name of variable.
+       * @return Values.
+       */
+      std::vector<std::complex<double>> vals_c(const std::string& name) const {
+        if (contains_r(name)) {
+          SEXP ee = rlist_[name];
+          return Rcpp::as<std::vector<std::complex<double>> >(ee);
+        }
+        return empty_vec_c_;
       }
 
       /**
