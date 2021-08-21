@@ -14,7 +14,7 @@ OBJECTS = $(SOURCES:.c=.o)
 static: $(OBJECTS)
 	@mkdir -p ../lib
 	$(AR) -rs ../lib/libStanHeaders.a $(OBJECTS)
-				
+
 clean:
 	rm -rf ../lib
 	rm $(OBJECTS)
