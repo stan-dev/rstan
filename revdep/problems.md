@@ -1,173 +1,3 @@
-# baggr
-
-<details>
-
-* Version: 0.6.4
-* GitHub: https://github.com/wwiecek/baggr
-* Source code: https://github.com/cran/baggr
-* Date/Publication: 2021-05-12 00:52:32 UTC
-* Number of recursive dependencies: 96
-
-Run `revdep_details(, "baggr")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking examples ... ERROR
-    ```
-    Running examples in ‘baggr-Ex.R’ failed
-    The error most likely occurred in:
-    
-    > ### Name: baggr
-    > ### Title: Bayesian aggregate treatment effects model
-    > ### Aliases: baggr
-    > 
-    > ### ** Examples
-    > 
-    > df_pooled <- data.frame("tau" = c(1, -1, .5, -.5, .7, -.7, 1.3, -1.3),
-    +                         "se" = rep(1, 8),
-    +                         "state" = datasets::state.name[1:8])
-    > baggr(df_pooled) #baggr automatically detects the input data
-    Automatically set model to Rubin model with aggregate data from data.
-    Setting prior for hypermean using 10 times the max effect :
-    ```
-
-## In both
-
-*   checking tests ...
-    ```
-     ERROR
-    Running the tests in ‘tests/testthat.R’ failed.
-    Last 13 lines of output:
-      Error: 'MARGIN' does not match dim(X)
-      Backtrace:
-          █
-       1. ├─testthat::expect_warning(...) test_rubin.R:53:0
-       2. │ └─testthat:::quasi_capture(enquo(object), label, capture_warnings)
-       3. │   ├─testthat:::.capture(...)
-       4. │   │ └─base::withCallingHandlers(...)
-       5. │   └─rlang::eval_bare(quo_get_expr(.quo), quo_get_env(.quo))
-       6. └─baggr::baggr(...)
-       7.   └─baggr::pooling(result)
-       8.     └─base::apply(ret, c(2, 3), mint)
-      
-      [ FAIL 17 | WARN 1 | SKIP 1 | PASS 159 ]
-      Error: Test failures
-      Execution halted
-    ```
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 173.0Mb
-      sub-directories of 1Mb or more:
-        libs  171.3Mb
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-# bayes4psy
-
-<details>
-
-* Version: 1.2.6
-* GitHub: https://github.com/bstatcomp/bayes4psy
-* Source code: https://github.com/cran/bayes4psy
-* Date/Publication: 2021-04-26 15:00:05 UTC
-* Number of recursive dependencies: 94
-
-Run `revdep_details(, "bayes4psy")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘bayes4psy’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/bayes4psy/new/bayes4psy.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 125.7Mb
-      sub-directories of 1Mb or more:
-        libs  123.6Mb
-    ```
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespaces in Imports field not imported from:
-      ‘scales’ ‘utils’
-      All declared Imports should be used.
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘bayes4psy’ ...
-** package ‘bayes4psy’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/reaction_time.stan
-Wrote C++ file "stan_files/reaction_time.cc"
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/RcppEigen/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/reaction_time.cc -o stan_files/reaction_time.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core.hpp:4,
-...
-                 from stan_files/reaction_time.cc:3:
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core/init_threadpool_tbb.hpp:12:10: fatal error: tbb/task_scheduler_init.h: No such file or directory
-   12 | #include <tbb/task_scheduler_init.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stan_files/reaction_time.o' failed
-make: *** [stan_files/reaction_time.o] Error 1
-rm stan_files/reaction_time.cc
-ERROR: compilation failed for package ‘bayes4psy’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/bayes4psy/new/bayes4psy.Rcheck/bayes4psy’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘bayes4psy’ ...
-** package ‘bayes4psy’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/reaction_time.stan
-Wrote C++ file "stan_files/reaction_time.cc"
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/RcppEigen/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/reaction_time.cc -o stan_files/reaction_time.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/bayes4psy/RcppEigen/include/Eigen/Core:397,
-...
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (bayes4psy)
-
-
-```
 # beanz
 
 <details>
@@ -839,7 +669,7 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 * GitHub: https://github.com/epiforecasts/EpiNow2
 * Source code: https://github.com/cran/EpiNow2
 * Date/Publication: 2020-12-14 09:00:15 UTC
-* Number of recursive dependencies: 153
+* Number of recursive dependencies: 154
 
 Run `revdep_details(, "EpiNow2")` for more info
 
@@ -1118,7 +948,7 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 * GitHub: https://github.com/snaketron/IgGeneUsage
 * Source code: https://github.com/cran/IgGeneUsage
 * Date/Publication: 2021-05-19
-* Number of recursive dependencies: 100
+* Number of recursive dependencies: 99
 
 Run `revdep_details(, "IgGeneUsage")` for more info
 
@@ -1141,8 +971,8 @@ Run `revdep_details(, "IgGeneUsage")` for more info
     ...
     SAMPLING FOR MODEL 'zibb' NOW (CHAIN 1).
     Chain 1: 
-    Chain 1: Gradient evaluation took 0.000117 seconds
-    Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.17 seconds.
+    Chain 1: Gradient evaluation took 0.000139 seconds
+    Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.39 seconds.
     Chain 1: Adjust your expectations accordingly!
     Chain 1: 
     Chain 1: 
@@ -1371,11 +1201,11 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 
 <details>
 
-* Version: 2.0.4
+* Version: 2.0.5
 * GitHub: https://github.com/nlmixrdevelopment/nlmixr
 * Source code: https://github.com/cran/nlmixr
-* Date/Publication: 2021-04-17 12:50:03 UTC
-* Number of recursive dependencies: 213
+* Date/Publication: 2021-09-04 12:10:02 UTC
+* Number of recursive dependencies: 214
 
 Run `revdep_details(, "nlmixr")` for more info
 
@@ -1416,7 +1246,7 @@ EG=`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'cat(file.path(find.package("RcppEig
 SH=`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'cat(file.path(find.package("StanHeaders"),"include"))'`
 ...
                  from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/core.hpp:10,
-                 from ode_cmt1.cpp:8:
+                 from ode_cmt1.cpp:9:
 /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core/init_threadpool_tbb.hpp:12:10: fatal error: tbb/task_scheduler_init.h: No such file or directory
    12 | #include <tbb/task_scheduler_init.h>
       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1455,191 +1285,6 @@ SH=`"$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e 'cat(file.path(find.package("StanHea
 
 
 ```
-# OncoBayes2
-
-<details>
-
-* Version: 0.7-0
-* GitHub: NA
-* Source code: https://github.com/cran/OncoBayes2
-* Date/Publication: 2021-05-07 19:30:02 UTC
-* Number of recursive dependencies: 89
-
-Run `revdep_details(, "OncoBayes2")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘OncoBayes2’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/OncoBayes2/new/OncoBayes2.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 54.0Mb
-      sub-directories of 1Mb or more:
-        libs  52.9Mb
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘OncoBayes2’ ...
-** package ‘OncoBayes2’ successfully unpacked and MD5 sums checked
-** using staged installation
-DIAGNOSTIC(S) FROM PARSER:
-Info: integer division implicitly rounds to integer. Found int division: current / base
- Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: integer division implicitly rounds to integer. Found int division: left_ind + right_ind / 2
- Positive values rounded down, negative values rounded up or down in platform-dependent way.
-
-** libs
-...
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/OncoBayes2/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:124:75:   required from ‘Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::product_evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; int ProductTag = 6; LhsShape = Eigen::DenseShape; RhsShape = Eigen::DenseShape; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Rhs>::Scalar = double; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Lhs>::Scalar = double; Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/OncoBayes2/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:35:90:   required from ‘Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/OncoBayes2/RcppEigen/include/Eigen/src/Core/Product.h:132:22:   required from ‘Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::operator const Scalar() const [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Option = 0; Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::Scalar = double]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:56:   required from ‘double stan::mcmc::dense_e_metric<Model, BaseRNG>::T(stan::mcmc::dense_e_point&) [with Model = model_blrm_exnex_namespace::model_blrm_exnex; BaseRNG = boost::random::additive_combine_engine<boost::random::linear_congruential_engine<unsigned int, 40014, 0, 2147483563>, boost::random::linear_congruential_engine<unsigned int, 40692, 0, 2147483399> >]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:10:   required from here
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/OncoBayes2/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stanExports_blrm_exnex.o' failed
-make: *** [stanExports_blrm_exnex.o] Error 1
-ERROR: compilation failed for package ‘OncoBayes2’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/OncoBayes2/new/OncoBayes2.Rcheck/OncoBayes2’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘OncoBayes2’ ...
-** package ‘OncoBayes2’ successfully unpacked and MD5 sums checked
-** using staged installation
-DIAGNOSTIC(S) FROM PARSER:
-Info: integer division implicitly rounds to integer. Found int division: current / base
- Positive values rounded down, negative values rounded up or down in platform-dependent way.
-Info: integer division implicitly rounds to integer. Found int division: left_ind + right_ind / 2
- Positive values rounded down, negative values rounded up or down in platform-dependent way.
-
-** libs
-...
-
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (OncoBayes2)
-
-
-```
-# pcFactorStan
-
-<details>
-
-* Version: 1.5.2
-* GitHub: https://github.com/jpritikin/pcFactorStan
-* Source code: https://github.com/cran/pcFactorStan
-* Date/Publication: 2020-09-15 17:10:05 UTC
-* Number of recursive dependencies: 130
-
-Run `revdep_details(, "pcFactorStan")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘pcFactorStan’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/pcFactorStan/new/pcFactorStan.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 236.6Mb
-      sub-directories of 1Mb or more:
-        doc     2.9Mb
-        libs  233.1Mb
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘pcFactorStan’ ...
-** package ‘pcFactorStan’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/correlation.stan
-Wrote C++ file "stan_files/correlation.cc"
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/rstan/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/correlation.cc -o stan_files/correlation.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core.hpp:4,
-...
-                 from stan_files/correlation.cc:3:
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core/init_threadpool_tbb.hpp:12:10: fatal error: tbb/task_scheduler_init.h: No such file or directory
-   12 | #include <tbb/task_scheduler_init.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stan_files/correlation.o' failed
-make: *** [stan_files/correlation.o] Error 1
-rm stan_files/correlation.cc
-ERROR: compilation failed for package ‘pcFactorStan’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/pcFactorStan/new/pcFactorStan.Rcheck/pcFactorStan’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘pcFactorStan’ ...
-** package ‘pcFactorStan’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/correlation.stan
-Wrote C++ file "stan_files/correlation.cc"
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/rstan/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/correlation.cc -o stan_files/correlation.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/pcFactorStan/RcppEigen/include/Eigen/Core:397,
-...
-** help
-*** installing help indices
-*** copying figures
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (pcFactorStan)
-
-
-```
 # PosteriorBootstrap
 
 <details>
@@ -1648,7 +1293,7 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 * GitHub: https://github.com/alan-turing-institute/PosteriorBootstrap
 * Source code: https://github.com/cran/PosteriorBootstrap
 * Date/Publication: 2021-05-14 13:02:12 UTC
-* Number of recursive dependencies: 97
+* Number of recursive dependencies: 99
 
 Run `revdep_details(, "PosteriorBootstrap")` for more info
 
@@ -1687,124 +1332,6 @@ Run `revdep_details(, "PosteriorBootstrap")` for more info
       All declared Imports should be used.
     ```
 
-# ppcseq
-
-<details>
-
-* Version: 1.0.0
-* GitHub: https://github.com/stemangiola/ppcseq
-* Source code: https://github.com/cran/ppcseq
-* Date/Publication: 2021-05-19
-* Number of recursive dependencies: 114
-
-Run `revdep_details(, "ppcseq")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘ppcseq’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/ppcseq/new/ppcseq.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 54.1Mb
-      sub-directories of 1Mb or more:
-        data   1.6Mb
-        libs  51.1Mb
-    ```
-
-*   checking R code for possible problems ... NOTE
-    ```
-    .identify_abundant: no visible binding for global variable ‘.’
-    .identify_abundant: no visible binding for global variable ‘.abundant’
-    add_exposure_rate: no visible binding for global variable ‘.variable’
-    add_exposure_rate: no visible binding for global variable ‘S’
-    add_exposure_rate: no visible binding for global variable ‘exposure
-      rate’
-    add_partition: no visible binding for global variable ‘.’
-    add_scaled_counts_bulk.calcNormFactor: no visible binding for global
-      variable ‘transcript’
-    add_scaled_counts_bulk.get_low_expressed: no visible binding for global
-    ...
-      . .abundant .chain .draw .iteration .lower .upper .upper_2 .value
-      .variable CI G S TMM cc chains dummy exposure rate idx_MPI init l l
-      %>% sd med multiplier nf ppc read count MPI row res_discovery rowid s
-      sample wise data scale_abundance slope symbol MPI row tot tot_filt
-      transcript write_on_disk
-    Consider adding
-      importFrom("base", "row", "sample")
-      importFrom("stats", "sd")
-      importFrom("utils", "data")
-    to your NAMESPACE file.
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘ppcseq’ ...
-** using staged installation
-** libs
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include'    -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppParallel/include' -D_REENTRANT -DSTAN_THREADS   -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c RcppExports.cpp -o RcppExports.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/Core:397,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/Dense:1,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/RcppEigenForward.h:30,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/RcppEigen.h:25,
-...
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:124:75:   required from ‘Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::product_evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; int ProductTag = 6; LhsShape = Eigen::DenseShape; RhsShape = Eigen::DenseShape; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Rhs>::Scalar = double; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Lhs>::Scalar = double; Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:35:90:   required from ‘Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/src/Core/Product.h:132:22:   required from ‘Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::operator const Scalar() const [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Option = 0; Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::Scalar = double]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:56:   required from ‘double stan::mcmc::dense_e_metric<Model, BaseRNG>::T(stan::mcmc::dense_e_point&) [with Model = model_negBinomial_MPI_namespace::model_negBinomial_MPI; BaseRNG = boost::random::additive_combine_engine<boost::random::linear_congruential_engine<unsigned int, 40014, 0, 2147483563>, boost::random::linear_congruential_engine<unsigned int, 40692, 0, 2147483399> >]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:10:   required from here
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stanExports_negBinomial_MPI.o' failed
-make: *** [stanExports_negBinomial_MPI.o] Error 1
-ERROR: compilation failed for package ‘ppcseq’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/ppcseq/new/ppcseq.Rcheck/ppcseq’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘ppcseq’ ...
-** using staged installation
-** libs
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include'    -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppParallel/include' -D_REENTRANT -DSTAN_THREADS   -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c RcppExports.cpp -o RcppExports.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/Core:397,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/Eigen/Dense:1,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/RcppEigenForward.h:30,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ppcseq/RcppEigen/include/RcppEigen.h:25,
-...
-** help
-*** installing help indices
-*** copying figures
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (ppcseq)
-
-
-```
 # ProbReco
 
 <details>
@@ -1998,7 +1525,7 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 * GitHub: NA
 * Source code: https://github.com/cran/publipha
 * Date/Publication: 2020-01-15 00:20:07 UTC
-* Number of recursive dependencies: 91
+* Number of recursive dependencies: 92
 
 Run `revdep_details(, "publipha")` for more info
 
@@ -2179,104 +1706,6 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 
 
 ```
-# rmdcev
-
-<details>
-
-* Version: 1.2.4
-* GitHub: https://github.com/plloydsmith/rmdcev
-* Source code: https://github.com/cran/rmdcev
-* Date/Publication: 2020-09-30 18:40:02 UTC
-* Number of recursive dependencies: 82
-
-Run `revdep_details(, "rmdcev")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘rmdcev’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/rmdcev/new/rmdcev.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 102.6Mb
-      sub-directories of 1Mb or more:
-        libs  101.8Mb
-    ```
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespace in Imports field not imported from: ‘RcppParallel’
-      All declared Imports should be used.
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘rmdcev’ ...
-** package ‘rmdcev’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppParallel/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include'    -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppParallel/include' -D_REENTRANT -DSTAN_THREADS   -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c RcppExports.cpp -o RcppExports.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/Core:397,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/Dense:1,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/mat/fun/../../fun/Eigen.hpp:22,
-...
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:124:75:   required from ‘Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::product_evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; int ProductTag = 6; LhsShape = Eigen::DenseShape; RhsShape = Eigen::DenseShape; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Rhs>::Scalar = double; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Lhs>::Scalar = double; Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:35:90:   required from ‘Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/src/Core/Product.h:132:22:   required from ‘Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::operator const Scalar() const [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Option = 0; Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::Scalar = double]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:56:   required from ‘double stan::mcmc::dense_e_metric<Model, BaseRNG>::T(stan::mcmc::dense_e_point&) [with Model = model_mdcev_namespace::model_mdcev; BaseRNG = boost::random::additive_combine_engine<boost::random::linear_congruential_engine<unsigned int, 40014, 0, 2147483563>, boost::random::linear_congruential_engine<unsigned int, 40692, 0, 2147483399> >]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:10:   required from here
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stanExports_mdcev.o' failed
-make: *** [stanExports_mdcev.o] Error 1
-ERROR: compilation failed for package ‘rmdcev’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/rmdcev/new/rmdcev.Rcheck/rmdcev’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘rmdcev’ ...
-** package ‘rmdcev’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppParallel/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include'    -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppParallel/include' -D_REENTRANT -DSTAN_THREADS   -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c RcppExports.cpp -o RcppExports.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/Core:397,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rmdcev/RcppEigen/include/Eigen/Dense:1,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-...
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-*** copying figures
-** building package indices
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (rmdcev)
-
-
-```
 # rstanarm
 
 <details>
@@ -2285,7 +1714,7 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 * GitHub: https://github.com/stan-dev/rstanarm
 * Source code: https://github.com/cran/rstanarm
 * Date/Publication: 2020-07-20 18:20:03 UTC
-* Number of recursive dependencies: 134
+* Number of recursive dependencies: 136
 
 Run `revdep_details(, "rstanarm")` for more info
 
@@ -2293,21 +1722,37 @@ Run `revdep_details(, "rstanarm")` for more info
 
 ## Newly broken
 
-*   checking whether package ‘rstanarm’ can be installed ... ERROR
+*   checking tests ...
     ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/rstanarm/new/rstanarm.Rcheck/00install.out’ for details.
+     ERROR
+    Running the tests in ‘tests/testthat.R’ failed.
+    Last 13 lines of output:
+         12 | #include <tbb/task_scheduler_init.h>
+            |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+      compilation terminated.
+      /usr/lib/R/etc/Makeconf:177: recipe for target 'tests.o' failed
+      make: *** [tests.o] Error 1
+      ══ Failed tests ════════════════════════════════════════════════════════════════
+      ── Error (test_stan_functions.R:71:1): (code run outside of `test_that()`) ─────
+      Error: Error 1 occurred building shared library.
+      Backtrace:
+          █
+       1. └─Rcpp::sourceCpp(...) test_stan_functions.R:71:0
+      
+      [ FAIL 1 | WARN 0 | SKIP 0 | PASS 1 ]
+      Error: Test failures
+      Execution halted
     ```
 
-## Newly fixed
+## In both
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 310.2Mb
+      installed size is 398.1Mb
       sub-directories of 1Mb or more:
         R       1.6Mb
         doc     4.5Mb
-        libs  303.4Mb
+        libs  391.4Mb
     ```
 
 *   checking dependencies in R code ... NOTE
@@ -2321,62 +1766,6 @@ Run `revdep_details(, "rstanarm")` for more info
     GNU make is a SystemRequirements.
     ```
 
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘rstanarm’ ...
-** package ‘rstanarm’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/lm.stan
-Wrote C++ file "stan_files/lm.cc"
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppParallel/include'   `"/usr/lib/R/bin/Rscript" -e "RcppParallel::CxxFlags()"` `"/usr/lib/R/bin/Rscript" -e "StanHeaders:::CxxFlags()"` -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/lm.cc -o stan_files/lm.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include/Eigen/Core:397,
-...
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/fun/quad_form.hpp:69:13:   required from ‘void stan::math::internal::quad_form_vari<Ta, Ra, Ca, Tb, Rb, Cb>::chainB(Eigen::Matrix<stan::math::var_value<double>, Rb, Cb>&, const Eigen::Matrix<double, R1, C1>&, const Eigen::Matrix<double, Rb, Cb>&, const Eigen::Matrix<double, Cb, Cb>&) [with Ta = double; int Ra = -1; int Ca = -1; Tb = stan::math::var_value<double>; int Rb = -1; int Cb = 1]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/fun/quad_form.hpp:78:11:   required from ‘void stan::math::internal::quad_form_vari<Ta, Ra, Ca, Tb, Rb, Cb>::chainAB(Eigen::Matrix<T, R, C>&, Eigen::Matrix<Tb, Rb, Cb>&, const Eigen::Matrix<double, R1, C1>&, const Eigen::Matrix<double, Rb, Cb>&, const Eigen::Matrix<double, Cb, Cb>&) [with Ta = double; int Ra = -1; int Ca = -1; Tb = stan::math::var_value<double>; int Rb = -1; int Cb = 1]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/fun/quad_form.hpp:91:5:   required from ‘void stan::math::internal::quad_form_vari<Ta, Ra, Ca, Tb, Rb, Cb>::chain() [with Ta = double; int Ra = -1; int Ca = -1; Tb = stan::math::var_value<double>; int Rb = -1; int Cb = 1]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/fun/quad_form.hpp:88:16:   required from here
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include/Eigen/src/Core/CoreEvaluators.h:989:54: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stan_files/continuous.o' failed
-make: *** [stan_files/continuous.o] Error 1
-rm stan_files/jm.cc stan_files/binomial.cc stan_files/lm.cc stan_files/continuous.cc stan_files/bernoulli.cc stan_files/polr.cc stan_files/count.cc stan_files/mvmer.cc
-ERROR: compilation failed for package ‘rstanarm’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/rstanarm/new/rstanarm.Rcheck/rstanarm’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘rstanarm’ ...
-** package ‘rstanarm’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/lm.stan
-Wrote C++ file "stan_files/lm.cc"
-
-
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppParallel/include'   `"/usr/lib/R/bin/Rscript" -e "RcppParallel::CxxFlags()"` `"/usr/lib/R/bin/Rscript" -e "StanHeaders:::CxxFlags()"` -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/lm.cc -o stan_files/lm.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include/Eigen/Core:397,
-...
-** help
-*** installing help indices
-*** copying figures
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (rstanarm)
-
-
-```
 # rstanemax
 
 <details>
@@ -2473,11 +1862,11 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 
 <details>
 
-* Version: 1.1.0
+* Version: 1.1.1
 * GitHub: https://github.com/nlmixrdevelopment/RxODE
 * Source code: https://github.com/cran/RxODE
-* Date/Publication: 2021-08-06 14:50:02 UTC
-* Number of recursive dependencies: 178
+* Date/Publication: 2021-09-03 12:30:05 UTC
+* Number of recursive dependencies: 179
 
 Run `revdep_details(, "RxODE")` for more info
 
@@ -2656,7 +2045,7 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 * GitHub: https://github.com/stan-dev/rstan
 * Source code: https://github.com/cran/stanette
 * Date/Publication: 2021-08-16 08:30:02 UTC
-* Number of recursive dependencies: 114
+* Number of recursive dependencies: 115
 
 Run `revdep_details(, "stanette")` for more info
 
@@ -2749,7 +2138,7 @@ Creating a new generic function for ‘as.mcmc.list’ in package ‘stanette’
 * GitHub: https://github.com/giabaio/survHE
 * Source code: https://github.com/cran/survHE
 * Date/Publication: 2021-02-09 00:40:07 UTC
-* Number of recursive dependencies: 149
+* Number of recursive dependencies: 150
 
 Run `revdep_details(, "survHE")` for more info
 
@@ -2837,104 +2226,6 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 ** testing if installed package can be loaded from final location
 ** testing if installed package keeps a record of temporary installation path
 * DONE (survHE)
-
-
-```
-# thurstonianIRT
-
-<details>
-
-* Version: 0.11.1
-* GitHub: https://github.com/paul-buerkner/thurstonianIRT
-* Source code: https://github.com/cran/thurstonianIRT
-* Date/Publication: 2020-08-07 08:20:03 UTC
-* Number of recursive dependencies: 98
-
-Run `revdep_details(, "thurstonianIRT")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘thurstonianIRT’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/thurstonianIRT/new/thurstonianIRT.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 72.3Mb
-      sub-directories of 1Mb or more:
-        libs  71.8Mb
-    ```
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespace in Imports field not imported from: ‘knitr’
-      All declared Imports should be used.
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘thurstonianIRT’ ...
-** package ‘thurstonianIRT’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/thurstonian_irt_model.stan
-Wrote C++ file "stan_files/thurstonian_irt_model.cc"
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/RcppEigen/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/thurstonian_irt_model.cc -o stan_files/thurstonian_irt_model.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core.hpp:4,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/core/Eigen_NumTraits.hpp:5,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/rev/core/typedefs.hpp:7,
-...
-                 from stan_files/thurstonian_irt_model.cc:3:
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core/init_threadpool_tbb.hpp:12:10: fatal error: tbb/task_scheduler_init.h: No such file or directory
-   12 | #include <tbb/task_scheduler_init.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stan_files/thurstonian_irt_model.o' failed
-make: *** [stan_files/thurstonian_irt_model.o] Error 1
-rm stan_files/thurstonian_irt_model.cc
-ERROR: compilation failed for package ‘thurstonianIRT’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/thurstonianIRT/new/thurstonianIRT.Rcheck/thurstonianIRT’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘thurstonianIRT’ ...
-** package ‘thurstonianIRT’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/usr/lib/R/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/thurstonian_irt_model.stan
-Wrote C++ file "stan_files/thurstonian_irt_model.cc"
-g++ -std=gnu++14 -I"/usr/share/R/include" -DNDEBUG -I"../inst/include" -I"/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/rstan/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/BH/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/Rcpp/include' -I'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/RcppEigen/include'    -fpic  -g -O2 -fdebug-prefix-map=/build/r-base-5XUBcI/r-base-4.1.1=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g  -c stan_files/thurstonian_irt_model.cc -o stan_files/thurstonian_irt_model.o
-In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/RcppEigen/include/Eigen/Core:397,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/thurstonianIRT/RcppEigen/include/Eigen/Dense:1,
-                 from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13,
-...
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (thurstonianIRT)
 
 
 ```
@@ -3123,99 +2414,6 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 
 
 ```
-# ubms
-
-<details>
-
-* Version: 1.0.2
-* GitHub: https://github.com/kenkellner/ubms
-* Source code: https://github.com/cran/ubms
-* Date/Publication: 2021-02-02 00:10:13 UTC
-* Number of recursive dependencies: 123
-
-Run `revdep_details(, "ubms")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘ubms’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/ubms/new/ubms.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 80.7Mb
-      sub-directories of 1Mb or more:
-        R      1.4Mb
-        libs  78.6Mb
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘ubms’ ...
-** package ‘ubms’ successfully unpacked and MD5 sums checked
-** using staged installation
-DIAGNOSTIC(S) FROM PARSER:
-Info: integer division implicitly rounds to integer. Found int division: num_elements(logit_p) / M
- Positive values rounded down, negative values rounded up or down in platform-dependent way.
-
-Registered S3 methods overwritten by 'RcppEigen':
-  method               from         
-  predict.fastLm       RcppArmadillo
-...
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ubms/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:124:75:   required from ‘Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::product_evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; int ProductTag = 6; LhsShape = Eigen::DenseShape; RhsShape = Eigen::DenseShape; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Rhs>::Scalar = double; typename Eigen::internal::traits<typename Eigen::Product<Lhs, Rhs, Option>::Lhs>::Scalar = double; Eigen::internal::product_evaluator<Eigen::Product<Lhs, Rhs, Option>, ProductTag, LhsShape, RhsShape>::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ubms/RcppEigen/include/Eigen/src/Core/ProductEvaluators.h:35:90:   required from ‘Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::evaluator(const XprType&) [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Options = 0; Eigen::internal::evaluator<Eigen::Product<Lhs, Rhs, Option> >::XprType = Eigen::Product<Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>, Eigen::Matrix<double, -1, 1>, 0>]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ubms/RcppEigen/include/Eigen/src/Core/Product.h:132:22:   required from ‘Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::operator const Scalar() const [with Lhs = Eigen::Product<Eigen::CwiseBinaryOp<Eigen::internal::scalar_product_op<double, double>, const Eigen::CwiseNullaryOp<Eigen::internal::scalar_constant_op<double>, const Eigen::Matrix<double, 1, -1> >, const Eigen::Transpose<Eigen::Matrix<double, -1, 1> > >, Eigen::Matrix<double, -1, -1>, 0>; Rhs = Eigen::Matrix<double, -1, 1>; int Option = 0; Eigen::internal::dense_product_base<Lhs, Rhs, Option, 6>::Scalar = double]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:56:   required from ‘double stan::mcmc::dense_e_metric<Model, BaseRNG>::T(stan::mcmc::dense_e_point&) [with Model = model_colext_namespace::model_colext; BaseRNG = boost::random::additive_combine_engine<boost::random::linear_congruential_engine<unsigned int, 40014, 0, 2147483563>, boost::random::linear_congruential_engine<unsigned int, 40692, 0, 2147483399> >]’
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:10:   required from here
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/ubms/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:55:30: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stanExports_colext.o' failed
-make: *** [stanExports_colext.o] Error 1
-ERROR: compilation failed for package ‘ubms’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/ubms/new/ubms.Rcheck/ubms’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘ubms’ ...
-** package ‘ubms’ successfully unpacked and MD5 sums checked
-** using staged installation
-DIAGNOSTIC(S) FROM PARSER:
-Info: integer division implicitly rounds to integer. Found int division: num_elements(logit_p) / M
- Positive values rounded down, negative values rounded up or down in platform-dependent way.
-
-Registered S3 methods overwritten by 'RcppEigen':
-  method               from         
-  predict.fastLm       RcppArmadillo
-...
-
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (ubms)
-
-
-```
 # visit
 
 <details>
@@ -3316,93 +2514,6 @@ In file included from /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/S
 ** testing if installed package can be loaded from final location
 ** testing if installed package keeps a record of temporary installation path
 * DONE (visit)
-
-
-```
-# walker
-
-<details>
-
-* Version: 1.0.2
-* GitHub: https://github.com/helske/walker
-* Source code: https://github.com/cran/walker
-* Date/Publication: 2021-04-06 16:10:02 UTC
-* Number of recursive dependencies: 101
-
-Run `revdep_details(, "walker")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘walker’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/walker/new/walker.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 125.9Mb
-      sub-directories of 1Mb or more:
-        libs  124.5Mb
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘walker’ ...
-** package ‘walker’ successfully unpacked and MD5 sums checked
-** using staged installation
-Registered S3 methods overwritten by 'RcppEigen':
-  method               from         
-  predict.fastLm       RcppArmadillo
-  print.fastLm         RcppArmadillo
-  summary.fastLm       RcppArmadillo
-  print.summary.fastLm RcppArmadillo
-Warning messages:
-...
-                 from stanExports_rw1_model.h:20,
-                 from stanExports_rw1_model.cc:5:
-/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/stan/math/prim/core/init_threadpool_tbb.hpp:12:10: fatal error: tbb/task_scheduler_init.h: No such file or directory
-   12 | #include <tbb/task_scheduler_init.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-/usr/lib/R/etc/Makeconf:175: recipe for target 'stanExports_rw1_model.o' failed
-make: *** [stanExports_rw1_model.o] Error 1
-ERROR: compilation failed for package ‘walker’
-* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/walker/new/walker.Rcheck/walker’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘walker’ ...
-** package ‘walker’ successfully unpacked and MD5 sums checked
-** using staged installation
-Registered S3 methods overwritten by 'RcppEigen':
-  method               from         
-  predict.fastLm       RcppArmadillo
-  print.fastLm         RcppArmadillo
-  summary.fastLm       RcppArmadillo
-  print.summary.fastLm RcppArmadillo
-Warning messages:
-...
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (walker)
 
 
 ```
