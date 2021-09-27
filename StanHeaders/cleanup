@@ -3,13 +3,11 @@
 rm -Rf inst/include/src \
        inst/include/mathlib \
        inst/include/stan \
-       inst/include/CL \
        inst/include/libsundials || true
 
 mkdir -p inst/include/src || true
 cp -Rf inst/include/upstream/src/stan inst/include/src/stan || true
 cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
-cp -Rf inst/include/upstream/lib/stan_math/lib/opencl_*/CL inst/include/CL || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
