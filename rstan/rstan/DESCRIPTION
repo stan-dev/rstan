@@ -1,7 +1,7 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.27.0.9000
+Version: 2.28.0.9000
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -35,25 +35,25 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
-    inline (>= 0.3.18),
+    inline (>= 0.3.19),
     gridExtra (>= 2.3),
-    Rcpp (>= 1.0.6),
+    Rcpp (>= 1.0.7),
     RcppParallel (>= 5.1.4),
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
     V8 (>= 3.4.2),
-    ggplot2 (>= 3.3.3)
+    ggplot2 (>= 3.3.5)
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.27.0)
+    StanHeaders (>= 2.28.0)
 LinkingTo:
-    Rcpp (>= 1.0.6),
+    Rcpp (>= 1.0.7),
     RcppEigen (>= 0.3.3.9.1),
     BH (>= 1.75.0-0),
-    StanHeaders (>= 2.27.0),
+    StanHeaders (>= 2.28.0),
     RcppParallel (>= 5.1.4)
 Suggests:
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.4),
     parallel,
     KernSmooth,
     shinystan,
@@ -68,5 +68,5 @@ BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Config/testthat/edition: 3
