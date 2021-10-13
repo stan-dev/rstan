@@ -35,25 +35,25 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
-    inline (>= 0.3.17),
+    inline (>= 0.3.19),
     gridExtra (>= 2.3),
-    Rcpp (>= 1.0.5),
-    RcppParallel (>= 5.0.2),
+    Rcpp (>= 1.0.7),
+    RcppParallel (>= 5.1.4),
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
-    V8 (>= 3.4.0),
-    ggplot2 (>= 3.3.2)
+    V8 (>= 3.4.2),
+    ggplot2 (>= 3.3.5)
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.26.1)
+    StanHeaders (>= 2.26.3)
 LinkingTo:
-    Rcpp (>= 1.0.5),
+    Rcpp (>= 1.0.7),
     RcppEigen (>= 0.3.3.9.1),
     BH (>= 1.75.0-0),
-    StanHeaders (>= 2.26.1),
-    RcppParallel (>= 5.0.2)
+    StanHeaders (>= 2.26.3),
+    RcppParallel (>= 5.1.4)
 Suggests:
-    testthat (>= 3.0.0),
+    testthat (>= 3.0.4),
     parallel,
     KernSmooth,
     shinystan,
@@ -68,5 +68,5 @@ BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Config/testthat/edition: 3
