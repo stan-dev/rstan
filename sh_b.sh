@@ -27,6 +27,17 @@ cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_* StanHeader
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/include/* StanHeaders/inst/include/ || true
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/src/* StanHeaders/src/ || true
 
+# Prepare TBB objects and headers
+if [ -z "$TBB_LIB" ]; then
+    cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb* StanHeaders/src/ || true
+    cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/rml StanHeaders/src/ || true
+    cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/serial StanHeaders/inst/include/ || true
+    cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/*tbb* StanHeaders/inst/include/ || true
+    cp -v StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/*tbb*/*.h StanHeaders/inst/include/tbb/ || true
+    cp -v StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb/*.h StanHeaders/inst/include/tbb/ || true
+    echo '#define __TBB_VERSION_STRINGS(N) "Empty"' > StanHeaders/src/tbb/version_string.ver || true
+fi
+
 R CMD build "$@" StanHeaders/
 
 stanheadtargz=`find StanHeaders*.tar.gz | sort | tail -n 1`

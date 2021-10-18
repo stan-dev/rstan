@@ -37,7 +37,7 @@ Imports: RcppParallel (>= 5.1.4)
 Suggests: Rcpp, BH (>= 1.75.0-0), knitr (>= 1.36), rmarkdown, Matrix, methods, rstan
 LinkingTo: RcppEigen, RcppParallel (>= 5.1.4)
 VignetteBuilder: knitr
-SystemRequirements: pandoc
+SystemRequirements: GNU make, pandoc
 Depends: R (>= 3.4.0)
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
