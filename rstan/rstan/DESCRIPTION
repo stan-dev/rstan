@@ -3,7 +3,7 @@ Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
 Version: 2.21.3
-Date: 2020-09-01
+Date: 2021-12-12
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -39,8 +39,7 @@ Imports:
     Rcpp (>= 0.12.0),
     RcppParallel (>= 5.0.1),
     loo (>= 2.3.0),
-    pkgbuild,
-    V8
+    pkgbuild
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.21.0),
