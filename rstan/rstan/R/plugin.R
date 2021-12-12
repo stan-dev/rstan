@@ -109,9 +109,6 @@ rstanplugin <- function() {
   # cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
   tbb_libs <- "-ltbb"
-  if (!is.null(tbbmalloc_proxyDllInfo))
-      tbb_libs <- paste(tbb_libs, "-ltbbmalloc -ltbbmalloc_proxy")
-
   PL <- paste(rcpp_pkg_libs,
               shQuote(rstan_StanServices),
               paste0("-L", shQuote(StanHeaders_pkg_libs)),
