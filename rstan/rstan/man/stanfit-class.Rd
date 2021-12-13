@@ -191,7 +191,7 @@ summarizing results and various access methods also allow the underlying data
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org}. 
+  \url{https://mc-stan.org}. 
 }
 \seealso{
   \code{\link{stan}} and \code{\linkS4class{stanmodel}} 

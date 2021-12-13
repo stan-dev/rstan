@@ -22,7 +22,7 @@ namespace analyze {
  * parameter across all kept samples.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". http://mc-stan.org/users/documentation
+ * Scale Reduction". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -104,7 +104,7 @@ inline double compute_potential_scale_reduction(
  * parameter across all kept samples.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". http://mc-stan.org/users/documentation
+ * Scale Reduction". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -128,7 +128,7 @@ inline double compute_potential_scale_reduction(
  * total draws N is odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". http://mc-stan.org/users/documentation
+ * Scale Reduction". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -160,7 +160,7 @@ inline double compute_split_potential_scale_reduction(
  * total draws N is odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". http://mc-stan.org/users/documentation
+ * Scale Reduction". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the

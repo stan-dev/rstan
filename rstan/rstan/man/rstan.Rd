@@ -10,7 +10,7 @@
    \emph{Stan Development Team}
 }
 
-  RStan is the \R interface to the \href{http://mc-stan.org/}{Stan} C++ package. 
+  RStan is the \R interface to the \href{https://mc-stan.org/}{Stan} C++ package. 
   The RStan interface (\pkg{rstan} \R package) provides:
   \itemize{
   \item Full Bayesian inference using the No-U-Turn sampler (NUTS), 
@@ -25,7 +25,7 @@
   tutorial information visit the Users section of the Stan website:
   
   \itemize{
-  \item \href{http://mc-stan.org/users/documentation/}{mc-stan.org/users/documentation}
+  \item \href{https://mc-stan.org/users/documentation/}{mc-stan.org/users/documentation}
   }
   
 }
@@ -36,27 +36,27 @@
   \pkg{bayesplot} 
     \tab ggplot-based plotting of parameter estimates, diagnostics, and posterior predictive checks. 
     \tab \link[bayesplot]{bayesplot-package}
-    \tab \href{http://mc-stan.org/bayesplot/}{mc-stan.org/bayesplot}
+    \tab \href{https://mc-stan.org/bayesplot/}{mc-stan.org/bayesplot}
     \cr
   \pkg{shinystan} 
     \tab Interactive GUI for exploring MCMC output. 
     \tab \link[shinystan]{shinystan-package}
-    \tab \href{http://mc-stan.org/shinystan/}{mc-stan.org/shinystan}
+    \tab \href{https://mc-stan.org/shinystan/}{mc-stan.org/shinystan}
     \cr
   \pkg{loo} 
     \tab Out-of-sample predictive performance estimates and model comparison.
     \tab \link[loo]{loo-package} 
-    \tab \href{http://mc-stan.org/loo/}{mc-stan.org/loo}
+    \tab \href{https://mc-stan.org/loo/}{mc-stan.org/loo}
     \cr
   \pkg{rstanarm} 
     \tab \R formula interface for applied regression modeling. 
     \tab \link[rstanarm]{rstanarm-package}
-    \tab \href{http://mc-stan.org/rstanarm/}{mc-stan.org/rstanarm}
+    \tab \href{https://mc-stan.org/rstanarm/}{mc-stan.org/rstanarm}
     \cr 
   \pkg{rstantools} 
     \tab Tools for developers of \R packages interfacing with Stan.
     \tab \link[rstantools]{rstantools-package}
-    \tab \href{http://mc-stan.org/rstantools/}{mc-stan.org/rstantools}
+    \tab \href{https://mc-stan.org/rstantools/}{mc-stan.org/rstantools}
     \cr
   }
 }
@@ -70,20 +70,20 @@
   There are also many other important contributors to RStan 
   (\href{https://github.com/stan-dev/rstan}{github.com/rstan}). 
   Please use 'Stan Development Team' whenever citing the R interface to Stan. 
-  A BibTex entry is available from \url{http://mc-stan.org/rstan/authors} 
+  A BibTex entry is available from \url{https://mc-stan.org/rstan/authors} 
   or \code{citation("rstan")}.
 }
 
 \seealso{
 \itemize{
-  \item The RStan vignettes: \url{http://mc-stan.org/rstan/articles/}.
+  \item The RStan vignettes: \url{https://mc-stan.org/rstan/articles/}.
   \item \code{\link{stan}} for details on fitting models and 
   \code{\linkS4class{stanfit}} for information on the fitted model objects.
   \item The \code{\link{lookup}} for finding a function in the Stan language 
   that corresponds to a \R function or name.
   \item \url{https://github.com/stan-dev/rstan/issues/} to submit a bug
   report or feature request.
-  \item \url{http://discourse.mc-stan.org} to ask a 
+  \item \url{https://discourse.mc-stan.org} to ask a 
   question on the Stan Forums.
 }
 }

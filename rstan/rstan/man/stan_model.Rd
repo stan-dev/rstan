@@ -105,7 +105,7 @@
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
+  \url{https://mc-stan.org/}. 
 }
 \seealso{
   \code{\linkS4class{stanmodel}} for details on the class. 
@@ -115,7 +115,7 @@
   parameters.
   
   More details on Stan, including the full user's guide and reference 
-  manual, can be found at \url{http://mc-stan.org/}. 
+  manual, can be found at \url{https://mc-stan.org/}. 
 }
 \examples{\dontrun{
 stancode <- 'data {real y_mean;} parameters {real y;} model {y ~ normal(y_mean,1);}'

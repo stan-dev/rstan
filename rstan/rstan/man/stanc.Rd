@@ -83,11 +83,11 @@ Translate Stan model specification to C++ code
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
+  \url{https://mc-stan.org/}. 
 
   The Stan Development Team
   \emph{CmdStan Interface User's Guide}.
-  \url{http://mc-stan.org}.
+  \url{https://mc-stan.org}.
 } 
 
 \seealso{

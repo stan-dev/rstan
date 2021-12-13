@@ -19,7 +19,7 @@ namespace analyze {
  * log10(number_total_draws).
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -145,7 +145,7 @@ inline double compute_effective_sample_size(std::vector<const double*> draws,
  * log10(number_total_draws).
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -172,7 +172,7 @@ inline double compute_effective_sample_size(std::vector<const double*> draws,
  * odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -207,7 +207,7 @@ inline double compute_split_effective_sample_size(
  * odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
