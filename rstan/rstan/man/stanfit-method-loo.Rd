@@ -88,7 +88,7 @@ Practical Bayesian model evaluation using leave-one-out cross-validation and WAI
 
 Vehtari, A., Gelman, A., and Gabry, J. (2017b).
 Pareto smoothed importance sampling. arXiv preprint:
-\url{https://arxiv.org/abs/1507.02646/}
+\url{https://arxiv.org/abs/1507.02646}
 
 Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018).
 Using stacking to average Bayesian predictive distributions.
@@ -104,7 +104,7 @@ arXiv preprint:
 \seealso{
  \itemize{
  \item The \pkg{\link[loo]{loo}} package documentation, including the vignettes for
- many examples (\url{https://mc-stan.org/loo}).
+ many examples (\url{https://mc-stan.org/loo/}).
  \item \code{\link[loo]{loo_moment_match}} for the moment matching algorithm.
  \item \code{\link[loo]{loo_model_weights}} for model averaging/weighting via
  stacking or pseudo-BMA weighting.

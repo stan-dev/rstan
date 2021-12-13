@@ -63,7 +63,7 @@ Suggests:
     Matrix,
     knitr (>= 1.15.1),
     V8
-URL: https://mc-stan.org/rstan, https://discourse.mc-stan.org
+URL: https://mc-stan.org/rstan/, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc

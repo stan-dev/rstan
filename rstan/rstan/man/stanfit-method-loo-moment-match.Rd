@@ -36,7 +36,7 @@ The \code{loo_moment_match()} methods return an updated \code{loo} object.
 \references{
 Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
 Implicitly Adaptive Importance Sampling.
-\href{https://arxiv.org/abs/1906.08850/}{preprint arXiv:1906.08850}
+\href{https://arxiv.org/abs/1906.08850}{preprint arXiv:1906.08850}
 }
 \seealso{
 \code{\link[=loo]{loo()}}, \code{\link[=loo]{loo_moment_match()}}
