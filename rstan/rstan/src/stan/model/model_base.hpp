@@ -53,6 +53,16 @@ class model_base : public prob_grad {
    */
   virtual std::string model_name() const = 0;
 
+#ifdef USE_STANC3
+  /**
+   * Returns the compile information of the model:
+   * stanc version and stanc flags used to compile the model.
+   *
+   * @return model name
+   */
+  virtual std::vector<std::string> model_compile_info() const = 0;
+#endif
+
   /**
    * Set the specified argument to sequence of parameters, transformed
    * parameters, and generated quantities in the order in which they
@@ -87,7 +97,7 @@ class model_base : public prob_grad {
    *  parameter names.  Each variable is output with a
    *  period-separated list of indexes as a suffix, indexing from 1.
    *
-   * <p>A real parmeter `alpha` will produce output `alpha` with no
+   * <p>A real parameter `alpha` will produce output `alpha` with no
    * indexes.
    *
    * <p>A 3-dimensional vector (row vector, simplex, etc.)
@@ -100,7 +110,7 @@ class model_base : public prob_grad {
    * X.2.3`.
    *
    * <p>Arrays are handled in natural C++ order, 2 x 3 x 4 array `a`
-   * will produce ouptut `a.1.1.1`, `a.1.1.2`, `a.1.1.3`, `a.1.1.4`,
+   * will produce output `a.1.1.1`, `a.1.1.2`, `a.1.1.3`, `a.1.1.4`,
    * `a.1.2.1`, `a.1.2.2`, `a.1.2.3`, `a.1.2.4`, `a.1.3.1`, `a.1.3.2`,
    * `a.1.3.3`, `a.1.3.4`, `a.2.1.1`, `a.2.1.2`, `a.2.1.3`, `a.2.1.4`,
    * `a.2.2.1`, `a.2.2.2`, `a.2.2.3`, `a.2.2.4`, `a.2.3.1`, `a.2.3.2`,
@@ -186,7 +196,7 @@ class model_base : public prob_grad {
    * parameters to constrained parameters; full details for Stan
    * language types can be found in the language reference manual.
    *
-   * @param[in] params_r unconstrained parmeters
+   * @param[in] params_r unconstrained parameters
    * @param[in,out] msgs message stream
    * @return log density for specified parameters
    */

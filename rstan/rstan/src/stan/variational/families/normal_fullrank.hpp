@@ -3,6 +3,7 @@
 
 #include <stan/callbacks/logger.hpp>
 #include <stan/math/prim/mat.hpp>
+#include <stan/math/prim/scal/err/domain_error.hpp>
 #include <stan/model/gradient.hpp>
 #include <stan/variational/base_family.hpp>
 #include <algorithm>
@@ -329,7 +330,7 @@ class normal_fullrank : public base_family {
   }
 
   /**
-   * Return the transform of the sepcified vector using the
+   * Return the transform of the specified vector using the
    * Cholesky factor and mean vector.
    *
    * The transform is defined by

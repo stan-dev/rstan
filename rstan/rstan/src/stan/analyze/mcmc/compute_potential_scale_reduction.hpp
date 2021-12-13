@@ -1,14 +1,13 @@
 #ifndef STAN_ANALYZE_MCMC_COMPUTE_POTENTIAL_SCALE_REDUCTION_HPP
 #define STAN_ANALYZE_MCMC_COMPUTE_POTENTIAL_SCALE_REDUCTION_HPP
 
-#include <stan/math/prim/mat.hpp>
+#include <stan/math/prim.hpp>
 #include <stan/analyze/mcmc/autocovariance.hpp>
 #include <stan/analyze/mcmc/split_chains.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
-#include <boost/math/special_functions/fpclassify.hpp>
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -22,7 +21,7 @@ namespace analyze {
  * parameter across all kept samples.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". https://mc-stan.org/users/documentation
+ * Scale Reduction". http://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -49,7 +48,7 @@ inline double compute_potential_scale_reduction(
         draws[chain], sizes[chain]);
 
     for (int n = 0; n < num_draws; n++) {
-      if (!boost::math::isfinite(draw(n))) {
+      if (!std::isfinite(draw(n))) {
         return std::numeric_limits<double>::quiet_NaN();
       }
     }
@@ -104,7 +103,7 @@ inline double compute_potential_scale_reduction(
  * parameter across all kept samples.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". https://mc-stan.org/users/documentation
+ * Scale Reduction". http://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -128,7 +127,7 @@ inline double compute_potential_scale_reduction(
  * total draws N is odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". https://mc-stan.org/users/documentation
+ * Scale Reduction". http://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -160,7 +159,7 @@ inline double compute_split_potential_scale_reduction(
  * total draws N is odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Potential
- * Scale Reduction". https://mc-stan.org/users/documentation
+ * Scale Reduction". http://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
