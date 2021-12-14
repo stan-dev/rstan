@@ -38,6 +38,13 @@ if [ -z "$TBB_LIB" ] && [ ! -d StanHeaders/src/tbb ]; then
     echo '#define __TBB_VERSION_STRINGS(N) "Empty"' > StanHeaders/src/tbb/version_string.ver || true
 fi
 
+if [ ! -z "$TBB_LIB" ]; then
+    rm -Rf StanHeaders/src/tbb* || true
+    rm -Rf StanHeaders/src/rml || true
+    rm -Rf StanHeaders/inst/include/serial || true
+    rm -Rf StanHeaders/inst/include/*tbb* || true
+fi
+
 R CMD build "$@" StanHeaders/
 
 stanheadtargz=`find StanHeaders*.tar.gz | sort | tail -n 1`
