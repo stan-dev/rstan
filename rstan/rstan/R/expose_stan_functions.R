@@ -16,13 +16,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 expose_stan_functions_hacks <- function(code, includes = NULL) {
-  code <- paste("#ifndef MODELS_HPP",
-                      "#define MODELS_HPP",
-                      "#define STAN__SERVICES__COMMAND_HPP",
-                      "#include <rstan/rstaninc.hpp>",
-                      code,
-                      "#endif",
-                      sep = '\n')
   code <- paste("// [[Rcpp::depends(StanHeaders)]]",
                 "// [[Rcpp::depends(rstan)]]",
                 "// [[Rcpp::depends(RcppEigen)]]",
@@ -31,6 +24,11 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
+                "#ifndef MODELS_HPP",
+                "#define MODELS_HPP",
+                "#define STAN__SERVICES__COMMAND_HPP",
+                "#include <rstan/rstaninc.hpp>",
+                "#endif",
                 code, sep = "\n")
   code <- gsub("// [[stan::function]]",
                "// [[Rcpp::export]]", code, fixed = TRUE)
