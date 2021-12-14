@@ -41,7 +41,7 @@ Imports:
     RcppParallel (>= 5.1.4),
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
-    V8 (>= 3.4.2),
+    V8 (>= 3.6.0),
     ggplot2 (>= 3.3.5)
 Depends:
     R (>= 3.4.0),

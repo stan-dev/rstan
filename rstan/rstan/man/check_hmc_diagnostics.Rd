@@ -60,7 +60,7 @@ The \code{get_*} functions are for programmatic access to the diagnostics.
 \itemize{
 \item \code{get_divergent_iterations} and \code{get_max_treedepth_iterations} 
 return a logical vector indicating problems for individual iterations,
-\item \code{get_num_divergences} and \code{get_num_max_treedepth} return the 
+\item \code{get_num_divergent} and \code{get_num_max_treedepth} return the 
 number of offending interations, 
 \item \code{get_num_leapfrog_per_iteration} returns an integer vector with the 
 number of leapfrog evalutions for each iteration,
