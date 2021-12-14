@@ -2,6 +2,7 @@
 #define STAN_MCMC_HMC_NUTS_BASE_XHMC_HPP
 
 #include <stan/callbacks/logger.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 #include <stan/mcmc/hmc/base_hmc.hpp>
 #include <stan/mcmc/hmc/hamiltonians/ps_point.hpp>
 #include <algorithm>
@@ -167,7 +168,7 @@ class base_xhmc : public base_hmc<Model, Hamiltonian, Integrator, BaseRNG> {
       ++n_leapfrog;
 
       double h = this->hamiltonian_.H(this->z_);
-      if (std::isnan(h))
+      if (boost::math::isnan(h))
         h = std::numeric_limits<double>::infinity();
 
       if ((h - H0) > this->max_deltaH_)

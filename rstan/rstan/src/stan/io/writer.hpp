@@ -1,7 +1,7 @@
 #ifndef STAN_IO_WRITER_HPP
 #define STAN_IO_WRITER_HPP
 
-#include <stan/math/prim.hpp>
+#include <stan/math/prim/mat.hpp>
 #include <stdexcept>
 #include <vector>
 
@@ -174,7 +174,7 @@ class writer {
    * correlation-constrained variable.
    *
    * <p>The unconstraining transform is <code>atanh(y)</code>, which
-   * reverses the transform in <code>corr_constrain()</code>.
+   * reverses the transfrom in <code>corr_constrain()</code>.
    *
    * @param y Correlation value.
    * @throw std::runtime_error if y is not between -1.0 and 1.0
@@ -222,7 +222,7 @@ class writer {
 
   /**
    * Write the unconstrained vector that corresponds to the specified
-   * positive ascendingly ordered vector.
+   * postiive ascendingly ordered vector.
    *
    * <p>The unconstraining transform is defined for input vector
    * <code>y</code> to produce an output vector <code>x</code> of
@@ -444,12 +444,6 @@ class writer {
     for (idx_t i = 0; i < y_free.size(); ++i)
       data_r_.push_back(y_free[i]);
   }
-
-#ifndef USE_STANC3
-  void cholesky_corr_unconstrain(matrix_t &y) {
-    return cholesky_factor_corr_unconstrain(y);
-  }
-#endif
 
   /**
    * Writes the unconstrained covariance matrix corresponding

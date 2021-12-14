@@ -3,6 +3,7 @@
 
 #include <stan/io/var_context.hpp>
 #include <stan/math.hpp>
+#include <boost/throw_exception.hpp>
 #include <stan/math/prim/mat/fun/Eigen.hpp>
 #include <map>
 #include <algorithm>
@@ -39,7 +40,7 @@ class array_var_context : public var_context {
   /**
    * Search over the real variables to check if a name is in the map
    * @param name The name of the variable to search for
-   * @return logical indicating if the variable was found in the map of reals.
+   * @return logical indiciating if the variable was found in the map of reals.
    */
   bool contains_r_only(const std::string& name) const {
     return vars_r_.find(name) != vars_r_.end();
@@ -335,25 +336,6 @@ class array_var_context : public var_context {
     }
     return empty_vec_ui_;
   }
-
-#ifdef USE_STANC3
-  /**
-   * Check variable dimensions against variable declaration.
-   * Only used for data read in from file.
-   *
-   * @param stage stan program processing stage
-   * @param name variable name
-   * @param base_type declared stan variable type
-   * @param dims variable dimensions
-   * @throw std::runtime_error if mismatch between declared
-   *        dimensions and dimensions found in context.
-   */
-  void validate_dims(const std::string& stage, const std::string& name,
-                     const std::string& base_type,
-                     const std::vector<size_t>& dims_declared) const {
-    stan::io::validate_dims(*this, stage, name, base_type, dims_declared);
-  }
-#endif
 
   /**
    * Return a list of the names of the floating point variables in

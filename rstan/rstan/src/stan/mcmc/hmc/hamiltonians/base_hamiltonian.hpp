@@ -5,6 +5,7 @@
 #include <stan/math/prim/mat/fun/Eigen.hpp>
 #include <stan/model/gradient.hpp>
 #include <stan/model/log_prob_propto.hpp>
+#include <Eigen/Dense>
 #include <iostream>
 #include <limits>
 #include <stdexcept>

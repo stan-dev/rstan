@@ -3,7 +3,9 @@
 
 #include <stan/model/grad_hess_log_prob.hpp>
 #include <stan/model/log_prob_grad.hpp>
-#include <stan/math/prim/mat/fun/Eigen.hpp>
+#include <Eigen/Dense>
+#include <Eigen/Cholesky>
+#include <Eigen/Eigenvalues>
 #include <vector>
 
 namespace stan {

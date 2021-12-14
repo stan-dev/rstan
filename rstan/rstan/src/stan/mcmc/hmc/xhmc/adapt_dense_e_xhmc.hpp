@@ -8,7 +8,7 @@
 namespace stan {
 namespace mcmc {
 /**
- * Exhaustive Hamiltonian Monte Carlo (XHMC) with multinomial sampling
+ * Exhausive Hamiltonian Monte Carlo (XHMC) with multinomial sampling
  * with a Gaussian-Euclidean disintegration and adaptive
  * dense metric and adaptive step size
  */

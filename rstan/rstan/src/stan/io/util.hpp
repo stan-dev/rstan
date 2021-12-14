@@ -16,12 +16,14 @@ namespace io {
  * @return String representation of current UTC.
  */
 std::string utc_time_string() {
+  // FIXME:  use std::strftime
+
   // original with asctime
   // std::time_t rawtime = time(0);
   // std::tm *time = gmtime(&rawtime);
   // return std::string(asctime(time));
 
-  // new with strftime
+  // new with strfitime
   time_t rawtime;
   std::time(&rawtime);
 

@@ -64,13 +64,7 @@ inline int rvalue_at(int n, const index_max& idx) { return n + 1; }
  * @param[in] idx Index (from 1).
  * @return Underlying index position (from 1).
  */
-inline int rvalue_at(int n, const index_min_max& idx) {
-  if (idx.min_ < idx.max_) {
-    return idx.min_ + n;
-  } else {
-    return idx.max_ + n;
-  }
-}
+inline int rvalue_at(int n, const index_min_max& idx) { return idx.min_ + n; }
 
 }  // namespace model
 }  // namespace stan

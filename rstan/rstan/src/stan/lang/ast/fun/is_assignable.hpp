@@ -12,7 +12,7 @@ struct bare_expr_type;
 /**
  * Return true if an expression of the right-hand side type is
  * assignable to a variable of the left-hand side type, writing
- * the failure message to the error messages if the assignment is
+ * the failure message to the error messages if the asisgnment is
  * not legal.
  *
  * @param[in] l_type type of expression being assigned to

@@ -26,7 +26,7 @@ struct lub_idx {
   lub_idx();
 
   /**
-   * Construct a lower and upper bound index with the specified
+   * Construt a lower and upper bound index with the specified
    * bounds.
    *
    * @param lb lower bound

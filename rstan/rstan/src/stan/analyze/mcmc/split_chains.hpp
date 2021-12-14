@@ -13,7 +13,7 @@ namespace analyze {
  * number of total draws N is odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes chains are all of equal size and
  * draws are stored in contiguous blocks of memory.
@@ -46,7 +46,7 @@ inline std::vector<const double*> split_chains(
  * number of total draws N is odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes chains are all of equal size and
  * draws are stored in contiguous blocks of memory.  Argument size

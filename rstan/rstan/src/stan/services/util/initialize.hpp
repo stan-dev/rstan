@@ -7,8 +7,7 @@
 #include <stan/io/random_var_context.hpp>
 #include <stan/io/chained_var_context.hpp>
 #include <stan/model/log_prob_grad.hpp>
-#include <stan/math/prim/mat.hpp>
-#include <chrono>
+#include <stan/math/prim/arr/fun/sum.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -66,7 +65,7 @@ namespace util {
  * @return valid unconstrained parameters for the model
  */
 template <bool Jacobian = true, class Model, class RNG>
-std::vector<double> initialize(Model& model, const stan::io::var_context& init,
+std::vector<double> initialize(Model& model, stan::io::var_context& init,
                                RNG& rng, double init_radius, bool print_timing,
                                stan::callbacks::logger& logger,
                                stan::callbacks::writer& init_writer) {
@@ -147,7 +146,7 @@ std::vector<double> initialize(Model& model, const stan::io::var_context& init,
       logger.info(e.what());
       throw;
     }
-    if (!std::isfinite(log_prob)) {
+    if (!boost::math::isfinite(log_prob)) {
       logger.info("Rejecting initial value:");
       logger.info(
           "  Log probability evaluates to log(0),"
@@ -159,7 +158,7 @@ std::vector<double> initialize(Model& model, const stan::io::var_context& init,
     }
     std::stringstream log_prob_msg;
     std::vector<double> gradient;
-    auto start = std::chrono::steady_clock::now();
+    clock_t start_check = clock();
     try {
       // we evaluate this with propto=true since we're
       // evaluating with autodiff variables
@@ -171,15 +170,13 @@ std::vector<double> initialize(Model& model, const stan::io::var_context& init,
       logger.info(e.what());
       throw;
     }
-    auto end = std::chrono::steady_clock::now();
+    clock_t end_check = clock();
     double deltaT
-        = std::chrono::duration_cast<std::chrono::microseconds>(end - start)
-              .count()
-          / 1000000.0;
+        = static_cast<double>(end_check - start_check) / CLOCKS_PER_SEC;
     if (log_prob_msg.str().length() > 0)
       logger.info(log_prob_msg);
 
-    bool gradient_ok = std::isfinite(stan::math::sum(gradient));
+    bool gradient_ok = boost::math::isfinite(stan::math::sum(gradient));
 
     if (!gradient_ok) {
       logger.info("Rejecting initial value:");

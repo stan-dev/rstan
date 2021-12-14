@@ -23,7 +23,7 @@ namespace util {
  * @return inv_metric
  */
 inline Eigen::MatrixXd read_dense_inv_metric(
-    const stan::io::var_context& init_context, size_t num_params,
+    stan::io::var_context& init_context, size_t num_params,
     callbacks::logger& logger) {
   Eigen::MatrixXd inv_metric;
   try {

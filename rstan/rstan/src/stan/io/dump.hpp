@@ -5,6 +5,11 @@
 #include <stan/io/var_context.hpp>
 #include <stan/math/prim/mat.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/throw_exception.hpp>
+#include <boost/type_traits/is_floating_point.hpp>
+#include <boost/type_traits/is_integral.hpp>
+#include <boost/type_traits/is_arithmetic.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <iostream>
 #include <limits>
 #include <map>
@@ -18,6 +23,7 @@
 namespace stan {
 namespace io {
 
+using Eigen::Dynamic;
 /**
  * Reads data from S-plus dump format.
  *
@@ -244,7 +250,7 @@ class dump_reader {
       d = boost::lexical_cast<size_t>(buf_);
     } catch (const boost::bad_lexical_cast& exc) {
       std::string msg = "value " + buf_ + " beyond array dimension range";
-      throw std::invalid_argument(msg);
+      BOOST_THROW_EXCEPTION(std::invalid_argument(msg));
     }
     return d;
   }
@@ -271,7 +277,7 @@ class dump_reader {
       n = boost::lexical_cast<int>(buf_);
     } catch (const boost::bad_lexical_cast& exc) {
       std::string msg = "value " + buf_ + " beyond int range";
-      throw std::invalid_argument(msg);
+      BOOST_THROW_EXCEPTION(std::invalid_argument(msg));
     }
     return n;
   }
@@ -284,7 +290,7 @@ class dump_reader {
         validate_zero_buf(buf_);
     } catch (const boost::bad_lexical_cast& exc) {
       std::string msg = "value " + buf_ + " beyond numeric range";
-      throw std::invalid_argument(msg);
+      BOOST_THROW_EXCEPTION(std::invalid_argument(msg));
     }
     return x;
   }
@@ -568,11 +574,11 @@ class dump_reader {
       bool okSyntax = scan_value();  // set stack_r_, stack_i_, dims_
       if (!okSyntax) {
         std::string msg = "syntax error";
-        throw std::invalid_argument(msg);
+        BOOST_THROW_EXCEPTION(std::invalid_argument(msg));
       }
     } catch (const std::invalid_argument& e) {
       std::string msg = "data " + name_ + " " + e.what();
-      throw std::invalid_argument(msg);
+      BOOST_THROW_EXCEPTION(std::invalid_argument(msg));
     }
     return true;
   }
@@ -759,25 +765,6 @@ class dump : public stan::io::var_context {
          it != vars_i_.end(); ++it)
       names.push_back((*it).first);
   }
-
-#ifdef USE_STANC3
-  /**
-=======
-   * Check variable dimensions against variable declaration.
-   *
-   * @param stage stan program processing stage
-   * @param name variable name
-   * @param base_type declared stan variable type
-   * @param dims variable dimensions
-   * @throw std::runtime_error if mismatch between declared
-   *        dimensions and dimensions found in context.
-   */
-  void validate_dims(const std::string& stage, const std::string& name,
-                     const std::string& base_type,
-                     const std::vector<size_t>& dims_declared) const {
-    stan::io::validate_dims(*this, stage, name, base_type, dims_declared);
-  }
-#endif
 
   /**
    * Remove variable from the object.

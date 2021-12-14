@@ -12,7 +12,7 @@ struct bare_expr_type;
  * Primitive types are scalar `int` or `double`.
  * Single primitive type promotes (sic) to itself,
  * i.e., `int` promotes to `int`, `double` promotes to `double`.
- * Can not promote non-primitive types to `int` or `double` so
+ * Cannont promote non-primitive types to `int` or `double` so
  * function returns `ill_formed_type` for all other types.
  *
  * @param et expression type

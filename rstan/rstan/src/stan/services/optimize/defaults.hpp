@@ -281,7 +281,7 @@ struct iter {
 };
 
 /**
- * Save optimization iterations to output.
+ * Save optimization interations to output.
  */
 struct save_iterations {
   /**
@@ -290,7 +290,7 @@ struct save_iterations {
    * @return description
    */
   static std::string description() {
-    return "Save optimization iterations to output.";
+    return "Save optimization interations to output.";
   }
 
   /**

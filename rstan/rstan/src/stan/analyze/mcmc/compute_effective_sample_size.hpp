@@ -1,9 +1,10 @@
 #ifndef STAN_ANALYZE_MCMC_COMPUTE_EFFECTIVE_SAMPLE_SIZE_HPP
 #define STAN_ANALYZE_MCMC_COMPUTE_EFFECTIVE_SAMPLE_SIZE_HPP
 
-#include <stan/math/prim/fun/Eigen.hpp>
+#include <stan/math/prim/mat/fun/Eigen.hpp>
 #include <stan/analyze/mcmc/autocovariance.hpp>
 #include <stan/analyze/mcmc/split_chains.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 #include <algorithm>
 #include <cmath>
 #include <vector>
@@ -18,7 +19,7 @@ namespace analyze {
  * log10(number_total_draws).
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -50,7 +51,7 @@ inline double compute_effective_sample_size(std::vector<const double*> draws,
         draws[chain_idx], sizes[chain_idx]);
 
     for (int n = 0; n < num_draws; n++) {
-      if (!std::isfinite(draw(n))) {
+      if (!boost::math::isfinite(draw(n))) {
         return std::numeric_limits<double>::quiet_NaN();
       }
     }
@@ -144,7 +145,7 @@ inline double compute_effective_sample_size(std::vector<const double*> draws,
  * log10(number_total_draws).
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -171,7 +172,7 @@ inline double compute_effective_sample_size(std::vector<const double*> draws,
  * odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the
@@ -206,7 +207,7 @@ inline double compute_split_effective_sample_size(
  * odd, the (N+1)/2th draw is ignored.
  *
  * See more details in Stan reference manual section "Effective
- * Sample Size". http://mc-stan.org/users/documentation
+ * Sample Size". https://mc-stan.org/users/documentation
  *
  * Current implementation assumes draws are stored in contiguous
  * blocks of memory.  Chains are trimmed from the back to match the

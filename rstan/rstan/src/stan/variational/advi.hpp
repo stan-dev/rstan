@@ -13,13 +13,12 @@
 #include <boost/circular_buffer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <algorithm>
-#include <chrono>
 #include <limits>
 #include <numeric>
 #include <ostream>
+#include <vector>
 #include <queue>
 #include <string>
-#include <vector>
 
 namespace stan {
 
@@ -87,7 +86,7 @@ class advi {
    * @return the evidence lower bound.
    * @throw std::domain_error If, after n_monte_carlo_elbo_ number of draws
    * from the variational distribution all give non-finite log joint
-   * evaluations. This means that the model is severely ill conditioned or
+   * evaluations. This means that the model is severly ill conditioned or
    * that the variational distribution has somehow collapsed.
    */
   double calc_ELBO(const Q& variational, callbacks::logger& logger) const {
@@ -116,8 +115,8 @@ class advi {
           const char* msg2
               = "). Your model may be either severely "
                 "ill-conditioned or misspecified.";
-          stan::math::domain_error(function, name, n_monte_carlo_elbo_,
-                                         msg1, msg2);
+          stan::math::domain_error(function, name, n_monte_carlo_elbo_, msg1,
+                                   msg2);
         }
       }
     }
@@ -295,7 +294,7 @@ class advi {
   /**
    * Runs stochastic gradient ascent with an adaptive stepsize sequence.
    *
-   * @param[in,out] variational initial variational distribution
+   * @param[in,out] variational initia variational distribution
    * @param[in] eta stepsize scaling parameter
    * @param[in] tol_rel_obj relative tolerance parameter for convergence
    * @param[in] max_iterations max number of iterations to run algorithm
@@ -348,7 +347,9 @@ class advi {
         "   notes ");
 
     // Timing variables
-    auto start = std::chrono::steady_clock::now();
+    clock_t start = clock();
+    clock_t end;
+    double delta_t;
 
     // Main loop
     bool do_more_iterations = true;
@@ -387,11 +388,10 @@ class advi {
            << std::setw(16) << std::fixed << std::setprecision(3)
            << delta_elbo_ave << "  " << std::setw(15) << std::fixed
            << std::setprecision(3) << delta_elbo_med;
-        auto end = std::chrono::steady_clock::now();
-        double delta_t
-            = std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
-                  .count()
-              / 1000.0;
+
+        end = clock();
+        delta_t = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+
         std::vector<double> print_vector;
         print_vector.clear();
         print_vector.push_back(iter_counter);
