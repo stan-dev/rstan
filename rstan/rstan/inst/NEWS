@@ -1,6 +1,7 @@
 Tue December 14, 2021
 
 1. Updated Stan to C++ compiler v2.28.2 (development).
+2. Disables static build of TBB objects.
 
 Mon October 18, 2021
 
