@@ -1,8 +1,20 @@
+Tue December 14, 2021
+
+1. Updated Stan to C++ compiler v2.28.2 (development).
+2. Used TBB source code from `RcppParallel`.
+
+Mon October 18, 2021
+
+1. Updated Stan to C++ compiler v2.28.0 (development).
+2. Supported complex numbers.
+3. Building `libsundials_kinsol` on Windows.
+4. Allowed static build of TBB objects.
+
 Tue August 3, 2021
 
 1. Updated package dependencies.
-2. Updated Stan to C++ compiler v2.26.1
-3. Built libsundials_kinsol into `libStanHeaders.a`.
+2. Updated Stan to C++ compiler v2.26.1.
+3. Built libsundials_kinsol into `libStanHeaders`.
 4. Fixed variational method checks.
 5. Fixed elt_divide() ambiguity with the old version of Stan to C++ compiler.
 6. Converted unit testing to use `testthat`.

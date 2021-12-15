@@ -28,7 +28,7 @@ cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/include/* 
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/src/* StanHeaders/src/ || true
 
 # Prepare TBB objects and headers
-if [ -z "$TBB_LIB" ] && [ ! -d StanHeaders/src/tbb ]; then
+if [ ! -z "STANHEADERS_TBB_STATIC" ] && [ -z "$TBB_LIB" ] && [ ! -d StanHeaders/src/tbb ]; then
     cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb* StanHeaders/src/ || true
     cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/rml StanHeaders/src/ || true
     cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/serial StanHeaders/inst/include/ || true
@@ -36,6 +36,13 @@ if [ -z "$TBB_LIB" ] && [ ! -d StanHeaders/src/tbb ]; then
     cp -v StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/*tbb*/*.h StanHeaders/inst/include/tbb/ || true
     cp -v StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb/*.h StanHeaders/inst/include/tbb/ || true
     echo '#define __TBB_VERSION_STRINGS(N) "Empty"' > StanHeaders/src/tbb/version_string.ver || true
+fi
+
+if [ ! -z "$TBB_LIB" ]; then
+    rm -Rf StanHeaders/src/tbb* || true
+    rm -Rf StanHeaders/src/rml || true
+    rm -Rf StanHeaders/inst/include/serial || true
+    rm -Rf StanHeaders/inst/include/*tbb* || true
 fi
 
 R CMD build "$@" StanHeaders/
