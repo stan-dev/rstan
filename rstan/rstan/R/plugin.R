@@ -122,7 +122,7 @@ rstanplugin <- function() {
               "-lStanHeaders",
               paste0("-L", shQuote(RcppParallel_pkg_libs)),
               tbb_libs,
-              utils::capture.output(RcppParallel::LdFlags()))
+              utils::capture.output(RcppParallel::RcppParallelLibs()))
   if (.Platform$OS.type == "windows") {
     list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
          body = function(x) x,
