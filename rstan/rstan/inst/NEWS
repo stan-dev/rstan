@@ -1,7 +1,6 @@
 Tue December 14, 2021
 
 1. Updated Stan to C++ compiler v2.28.2 (development).
-2. Used TBB source code from `RcppParallel`.
 
 Mon October 18, 2021
 
