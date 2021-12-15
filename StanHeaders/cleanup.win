@@ -12,7 +12,7 @@ cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
 # Prepare TBB objects and headers
-if [ -z "$TBB_LIB" ] && [ ! -d src/tbb ]; then
+if [ ! -z "STANHEADERS_TBB_STATIC" ] && [ -z "$TBB_LIB" ] && [ ! -d src/tbb ]; then
     cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb* src/ || true
     cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/src/rml src/ || true
     cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/include/serial inst/include/ || true

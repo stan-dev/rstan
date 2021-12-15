@@ -28,7 +28,7 @@ cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/include/* 
 cp -Rf StanHeaders/inst/include/upstream/lib/stan_math/lib/sundials_*/src/* StanHeaders/src/ || true
 
 # Prepare TBB objects and headers
-if [ -z "$TBB_LIB" ] && [ ! -d StanHeaders/src/tbb ]; then
+if [ ! -z "STANHEADERS_TBB_STATIC" ] && [ -z "$TBB_LIB" ] && [ ! -d StanHeaders/src/tbb ]; then
     cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb* StanHeaders/src/ || true
     cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/src/rml StanHeaders/src/ || true
     cp -Rv StanHeaders/inst/include/upstream/lib/stan_math/lib/tbb_*/include/serial StanHeaders/inst/include/ || true
