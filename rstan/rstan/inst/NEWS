@@ -1,3 +1,7 @@
+Wed December 15, 2021
+
+1. Using `RcppParallel::CxxFlags()` instead of `RcppParallel::LdFlags()`.
+
 Tue December 14, 2021
 
 1. Updated Stan to C++ compiler v2.28.2 (development).
