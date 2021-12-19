@@ -464,8 +464,8 @@ int command(stan_args& args,
   if (args.get_method() == TEST_GRADIENT) {
     double epsilon = args.get_ctrl_test_grad_epsilon();
     double error = args.get_ctrl_test_grad_error();
-    stan::callbacks::writer sample_writer;
-
+    stan::callbacks::stream_writer sample_writer(Rcpp::Rcout);
+    
     return_code = stan::services::diagnose::diagnose(*model,
                                                      *init_context_ptr,
                                                      random_seed, id,
