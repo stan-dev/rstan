@@ -1,6 +1,6 @@
 Package: StanHeaders
 Title: C++ Header Files for Stan
-Version: 2.29.0.9000
+Version: 2.29.1.9000
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),
              person("Andrew", "Gelman", role = "aut"),
