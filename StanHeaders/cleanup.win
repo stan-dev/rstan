@@ -11,6 +11,24 @@ cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
+# Prepare TBB objects and headers
+if [ ! -z "STANHEADERS_TBB_STATIC" ] && [ -z "$TBB_LIB" ] && [ ! -d src/tbb ]; then
+    cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb* src/ || true
+    cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/src/rml src/ || true
+    cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/include/serial inst/include/ || true
+    cp -Rv inst/include/upstream/lib/stan_math/lib/tbb_*/include/*tbb* inst/include/ || true
+    cp -v inst/include/upstream/lib/stan_math/lib/tbb_*/include/*tbb*/*.h inst/include/tbb/ || true
+    cp -v inst/include/upstream/lib/stan_math/lib/tbb_*/src/tbb/*.h inst/include/tbb/ || true
+    echo '#define __TBB_VERSION_STRINGS(N) "Empty"' > src/tbb/version_string.ver || true
+fi
+
+if [ ! -z "$TBB_LIB" ]; then
+    rm -Rf src/tbb* || true
+    rm -Rf src/rml || true
+    rm -Rf inst/include/serial || true
+    rm -Rf inst/include/*tbb* || true
+fi
+
 rm -Rf inst/include/upstream || true
 
 exit $?

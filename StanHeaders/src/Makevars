@@ -2,7 +2,7 @@
 
 CXX_STD = CXX14
 CXX14STD = -std=c++1y
-PKG_CPPFLAGS = -DNO_FPRINTF_OUTPUT -I"../inst/include" -include stan_sundials_printf_override.hpp
+PKG_CPPFLAGS = -DNO_FPRINTF_OUTPUT -I"../inst/include" -I"sundials" -include stan_sundials_printf_override.hpp
 PKG_CPPFLAGS += -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -DBOOST_NO_AUTO_PTR -D_REENTRANT -DSTAN_THREADS -DSTRICT_R_HEADERS
 PKG_CXXFLAGS += -DSTRICT_R_HEADERS
 PKG_CPPFLAGS += -DUSE_PTHREAD
@@ -16,7 +16,13 @@ SUNDIALS_IDAS = idas/idas_io.c idas/idas_nls_sim.c idas/idas_ls.c idas/idas_ic.c
 SUNDIALS_KINSOL = kinsol/kinsol.c kinsol/kinsol_io.c kinsol/kinsol_bbdpre.c kinsol/kinsol_spils.c kinsol/kinsol_ls.c kinsol/kinsol_direct.c
 SUNDIALS_NVECSERIAL = nvector/serial/nvector_serial.c
 
-SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_KINSOL) $(SUNDIALS_NVECSERIAL)
+ifndef TBB_LIB
+TBB = tbb/concurrent_hash_map.cpp tbb/concurrent_queue.cpp tbb/concurrent_vector.cpp tbb/dynamic_link.cpp tbb/itt_notify.cpp tbb/cache_aligned_allocator.cpp tbb/pipeline.cpp tbb/queuing_mutex.cpp tbb/queuing_rw_mutex.cpp tbb/reader_writer_lock.cpp tbb/spin_rw_mutex.cpp tbb/spin_mutex.cpp tbb/critical_section.cpp tbb/task.cpp tbb/tbb_misc.cpp tbb/tbb_misc_ex.cpp tbb/mutex.cpp tbb/recursive_mutex.cpp tbb/condition_variable.cpp tbb/tbb_thread.cpp tbb/concurrent_monitor.cpp tbb/semaphore.cpp tbb/private_server.cpp rml/client/rml_tbb.cpp tbb/task_group_context.cpp tbb/governor.cpp tbb/market.cpp tbb/arena.cpp tbb/scheduler.cpp tbb/observer_proxy.cpp tbb/tbb_statistics.cpp tbb/tbb_main.cpp
+else
+TBB =
+endif
+
+SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_KINSOL) $(SUNDIALS_NVECSERIAL) $(TBB)
 OBJECTS_C = $(SOURCES:.c=.o)
 OBJECTS = $(OBJECTS_C:.cpp=.o)
 
