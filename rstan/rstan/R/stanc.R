@@ -122,7 +122,7 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
 
   model_code <- stanc_process(file = file,
                               model_name = model_name,
-                              isystem = c(dirname(file), getwd()))
+                              isystem = isystem)
 
   out <- stanc(model_code = model_code,
                model_name = model_name, verbose = verbose,
@@ -157,7 +157,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   model_code <- stanc_process(file = file,
                               model_code = model_code,
                               model_name = model_name,
-                              isystem = c(dirname(file), getwd()))
+                              isystem = isystem)
 
   if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
     Sys.setenv("STAN_NUM_THREADS" = rstan_options("threads_per_chain"))
