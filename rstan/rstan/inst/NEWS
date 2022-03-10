@@ -1,3 +1,9 @@
+Thu March 10, 2022
+
+1. Fixed `stanc_builder` ignoring user-provided `isystem` (#991).
+2. Fixed unexpected failure with exiting `*.rds` file (#993).
+3. Fixed a backward compatibility issue with `stan::io::validate_dims`.
+
 Wed December 15, 2021
 
 1. Using `RcppParallel::CxxFlags()` instead of `RcppParallel::LdFlags()`.

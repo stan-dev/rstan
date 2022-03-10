@@ -102,7 +102,7 @@ stan_model <- function(file,
     }
     if(!file.exists(file.rds) ||
        (mtime.rds <- file.info(file.rds)$mtime) <
-       as.POSIXct(packageDescription("rstan")$Date) ||
+       as.POSIXct(packageDate("rstan")) ||
        !is(obj <- readRDS(file.rds), "stanmodel") ||
        !is_sm_valid(obj) ||
        (!identical(stanc_ret$model_code, obj@model_code) && is.null(
