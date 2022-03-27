@@ -1,3 +1,7 @@
+Sun March 27, 2022
+
+1. Fixed Stan to C++ code translation and parsing, with `stanc3`.
+
 Thu March 10, 2022
 
 1. Fixed `stanc_builder` ignoring user-provided `isystem` (#991).

@@ -1597,8 +1597,8 @@ get_time_from_csv <- function(tlines) {
 parse_data <- function(cppcode) {
   cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
                   text = cppcode)
-  private <- grep("^private:$| private:$", cppcode) + 1L
-  public <- grep("^public:$| public:$", cppcode) - 1L
+  private <- grep("^private:$", cppcode) + 1L
+  public <- grep("^public:$", cppcode) - 1L
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
