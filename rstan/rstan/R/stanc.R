@@ -222,6 +222,14 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
                    cppcode,
                    sep = "\n")
 
+  # Remove leading space from keywords
+  cppcode <- scan(text = cppcode, what = character(), sep = "\n", quiet = TRUE)
+  cppcode <- gsub("^ class ", "class ", cppcode)
+  cppcode <- gsub("^ namespace ", "namespace ", cppcode)
+  cppcode <- gsub("^ private:", "private:", cppcode)
+  cppcode <- gsub("^ public:", "public:", cppcode)
+  cppcode <- paste(cppcode, collapse = "\n")
+
   return(list(status = model_cppcode$status,
               model_cppname = model_cppname, cppcode = cppcode,
               model_name = model_name, model_code = model_code))
