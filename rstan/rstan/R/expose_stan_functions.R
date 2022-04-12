@@ -18,6 +18,7 @@
 expose_stan_functions_hacks <- function(code, includes = NULL) {
   code <- paste("// [[Rcpp::depends(StanHeaders)]]",
                 "// [[Rcpp::depends(rstan)]]",
+                "// [[Rcpp::plugins(rstan)]]",
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
                 "#include <stan/math/prim/mat/fun/Eigen.hpp>",
@@ -96,6 +97,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
   }
+  Rcpp::registerPlugin("rstan", rstanplugin)
   compiled <- pkgbuild::with_build_tools(try(suppressWarnings(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)), silent = TRUE),
     required = rstan_options("required") &&
