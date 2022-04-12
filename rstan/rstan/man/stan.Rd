@@ -2,7 +2,7 @@
 \alias{stan}
 \title{Fit a model with Stan}
 \description{
-\if{html}{\figure{stanlogo.png}{options: width="25px" alt="https://mc-stan.org/about/logo/"}}
+\if{html}{\figure{stanlogo.png}{options: width="25" alt="https://mc-stan.org/about/logo/"}}
 Fit a model defined in the Stan modeling language and  
 return the fitted result as an instance of \code{stanfit}. 
 }

@@ -4,7 +4,7 @@
 \alias{plot.sbc}
 \title{Simulation Based Calibration (sbc)}
 \description{
-\if{html}{\figure{stanlogo.png}{options: width="25px" alt="https://mc-stan.org/about/logo/"}}
+\if{html}{\figure{stanlogo.png}{options: width="25" alt="https://mc-stan.org/about/logo/"}}
 Check whether a model is well-calibrated with respect to the
 prior distribution and hence possibly amenable to obtaining
 a posterior distribution conditional on observed data.
