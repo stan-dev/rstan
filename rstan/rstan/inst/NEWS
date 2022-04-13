@@ -1,3 +1,9 @@
+Wed April 13, 2022
+
+1. Fixed building vignettes.
+1. Fixed `log_prob` and test gradient mode in `stan_fit`.
+1. Removed support for loading `tbbmalloc_proxy` on macOS.
+
 Sun March 27, 2022
 
 1. Fixed Stan to C++ code translation and parsing, with `stanc3`.
