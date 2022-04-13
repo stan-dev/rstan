@@ -25,7 +25,7 @@ OUT <- 0
   if (!file.exists(stanc_js)) {
     warning(paste0("Default stancjs compiler not found, ",
                    "downloading the current version from github."))
-    stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/v2.29.2/stanc.js"
+    stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/v2.26.1/stanc.js"
   }
   stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
