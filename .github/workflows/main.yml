@@ -80,6 +80,14 @@ jobs:
         run: |
           remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
+          remotes::install_cran("rstantools", type = "source")
+          remotes::install_cran("sessioninfo")
+          if (utils::packageVersion("sessioninfo") >= "1.2.1") {
+            sessioninfo::session_info(pkgs = "installed", include_base = TRUE)
+          } else {
+            options(width = 200)
+            sessioninfo::session_info(rownames(installed.packages()), include_base = TRUE)
+          }
         shell: Rscript {0}
 
       - name: Install StanHeaders

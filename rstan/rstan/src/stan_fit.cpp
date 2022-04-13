@@ -469,7 +469,8 @@ int command(stan_args& args,
   if (args.get_method() == TEST_GRADIENT) {
     double epsilon = args.get_ctrl_test_grad_epsilon();
     double error = args.get_ctrl_test_grad_error();
-    stan::callbacks::writer sample_writer;
+    stan::callbacks::stream_writer sample_writer(Rcpp::Rcout);
+    
     return_code = stan::services::diagnose::diagnose(*model,
                                                      *init_context_ptr,
                                                      random_seed, id,
@@ -1070,6 +1071,7 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
       throw std::domain_error(msg.str());
     }
     std::vector<int> par_i(model_->num_params_i(), 0);
+/*    
     if (!gradient) {
       double lp = 0;
       if (jacobian_adjust_transform) {
@@ -1080,13 +1082,14 @@ std::vector<double> stan_fit::unconstrain_pars(Rcpp::List par) {
       Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
       return lp2;
     }
+*/ 
     
     std::vector<double> grad;
     double lp = jacobian_adjust_transform ? 
       stan::model::log_prob_grad<true,true >(*model_, upar, par_i, grad, &rstan::io::rcout) :
       stan::model::log_prob_grad<true,false>(*model_, upar, par_i, grad, &rstan::io::rcout);
     Rcpp::NumericVector lp2 = Rcpp::wrap(lp);
-    lp2.attr("gradient") = grad;
+    if (gradient) lp2.attr("gradient") = grad;
     return lp2;
   }
   
