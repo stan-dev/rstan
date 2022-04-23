@@ -1,8 +1,12 @@
+Sat April 23, 2022
+
+1. Fixed environment variables in `rstanplugin` (#1006).
+
 Wed April 13, 2022
 
 1. Fixed building vignettes.
-1. Fixed `log_prob` and test gradient mode in `stan_fit`.
-1. Removed support for loading `tbbmalloc_proxy` on macOS.
+2. Fixed `log_prob` and test gradient mode in `stan_fit`.
+3. Removed support for loading `tbbmalloc_proxy` on macOS.
 
 Sun March 27, 2022
 
