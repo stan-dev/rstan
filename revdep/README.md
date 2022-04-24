@@ -10,14 +10,14 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |America/New_York             |
-|date     |2022-04-13                   |
+|date     |2022-04-24                   |
 |pandoc   |1.19.2.4 @ /usr/bin/pandoc   |
 
 # Dependencies
 
 |package     |old      |new     |Δ  |
 |:-----------|:--------|:-------|:--|
-|StanHeaders |2.21.0-7 |2.26.10 |*  |
+|StanHeaders |2.21.0-7 |2.26.11 |*  |
 
 # Revdeps
 
