@@ -1,3 +1,7 @@
+Tue June 21, 2022
+
+1. Updated Stan to C++ compiler v2.30.0-rc1 (development).
+
 Sat April 23, 2022
 
 1. Fixed environment variables in `rstanplugin` (#1006).
