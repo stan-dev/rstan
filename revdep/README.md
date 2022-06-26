@@ -17,18 +17,15 @@
 
 |package     |old      |new     |Δ  |
 |:-----------|:--------|:-------|:--|
-|StanHeaders |2.21.0-7 |2.26.12 |*  |
+|StanHeaders |2.21.0-7 |2.26.13 |*  |
 
 # Revdeps
 
-## Failed to check (4)
+## Failed to check (1)
 
-|package                          |version |error     |warning |note |
-|:--------------------------------|:-------|:---------|:-------|:----|
-|[epidemia](failures.md#epidemia) |1.0.0   |__+1__    |        |-2   |
-|[geostan](failures.md#geostan)   |0.2.1   |-1 __+1__ |        |-3   |
-|[ProbReco](failures.md#probreco) |0.1.0.1 |__+1__    |        |-2   |
-|[stanette](failures.md#stanette) |2.21.4  |__+1__    |        |-2   |
+|package                          |version |error  |warning |note |
+|:--------------------------------|:-------|:------|:-------|:----|
+|[ProbReco](failures.md#probreco) |0.1.0.1 |__+1__ |        |-2   |
 
 ## New problems (4)
 

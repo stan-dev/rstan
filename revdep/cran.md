@@ -3,7 +3,7 @@
 We checked 104 reverse dependencies (101 from CRAN + 3 from Bioconductor), comparing R CMD check results across CRAN and dev versions of this package.
 
  * We saw 3 new problems
- * We failed to check 4 packages
+ * We failed to check 1 packages
 
 Issues with CRAN packages are summarised below.
 
@@ -21,7 +21,4 @@ Issues with CRAN packages are summarised below.
 
 ### Failed to check
 
-* epidemia (NA)
-* geostan  (NA)
 * ProbReco (NA)
-* stanette (NA)
