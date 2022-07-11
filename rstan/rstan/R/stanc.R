@@ -123,7 +123,7 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
-  auto_format <- getOption("stanc.auto_format", FALSE)
+  auto_format <- getOption("stanc.auto_format", TRUE)
   if (isTRUE(auto_format)) {
     model_code <- stanc_process(file = file,
                                 model_name = model_name,
@@ -178,7 +178,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
-  auto_format <- getOption("stanc.auto_format", FALSE)
+  auto_format <- getOption("stanc.auto_format", TRUE)
   if (isTRUE(auto_format)) {
     model_code <- stanc_process(file = file,
                                 model_code = model_code,
