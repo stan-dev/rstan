@@ -43,6 +43,7 @@ rstudio_stanc <- function(filename) {
 }
 
 stanc_process <- function(file, model_code = '', model_name = "anon_model",
+                          auto_format = FALSE,
                           isystem = c(dirname(file), getwd())) {
   model_name2 <- deparse(substitute(model_code))
   if (is.null(attr(model_code, "model_name2")))
@@ -84,7 +85,7 @@ stanc_process <- function(file, model_code = '', model_name = "anon_model",
   model_code <- gsub('#include /(.*$)', '#include "\\1"', model_code)
   has_pound <- any(grepl("#", model_code, fixed = TRUE))
 
-  if (has_pound) {
+  if (has_pound && isFALSE(auto_format)) {
     unprocessed <- tempfile(fileext = ".stan")
     processed <- tempfile(fileext = ".stan")
     on.exit(file.remove(unprocessed))
@@ -120,8 +121,29 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
 
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
+
+  auto_format <- getOption("stanc.auto_format", FALSE)
+  if (isTRUE(auto_format)) {
+    model_code <- stanc_process(file = file,
+                                model_name = model_name,
+                                auto_format = TRUE,
+                                isystem = isystem)
+
+    stopifnot(stanc_ctx$validate("stanc"))
+    formatted_code <- try(stanc_ctx$call("stanc", model_cppname,
+                          model_code, as.array("auto-format")),
+                          silent = TRUE)
+    if (inherits(formatted_code, "try-error")) {
+      stop("Stan code automatic formatting failed!")
+    } else {
+      model_code <- formatted_code$result
+    }
+  }
+
   model_code <- stanc_process(file = file,
                               model_name = model_name,
+                              auto_format = FALSE,
                               isystem = isystem)
 
   out <- stanc(model_code = model_code,
@@ -154,9 +176,31 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   if (missing(model_name) && is.character(file) && length(file) == 1 && file.exists(file))
     model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
 
+  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
+
+  auto_format <- getOption("stanc.auto_format", FALSE)
+  if (isTRUE(auto_format)) {
+    model_code <- stanc_process(file = file,
+                                model_code = model_code,
+                                model_name = model_name,
+                                auto_format = TRUE,
+                                isystem = isystem)
+
+    stopifnot(stanc_ctx$validate("stanc"))
+    formatted_code <- try(stanc_ctx$call("stanc", model_cppname,
+                          model_code, as.array("auto-format")),
+                          silent = TRUE)
+    if (inherits(formatted_code, "try-error")) {
+      stop("Stan code automatic formatting failed!")
+    } else {
+      model_code <- formatted_code$result
+    }
+  }
+
   model_code <- stanc_process(file = file,
                               model_code = model_code,
                               model_name = model_name,
+                              auto_format = FALSE,
                               isystem = isystem)
 
   if (isTRUE(rstan_options("threads_per_chain") > 1L)) {
@@ -165,7 +209,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   if (verbose)
     cat("\nTRANSLATING MODEL '", model_name, "' FROM Stan CODE TO C++ CODE NOW.\n", sep = '')
-  model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
+
   stopifnot(stanc_ctx$validate("stanc"))
   stanc_flags <- c("allow-undefined",
                    "standalone-functions",
