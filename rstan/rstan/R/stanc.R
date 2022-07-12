@@ -134,9 +134,7 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
     formatted_code <- try(stanc_ctx$call("stanc", model_cppname,
                           model_code, as.array("auto-format")),
                           silent = TRUE)
-    if (inherits(formatted_code, "try-error")) {
-      stop("Stan code automatic formatting failed!")
-    } else {
+    if (!inherits(formatted_code, "try-error") && !is.null(formatted_code$result)) {
       model_code <- formatted_code$result
     }
   }
@@ -190,9 +188,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     formatted_code <- try(stanc_ctx$call("stanc", model_cppname,
                           model_code, as.array("auto-format")),
                           silent = TRUE)
-    if (inherits(formatted_code, "try-error")) {
-      stop("Stan code automatic formatting failed!")
-    } else {
+    if (!inherits(formatted_code, "try-error") && !is.null(formatted_code$result)) {
       model_code <- formatted_code$result
     }
   }
