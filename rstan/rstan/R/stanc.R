@@ -211,7 +211,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   stopifnot(stanc_ctx$validate("stanc"))
   stanc_flags <- c("allow-undefined",
-                   "O",
+                   "O1",
                    "standalone-functions",
                    "use-opencl",
                    "warn-pedantic",
