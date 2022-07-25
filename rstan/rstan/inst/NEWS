@@ -1,3 +1,9 @@
+Mon July 25, 2020
+
+1. Exposed `stanc3` flag for experimental optimization in `stanc` and `stan_model`:
+    - `allow_optimizations`: Allow the compiler to apply all optimizations to the Stan code.
+    - Some of these are not thorougly tested and may not always improve a programs performance.
+
 Tue July 1, 2022
 
 1. Updated Stan to C++ compiler v2.30.0 (development).
