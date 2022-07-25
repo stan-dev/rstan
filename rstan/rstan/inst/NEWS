@@ -2,7 +2,7 @@ Mon July 25, 2020
 
 1. Exposed `stanc3` flag for experimental optimization in `stanc` and `stan_model`:
     - `allow_optimizations`: Allow the compiler to apply all optimizations to the Stan code.
-    - Some of these are not thoroughly tested and may not always improve a programs performance.
+    - Some of these are not thoroughly tested and may not always improve the performance.
 2. Added R options to override default `default` behaviour/arguments.
 
 Tue July 1, 2022
