@@ -55,7 +55,7 @@ Translate Stan model specification to C++ code
     to provide a function definition in another header file or linked shared object.}
   \item{allow_optimizations}{A logical scalar defaulting to \code{FALSE} indicating
     whether to allow the compiler to apply all optimizations to the \pkg{Stan} code.
-    Some of these are not thorougly tested and may not always improve a programs performance.}
+    Some of these are not thoroughly tested and may not always improve a programs performance.}
   \item{standalone_functions}{A logical scalar defaulting to \code{FALSE} indicating
     whether to generate the standalone functions \pkg{C++} code.}
   \item{use_opencl}{A logical scalar defaulting to \code{FALSE} indicating
