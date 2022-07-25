@@ -12,21 +12,21 @@ Translate Stan model specification to C++ code
 \usage{
   stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE,
         obfuscate_model_name = TRUE,
-        allow_undefined = FALSE,
-        allow_optimizations = FALSE,
-        standalone_functions = FALSE,
-        use_opencl = FALSE,
-        warn_pedantic = FALSE,
-        warn_uninitialized = FALSE,
+        allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+        allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+        standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+        use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+        warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+        warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)),
         isystem = c(if (!missing(file)) dirname(file), getwd())) 
   stanc_builder(file, isystem = c(dirname(file), getwd()),
                 verbose = FALSE, obfuscate_model_name = FALSE,
-                allow_undefined = FALSE,
-                allow_optimizations = FALSE,
-                standalone_functions = FALSE,
-                use_opencl = FALSE,
-                warn_pedantic = FALSE,
-                warn_uninitialized = FALSE)
+                allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+                allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+                standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+                use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+                warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+                warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)))
 } 
 
 \arguments{

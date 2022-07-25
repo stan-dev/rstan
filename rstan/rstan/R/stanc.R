@@ -113,18 +113,18 @@ stanc_process <- function(file, model_code = '', model_name = "anon_model",
 
 stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
                           verbose = FALSE, obfuscate_model_name = FALSE,
-                          allow_undefined = FALSE,
-                          allow_optimizations = FALSE,
-                          standalone_functions = FALSE,
-                          use_opencl = FALSE,
-                          warn_pedantic = FALSE,
-                          warn_uninitialized = FALSE) {
+                          allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+                          allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+                          standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+                          use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+                          warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+                          warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE))) {
   stopifnot(is.character(file), length(file) == 1, file.exists(file))
   model_name <- sub("\\.[^.]*$", "", filename_rm_ext(basename(file)))
 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
-  auto_format <- getOption("stanc.auto_format", FALSE)
+  auto_format <- isTRUE(getOption("stanc.auto_format", FALSE))
   if (isTRUE(auto_format)) {
     model_code <- stanc_process(file = file,
                                 model_name = model_name,
@@ -159,12 +159,12 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
 
 stanc <- function(file, model_code = '', model_name = "anon_model",
                   verbose = FALSE, obfuscate_model_name = TRUE,
-                  allow_undefined = FALSE,
-                  allow_optimizations = FALSE,
-                  standalone_functions = FALSE,
-                  use_opencl = FALSE,
-                  warn_pedantic = FALSE,
-                  warn_uninitialized = FALSE,
+                  allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+                  allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+                  standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+                  use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+                  warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+                  warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)),
                   isystem = c(if (!missing(file)) dirname(file), getwd())) {
   if (missing(file)) {
     file <- tempfile(fileext = ".stan")
@@ -179,7 +179,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
 
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
-  auto_format <- getOption("stanc.auto_format", FALSE)
+  auto_format <- isTRUE(getOption("stanc.auto_format", FALSE))
   if (isTRUE(auto_format)) {
     model_code <- stanc_process(file = file,
                                 model_code = model_code,
