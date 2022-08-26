@@ -24,6 +24,7 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
+                includes,
                 code, sep = "\n")
   code <- gsub("// [[stan::function]]",
                "// [[Rcpp::export]]", code, fixed = TRUE)
@@ -31,10 +32,6 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
   code <- gsub("= nullptr", "= 0", code, fixed = TRUE)
-  if(is.null(includes)) return(code)
-  code <- sub("\n\nstan::io::program_reader prog_reader__() {",
-              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"),
-              code, fixed = TRUE)
   return(code)
 }
 
