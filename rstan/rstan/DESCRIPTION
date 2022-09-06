@@ -2,8 +2,8 @@ Package: rstan
 Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
-Version: 2.21.5
-Date: 2022-04-08
+Version: 2.21.6
+Date: 2022-09-05
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
