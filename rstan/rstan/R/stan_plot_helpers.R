@@ -445,7 +445,7 @@ color_vector_chain <- function(n) {
   if (!is.null(divergent)) df$divergent <- do.call("c", divergent)
   if (!is.null(hit_max_td)) df$hit_max_td <- do.call("c", hit_max_td)
 
-  base <- ggplot2::ggplot(df, ggplot2::aes_string(x = "sp", y = "p")) + xy_labs
+  base <- ggplot2::ggplot(df, ggplot2::aes(x = .data$sp, y = .data$p)) + xy_labs
   if (chain == 0) {
     if (violin)
       graph <- base + ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
@@ -456,7 +456,7 @@ color_vector_chain <- function(n) {
         graph <-
           graph + ggplot2::geom_point(
             data = subset(df, divergent == 1),
-            mapping = ggplot2::aes_string(x = "sp", y = "p"),
+            mapping = ggplot2::aes(x = .data$sp, y = .data$p),
             color = .NDIVERGENT_CLR,
             fill = .NDIVERGENT_FILL,
             alpha = 0.8,
@@ -467,7 +467,7 @@ color_vector_chain <- function(n) {
         graph <-
           graph + ggplot2::geom_point(
             data = subset(df, hit_max_td == 1),
-            mapping = ggplot2::aes_string(x = "sp", y = "p"),
+            mapping = ggplot2::aes(x = .data$sp, y = .data$p),
             color = .MAXTD_CLR,
             fill = .MAXTD_FILL,
             alpha = 0.8,
@@ -488,7 +488,7 @@ color_vector_chain <- function(n) {
       ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL, ...) +
       ggplot2::geom_violin(
         data = chain_data,
-        mapping = ggplot2::aes_string(x = "sp", y = "p"),
+        mapping = ggplot2::aes(x = .data$sp, y = .data$p),
         color = chain_clr,
         fill = chain_fill,
         ...
@@ -500,14 +500,14 @@ color_vector_chain <- function(n) {
   graph <- graph +
     ggplot2::geom_point(
       data = chain_data,
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = chain_fill,
       ...
     )
   if (smoother) graph <- graph +
     ggplot2::stat_smooth(
       data = chain_data,
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = chain_fill,
       se = FALSE
     )
@@ -515,7 +515,7 @@ color_vector_chain <- function(n) {
     graph <- graph +
      ggplot2::geom_point(
       data = chain_data[chain_data$div == 1, , drop = FALSE],
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = .NDIVERGENT_CLR,
       fill = .NDIVERGENT_FILL,
       size = 3,
@@ -525,7 +525,7 @@ color_vector_chain <- function(n) {
     graph <-
     graph + ggplot2::geom_point(
       data = chain_data[chain_data$hit == 1, , drop = FALSE],
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = .MAXTD_CLR,
       fill = .MAXTD_FILL,
       size = 3,
@@ -541,7 +541,7 @@ color_vector_chain <- function(n) {
   df <- data.frame(x = do.call("c", df_x), y = do.call("c", df_y))
   df$x <- as.factor(df$x)
 
-  base <- ggplot2::ggplot(df, ggplot2::aes_string("x","y")) + xy_labs
+  base <- ggplot2::ggplot(df, ggplot2::aes(x = .data$x, y = .data$y)) + xy_labs
   graph <- base + ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_x))[chain]
@@ -549,7 +549,7 @@ color_vector_chain <- function(n) {
   chain_data <- data.frame(x = as.factor(df_x[, chain]), y = df_y[, chain])
   graph + ggplot2::geom_violin(
     data = chain_data,
-    mapping = ggplot2::aes_string("x", "y"),
+    mapping = ggplot2::ggplot2::aes(x = .data$x, y = .data$y),
     color = chain_clr,
     fill = chain_fill,
     alpha = 0.5
@@ -562,7 +562,7 @@ color_vector_chain <- function(n) {
   dots$binwidth <- diff(range(mdf$value))/30
   dots$fill <- .NUTS_FILL
   dots$color <- .NUTS_CLR
-  base <- ggplot2::ggplot(mdf, ggplot2::aes_string(x = "value")) +
+  base <- ggplot2::ggplot(mdf, ggplot2::aes(x = .data$value)) +
     do.call(ggplot2::geom_histogram, dots) +
     ggplot2::labs(x = if (missing(lab)) NULL else lab, y = "")
   if (chain == 0) {
