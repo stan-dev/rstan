@@ -20,7 +20,7 @@ stan_trace <- function(object, pars, include = TRUE,
   base <-
     ggplot2::ggplot(
       plot_data$samp,
-      ggplot2::aes_string(x = "iteration", y = "value", color = "chain")
+      ggplot2::aes(x = .data$iteration, y = .data$value, color = .data$chain)
     )
   if (inc_warmup) base <- base +
     ggplot2::annotate("rect", xmin = -Inf, xmax = plot_data$warmup,
@@ -78,12 +78,12 @@ stan_scat <- function(object, pars, unconstrain = FALSE, inc_warmup = FALSE,
 #   sel <- seq_len(nrow(df) / nchains)
 #   div <- df[div[sel], ]
 #   td <- df[hit_max_td[sel], ]
-  base <- ggplot2::ggplot(df, ggplot2::aes_string("x", "y"))
+  base <- ggplot2::ggplot(df, ggplot2::aes(x = .data$x, y = .data$y))
   graph <-
     base +
     do.call(ggplot2::geom_point, dots) +
-#     geom_point(data = div, aes_string("x","y"), color = "red") +
-#     geom_point(data = td, aes_string("x","y"), color = "yellow") +
+#     geom_point(data = div, aes(x = .data$x, y = .data$y), color = "red") +
+#     geom_point(data = td, aes(x = .data$x, y = .data$y), color = "yellow") +
     ggplot2::labs(x = pars[1], y = pars[2]) +
     thm
 
@@ -102,7 +102,7 @@ stan_hist <- function(object, pars, include = TRUE,
   dots <- .add_aesthetics(list(...), c("fill", "color"))
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   thm <- rstanvis_hist_theme()
-  base <- ggplot2::ggplot(plot_data$samp, ggplot2::aes_string(x = "value", y = "..density.."))
+  base <- ggplot2::ggplot(plot_data$samp, ggplot2::aes(x = .data$value, y = ggplot2::after_stat(.data$density)))
   graph <-
     base +
     do.call(ggplot2::geom_histogram, dots) +
@@ -129,7 +129,7 @@ stan_dens <- function(object, pars, include = TRUE,
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   clrs <- rep_len(rstanvis_aes_ops("chain_colors"), plot_data$nchains)
   thm <- rstanvis_hist_theme()
-  base <- ggplot2::ggplot(plot_data$samp, ggplot2::aes_string(x = "value")) + ggplot2::xlab("")
+  base <- ggplot2::ggplot(plot_data$samp, ggplot2::aes(x = .data$value)) + ggplot2::xlab("")
   if (!separate_chains) {
     dots <- .add_aesthetics(list(...), c("fill", "color"))
     graph <-
@@ -138,7 +138,7 @@ stan_dens <- function(object, pars, include = TRUE,
       thm
   } else {
     dots <- .add_aesthetics(list(...), c("color", "alpha"))
-    dots$mapping <- ggplot2::aes_string(fill = "chain")
+    dots$mapping <- ggplot2::aes(fill = .data$chain)
     graph <-
       base +
       do.call(ggplot2::geom_density, dots) +
@@ -178,7 +178,7 @@ stan_ac <- function(object, pars, include = TRUE,
     y_lab <- paste("Avg.", if (partial) "partial", "autocorrelation")
     ac_labs <- ggplot2::labs(x = "Lag", y = y_lab)
     y_scale <- ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25))
-    base <- ggplot2::ggplot(ac_dat, ggplot2::aes_string(x = "lag", y = "ac"))
+    base <- ggplot2::ggplot(ac_dat, ggplot2::aes(x = .data$lag, y = .data$ac))
     graph <- base +
       do.call(ggplot2::geom_bar, dots) +
       y_scale +
@@ -199,7 +199,7 @@ stan_ac <- function(object, pars, include = TRUE,
   y_scale <- ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25),
                                 labels = c("0","","0.5","",""))
 
-  base <- ggplot2::ggplot(ac_dat, ggplot2::aes_string(x = "lag", y = "ac"))
+  base <- ggplot2::ggplot(ac_dat, ggplot2::aes(x = .data$lag, y = .data$ac))
   graph <- base +
     do.call(ggplot2::geom_bar, dots) +
     y_scale +
@@ -279,11 +279,11 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   if (dotenv[["show_outer_line"]] || show_density) {
     p.ci <-
       ggplot2::geom_segment(
-        mapping = ggplot2::aes_string(
-          x = "ll",
-          xend = "hh",
-          y = "y",
-          yend = "y"
+        mapping = ggplot2::aes(
+          x = .data$ll,
+          xend = .data$hh,
+          y = .data$y,
+          yend = .data$y
         ),
         color = outline_color
       )
@@ -306,7 +306,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
     p.den <-
       ggplot2::geom_line(
         data = df.den,
-        mapping = ggplot2::aes_string("x", "y", group = "name"),
+        mapping = ggplot2::aes(x = .data$x, y = .data$y, group = .data$name),
         color = outline_color
       )
 
@@ -323,29 +323,29 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
     }
     df.poly <- data.frame(x = as.vector(x.poly), y = as.vector(y.poly),
                           name = rep(param_names, each = npoint.den + 2))
-    p.poly <- ggplot2::geom_polygon(data = df.poly, mapping=ggplot2::aes_string("x", "y", group = "name", fill = "y"))
+    p.poly <- ggplot2::geom_polygon(data = df.poly, mapping=ggplot2::aes(x = .data$x, y = .data$y, group = .data$name, fill = .data$y))
     p.col <- ggplot2::scale_fill_gradient(low = fill_color, high = fill_color, guide = "none")
 
     #point estimate
     if (color_by_rhat) {
       rhat_colors <- dotenv[["rhat_colors"]]
-      p.point <- ggplot2::geom_segment(ggplot2::aes_string(x = "m", xend = "m", y = "y", yend = "y + 0.25",
-                                         color = "rhat_id"), linewidth = 1.5)
+      p.point <- ggplot2::geom_segment(ggplot2::aes(x = .data$m, xend = .data$m, y = .data$y, yend = .data$y + 0.25,
+                                         color = .data$rhat_id), linewidth = 1.5)
       p.all + p.poly + p.den + p.col + p.point + rhat_colors #+ rhat_lgnd
     } else {
-      p.point <- ggplot2::geom_segment(ggplot2::aes_string(x = "m", xend = "m", y = "y", yend = "y + 0.25"),
+      p.point <- ggplot2::geom_segment(ggplot2::aes(x = .data$m, xend = .data$m, y = .data$y, yend = .data$y + 0.25),
                               colour = est_color, linewidth = 1.5)
       p.all + p.poly + p.den + p.col + p.point
     }
   } else {
-    p.ci.2 <- ggplot2::geom_segment(ggplot2::aes_string(x = "l", xend = "h", y = "y", yend = "y"),
+    p.ci.2 <- ggplot2::geom_segment(ggplot2::aes(x = .data$l, xend = .data$h, y = .data$y, yend = .data$y),
                            colour = fill_color, linewidth = 2)
     if (color_by_rhat) {
-      p.point <- ggplot2::geom_point(ggplot2::aes_string(x = "m", y = "y", fill = "rhat_id"),
+      p.point <- ggplot2::geom_point(ggplot2::aes(x = .data$m, y = .data$y, fill = .data$rhat_id),
                             color = "black", shape = 21, size = 4)
       p.all + p.ci.2 + p.point + rhat_colors # + rhat_lgnd
     } else {
-      p.point <- ggplot2::geom_point(ggplot2::aes_string(x = "m", y = "y"), size = 4,
+      p.point <- ggplot2::geom_point(ggplot2::aes(x = .data$m, y = .data$y), size = 4,
                             color = fill_color, fill = est_color, shape = 21)
       p.all + p.ci.2 + p.point
     }
