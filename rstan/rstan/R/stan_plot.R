@@ -10,13 +10,13 @@ stan_trace <- function(object, pars, include = TRUE,
                        inc_warmup = FALSE,
                        nrow = NULL, ncol = NULL,
                        ..., window = NULL) {
-  
+
   .check_object(object, unconstrain)
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
-  
+
   thm <- rstanvis_theme()
   clrs <- rep_len(rstanvis_aes_ops("chain_colors"), plot_data$nchains)
-  
+
   base <-
     ggplot2::ggplot(
       plot_data$samp,
@@ -25,19 +25,19 @@ stan_trace <- function(object, pars, include = TRUE,
   if (inc_warmup) base <- base +
     ggplot2::annotate("rect", xmin = -Inf, xmax = plot_data$warmup,
              ymin = -Inf, ymax = Inf, fill = rstanvis_aes_ops("grays")[2L])
-  
+
   graph <-
     base +
     ggplot2::geom_path(...) +
     ggplot2::scale_color_manual(values = clrs) +
     ggplot2::labs(x="",y="") +
     thm
-  
+
   if (plot_data$nparams == 1)
     graph <- graph + ggplot2::ylab(unique(plot_data$samp$parameter))
   else
     graph <- graph + ggplot2::facet_wrap(~parameter, nrow = nrow, ncol = ncol, scales = "free")
-  
+
   if (!is.null(window)) {
     if (!is.numeric(window) || length(window) != 2)
       stop("'window' should be a numeric vector of length 2.")
@@ -50,24 +50,24 @@ stan_trace <- function(object, pars, include = TRUE,
 # scatterplot -------------------------------------------------------------
 stan_scat <- function(object, pars, unconstrain = FALSE, inc_warmup = FALSE,
                       nrow = NULL, ncol = NULL, ...) {
-  
+
   .check_object(object, unconstrain)
   thm <- rstanvis_theme()
   dots <- .add_aesthetics(list(...), c("fill", "pt_color", "pt_size", "alpha", "shape"))
   if (missing(pars) || length(pars) != 2L)
     stop("'pars' must contain exactly two parameter names", call. = FALSE)
-#   ndivergent <- 
+#   ndivergent <-
 #     .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)[, -1L]
-#   treedepth <- 
+#   treedepth <-
 #     .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)[, -1L]
 #   max_td <- .max_td(object)
 #   div <- unname(rowSums(ndivergent) == 1)
 #   hit_max_td <- sapply(1:nrow(treedepth), function(i) any(treedepth[i,] >= max_td))
   plot_data <- .make_plot_data(
-    object, 
-    pars = pars, 
-    include = TRUE, 
-    inc_warmup = inc_warmup, 
+    object,
+    pars = pars,
+    include = TRUE,
+    inc_warmup = inc_warmup,
     unconstrain = unconstrain
   )
   p1 <- plot_data$samp$parameter == pars[1]
@@ -86,7 +86,7 @@ stan_scat <- function(object, pars, unconstrain = FALSE, inc_warmup = FALSE,
 #     geom_point(data = td, aes_string("x","y"), color = "yellow") +
     ggplot2::labs(x = pars[1], y = pars[2]) +
     thm
-  
+
   graph
 }
 
@@ -105,10 +105,10 @@ stan_hist <- function(object, pars, include = TRUE,
   base <- ggplot2::ggplot(plot_data$samp, ggplot2::aes_string(x = "value", y = "..density.."))
   graph <-
     base +
-    do.call(ggplot2::geom_histogram, dots) + 
+    do.call(ggplot2::geom_histogram, dots) +
     ggplot2::xlab("") +
     thm
-  
+
   if (plot_data$nparams == 1)
     graph + ggplot2::xlab(unique(plot_data$samp$parameter))
   else
@@ -124,7 +124,7 @@ stan_dens <- function(object, pars, include = TRUE,
                       nrow = NULL, ncol = NULL,
                       ...,
                       separate_chains = FALSE) {
-  
+
   .check_object(object, unconstrain)
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
   clrs <- rep_len(rstanvis_aes_ops("chain_colors"), plot_data$nchains)
@@ -134,14 +134,14 @@ stan_dens <- function(object, pars, include = TRUE,
     dots <- .add_aesthetics(list(...), c("fill", "color"))
     graph <-
       base +
-      do.call(ggplot2::geom_density, dots) + 
+      do.call(ggplot2::geom_density, dots) +
       thm
   } else {
     dots <- .add_aesthetics(list(...), c("color", "alpha"))
     dots$mapping <- ggplot2::aes_string(fill = "chain")
     graph <-
       base +
-      do.call(ggplot2::geom_density, dots) + 
+      do.call(ggplot2::geom_density, dots) +
       ggplot2::scale_fill_manual(values = clrs) +
       thm
   }
@@ -180,11 +180,11 @@ stan_ac <- function(object, pars, include = TRUE,
     y_scale <- ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25))
     base <- ggplot2::ggplot(ac_dat, ggplot2::aes_string(x = "lag", y = "ac"))
     graph <- base +
-      do.call(ggplot2::geom_bar, dots) + 
+      do.call(ggplot2::geom_bar, dots) +
       y_scale +
       ac_labs +
       thm
-    
+
     if (plot_data$nparams == 1) {
       y_lab <- ggplot2::ylab(paste0(y_lab, " (", pars,")"))
       return(graph + y_lab)
@@ -198,14 +198,14 @@ stan_ac <- function(object, pars, include = TRUE,
     "Partial autocorrelation" else "Autocorrelation")
   y_scale <- ggplot2::scale_y_continuous(breaks = seq(0, 1, 0.25),
                                 labels = c("0","","0.5","",""))
-  
+
   base <- ggplot2::ggplot(ac_dat, ggplot2::aes_string(x = "lag", y = "ac"))
   graph <- base +
     do.call(ggplot2::geom_bar, dots) +
     y_scale +
     ac_labs +
     thm
-  
+
   if (plot_data$nparams == 1) {
     graph <- graph + ggplot2::facet_wrap(~chains, nrow = nrow, ncol = ncol)
     return(graph)
@@ -220,18 +220,18 @@ stan_ac <- function(object, pars, include = TRUE,
 # parameter estimates -----------------------------------------------------
 stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
                       ...) {
-  
+
   inc_warmup <- FALSE
   .check_object(object, unconstrain)
   thm <- rstanvis_multiparam_theme()
   plot_data <- .make_plot_data(object, pars, include, inc_warmup, unconstrain)
-  
-  color_by_rhat <- FALSE # FIXME 
+
+  color_by_rhat <- FALSE # FIXME
   dots <- list(...)
   defs <- list(point_est = "median", show_density = FALSE,
                show_outer_line = TRUE, ci_level = 0.8, outer_level = 0.95,
-               fill_color = rstanvis_aes_ops("fill"), 
-               outline_color = rstanvis_aes_ops("color"), 
+               fill_color = rstanvis_aes_ops("fill"),
+               outline_color = rstanvis_aes_ops("color"),
                est_color = rstanvis_aes_ops("color"))
   args <- names(defs)
   dotenv <- list()
@@ -267,7 +267,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
   xy.df <- data.frame(params = rownames(statmat), y, statmat)
   colnames(xy.df) <- c("params", "y", "mean", "ll", "l", "m", "h", "hh")
   if (dotenv[["point_est"]] == "mean") xy.df$m <- xy.df$mean
-  
+
   p.base <- ggplot2::ggplot(xy.df)
   p.name <- ggplot2::scale_y_continuous(breaks = y, labels = param_names,
                                limits = c(0.5, nparams + 1))
@@ -309,7 +309,7 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
         mapping = ggplot2::aes_string("x", "y", group = "name"),
         color = outline_color
       )
-    
+
     #shaded interval
     y.poly <- x.poly <- matrix(0, nrow = npoint.den + 2, ncol = nparams)
     for(i in 1:nparams){
@@ -325,21 +325,21 @@ stan_plot <- function(object, pars, include = TRUE, unconstrain = FALSE,
                           name = rep(param_names, each = npoint.den + 2))
     p.poly <- ggplot2::geom_polygon(data = df.poly, mapping=ggplot2::aes_string("x", "y", group = "name", fill = "y"))
     p.col <- ggplot2::scale_fill_gradient(low = fill_color, high = fill_color, guide = "none")
-    
+
     #point estimate
     if (color_by_rhat) {
       rhat_colors <- dotenv[["rhat_colors"]]
       p.point <- ggplot2::geom_segment(ggplot2::aes_string(x = "m", xend = "m", y = "y", yend = "y + 0.25",
-                                         color = "rhat_id"), size = 1.5)
+                                         color = "rhat_id"), linewidth = 1.5)
       p.all + p.poly + p.den + p.col + p.point + rhat_colors #+ rhat_lgnd
     } else {
       p.point <- ggplot2::geom_segment(ggplot2::aes_string(x = "m", xend = "m", y = "y", yend = "y + 0.25"),
-                              colour = est_color, size = 1.5)
+                              colour = est_color, linewidth = 1.5)
       p.all + p.poly + p.den + p.col + p.point
     }
   } else {
     p.ci.2 <- ggplot2::geom_segment(ggplot2::aes_string(x = "l", xend = "h", y = "y", yend = "y"),
-                           colour = fill_color, size = 2)
+                           colour = fill_color, linewidth = 2)
     if (color_by_rhat) {
       p.point <- ggplot2::geom_point(ggplot2::aes_string(x = "m", y = "y", fill = "rhat_id"),
                             color = "black", shape = 21, size = 4)
@@ -379,13 +379,13 @@ stan_mcse <- function(object, pars, ...) {
 
 
 # NUTS --------------------------------------------------------------------
-stan_diag <- function(object, 
+stan_diag <- function(object,
                       information = c("sample","stepsize","treedepth","divergence"),
                       chain = 0, ...) {
   .vb_check(object)
   if ("pars" %in% names(list(...)))
     stop("'stan_diag' does not accept a 'pars' argument.")
-  nchains <- if (is.stanreg(object)) 
+  nchains <- if (is.stanreg(object))
     ncol(object$stanfit) else ncol(object)
   if (!isTRUE(nchains > 1))
     stop("'stan_diag' requires more than one chain.", call. = FALSE)
@@ -400,13 +400,13 @@ stan_stepsize <- function(object, chain = 0, ...) {
   stepsize <- .sampler_params_post_warmup(object, "stepsize__", as.df = TRUE)
   lp <- extract(if (is.stanreg(object)) object$stanfit else object,
                        pars = "lp__", permuted = FALSE)[,,1L]
-  
+
   graphs <- list()
   graphs$stepsize_vs_lp <- .sampler_param_vs_param(p = lp, sp = stepsize[,-1L],
                                                    p_lab = .LP_LAB,
                                                    sp_lab = .STEPSIZE_LAB,
                                                    chain = chain, violin = TRUE)
-  
+
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)
   graphs$stepsize_vs_metrop <-
     .sampler_param_vs_sampler_param_violin(round(stepsize[,-1L], 4), metrop[,-1L],
@@ -435,7 +435,7 @@ stan_sample <- function(object, chain = 0, ...) {
     .sampler_param_vs_param(p = lp, sp = metrop[,-1L], p_lab = .LP_LAB,
                             sp_lab = .METROP_LAB, chain = chain) +
     thm
-  
+
   .nuts_return(graphs, ...)
 }
 
@@ -449,9 +449,9 @@ stan_treedepth <- function(object, chain = 0, ...) {
   treedepth <- .sampler_params_post_warmup(object, "treedepth__", as.df = TRUE)
   ndivergent <- .sampler_params_post_warmup(object, "divergent__", as.df = TRUE)
   metrop <- .sampler_params_post_warmup(object, "accept_stat__", as.df = TRUE)
-  
+
   graphs <- graphs_nd <- list()
-  
+
   graphs$treedepth_vs_lp <-
     .sampler_param_vs_param(p = lp, sp = treedepth[, -1L],
                             p_lab = .LP_LAB,
@@ -462,11 +462,11 @@ stan_treedepth <- function(object, chain = 0, ...) {
                                            lab_x = .TREEDEPTH_LAB,
                                            lab_y = .METROP_LAB,
                                            chain = chain)
-  
+
   graphs_nd$treedepth_ndivergent <-
     .treedepth_ndivergent_hist(treedepth, ndivergent, chain = chain,
                                divergent = "All")
-  
+
   any_nd <- any(ndivergent[,-1L] != 0)
   if (any_nd) {
     graphs_nd$treedepth_ndivergent0 <-
@@ -516,7 +516,7 @@ stan_par <- function(object, par, chain = 0, ...) {
   thm <- rstanvis_theme()
   samp <- extract(object, pars = c("lp__", par), permuted = FALSE)
   par_sel <- which(dimnames(samp)$parameters == par)
-  
+
   cntrl <- object@stan_args[[1L]]$control
   if (is.null(cntrl))
     max_td <- 11
@@ -551,7 +551,7 @@ stan_par <- function(object, par, chain = 0, ...) {
     .sampler_param_vs_param(p = par_samp, sp = stepsize,
                             p_lab = par, sp_lab = .STEPSIZE_LAB,
                             chain = chain, violin = TRUE)
-  
+
   graphs <- lapply(graphs, function(x) x + thm)
   .nuts_return(graphs, ...)
 }
