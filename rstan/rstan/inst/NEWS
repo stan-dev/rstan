@@ -1,3 +1,7 @@
+Fri January 10, 2023
+
+1. `StanHeaders`: C++17 Compatibility Backports
+
 Sat April 23, 2022
 
 1. Fixed environment variables in `rstanplugin` (#1006).
