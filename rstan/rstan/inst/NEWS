@@ -1,6 +1,7 @@
 Fri February 10, 2023
 
-1. `StanHeaders`: C++17 Compatibility Backports
+1. `StanHeaders`: C++17 Compatibility Backports.
+2. `stanc3`: Fix ternary ops with expressions (#1035).
 
 Tue November 22, 2022
 
