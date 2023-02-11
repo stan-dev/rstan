@@ -19,11 +19,12 @@
              save_dso = TRUE, verbose = FALSE, 
              auto_write = rstan_options("auto_write"), 
              obfuscate_model_name = TRUE, 
-             allow_undefined = FALSE,
-             standalone_functions = FALSE,
-             use_opencl = FALSE,
-             warn_pedantic = FALSE,
-             warn_uninitialized = FALSE,
+             allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+             allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+             standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+             use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+             warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+             warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)),
              includes = NULL,
              isystem = c(if (!missing(file)) dirname(file), getwd()))
 }
@@ -71,6 +72,8 @@
   \item{obfuscate_model_name}{A logical scalar that is \code{TRUE} by default and
     passed to \code{\link{stanc}}.}
   \item{allow_undefined}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
+  \item{allow_optimizations}{A logical scalar that is \code{FALSE} by default and
     passed to \code{\link{stanc}}.}
   \item{standalone_functions}{A logical scalar that is \code{FALSE} by default and
     passed to \code{\link{stanc}}.}

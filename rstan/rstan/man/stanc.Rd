@@ -12,19 +12,21 @@ Translate Stan model specification to C++ code
 \usage{
   stanc(file, model_code = '', model_name = "anon_model", verbose = FALSE,
         obfuscate_model_name = TRUE,
-        allow_undefined = FALSE,
-        standalone_functions = FALSE,
-        use_opencl = FALSE,
-        warn_pedantic = FALSE,
-        warn_uninitialized = FALSE,
+        allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+        allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+        standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+        use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+        warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+        warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)),
         isystem = c(if (!missing(file)) dirname(file), getwd())) 
   stanc_builder(file, isystem = c(dirname(file), getwd()),
                 verbose = FALSE, obfuscate_model_name = FALSE,
-                allow_undefined = FALSE,
-                standalone_functions = FALSE,
-                use_opencl = FALSE,
-                warn_pedantic = FALSE,
-                warn_uninitialized = FALSE)
+                allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+                allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+                standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+                use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+                warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+                warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)))
 } 
 
 \arguments{
@@ -51,6 +53,8 @@ Translate Stan model specification to C++ code
     whether to allow Stan functions to be declared but not defined in \code{file}
     or \code{model_code}. If \code{TRUE}, then it is the caller's responsibility
     to provide a function definition in another header file or linked shared object.}
+  \item{allow_optimizations}{A logical scalar defaulting to \code{FALSE} indicating
+    whether to allow level-1 compiler optimization to the \pkg{Stan} code.}
   \item{standalone_functions}{A logical scalar defaulting to \code{FALSE} indicating
     whether to generate the standalone functions \pkg{C++} code.}
   \item{use_opencl}{A logical scalar defaulting to \code{FALSE} indicating
@@ -58,8 +62,7 @@ Translate Stan model specification to C++ code
   \item{warn_pedantic}{A logical scalar defaulting to \code{FALSE} indicating
     whether to emit warnings about common mistakes in \pkg{Stan} programs.}
   \item{warn_uninitialized}{A logical scalar defaulting to \code{FALSE} indicating
-    whether emit warnings about uninitialized variables.
-    This is currently an experimental feature.}
+    whether emit warnings about uninitialized variables.}
 } 
 
 \details{

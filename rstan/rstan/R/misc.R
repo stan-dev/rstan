@@ -1602,6 +1602,8 @@ parse_data <- function(cppcode) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
+  # Remove model internal name _data__ suffix for stanc3 v2.30+
+  objects <- gsub("_data__$", "", objects)
   # Remove model internal name underscores in case of Eigen::Maps
   objects <- gsub("__$", "\\1", objects)
   # Remove any bad regex matches that found the end of an Eigen::Map.
