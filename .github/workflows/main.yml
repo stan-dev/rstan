@@ -80,6 +80,7 @@ jobs:
           remotes::install_cran("rcmdcheck")
           remotes::install_cran("rstantools", type = "source")
           remotes::install_cran("sessioninfo")
+          remotes::install_github("hsbadr/RcppEigen@develop")
           if (utils::packageVersion("sessioninfo") >= "1.2.1") {
             sessioninfo::session_info(pkgs = "installed", include_base = TRUE)
           } else {
