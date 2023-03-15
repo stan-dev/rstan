@@ -1,3 +1,8 @@
+Tue March 14, 2023
+
+1. Moved `stanc3` JS into `StanHeaders`.
+2. Linking to `RcppEigen` >= v3.4 (development).
+
 Tue November 22, 2022
 
 1. Updated Stan to C++ compiler v2.31.0 (development).
