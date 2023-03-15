@@ -1,51 +1,3 @@
-# PosteriorBootstrap
-
-<details>
-
-* Version: 0.1.1
-* GitHub: https://github.com/alan-turing-institute/PosteriorBootstrap
-* Source code: https://github.com/cran/PosteriorBootstrap
-* Date/Publication: 2021-05-14 13:02:12 UTC
-* Number of recursive dependencies: 103
-
-Run `revdepcheck::revdep_details(, "PosteriorBootstrap")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking tests ...
-    ```
-      Running ‘testthat.R’
-     ERROR
-    Running the tests in ‘tests/testthat.R’ failed.
-    Last 13 lines of output:
-       1. ├─base::suppressWarnings(...) at test_anpl.R:177:2
-       2. │ └─base::withCallingHandlers(...)
-       3. ├─rstan::vb(...)
-       4. └─rstan::vb(...)
-       5.   └─rstan (local) .local(object, ...)
-       6.     └─sampler$call_sampler(c(args, dotlist))
-      
-      [ FAIL 1 | WARN 0 | SKIP 3 | PASS 51 ]
-      Error: Test failures
-      Execution halted
-      
-       *** caught segfault ***
-      address 0x18, cause 'memory not mapped'
-      An irrecoverable exception occurred. R is aborting now ...
-      Segmentation fault (core dumped)
-    ```
-
-## In both
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespaces in Imports field not imported from:
-      ‘Rcpp’ ‘StanHeaders’ ‘dplyr’ ‘ggplot2’ ‘gridExtra’ ‘rstan’ ‘tibble’
-      All declared Imports should be used.
-    ```
-
 # ProbReco
 
 <details>
@@ -161,8 +113,8 @@ Run `revdepcheck::revdep_details(, "prophet")` for more info
      ERROR
     Running the tests in ‘tests/testthat.R’ failed.
     Last 13 lines of output:
-      Chain 4:                10.184 seconds (Sampling)
-      Chain 4:                17.088 seconds (Total)
+      Chain 4:                2.211 seconds (Sampling)
+      Chain 4:                8.751 seconds (Total)
       Chain 4: 
       [ FAIL 0 | WARN 2 | SKIP 0 | PASS 375 ]
       
@@ -170,7 +122,7 @@ Run `revdepcheck::revdep_details(, "prophet")` for more info
       > 
       > proc.time()
          user  system elapsed 
-      177.381   3.718 182.427 
+      170.307   3.773 174.654 
       
        *** caught segfault ***
       address 0x18, cause 'memory not mapped'
@@ -182,9 +134,9 @@ Run `revdepcheck::revdep_details(, "prophet")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 53.7Mb
+      installed size is 53.9Mb
       sub-directories of 1Mb or more:
-        libs  53.0Mb
+        libs  53.1Mb
     ```
 
 *   checking dependencies in R code ... NOTE
@@ -224,13 +176,13 @@ Run `revdepcheck::revdep_details(, "rstanarm")` for more info
       /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:650:74: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
         650 |   return internal::first_aligned<int(unpacket_traits<DefaultPacketType>::alignment),Derived>(m);
             |                                                                          ^~~~~~~~~
-      g++ -std=gnu++14 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o sourceCpp_2.so file9f492ccb16e3.o /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/rstan/lib//libStanServices.a -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/lib/ -lStanHeaders -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppParallel/lib/ -ltbb -L/usr/lib/R/lib -lR
+      g++ -std=gnu++14 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o sourceCpp_2.so file2e42c43ba7a.o /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/rstan/lib//libStanServices.a -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/lib/ -lStanHeaders -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppParallel/lib/ -ltbb -L/usr/lib/R/lib -lR
       [ FAIL 0 | WARN 0 | SKIP 0 | PASS 191 ]
       > 
       > 
       > proc.time()
          user  system elapsed 
-       49.631   3.365  53.087 
+       51.192   3.339  54.601 
       
        *** caught segfault ***
       address 0x18, cause 'memory not mapped'
