@@ -21,7 +21,7 @@ OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
   assign("stanc_ctx", V8::v8(), envir = topenv())
-  stanc_js <- system.file("stanc.js", package = "rstan")
+  stanc_js <- system.file("stanc.js", package = "StanHeaders")
   if (!file.exists(stanc_js)) {
     warning(paste0("Default stancjs compiler not found, ",
                    "downloading the current version from github."))
