@@ -21,6 +21,7 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
                 "#include <stan/math/prim/fun/Eigen.hpp>",
+                "#include <stan/math/prim/meta.hpp>",
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
@@ -31,7 +32,7 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
   code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
-  code <- gsub("= nullptr", "= 0", code, fixed = TRUE)
+  code <- gsub("pstream__(\\s*|)=(\\s*|)nullptr", "pstream__ = 0", code)
   return(code)
 }
 
@@ -101,6 +102,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     # workaround for packages with src/install.libs.R
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
+  if (inherits(compiled, "try-error")) stop("Compilation failed!")
   if (!isTRUE(show_compiler_warnings)) {
     sink(type = "output")
     close(zz)
