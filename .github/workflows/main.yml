@@ -102,6 +102,11 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
+      - name: Verify Math Version
+        run: |
+          readLines(system.file("include","stan","math","version.hpp", package="StanHeaders"))
+        shell: Rscript {0}
+
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
@@ -122,7 +127,9 @@ jobs:
 
       - name: Show testthat output
         if: always()
-        run: find check -name './rstan/rstan/testthat.Rout*' -exec cat '{}' \; || true
+        run: |
+          rm -rf check/rstan.Rcheck/rstan check/rstan.Rcheck/*pkg_src
+          find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
       - name: Upload check results
