@@ -549,7 +549,7 @@ color_vector_chain <- function(n) {
   chain_data <- data.frame(x = as.factor(df_x[, chain]), y = df_y[, chain])
   graph + ggplot2::geom_violin(
     data = chain_data,
-    mapping = ggplot2::ggplot2::aes(x = .data$x, y = .data$y),
+    mapping = ggplot2::aes(x = .data$x, y = .data$y),
     color = chain_clr,
     fill = chain_fill,
     alpha = 0.5
