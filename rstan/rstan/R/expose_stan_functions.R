@@ -21,6 +21,7 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
                 "#include <stan/math/prim/fun/Eigen.hpp>",
+                "#include <stan/math/prim/meta.hpp>",
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
