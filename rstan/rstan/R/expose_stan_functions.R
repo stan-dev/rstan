@@ -31,7 +31,7 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
   code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
-  code <- gsub("= nullptr)", "= 0)", code, fixed = TRUE)
+  code <- gsub("pstream__(\\s*|)=(\\s*|)nullptr", "pstream__ = 0", code)
   return(code)
 }
 
