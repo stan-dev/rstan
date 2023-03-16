@@ -1,3 +1,7 @@
+Thu March 16, 2023
+
+1. Fix `rstan::expose_stan_functions` C++ compilation error.
+
 Tue March 14, 2023
 
 1. Moved `stanc3` JS into `StanHeaders`.
