@@ -126,7 +126,9 @@ jobs:
 
       - name: Show testthat output
         if: always()
-        run: find check -name './rstan/rstan/testthat.Rout*' -exec cat '{}' \; || true
+        run: |
+          rm -rf check/rstan.Rcheck/rstan check/rstan.Rcheck/*pkg_src
+          find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
       - name: Upload check results
