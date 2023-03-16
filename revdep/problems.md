@@ -113,8 +113,8 @@ Run `revdepcheck::revdep_details(, "prophet")` for more info
      ERROR
     Running the tests in ‘tests/testthat.R’ failed.
     Last 13 lines of output:
-      Chain 4:                2.211 seconds (Sampling)
-      Chain 4:                8.751 seconds (Total)
+      Chain 4:                9.096 seconds (Sampling)
+      Chain 4:                15.621 seconds (Total)
       Chain 4: 
       [ FAIL 0 | WARN 2 | SKIP 0 | PASS 375 ]
       
@@ -122,7 +122,7 @@ Run `revdepcheck::revdep_details(, "prophet")` for more info
       > 
       > proc.time()
          user  system elapsed 
-      170.307   3.773 174.654 
+      164.667   3.417 168.135 
       
        *** caught segfault ***
       address 0x18, cause 'memory not mapped'
@@ -176,13 +176,13 @@ Run `revdepcheck::revdep_details(, "rstanarm")` for more info
       /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:650:74: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
         650 |   return internal::first_aligned<int(unpacket_traits<DefaultPacketType>::alignment),Derived>(m);
             |                                                                          ^~~~~~~~~
-      g++ -std=gnu++14 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o sourceCpp_2.so file2e42c43ba7a.o /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/rstan/lib//libStanServices.a -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/lib/ -lStanHeaders -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppParallel/lib/ -ltbb -L/usr/lib/R/lib -lR
+      g++ -std=gnu++14 -shared -L/usr/lib/R/lib -Wl,-Bsymbolic-functions -Wl,-z,relro -o sourceCpp_2.so file45d34535c29d.o /mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/rstan/lib//libStanServices.a -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/lib/ -lStanHeaders -L/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/rstanarm/RcppParallel/lib/ -ltbb -L/usr/lib/R/lib -lR
       [ FAIL 0 | WARN 0 | SKIP 0 | PASS 191 ]
       > 
       > 
       > proc.time()
          user  system elapsed 
-       51.192   3.339  54.601 
+       47.671   3.565  51.331 
       
        *** caught segfault ***
       address 0x18, cause 'memory not mapped'

@@ -1,3 +1,81 @@
+# nlmixr2est
+
+<details>
+
+* Version: 2.1.3
+* GitHub: https://github.com/nlmixr2/nlmixr2est
+* Source code: https://github.com/cran/nlmixr2est
+* Date/Publication: 2022-11-10 17:00:19 UTC
+* Number of recursive dependencies: 202
+
+Run `revdepcheck::revdep_details(, "nlmixr2est")` for more info
+
+</details>
+
+## In both
+
+*   checking whether package ‘nlmixr2est’ can be installed ... ERROR
+    ```
+    Installation failed.
+    See ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/nlmixr2est/new/nlmixr2est.Rcheck/00install.out’ for details.
+    ```
+
+## Installation
+
+### Devel
+
+```
+* installing *source* package ‘nlmixr2est’ ...
+** package ‘nlmixr2est’ successfully unpacked and MD5 sums checked
+** using staged installation
+--------[begin src/Makevars]--------
+# -*- mode: makefile-gmake -*-
+ARMA=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/RcppArmadillo/include
+BH=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/BH/include
+RCPP=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/Rcpp/include
+EG=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/RcppEigen/include
+SH=-isystem'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/new/StanHeaders/include/src' 
+...
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+Error: .onLoad failed in loadNamespace() for 'rxode2parse', details:
+  call: NULL
+  error: rxode2parse compiled with dparser '1.3.1.9' but dparser '1.3.1.10' is loaded
+Recompile rxode2parse with the this version of dparser
+Execution halted
+ERROR: lazy loading failed for package ‘nlmixr2est’
+* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/nlmixr2est/new/nlmixr2est.Rcheck/nlmixr2est’
+
+
+```
+### CRAN
+
+```
+* installing *source* package ‘nlmixr2est’ ...
+** package ‘nlmixr2est’ successfully unpacked and MD5 sums checked
+** using staged installation
+--------[begin src/Makevars]--------
+# -*- mode: makefile-gmake -*-
+ARMA=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/RcppArmadillo/include
+BH=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/BH/include
+RCPP=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/Rcpp/include
+EG=/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/nlmixr2est/RcppEigen/include
+SH=-isystem'/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/library/StanHeaders/old/StanHeaders/include/src' 
+...
+** R
+** inst
+** byte-compile and prepare package for lazy loading
+Error: .onLoad failed in loadNamespace() for 'rxode2parse', details:
+  call: NULL
+  error: rxode2parse compiled with dparser '1.3.1.9' but dparser '1.3.1.10' is loaded
+Recompile rxode2parse with the this version of dparser
+Execution halted
+ERROR: lazy loading failed for package ‘nlmixr2est’
+* removing ‘/mnt/local_drive/badr/tmp/revdepcheck/StanHeaders_revdep/StanHeaders/revdep/checks/nlmixr2est/old/nlmixr2est.Rcheck/nlmixr2est’
+
+
+```
 # ProbReco
 
 <details>
