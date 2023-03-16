@@ -1,6 +1,6 @@
 Thu March 16, 2023
 
-1. Fix `rstan::expose_stan_functions` C++ compilation error.
+1. Fix `rstan::expose_stan_functions` C++ compilation error (#1050).
 
 Tue March 14, 2023
 
