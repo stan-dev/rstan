@@ -1,6 +1,8 @@
 Thu March 16, 2023
 
-1. Fix `rstan::expose_stan_functions` C++ compilation error (#1050).
+1. Fixed `rstan::expose_stan_functions()` C++ compilation error (#1050).
+2. Fixed `rstan::gqs()` with transformed parameters (#949).
+3. Changed deprecated ggplot2 syntax to current recommendations (#1026).
 
 Tue March 14, 2023
 
