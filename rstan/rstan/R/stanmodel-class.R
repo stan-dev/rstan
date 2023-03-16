@@ -944,7 +944,8 @@ setMethod("gqs", "stanmodel",
   p_names <- unique(sub("\\..*$", "", sampler$constrained_param_names(TRUE, FALSE)))
   all_names <- sampler$constrained_param_names(TRUE, TRUE)
   some_names <- sampler$constrained_param_names(TRUE, FALSE)
-  draws_colnames <- sub("\\.", "[", some_names)
+  # exclude transformed parameters from draws
+  draws_colnames <- sub("\\.", "[", sampler$constrained_param_names(FALSE, FALSE))
   draws_colnames <- gsub("\\.", ",", draws_colnames)
   draws_colnames[grep("\\[", draws_colnames)] <- 
     paste0(draws_colnames[grep("\\[", draws_colnames)], "]")

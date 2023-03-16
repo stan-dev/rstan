@@ -1,10 +1,10 @@
-.add_aesthetics <- function(dots, to_add) { 
+.add_aesthetics <- function(dots, to_add) {
   # Add some default aesthetics if not included in ...
   # @param dots list(...)
-  # @param to_add = character vector 
+  # @param to_add = character vector
   add_names <- gsub("pt_", "", to_add)
   for (j in seq_along(to_add)) {
-    if (!add_names[j] %in% names(dots)) 
+    if (!add_names[j] %in% names(dots))
       dots[[add_names[j]]] <- rstanvis_aes_ops(to_add[j])
   }
   dots
@@ -28,7 +28,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 .check_object <- function(object, unconstrain = FALSE) {
   if (is.stanreg(object)) {
     if (object$algorithm == "optimizing")
-      stop("Plots not yet available for optimization (algorithm='optimizing')", 
+      stop("Plots not yet available for optimization (algorithm='optimizing')",
            call. = FALSE)
     if (unconstrain)
       stop("Option 'unconstrain' not yet available for stanreg objects.",
@@ -69,13 +69,13 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 }
 .make_plot_data <- function(object, pars, include = TRUE,
                             inc_warmup = FALSE, unconstrain = FALSE) {
-  
+
   window <- NULL
   if (is.stanreg(object)) {
     sim <- object$stanfit@sim
   }
   else sim <- object@sim
-  
+
   nopars <- missing(pars)
   if (is.stanfit(object) && !nopars) {
     if ("log-posterior" %in% pars)
@@ -84,23 +84,23 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   if (!include) {
     if (nopars) stop("pars must be specified if include=FALSE.", call. = FALSE)
     else {
-      if (is.stanreg(object)) 
+      if (is.stanreg(object))
         pars <- setdiff(sim$fnames_oi, pars)
-      else 
+      else
         pars <- setdiff(sim$pars_oi, pars)
     }
   }
   if (nopars) {
-    if (is.stanreg(object)) 
+    if (is.stanreg(object))
       pars <- names(object$coefficients)
-    else 
+    else
       pars <- setdiff(sim$pars_oi, c("lp__", "log-posterior"))
   }
   else {
-    if (!is.stanreg(object)) 
+    if (!is.stanreg(object))
       pars <- check_pars_second(sim, pars)
   }
-  
+
   pars <- remove_empty_pars(pars, sim$dims_oi)
   if (unconstrain && "lp__" %in% pars) {
     if (length(pars) == 1L) stop("Can't unconstrain lp__", call. = FALSE)
@@ -113,13 +113,13 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   tidx <- lapply(tidx, function(x) attr(x, "row_major_idx"))
   tidx <- unlist(tidx, use.names = FALSE)
   num_plots <- length(tidx)
-  
+
   if (nopars && num_plots > 10) {
     # if pars is not specified then default to showing 10 of the parameters
     tidx <- tidx[1:10]
     message("'pars' not specified. Showing first 10 parameters by default.")
   }
-  
+
   if (!is.null(window)) {
     window <- sort(window)
     if (window[1] < 1) window[1] <- 1
@@ -137,7 +137,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     stop("the given window does not include sample")
   }
   if (window[1] > sim$warmup[1]) inc_warmup <- FALSE
-  
+
   thin <- sim$thin
   warmup2 <- sim$warmup2[1]
   warmup <- sim$warmup
@@ -147,7 +147,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   start_idx <- (if (warmup2 == 0) (start_i - warmup) else start_i) %/% thin
   if (start_idx < 1)  start_idx <- 1
   idx <- seq.int(start_idx, by = 1, length.out = window_size)
-  
+
   if (unconstrain) {
     sim$samples <- .upars(object)
     sel <- grep(paste(pars, collapse ="|"), names(sim$samples[[1]]), value = TRUE)
@@ -166,21 +166,21 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   nchains <- length(samp_use)
 
   if (unconstrain) {
-    if (is.stanreg(object)) 
+    if (is.stanreg(object))
       object <- object$stanfit
     pblock <- .get_stan_params(object)
     pars2 <- unlist(lapply(strsplit(pars, "\\["), "[[", 1))
     not_pblock <- length(setdiff(unique(pars2), pblock))
     if (not_pblock)
       stop("If 'unconstrain' is TRUE only variables declared in the ",
-           "'parameters' block can be included in 'pars'.", 
+           "'parameters' block can be included in 'pars'.",
            call. = FALSE)
   }
-  
+
   dat <- .reshape_sample(samp_use)
   dat$iteration <- idx * thin
   dat$chain <- factor(dat$chain)
-  fnames <- if (unconstrain) 
+  fnames <- if (unconstrain)
     names(samp_use[[1]]) else sim$fnames_oi[tidx]
   lp <- which(dat$parameter == "lp__")
   if (!identical(lp, integer(0))) {
@@ -197,7 +197,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 # get parameter names for parameters block only
 .get_stan_params <- function(object) {
   stopifnot(is.stanfit(object))
-  params <- grep("context__.vals_r", fixed = TRUE, value = TRUE, 
+  params <- grep("context__.vals_r", fixed = TRUE, value = TRUE,
                  x = strsplit(get_cppcode(get_stanmodel(object)), "\n")[[1]])
   params <- sapply(strsplit(params, "\""), FUN = function(x) x[[2]])
   intersect(params, object@model_pars)
@@ -205,7 +205,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
 
 # unconstrain
 .upars <- function(object, permuted = FALSE, inc_warmup = TRUE) {
-  if (is.stanreg(object)) 
+  if (is.stanreg(object))
     object <- object$stanfit
   pars <- extract(object, permuted = permuted, inc_warmup = inc_warmup)
   nchains <- ncol(pars)
@@ -221,17 +221,17 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     upars <- aperm(upars, c(2, 3, 1))
   }
   else upars <- aperm(upars, c(3, 1, 2))
-  
+
   pblock <- .get_stan_params(object)
   mark <- c()
   for (p in pblock) {
     patt <- paste0("^", p, "|^", p, "\\[")
-    sel <- grep(patt, param_names)  
+    sel <- grep(patt, param_names)
     if (length(sel))
       mark <- c(mark, sel)
   }
   param_names <- param_names[sort(mark)]
-  
+
   cpp_code <- strsplit(get_cppcode(get_stanmodel(object)), "\n")[[1]]
   param_names <- .remove_udiag_pars(cpp_code, pblock, param_names)
 
@@ -249,7 +249,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
   for (patt in patts) {
     to_drop <- c()
     for (p in pblock) {
-      par_mentions = grep(paste0("(",p,")"), x = cpp_code, 
+      par_mentions = grep(paste0("(",p,")"), x = cpp_code,
                           fixed = TRUE, value = TRUE)
       if (length(grep(patt, par_mentions))) {
         for (v in grep(p, param_names)) {
@@ -262,7 +262,7 @@ is.stanfit <- function(x) inherits(x, "stanfit")
     if (length(to_drop))
       param_names <- param_names[-to_drop]
   }
-  
+
   return(param_names)
 }
 
@@ -323,7 +323,7 @@ color_vector_chain <- function(n) {
   }
   if (!is.null(pars)) smry <- summary(object, pars = pars)$summary
   else smry <- summary(object)$summary
-  
+
   xlab <- switch(which,
                  rhat = "Rhat statistic",
                  n_eff_ratio = "Effective sample size / Sample size",
@@ -338,7 +338,7 @@ color_vector_chain <- function(n) {
   plot_labs <- ggplot2::labs(y = "", x = xlab)
   base <- ggplot2::ggplot(df, ggplot2::aes(x = stat))
   base +
-    do.call(ggplot2::geom_histogram, dots) + 
+    do.call(ggplot2::geom_histogram, dots) +
     plot_labs +
     thm
 }
@@ -376,14 +376,14 @@ color_vector_chain <- function(n) {
 }
 
 .max_td <- function(x) {
-  if (is.stanreg(x)) 
+  if (is.stanreg(x))
     x <- x$stanfit
   cntrl <- x@stan_args[[1L]]$control
   if (is.null(cntrl)) 11
   else {
     max_td <- cntrl$max_treedepth
     if (is.null(max_td)) 11
-    else max_td  
+    else max_td
   }
 }
 
@@ -444,8 +444,8 @@ color_vector_chain <- function(n) {
   if (violin) df$sp <- as.factor(round(df$sp, 4))
   if (!is.null(divergent)) df$divergent <- do.call("c", divergent)
   if (!is.null(hit_max_td)) df$hit_max_td <- do.call("c", hit_max_td)
-  
-  base <- ggplot2::ggplot(df, ggplot2::aes_string(x = "sp", y = "p")) + xy_labs
+
+  base <- ggplot2::ggplot(df, ggplot2::aes(x = .data$sp, y = .data$p)) + xy_labs
   if (chain == 0) {
     if (violin)
       graph <- base + ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
@@ -456,7 +456,7 @@ color_vector_chain <- function(n) {
         graph <-
           graph + ggplot2::geom_point(
             data = subset(df, divergent == 1),
-            mapping = ggplot2::aes_string(x = "sp", y = "p"),
+            mapping = ggplot2::aes(x = .data$sp, y = .data$p),
             color = .NDIVERGENT_CLR,
             fill = .NDIVERGENT_FILL,
             alpha = 0.8,
@@ -467,7 +467,7 @@ color_vector_chain <- function(n) {
         graph <-
           graph + ggplot2::geom_point(
             data = subset(df, hit_max_td == 1),
-            mapping = ggplot2::aes_string(x = "sp", y = "p"),
+            mapping = ggplot2::aes(x = .data$sp, y = .data$p),
             color = .MAXTD_CLR,
             fill = .MAXTD_FILL,
             alpha = 0.8,
@@ -488,7 +488,7 @@ color_vector_chain <- function(n) {
       ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL, ...) +
       ggplot2::geom_violin(
         data = chain_data,
-        mapping = ggplot2::aes_string(x = "sp", y = "p"),
+        mapping = ggplot2::aes(x = .data$sp, y = .data$p),
         color = chain_clr,
         fill = chain_fill,
         ...
@@ -500,22 +500,22 @@ color_vector_chain <- function(n) {
   graph <- graph +
     ggplot2::geom_point(
       data = chain_data,
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = chain_fill,
       ...
     )
   if (smoother) graph <- graph +
     ggplot2::stat_smooth(
       data = chain_data,
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = chain_fill,
       se = FALSE
     )
   if (!is.null(divergent))
-    graph <- graph + 
+    graph <- graph +
      ggplot2::geom_point(
       data = chain_data[chain_data$div == 1, , drop = FALSE],
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = .NDIVERGENT_CLR,
       fill = .NDIVERGENT_FILL,
       size = 3,
@@ -525,7 +525,7 @@ color_vector_chain <- function(n) {
     graph <-
     graph + ggplot2::geom_point(
       data = chain_data[chain_data$hit == 1, , drop = FALSE],
-      mapping = ggplot2::aes_string(x = "sp", y = "p"),
+      mapping = ggplot2::aes(x = .data$sp, y = .data$p),
       color = .MAXTD_CLR,
       fill = .MAXTD_FILL,
       size = 3,
@@ -536,12 +536,12 @@ color_vector_chain <- function(n) {
 
 .sampler_param_vs_sampler_param_violin <- function(df_x, df_y, lab_x, lab_y,
                                                    chain = 0) {
-  
+
   xy_labs <- ggplot2::labs(y = lab_y, x = lab_x)
   df <- data.frame(x = do.call("c", df_x), y = do.call("c", df_y))
   df$x <- as.factor(df$x)
-  
-  base <- ggplot2::ggplot(df, ggplot2::aes_string("x","y")) + xy_labs
+
+  base <- ggplot2::ggplot(df, ggplot2::aes(x = .data$x, y = .data$y)) + xy_labs
   graph <- base + ggplot2::geom_violin(color = .NUTS_CLR, fill = .NUTS_FILL)
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_x))[chain]
@@ -549,7 +549,7 @@ color_vector_chain <- function(n) {
   chain_data <- data.frame(x = as.factor(df_x[, chain]), y = df_y[, chain])
   graph + ggplot2::geom_violin(
     data = chain_data,
-    mapping = ggplot2::aes_string("x", "y"),
+    mapping = ggplot2::aes(x = .data$x, y = .data$y),
     color = chain_clr,
     fill = chain_fill,
     alpha = 0.5
@@ -558,17 +558,17 @@ color_vector_chain <- function(n) {
 
 .p_hist <- function(df, lab, chain = 0, ...) {
   mdf <- .reshape_df(df) # reshape2::melt(df, id.vars = grep("iteration", colnames(df), value = TRUE))
-  dots <- .add_aesthetics(list(...), "size")
+  dots <- .add_aesthetics(list(...), "linewidth")
   dots$binwidth <- diff(range(mdf$value))/30
   dots$fill <- .NUTS_FILL
   dots$color <- .NUTS_CLR
-  base <- ggplot2::ggplot(mdf, ggplot2::aes_string(x = "value")) +
-    do.call(ggplot2::geom_histogram, dots) + 
+  base <- ggplot2::ggplot(mdf, ggplot2::aes(x = .data$value)) +
+    do.call(ggplot2::geom_histogram, dots) +
     ggplot2::labs(x = if (missing(lab)) NULL else lab, y = "")
   if (chain == 0) {
     graph <- base +
-      ggplot2::geom_vline(xintercept = mean(mdf$value), color = .NUTS_VLINE_CLR, size = .8) +
-      ggplot2::geom_vline(xintercept = median(mdf$value), color = .NUTS_VLINE_CLR, lty = 2, size = 1)
+      ggplot2::geom_vline(xintercept = mean(mdf$value), color = .NUTS_VLINE_CLR, linewidth = .8) +
+      ggplot2::geom_vline(xintercept = median(mdf$value), color = .NUTS_VLINE_CLR, lty = 2, linewidth = 1)
     return(graph)
   }
   chain_data <- mdf[mdf$variable == paste0("chain:",chain), ]
@@ -577,9 +577,9 @@ color_vector_chain <- function(n) {
   base + ggplot2::geom_histogram(data = chain_data,
                         binwidth = diff(range(chain_data$value))/30,
                         fill = chain_fill, alpha = 0.5) +
-    ggplot2::geom_vline(xintercept = mean(chain_data$value), color = chain_clr, size = .8) +
+    ggplot2::geom_vline(xintercept = mean(chain_data$value), color = chain_clr, linewidth = .8) +
     ggplot2::geom_vline(xintercept = median(chain_data$value),
-               color = chain_clr, lty = 2, size = 1)
+               color = chain_clr, lty = 2, linewidth = 1)
 }
 
 .treedepth_ndivergent_hist <- function(df_td, df_nd, chain = 0,
@@ -587,13 +587,13 @@ color_vector_chain <- function(n) {
   x_lab <- if (divergent == "All")
     "Treedepth" else paste0("Treedepth (Divergent = ", divergent,")")
   plot_labs <- ggplot2::labs(x = x_lab, y = "")
-  
+
   mdf_td <- .reshape_df(df_td) #reshape2::melt(df_td, id.vars = grep("iteration", colnames(df_td), value = TRUE))
   mdf_nd <- .reshape_df(df_nd) #reshape2::melt(df_nd, id.vars = grep("iteration", colnames(df_nd), value = TRUE))
   mdf <- cbind(mdf_td, div = mdf_nd$value)
   plot_data <- if (divergent == "All") mdf else mdf[mdf$div == divergent,,drop=FALSE]
   if (nrow(plot_data) == 0) return(NULL)
-  
+
   graph <- ggplot2::ggplot(plot_data, ggplot2::aes_q(x = quote(factor(value))), na.rm = TRUE) +
     ggplot2::geom_bar(mapping = ggplot2::aes_q(y=quote(..count../sum(..count..))),
              width=1, fill = .NUTS_FILL, color = .NUTS_CLR) + plot_labs
@@ -604,4 +604,3 @@ color_vector_chain <- function(n) {
   graph + ggplot2::geom_bar(data = chain_data, mapping = ggplot2::aes_q(y=quote(..count../sum(..count..))),
                    fill = chain_fill, width = 1)
 }
-
