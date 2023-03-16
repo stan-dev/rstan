@@ -101,6 +101,11 @@ jobs:
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
+      - name: Verify Math Version
+        run: |
+          readLines(system.file("include","stan","math","version.hpp", package="StanHeaders"))
+        shell: Rscript {0}
+
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
