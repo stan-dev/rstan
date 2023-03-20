@@ -102,7 +102,6 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     # workaround for packages with src/install.libs.R
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-  if (inherits(compiled, "try-error")) stop("Compilation failed!")
   if (!isTRUE(show_compiler_warnings)) {
     sink(type = "output")
     close(zz)
@@ -116,6 +115,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
   DOTS <- list(...)
   if (isTRUE(DOTS$dryRun)) return(code)
+  if (inherits(compiled, "try-error")) stop("Compilation failed!")
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()
   for (x in compiled$functions) {
