@@ -1,27 +1,27 @@
-## test fitting multiple stan model in one R session 
+## test fitting multiple stan model in one R session
 
 library(rstan)
 code1 <- '
   data {
-    int N; 
-  } 
+    int N;
+  }
   parameters {
-    real y[N]; 
-  } 
+    array[N] real;
+  }
   model {
     y ~ normal(0, 1);
   }
-' 
+'
 
 code2 <- '
   data {
-    int J; 
-  } 
+    int J;
+  }
   parameters {
-    real y[J]; 
-  } 
+    real y[J];
+  }
   model {
-    y ~ uniform(0, 1); 
+    y ~ uniform(0, 1);
   }
 '
 

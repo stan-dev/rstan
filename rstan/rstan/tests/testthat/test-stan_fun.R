@@ -6,7 +6,7 @@ test_that("Running stan() in parallel works",  {
   data {
     int N;
   } parameters {
-    real y[N];
+    array[N] real;
   }  model {
     y ~ normal(0, 1);
   }
@@ -48,11 +48,11 @@ test_that("stan() arguments works", {
   diag_fname2 <- "diag2.csv"
   model_code <- "
     parameters {
-      real y[2];
+      array[2] real y;
       real alpha;
     }
     transformed parameters {
-      real y2[2, 2];
+      array[2, 2] real y2;
       y2[1, 1] = y[1];
       y2[1, 2] = -y[1];
       y2[2, 1] = -y[2];

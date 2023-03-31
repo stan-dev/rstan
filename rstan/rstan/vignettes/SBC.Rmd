@@ -7,7 +7,7 @@ vignette: >
   %\VignetteIndexEntry{Simulation Based Calibration}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -37,7 +37,7 @@ model {
 generated quantities { // these adhere to the conventions above
   int y_ = y;
   vector[1] pars_;
-  int ranks_[1] = {pi > pi_};
+  array[1] int ranks_ = {pi > pi_};
   vector[N] log_lik;
   pars_[1] = pi_;
   for (n in 1:y) log_lik[n] = bernoulli_lpmf(1 | pi);
@@ -53,20 +53,20 @@ Notice that it adheres to the following conventions:
   have the same names except for the trailing underscore, such as `pi`.
 * The realizations of the unknown parameters are then conditioned on when drawing from
   the prior predictive distribution in `transformed data` block, which in this
-  case is `int y = binomial_rng(N, pi_);`. To avoid confusion, `y` does not have a 
+  case is `int y = binomial_rng(N, pi_);`. To avoid confusion, `y` does not have a
   training underscore.
 * The realizations of the unknown parameters are copied into a `vector`
   in the `generated quantities` block named `pars_`
-* The realizations from the prior predictive distribution are copied 
+* The realizations from the prior predictive distribution are copied
   into an object (of the same type) in the `generated quantities` block
   named `y_. This is optional.
-* The `generated quantities` block contains an integer array named 
-  `ranks_` whose only values are zero or one, depending on whether the realization of a 
+* The `generated quantities` block contains an integer array named
+  `ranks_` whose only values are zero or one, depending on whether the realization of a
   parameter from the posterior distribution exceeds the corresponding "true"
   realization, which in this case is `ranks_[1] = {pi > pi_};`. These are not actually "ranks"
   but can be used afterwards to reconstruct (thinned) ranks.
 * The `generated quantities` block contains a vector named `log_lik` whose values
-  are the contribution to the log-likelihood by each observation. In this case, 
+  are the contribution to the log-likelihood by each observation. In this case,
   the "observations" are the implicit successes and failures that are aggregated
   into a binomial likelihood. This is optional but facilitates calculating the
   Pareto k shape parameter estimates that indicate whether the posterior distribution
@@ -85,7 +85,7 @@ pars_ <- rbeta(M, 1, 1)
 y_ <- matrix(rbinom(pars_, size = N, prob = pars_), ncol = M)
 post_ <- matrix(rbeta(M * 1000L, 1 + y_, 1 + N - y_), ncol = M)
 ranks_ <- lapply(1:M, FUN = function(m) {
-  matrix(post_[ , m] > pars_[m], ncol = 1, 
+  matrix(post_[ , m] > pars_[m], ncol = 1,
          dimnames = list(NULL, "pi"))
 })
 log_lik <- t(sapply(1:M, FUN = function(m) {
@@ -93,9 +93,9 @@ log_lik <- t(sapply(1:M, FUN = function(m) {
     dbinom(rep(1, N - y_[m]), size = 1, prob = pars_[m], log = TRUE))
 }))
 sampler_params <- array(0, dim = c(1000, 6, M))
-colnames(sampler_params) <- c("accept_stat__", "stepsize__", "treedepth__",   
+colnames(sampler_params) <- c("accept_stat__", "stepsize__", "treedepth__",
                               "n_leapfrog__",  "divergent__",   "energy__")
-output <- list(ranks = ranks_, Y = y_, pars = pars_, 
+output <- list(ranks = ranks_, Y = y_, pars = pars_,
                log_lik = log_lik, sampler_params = sampler_params)
 class(output) <- "sbc"
 ```

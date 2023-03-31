@@ -8,11 +8,11 @@ test_that("outputing csv and extracting work", {
       n = 0;
     }
     parameters {
-      real y[2];
-      real zeroleny[n];
+      array[2] real y;
+      array[n] real zeroleny;
     }
     transformed parameters {
-      real y2[2, 2];
+      array[2, 2] real y2;
       y2[1, 1] = y[1];
       y2[1, 2] = -y[1];
       y2[2, 1] = -y[2];
@@ -22,7 +22,7 @@ test_that("outputing csv and extracting work", {
       y ~ normal(0, 1);
     }
     generated quantities {
-      real y3[3, 2, 3];
+      array[3, 2, 3] real y3;
       y3[1,1,1] = 1;   y3[1,1,2] = 2;   y3[1,1,3] = 3;
       y3[1,2,1] = 4;   y3[1,2,2] = 5;   y3[1,2,3] = 6;
       y3[2,1,1] = 7;   y3[2,1,2] = 8;   y3[2,1,3] = 9;
@@ -182,7 +182,7 @@ test_that("grad log is correct", {
 
   code <- "
     data {
-      real y[20];
+      array[20] real y;
     }
     parameters {
       real mu;
@@ -241,7 +241,7 @@ test_that("Specifying arguments and data works", {
   code <- "
     data {
       int N;
-      real y[N];
+      array[N] real;
     }
     parameters {
       real mu;
