@@ -1,5 +1,5 @@
 stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FALSE,
-                         cacheDir = getOption("rcpp.cache.dir", tempdir()), 
+                         cacheDir = getOption("rcpp.cache.dir", tempdir()),
                          showOutput = verbose, verbose = getOption("verbose")) {
   make_type <- function(x, recursive = FALSE) {
     is_array <- is.list(x)
@@ -44,8 +44,8 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
   int_lists <- types == "const std::vector<int >&"
   if (any(int_lists)) types[int_lists] <- "const List&"
   code <- paste0("auto ", function_name, "(",
-                 paste(types, names(types), collapse = ", "), 
-                 ") { return stan::math::", function_name, "(", 
+                 paste(types, names(types), collapse = ", "),
+                 ") { return stan::math::", function_name, "(",
                  paste(ifelse(double_lists,
                               paste0("std::vector<double>(", names(types), ".begin(), ",
                                                              names(types), ".end())"),
@@ -53,7 +53,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
                                      paste0("std::vector<int>(", names(types), ".begin(), ",
                                                                  names(types), ".end())"),
                                      names(types))), collapse = ", "), "); }")
-  incl <- dir(system.file("include", "stan", "math", "prim", 
+  incl <- dir(system.file("include", "stan", "math", "prim",
                           package = "StanHeaders", mustWork = TRUE),
               pattern = "hpp$")
   incl <- setdiff(incl, "core.hpp")
@@ -66,18 +66,24 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
     on.exit(options(useFancyQuotes = op))
     incl <- c(incl, paste0('#include ', dQuote(create_rng)))
     code <- sub(") {", ", const int random_seed = 0) {", code, fixed = TRUE)
-    code <- sub(" return ", 
+    code <- sub(" return ",
                 "boost::ecuyer1988 base_rng__ = stan::services::util::create_rng(random_seed, 0); return ",
                 code)
       code <- sub("); }", ", base_rng__); }", code, fixed = TRUE)
   }
-  old_USE_CXX14 <- Sys.getenv("USE_CXX14")
-  on.exit(Sys.setenv(USE_CXX14 = old_USE_CXX14))
-  Sys.setenv(USE_CXX14 = "1")
-  Rcpp::cppFunction(code, depends = c("StanHeaders", "RcppEigen", "BH"),
-                    includes = incl, env = env, rebuild = rebuild, 
-                    cacheDir = cacheDir,
-                    showOutput = showOutput, verbose = verbose)
+  SH <- system.file(ifelse(.Platform$OS.type == "windows", "libs", "lib"), .Platform$r_arch,
+                    package = "StanHeaders", mustWork = TRUE)
+  withr::with_makevars(
+    c(
+      USE_CXX14 = 1,
+      PKG_CXXFLAGS = CxxFlags(as_character = TRUE),
+      PKG_LIBS = paste0(StanHeaders:::LdFlags(as_character = TRUE), " -L", shQuote(SH), " -lStanHeaders")
+    ),
+    Rcpp::cppFunction(code, depends = c("StanHeaders", "RcppEigen", "BH"),
+                      includes = incl, env = env, rebuild = rebuild,
+                      cacheDir = cacheDir,
+                      showOutput = showOutput, verbose = verbose)
+  )
   if (grepl("_rng$", function_name)) {
     fun <- get(function_name, envir = env, mode = "function")
     formals(fun, envir = env)$random_seed <- quote(sample.int(.Machine$integer.max, size = 1L))
