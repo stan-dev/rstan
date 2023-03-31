@@ -77,7 +77,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
     c(
       USE_CXX14 = 1,
       PKG_CXXFLAGS = CxxFlags(as_character = TRUE),
-      PKG_LIBS = paste0(StanHeaders:::LdFlags(as_character = TRUE), " -L", shQuote(SH), " -lStanHeaders")
+      PKG_LIBS = paste0(LdFlags(as_character = TRUE), " -L", shQuote(SH), " -lStanHeaders")
     ),
     Rcpp::cppFunction(code, depends = c("StanHeaders", "RcppEigen", "BH"),
                       includes = incl, env = env, rebuild = rebuild,
