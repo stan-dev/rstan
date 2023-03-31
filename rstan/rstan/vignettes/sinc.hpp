@@ -3,10 +3,8 @@ double sinc(const double& x, std::ostream* pstream__) {
 }
 
 stan::math::var sinc(const stan::math::var& x, std::ostream* pstream__) {
-  double x_ = x.val();
-  double f = x_ != 0.0 ? sin(x_) / x_ : 1.0;
-  double dfdx_ = x_ != 0.0 ? (cos(x_) - sin(x_)) / x_ : 0.0;
-  return stan::math::make_callback_vari(f, [x, dfdx_](const auto& vi) mutable {
+  return stan::math::make_callback_vari(sinc(x.val(), pstream__), [x](const auto& vi) mutable {
+    double dfdx_ = x.val() != 0.0 ? (cos(x.val()) - sin(x.val())) / x.val() : 0.0;
     x.adj() += vi.adj() * dfdx_;
   });
 }

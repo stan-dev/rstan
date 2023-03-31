@@ -217,12 +217,10 @@ unknown real parameter, which is represented in the Stan Math Library as a
 `stan::math::var`. Since the derivative of the `sinc` function is easy to
 compute analytically, we extract the underlying double-precision value from
 the inputted `stan::math::var` and use that to calculate the function value
-and its first derivative. Then, we return the result of `make_callback_var()`,
-whose arguments are the function value (`f`), and a functor to update the
-derivative of `x` during the reverse-pass of the autodifferentiation. Here we 
-calculate the first derivative of `f` (`dfdx_`) during the forward pass, and
-'capture' it in the functor with `x` (`[x, dfdx_]`) for use during the reverse
-pass.
+and its first derivative. To do this, we return the result of 
+`make_callback_var()`, whose arguments are the function value (`sinc(x.val())`),
+and a functor to update the derivative of `x` during the reverse-pass of the
+autodifferentiation.
 
 An easy way to see what the generated function signature will be is to call the
 `stanc` function in the __rstan__ package with `allow_undefined = TRUE` and
