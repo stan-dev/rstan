@@ -1,6 +1,6 @@
 data {
   int<lower=0> J;          // number of schools
-  array[N] real y;               // estimated treatment effects
+  array[J] real y;               // estimated treatment effects
   array[J] real<lower=0> sigma;  // s.e. of effect estimates
 }
 parameters {

@@ -534,7 +534,7 @@ method, to which data and other arguments can be fed.
 ocode <- "
   data {
     int<lower=1> N;
-    array[N] real;
+    array[N] real y;
   }
   parameters {
     real mu;

@@ -217,19 +217,17 @@ unknown real parameter, which is represented in the Stan Math Library as a
 `stan::math::var`. Since the derivative of the `sinc` function is easy to
 compute analytically, we extract the underlying double-precision value from
 the inputted `stan::math::var` and use that to calculate the function value
-and its first derivative. Then, we return the result of `precomputed_gradients`,
-whose arguments are the function value (`f`), the derivative of `x` with
-respect to any other parameters (`x.vi_`), and the first derivative of `f`
-(`dfdx_`). The latter two are actually `std::vector`s but only have one
-element each because there is only one unknown.
+and its first derivative. Then, we return the result of `make_callback_var()`,
+whose arguments are the function value (`f`), and a functor to update the
+derivative of `x` during the reverse-pass of the autodifferentiation. Here we 
+calculate the first derivative of `f` (`dfdx_`) during the forward pass, and
+'capture' it in the functor with `x` (`[x, dfdx_]`) for use during the reverse
+pass.
 
 An easy way to see what the generated function signature will be is to call the
 `stanc` function in the __rstan__ package with `allow_undefined = TRUE` and
-inspect the resuling C++ code. In this case, I first did
-```{r, eval = TRUE}
-try(readLines(stanc(model_code = mc, allow_undefined = TRUE)$cppcode))
-```
-to see what function signatures needed to be written for sinc.hpp.
+inspect the resulting C++ code to see what function signatures needed to be
+written for sinc.hpp.
 
 Once you go to the trouble of writing a numerically stable C++ function, we 
 would welcome a pull request on GitHub to include your C++ function in the 
