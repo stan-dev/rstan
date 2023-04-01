@@ -241,7 +241,7 @@ test_that("Specifying arguments and data works", {
   code <- "
     data {
       int N;
-      array[N] real;
+      array[N] real y;
     }
     parameters {
       real mu;

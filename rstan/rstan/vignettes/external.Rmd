@@ -2,7 +2,7 @@
 title: "Interfacing with External C++ Code"
 author: "Stan Development Team"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: true
 vignette: >
@@ -18,10 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-Starting with the 2.13 release, it is much easier to use external C++ code in a 
-Stan program. This vignette briefly illustrates how to do so. 
+Starting with the 2.13 release, it is much easier to use external C++ code in a
+Stan program. This vignette briefly illustrates how to do so.
 
-Suppose that you have (part of) a Stan program that involves Fibonacci numbers, 
+Suppose that you have (part of) a Stan program that involves Fibonacci numbers,
 such as
 ```{stan eval = FALSE, output.var = "fib"}
 functions {
@@ -34,9 +34,9 @@ functions {
 model {} // use the fib() function somehow
 ```
 On the second line, we have _declared_ the `fib` function before it is _defined_
-in order to call it recursively. 
+in order to call it recursively.
 
-For functions that are not recursive, it is not necessary to declare them before 
+For functions that are not recursive, it is not necessary to declare them before
 defining them but it may be advantageous. For example, I often like to hide the
 definitions of complicated utility functions that are just a distraction using
 the `#include "file"` mechanism
@@ -52,27 +52,27 @@ the __rstan__ package rather than the default `stanc` function (which is called
 by `sampling` and `stan` internally).
 
 Returning to the Fibonacci example, it is not necessary to define the `fib`
-function using the Stan language because Stan programs with functions that are 
-_declared_ but not _defined_ can use the standard capabilities of the C++ 
+function using the Stan language because Stan programs with functions that are
+_declared_ but not _defined_ can use the standard capabilities of the C++
 toolchain to provide the function definitions in C++. For example, this program
 produces a parser error by default
 ```{r, eval = TRUE}
-mc <- 
+mc <-
 '
 functions { int fib(int n); }
 model {} // use the fib() function somehow
 '
 try(stan_model(model_code = mc, model_name = "parser_error"), silent = TRUE)
 ```
-However, if we specify the `allow_undefined` and `includes` arguments to the 
-`stan_model` function, and define a `fib` function in the named C++ header file, 
+However, if we specify the `allow_undefined` and `includes` arguments to the
+`stan_model` function, and define a `fib` function in the named C++ header file,
 then it will parse and compile
 ```{r}
 stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
-           includes = paste0('\n#include "', 
+           includes = paste0('\n#include "',
                              file.path(getwd(), 'fib.hpp'), '"\n'))
 ```
-Specifying the `includes` argument is a bit awkward because the C++ 
+Specifying the `includes` argument is a bit awkward because the C++
 representation of a Stan program is written and compiled in a temporary
 directory. Thus, the `includes` argument must specify a _full_ path to the
 fib.hpp file, which in this case is in the working directory. Also, the
@@ -110,15 +110,15 @@ static int current_statement_begin__;
 #include "/full/path/to/fib.hpp"
 ```
 Thus, the definition of the `fib` function in the fib.hpp file need not be
-enclosed in any particular namespace (which is a random string by default. The 
+enclosed in any particular namespace (which is a random string by default. The
 "meta-include" stan/model/model_header.hpp file reads as
 ```{r, echo = FALSE, eval = TRUE, comment = NA}
-cat(readLines(system.file("include", "src", "stan", "model", "model_header.hpp", 
+cat(readLines(system.file("include", "src", "stan", "model", "model_header.hpp",
                           package = "StanHeaders")), sep = "\n")
 ```
 so the definition of the `fib` function in the fib.hpp file could utilize any
 function in the Stan Math Library (without having to prefix function calls with
-`stan::math::`), some typedefs to classes in the Eigen matrix algebra library, 
+`stan::math::`), some typedefs to classes in the Eigen matrix algebra library,
 plus streams, exceptions, etc. without having to worry about the corresponding
 header files. Nevertheless, an external C++ file _may_ contain additional
 include directives that bring in class definitions, for example.
@@ -134,7 +134,7 @@ int fib(const int&n, std::ostream* pstream__) {
   return n <= 1 ? 1 : fib(n - 1, 0) + fib(n - 2, 0);
 }
 ```
-This C++ function is essentially what the preceding user-defined function in the 
+This C++ function is essentially what the preceding user-defined function in the
 Stan language
 ```{stan eval = FALSE, output.var="def"}
 int fib(int n) {
@@ -155,11 +155,11 @@ directory and rely on the linker to make them available in its Stan programs,
 which are compiled at (or before) installation time.
 
 In the C++ version, we check if `n` is non-positive, in which case we throw an
-exception. The way the MCMC samplers are configured, if there is an exception 
-thrown and it is `std::domain_error`, it will treat that iteration as a rejection 
+exception. The way the MCMC samplers are configured, if there is an exception
+thrown and it is `std::domain_error`, it will treat that iteration as a rejection
 but as a recoverable error: set that iteration's log probability value to negative
-infinity and move to the next iteration. If there is a `std::invalid_argument` 
-thrown, MCMC terminates. We treat these as non-recoverable, user programming errors. 
+infinity and move to the next iteration. If there is a `std::invalid_argument`
+thrown, MCMC terminates. We treat these as non-recoverable, user programming errors.
 It is unnecessary to prefix `stringstream` with `std::` because of
 the `using std::stringstream;` line in the _generated_ C++ file. However, there
 is no corresponding `using std::domain_error;` line, so it has to be qualified
@@ -168,25 +168,25 @@ appropriately when the exception is thrown.
 The only confusing part of the C++ version of the `fib` function is that it has
 an additional argument (with no default value) named `pstream__` that is added
 to the _declaration_ of the `fib` function by Stan. Thus, your _definition_ of
-the `fib` function needs to match with this signature. This additional argument 
+the `fib` function needs to match with this signature. This additional argument
 is a pointer to a `std::ostream` and is only used if your function prints
-something to the screen, which is rare. Thus, when we call the `fib` function 
-recursively in the last line, we specify `fib(n - 1, 0) + fib(n - 2, 0);` so 
+something to the screen, which is rare. Thus, when we call the `fib` function
+recursively in the last line, we specify `fib(n - 1, 0) + fib(n - 2, 0);` so
 that the output (if any, and in this case there is none) is directed to the null
 pointer.
 
 This vignette has employed a toy example with the Fibonacci function, which has
-little apparent use in a Stan program and if it were useful, would more easily 
-be implemented as a user-defined function in the `functions` block as 
+little apparent use in a Stan program and if it were useful, would more easily
+be implemented as a user-defined function in the `functions` block as
 illustrated at the outset. The ability to use external C++ code only becomes
 useful with more complicated C++ functions. It goes without saying that this
 mechanism ordinarily cannot call functions in C, Fortran, R, or other languages
 because Stan needs the derivatives with respect to unknown parameters in order
 to perform estimation. These derivatives are handled with custom C++ types that
 cannot be processed by functions in other languages that only handle primitive
-types such as `double`, `float`, etc. 
+types such as `double`, `float`, etc.
 
-That said, it is possible to accomplish a great deal in C++, particularly when 
+That said, it is possible to accomplish a great deal in C++, particularly when
 utilizing the Stan Math Library. For more details, see
 [The Stan Math Library: Reverse-Mode Automatic Differentiation in C++](https://arxiv.org/abs/1509.07164)
 and its GitHub [repository](https://github.com/stan-dev/math/). The functions
@@ -196,29 +196,29 @@ involve templating and type promotion in their signatures when parsed to C++
 the `fib` function above). Suppose you wanted to define a function whose
 arguments are real numbers (or at least one of the arguments is). For example,
 ```{r, eval = TRUE}
-mc <- 
+mc <-
 '
 functions { real sinc(real x); }
 transformed data { real sinc_pi = sinc(pi()); }
 '
 stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
-           includes = paste0('\n#include "', 
+           includes = paste0('\n#include "',
                              file.path(getwd(), 'sinc.hpp'), '"\n'))
 ```
 The sinc.hpp file reads as
 ```{r, echo = FALSE, eval = TRUE, comment=""}
 cat(readLines("sinc.hpp"), sep = "\n")
 ```
-The body of the first `sinc` function is simply its mathematical definition in the 
-form of a ternary operator, which is sufficient when the input is a `double`. 
+The body of the first `sinc` function is simply its mathematical definition in the
+form of a ternary operator, which is sufficient when the input is a `double`.
 
 The last lines of sinc.hpp are a specialization for when the input is an
 unknown real parameter, which is represented in the Stan Math Library as a
 `stan::math::var`. Since the derivative of the `sinc` function is easy to
 compute analytically, we extract the underlying double-precision value from
 the inputted `stan::math::var` and use that to calculate the function value
-and its first derivative. To do this, we return the result of 
-`make_callback_var()`, whose arguments are the function value (`sinc(x.val())`),
+and its first derivative. To do this, we return the result of
+`make_callback_vari()`, whose arguments are the function value (`sinc(x.val())`),
 and a functor to update the derivative of `x` during the reverse-pass of the
 autodifferentiation.
 
@@ -227,10 +227,10 @@ An easy way to see what the generated function signature will be is to call the
 inspect the resulting C++ code to see what function signatures needed to be
 written for sinc.hpp.
 
-Once you go to the trouble of writing a numerically stable C++ function, we 
-would welcome a pull request on GitHub to include your C++ function in the 
-Stan Math Library for everyone to benefit from, provided that it can be licensed 
-under the 3-clause BSD license and its use is not overly-specific to your 
+Once you go to the trouble of writing a numerically stable C++ function, we
+would welcome a pull request on GitHub to include your C++ function in the
+Stan Math Library for everyone to benefit from, provided that it can be licensed
+under the 3-clause BSD license and its use is not overly-specific to your
 particular Stan program.
 
 The Stan Math Library is compliant with the C++14 standard but not all compilers

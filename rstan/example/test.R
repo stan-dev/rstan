@@ -5,7 +5,7 @@ library(rstan)
 stanmodelcode <- '
 data {
   int<lower=0> N;
-  array[N] real;
+  array[N] real y;
 }
 
 parameters {
@@ -75,7 +75,7 @@ code1 <- '
     int N;
   }
   parameters {
-    array[N] real;
+    array[N] real y;
   }
   model {
     y ~ normal(0, 1);

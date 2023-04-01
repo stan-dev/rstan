@@ -1,5 +1,5 @@
 library(rstan)
-sm <- stan_model(model_code = 'data { int N; } parameters { array[N] real; } model {y ~ normal(0, 1); }')
+sm <- stan_model(model_code = 'data { int N; } parameters { array[N] real y; } model {y ~ normal(0, 1); }')
 
 a <- sampling(sm, data = list(N = 3))
 

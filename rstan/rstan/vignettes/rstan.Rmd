@@ -324,7 +324,7 @@ defined as
 ```
 data {
   int<lower=1> N;
-  array[N] real;
+  array[N] real y;
 }
 ```
 

@@ -2,7 +2,7 @@ library(rstan)
 stdnorm <- '
 data {
   int N;
-  array[N] real;
+  array[N] real y;
 }
 
 parameters {

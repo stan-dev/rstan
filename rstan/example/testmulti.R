@@ -6,7 +6,7 @@ code1 <- '
     int N;
   }
   parameters {
-    array[N] real;
+    array[N] real y;
   }
   model {
     y ~ normal(0, 1);

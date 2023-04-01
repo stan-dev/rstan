@@ -6,7 +6,7 @@ library(rstan)
 stanmodelcode <- '
 data {
   int<lower=0> N;
-  array[N] real;
+  array[N] real y;
 }
 
 parameters {

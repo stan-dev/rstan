@@ -6,7 +6,7 @@ test_that("Running stan() in parallel works",  {
   data {
     int N;
   } parameters {
-    array[N] real;
+    array[N] real y;
   }  model {
     y ~ normal(0, 1);
   }
