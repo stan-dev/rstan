@@ -53,7 +53,7 @@ Run `revdepcheck::revdep_details(, "beanz")` for more info
 Wrote C++ file "stan_files/bs.cc"
 
 
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"../inst/include" -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c stan_files/bs.cc -o stan_files/bs.o
+clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"../inst/include" -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c stan_files/bs.cc -o stan_files/bs.o
 In file included from stan_files/bs.cc:3:
 ...
   return ::lgamma_r(x, &sign);
@@ -80,7 +80,7 @@ ERROR: compilation failed for package ‘beanz’
 Wrote C++ file "stan_files/bs.cc"
 
 
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"../inst/include" -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c stan_files/bs.cc -o stan_files/bs.o
+clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"../inst/include" -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/beanz/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c stan_files/bs.cc -o stan_files/bs.o
 "/Library/Frameworks/R.framework/Resources/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/ds.stan
 ...
 ** byte-compile and prepare package for lazy loading
@@ -136,10 +136,10 @@ Run `revdepcheck::revdep_details(, "dfpk")` for more info
 ** libs
 
 
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/src" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c Modules.cpp -o Modules.o
+clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/src" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c Modules.cpp -o Modules.o
 In file included from Modules.cpp:3:
 In file included from ./include/models.hpp:5:
-In file included from /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include/rstan/rstaninc.hpp:4:
+In file included from /Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/rstan/include/rstan/rstaninc.hpp:4:
 ...
 /Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math/prim/fun/lgamma.hpp:66:12: error: no member named 'lgamma_r' in the global namespace
   return ::lgamma_r(x, &sign);
@@ -163,10 +163,10 @@ ERROR: compilation failed for package ‘dfpk’
 ** libs
 
 
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c Modules.cpp -o Modules.o
+clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c Modules.cpp -o Modules.o
 
 
-clang -arch arm64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -c init.c -o init.o
+clang -arch arm64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_RESULT_OF_USE_TR1 -DBOOST_NO_DECLTYPE -DBOOST_DISABLE_ASSERTS -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/dfpk/RcppEigen/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -c init.c -o init.o
 ...
 ** inst
 ** byte-compile and prepare package for lazy loading
@@ -263,272 +263,6 @@ clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/in
 ** testing if installed package can be loaded from final location
 ** testing if installed package keeps a record of temporary installation path
 * DONE (idem)
-
-
-```
-# OpenMx
-
-<details>
-
-* Version: 2.21.1
-* GitHub: https://github.com/OpenMx/OpenMx
-* Source code: https://github.com/cran/OpenMx
-* Date/Publication: 2023-01-19 23:50:02 UTC
-* Number of recursive dependencies: 147
-
-Run `revdepcheck::revdep_details(, "OpenMx")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘OpenMx’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/OpenMx/new/OpenMx.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking installed package size ... NOTE
-    ```
-      installed size is 15.7Mb
-      sub-directories of 1Mb or more:
-        R        3.1Mb
-        data     1.4Mb
-        libs     4.1Mb
-        models   4.7Mb
-    ```
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘OpenMx’ ...
-** package ‘OpenMx’ successfully unpacked and MD5 sums checked
-** using staged installation
-NOTE: ./configure is not an autoconf generated script.
-Change default C/C++ compiler and default compile flags by editing ~/.R/Makevars
-** libs
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/RcppParallel/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/rpf/include' -I/opt/R/arm64/include         -DSTRICT_R_HEADERS -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c Compute.cpp -o Compute.o
-In file included from Compute.cpp:25:
-In file included from ./glue.h:23:
-In file included from ./omxState.h:48:
-...
-class omxFitFunction {
-^
-./omxDefines.h:131:9: note: did you mean class here?
-typedef struct omxFitFunction omxFitFunction;
-        ^~~~~~
-        class
-2 warnings and 2 errors generated.
-make: *** [omxMLFitFunction.o] Error 1
-ERROR: compilation failed for package ‘OpenMx’
-* removing ‘/Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/OpenMx/new/OpenMx.Rcheck/OpenMx’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘OpenMx’ ...
-** package ‘OpenMx’ successfully unpacked and MD5 sums checked
-** using staged installation
-NOTE: ./configure is not an autoconf generated script.
-Change default C/C++ compiler and default compile flags by editing ~/.R/Makevars
-** libs
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/RcppParallel/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/OpenMx/rpf/include' -I/opt/R/arm64/include         -DSTRICT_R_HEADERS -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c Compute.cpp -o Compute.o
-In file included from Compute.cpp:25:
-In file included from ./glue.h:23:
-In file included from ./omxState.h:48:
-...
-** help
-*** installing help indices
-*** copying figures
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (OpenMx)
-
-
-```
-# ProbReco
-
-<details>
-
-* Version: 0.1.0.1
-* GitHub: https://github.com/anastasiospanagiotelis/ProbReco
-* Source code: https://github.com/cran/ProbReco
-* Date/Publication: 2020-09-24 08:10:06 UTC
-* Number of recursive dependencies: 75
-
-Run `revdepcheck::revdep_details(, "ProbReco")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘ProbReco’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/ProbReco/new/ProbReco.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespace in Imports field not imported from: ‘Rdpack’
-      All declared Imports should be used.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘ProbReco’ ...
-** package ‘ProbReco’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/BH/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c RcppExports.cpp -o RcppExports.o
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/BH/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c scores.cpp -o scores.o
-In file included from scores.cpp:7:
-In file included from /Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math.hpp:19:
-In file included from /Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math/rev.hpp:10:
-In file included from /Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math/rev/fun.hpp:7:
-...
-/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math/prim/fun/lgamma.hpp:66:12: error: no member named 'lgamma_r' in the global namespace
-  return ::lgamma_r(x, &sign);
-         ~~^
-/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math/prim/fun/lgamma.hpp:85:12: error: no member named 'lgamma_r' in the global namespace
-  return ::lgamma_r(x, &sign);
-         ~~^
-1 warning and 2 errors generated.
-make: *** [scores.o] Error 1
-ERROR: compilation failed for package ‘ProbReco’
-* removing ‘/Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/ProbReco/new/ProbReco.Rcheck/ProbReco’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘ProbReco’ ...
-** package ‘ProbReco’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/BH/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c RcppExports.cpp -o RcppExports.o
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ProbReco/BH/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c scores.cpp -o scores.o
-clang++ -arch arm64 -std=gnu++14 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/opt/R/arm64/lib -o ProbReco.so RcppExports.o scores.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation
-installing to /Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/ProbReco/old/ProbReco.Rcheck/00LOCK-ProbReco/00new/ProbReco/libs
-** R
-** data
-...
-** help
-*** installing help indices
-*** copying figures
-** building package indices
-** installing vignettes
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (ProbReco)
-
-
-```
-# ssMousetrack
-
-<details>
-
-* Version: 1.1.5
-* GitHub: https://github.com/antcalcagni/ssMousetrack
-* Source code: https://github.com/cran/ssMousetrack
-* Date/Publication: 2019-01-16 17:00:03 UTC
-* Number of recursive dependencies: 54
-
-Run `revdepcheck::revdep_details(, "ssMousetrack")` for more info
-
-</details>
-
-## Newly broken
-
-*   checking whether package ‘ssMousetrack’ can be installed ... ERROR
-    ```
-    Installation failed.
-    See ‘/Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/ssMousetrack/new/ssMousetrack.Rcheck/00install.out’ for details.
-    ```
-
-## Newly fixed
-
-*   checking for GNU extensions in Makefiles ... NOTE
-    ```
-    GNU make is a SystemRequirements.
-    ```
-
-## Installation
-
-### Devel
-
-```
-* installing *source* package ‘ssMousetrack’ ...
-** package ‘ssMousetrack’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/Library/Frameworks/R.framework/Resources/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/fit_model_gomp.stan
-Wrote C++ file "stan_files/fit_model_gomp.cc"
-
-
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"../inst/include" -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c stan_files/fit_model_gomp.cc -o stan_files/fit_model_gomp.o
-In file included from stan_files/fit_model_gomp.cc:3:
-...
-  return ::lgamma_r(x, &sign);
-         ~~^
-/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/new/StanHeaders/include/stan/math/prim/fun/lgamma.hpp:85:12: error: no member named 'lgamma_r' in the global namespace
-  return ::lgamma_r(x, &sign);
-         ~~^
-1 warning and 2 errors generated.
-make: *** [stan_files/fit_model_gomp.o] Error 1
-rm stan_files/fit_model_gomp.cc
-ERROR: compilation failed for package ‘ssMousetrack’
-* removing ‘/Users/andrew/Downloads/StanHeaders/revdep/checks.noindex/ssMousetrack/new/ssMousetrack.Rcheck/ssMousetrack’
-
-
-```
-### CRAN
-
-```
-* installing *source* package ‘ssMousetrack’ ...
-** package ‘ssMousetrack’ successfully unpacked and MD5 sums checked
-** using staged installation
-** libs
-"/Library/Frameworks/R.framework/Resources/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/fit_model_gomp.stan
-Wrote C++ file "stan_files/fit_model_gomp.cc"
-
-
-clang++ -arch arm64 -std=gnu++14 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG -I"../inst/include" -I"/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include/src" -DBOOST_DISABLE_ASSERTS -DEIGEN_NO_DEBUG -DBOOST_MATH_OVERFLOW_ERROR_POLICY=errno_on_error -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/BH/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/Rcpp/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/RcppEigen/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/ssMousetrack/rstan/include' -I'/Users/andrew/Downloads/StanHeaders/revdep/library.noindex/StanHeaders/old/StanHeaders/include' -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -Wno-unknown-warning-option -Wno-enum-compare -Wno-ignored-attributes -Wno-unused-local-typedef -Wno-sign-compare -Wno-unneeded-internal-declaration -Wno-unused-function -Wno-unused-but-set-variable -Wno-unused-variable -Wno-infinite-recursion -Wno-unknown-pragmas -Wno-unused-lambda-capture -Wno-deprecated-declarations -Wno-deprecated-builtins -Wno-unused-but-set-variables -ftemplate-backtrace-limit=0 -Wno-nonnull -c stan_files/fit_model_gomp.cc -o stan_files/fit_model_gomp.o
-"/Library/Frameworks/R.framework/Resources/bin/Rscript" -e "source(file.path('..', 'tools', 'make_cc.R')); make_cc(commandArgs(TRUE))" stan_files/fit_model_log.stan
-...
-** inst
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** testing if installed package can be loaded from temporary location
-** checking absolute paths in shared objects and dynamic libraries
-** testing if installed package can be loaded from final location
-** testing if installed package keeps a record of temporary installation path
-* DONE (ssMousetrack)
 
 
 ```
