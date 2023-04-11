@@ -79,8 +79,6 @@ init_rstan_opt_env <- function(e) {
 
   assign('required', TRUE, e)
 
-  assign('javascript', requireNamespace("V8"), e)
-
   assign('disable_march_warning', FALSE, e)
 
   assign('threads_per_chain', 1L, e)
