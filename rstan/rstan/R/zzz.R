@@ -20,14 +20,9 @@ RNG <- 0
 OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
-  assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4097152), envir = topenv())
+  assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
   stanc_js <- system.file("stanc.js", package = "StanHeaders")
-  if (!file.exists(stanc_js)) {
-    warning(paste0("Default stancjs compiler not found, ",
-                   "downloading the current version from github."))
-    stanc_js <- "https://github.com/stan-dev/stanc3/releases/download/v2.29.2/stanc.js"
-  }
-  stanc_ctx$source(file = stanc_js)
+  stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
