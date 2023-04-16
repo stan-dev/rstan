@@ -1,3 +1,7 @@
+Sun April 16, 2023
+
+1. Updated Stan to C++ compiler v2.32.0-rc1 (development).
+
 Thu March 16, 2023
 
 1. Fixed `rstan::expose_stan_functions()` C++ compilation error (#1050).
