@@ -12,10 +12,4 @@ cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_* inst/include/libsundia
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
-rm -Rf src/tbb* || true
-rm -Rf src/rml || true
-rm -Rf inst/include/serial || true
-rm -Rf inst/include/*tbb* || true
-
-
 exit $?
