@@ -5,9 +5,10 @@ rm -Rf inst/include/src \
        inst/include/stan \
        inst/include/libsundials || true
 
-mkdir -p inst/include/src || true
-cp -Rf inst/include/upstream/src/stan inst/include/src/stan || true
+cp -Rf inst/include/upstream/src inst/include/src || true
+cp -Rf inst/include/upstream/lib/stan_math inst/include/mathlib || true
 cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
+cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_* inst/include/libsundials || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
@@ -16,6 +17,5 @@ rm -Rf src/rml || true
 rm -Rf inst/include/serial || true
 rm -Rf inst/include/*tbb* || true
 
-rm -Rf inst/include/upstream || true
 
 exit $?
