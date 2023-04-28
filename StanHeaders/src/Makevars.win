@@ -27,3 +27,8 @@ SUNDIALS_NVECSERIAL := nvector/serial/nvector_serial.c
 SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_KINSOL) $(SUNDIALS_NVECSERIAL) init.c
 OBJECTS_C = $(SOURCES:.c=.o)
 OBJECTS = $(OBJECTS_C:.cpp=.o)
+
+$(SHLIB): $(OBJECTS)
+
+clean:
+  rm $(OBJECTS)
