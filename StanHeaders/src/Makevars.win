@@ -31,4 +31,4 @@ OBJECTS = $(OBJECTS_C:.cpp=.o)
 $(SHLIB): $(OBJECTS)
 
 clean:
-  rm $(OBJECTS)
+	rm $(OBJECTS)
