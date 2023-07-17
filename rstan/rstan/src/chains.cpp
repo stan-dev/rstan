@@ -21,7 +21,6 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/random/additive_combine.hpp> // L'Ecuyer RNG
 #include <boost/random/uniform_int_distribution.hpp>
 #include <fstream>
@@ -51,7 +50,7 @@ private:
   
   inline unsigned int sexp2seed(SEXP seed) {
     if (TYPEOF(seed) == STRSXP)
-      return boost::lexical_cast<unsigned int>(Rcpp::as<std::string>(seed));
+      return std::stoull(Rcpp::as<std::string>(seed));
     return Rcpp::as<unsigned int>(seed);
   }
   
