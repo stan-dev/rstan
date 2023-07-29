@@ -21,6 +21,6 @@ extract_sparse_parts <- function(A) {
   if (!is(A, 'Matrix')) 
     A <- Matrix::Matrix(A, sparse=TRUE, doDiag=FALSE)
   A <- Matrix::t(A)
-  A <- as(A, "dgCMatrix")
+  A <- as(A, "dMatrix")
   return(.Call(extract_sparse_components, A))
 }
