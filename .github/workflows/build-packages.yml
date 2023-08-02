@@ -44,7 +44,6 @@ jobs:
 
       - name: Build binary packages
         run: |
-          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
           bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
           dir.create("build_bin")
           file.copy(c(bin2), "build_bin")
@@ -54,8 +53,8 @@ jobs:
         if: matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
         uses: actions/upload-artifact@v2
         with:
-          name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
-          path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
+          name: rstan_2.26.22.tar.gz
+          path: build/rstan_2.26.22.tar.gz
 
       - name: Upload binary packages
         uses: actions/upload-artifact@v2
