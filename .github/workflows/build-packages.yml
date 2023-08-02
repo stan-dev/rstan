@@ -1,0 +1,64 @@
+---
+# Github Actions workflow to check and build StanHeaders and RStan
+# yamllint disable rule:line-length
+
+name: R-CMD-check
+
+'on':
+  push:
+    branches:
+      - build-packages
+
+jobs:
+  R-CMD-check:
+    if: "! contains(github.event.head_commit.message, '[ci skip]')"
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: true
+      matrix:
+        config:
+          - {os: macOS-latest, r: 'release'}
+          - {os: macOS-latest, r: 'oldrel'}
+          - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: 'oldrel'}
+          - {os: ubuntu-latest, r: 'release'}
+          - {os: ubuntu-latest, r: 'oldrel'}
+
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: ./rstan/rstan
+
+      - name: Build binary packages
+        run: |
+          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
+          bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
+          dir.create("build_bin")
+          file.copy(c(bin2), "build_bin")
+        shell: Rscript {0}
+
+      - name: Upload RStan source package
+        if: matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release'
+        uses: actions/upload-artifact@v2
+        with:
+          name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
+          path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
+
+      - name: Upload binary packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: R-${{ matrix.config.r }}_${{ matrix.config.os }}
+          path: build_bin
