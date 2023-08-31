@@ -1,6 +1,6 @@
 citHeader("To cite StanHeaders in publications use:")
 
-citEntry(entry = "Misc", 
+bibentry(bibtype = "Misc",
          title = "{StanHeaders}: Headers for the {R} interface to {Stan}",
          author = person(given = "Stan Development Team"),
          note = "R package version 2.21.0-6",
@@ -9,5 +9,5 @@ citEntry(entry = "Misc",
          textVersion =
            paste("Stan Development Team (2018).",
                  title = "StanHeaders: Headers for the {R} interface to {Stan}.",
-                 "https://mc-stan.org/.") 
+                 "https://mc-stan.org/.")
 )

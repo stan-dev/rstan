@@ -2,7 +2,7 @@
 #define STAN_FIT_BASE_HPP
 
 #include <vector>
-#include <stan/math/prim/mat/fun/Eigen.hpp>
+#include <stan/math/prim/fun/Eigen.hpp>
 
 #include <Rcpp.h>
 #include <RcppEigen.h>

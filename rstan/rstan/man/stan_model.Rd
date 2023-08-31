@@ -19,7 +19,13 @@
              save_dso = TRUE, verbose = FALSE, 
              auto_write = rstan_options("auto_write"), 
              obfuscate_model_name = TRUE, 
-             allow_undefined = FALSE, includes = NULL,
+             allow_undefined = isTRUE(getOption("stanc.allow_undefined", FALSE)),
+             allow_optimizations = isTRUE(getOption("stanc.allow_optimizations", FALSE)),
+             standalone_functions = isTRUE(getOption("stanc.standalone_functions", FALSE)),
+             use_opencl = isTRUE(getOption("stanc.use_opencl", FALSE)),
+             warn_pedantic = isTRUE(getOption("stanc.warn_pedantic", FALSE)),
+             warn_uninitialized = isTRUE(getOption("stanc.warn_uninitialized", FALSE)),
+             includes = NULL,
              isystem = c(if (!missing(file)) dirname(file), getwd()))
 }
 
@@ -67,6 +73,16 @@
     passed to \code{\link{stanc}}.}
   \item{allow_undefined}{A logical scalar that is \code{FALSE} by default and
     passed to \code{\link{stanc}}.}
+  \item{allow_optimizations}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
+  \item{standalone_functions}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
+  \item{use_opencl}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
+  \item{warn_pedantic}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
+  \item{warn_uninitialized}{A logical scalar that is \code{FALSE} by default and
+    passed to \code{\link{stanc}}.}
   \item{includes}{If not \code{NULL} (the default), then a character vector of
     length one (possibly containing one or more \code{"\n"}) of the form 
     \code{'#include "/full/path/to/my_header.hpp"'}, which will be inserted
@@ -105,7 +121,7 @@
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
+  \url{https://mc-stan.org/}.
 }
 \seealso{
   \code{\linkS4class{stanmodel}} for details on the class. 
@@ -115,7 +131,7 @@
   parameters.
   
   More details on Stan, including the full user's guide and reference 
-  manual, can be found at \url{http://mc-stan.org/}. 
+  manual, can be found at \url{https://mc-stan.org/}.
 }
 \examples{\dontrun{
 stancode <- 'data {real y_mean;} parameters {real y;} model {y ~ normal(y_mean,1);}'
