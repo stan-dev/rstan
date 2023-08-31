@@ -86,7 +86,7 @@ as well as a conceptual introduction to Hamiltonian Monte Carlo in general.
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{https://mc-stan.org/}. 
+  \url{https://mc-stan.org/}.
   
   Betancourt, M. (2017). A conceptual introduction to Hamiltonian Monte Carlo.
   \url{https://arxiv.org/abs/1701.02434}.

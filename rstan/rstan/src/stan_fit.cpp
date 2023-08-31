@@ -6,8 +6,9 @@
 #include <memory>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
-//#include <stan/math/prim/mat/fun/Eigen.hpp>
 #include <stan/version.hpp>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
@@ -15,22 +16,38 @@
 #include <boost/random/additive_combine.hpp> // L'Ecuyer RNG
 #include <boost/random/uniform_real_distribution.hpp>
 
-//#include <Rcpp.h>
-//#include <RcppEigen.h>
+#include <rstan/io/rlist_ref_var_context.hpp>
+#include <rstan/io/r_ostream.hpp>
+#include <rstan/stan_args.hpp>
+#include <rstan/filtered_values.hpp>
+#include <rstan/sum_values.hpp>
+#include <rstan/value.hpp>
+#include <rstan/values.hpp>
+#include <rstan/rstan_writer.hpp>
+#include <rstan/logger.hpp>
 
-//http://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
+#include <Rcpp.h>
+#include <RcppEigen.h>
+
+//https://cran.r-project.org/doc/manuals/R-exts.html#Allowing-interrupts
 #include <R_ext/Utils.h>
 // void R_CheckUserInterrupt(void);
 
-
 // REF: cmdstan: src/cmdstan/command.hpp
 #include <stan/callbacks/interrupt.hpp>
+#include <stan/callbacks/logger.hpp>
 #include <stan/callbacks/stream_logger.hpp>
 #include <stan/callbacks/stream_writer.hpp>
 #include <stan/callbacks/writer.hpp>
+#include <stan/io/dump.hpp>
 #include <stan/io/empty_var_context.hpp>
+#include <stan/io/ends_with.hpp>
+#include <stan/io/stan_csv_reader.hpp>
+#include <stan/math/prim.hpp>
 #include <stan/model/model_base.hpp>
 #include <stan/services/diagnose/diagnose.hpp>
+#include <stan/services/experimental/advi/fullrank.hpp>
+#include <stan/services/experimental/advi/meanfield.hpp>
 #include <stan/services/optimize/bfgs.hpp>
 #include <stan/services/optimize/lbfgs.hpp>
 #include <stan/services/optimize/newton.hpp>
@@ -48,20 +65,6 @@
 #include <stan/services/sample/hmc_static_unit_e.hpp>
 #include <stan/services/sample/hmc_static_unit_e_adapt.hpp>
 #include <stan/services/sample/standalone_gqs.hpp>
-#include <stan/services/experimental/advi/fullrank.hpp>
-#include <stan/services/experimental/advi/meanfield.hpp>
-
-
-#include <rstan/io/rlist_ref_var_context.hpp>
-#include <rstan/io/r_ostream.hpp>
-#include <rstan/stan_args.hpp>
-#include <rstan/filtered_values.hpp>
-#include <rstan/sum_values.hpp>
-#include <rstan/value.hpp>
-#include <rstan/values.hpp>
-#include <rstan/rstan_writer.hpp>
-#include <rstan/logger.hpp>
-
 
 namespace rstan {
 
@@ -390,7 +393,9 @@ int command(stan_args& args,
             const std::vector<size_t>& qoi_idx,
             const std::vector<std::string>& fnames_oi,
             boost::ecuyer1988& base_rng) {
-  
+
+  stan::math::init_threadpool_tbb();
+
   if (args.get_method() == SAMPLING
         && model->num_params_r() == 0
         && args.get_ctrl_sampling_algorithm() != Fixed_param)

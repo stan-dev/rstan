@@ -10,7 +10,7 @@
    \emph{Stan Development Team}
 }
 
-  RStan is the \R interface to the \href{https://mc-stan.org/}{Stan} C++ package. 
+  RStan is the \R interface to the \href{https://mc-stan.org/}{Stan} C++ package.
   The RStan interface (\pkg{rstan} \R package) provides:
   \itemize{
   \item Full Bayesian inference using the No-U-Turn sampler (NUTS), 
@@ -70,7 +70,7 @@
   There are also many other important contributors to RStan 
   (\href{https://github.com/stan-dev/rstan}{github.com/rstan}). 
   Please use 'Stan Development Team' whenever citing the R interface to Stan. 
-  A BibTex entry is available from \url{https://mc-stan.org/rstan/authors} 
+  A BibTex entry is available from \url{https://mc-stan.org/rstan/authors}
   or \code{citation("rstan")}.
 }
 
@@ -83,7 +83,7 @@
   that corresponds to a \R function or name.
   \item \url{https://github.com/stan-dev/rstan/issues/} to submit a bug
   report or feature request.
-  \item \url{https://discourse.mc-stan.org} to ask a 
+  \item \url{https://discourse.mc-stan.org} to ask a
   question on the Stan Forums.
 }
 }

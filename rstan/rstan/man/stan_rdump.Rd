@@ -12,7 +12,7 @@ in the limited format that Stan can read.
   This function takes a vector of names of \R objects and outputs
   text representations of the objects to a file or connection.
   The file created by \code{stan_rdump} is typically used as data 
-  input of the Stan package (\url{https://mc-stan.org/}) or 
+  input of the Stan package (\url{https://mc-stan.org/}) or
   \code{\link{source}}d into another \R session. The usage of 
   this function is very similar to \code{dump} in \R. 
 }
@@ -80,7 +80,7 @@ stan_rdump(list, file = "", append = FALSE,
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{https://mc-stan.org}. 
+  \url{https://mc-stan.org}.
 }
 
 \seealso{

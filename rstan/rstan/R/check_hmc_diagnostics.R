@@ -36,7 +36,7 @@ throw_sampler_warnings <- function(object) {
       if (is.null(ad)) ad <- 0.8
     }
     warning("There were ", n_d, " divergent transitions after warmup. See\n",
-            "https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup\n", 
+            "https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup\n",
             "to find out why this is a problem and how to eliminate them.", call. = FALSE)
   }
   max_td <- object@stan_args[[1]]$control

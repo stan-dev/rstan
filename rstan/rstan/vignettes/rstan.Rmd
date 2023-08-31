@@ -42,7 +42,7 @@ Stan. The __rstan__ package allows one to conveniently fit Stan models from R
 quantities such as evaluations of the log posterior density and its gradients.
 
 In this vignette we provide a concise introduction to the functionality included
-in the __rstan__ package. Stan's website [mc-stan.org](https://mc-stan.org) has 
+in the __rstan__ package. Stan's website [mc-stan.org](https://mc-stan.org) has
 additional details and provides up-to-date information about how to operate both
 Stan and its many interfaces including RStan. See, for example, _RStan Getting 
 Started_ [@rstangettingstarted2012].
@@ -56,8 +56,8 @@ model expressed in the Stan language to C++ code, whereupon it is compiled to an
 executable program and loaded as a Dynamic Shared Object (DSO) in R which can
 then be called by the user.
 
-A C++ compiler, such as [`g++`](http://gcc.gnu.org) or 
-[`clang++`](http://clang.llvm.org), is required for this process. For
+A C++ compiler, such as [`g++`](https://gcc.gnu.org) or
+[`clang++`](https://clang.llvm.org), is required for this process. For
 instructions on installing a C++ compiler for use with RStan see 
 [RStan-Getting-Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
 
@@ -638,11 +638,11 @@ objects and use external C++ in a Stan program.
 * The very thorough [Stan manual](https://mc-stan.org/users/documentation/) [@StanManual].
 * The `stan_demo` function, which can be used to fit many of the example models
 in the manual.
-* The [__bayesplot__](https://mc-stan.org/bayesplot/) package for visual MCMC diagnostics, posterior predictive checking, and other 
+* The [__bayesplot__](https://mc-stan.org/bayesplot/) package for visual MCMC diagnostics, posterior predictive checking, and other
 plotting (ggplot based).
 * The [__shinystan__](https://mc-stan.org/shinystan/) R
 package, which provides a GUI for exploring MCMC output.
-* The [__loo__](http://mc-stan.org/loo/) R
+* The [__loo__](https://mc-stan.org/loo/) R
 package, which is very useful for model comparison using stanfit objects.
 * The [__rstanarm__](https://mc-stan.org/rstanarm/) R
 package, which provides a `glmer`-style interface to Stan.

@@ -21,21 +21,19 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 "// [[Rcpp::plugins(rstan)]]",
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
-                "#include <stan/math/prim/mat/fun/Eigen.hpp>",
+                "#include <stan/math/prim/fun/Eigen.hpp>",
+                "#include <stan/math/prim/meta.hpp>",
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
+                includes,
                 code, sep = "\n")
   code <- gsub("// [[stan::function]]",
                "// [[Rcpp::export]]", code, fixed = TRUE)
   code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
-  code <- gsub("= nullptr", "= 0", code, fixed = TRUE)
-  if(is.null(includes)) return(code)
-  code <- sub("\n\nstan::io::program_reader prog_reader__() {",
-              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"),
-              code, fixed = TRUE)
+  code <- gsub("pstream__(\\s*|)=(\\s*|)nullptr", "pstream__ = 0", code)
   return(code)
 }
 
@@ -62,7 +60,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
   stopifnot(stanc(model_code = mc, model_name = "User-defined functions",
                   allow_undefined = TRUE)$status)
-  r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
+  r <- stanc(model_code = mc, model_name = "User-defined functions",
+             allow_undefined = TRUE,
+             standalone_functions = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
 
   WINDOWS <- .Platform$OS.type == "windows"
@@ -117,6 +117,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
   DOTS <- list(...)
   if (isTRUE(DOTS$dryRun)) return(code)
+  if (inherits(compiled, "try-error")) stop("Compilation failed!")
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()
   for (x in compiled$functions) {

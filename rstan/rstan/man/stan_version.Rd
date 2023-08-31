@@ -17,7 +17,7 @@
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{https://mc-stan.org/}. 
+  \url{https://mc-stan.org/}.
 }
 \seealso{
   \code{\link{stan}} and \code{\link{stan_model}} 

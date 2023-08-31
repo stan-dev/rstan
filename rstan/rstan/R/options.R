@@ -81,6 +81,8 @@ init_rstan_opt_env <- function(e) {
 
   assign('disable_march_warning', FALSE, e)
 
+  assign('threads_per_chain', 1L, e)
+
   # cat("init_rstan_opt_env called.\n")
   invisible(e)
 }
@@ -118,8 +120,14 @@ rstan_options <- function(...) {
 
   # set options
   for (n in a_names[!empty]) {
-    if (n == 'plot_rhat_breaks') { assign(n, sort(a[[n]]), e); next }
-    assign(n, a[[n]], e)
+    if (n == 'plot_rhat_breaks') {
+      assign(n, sort(a[[n]]), e)
+    } else if (n == 'threads_per_chain') {
+      assign(n, max(1L, as.integer(a[[n]]), na.rm = TRUE), e)
+      Sys.setenv("STAN_NUM_THREADS" = max(1L, as.integer(a[[n]]), na.rm = TRUE))
+    } else {
+      assign(n, a[[n]], e)
+    }
   }
 
   if (len == 1) return(invisible(r[[1]]))
