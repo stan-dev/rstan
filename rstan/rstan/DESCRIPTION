@@ -1,10 +1,11 @@
 Package: rstan
 Type: Package
 Title: R Interface to Stan
-Version: 2.26.22
+Version: 2.26.23
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
+             person("Andrew", "Johnson", email = "andrew.johnson@arjohnsonau.com", role = "aut"),
              person("Sebastian", "Weber", email = "sdw.post@waebers.de", role = "aut"),
              person("Daniel", "Lee", role = "ctb"),
              person("Krzysztof", "Sakrejda", role = "ctb"),
@@ -41,7 +42,7 @@ Imports:
     RcppParallel (>= 5.1.4),
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
-    V8 (>= 3.6.0),
+    QuickJSR,
     ggplot2 (>= 3.3.5)
 Depends:
     R (>= 3.4.0),
@@ -62,7 +63,9 @@ Suggests:
     rstantools,
     rstudioapi,
     Matrix,
-    knitr
+    knitr,
+    rstanarm,
+    coda
 URL: https://mc-stan.org/rstan/, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
