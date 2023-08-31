@@ -1,9 +1,7 @@
 Package: rstan
-Encoding: UTF-8
 Type: Package
 Title: R Interface to Stan
-Version: 2.21.3
-Date: 2020-09-01
+Version: 2.26.22
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
@@ -11,6 +9,9 @@ Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut")
              person("Daniel", "Lee", role = "ctb"),
              person("Krzysztof", "Sakrejda", role = "ctb"),
              person("Modrak", "Martin", role = "ctb"),
+             person("Hamada S.", "Badr", role = c("ctb"),
+                    email = "badr@jhu.edu",
+                    comment = c(ORCID = "0000-0002-9808-2344")),
              person("Trustees of", "Columbia University", role = "cph"),
              person("Oleg", "Sklyar", role = "cph", comment = "R/cxxfunplus.R"),
              person("The R", "Core Team", role = "cph", comment = "R/pairs.R, R/dynGet.R"),
@@ -34,38 +35,38 @@ NeedsCompilation: yes
 Imports:
     methods,
     stats4,
-    inline,
-    gridExtra (>= 2.0.0),
-    Rcpp (>= 0.12.0),
-    RcppParallel (>= 5.0.1),
-    loo (>= 2.3.0),
-    pkgbuild,
-    V8
+    inline (>= 0.3.19),
+    gridExtra (>= 2.3),
+    Rcpp (>= 1.0.7),
+    RcppParallel (>= 5.1.4),
+    loo (>= 2.4.1),
+    pkgbuild (>= 1.2.0),
+    V8 (>= 3.6.0),
+    ggplot2 (>= 3.3.5)
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.21.0),
-    ggplot2 (>= 3.0.0)
-LinkingTo: Rcpp (>= 0.12.0),
-    RcppEigen (>= 0.3.3.3.0),
-    BH (>= 1.72.0-2),
-    StanHeaders (>= 2.21.0),
-    RcppParallel
+    StanHeaders (>= 2.26.22)
+LinkingTo:
+    Rcpp (>= 1.0.7),
+    RcppEigen (>= 0.3.3.9.1),
+    BH (>= 1.75.0-0),
+    StanHeaders (>= 2.26.22),
+    RcppParallel (>= 5.1.4)
 Suggests:
-    RUnit,
-    RcppEigen (>= 0.3.3.3.0),
-    BH (>= 1.72.0-2),
+    testthat (>= 3.0.4),
     parallel,
     KernSmooth,
-    shinystan (>= 2.3.0),
-    bayesplot (>= 1.5.0),
+    shinystan,
+    bayesplot,
     rmarkdown,
     rstantools,
     rstudioapi,
     Matrix,
-    knitr (>= 1.15.1),
-    V8
-URL: https://mc-stan.org/rstan, https://discourse.mc-stan.org
+    knitr
+URL: https://mc-stan.org/rstan/, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr
 SystemRequirements: GNU make, pandoc
-RoxygenNote: 5.0.1
+Encoding: UTF-8
+RoxygenNote: 7.1.2
+Config/testthat/edition: 3

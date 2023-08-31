@@ -1,7 +1,5 @@
 
-#include <stan/math/prim/mat/fun/csr_extract_u.hpp>
-#include <stan/math/prim/mat/fun/csr_extract_v.hpp>
-#include <stan/math/prim/mat/fun/csr_extract_w.hpp>
+#include <stan/math/prim.hpp>
 
 #include <Rcpp.h>
 #include <RcppEigen.h>

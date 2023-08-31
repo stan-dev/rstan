@@ -1,14 +1,15 @@
 #!/bin/sh
 
-rm -rf inst/include/stan
-rm -rf inst/include/src
-rm -rf inst/include/libsundials
+rm -Rf inst/include/src \
+       inst/include/mathlib \
+       inst/include/stan \
+       inst/include/libsundials || true
 
-cp -r inst/include/mathlib/stan inst/include/stan
-cp -r inst/include/upstream/src inst/include/src
-
-cp -r inst/include/mathlib/lib/sundials_*/src/* src
-cp -r inst/include/mathlib/lib/sundials_*/include/* inst/include/
+cp -Rf inst/include/upstream/src inst/include/src || true
+cp -Rf inst/include/upstream/lib/stan_math inst/include/mathlib || true
+cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
+cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_* inst/include/libsundials || true
+cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
+cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
 exit $?
-

@@ -50,7 +50,7 @@ print.stanfit <- function(x, pars = x@sim$pars_oi,
   sampler <- attr(x@sim$samples[[1]], "args")$sampler_t
 
   if (!is.null(x@stan_args[[1]]$method) && 
-               x@stan_args[[1]]$method == "variational") {
+        isTRUE(x@stan_args[[1]]$method == "variational")) {
       if ("diagnostics" %in% names(x@sim)
           & "ir_idx" %in% names(x@sim$diagnostics)
           & !is.null(x@sim$diagnostics$ir_idx)) {
@@ -339,7 +339,7 @@ setMethod("get_sampler_params",
               return(invisible(NULL)) 
             }
             
-            if (isTRUE(object@stan_args[[1L]]$method == "variational")) {
+            if (isTRUE(object@stan_args[[1]]$method == "variational")) {
               stop("'get_sampler_params' not available for ",
                    "meanfield or fullrank algorithms.") 
             }
@@ -539,7 +539,7 @@ setMethod("summary", signature = "stanfit",
             if (!use_cache) {
               # not using the cached (and not create cache, which takes time for too many pars)
               ss <-  summary_sim(object@sim, pars, probs) 
-              if (object@stan_args[[1]]$method=="variational") {
+              if (isTRUE(object@stan_args[[1]]$method == "variational")) {
                 s1 <- cbind(ss$msd[, 1, drop = FALSE], ss$sem, ss$msd[, 2, drop = FALSE], 
                             ss$quan, ss$ess, ss$khat)
                 colnames(s1) <- c("mean", "se_mean", "sd", colnames(ss$quan), 'n_eff', 'khat')
@@ -559,7 +559,7 @@ setMethod("summary", signature = "stanfit",
               ss <-  summary_sim_quan(object@sim, pars, probs) 
               col_idx <- attr(ss, "col_major_idx") 
               ss$ess <- object@.MISC$summary$ess[col_idx, drop = FALSE]
-              if (object@stan_args[[1]]$method=="variational") {
+              if (isTRUE(object@stan_args[[1]]$method == "variational")) {
                 ss$hat <- object@.MISC$summary$khat[col_idx, drop = FALSE]
                 hatstr <- "khat"
               } else {
@@ -591,7 +591,7 @@ setMethod("summary", signature = "stanfit",
             qnames <- colnames(ss$quan)[m]
 
             if (!is.null(object@stan_args[[1]]$method) && 
-                         object@stan_args[[1]]$method == "variational") {
+                  isTRUE(object@stan_args[[1]]$method == "variational")) {
               s1 <- cbind(ss$msd[tidx, 1, drop = FALSE], 
                           ss$sem[tidx, drop = FALSE], 
                           ss$msd[tidx, 2, drop = FALSE], 

@@ -36,7 +36,7 @@ throw_sampler_warnings <- function(object) {
       if (is.null(ad)) ad <- 0.8
     }
     warning("There were ", n_d, " divergent transitions after warmup. See\n",
-            "http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup\n", 
+            "https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup\n",
             "to find out why this is a problem and how to eliminate them.", call. = FALSE)
   }
   max_td <- object@stan_args[[1]]$control
@@ -53,7 +53,7 @@ throw_sampler_warnings <- function(object) {
     warning("There were ", n_m,
             " transitions after warmup that exceeded the maximum treedepth.",
             " Increase max_treedepth above ", max_td, ". See\n",
-            "http://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
+            "https://mc-stan.org/misc/warnings.html#maximum-treedepth-exceeded", call. = FALSE)
   n_e <- 0L
   if (is_sfinstance_valid(object) && all(sapply(sp, function(x) "energy__" %in% colnames(x)))) {
     E <- as.matrix(sapply(sp, FUN = function(x) x[,"energy__"]))
@@ -67,7 +67,7 @@ throw_sampler_warnings <- function(object) {
       warning("There were ", n_e, 
               " chains where the estimated Bayesian Fraction of Missing Information",
               " was low. See\n", 
-              "http://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
+              "https://mc-stan.org/misc/warnings.html#bfmi-low", call. = FALSE)
   }
   if (n_d > 0 || n_m > 0 || n_e > 0) 
     warning("Examine the pairs() plot to diagnose sampling problems\n",
@@ -79,19 +79,19 @@ throw_sampler_warnings <- function(object) {
       warning("The largest R-hat is ", round(max(rhat), digits = 2),
             ", indicating chains have not mixed.\n",
             "Running the chains for more iterations may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#r-hat", call. = FALSE)
+            "https://mc-stan.org/misc/warnings.html#r-hat", call. = FALSE)
   bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
   if (any(bulk_ess < 100 * ncol(sims), na.rm = TRUE))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
             "indicating posterior means and medians may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#bulk-ess", call. = FALSE)
+            "https://mc-stan.org/misc/warnings.html#bulk-ess", call. = FALSE)
   tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
   if (any(tail_ess < 100 * ncol(sims), na.rm = TRUE))
     warning("Tail Effective Samples Size (ESS) is too low, indicating ",
             "posterior variances and tail quantiles may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
-            "http://mc-stan.org/misc/warnings.html#tail-ess", call. = FALSE)
+            "https://mc-stan.org/misc/warnings.html#tail-ess", call. = FALSE)
   
   return(invisible(NULL))
 }
