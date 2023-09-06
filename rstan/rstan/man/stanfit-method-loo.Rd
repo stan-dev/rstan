@@ -93,7 +93,6 @@ Pareto smoothed importance sampling. arXiv preprint:
 Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018).
 Using stacking to average Bayesian predictive distributions.
 Bayesian Analysis, advance publication, \code{doi:10.1214/17-BA1091}.
-\url{https://projecteuclid.org/euclid.ba/1516093227}.
 
 Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
 Implicitly Adaptive Importance Sampling.
