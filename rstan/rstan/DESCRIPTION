@@ -48,11 +48,10 @@ Depends:
     StanHeaders (>= 2.33.0)
 LinkingTo:
     Rcpp (>= 1.0.7),
-    RcppEigen (>= 0.3.4.0.0),
+    RcppEigen (>= 0.3.3.9.3),
     BH (>= 1.75.0-0),
     StanHeaders (>= 2.33.0),
     RcppParallel (>= 5.1.4)
-Remotes: hsbadr/RcppEigen@develop
 Suggests:
     testthat (>= 3.0.4),
     parallel,
