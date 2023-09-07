@@ -25,6 +25,7 @@ cleanup.win
 revdep
 install-github.R
 inst/doc/.install_extras
+vignettes/.install_extras
 .*\.o$
 .*\.a$
 \.gitignore$

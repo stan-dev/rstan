@@ -83,17 +83,16 @@ Vehtari, A., Gelman, A., and Gabry, J. (2017a).
 Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC.
 \emph{Statistics and Computing}. 27(5), 1413-1432.
 \code{doi:10.1007/s11222-016-9696-4}.
-\url{http://arxiv.org/abs/1507.04544},
-\url{http://link.springer.com/article/10.1007\%2Fs11222-016-9696-4}
+\url{https://arxiv.org/abs/1507.04544},
+\url{https://link.springer.com/article/10.1007\%2Fs11222-016-9696-4}
 
 Vehtari, A., Gelman, A., and Gabry, J. (2017b).
 Pareto smoothed importance sampling. arXiv preprint:
-\url{http://arxiv.org/abs/1507.02646/}
+\url{https://arxiv.org/abs/1507.02646}
 
 Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018).
 Using stacking to average Bayesian predictive distributions.
 Bayesian Analysis, advance publication, \code{doi:10.1214/17-BA1091}.
-\url{https://projecteuclid.org/euclid.ba/1516093227}.
 
 Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
 Implicitly Adaptive Importance Sampling.
@@ -104,7 +103,7 @@ arXiv preprint:
 \seealso{
  \itemize{
  \item The \pkg{\link[loo]{loo}} package documentation, including the vignettes for
- many examples (\url{http://mc-stan.org/loo}).
+ many examples (\url{https://mc-stan.org/loo/}).
  \item \code{\link[loo]{loo_moment_match}} for the moment matching algorithm.
  \item \code{\link[loo]{loo_model_weights}} for model averaging/weighting via
  stacking or pseudo-BMA weighting.

@@ -18,40 +18,62 @@
 get_Rcpp_module_def_code <- function(model_name) {
   RCPP_MODULE <-
 '
-#include <rstan_next/stan_fit.hpp>
+RCPP_MODULE(stan_fit4%model_name%_mod) {
+  class_<rstan::stan_fit<stan_model, boost::random::ecuyer1988> >(
+      "stan_fit4%model_name%")
 
-struct stan_model_holder {
-    stan_model_holder(rstan::io::rlist_ref_var_context rcontext,
-                      unsigned int random_seed)
-    : rcontext_(rcontext), random_seed_(random_seed)
-     {
-     }
+      .constructor<SEXP, SEXP, SEXP>()
 
-   //stan::math::ChainableStack ad_stack;
-   rstan::io::rlist_ref_var_context rcontext_;
-   unsigned int random_seed_;
-};
-
-Rcpp::XPtr<stan::model::model_base> model_ptr(stan_model_holder* smh) {
-  Rcpp::XPtr<stan::model::model_base> model_instance(new stan_model(smh->rcontext_, smh->random_seed_), true);
-  return model_instance;
-}
-
-Rcpp::XPtr<rstan::stan_fit_base> fit_ptr(stan_model_holder* smh) {
-  return Rcpp::XPtr<rstan::stan_fit_base>(new rstan::stan_fit(model_ptr(smh), smh->random_seed_), true);
-}
-
-std::string model_name(stan_model_holder* smh) {
-  return model_ptr(smh).get()->model_name();
-}
-
-RCPP_MODULE(stan_fit4%model_name%_mod){
-  Rcpp::class_<stan_model_holder>("stan_fit4%model_name%")
-  .constructor<rstan::io::rlist_ref_var_context, unsigned int>()
-  .method("model_ptr", &model_ptr)
-  .method("fit_ptr", &fit_ptr)
-  .method("model_name", &model_name)
-  ;
+      .method(
+          "call_sampler",
+          &rstan::stan_fit<stan_model, boost::random::ecuyer1988>::call_sampler)
+      .method(
+          "param_names",
+          &rstan::stan_fit<stan_model, boost::random::ecuyer1988>::param_names)
+      .method("param_names_oi",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::param_names_oi)
+      .method("param_fnames_oi",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::param_fnames_oi)
+      .method(
+          "param_dims",
+          &rstan::stan_fit<stan_model, boost::random::ecuyer1988>::param_dims)
+      .method("param_dims_oi",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::param_dims_oi)
+      .method("update_param_oi",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::update_param_oi)
+      .method("param_oi_tidx",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::param_oi_tidx)
+      .method("grad_log_prob",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::grad_log_prob)
+      .method("log_prob",
+              &rstan::stan_fit<stan_model, boost::random::ecuyer1988>::log_prob)
+      .method("unconstrain_pars",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::unconstrain_pars)
+      .method("constrain_pars",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::constrain_pars)
+      .method(
+          "num_pars_unconstrained",
+          &rstan::stan_fit<stan_model,
+                           boost::random::ecuyer1988>::num_pars_unconstrained)
+      .method(
+          "unconstrained_param_names",
+          &rstan::stan_fit<
+              stan_model, boost::random::ecuyer1988>::unconstrained_param_names)
+      .method(
+          "constrained_param_names",
+          &rstan::stan_fit<stan_model,
+                           boost::random::ecuyer1988>::constrained_param_names)
+      .method("standalone_gqs",
+              &rstan::stan_fit<stan_model,
+                               boost::random::ecuyer1988>::standalone_gqs);
 }
 '
 gsub("%model_name%", model_name, RCPP_MODULE)

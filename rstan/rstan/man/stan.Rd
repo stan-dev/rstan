@@ -2,7 +2,7 @@
 \alias{stan}
 \title{Fit a model with Stan}
 \description{
-\if{html}{\figure{stanlogo.png}{options: width="25px" alt="http://mc-stan.org/about/logo/"}}
+\if{html}{\figure{stanlogo.png}{options: width="25px" alt="https://mc-stan.org/about/logo/"}}
 Fit a model defined in the Stan modeling language and  
 return the fitted result as an instance of \code{stanfit}. 
 }
@@ -401,16 +401,16 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org}. 
+  \url{https://mc-stan.org}.
 
   The Stan Development Team
   \emph{CmdStan Interface User's Guide}.
-  \url{http://mc-stan.org}.
+  \url{https://mc-stan.org}.
 }
 \seealso{
   \itemize{
   \item The package vignettes for an example of fitting a model and accessing
-  the contents of \code{stanfit} objects (\url{http://mc-stan.org/rstan/articles/}).
+  the contents of \code{stanfit} objects (\url{https://mc-stan.org/rstan/articles/}).
   
   \item \code{\link{stanc}} for translating model code in Stan modeling language to C++, 
   \code{\link{sampling}} for sampling, and \code{\linkS4class{stanfit}} for the
