@@ -5,6 +5,7 @@ Version: 2.33.0.9000
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
              person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
+             person("Andrew", "Johnson", email = "andrew.johnson@arjohnsonau.com", role = "aut"),
              person("Sebastian", "Weber", email = "sdw.post@waebers.de", role = "aut"),
              person("Hamada S.", "Badr", role = c("aut"),
                     email = "badr@jhu.edu",
@@ -62,7 +63,10 @@ Suggests:
     rstantools,
     rstudioapi,
     Matrix,
-    knitr
+    knitr,
+    rstanarm,
+    coda,
+    V8
 URL: https://mc-stan.org/rstan/, https://discourse.mc-stan.org
 BugReports: https://github.com/stan-dev/rstan/issues/
 VignetteBuilder: knitr

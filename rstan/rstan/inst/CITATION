@@ -1,6 +1,6 @@
 citHeader("To cite RStan in publications use:")
 
-citEntry(entry = "Misc", 
+bibentry(bibtype = "Misc",
          title = "{RStan}: the {R} interface to {Stan}",
          author = person(given = "Stan Development Team"),
          note = paste("R package version", meta$Version),

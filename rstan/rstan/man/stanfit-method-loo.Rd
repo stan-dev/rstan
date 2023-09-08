@@ -36,9 +36,9 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
   \code{cores} is specified or the \code{mc.cores} \link[=options]{option}
   has been set.}
 \item{moment_match}{Logical; Whether to use the moment matching algorithm for
-  observations with high Pareto k values to improve accuracy. Note: 
+  observations with high Pareto k values to improve accuracy. Note:
   because the moment matching algorithm relies on the \code{unconstrain_pars}
-  method in RStan it is only available if run in the same R session as fitting the 
+  method in RStan it is only available if run in the same R session as fitting the
   model.}
   \item{k_threshold}{Threshold value for Pareto k values above which
   the moment matching algorithm is used. If \code{moment_match} is \code{FALSE},
@@ -84,7 +84,7 @@ Practical Bayesian model evaluation using leave-one-out cross-validation and WAI
 \emph{Statistics and Computing}. 27(5), 1413-1432.
 \code{doi:10.1007/s11222-016-9696-4}.
 \url{https://arxiv.org/abs/1507.04544},
-\url{https://link.springer.com/article/10.1007\%2Fs11222-016-9696-4}
+\url{https://link.springer.com/article/10.1007/s11222-016-9696-4}
 
 Vehtari, A., Gelman, A., and Gabry, J. (2017b).
 Pareto smoothed importance sampling. arXiv preprint:
@@ -93,7 +93,6 @@ Pareto smoothed importance sampling. arXiv preprint:
 Yao, Y., Vehtari, A., Simpson, D., and Gelman, A. (2018).
 Using stacking to average Bayesian predictive distributions.
 Bayesian Analysis, advance publication, \code{doi:10.1214/17-BA1091}.
-\url{https://projecteuclid.org/euclid.ba/1516093227}.
 
 Paananen, T., Piironen, J., Buerkner, P.-C., Vehtari, A. (2020).
 Implicitly Adaptive Importance Sampling.

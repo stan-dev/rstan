@@ -23,7 +23,11 @@ Thu March 16, 2023
 Tue March 14, 2023
 
 1. Moved `stanc3` JS into `StanHeaders`.
-2. Linking to `RcppEigen` >= v3.4 (development).
+
+Fri February 10, 2023
+
+1. `StanHeaders`: C++17 Compatibility Backports.
+2. `stanc3`: Fix ternary ops with expressions (#1035).
 
 Tue November 22, 2022
 
@@ -117,7 +121,7 @@ Fri February 5, 2021
 14. Added support for `stan::io::validate_dims`.
 15. Introducing a new `stanc_process()` helper function to process Stan code.
 16. Updated `stanc` to print errors and return code for debugging.
-17. Linking the newest version of Sundials form [`math`](https://github.com/stan-dev/math) (currently, `sundials 5.7.0`).
+17. Linking the newest version of Sundials form [`math`](https://github.com/stan-dev/math) (currently, `sundials 5.6.1`).
 18. Fixed `rstan` dependency on the development version of `StanHeaders`.
 19. Fixed automatic installation of `StanHeaders` in the GitHub workflows.
 20. Fixed `no valid constructor` errors and rebuilt the `Rcpp` module to expose C++ classes in R.

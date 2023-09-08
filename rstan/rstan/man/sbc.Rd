@@ -4,7 +4,7 @@
 \alias{plot.sbc}
 \title{Simulation Based Calibration (sbc)}
 \description{
-\if{html}{\figure{stanlogo.png}{options: width="25px" alt="https://mc-stan.org/about/logo/"}}
+\if{html}{\figure{stanlogo.png}{options: width="25" alt="https://mc-stan.org/about/logo/"}}
 Check whether a model is well-calibrated with respect to the
 prior distribution and hence possibly amenable to obtaining
 a posterior distribution conditional on observed data.
@@ -19,8 +19,8 @@ a posterior distribution conditional on observed data.
   \item{stanmodel}{
     An object of \code{\link{stanmodel-class}} that is first created by
     calling the \code{\link{stan_model}} function}
-  \item{data}{A named \code{list} or \code{environment} providing the data for 
-    the model, or a character vector for all the names of objects to use as data. 
+  \item{data}{A named \code{list} or \code{environment} providing the data for
+    the model, or a character vector for all the names of objects to use as data.
     This is the same format as in \code{\link{stan}} or \code{\link{sampling}}.}
   \item{M}{
     The number of times to condition on draws from the prior predictive
@@ -38,7 +38,7 @@ a posterior distribution conditional on observed data.
     whatever runs have been saved to disk and ignore argument \code{M}.}
 }
 \details{
-  This function assumes adherence to the following conventions in the 
+  This function assumes adherence to the following conventions in the
   underlying Stan program:
   \enumerate{
   \item Realizations of the unknown parameters are drawn in the \code{transformed data}
@@ -53,14 +53,14 @@ a posterior distribution conditional on observed data.
     a trailing underscore.
   \item The realizations of the unknown parameters should be copied into a \code{vector}
     in the \code{generated quantities} block named \code{pars_}.
-  \item The realizations from the prior predictive distribution should be copied 
+  \item The realizations from the prior predictive distribution should be copied
     into an object (of the same type) in the \code{generated quantities} block
     named \code{y_}. Technically, this step is optional and could be omitted
     to conserve RAM, but inspecting the realizations from the prior predictive distribution
     is a good way to judge whether the priors are reasonable.
-  \item The \code{generated quantities} block must contain an integer array named 
-    \code{ranks_} whose only values are zero or one, depending on whether the realization of a 
-    parameter from the posterior distribution exceeds the corresponding \dQuote{true} 
+  \item The \code{generated quantities} block must contain an integer array named
+    \code{ranks_} whose only values are zero or one, depending on whether the realization of a
+    parameter from the posterior distribution exceeds the corresponding \dQuote{true}
     realization, such as \code{theta > theta_;}. These are not actually "ranks"
     but can be used afterwards to reconstruct (thinned) ranks.
   \item The \code{generated quantities} block may contain a vector named \code{log_lik}
@@ -68,7 +68,7 @@ a posterior distribution conditional on observed data.
     is optional but facilitates calculating Pareto k shape parameters to judge whether
     the posterior distribution is sensitive to particular observations.
   }
-  
+
   Although the user can pass additional arguments to \code{\link{sampling}} through the \dots,
   the following arguments are hard-coded and should not be passed through the \dots:
   \enumerate{
@@ -82,32 +82,32 @@ a posterior distribution conditional on observed data.
     finished, as is done by the \code{thin} argument to the \code{plot} method in order to
     make the histograms consist of approximately independent realizations
   }
-  Other arguments will take the default values used by \code{\link{sampling}} unless 
+  Other arguments will take the default values used by \code{\link{sampling}} unless
   passed through the \dots. Specifying \code{refresh = 0} is recommended to avoid printing
-  a lot of intermediate progress reports to the screen. It may be necessary to pass a 
+  a lot of intermediate progress reports to the screen. It may be necessary to pass a
   list to the \code{control} argument of \code{\link{sampling}} with elements \code{adapt_delta}
   and / or \code{max_treedepth} in order to obtain adequate results.
-  
+
   Ideally, users would want to see the absence of divergent transitions (which is shown
-  by the \code{print} method) and other warnings, plus an approximately uniform histogram 
-  of the ranks for each parameter (which are shown by the \code{plot} method). See the 
+  by the \code{print} method) and other warnings, plus an approximately uniform histogram
+  of the ranks for each parameter (which are shown by the \code{plot} method). See the
   vignette for more details.
 }
 \value{
   The \code{sbc} function outputs a list of S3 class \code{"sbc"}, which contains the
   following elements:
   \enumerate{
-  \item \code{ranks} A list of \code{M} matrices, each with number of 
-    rows equal to the number of saved iterations and number of columns equal to 
+  \item \code{ranks} A list of \code{M} matrices, each with number of
+    rows equal to the number of saved iterations and number of columns equal to
     the number of unknown parameters. These matrices contain the realizations
     of the \code{ranks_} object from the \code{generated quantities} block of the
     Stan program.
   \item \code{Y} If present, a matrix of realizations from the prior predictive
     distribution whose rows are equal to the number of observations and whose columns
-    are equal to \code{M}, which are taken from the \code{y_} object in the 
+    are equal to \code{M}, which are taken from the \code{y_} object in the
     \code{generated quantities} block of the Stan program.
   \item \code{pars} A matrix of realizations from the prior distribution whose rows
-    are equal to the number of parameters and whose columns are equal to \code{M}, 
+    are equal to the number of parameters and whose columns are equal to \code{M},
     which are taken from the \code{pars_} object in the \code{generated quantities}
     block of the Stan program.
   \item \code{pareto_k} A matrix of Pareto k shape parameter estimates or \code{NULL}
@@ -115,7 +115,7 @@ a posterior distribution conditional on observed data.
     of the Stan program
   \item \code{sampler_params} A three-dimensional array that results from combining
     calls to \code{\link{get_sampler_params}} for each of
-    the \code{M} runs. The resulting matrix has rows equal to the number of 
+    the \code{M} runs. The resulting matrix has rows equal to the number of
     post-warmup iterations, columns equal to six, and \code{M} floors. The columns
     are named \code{"accept_stat__"}, \code{"stepsize__"}, \code{"treedepth__"},
     \code{"n_leapfrog__"}, \code{"divergent__"}, and \code{"energy__"}. The most
@@ -132,8 +132,8 @@ a posterior distribution conditional on observed data.
 
 
 \references{
-  The Stan Development Team 
-  \emph{Stan Modeling Language User's Guide and Reference Manual}. 
+  The Stan Development Team
+  \emph{Stan Modeling Language User's Guide and Reference Manual}.
   \url{https://mc-stan.org}.
 
   Talts, S., Betancourt, M., Simpson, D., Vehtari, A., and Gelman, A. (2018).

@@ -20,8 +20,13 @@ RNG <- 0
 OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
-  assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
-  stanc_js <- system.file("stanc.js", package = "StanHeaders")
+  if (requireNamespace("V8")) {
+    assign("stanc_ctx", V8::v8(), envir = topenv())
+  } else assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
+  stanc_js <- system.file("stanc.js", package = "StanHeaders", mustWork = TRUE)
+  if (!stanc_ctx$validate(stanc_js)) {
+    stanc_js <- system.file("exec", "stanc.js", package = "rstan", mustWork = TRUE)
+  }
   stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
