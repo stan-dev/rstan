@@ -64,7 +64,6 @@ Suggests:
     rstudioapi,
     Matrix,
     knitr,
-    rstanarm,
     coda,
     V8
 URL: https://mc-stan.org/rstan/, https://discourse.mc-stan.org
