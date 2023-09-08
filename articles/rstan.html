@@ -6,19 +6,21 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RStan: the R interface to Stan • rstan</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="RStan: the R interface to Stan">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="rstan">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rstan</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.19.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.24</span>
       </span>
     </div>
 
@@ -44,7 +46,7 @@
   <a href="../reference/index.html">Functions</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
@@ -54,16 +56,16 @@
       <a href="https://mc-stan.org/rstanarm">rstanarm</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/bayesplot">bayesplot</a>
+      <a href="https://mc-stan.org/bayesplot" class="external-link">bayesplot</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/shinystan">shinystan</a>
+      <a href="https://mc-stan.org/shinystan" class="external-link">shinystan</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/loo">loo</a>
+      <a href="https://mc-stan.org/loo" class="external-link">loo</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/projpred">projpred</a>
+      <a href="https://mc-stan.org/projpred" class="external-link">projpred</a>
     </li>
     <li>
       <a href="https://mc-stan.org/rstantools">rstantools</a>
@@ -71,24 +73,24 @@
   </ul>
 </li>
 <li>
-  <a href="https://mc-stan.org">Stan</a>
+  <a href="https://mc-stan.org" class="external-link">Stan</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/mcmc_stan">
+  <a href="https://twitter.com/mcmc_stan" class="external-link">
     <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/stan-dev/rstan">
+  <a href="https://github.com/stan-dev/rstan" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://discourse.mc-stan.org/">
+  <a href="https://discourse.mc-stan.org/" class="external-link">
     <span class="fa fa-users"></span>
      
   </a>
@@ -106,31 +108,57 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>RStan: the R interface to Stan</h1>
-                        <h4 class="author">Stan Development Team</h4>
+      <h1 data-toc-skip>RStan: the R interface to Stan</h1>
+                        <h4 data-toc-skip class="author">Stan
+Development Team</h4>
             
-            <h4 class="date">2019-09-20</h4>
+            <h4 data-toc-skip class="date">2023-09-08</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/HEAD/vignettes/rstan.Rmd" class="external-link"><code>vignettes/rstan.Rmd</code></a></small>
       <div class="hidden name"><code>rstan.Rmd</code></div>
 
     </div>
 
     
     
-<p>In this vignette we present RStan, the R interface to Stan. Stan is a C++ library for Bayesian inference using the No-U-Turn sampler (a variant of Hamiltonian Monte Carlo) or frequentist inference via optimization. We illustrate the features of RStan through an example in <span class="citation">Gelman et al. (2003)</span>.</p>
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>Stan is a C++ library for Bayesian modeling and inference that primarily uses the No-U-Turn sampler (NUTS) <span class="citation">(Hoffman and Gelman 2012)</span> to obtain posterior simulations given a user-specified model and data. Alternatively, Stan can utilize the LBFGS optimization algorithm to maximize an objective function, such as a log-likelihood. The R package <strong>rstan</strong> provides RStan, the R interface to Stan. The <strong>rstan</strong> package allows one to conveniently fit Stan models from R <span class="citation">(R Core Team 2014)</span> and access the output, including posterior inferences and intermediate quantities such as evaluations of the log posterior density and its gradients.</p>
-<p>In this vignette we provide a concise introduction to the functionality included in the <strong>rstan</strong> package. Stan’s website <a href="http://mc-stan.org">mc-stan.org</a> has additional details and provides up-to-date information about how to operate both Stan and its many interfaces including RStan. See, for example, <em>RStan Getting Started</em> <span class="citation">(The Stan Development Team 2014)</span>.</p>
+<p>In this vignette we present RStan, the R interface to Stan. Stan is a
+C++ library for Bayesian inference using the No-U-Turn sampler (a
+variant of Hamiltonian Monte Carlo) or frequentist inference via
+optimization. We illustrate the features of RStan through an example in
+<span class="citation">Gelman et al. (2003)</span>.</p>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>Stan is a C++ library for Bayesian modeling and inference that
+primarily uses the No-U-Turn sampler (NUTS) <span class="citation">(Hoffman and Gelman 2012)</span> to obtain posterior
+simulations given a user-specified model and data. Alternatively, Stan
+can utilize the LBFGS optimization algorithm to maximize an objective
+function, such as a log-likelihood. The R package <strong>rstan</strong>
+provides RStan, the R interface to Stan. The <strong>rstan</strong>
+package allows one to conveniently fit Stan models from R <span class="citation">(R Core Team 2014)</span> and access the output,
+including posterior inferences and intermediate quantities such as
+evaluations of the log posterior density and its gradients.</p>
+<p>In this vignette we provide a concise introduction to the
+functionality included in the <strong>rstan</strong> package. Stan’s
+website <a href="https://mc-stan.org" class="external-link">mc-stan.org</a> has additional
+details and provides up-to-date information about how to operate both
+Stan and its many interfaces including RStan. See, for example,
+<em>RStan Getting Started</em> <span class="citation">(The Stan
+Development Team 2014)</span>.</p>
 </div>
-<div id="prerequisites" class="section level2">
-<h2 class="hasAnchor">
-<a href="#prerequisites" class="anchor"></a>Prerequisites</h2>
-<p>Stan has a modeling language, which is similar to but not identical to that of the Bayesian graphical modeling package BUGS <span class="citation">(Lunn et al. 2000)</span>. A parser translates a model expressed in the Stan language to C++ code, whereupon it is compiled to an executable program and loaded as a Dynamic Shared Object (DSO) in R which can then be called by the user.</p>
-<p>A C++ compiler, such as <a href="http://gcc.gnu.org"><code>g++</code></a> or <a href="http://clang.llvm.org"><code>clang++</code></a>, is required for this process. For instructions on installing a C++ compiler for use with RStan see <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan-Getting-Started</a>.</p>
-<p>The <strong>rstan</strong> package also depends heavily on several other R packages:</p>
+<div class="section level2">
+<h2 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a>
+</h2>
+<p>Stan has a modeling language, which is similar to but not identical
+to that of the Bayesian graphical modeling package BUGS <span class="citation">(Lunn et al. 2000)</span>. A parser translates a model
+expressed in the Stan language to C++ code, whereupon it is compiled to
+an executable program and loaded as a Dynamic Shared Object (DSO) in R
+which can then be called by the user.</p>
+<p>A C++ compiler, such as <a href="https://gcc.gnu.org" class="external-link"><code>g++</code></a> or <a href="https://clang.llvm.org" class="external-link"><code>clang++</code></a>, is required for
+this process. For instructions on installing a C++ compiler for use with
+RStan see <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">RStan-Getting-Started</a>.</p>
+<p>The <strong>rstan</strong> package also depends heavily on several
+other R packages:</p>
 <ul>
 <li>
 <strong>StanHeaders</strong> (Stan C++ headers)</li>
@@ -143,26 +171,44 @@
 <li>
 <strong>inline</strong> (compiles C++ for use with R)</li>
 </ul>
-<p>These dependencies should be automatically installed if you install the <strong>rstan</strong> package via one of the conventional mechanisms.</p>
+<p>These dependencies should be automatically installed if you install
+the <strong>rstan</strong> package via one of the conventional
+mechanisms.</p>
 </div>
-<div id="typical-workflow" class="section level2">
-<h2 class="hasAnchor">
-<a href="#typical-workflow" class="anchor"></a>Typical Workflow</h2>
-<p>The following is a typical workflow for using Stan via RStan for Bayesian inference.</p>
+<div class="section level2">
+<h2 id="typical-workflow">Typical Workflow<a class="anchor" aria-label="anchor" href="#typical-workflow"></a>
+</h2>
+<p>The following is a typical workflow for using Stan via RStan for
+Bayesian inference.</p>
 <ol style="list-style-type: decimal">
-<li>Represent a statistical model by writing its log posterior density (up to an normalizing constant that does not depend on the unknown parameters in the model) using the Stan modeling language. We recommend using a separate file with a <code>.stan</code> extension, although it can also be done using a character string within R.</li>
-<li>Translate the Stan program to C++ code using the <code>stanc</code> function.</li>
-<li>Compile the C++ code to create a DSO (also called a dynamic link library (DLL)) that can be loaded by R.</li>
+<li>Represent a statistical model by writing its log posterior density
+(up to an normalizing constant that does not depend on the unknown
+parameters in the model) using the Stan modeling language. We recommend
+using a separate file with a <code>.stan</code> extension, although it
+can also be done using a character string within R.</li>
+<li>Translate the Stan program to C++ code using the <code>stanc</code>
+function.</li>
+<li>Compile the C++ code to create a DSO (also called a dynamic link
+library (DLL)) that can be loaded by R.</li>
 <li>Run the DSO to sample from the posterior distribution.</li>
 <li>Diagnose non-convergence of the MCMC chains.</li>
-<li>Conduct inference based on the posterior sample (the MCMC draws from the posterior distribution).</li>
+<li>Conduct inference based on the posterior sample (the MCMC draws from
+the posterior distribution).</li>
 </ol>
-<p>Conveniently, steps 2, 3, and 4, above, are all performed implicitly by a single call to the <code>stan</code> function.</p>
+<p>Conveniently, steps 2, 3, and 4, above, are all performed implicitly
+by a single call to the <code>stan</code> function.</p>
 </div>
-<div id="example" class="section level2">
-<h2 class="hasAnchor">
-<a href="#example" class="anchor"></a>Example</h2>
-<p>Throughout the rest of the vignette we’ll use a hierarchical meta-analysis model described in section 5.5 of <span class="citation">Gelman et al. (2003)</span> as a running example. A hierarchical model is used to model the effect of coaching programs on college admissions tests. The data, shown in the table below, summarize the results of experiments conducted in eight high schools, with an estimated standard error for each. These data and model are of historical interest as an example of full Bayesian inference <span class="citation">(Rubin 1981)</span>. For short, we call this the <em>Eight Schools</em> examples.</p>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Throughout the rest of the vignette we’ll use a hierarchical
+meta-analysis model described in section 5.5 of <span class="citation">Gelman et al. (2003)</span> as a running example. A
+hierarchical model is used to model the effect of coaching programs on
+college admissions tests. The data, shown in the table below, summarize
+the results of experiments conducted in eight high schools, with an
+estimated standard error for each. These data and model are of
+historical interest as an example of full Bayesian inference <span class="citation">(Rubin 1981)</span>. For short, we call this the
+<em>Eight Schools</em> examples.</p>
 <table class="table">
 <thead><tr class="header">
 <th>School</th>
@@ -212,7 +258,14 @@
 </tr>
 </tbody>
 </table>
-<p>We use the Eight Schools example here because it is simple but also represents a nontrivial Markov chain simulation problem in that there is dependence between the parameters of original interest in the study — the effects of coaching in each of the eight schools — and the hyperparameter representing the variation of these effects in the modeled population. Certain implementations of a Gibbs sampler or a Hamiltonian Monte Carlo sampler can be slow to converge in this example.</p>
+<p>We use the Eight Schools example here because it is simple but also
+represents a nontrivial Markov chain simulation problem in that there is
+dependence between the parameters of original interest in the study —
+the effects of coaching in each of the eight schools — and the
+hyperparameter representing the variation of these effects in the
+modeled population. Certain implementations of a Gibbs sampler or a
+Hamiltonian Monte Carlo sampler can be slow to converge in this
+example.</p>
 <p>The statistical model of interest is specified as</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -221,11 +274,15 @@ y_j &amp;\sim \mathsf{Normal}(\theta_j, \sigma_j), \quad j=1,\ldots,8 \\
 p(\mu, \tau) &amp;\propto 1,
 \end{aligned}
 \]</span></p>
-<p>where each <span class="math inline">\(\sigma_j\)</span> is assumed known.</p>
-<div id="write-a-stan-program" class="section level3">
-<h3 class="hasAnchor">
-<a href="#write-a-stan-program" class="anchor"></a>Write a Stan Program</h3>
-<p>RStan allows a Stan program to be coded in a text file (typically with suffix <code>.stan</code>) or in a R character vector (of length one). We put the following code for the Eight Schools model into the file <code>schools.stan</code>:</p>
+<p>where each <span class="math inline">\(\sigma_j\)</span> is assumed
+known.</p>
+<div class="section level3">
+<h3 id="write-a-stan-program">Write a Stan Program<a class="anchor" aria-label="anchor" href="#write-a-stan-program"></a>
+</h3>
+<p>RStan allows a Stan program to be coded in a text file (typically
+with suffix <code>.stan</code>) or in a R character vector (of length
+one). We put the following code for the Eight Schools model into the
+file <code>schools.stan</code>:</p>
 <pre><code>data {
   int&lt;lower=0&gt; J;          // number of schools 
   real y[J];               // estimated treatment effects
@@ -244,300 +301,547 @@ model {
   target += normal_lpdf(eta | 0, 1);
   target += normal_lpdf(y | theta, sigma);
 }</code></pre>
-<p>The first section of the Stan program above, the <code>data</code> block, specifies the data that is conditioned upon in Bayes Rule: the number of schools, <span class="math inline">\(J\)</span>, the vector of estimates, <span class="math inline">\((y_1, \ldots, y_J)\)</span>, and the vector of standard errors of the estimates <span class="math inline">\((\sigma_{1}, \ldots, \sigma_{J})\)</span>. Data are declared as integer or real and can be vectors (or, more generally, arrays) if dimensions are specified. Data can also be constrained; for example, in the above model <span class="math inline">\(J\)</span> has been restricted to be at least <span class="math inline">\(1\)</span> and the components of <span class="math inline">\(\sigma_y\)</span> must all be positive.</p>
-<p>The <code>parameters</code> block declares the parameters whose posterior distribution is sought. These are the the mean, <span class="math inline">\(\mu\)</span>, and standard deviation, <span class="math inline">\(\tau\)</span>, of the school effects, plus the <em>standardized</em> school-level effects <span class="math inline">\(\eta\)</span>. In this model, we let the unstandardized school-level effects, <span class="math inline">\(\theta\)</span>, be a transformed parameter constructed by scaling the standardized effects by <span class="math inline">\(\tau\)</span> and shifting them by <span class="math inline">\(\mu\)</span> rather than directly declaring <span class="math inline">\(\theta\)</span> as a parameter. By parameterizing the model this way, the sampler runs more efficiently because the resulting multivariate geometry is more amendable to Hamiltonian Monte Carlo <span class="citation">(Neal 2011)</span>.</p>
-<p>Finally, the <code>model</code> block looks similar to standard statistical notation. (Just be careful: the second argument to Stan’s normal<span class="math inline">\((\cdot,\cdot)\)</span> distribution is the standard deviation, not the variance as is usual in statistical notation). We have written the model in vector notation, which allows Stan to make use of more efficient algorithmic differentiation (AD). It would also be possible — but less efficient — to write the model by replacing <code>normal_lpdf(y | theta,sigma)</code> with a loop over the <span class="math inline">\(J\)</span> schools,</p>
+<p>The first section of the Stan program above, the <code>data</code>
+block, specifies the data that is conditioned upon in Bayes Rule: the
+number of schools, <span class="math inline">\(J\)</span>, the vector of
+estimates, <span class="math inline">\((y_1, \ldots, y_J)\)</span>, and
+the vector of standard errors of the estimates <span class="math inline">\((\sigma_{1}, \ldots, \sigma_{J})\)</span>. Data
+are declared as integer or real and can be vectors (or, more generally,
+arrays) if dimensions are specified. Data can also be constrained; for
+example, in the above model <span class="math inline">\(J\)</span> has
+been restricted to be at least <span class="math inline">\(1\)</span>
+and the components of <span class="math inline">\(\sigma_y\)</span> must
+all be positive.</p>
+<p>The <code>parameters</code> block declares the parameters whose
+posterior distribution is sought. These are the the mean, <span class="math inline">\(\mu\)</span>, and standard deviation, <span class="math inline">\(\tau\)</span>, of the school effects, plus the
+<em>standardized</em> school-level effects <span class="math inline">\(\eta\)</span>. In this model, we let the
+unstandardized school-level effects, <span class="math inline">\(\theta\)</span>, be a transformed parameter
+constructed by scaling the standardized effects by <span class="math inline">\(\tau\)</span> and shifting them by <span class="math inline">\(\mu\)</span> rather than directly declaring <span class="math inline">\(\theta\)</span> as a parameter. By parameterizing
+the model this way, the sampler runs more efficiently because the
+resulting multivariate geometry is more amendable to Hamiltonian Monte
+Carlo <span class="citation">(Neal 2011)</span>.</p>
+<p>Finally, the <code>model</code> block looks similar to standard
+statistical notation. (Just be careful: the second argument to Stan’s
+normal<span class="math inline">\((\cdot,\cdot)\)</span> distribution is
+the standard deviation, not the variance as is usual in statistical
+notation). We have written the model in vector notation, which allows
+Stan to make use of more efficient algorithmic differentiation (AD). It
+would also be possible — but less efficient — to write the model by
+replacing <code>normal_lpdf(y | theta,sigma)</code> with a loop over the
+<span class="math inline">\(J\)</span> schools,</p>
 <pre><code>for (j in 1:J)
   target += normal_lpdf(y[j] | theta[j],sigma[j]);</code></pre>
-<p>Stan has versions of many of the most useful R functions for statistical modeling, including probability distributions, matrix operations, and various special functions. However, the names of the Stan functions may differ from their R counterparts and, more subtly, the parameterizations of probability distributions in Stan may differ from those in R for the same distribution. To mitigate this problem, the <code>lookup</code> function can be passed an R function or character string naming an R function, and RStan will attempt to look up the corresponding Stan function, display its arguments, and give the page number in <span class="citation">The Stan Development Team (2016)</span> where the function is discussed.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/lookup.html">lookup</a></span>(<span class="st">"dnorm"</span>)</a></code></pre></div>
+<p>Stan has versions of many of the most useful R functions for
+statistical modeling, including probability distributions, matrix
+operations, and various special functions. However, the names of the
+Stan functions may differ from their R counterparts and, more subtly,
+the parameterizations of probability distributions in Stan may differ
+from those in R for the same distribution. To mitigate this problem, the
+<code>lookup</code> function can be passed an R function or character
+string naming an R function, and RStan will attempt to look up the
+corresponding Stan function, display its arguments, and give the page
+number in <span class="citation">The Stan Development Team (2016)</span>
+where the function is discussed.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/lookup.html">lookup</a></span><span class="op">(</span><span class="st">"dnorm"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>          StanFunction
 374 normal_id_glm_lpmf
 375 normal_id_glm_lpmf
 376      normal_id_glm
 379        normal_lpdf
 380             normal
-                                                       Arguments
-374   (vector y , matrix x, real alpha, vector beta, real sigma)
-375 (vector y , matrix x, vector alpha, vector beta, real sigma)
-376                                                            ~
-379                            (reals y , reals mu, reals sigma)
-380                                                            ~
-    ReturnType
-374       real
-375       real
-376       real
-379       real
-380       real</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="../reference/lookup.html">lookup</a></span>(dwilcox)   <span class="co"># no corresponding Stan function</span></a></code></pre></div>
+                                                       Arguments ReturnType
+374   (vector y , matrix x, real alpha, vector beta, real sigma)       real
+375 (vector y , matrix x, vector alpha, vector beta, real sigma)       real
+376                                                            ~       real
+379                            (reals y , reals mu, reals sigma)       real
+380                                                            ~       real</code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/lookup.html">lookup</a></span><span class="op">(</span><span class="va">dwilcox</span><span class="op">)</span>   <span class="co"># no corresponding Stan function</span></span></code></pre></div>
 <pre><code>[1] "no matching Stan functions"</code></pre>
-<p>If the <code>lookup</code> function fails to find an R function that corresponds to a Stan function, it will treat its argument as a regular expression and attempt to find matches with the names of Stan functions.</p>
+<p>If the <code>lookup</code> function fails to find an R function that
+corresponds to a Stan function, it will treat its argument as a regular
+expression and attempt to find matches with the names of Stan
+functions.</p>
 </div>
-<div id="preparing-the-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#preparing-the-data" class="anchor"></a>Preparing the Data</h3>
-<p>The <code>stan</code> function accepts data as a named list, a character vector of object names, or an <code>environment</code>. Alternatively, the <code>data</code> argument can be omitted and R will search for objects that have the same names as those declared in the <code>data</code> block of the Stan program. Here is the data for the Eight Schools example:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">schools_data &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="dt">J =</span> <span class="dv">8</span>,</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">28</span>,  <span class="dv">8</span>, <span class="dv">-3</span>,  <span class="dv">7</span>, <span class="dv">-1</span>,  <span class="dv">1</span>, <span class="dv">18</span>, <span class="dv">12</span>),</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="dt">sigma =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">16</span>, <span class="dv">11</span>,  <span class="dv">9</span>, <span class="dv">11</span>, <span class="dv">10</span>, <span class="dv">18</span>)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">)</a></code></pre></div>
-<p>It would also be possible (indeed, encouraged) to read in the data from a file rather than to directly enter the numbers in the R script.</p>
+<div class="section level3">
+<h3 id="preparing-the-data">Preparing the Data<a class="anchor" aria-label="anchor" href="#preparing-the-data"></a>
+</h3>
+<p>The <code>stan</code> function accepts data as a named list, a
+character vector of object names, or an <code>environment</code>.
+Alternatively, the <code>data</code> argument can be omitted and R will
+search for objects that have the same names as those declared in the
+<code>data</code> block of the Stan program. Here is the data for the
+Eight Schools example:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">schools_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  J <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">28</span>,  <span class="fl">8</span>, <span class="op">-</span><span class="fl">3</span>,  <span class="fl">7</span>, <span class="op">-</span><span class="fl">1</span>,  <span class="fl">1</span>, <span class="fl">18</span>, <span class="fl">12</span><span class="op">)</span>,</span>
+<span>  sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">10</span>, <span class="fl">16</span>, <span class="fl">11</span>,  <span class="fl">9</span>, <span class="fl">11</span>, <span class="fl">10</span>, <span class="fl">18</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>It would also be possible (indeed, encouraged) to read in the data
+from a file rather than to directly enter the numbers in the R
+script.</p>
 </div>
-<div id="sample-from-the-posterior-distribution" class="section level3">
-<h3 class="hasAnchor">
-<a href="#sample-from-the-posterior-distribution" class="anchor"></a>Sample from the Posterior Distribution</h3>
-<p>Next, we can call the <code>stan</code> function to draw posterior samples:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rstan)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">fit1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/stan.html">stan</a></span>(</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">  <span class="dt">file =</span> <span class="st">"schools.stan"</span>,  <span class="co"># Stan program</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">  <span class="dt">data =</span> schools_data,    <span class="co"># named list of data</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">  <span class="dt">chains =</span> <span class="dv">4</span>,             <span class="co"># number of Markov chains</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">  <span class="dt">warmup =</span> <span class="dv">1000</span>,          <span class="co"># number of warmup iterations per chain</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">  <span class="dt">iter =</span> <span class="dv">2000</span>,            <span class="co"># total number of iterations per chain</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">  <span class="dt">cores =</span> <span class="dv">2</span>,              <span class="co"># number of cores (could use one per chain)</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">  <span class="dt">refresh =</span> <span class="dv">0</span>             <span class="co"># no progress shown</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10">  )</a></code></pre></div>
-<pre><code>Warning: There were 2 divergent transitions after warmup. Increasing adapt_delta above 0.8 may help. See
-http://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup</code></pre>
+<div class="section level3">
+<h3 id="sample-from-the-posterior-distribution">Sample from the Posterior Distribution<a class="anchor" aria-label="anchor" href="#sample-from-the-posterior-distribution"></a>
+</h3>
+<p>Next, we can call the <code>stan</code> function to draw posterior
+samples:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/">rstan</a></span><span class="op">)</span></span>
+<span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stan.html">stan</a></span><span class="op">(</span></span>
+<span>  file <span class="op">=</span> <span class="st">"schools.stan"</span>,  <span class="co"># Stan program</span></span>
+<span>  data <span class="op">=</span> <span class="va">schools_data</span>,    <span class="co"># named list of data</span></span>
+<span>  chains <span class="op">=</span> <span class="fl">4</span>,             <span class="co"># number of Markov chains</span></span>
+<span>  warmup <span class="op">=</span> <span class="fl">1000</span>,          <span class="co"># number of warmup iterations per chain</span></span>
+<span>  iter <span class="op">=</span> <span class="fl">2000</span>,            <span class="co"># total number of iterations per chain</span></span>
+<span>  cores <span class="op">=</span> <span class="fl">1</span>,              <span class="co"># number of cores (could use one per chain)</span></span>
+<span>  refresh <span class="op">=</span> <span class="fl">0</span>             <span class="co"># no progress shown</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<pre><code>Warning: There were 1 divergent transitions after warmup. See
+https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+to find out why this is a problem and how to eliminate them.</code></pre>
 <pre><code>Warning: Examine the pairs() plot to diagnose sampling problems</code></pre>
 <p>The <code>stan</code> function wraps the following three steps:</p>
 <ul>
 <li>Translate a model in Stan code to C++ code</li>
-<li>Compile the C++ code to a dynamic shared object (DSO) and load the DSO</li>
+<li>Compile the C++ code to a dynamic shared object (DSO) and load the
+DSO</li>
 <li>Sample given some user-specified data and other settings</li>
 </ul>
-<p>A single call to <code>stan</code> performs all three steps, but they can also be executed one by one (see the help pages for <code>stanc</code>, <code>stan_model</code>, and <code>sampling</code>), which can be useful for debugging. In addition, Stan saves the DSO so that when the same model is fit again (possibly with new data and settings) we can avoid recompilation. If an error happens after the model is compiled but before sampling (e.g., problems with inputs like data and initial values), we can still reuse the compiled model.</p>
-<p>The <code>stan</code> function returns a stanfit object, which is an S4 object of class <code>"stanfit"</code>. For those who are not familiar with the concept of class and S4 class in R, refer to <span class="citation">Chambers (2008)</span>. An S4 class consists of some attributes (data) to model an object and some methods to model the behavior of the object. From a user’s perspective, once a stanfit object is created, we are mainly concerned about what methods are defined.</p>
-<p>If no error occurs, the returned stanfit object includes the sample drawn from the posterior distribution for the model parameters and other quantities defined in the model. If there is an error (e.g. a syntax error in the Stan program), <code>stan</code> will either quit or return a stanfit object that contains no posterior draws.</p>
-<p>For class <code>"stanfit"</code>, many methods such as <code>print</code> and <code>plot</code> are defined for working with the MCMC sample. For example, the following shows a summary of the parameters from the Eight Schools model using the <code>print</code> method:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(fit1, <span class="dt">pars=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"theta"</span>, <span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span>), <span class="dt">probs=</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(.<span class="dv">1</span>,.<span class="dv">5</span>,.<span class="dv">9</span>))</a></code></pre></div>
-<pre><code>Inference for Stan model: schools.
+<p>A single call to <code>stan</code> performs all three steps, but they
+can also be executed one by one (see the help pages for
+<code>stanc</code>, <code>stan_model</code>, and <code>sampling</code>),
+which can be useful for debugging. In addition, Stan saves the DSO so
+that when the same model is fit again (possibly with new data and
+settings) we can avoid recompilation. If an error happens after the
+model is compiled but before sampling (e.g., problems with inputs like
+data and initial values), we can still reuse the compiled model.</p>
+<p>The <code>stan</code> function returns a stanfit object, which is an
+S4 object of class <code>"stanfit"</code>. For those who are not
+familiar with the concept of class and S4 class in R, refer to <span class="citation">Chambers (2008)</span>. An S4 class consists of some
+attributes (data) to model an object and some methods to model the
+behavior of the object. From a user’s perspective, once a stanfit object
+is created, we are mainly concerned about what methods are defined.</p>
+<p>If no error occurs, the returned stanfit object includes the sample
+drawn from the posterior distribution for the model parameters and other
+quantities defined in the model. If there is an error (e.g. a syntax
+error in the Stan program), <code>stan</code> will either quit or return
+a stanfit object that contains no posterior draws.</p>
+<p>For class <code>"stanfit"</code>, many methods such as
+<code>print</code> and <code>plot</code> are defined for working with
+the MCMC sample. For example, the following shows a summary of the
+parameters from the Eight Schools model using the <code>print</code>
+method:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit1</span>, pars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"theta"</span>, <span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span><span class="op">)</span>, probs<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.5</span>,<span class="fl">.9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Inference for Stan model: anon_model.
 4 chains, each with iter=2000; warmup=1000; thin=1; 
 post-warmup draws per chain=1000, total post-warmup draws=4000.
 
            mean se_mean   sd    10%    50%    90% n_eff Rhat
-theta[1]  10.99    0.16 8.10   2.08   9.81  21.51  2625 1.00
-theta[2]   7.88    0.08 6.14   0.43   7.70  15.51  5512 1.00
-theta[3]   6.10    0.14 7.57  -3.14   6.59  14.73  2755 1.00
-theta[4]   7.71    0.09 6.37  -0.22   7.73  15.44  4585 1.00
-theta[5]   5.23    0.11 6.44  -2.96   5.74  12.99  3639 1.00
-theta[6]   6.27    0.10 6.49  -1.61   6.60  13.88  4356 1.00
-theta[7]  10.47    0.11 6.81   2.64   9.66  19.46  3712 1.00
-theta[8]   8.33    0.14 7.78  -0.49   8.15  17.56  3002 1.00
-mu         7.84    0.13 5.17   1.58   7.67  14.23  1675 1.00
-tau        6.36    0.15 5.56   0.85   5.06  13.25  1450 1.01
-lp__     -39.63    0.07 2.65 -43.07 -39.40 -36.44  1261 1.00
+theta[1]  11.42    0.17 8.26   2.61  10.26  21.92  2251    1
+theta[2]   7.98    0.10 6.12   0.52   7.84  15.70  4038    1
+theta[3]   5.84    0.14 8.03  -3.52   6.35  14.67  3399    1
+theta[4]   7.52    0.11 6.52  -0.37   7.45  15.36  3829    1
+theta[5]   4.93    0.10 6.25  -3.15   5.33  12.55  3857    1
+theta[6]   6.06    0.10 6.56  -2.47   6.46  13.74  4062    1
+theta[7]  10.66    0.12 6.80   2.78   9.87  19.82  3127    1
+theta[8]   8.27    0.13 7.80  -0.68   7.90  17.48  3726    1
+mu         7.89    0.13 5.17   1.47   7.86  14.12  1524    1
+tau        6.76    0.15 5.71   1.05   5.37  14.05  1483    1
+lp__     -39.37    0.07 2.58 -42.74 -39.11 -36.32  1381    1
 
-Samples were drawn using NUTS(diag_e) at Fri Sep 20 17:44:34 2019.
+Samples were drawn using NUTS(diag_e) at Fri Sep  8 11:59:07 2023.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
-<p>The last line of this output, <code>lp__</code>, is the logarithm of the (unnormalized) posterior density as calculated by Stan. This log density can be used in various ways for model evaluation and comparison (see, e.g., <span class="citation">Vehtari and Ojanen (2012)</span>).</p>
-<div id="arguments-to-the-stan-function" class="section level4">
-<h4 class="hasAnchor">
-<a href="#arguments-to-the-stan-function" class="anchor"></a>Arguments to the <code>stan</code> Function</h4>
-<p>The primary arguments for sampling (in functions <code>stan</code> and <code>sampling</code>) include data, initial values, and the options of the sampler such as <code>chains</code>, <code>iter</code>, and <code>warmup</code>. In particular, <code>warmup</code> specifies the number of iterations that are used by the NUTS sampler for the adaptation phase before sampling begins. After the warmup, the sampler turns off adaptation and continues until a total of <code>iter</code> iterations (including <code>warmup</code>) have been completed. There is no theoretical guarantee that the draws obtained during warmup are from the posterior distribution, so the warmup draws should only be used for diagnosis and not inference. The summaries for the parameters shown by the <code>print</code> method are calculated using only post-warmup draws.</p>
-<p>The optional <code>init</code> argument can be used to specify initial values for the Markov chains. There are several ways to specify initial values, and the details can be found in the documentation of the <code>stan</code> function. The vast majority of the time it is adequate to allow Stan to generate its own initial values randomly. However, sometimes it is better to specify the initial values for at least a subset of the objects declared in the <code>parameters</code> block of a Stan program.</p>
-<p>Stan uses a random number generator (RNG) that supports parallelism. The initialization of the RNG is determined by the arguments <code>seed</code> and <code>chain_id</code>. Even if we are running multiple chains from one call to the <code>stan</code> function we only need to specify one seed, which is randomly generated by R if not specified.</p>
+<p>The last line of this output, <code>lp__</code>, is the logarithm of
+the (unnormalized) posterior density as calculated by Stan. This log
+density can be used in various ways for model evaluation and comparison
+(see, e.g., <span class="citation">Vehtari and Ojanen
+(2012)</span>).</p>
+<div class="section level4">
+<h4 id="arguments-to-the-stan-function">Arguments to the <code>stan</code> Function<a class="anchor" aria-label="anchor" href="#arguments-to-the-stan-function"></a>
+</h4>
+<p>The primary arguments for sampling (in functions <code>stan</code>
+and <code>sampling</code>) include data, initial values, and the options
+of the sampler such as <code>chains</code>, <code>iter</code>, and
+<code>warmup</code>. In particular, <code>warmup</code> specifies the
+number of iterations that are used by the NUTS sampler for the
+adaptation phase before sampling begins. After the warmup, the sampler
+turns off adaptation and continues until a total of <code>iter</code>
+iterations (including <code>warmup</code>) have been completed. There is
+no theoretical guarantee that the draws obtained during warmup are from
+the posterior distribution, so the warmup draws should only be used for
+diagnosis and not inference. The summaries for the parameters shown by
+the <code>print</code> method are calculated using only post-warmup
+draws.</p>
+<p>The optional <code>init</code> argument can be used to specify
+initial values for the Markov chains. There are several ways to specify
+initial values, and the details can be found in the documentation of the
+<code>stan</code> function. The vast majority of the time it is adequate
+to allow Stan to generate its own initial values randomly. However,
+sometimes it is better to specify the initial values for at least a
+subset of the objects declared in the <code>parameters</code> block of a
+Stan program.</p>
+<p>Stan uses a random number generator (RNG) that supports parallelism.
+The initialization of the RNG is determined by the arguments
+<code>seed</code> and <code>chain_id</code>. Even if we are running
+multiple chains from one call to the <code>stan</code> function we only
+need to specify one seed, which is randomly generated by R if not
+specified.</p>
 </div>
-<div id="data-preprocessing-and-passing" class="section level4">
-<h4 class="hasAnchor">
-<a href="#data-preprocessing-and-passing" class="anchor"></a>Data Preprocessing and Passing</h4>
-<p>The data passed to <code>stan</code> will go through a preprocessing procedure. The details of this preprocessing are documented in the documentation for the <code>stan</code> function. Here we stress a few important steps. First, RStan allows the user to pass more objects as data than what is declared in the <code>data</code> block (silently omitting any unnecessary objects). In general, an element in the list of data passed to Stan from R should be numeric and its dimension should match the declaration in the <code>data</code> block of the model. So for example, the <code>factor</code> type in R is not supported as a data element for RStan and must be converted to integer codes via <code>as.integer</code>. The Stan modeling language distinguishes between integers and doubles (type <code>int</code> and <code>real</code> in Stan modeling language, respectively). The <code>stan</code> function will convert some R data (which is double-precision usually) to integers if possible.</p>
-<p>The Stan language has scalars and other types that are sets of scalars, e.g. vectors, matrices, and arrays. As R does not have true scalars, RStan treats vectors of length one as scalars. However, consider a model with a <code>data</code> block defined as</p>
+<div class="section level4">
+<h4 id="data-preprocessing-and-passing">Data Preprocessing and Passing<a class="anchor" aria-label="anchor" href="#data-preprocessing-and-passing"></a>
+</h4>
+<p>The data passed to <code>stan</code> will go through a preprocessing
+procedure. The details of this preprocessing are documented in the
+documentation for the <code>stan</code> function. Here we stress a few
+important steps. First, RStan allows the user to pass more objects as
+data than what is declared in the <code>data</code> block (silently
+omitting any unnecessary objects). In general, an element in the list of
+data passed to Stan from R should be numeric and its dimension should
+match the declaration in the <code>data</code> block of the model. So
+for example, the <code>factor</code> type in R is not supported as a
+data element for RStan and must be converted to integer codes via
+<code>as.integer</code>. The Stan modeling language distinguishes
+between integers and doubles (type <code>int</code> and
+<code>real</code> in Stan modeling language, respectively). The
+<code>stan</code> function will convert some R data (which is
+double-precision usually) to integers if possible.</p>
+<p>The Stan language has scalars and other types that are sets of
+scalars, e.g. vectors, matrices, and arrays. As R does not have true
+scalars, RStan treats vectors of length one as scalars. However,
+consider a model with a <code>data</code> block defined as</p>
 <pre><code>data {                
   int&lt;lower=1&gt; N;      
   real y[N];
 }</code></pre>
-<p>in which <code>N</code> can be <span class="math inline">\(1\)</span> as a special case. So if we know that <code>N</code> is always larger than <span class="math inline">\(1\)</span>, we can use a vector of length <code>N</code> in R as the data input for <code>y</code> (for example, a vector created by <code>y &lt;- rnorm(N)</code>). If we want to prevent RStan from treating the input data for <code>y</code> as a scalar when <span class="math inline">\(N`\)</span> is <span class="math inline">\(1\)</span>, we need to explicitly make it an array as the following R code shows:</p>
-<pre><code>y &lt;- as.array(y)</code></pre>
-<p>Stan cannot handle missing values in data automatically, so no element of the data can contain <code>NA</code> values. An important step in RStan’s data preprocessing is to check missing values and issue an error if any are found. There are, however, various ways of writing Stan programs that account for missing data (see <span class="citation">The Stan Development Team (2016)</span>).</p>
+<p>in which <code>N</code> can be <span class="math inline">\(1\)</span>
+as a special case. So if we know that <code>N</code> is always larger
+than <span class="math inline">\(1\)</span>, we can use a vector of
+length <code>N</code> in R as the data input for <code>y</code> (for
+example, a vector created by <code>y &lt;- rnorm(N)</code>). If we want
+to prevent RStan from treating the input data for <code>y</code> as a
+scalar when <span class="math inline">\(N`\)</span> is <span class="math inline">\(1\)</span>, we need to explicitly make it an array
+as the following R code shows:</p>
+<pre><code><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">as.array</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code></pre>
+<p>Stan cannot handle missing values in data automatically, so no
+element of the data can contain <code>NA</code> values. An important
+step in RStan’s data preprocessing is to check missing values and issue
+an error if any are found. There are, however, various ways of writing
+Stan programs that account for missing data (see <span class="citation">The Stan Development Team (2016)</span>).</p>
 </div>
 </div>
-<div id="methods-for-the-stanfit-class" class="section level3">
-<h3 class="hasAnchor">
-<a href="#methods-for-the-stanfit-class" class="anchor"></a>Methods for the <code>"stanfit"</code> Class</h3>
-<p>The other vignette included with the <strong>rstan</strong> package discusses stanfit objects in greater detail and gives examples of accessing the most important content contained in the objects (e.g., posterior draws, diagnostic summaries). Also, a full list of available methods can be found in the documentation for the <code>"stanfit"</code> class at <code><a href="https://rdrr.io/r/utils/help.html">help("stanfit", "rstan")</a></code>. Here we give only a few examples.</p>
-<p>The <code>plot</code> method for stanfit objects provides various graphical overviews of the output. The default plot shows posterior uncertainty intervals (by default 80% (inner) and 95% (outer)) and the posterior median for all the parameters as well as <code>lp__</code> (the log of posterior density function up to an additive constant):</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(fit1)</a></code></pre></div>
+<div class="section level3">
+<h3 id="methods-for-the-stanfit-class">Methods for the <code>"stanfit"</code> Class<a class="anchor" aria-label="anchor" href="#methods-for-the-stanfit-class"></a>
+</h3>
+<p>The other vignette included with the <strong>rstan</strong> package
+discusses stanfit objects in greater detail and gives examples of
+accessing the most important content contained in the objects (e.g.,
+posterior draws, diagnostic summaries). Also, a full list of available
+methods can be found in the documentation for the <code>"stanfit"</code>
+class at <code><a href="../reference/stanfit-class.html">help("stanfit", "rstan")</a></code>. Here we give only a few
+examples.</p>
+<p>The <code>plot</code> method for stanfit objects provides various
+graphical overviews of the output. The default plot shows posterior
+uncertainty intervals (by default 80% (inner) and 95% (outer)) and the
+posterior median for all the parameters as well as <code>lp__</code>
+(the log of posterior density function up to an additive constant):</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span></span></code></pre></div>
 <pre><code>'pars' not specified. Showing first 10 parameters by default.</code></pre>
 <pre><code>ci_level: 0.8 (80% intervals)</code></pre>
 <pre><code>outer_level: 0.95 (95% intervals)</code></pre>
 <p><img src="rstan_files/figure-html/stanfit-plot-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>The optional <code>plotfun</code> argument can be used to select among the various available plots. See <code><a href="https://rdrr.io/r/utils/help.html">help("plot,stanfit-method")</a></code>.</p>
-<p>The <code>traceplot</code> method is used to plot the time series of the posterior draws. If we include the warmup draws by setting <code>inc_warmup=TRUE</code>, the background color of the warmup area is different from the post-warmup phase:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="../reference/stanfit-method-traceplot.html">traceplot</a></span>(fit1, <span class="dt">pars =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mu"</span>, <span class="st">"tau"</span>), <span class="dt">inc_warmup =</span> <span class="ot">TRUE</span>, <span class="dt">nrow =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p>The optional <code>plotfun</code> argument can be used to select
+among the various available plots. See
+<code><a href="../reference/stanfit-method-plot.html">help("plot,stanfit-method")</a></code>.</p>
+<p>The <code>traceplot</code> method is used to plot the time series of
+the posterior draws. If we include the warmup draws by setting
+<code>inc_warmup=TRUE</code>, the background color of the warmup area is
+different from the post-warmup phase:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/stanfit-method-traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span>, inc_warmup <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rstan_files/figure-html/stanfit-traceplot-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>To assess the convergence of the Markov chains, in addition to visually inspecting traceplots we can calculate the split <span class="math inline">\(\hat{R}\)</span> statistic. Split <span class="math inline">\(\hat{R}\)</span> is an updated version of the <span class="math inline">\(\hat{R}\)</span> statistic proposed in <span class="citation">Gelman and Rubin (1992)</span> that is based on splitting each chain into two halves. See the Stan manual for more details. The estimated <span class="math inline">\(\hat{R}\)</span> for each parameter is included as one of the columns in the output from the <code>summary</code> and <code>print</code> methods.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(fit1, <span class="dt">pars =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mu"</span>, <span class="st">"tau"</span>))</a></code></pre></div>
-<pre><code>Inference for Stan model: schools.
+<p>To assess the convergence of the Markov chains, in addition to
+visually inspecting traceplots we can calculate the split <span class="math inline">\(\hat{R}\)</span> statistic. Split <span class="math inline">\(\hat{R}\)</span> is an updated version of the
+<span class="math inline">\(\hat{R}\)</span> statistic proposed in <span class="citation">Gelman and Rubin (1992)</span> that is based on
+splitting each chain into two halves. See the Stan manual for more
+details. The estimated <span class="math inline">\(\hat{R}\)</span> for
+each parameter is included as one of the columns in the output from the
+<code>summary</code> and <code>print</code> methods.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Inference for Stan model: anon_model.
 4 chains, each with iter=2000; warmup=1000; thin=1; 
 post-warmup draws per chain=1000, total post-warmup draws=4000.
 
     mean se_mean   sd  2.5%  25%  50%   75% 97.5% n_eff Rhat
-mu  7.84    0.13 5.17 -2.40 4.52 7.67 11.05 18.25  1675 1.00
-tau 6.36    0.15 5.56  0.19 2.31 5.06  8.83 20.73  1450 1.01
+mu  7.89    0.13 5.17 -2.17 4.72 7.86 11.03 18.50  1524    1
+tau 6.76    0.15 5.71  0.25 2.64 5.37  9.32 21.59  1483    1
 
-Samples were drawn using NUTS(diag_e) at Fri Sep 20 17:44:34 2019.
+Samples were drawn using NUTS(diag_e) at Fri Sep  8 11:59:07 2023.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
-<p>Again, see the additional vignette on stanfit objects for more details.</p>
+<p>Again, see the additional vignette on stanfit objects for more
+details.</p>
 </div>
-<div id="sampling-difficulties" class="section level3">
-<h3 class="hasAnchor">
-<a href="#sampling-difficulties" class="anchor"></a>Sampling Difficulties</h3>
-<p>The best way to visualize the output of a model is through the ShinyStan interface, which can be accessed via the <a href="https://cran.r-project.org/package=shinystan"><strong>shinystan</strong></a> R package. ShinyStan facilitates both the visualization of parameter distributions and diagnosing problems with the sampler. The documentation for the <strong>shinystan</strong> package provides instructions for using the interface with stanfit objects.</p>
-<p>In addition to using ShinyStan, it is also possible to diagnose some sampling problems using functions in the <strong>rstan</strong> package. The <code>get_sampler_params</code> function returns information on parameters related the performance of the sampler:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co"># all chains combined</span></a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">sampler_params &lt;-<span class="st"> </span><span class="kw"><a href="../reference/stanfit-class.html">get_sampler_params</a></span>(fit1, <span class="dt">inc_warmup =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/summary.html">summary</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(rbind, sampler_params), <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
-<pre><code> accept_stat__    stepsize__      treedepth__   n_leapfrog__
- Min.   :0.00   Min.   : 0.046   Min.   :0.0   Min.   :  1  
- 1st Qu.:0.76   1st Qu.: 0.281   1st Qu.:3.0   1st Qu.:  7  
- Median :0.94   Median : 0.400   Median :3.0   Median :  7  
- Mean   :0.82   Mean   : 0.418   Mean   :3.3   Mean   : 12  
- 3rd Qu.:0.99   3rd Qu.: 0.418   3rd Qu.:4.0   3rd Qu.: 15  
- Max.   :1.00   Max.   :12.683   Max.   :7.0   Max.   :127  
-  divergent__        energy__ 
- Min.   :0.0000   Min.   :35  
- 1st Qu.:0.0000   1st Qu.:42  
- Median :0.0000   Median :44  
- Mean   :0.0097   Mean   :45  
- 3rd Qu.:0.0000   3rd Qu.:47  
- Max.   :1.0000   Max.   :61  </code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># each chain separately</span></a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(sampler_params, summary, <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="section level3">
+<h3 id="sampling-difficulties">Sampling Difficulties<a class="anchor" aria-label="anchor" href="#sampling-difficulties"></a>
+</h3>
+<p>The best way to visualize the output of a model is through the
+ShinyStan interface, which can be accessed via the <a href="https://cran.r-project.org/package=shinystan" class="external-link"><strong>shinystan</strong></a>
+R package. ShinyStan facilitates both the visualization of parameter
+distributions and diagnosing problems with the sampler. The
+documentation for the <strong>shinystan</strong> package provides
+instructions for using the interface with stanfit objects.</p>
+<p>In addition to using ShinyStan, it is also possible to diagnose some
+sampling problems using functions in the <strong>rstan</strong> package.
+The <code>get_sampler_params</code> function returns information on
+parameters related the performance of the sampler:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># all chains combined</span></span>
+<span><span class="va">sampler_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_sampler_params</a></span><span class="op">(</span><span class="va">fit1</span>, inc_warmup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">sampler_params</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code> accept_stat__    stepsize__      treedepth__   n_leapfrog__  divergent__  
+ Min.   :0.00   Min.   : 0.025   Min.   :0.0   Min.   :  1   Min.   :0.00  
+ 1st Qu.:0.75   1st Qu.: 0.282   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.00  
+ Median :0.95   Median : 0.317   Median :3.0   Median : 15   Median :0.00  
+ Mean   :0.82   Mean   : 0.388   Mean   :3.4   Mean   : 12   Mean   :0.01  
+ 3rd Qu.:0.99   3rd Qu.: 0.443   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.00  
+ Max.   :1.00   Max.   :14.332   Max.   :7.0   Max.   :127   Max.   :1.00  
+    energy__ 
+ Min.   :34  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :60  </code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># each chain separately</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="va">summary</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[[1]]
- accept_stat__    stepsize__     treedepth__   n_leapfrog__
- Min.   :0.00   Min.   :0.046   Min.   :0.0   Min.   : 1   
- 1st Qu.:0.73   1st Qu.:0.400   1st Qu.:3.0   1st Qu.: 7   
- Median :0.93   Median :0.400   Median :3.0   Median : 7   
- Mean   :0.81   Mean   :0.442   Mean   :3.2   Mean   :12   
- 3rd Qu.:0.98   3rd Qu.:0.404   3rd Qu.:4.0   3rd Qu.:15   
- Max.   :1.00   Max.   :9.155   Max.   :6.0   Max.   :63   
-  divergent__       energy__ 
- Min.   :0.000   Min.   :36  
- 1st Qu.:0.000   1st Qu.:42  
- Median :0.000   Median :44  
- Mean   :0.011   Mean   :44  
- 3rd Qu.:0.000   3rd Qu.:47  
- Max.   :1.000   Max.   :61  
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
+ Min.   :0.00   Min.   :0.034   Min.   :0.0   Min.   :  1   Min.   :0.00  
+ 1st Qu.:0.82   1st Qu.:0.289   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.00  
+ Median :0.96   Median :0.289   Median :4.0   Median : 15   Median :0.00  
+ Mean   :0.84   Mean   :0.396   Mean   :3.5   Mean   : 13   Mean   :0.01  
+ 3rd Qu.:0.99   3rd Qu.:0.452   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.00  
+ Max.   :1.00   Max.   :8.761   Max.   :7.0   Max.   :127   Max.   :1.00  
+    energy__ 
+ Min.   :36  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :44  
+ 3rd Qu.:47  
+ Max.   :59  
 
 [[2]]
- accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
- Min.   :0.00   Min.   :0.047   Min.   :0.0   Min.   : 1    Min.   :0.00  
- 1st Qu.:0.85   1st Qu.:0.267   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.00  
- Median :0.97   Median :0.267   Median :4.0   Median :15    Median :0.00  
- Mean   :0.86   Mean   :0.357   Mean   :3.6   Mean   :13    Mean   :0.01  
- 3rd Qu.:0.99   3rd Qu.:0.381   3rd Qu.:4.0   3rd Qu.:15    3rd Qu.:0.00  
- Max.   :1.00   Max.   :6.806   Max.   :6.0   Max.   :63    Max.   :1.00  
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+ Min.   :0.00   Min.   :0.041   Min.   :0.0   Min.   :  1   Min.   :0.000  
+ 1st Qu.:0.65   1st Qu.:0.363   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+ Median :0.92   Median :0.443   Median :3.0   Median :  7   Median :0.000  
+ Mean   :0.78   Mean   :0.427   Mean   :3.2   Mean   : 11   Mean   :0.011  
+ 3rd Qu.:0.98   3rd Qu.:0.443   3rd Qu.:3.0   3rd Qu.: 15   3rd Qu.:0.000  
+ Max.   :1.00   Max.   :4.627   Max.   :6.0   Max.   :127   Max.   :1.000  
     energy__ 
- Min.   :35  
+ Min.   :36  
  1st Qu.:42  
- Median :45  
+ Median :44  
  Mean   :45  
  3rd Qu.:47  
  Max.   :59  
 
 [[3]]
- accept_stat__    stepsize__     treedepth__   n_leapfrog__
- Min.   :0.00   Min.   :0.058   Min.   :0.0   Min.   :  1  
- 1st Qu.:0.72   1st Qu.:0.387   1st Qu.:3.0   1st Qu.:  7  
- Median :0.93   Median :0.418   Median :3.0   Median :  7  
- Mean   :0.80   Mean   :0.427   Mean   :3.2   Mean   : 11  
- 3rd Qu.:0.98   3rd Qu.:0.418   3rd Qu.:4.0   3rd Qu.: 15  
- Max.   :1.00   Max.   :9.343   Max.   :7.0   Max.   :127  
-  divergent__        energy__ 
- Min.   :0.0000   Min.   :35  
- 1st Qu.:0.0000   1st Qu.:42  
- Median :0.0000   Median :44  
- Mean   :0.0095   Mean   :45  
- 3rd Qu.:0.0000   3rd Qu.:47  
- Max.   :1.0000   Max.   :59  
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+ Min.   :0.00   Min.   :0.025   Min.   :0.0   Min.   :  1   Min.   :0.000  
+ 1st Qu.:0.67   1st Qu.:0.317   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+ Median :0.93   Median :0.317   Median :3.0   Median : 15   Median :0.000  
+ Mean   :0.79   Mean   :0.392   Mean   :3.4   Mean   : 12   Mean   :0.011  
+ 3rd Qu.:0.98   3rd Qu.:0.431   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
+ Max.   :1.00   Max.   :6.714   Max.   :7.0   Max.   :127   Max.   :1.000  
+    energy__ 
+ Min.   :36  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :60  
 
 [[4]]
- accept_stat__    stepsize__      treedepth__   n_leapfrog__
- Min.   :0.00   Min.   : 0.053   Min.   :0.0   Min.   : 1   
- 1st Qu.:0.75   1st Qu.: 0.405   1st Qu.:3.0   1st Qu.: 7   
- Median :0.94   Median : 0.410   Median :3.0   Median : 7   
- Mean   :0.82   Mean   : 0.445   Mean   :3.2   Mean   :11   
- 3rd Qu.:0.98   3rd Qu.: 0.410   3rd Qu.:3.0   3rd Qu.:15   
- Max.   :1.00   Max.   :12.683   Max.   :6.0   Max.   :79   
-  divergent__       energy__ 
- Min.   :0.000   Min.   :36  
- 1st Qu.:0.000   1st Qu.:42  
- Median :0.000   Median :44  
- Mean   :0.008   Mean   :44  
- 3rd Qu.:0.000   3rd Qu.:47  
- Max.   :1.000   Max.   :58  </code></pre>
-<p>Here we see that there are a small number of divergent transitions, which are identified by <code>divergent__</code> being <span class="math inline">\(1\)</span>. Ideally, there should be no divergent transitions after the warmup phase. The best way to try to eliminate divergent transitions is by increasing the target acceptance probability, which by default is <span class="math inline">\(0.8\)</span>. In this case the mean of <code>accept_stat__</code> is close to <span class="math inline">\(0.8\)</span> for all chains, but has a very skewed distribution because the median is near <span class="math inline">\(0.95\)</span>. We could go back and call <code>stan</code> again and specify the optional argument <code>control=list(adapt_delta=0.9)</code> to try to eliminate the divergent transitions. However, sometimes when the target acceptance rate is high, the stepsize is very small and the sampler hits its limit on the number of leapfrog steps it can take per iteration. In this case, it is a non-issue because each chain has a <code>treedepth__</code> of at most <span class="math inline">\(7\)</span> and the default is <span class="math inline">\(10\)</span>. But if any <code>treedepth__</code> were <span class="math inline">\(11\)</span>, then it would be wise to increase the limit by passing <code>control=list(max_treedepth=12)</code> (for example) to <code>stan</code>. See the vignette on stanfit objects for more on the structure of the object returned by <code>get_sampler_params</code>.</p>
-<p>We can also make a graphical representation of (much of the) the same information using <code>pairs</code>. The “pairs”" plot can be used to get a sense of whether any sampling difficulties are occurring in the tails or near the mode:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/graphics/pairs.html">pairs</a></span>(fit1, <span class="dt">pars =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span>), <span class="dt">las =</span> <span class="dv">1</span>)</a></code></pre></div>
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
+ Min.   :0.00   Min.   : 0.04   Min.   :0.0   Min.   :  1   Min.   :0.0000  
+ 1st Qu.:0.88   1st Qu.: 0.22   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.0000  
+ Median :0.97   Median : 0.22   Median :4.0   Median : 15   Median :0.0000  
+ Mean   :0.87   Mean   : 0.34   Mean   :3.6   Mean   : 14   Mean   :0.0085  
+ 3rd Qu.:0.99   3rd Qu.: 0.39   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.0000  
+ Max.   :1.00   Max.   :14.33   Max.   :7.0   Max.   :127   Max.   :1.0000  
+    energy__ 
+ Min.   :34  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :60  </code></pre>
+<p>Here we see that there are a small number of divergent transitions,
+which are identified by <code>divergent__</code> being <span class="math inline">\(1\)</span>. Ideally, there should be no divergent
+transitions after the warmup phase. The best way to try to eliminate
+divergent transitions is by increasing the target acceptance
+probability, which by default is <span class="math inline">\(0.8\)</span>. In this case the mean of
+<code>accept_stat__</code> is close to <span class="math inline">\(0.8\)</span> for all chains, but has a very skewed
+distribution because the median is near <span class="math inline">\(0.95\)</span>. We could go back and call
+<code>stan</code> again and specify the optional argument
+<code>control=list(adapt_delta=0.9)</code> to try to eliminate the
+divergent transitions. However, sometimes when the target acceptance
+rate is high, the stepsize is very small and the sampler hits its limit
+on the number of leapfrog steps it can take per iteration. In this case,
+it is a non-issue because each chain has a <code>treedepth__</code> of
+at most <span class="math inline">\(7\)</span> and the default is <span class="math inline">\(10\)</span>. But if any <code>treedepth__</code>
+were <span class="math inline">\(11\)</span>, then it would be wise to
+increase the limit by passing
+<code>control=list(max_treedepth=12)</code> (for example) to
+<code>stan</code>. See the vignette on stanfit objects for more on the
+structure of the object returned by <code>get_sampler_params</code>.</p>
+<p>We can also make a graphical representation of (much of the) the same
+information using <code>pairs</code>. The “pairs”” plot can be used to
+get a sense of whether any sampling difficulties are occurring in the
+tails or near the mode:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
 <p><img src="rstan_files/figure-html/pairs-plot-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>In the plot above, the marginal distribution of each selected parameter is included as a histogram along the diagonal. By default, draws with below-median <code>accept_stat__</code> (MCMC proposal acceptance rate) are plotted below the diagonal and those with above-median <code>accept_stat__</code> are plotted above the diagonal (this can be changed using the <code>condition</code> argument). Each off-diagonal square represents a bivariate distribution of the draws for the intersection of the row-variable and the column-variable. Ideally, the below-diagonal intersection and the above-diagonal intersection of the same two variables should have distributions that are mirror images of each other. Any yellow points would indicate transitions where the maximum <code>treedepth__</code> was hit, and red points indicate a divergent transition.</p>
+<p>In the plot above, the marginal distribution of each selected
+parameter is included as a histogram along the diagonal. By default,
+draws with below-median <code>accept_stat__</code> (MCMC proposal
+acceptance rate) are plotted below the diagonal and those with
+above-median <code>accept_stat__</code> are plotted above the diagonal
+(this can be changed using the <code>condition</code> argument). Each
+off-diagonal square represents a bivariate distribution of the draws for
+the intersection of the row-variable and the column-variable. Ideally,
+the below-diagonal intersection and the above-diagonal intersection of
+the same two variables should have distributions that are mirror images
+of each other. Any yellow points would indicate transitions where the
+maximum <code>treedepth__</code> was hit, and red points indicate a
+divergent transition.</p>
 </div>
 </div>
-<div id="additional-topics" class="section level2">
-<h2 class="hasAnchor">
-<a href="#additional-topics" class="anchor"></a>Additional Topics</h2>
-<div id="user-defined-stan-functions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#user-defined-stan-functions" class="anchor"></a>User-defined Stan Functions</h3>
-<p>Stan also permits users to define their own functions that can be used throughout a Stan program. These functions are defined in the <code>functions</code> block. The <code>functions</code> block is optional but, if it exists, it must come before any other block. This mechanism allows users to implement statistical distributions or other functionality that is not currently available in Stan. However, even if the user’s function merely wraps calls to existing Stan functions, the code in the <code>model</code> block can be much more readible if several lines of Stan code that accomplish one (or perhaps two) task(s) are replaced by a call to a user-defined function.</p>
-<p>Another reason to utilize user-defined functions is that RStan provides the <code>expose_stan_functions</code> function for exporting such functions to the R global environment so that they can be tested in R to ensure they are working properly. For example,</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">model_code &lt;-</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="st">'</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="st">functions {</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="st">  real standard_normal_rng() {</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">    return normal_rng(0,1);</span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="st">}</span></a>
-<a class="sourceLine" id="cb27-8" data-line-number="8"><span class="st">model {}</span></a>
-<a class="sourceLine" id="cb27-9" data-line-number="9"><span class="st">'</span></a>
-<a class="sourceLine" id="cb27-10" data-line-number="10"><span class="kw"><a href="../reference/expose_stan_functions.html">expose_stan_functions</a></span>(<span class="kw"><a href="../reference/stanc.html">stanc</a></span>(<span class="dt">model_code =</span> model_code))</a>
-<a class="sourceLine" id="cb27-11" data-line-number="11"><span class="kw">standard_normal_rng</span>()</a></code></pre></div>
+<div class="section level2">
+<h2 id="additional-topics">Additional Topics<a class="anchor" aria-label="anchor" href="#additional-topics"></a>
+</h2>
+<div class="section level3">
+<h3 id="user-defined-stan-functions">User-defined Stan Functions<a class="anchor" aria-label="anchor" href="#user-defined-stan-functions"></a>
+</h3>
+<p>Stan also permits users to define their own functions that can be
+used throughout a Stan program. These functions are defined in the
+<code>functions</code> block. The <code>functions</code> block is
+optional but, if it exists, it must come before any other block. This
+mechanism allows users to implement statistical distributions or other
+functionality that is not currently available in Stan. However, even if
+the user’s function merely wraps calls to existing Stan functions, the
+code in the <code>model</code> block can be much more readible if
+several lines of Stan code that accomplish one (or perhaps two) task(s)
+are replaced by a call to a user-defined function.</p>
+<p>Another reason to utilize user-defined functions is that RStan
+provides the <code>expose_stan_functions</code> function for exporting
+such functions to the R global environment so that they can be tested in
+R to ensure they are working properly. For example,</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">model_code</span> <span class="op">&lt;-</span></span>
+<span><span class="st">'</span></span>
+<span><span class="st">functions {</span></span>
+<span><span class="st">  real standard_normal_rng() {</span></span>
+<span><span class="st">    return normal_rng(0,1);</span></span>
+<span><span class="st">  }</span></span>
+<span><span class="st">}</span></span>
+<span><span class="st">model {}</span></span>
+<span><span class="st">'</span></span>
+<span><span class="fu"><a href="../reference/expose_stan_functions.html">expose_stan_functions</a></span><span class="op">(</span><span class="fu"><a href="../reference/stanc.html">stanc</a></span><span class="op">(</span>model_code <span class="op">=</span> <span class="va">model_code</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">standard_normal_rng</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] -0.9529876</code></pre>
 </div>
-<div id="the-log-posterior-function-and-gradient" class="section level3">
-<h3 class="hasAnchor">
-<a href="#the-log-posterior-function-and-gradient" class="anchor"></a>The Log-Posterior (function and gradient)</h3>
-<p>Stan defines the log of the probability density function of a posterior distribution up to an unknown additive constant. We use <code>lp__</code> to represent the realizations of this log kernel at each iteration (and <code>lp__</code> is treated as an unknown in the summary and the calculation of split <span class="math inline">\(\hat{R}\)</span> and effective sample size).</p>
-<p>A nice feature of the <strong>rstan</strong> package is that it exposes functions for calculating both <code>lp__</code> and its gradients for a given stanfit object. These two functions are <code>log_prob</code> and <code>grad_log_prob</code>, respectively. Both take parameters on the <em>unconstrained</em> space, even if the support of a parameter is not the whole real line. The Stan manual <span class="citation">(The Stan Development Team 2016)</span> has full details on the particular transformations Stan uses to map from the entire real line to some subspace of it (and vice-versa).</p>
-<p>It maybe the case that the number of unconstrained parameters might be less than the total number of parameters. For example, for a simplex parameter of length <span class="math inline">\(K\)</span>, there are actually only <span class="math inline">\(K-1\)</span> unconstrained parameters because of the constraint that all elements of a simplex must be nonnegative and sum to one. The <code>get_num_upars</code> method is provided to get the number of unconstrained parameters, while the <code>unconstrain_pars</code> and <code>constrain_pars</code> methods can be used to compute unconstrained and constrained values of parameters respectively. The former takes a list of parameters as input and transforms it to an unconstrained vector, and the latter does the opposite. Using these functions, we can implement other algorithms such as maximum a posteriori estimation of Bayesian models.</p>
+<div class="section level3">
+<h3 id="the-log-posterior-function-and-gradient">The Log-Posterior (function and gradient)<a class="anchor" aria-label="anchor" href="#the-log-posterior-function-and-gradient"></a>
+</h3>
+<p>Stan defines the log of the probability density function of a
+posterior distribution up to an unknown additive constant. We use
+<code>lp__</code> to represent the realizations of this log kernel at
+each iteration (and <code>lp__</code> is treated as an unknown in the
+summary and the calculation of split <span class="math inline">\(\hat{R}\)</span> and effective sample size).</p>
+<p>A nice feature of the <strong>rstan</strong> package is that it
+exposes functions for calculating both <code>lp__</code> and its
+gradients for a given stanfit object. These two functions are
+<code>log_prob</code> and <code>grad_log_prob</code>, respectively. Both
+take parameters on the <em>unconstrained</em> space, even if the support
+of a parameter is not the whole real line. The Stan manual <span class="citation">(The Stan Development Team 2016)</span> has full
+details on the particular transformations Stan uses to map from the
+entire real line to some subspace of it (and vice-versa).</p>
+<p>It maybe the case that the number of unconstrained parameters might
+be less than the total number of parameters. For example, for a simplex
+parameter of length <span class="math inline">\(K\)</span>, there are
+actually only <span class="math inline">\(K-1\)</span> unconstrained
+parameters because of the constraint that all elements of a simplex must
+be nonnegative and sum to one. The <code>get_num_upars</code> method is
+provided to get the number of unconstrained parameters, while the
+<code>unconstrain_pars</code> and <code>constrain_pars</code> methods
+can be used to compute unconstrained and constrained values of
+parameters respectively. The former takes a list of parameters as input
+and transforms it to an unconstrained vector, and the latter does the
+opposite. Using these functions, we can implement other algorithms such
+as maximum a posteriori estimation of Bayesian models.</p>
 </div>
-<div id="optimization-in-stan" class="section level3">
-<h3 class="hasAnchor">
-<a href="#optimization-in-stan" class="anchor"></a>Optimization in Stan</h3>
-<p>RStan also provides an interface to Stan’s optimizers, which can be used to obtain a point estimate by maximizing the (perhaps penalized) likelihood function defined by a Stan program. We illustrate this feature using a very simple example: estimating the mean from samples assumed to be drawn from a normal distribution with known standard deviation. That is, we assume</p>
-<p><span class="math display">\[y_n \sim \mathsf{Normal}(\mu,1), \quad n = 1, \ldots, N. \]</span></p>
-<p>By specifying a prior <span class="math inline">\(p(\mu) \propto 1\)</span>, the maximum a posteriori estimator for <span class="math inline">\(\mu\)</span> is just the sample mean. We don’t need to explicitly code this prior for <span class="math inline">\(\mu\)</span>, as <span class="math inline">\(p(\mu) \propto 1\)</span> is the default if no prior is specified.</p>
-<p>We first create an object of class <code>"stanmodel"</code> and then use the <code>optimizing</code> method, to which data and other arguments can be fed.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">ocode &lt;-<span class="st"> "</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">  data {</span></a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">    int&lt;lower=1&gt; N;</span></a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">    real y[N];</span></a>
-<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb29-6" data-line-number="6"><span class="st">  parameters {</span></a>
-<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="st">    real mu;</span></a>
-<a class="sourceLine" id="cb29-8" data-line-number="8"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb29-9" data-line-number="9"><span class="st">  model {</span></a>
-<a class="sourceLine" id="cb29-10" data-line-number="10"><span class="st">    target += normal_lpdf(y | mu, 1);</span></a>
-<a class="sourceLine" id="cb29-11" data-line-number="11"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb29-12" data-line-number="12"><span class="st">"</span></a>
-<a class="sourceLine" id="cb29-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb29-14" data-line-number="14">sm &lt;-<span class="st"> </span><span class="kw"><a href="../reference/stan_model.html">stan_model</a></span>(<span class="dt">model_code =</span> ocode)</a>
-<a class="sourceLine" id="cb29-15" data-line-number="15">y2 &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">20</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(y2)</a></code></pre></div>
-<pre><code>[1] -0.1954194</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw"><a href="../reference/stanmodel-method-optimizing.html">optimizing</a></span>(sm, <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">y =</span> y2, <span class="dt">N =</span> <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(y2)), <span class="dt">hessian =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="section level3">
+<h3 id="optimization-in-stan">Optimization in Stan<a class="anchor" aria-label="anchor" href="#optimization-in-stan"></a>
+</h3>
+<p>RStan also provides an interface to Stan’s optimizers, which can be
+used to obtain a point estimate by maximizing the (perhaps penalized)
+likelihood function defined by a Stan program. We illustrate this
+feature using a very simple example: estimating the mean from samples
+assumed to be drawn from a normal distribution with known standard
+deviation. That is, we assume</p>
+<p><span class="math display">\[y_n \sim \mathsf{Normal}(\mu,1), \quad n
+= 1, \ldots, N. \]</span></p>
+<p>By specifying a prior <span class="math inline">\(p(\mu) \propto
+1\)</span>, the maximum a posteriori estimator for <span class="math inline">\(\mu\)</span> is just the sample mean. We don’t
+need to explicitly code this prior for <span class="math inline">\(\mu\)</span>, as <span class="math inline">\(p(\mu) \propto 1\)</span> is the default if no
+prior is specified.</p>
+<p>We first create an object of class <code>"stanmodel"</code> and then
+use the <code>optimizing</code> method, to which data and other
+arguments can be fed.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ocode</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
+<span><span class="st">  data {</span></span>
+<span><span class="st">    int&lt;lower=1&gt; N;</span></span>
+<span><span class="st">    real y[N];</span></span>
+<span><span class="st">  }</span></span>
+<span><span class="st">  parameters {</span></span>
+<span><span class="st">    real mu;</span></span>
+<span><span class="st">  }</span></span>
+<span><span class="st">  model {</span></span>
+<span><span class="st">    target += normal_lpdf(y | mu, 1);</span></span>
+<span><span class="st">  }</span></span>
+<span><span class="st">"</span></span>
+<span></span>
+<span><span class="va">sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stan_model.html">stan_model</a></span><span class="op">(</span>model_code <span class="op">=</span> <span class="va">ocode</span><span class="op">)</span></span>
+<span><span class="va">y2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">y2</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] -0.01267251</code></pre>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/stanmodel-method-optimizing.html">optimizing</a></span><span class="op">(</span><span class="va">sm</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y2</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y2</span><span class="op">)</span><span class="op">)</span>, hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>$par
-        mu 
--0.1954194 
+         mu 
+-0.01267251 
 
 $value
-[1] -26.48907
+[1] -24.76204
 
 $return_code
 [1] 0
@@ -547,111 +851,194 @@ $hessian
 mu -20
 
 $theta_tilde
-             mu
-[1,] -0.1954194</code></pre>
+              mu
+[1,] -0.01267251</code></pre>
 </div>
-<div id="model-compilation" class="section level3">
-<h3 class="hasAnchor">
-<a href="#model-compilation" class="anchor"></a>Model Compilation</h3>
-<p>As mentioned earlier in the vignette, Stan programs are written in the Stan modeling language, translated to C++ code, and then compiled to a dynamic shared object (DSO). The DSO is then loaded by R and executed to draw the posterior sample. The process of compiling C++ code to DSO sometimes takes a while. When the model is the same, we can reuse the DSO from a previous run. The <code>stan</code> function accepts the optional argument <code>fit</code>, which can be used to pass an existing fitted model object so that the compiled model is reused. When reusing a previous fitted model, we can still specify different values for the other arguments to <code>stan</code>, including passing different data to the <code>data</code> argument.</p>
-<p>In addition, if fitted models are saved using functions like <code>save</code> and <code>save.image</code>, RStan is able to save DSOs, so that they can be used across R sessions. To avoid saving the DSO, specify <code>save_dso=FALSE</code> when calling the <code>stan</code> function.</p>
-<p>If the user executes <code><a href="../reference/rstan_options.html">rstan_options(auto_write = TRUE)</a></code>, then a serialized version of the compiled model will be automatically saved to the hard disk in the same directory as the <code>.stan</code> file or in R’s temporary directory if the Stan program is expressed as a character string. Although this option is not enabled by default due to CRAN policy, it should ordinarily be specified by users in order to eliminate redundant compilation.</p>
-<p>Stan runs much faster when the code is compiled at the maximum level of optimization, which is <code>-O3</code> on most C++ compilers. However, the default value is <code>-O2</code> in R, which is appropriate for most R packages but entails a slight slowdown for Stan. You can change this default locally by following the instructions at <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Customizing-package-compilation">CRAN - Customizing-package-compilation</a>. However, you should be advised that setting <code>CXXFLAGS = -O3</code> may cause adverse side effects for other R packages.</p>
-<p>See the documentation for the <code>stanc</code> and <code>stan_model</code> functions for more details on the parsing and compilation of Stan programs.</p>
+<div class="section level3">
+<h3 id="model-compilation">Model Compilation<a class="anchor" aria-label="anchor" href="#model-compilation"></a>
+</h3>
+<p>As mentioned earlier in the vignette, Stan programs are written in
+the Stan modeling language, translated to C++ code, and then compiled to
+a dynamic shared object (DSO). The DSO is then loaded by R and executed
+to draw the posterior sample. The process of compiling C++ code to DSO
+sometimes takes a while. When the model is the same, we can reuse the
+DSO from a previous run. The <code>stan</code> function accepts the
+optional argument <code>fit</code>, which can be used to pass an
+existing fitted model object so that the compiled model is reused. When
+reusing a previous fitted model, we can still specify different values
+for the other arguments to <code>stan</code>, including passing
+different data to the <code>data</code> argument.</p>
+<p>In addition, if fitted models are saved using functions like
+<code>save</code> and <code>save.image</code>, RStan is able to save
+DSOs, so that they can be used across R sessions. To avoid saving the
+DSO, specify <code>save_dso=FALSE</code> when calling the
+<code>stan</code> function.</p>
+<p>If the user executes <code>rstan_options(auto_write = TRUE)</code>,
+then a serialized version of the compiled model will be automatically
+saved to the hard disk in the same directory as the <code>.stan</code>
+file or in R’s temporary directory if the Stan program is expressed as a
+character string. Although this option is not enabled by default due to
+CRAN policy, it should ordinarily be specified by users in order to
+eliminate redundant compilation.</p>
+<p>Stan runs much faster when the code is compiled at the maximum level
+of optimization, which is <code>-O3</code> on most C++ compilers.
+However, the default value is <code>-O2</code> in R, which is
+appropriate for most R packages but entails a slight slowdown for Stan.
+You can change this default locally by following the instructions at <a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Customizing-package-compilation" class="external-link">CRAN
+- Customizing-package-compilation</a>. However, you should be advised
+that setting <code>CXXFLAGS = -O3</code> may cause adverse side effects
+for other R packages.</p>
+<p>See the documentation for the <code>stanc</code> and
+<code>stan_model</code> functions for more details on the parsing and
+compilation of Stan programs.</p>
 </div>
-<div id="running-multiple-chains-in-parallel" class="section level3">
-<h3 class="hasAnchor">
-<a href="#running-multiple-chains-in-parallel" class="anchor"></a>Running Multiple Chains in Parallel</h3>
-<p>The number of Markov chains to run can be specified using the <code>chains</code> argument to the <code>stan</code> or <code>sampling</code> functions. By default, the chains are executed serially (i.e., one at a time) using the parent R process. There is also an optional <code>cores</code> argument that can be set to the number of chains (if the hardware has sufficient processors and RAM), which is appropriate on most laptops. We typically recommend first calling <code><a href="https://rdrr.io/r/base/options.html">options(mc.cores=parallel::detectCores())</a></code> once per R session so that all available cores can be used without needing to manually specify the <code>cores</code> argument.</p>
-<p>For users working with a different parallelization scheme (perhaps with a remote cluster), the <strong>rstan</strong> package provides a function called <code>sflist2stanfit</code> for consolidating a list of multiple stanfit objects (created from the same Stan program and using the same number of warmup and sampling iterations) into a single stanfit object. It is important to specify the same seed for all the chains and equally important to use a different chain ID (argument <code>chain_id</code>), the combination of which ensures that the random numbers generated in Stan for all chains are essentially independent. This is handled automatically (internally) when <span class="math inline">\(`cores` &gt; 1\)</span>.</p>
+<div class="section level3">
+<h3 id="running-multiple-chains-in-parallel">Running Multiple Chains in Parallel<a class="anchor" aria-label="anchor" href="#running-multiple-chains-in-parallel"></a>
+</h3>
+<p>The number of Markov chains to run can be specified using the
+<code>chains</code> argument to the <code>stan</code> or
+<code>sampling</code> functions. By default, the chains are executed
+serially (i.e., one at a time) using the parent R process. There is also
+an optional <code>cores</code> argument that can be set to the number of
+chains (if the hardware has sufficient processors and RAM), which is
+appropriate on most laptops. We typically recommend first calling
+<code>options(mc.cores=parallel::detectCores())</code> once per R
+session so that all available cores can be used without needing to
+manually specify the <code>cores</code> argument.</p>
+<p>For users working with a different parallelization scheme (perhaps
+with a remote cluster), the <strong>rstan</strong> package provides a
+function called <code>sflist2stanfit</code> for consolidating a list of
+multiple stanfit objects (created from the same Stan program and using
+the same number of warmup and sampling iterations) into a single stanfit
+object. It is important to specify the same seed for all the chains and
+equally important to use a different chain ID (argument
+<code>chain_id</code>), the combination of which ensures that the random
+numbers generated in Stan for all chains are essentially independent.
+This is handled automatically (internally) when <span class="math inline">\(`cores` &gt; 1\)</span>.</p>
 </div>
 </div>
-<div id="working-with-cmdstan" class="section level2">
-<h2 class="hasAnchor">
-<a href="#working-with-cmdstan" class="anchor"></a>Working with CmdStan</h2>
-<p>The <strong>rstan</strong> package provides some functions for creating data for and reading output from CmdStan, the command line interface to Stan.</p>
-<p>First, when Stan reads data or initial values, it supports a subset of the syntax of R dump data formats. So if we use the <code>dump</code> function in base R to prepare data, Stan might not be able to read the contents. The <code>stan_rdump</code> function in <strong>rstan</strong> is designed to dump the data from R to a format that is supported by Stan, with semantics that are very similar to the <code>dump</code> function.</p>
-<p>Second, the <code>read_stan_csv</code> function creates a stanfit object from reading the CSV files generated by CmdStan. The resulting stanfit object is compatible with the various methods for diagnostics and posterior analysis.</p>
+<div class="section level2">
+<h2 id="working-with-cmdstan">Working with CmdStan<a class="anchor" aria-label="anchor" href="#working-with-cmdstan"></a>
+</h2>
+<p>The <strong>rstan</strong> package provides some functions for
+creating data for and reading output from CmdStan, the command line
+interface to Stan.</p>
+<p>First, when Stan reads data or initial values, it supports a subset
+of the syntax of R dump data formats. So if we use the <code>dump</code>
+function in base R to prepare data, Stan might not be able to read the
+contents. The <code>stan_rdump</code> function in <strong>rstan</strong>
+is designed to dump the data from R to a format that is supported by
+Stan, with semantics that are very similar to the <code>dump</code>
+function.</p>
+<p>Second, the <code>read_stan_csv</code> function creates a stanfit
+object from reading the CSV files generated by CmdStan. The resulting
+stanfit object is compatible with the various methods for diagnostics
+and posterior analysis.</p>
 </div>
-<div id="see-also" class="section level2">
-<h2 class="hasAnchor">
-<a href="#see-also" class="anchor"></a>See Also</h2>
+<div class="section level2">
+<h2 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>
+</h2>
 <ul>
-<li>The <a href="https://discourse.mc-stan.org/">Stan Forums</a> on Discourse</li>
-<li>The <a href="https://mc-stan.org/rstan/articles/">other vignettes</a> for the <strong>rstan</strong> package, which show how to access the contents of stanfit objects and use external C++ in a Stan program.</li>
-<li>The very thorough <a href="http://mc-stan.org/users/documentation/">Stan manual</a> <span class="citation">(The Stan Development Team 2016)</span>.</li>
-<li>The <code>stan_demo</code> function, which can be used to fit many of the example models in the manual.</li>
-<li>The <a href="http://mc-stan.org/bayesplot/"><strong>bayesplot</strong></a> package for visual MCMC diagnostics, posterior predictive checking, and other plotting (ggplot based).</li>
-<li>The <a href="http://mc-stan.org/shinystan/"><strong>shinystan</strong></a> R package, which provides a GUI for exploring MCMC output.</li>
-<li>The <a href="http://mc-stan.org/loo/"><strong>loo</strong></a> R package, which is very useful for model comparison using stanfit objects.</li>
-<li>The <a href="http://mc-stan.org/rstanarm/"><strong>rstanarm</strong></a> R package, which provides a <code>glmer</code>-style interface to Stan.</li>
+<li>The <a href="https://discourse.mc-stan.org/" class="external-link">Stan Forums</a> on
+Discourse</li>
+<li>The <a href="https://mc-stan.org/rstan/articles/">other
+vignettes</a> for the <strong>rstan</strong> package, which show how to
+access the contents of stanfit objects and use external C++ in a Stan
+program.</li>
+<li>The very thorough <a href="https://mc-stan.org/users/documentation/" class="external-link">Stan manual</a> <span class="citation">(The Stan Development Team 2016)</span>.</li>
+<li>The <code>stan_demo</code> function, which can be used to fit many
+of the example models in the manual.</li>
+<li>The <a href="https://mc-stan.org/bayesplot/" class="external-link"><strong>bayesplot</strong></a>
+package for visual MCMC diagnostics, posterior predictive checking, and
+other plotting (ggplot based).</li>
+<li>The <a href="https://mc-stan.org/shinystan/" class="external-link"><strong>shinystan</strong></a> R
+package, which provides a GUI for exploring MCMC output.</li>
+<li>The <a href="https://mc-stan.org/loo/" class="external-link"><strong>loo</strong></a> R
+package, which is very useful for model comparison using stanfit
+objects.</li>
+<li>The <a href="https://mc-stan.org/rstanarm/"><strong>rstanarm</strong></a> R
+package, which provides a <code>glmer</code>-style interface to
+Stan.</li>
 </ul>
 <hr>
-<div id="refs" class="references">
-<div id="ref-chambers2010software">
-<p>Chambers, John M. 2008. <em>Software for Data Analysis : Programming with R</em>. New York: Springer.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-chambers2010software" class="csl-entry">
+Chambers, John M. 2008. <em>Software for Data Analysis : Programming
+with r</em>. New York: Springer.
 </div>
-<div id="ref-GelmanCarlinSternRubin:2003">
-<p>Gelman, Andrew, J. B. Carlin, Hal S. Stern, and Donald B. Rubin. 2003. <em>Bayesian Data Analysis</em>. 2nd ed. London: CRC Press.</p>
+<div id="ref-GelmanCarlinSternRubin:2003" class="csl-entry">
+Gelman, Andrew, J. B. Carlin, Hal S. Stern, and Donald B. Rubin. 2003.
+<em>Bayesian Data Analysis</em>. 2nd ed. London: CRC Press.
 </div>
-<div id="ref-GelmanRubin:1992">
-<p>Gelman, Andrew, and Donald B. Rubin. 1992. “Inference from Iterative Simulation Using Multiple Sequences.” <em>Statistical Science</em> 7 (4): 457–72.</p>
+<div id="ref-GelmanRubin:1992" class="csl-entry">
+Gelman, Andrew, and Donald B. Rubin. 1992. <span>“Inference from
+Iterative Simulation Using Multiple Sequences.”</span> <em>Statistical
+Science</em> 7 (4): 457–72.
 </div>
-<div id="ref-hoffman-gelman:2012">
-<p>Hoffman, Matthew D., and Andrew Gelman. 2012. “The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo.” <em>Journal of Machine Learning Research</em>.</p>
+<div id="ref-hoffman-gelman:2012" class="csl-entry">
+Hoffman, Matthew D., and Andrew Gelman. 2012. <span>“The
+No-<span>U</span>-Turn Sampler: Adaptively Setting Path Lengths in
+<span>H</span>amiltonian <span>M</span>onte <span>C</span>arlo.”</span>
+<em>Journal of Machine Learning Research</em>.
 </div>
-<div id="ref-WinBUGS">
-<p>Lunn, D.J., A. Thomas, N. Best, and D. Spiegelhalter. 2000. “WinBUGS — a Bayesian Modelling Framework: Concepts, Structure, and Extensibility.” <em>Statistics and Computing</em>, 325–37.</p>
+<div id="ref-WinBUGS" class="csl-entry">
+Lunn, D. J., A. Thomas, N. Best, and D. Spiegelhalter. 2000.
+<span>“<span>WinBUGS</span> — a <span>Bayesian</span> Modelling
+Framework: Concepts, Structure, and Extensibility.”</span>
+<em>Statistics and Computing</em>, 325–37.
 </div>
-<div id="ref-Neal:2011">
-<p>Neal, Radford. 2011. “MCMC Using Hamiltonian Dynamics.” In <em>Handbook of Markov Chain Monte Carlo</em>, edited by Steve Brooks, Andrew Gelman, Galin L. Jones, and Xiao-Li Meng, 116–62. Chapman; Hall/CRC.</p>
+<div id="ref-Neal:2011" class="csl-entry">
+Neal, Radford. 2011. <span>“<span>MCMC</span> Using
+<span>H</span>amiltonian Dynamics.”</span> In <em>Handbook of
+<span>M</span>arkov Chain <span>M</span>onte <span>C</span>arlo</em>,
+edited by Steve Brooks, Andrew Gelman, Galin L. Jones, and Xiao-Li Meng,
+116–62. Chapman; Hall/CRC.
 </div>
-<div id="ref-rprj">
-<p>R Core Team. 2014. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
+<div id="ref-rprj" class="csl-entry">
+R Core Team. 2014. <em>R: A Language and Environment for Statistical
+Computing</em>. Vienna, Austria: R Foundation for Statistical Computing.
+<a href="https://www.R-project.org/" class="external-link">https://www.R-project.org/</a>.
 </div>
-<div id="ref-Rubin1981">
-<p>Rubin, Donald B. 1981. “Estimation in Parallel Randomized Experiments.” <em>Journal of Educational and Behavioral Statistics</em> 6 (4): 377–401.</p>
+<div id="ref-Rubin1981" class="csl-entry">
+Rubin, Donald B. 1981. <span>“Estimation in Parallel Randomized
+Experiments.”</span> <em>Journal of Educational and Behavioral
+Statistics</em> 6 (4): 377–401.
 </div>
-<div id="ref-rstangettingstarted2012">
-<p>The Stan Development Team. 2014. “RStan Getting Started.” <a href="http://mc-stan.org/">http://mc-stan.org/</a>.</p>
+<div id="ref-rstangettingstarted2012" class="csl-entry">
+The Stan Development Team. 2014. <span>“<span>RStan</span> Getting
+Started.”</span> <a href="https://mc-stan.org/" class="external-link">https://mc-stan.org/</a>.
 </div>
-<div id="ref-StanManual">
-<p>———. 2016. <em>Stan Modeling Language: User’s Guide and Reference Manual</em>. <a href="http://mc-stan.org">http://mc-stan.org</a>.</p>
+<div id="ref-StanManual" class="csl-entry">
+———. 2016. <em>Stan Modeling Language: User’s Guide and Reference
+Manual</em>. <a href="https://mc-stan.org" class="external-link">https://mc-stan.org</a>.
 </div>
-<div id="ref-Vehtari2012">
-<p>Vehtari, A., and J. Ojanen. 2012. “A Survey of Bayesian Predictive Methods for Model Assessment, Selection and Comparison.” <em>Statistics Surveys</em> 6: 142–228.</p>
+<div id="ref-Vehtari2012" class="csl-entry">
+Vehtari, A., and J. Ojanen. 2012. <span>“A Survey of
+<span>Bayesian</span> Predictive Methods for Model Assessment, Selection
+and Comparison.”</span> <em>Statistics Surveys</em> 6: 142–228.
 </div>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#introduction">Introduction</a></li>
-      <li><a href="#prerequisites">Prerequisites</a></li>
-      <li><a href="#typical-workflow">Typical Workflow</a></li>
-      <li><a href="#example">Example</a></li>
-      <li><a href="#additional-topics">Additional Topics</a></li>
-      <li><a href="#working-with-cmdstan">Working with CmdStan</a></li>
-      <li><a href="#see-also">See Also</a></li>
-      </ul>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
 
 
 
       <footer><div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Jiqiang Guo.</p>
+  <p></p>
+<p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Andrew Johnson, Sebastian Weber.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -659,6 +1046,8 @@ $theta_tilde
 
   
 
+
+  
 
   </body>
 </html>

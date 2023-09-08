@@ -27,6 +27,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -39,12 +41,18 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rstan</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.24</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
+<li>
+  <a href="index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
+</li>
 <li>
   <a href="articles/index.html">Vignettes</a>
 </li>
@@ -52,51 +60,60 @@
   <a href="reference/index.html">Functions</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="https://mc-stan.org/cmdstanr" class="external-link">cmdstanr</a>
+    </li>
+    <li>
       <a href="https://mc-stan.org/rstanarm">rstanarm</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/bayesplot">bayesplot</a>
+      <a href="https://paul-buerkner.github.io/brms/" class="external-link">brms</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/shinystan">shinystan</a>
+      <a href="https://mc-stan.org/bayesplot" class="external-link">bayesplot</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/loo">loo</a>
+      <a href="https://mc-stan.org/shinystan" class="external-link">shinystan</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/projpred">projpred</a>
+      <a href="https://mc-stan.org/loo" class="external-link">loo</a>
+    </li>
+    <li>
+      <a href="https://mc-stan.org/projpred" class="external-link">projpred</a>
     </li>
     <li>
       <a href="https://mc-stan.org/rstantools">rstantools</a>
     </li>
+    <li>
+      <a href="https://mc-stan.org/posterior" class="external-link">posterior</a>
+    </li>
   </ul>
 </li>
 <li>
-  <a href="https://mc-stan.org">Stan</a>
+  <a href="https://mc-stan.org" class="external-link">Stan</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/mcmc_stan">
+  <a href="https://twitter.com/mcmc_stan" class="external-link">
     <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/stan-dev/rstan">
+  <a href="https://github.com/stan-dev/rstan" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://discourse.mc-stan.org/">
+  <a href="https://discourse.mc-stan.org/" class="external-link">
     <span class="fa fa-users"></span>
      
   </a>
@@ -116,51 +133,51 @@
 
 
 <br><div style="text-align:left">
-<span><a href="https://mc-stan.org"> <img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width="100" alt="Stan Logo"></a>
+<span><a href="https://mc-stan.org" class="external-link"> <img src="https://raw.githubusercontent.com/stan-dev/logos/master/logo_tm.png" width="100" alt="Stan Logo"></a>
 <h2>
 <strong>RStan</strong>
 </h2>
 <h4>
 The R interface to Stan
 </h4>
-</span>
+<p></p></span>
 </div>
 <hr>
-<p><strong>RStan</strong> is the R interface to <a href="https://mc-stan.org">Stan</a>. It is distributed on <a href="https://CRAN.R-project.org/package=rstan">CRAN</a> as the <strong>rstan</strong> package and its source code is hosted on <a href="https://github.com/stan-dev/rstan">GitHub</a>. Before installation, make sure you have the necessary C++ toolchain for your system by following the instructions in the Getting Started documents below.</p>
-<div id="getting-started" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-started" class="anchor"></a>Getting Started</h2>
+<p><strong>RStan</strong> is the R interface to <a href="https://mc-stan.org" class="external-link">Stan</a>. It is distributed on <a href="https://CRAN.R-project.org/package=rstan" class="external-link">CRAN</a> as the <strong>rstan</strong> package and its source code is hosted on <a href="https://github.com/stan-dev/rstan" class="external-link">GitHub</a>. Before installation, make sure you have the necessary C++ toolchain for your system by following the instructions in the Getting Started documents below.</p>
+<div class="section level2">
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
 <p>For installation instructions and other tips on getting started with RStan see:</p>
 <ul>
-<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">RStan Getting Started</a></li>
+<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">RStan Getting Started</a></li>
 </ul>
 <p>Once you have the package up and running some good places to start are:</p>
 <ul>
 <li><p>The <a href="https://mc-stan.org/rstan/articles/">RStan vignettes</a> show how to fit a model, extract the contents of a stanfit object, and use external C++ code with a Stan program.</p></li>
-<li><p>The majority of the <a href="https://mc-stan.org/users/documentation/case-studies.html">Stan Case Studies</a> include fully worked examples using Rstan.</p></li>
+<li><p>The majority of the <a href="https://mc-stan.org/users/documentation/case-studies.html" class="external-link">Stan Case Studies</a> include fully worked examples using Rstan.</p></li>
 </ul>
 <p>Several Stan users have also contributed translations of the Getting Started page:</p>
 <ul>
-<li><a href="https://github.com/stan-dev/rstan/#getting-started">RStan Getting Started translations</a></li>
+<li><a href="https://github.com/stan-dev/rstan/#getting-started" class="external-link">RStan Getting Started translations</a></li>
 </ul>
 </div>
-<div id="stan" class="section level2">
-<h2 class="hasAnchor">
-<a href="#stan" class="anchor"></a>Stan</h2>
+<div class="section level2">
+<h2 id="stan">Stan<a class="anchor" aria-label="anchor" href="#stan"></a>
+</h2>
 <p>Stan’s home page with links to everything you’ll need to use Stan’s language and algorithms is:</p>
 <ul>
-<li><a href="https://mc-stan.org">mc-stan.org</a></li>
+<li><a href="https://mc-stan.org" class="external-link">mc-stan.org</a></li>
 </ul>
 </div>
-<div id="source-repository" class="section level2">
-<h2 class="hasAnchor">
-<a href="#source-repository" class="anchor"></a>Source Repository</h2>
+<div class="section level2">
+<h2 id="source-repository">Source Repository<a class="anchor" aria-label="anchor" href="#source-repository"></a>
+</h2>
 <p>RStan’s source-code repository is hosted on GitHub.<br>
-Stan’s source repository is defined as a submodule (see <a href="https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule-in-rstan-repo%3F">how to work with stan submodule in rstan repo</a>).</p>
+Stan’s source repository is defined as a submodule (see <a href="https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule-in-rstan-repo%3F" class="external-link">how to work with stan submodule in rstan repo</a>).</p>
 </div>
-<div id="licensing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#licensing" class="anchor"></a>Licensing</h2>
+<div class="section level2">
+<h2 id="licensing">Licensing<a class="anchor" aria-label="anchor" href="#licensing"></a>
+</h2>
 <p>RStan is licensed under GPLv3. The Stan code packaged in RStan is licensed under new BSD.</p>
 </div>
 
@@ -168,59 +185,63 @@ Stan’s source repository is defined as a submodule (see <a href="https://githu
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=rstan">https://​cloud.r-project.org/​package=rstan</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/stan-dev/rstan/">https://​github.com/​stan-dev/​rstan/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/stan-dev/rstan/issues/">https://​github.com/​stan-dev/​rstan/​issues/​</a>
-</li>
-<li>Ask a question at <br><a href="https://discourse.mc-stan.org/">https://​discourse.mc-stan.org/​</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=rstan" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/stan-dev/rstan/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/stan-dev/rstan/issues/" class="external-link">Report a bug</a></li>
+<li><a href="https://discourse.mc-stan.org/" class="external-link">Ask a question</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;=3)</li>
 </ul>
 </div>
+
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing rstan</a></li>
+<li><a href="authors.html#citation">Citing rstan</a></li>
 </ul>
 </div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Jiqiang Guo <br><small class="roles"> Author </small>  </li>
 <li>Jonah Gabry <br><small class="roles"> Author </small>  </li>
 <li>Ben Goodrich <br><small class="roles"> Maintainer, author </small>  </li>
+<li>Andrew Johnson <br><small class="roles"> Author </small>  </li>
 <li>Sebastian Weber <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=rstan"><img src="https://www.r-pkg.org/badges/version/rstan?color=blue" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://cran.rstudio.com/package=rstan"><img src="https://cranlogs.r-pkg.org/badges/rstan?color=blue" alt="Downloads"></a></li>
-<li><a href="http://depsy.org/package/r/rstan"><img src="http://depsy.org/api/package/cran/rstan/badge.svg" alt="Research software impact"></a></li>
+<li><a href="https://cran.r-project.org/package=rstan" class="external-link"><img src="https://www.r-pkg.org/badges/version/rstan?color=blue" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.rstudio.com/package=rstan" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/rstan?color=blue" alt="Downloads"></a></li>
+<li><a href="http://depsy.org/package/r/rstan" class="external-link"><img src="http://depsy.org/api/package/cran/rstan/badge.svg" alt="Research software impact"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Sebastian Weber.</p>
+  <p></p>
+<p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Andrew Johnson, Sebastian Weber.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -228,6 +249,8 @@ Stan’s source repository is defined as a submodule (see <a href="https://githu
 
   
 
+
+  
 
   </body>
 </html>

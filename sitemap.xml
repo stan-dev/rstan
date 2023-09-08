@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://mc-stan.org/rstan/404.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/articles/SBC.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/articles/external.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/articles/rstan.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/articles/stanfit_objects.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/authors.html</loc>
+  </url>
+  <url>
     <loc>https://mc-stan.org/rstan/index.html</loc>
   </url>
   <url>
@@ -19,6 +40,9 @@
     <loc>https://mc-stan.org/rstan/reference/extract_sparse_parts.html</loc>
   </url>
   <url>
+    <loc>https://mc-stan.org/rstan/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://mc-stan.org/rstan/reference/lookup.html</loc>
   </url>
   <url>
@@ -26,6 +50,9 @@
   </url>
   <url>
     <loc>https://mc-stan.org/rstan/reference/monitor.html</loc>
+  </url>
+  <url>
+    <loc>https://mc-stan.org/rstan/reference/nlist.html</loc>
   </url>
   <url>
     <loc>https://mc-stan.org/rstan/reference/plotting-functions.html</loc>
@@ -133,15 +160,6 @@
     <loc>https://mc-stan.org/rstan/reference/stanmodel-method-vb.html</loc>
   </url>
   <url>
-    <loc>https://mc-stan.org/rstan/articles/SBC.html</loc>
-  </url>
-  <url>
-    <loc>https://mc-stan.org/rstan/articles/external.html</loc>
-  </url>
-  <url>
-    <loc>https://mc-stan.org/rstan/articles/rstan.html</loc>
-  </url>
-  <url>
-    <loc>https://mc-stan.org/rstan/articles/stanfit_objects.html</loc>
+    <loc>https://mc-stan.org/rstan/rstan/rstan/inst/misc/stan_progress.html</loc>
   </url>
 </urlset>

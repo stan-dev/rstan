@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rstan</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.21.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.26.24</span>
       </span>
     </div>
 
@@ -44,7 +46,7 @@
   <a href="../reference/index.html">Functions</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Other Packages
      
     <span class="caret"></span>
@@ -54,16 +56,16 @@
       <a href="https://mc-stan.org/rstanarm">rstanarm</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/bayesplot">bayesplot</a>
+      <a href="https://mc-stan.org/bayesplot" class="external-link">bayesplot</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/shinystan">shinystan</a>
+      <a href="https://mc-stan.org/shinystan" class="external-link">shinystan</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/loo">loo</a>
+      <a href="https://mc-stan.org/loo" class="external-link">loo</a>
     </li>
     <li>
-      <a href="https://mc-stan.org/projpred">projpred</a>
+      <a href="https://mc-stan.org/projpred" class="external-link">projpred</a>
     </li>
     <li>
       <a href="https://mc-stan.org/rstantools">rstantools</a>
@@ -71,24 +73,24 @@
   </ul>
 </li>
 <li>
-  <a href="https://mc-stan.org">Stan</a>
+  <a href="https://mc-stan.org" class="external-link">Stan</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://twitter.com/mcmc_stan">
+  <a href="https://twitter.com/mcmc_stan" class="external-link">
     <span class="fa fa-twitter"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/stan-dev/rstan">
+  <a href="https://github.com/stan-dev/rstan" class="external-link">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://discourse.mc-stan.org/">
+  <a href="https://discourse.mc-stan.org/" class="external-link">
     <span class="fa fa-users"></span>
      
   </a>
@@ -103,15 +105,16 @@
 
       
 
-      </header><script src="SBC_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Simulation Based Calibration</h1>
-                        <h4 class="author">Stan Development Team</h4>
+                        <h4 data-toc-skip class="author">Stan
+Development Team</h4>
             
-            <h4 class="date">2020-07-21</h4>
+            <h4 data-toc-skip class="date">2023-09-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/master/vignettes/SBC.Rmd"><code>vignettes/SBC.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/HEAD/vignettes/SBC.Rmd" class="external-link"><code>vignettes/SBC.Rmd</code></a></small>
       <div class="hidden name"><code>SBC.Rmd</code></div>
 
     </div>
@@ -119,52 +122,85 @@
     
     
 <p>Here is a Stan program for a beta-binomial model</p>
-<pre class="stan"><code>data {
-  int&lt;lower = 1&gt; N;
-  real&lt;lower = 0&gt; a;
-  real&lt;lower = 0&gt; b;
-}
-transformed data { // these adhere to the conventions above
-  real pi_ = beta_rng(a, b);
-  int y = binomial_rng(N, pi_);
-}
-parameters {
-  real&lt;lower = 0, upper = 1&gt; pi;
-}
-model {
-  target += beta_lpdf(pi | a, b);
-  target += binomial_lpmf(y | N, pi);
-}
-generated quantities { // these adhere to the conventions above
-  int y_ = y;
-  vector[1] pars_;
-  int ranks_[1] = {pi &gt; pi_};
-  vector[N] log_lik;
-  pars_[1] = pi_;
-  for (n in 1:y) log_lik[n] = bernoulli_lpmf(1 | pi);
-  for (n in (y + 1):N) log_lik[n] = bernoulli_lpmf(0 | pi);
-}</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode stan"><code class="sourceCode stan"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="kw">data</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>  <span class="dt">int</span>&lt;<span class="kw">lower</span> = <span class="dv">1</span>&gt; N;</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; a;</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>&gt; b;</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>}</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="kw">transformed data</span> { <span class="co">// these adhere to the conventions above</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="dt">real</span> pi_ = beta_rng(a, b);</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="dt">int</span> y = binomial_rng(N, pi_);</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>}</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="kw">parameters</span> {</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  <span class="dt">real</span>&lt;<span class="kw">lower</span> = <span class="dv">0</span>, <span class="kw">upper</span> = <span class="dv">1</span>&gt; pi;</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>}</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="kw">model</span> {</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  <span class="kw">target +=</span> beta_lpdf(pi | a, b);</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  <span class="kw">target +=</span> binomial_lpmf(y | N, pi);</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>}</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="kw">generated quantities</span> { <span class="co">// these adhere to the conventions above</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>  <span class="dt">int</span> y_ = y;</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="dt">vector</span>[<span class="dv">1</span>] pars_;</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="dt">int</span> ranks_[<span class="dv">1</span>] = {pi &gt; pi_};</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>  <span class="dt">vector</span>[N] log_lik;</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a>  pars_[<span class="dv">1</span>] = pi_;</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> <span class="dv">1</span>:y) log_lik[n] = bernoulli_lpmf(<span class="dv">1</span> | pi);</span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a>  <span class="cf">for</span> (n <span class="cf">in</span> (y + <span class="dv">1</span>):N) log_lik[n] = bernoulli_lpmf(<span class="dv">0</span> | pi);</span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a>}</span></code></pre></div>
 <p>Notice that it adheres to the following conventions:</p>
 <ul>
-<li>Realizations of the unknown parameters are drawn in the <code>transformed data</code> block are postfixed with an underscore, such as <code>pi_</code>. These are considered the “true” parameters being estimated by the corresponding symbol declared in the <code>parameters</code> block, which have the same names except for the trailing underscore, such as <code>pi</code>.</li>
-<li>The realizations of the unknown parameters are then conditioned on when drawing from the prior predictive distribution in <code>transformed data</code> block, which in this case is <code>int y = binomial_rng(N, pi_);</code>. To avoid confusion, <code>y</code> does not have a training underscore.</li>
-<li>The realizations of the unknown parameters are copied into a <code>vector</code> in the <code>generated quantities</code> block named <code>pars_</code>
+<li>Realizations of the unknown parameters are drawn in the
+<code>transformed data</code> block are postfixed with an underscore,
+such as <code>pi_</code>. These are considered the “true” parameters
+being estimated by the corresponding symbol declared in the
+<code>parameters</code> block, which have the same names except for the
+trailing underscore, such as <code>pi</code>.</li>
+<li>The realizations of the unknown parameters are then conditioned on
+when drawing from the prior predictive distribution in
+<code>transformed data</code> block, which in this case is
+<code>int y = binomial_rng(N, pi_);</code>. To avoid confusion,
+<code>y</code> does not have a training underscore.</li>
+<li>The realizations of the unknown parameters are copied into a
+<code>vector</code> in the <code>generated quantities</code> block named
+<code>pars_</code>
 </li>
-<li>The realizations from the prior predictive distribution are copied into an object (of the same type) in the <code>generated quantities</code> block named `y_. This is optional.</li>
-<li>The <code>generated quantities</code> block contains an integer array named <code>ranks_</code> whose only values are zero or one, depending on whether the realization of a parameter from the posterior distribution exceeds the corresponding “true” realization, which in this case is <code>ranks_[1] = {pi &gt; pi_};</code>. These are not actually “ranks” but can be used afterwards to reconstruct (thinned) ranks.</li>
-<li>The <code>generated quantities</code> block contains a vector named <code>log_lik</code> whose values are the contribution to the log-likelihood by each observation. In this case, the “observations” are the implicit successes and failures that are aggregated into a binomial likelihood. This is optional but facilitates calculating the Pareto k shape parameter estimates that indicate whether the posterior distribution is sensitive to particular observations.</li>
+<li>The realizations from the prior predictive distribution are copied
+into an object (of the same type) in the
+<code>generated quantities</code> block named `y_. This is
+optional.</li>
+<li>The <code>generated quantities</code> block contains an integer
+array named <code>ranks_</code> whose only values are zero or one,
+depending on whether the realization of a parameter from the posterior
+distribution exceeds the corresponding “true” realization, which in this
+case is <code>ranks_[1] = {pi &gt; pi_};</code>. These are not actually
+“ranks” but can be used afterwards to reconstruct (thinned) ranks.</li>
+<li>The <code>generated quantities</code> block contains a vector named
+<code>log_lik</code> whose values are the contribution to the
+log-likelihood by each observation. In this case, the “observations” are
+the implicit successes and failures that are aggregated into a binomial
+likelihood. This is optional but facilitates calculating the Pareto k
+shape parameter estimates that indicate whether the posterior
+distribution is sensitive to particular observations.</li>
 </ul>
-<p>Assuming the above is compile to a code <code>stanmodel</code> named <code>beta_binomial</code>, we can then call the <code>sbc</code> function</p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="no">output</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/sbc.html">sbc</a></span>(<span class="no">beta_binomial</span>, <span class="kw">data</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw">N</span> <span class="kw">=</span> <span class="fl">10</span>, <span class="kw">a</span> <span class="kw">=</span> <span class="fl">1</span>, <span class="kw">b</span> <span class="kw">=</span> <span class="fl">1</span>), <span class="kw">M</span> <span class="kw">=</span> <span class="fl">500</span>, <span class="kw">refresh</span> <span class="kw">=</span> <span class="fl">0</span>)</pre></body></html></div>
+<p>Assuming the above is compile to a code <code>stanmodel</code> named
+<code>beta_binomial</code>, we can then call the <code>sbc</code>
+function</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/sbc.html">sbc</a></span><span class="op">(</span><span class="va">beta_binomial</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>N <span class="op">=</span> <span class="fl">10</span>, a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, M <span class="op">=</span> <span class="fl">500</span>, refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p>At which point, we can then call</p>
-<div class="sourceCode" id="cb3"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="no">output</span>)</pre></body></html></div>
-<pre><code>## 0 chains had divergent transitions after warmup</code></pre>
-<div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">output</span>, <span class="kw">bins</span> <span class="kw">=</span> <span class="fl">10</span>) <span class="co"># it is best to specify the bins argument yourself</span></pre></body></html></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## 0 chains had divergent transitions after warmup</span></span></code></pre>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">output</span>, bins <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="co"># it is best to specify the bins argument yourself</span></span></code></pre></div>
 <p><img src="SBC_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
-<div id="references" class="section level1">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
-<p>Talts, S., Betancourt, M., Simpson, D., Vehtari, A., and Gelman, A. (2018). Validating Bayesian Inference Algorithms with Simulation-Based Calibration. <a href="https://arxiv.org/abs/1804.06788">arXiv preprint arXiv:1804.06788</a></p>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<p>Talts, S., Betancourt, M., Simpson, D., Vehtari, A., and Gelman, A.
+(2018). Validating Bayesian Inference Algorithms with Simulation-Based
+Calibration. <a href="https://arxiv.org/abs/1804.06788" class="external-link">arXiv preprint
+arXiv:1804.06788</a></p>
 </div>
   </div>
 
@@ -179,11 +215,13 @@ generated quantities { // these adhere to the conventions above
 
 
       <footer><div class="copyright">
-  <p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Sebastian Weber.</p>
+  <p></p>
+<p>Developed by Jiqiang Guo, Jonah Gabry, Ben Goodrich, Andrew Johnson, Sebastian Weber.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -191,6 +229,8 @@ generated quantities { // these adhere to the conventions above
 
   
 
+
+  
 
   </body>
 </html>

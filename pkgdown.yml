@@ -1,12 +1,12 @@
-pandoc: 2.7.3
-pkgdown: 1.5.1
+pandoc: 3.1.1
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   SBC: SBC.html
   external: external.html
   rstan: rstan.html
   stanfit_objects: stanfit_objects.html
-last_built: 2020-07-21T17:26Z
+last_built: 2023-09-08T17:57Z
 urls:
   reference: https://mc-stan.org/rstan/reference
   article: https://mc-stan.org/rstan/articles
