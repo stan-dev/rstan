@@ -24,7 +24,7 @@ Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.e
              person("Dustin", "Tran", role = "aut"),
              person("Michael", "Malecki", role = "aut"),
              person("Yuanjun", "Gao", role = "aut"),
-             person("Hamada S.", "Badr", role = c("ctb"),
+             person("Hamada S.", "Badr", role = c("aut"),
                     email = "badr@jhu.edu",
                     comment = c(ORCID = "0000-0002-9808-2344")),
              person("Trustees of", "Columbia University", role = "cph"),
