@@ -591,16 +591,30 @@ color_vector_chain <- function(n) {
   mdf_td <- .reshape_df(df_td) #reshape2::melt(df_td, id.vars = grep("iteration", colnames(df_td), value = TRUE))
   mdf_nd <- .reshape_df(df_nd) #reshape2::melt(df_nd, id.vars = grep("iteration", colnames(df_nd), value = TRUE))
   mdf <- cbind(mdf_td, div = mdf_nd$value)
-  plot_data <- if (divergent == "All") mdf else mdf[mdf$div == divergent,,drop=FALSE]
+  plot_data <- if (divergent == "All") mdf else mdf[mdf$div == divergent, , drop = FALSE]
   if (nrow(plot_data) == 0) return(NULL)
 
-  graph <- ggplot2::ggplot(plot_data, ggplot2::aes_q(x = quote(factor(value))), na.rm = TRUE) +
-    ggplot2::geom_bar(mapping = ggplot2::aes_q(y=quote(..count../sum(..count..))),
-             width=1, fill = .NUTS_FILL, color = .NUTS_CLR) + plot_labs
+  graph <- ggplot2::ggplot(
+    data = plot_data,
+    mapping = ggplot2::aes(x = factor(.data$value)),
+    na.rm = TRUE
+  ) +
+    ggplot2::geom_bar(
+      mapping = ggplot2::aes(
+        y = ggplot2::after_stat(count) / sum(ggplot2::after_stat(count))
+      ),
+      width = 1, fill = .NUTS_FILL, color = .NUTS_CLR
+    ) +
+    plot_labs
   if (chain == 0) return(graph)
   chain_clr <- color_vector_chain(ncol(df_td) - 1)[chain]
   chain_fill <- chain_clr
-  chain_data <- plot_data[plot_data$variable == paste0("chain:",chain),, drop=FALSE]
-  graph + ggplot2::geom_bar(data = chain_data, mapping = ggplot2::aes_q(y=quote(..count../sum(..count..))),
-                   fill = chain_fill, width = 1)
+  chain_data <- plot_data[plot_data$variable == paste0("chain:", chain), , drop = FALSE]
+  graph + ggplot2::geom_bar(
+    data = chain_data,
+    mapping = ggplot2::aes(
+      y = ggplot2::after_stat(count) / sum(ggplot2::after_stat(count))
+    ),
+    fill = chain_fill, width = 1
+  )
 }
