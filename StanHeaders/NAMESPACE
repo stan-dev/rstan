@@ -1,3 +1,0 @@
-if(.Platform$OS.type == "windows") useDynLib(StanHeaders, .registration = TRUE)
-importFrom(RcppParallel, RcppParallelLibs)
-export(stanFunction)
