@@ -49,6 +49,13 @@ rstan_options(...)
          controls whether a compiled instance of a \code{\link{stanmodel-class}}
          is written to the hard disk in the same directory as the \code{.stan}
          program.
+    \item \code{threads_per_chain}: A positive integer (defaulting to \code{1}).
+         If the model was compiled with threading support, the number of
+         threads to use in parallelized sections _within_ an MCMC chain (e.g., when
+         using the Stan functions `reduce_sum()` or `map_rect()`). The actual number of CPU cores
+         used is `chains * threads_per_chain` where `chains` is the number of parallel chains.
+         For an example of using threading, see the Stan case study [Reduce Sum: A Minimal
+         Example](https://mc-stan.org/users/documentation/case-studies/reduce_sum_tutorial.html).
   } 
 }
 \value{

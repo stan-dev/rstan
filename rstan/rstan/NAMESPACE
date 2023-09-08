@@ -4,22 +4,20 @@ useDynLib(rstan, .registration = TRUE)
 importFrom("graphics", "hist", "lines", "mtext", "par", "points", "rect", "segments", "smoothScatter", "strheight", "strwidth", "text")
 importFrom("grDevices", "devAskNewPage", "hcl", "rgb")
 importFrom("stats", "acf", "aggregate", "density", "dnorm", "fft", "median", "optimHess", "pacf", "qbeta", "qnorm", "quantile", "reshape", "rnorm", "runif", "sd", "setNames", "var")
-importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDescription", "packageVersion", "relist", "select.list", "str", "tail", "unzip")
+importFrom("utils", "apropos", "assignInMyNamespace", "capture.output", "download.file", "head", "menu", "object.size", "packageDate", "packageVersion", "read.csv", "relist", "select.list", "str", "tail", "unzip")
 importFrom("stats4", summary, plot)
 importFrom("inline", cxxfunction, getDynLib, getPlugin)
 importFrom("pkgbuild", with_build_tools)
 #importFrom("Rcpp", cpp_object_initializer)
-importFrom("V8", v8)
-importFrom("withr", "set_makevars", "defer", "local_")
+importFrom("QuickJSR", JSContext)
 import("methods")
 import(Rcpp)
-importFrom(RcppParallel,RcppParallelLibs)
 import(StanHeaders)
 
 importFrom("gridExtra","arrangeGrob","grid.arrange")
 import(ggplot2)
 
-importFrom("loo", "loo", "loo_moment_match")
+importFrom("loo", "loo", "loo_moment_match", "nlist")
 
 export(
   sbc,
@@ -74,7 +72,8 @@ export(
   RNG, OUT,
   Rhat, ess_bulk, ess_tail,
   loo,
-  loo_moment_match
+  loo_moment_match,
+  nlist
 )
 
 

@@ -152,11 +152,17 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
   }
   if (rstan_options("required"))
-    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+    pkgbuild::has_build_tools(debug = FALSE) ||
+    pkgbuild::has_build_tools(debug = TRUE)
 
   # compiling with -march=native on windows can cause segfaults
   if (WINDOWS) {
-    no_march_flags <- .remove_march_makevars()
+    has_march = .warn_march_makevars()
+    if (has_march) {
+      user_makevar = Sys.getenv("R_MAKEVARS_USER")
+      Sys.setenv(R_MAKEVARS_USER = NULL)
+      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+    }
   }
   if (!isTRUE(verbose)) {
     tf <- tempfile(fileext = ".warn")

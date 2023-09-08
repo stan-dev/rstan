@@ -12,10 +12,21 @@ editor_options:
 ---
 
 ```{r setup, include = FALSE}
+options(width = 100)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+local({
+  hook_output <- knitr::knit_hooks$get('output')
+  knitr::knit_hooks$set(output = function(x, options) {
+    if (!is.null(options$max.height)) options$attr.output <- c(
+      options$attr.output,
+      sprintf('style="max-height: %s;"', options$max.height)
+    )
+    hook_output(x, options)
+  })
+})
 Sys.setenv(USE_CXX14 = "1")
 set.seed(12345)
 ```
@@ -25,7 +36,7 @@ set.seed(12345)
 The **StanHeaders** package contains no R functions. To use the Stan Math Library
 in other packages, it is often sufficient to specify
 ```
-LinkingTo: StanHeaders (>= 2.21.0), RcppParallel (>= 5.0.1)
+LinkingTo: StanHeaders (>= 2.26.0), RcppParallel (>= 5.0.1)
 ```
 in the DESCRIPTION file of another package and put something like
 ```
@@ -47,9 +58,37 @@ STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "message()" \
 PKG_CXXFLAGS += -I"$(STANHEADERS_SRC)"
 ```
 
+# Calling functions in the **StanHeaders** Package from R
+
+The only exposed R function in the in the **StanHeaders** package is `stanFunction`, which
+can be used to call most functions in the Stan Math Library.
+
+```{r}
+example(stanFunction, package = "StanHeaders", run.dontrun = TRUE)
+```
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 100px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+The `functions` object defined in this example lists the many Stan functions that could be called
+(if all their arguments are numeric, see `help(stanFunction, package = "StanHeaders")` for details)
+```{r, echo = FALSE, warning = FALSE, class.output="scroll-100"}
+if (length(functions) %% 2 == 1) {
+  functions <- c(functions, "")
+}
+functions <- matrix(functions, ncol = 2, byrow = TRUE)
+print(functions)
+```
+
+
 # Using Higher-Order Functions in the **StanHeaders** Package
 
-This section will demonstrate how to use some of the C++ functions in the **StanHeaders** package.
+This section will demonstrate how to use some of the C++ functions in the **StanHeaders** package
+whose first argument is another C++ function, in which case the `stanFunction` in the previous
+section will not work and you have to write your own C++.
 
 ## Derivatives and Minimization
 
@@ -81,11 +120,10 @@ using the R function `optim` below.
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
-#include <stan/math/fwd/mat/fun/dot_self.hpp>    // stuff from fwd/ must come first
-#include <stan/math/mix/mat/functor/hessian.hpp> // then stuff from mix/ must come next
-#include <stan/math.hpp>                         // finally pull in everything from rev/ & prim/
+#include <stan/math/mix/functor/hessian.hpp> // stuff from mix/ must come first
+#include <stan/math.hpp>                     // finally pull in everything from rev/ & prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>                           // do this AFTER including stan/math
+#include <RcppEigen.h>                       // do this AFTER including stan/math
 
 // [[Rcpp::plugins(cpp14)]]
 
@@ -111,6 +149,7 @@ auto g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
 
 /* Hessian */
 
+/*
 // [[Rcpp::export]]
 auto H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
   double fx;
@@ -122,6 +161,7 @@ auto H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
                       x, fx, grad_fx, H);
   return H;
 }
+*/
 
 /* Jacobian */
 
@@ -165,7 +205,7 @@ a random point in three dimensions:
 x <- optim(rnorm(3), fn = f, gr = g, a = 1:3, method = "BFGS", hessian = TRUE)
 x$par
 x$hessian
-H(x$par, a = 1:3)
+#H(x$par, a = 1:3)
 J(x$par, a = 1:3)
 solution(a = 1:3, guess = rnorm(3))
 ```
@@ -194,7 +234,7 @@ double Cauchy(double scale) {
   auto half = stan::math::integrate_1d([](auto x, auto xc, auto theta,
                                           auto x_r, auto x_i, auto msgs) {
     return exp(stan::math::cauchy_lpdf(x, 0, x_r[0]));
-  }, -scale, scale, theta, {scale}, {}, Rcpp::Rcout, 1e-7);
+  }, -scale, scale, theta, {scale}, {}, nullptr, 1e-7);
   return half * 2; // should equal 1 for any positive scale
 }
 

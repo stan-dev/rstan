@@ -214,7 +214,7 @@ data_preprocess <- function(data) { # , varnames) {
                    } else if (is.list(x)) {
                      x <- data_list2array(x) # list to array
                    } else if (is.logical(x)) {
-                     x <- as.integer(x)
+                     storage.mode(x) <- "integer"
                    }
 
                    ## Now we stop whenever we have NA in the data
@@ -310,7 +310,7 @@ check_args <- function(argss) {
 }
 
 #
-# model_code <- read_model_from_con('http://stan.googlecode.com/git/src/models/bugs_examples/vol1/dyes/dyes.stan')
+# model_code <- read_model_from_con('https://stan.googlecode.com/git/src/models/bugs_examples/vol1/dyes/dyes.stan')
 # cat(model_code)
 
 
@@ -934,7 +934,7 @@ rstancolgrey <- rgb(matrix(c(247, 247, 247, 204, 204, 204, 150, 150, 150, 82, 82
                     alpha = 100,
                     names = paste(1:4), maxColorValue = 255)
 
-# from http://colorbrewer2.org/, colorblind safe,
+# from https://colorbrewer2.org/, colorblind safe,
 # 6 different colors, diverging
 rstancolc <- rgb(matrix(c(230, 97, 1,
                           153, 142, 195,
@@ -1380,7 +1380,7 @@ legitimate_model_name <- function(name, obfuscate_name = TRUE) {
   # take advantage of tools such as ccache
 }
 
-boost_url <- function() {"http://www.boost.org/users/download/"}
+boost_url <- function() {"https://www.boost.org/users/download/"}
 
 makeconf_path <- function() {
   RMU <- Sys.getenv("R_MAKEVARS_USER")
@@ -1587,10 +1587,8 @@ get_time_from_csv <- function(tlines) {
   t <- rep(NA, 2)
   names(t) <- c("warmup", "sample")
   if (length(tlines) < 2) return(t)
-  warmupt <- gsub(".*#\\s*Elapsed.*:\\s*", "", tlines[1])
-  warmupt <- gsub("\\s*seconds.*$", "", warmupt)
-  samplet <- gsub(".*#\\s*", "", tlines[2])
-  samplet <- gsub("\\s*seconds.*$", "", samplet)
+  warmupt <- gsub("[^0-9.]", "", tlines[1])
+  samplet <- gsub("[^0-9.]", "", tlines[2])
   t[1] <- as.double(warmupt)
   t[2] <- as.double(samplet)
   t
@@ -1604,17 +1602,20 @@ parse_data <- function(cppcode) {
   # pull out object names from the data block
   objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
                   cppcode[private:public])
+  # Remove model internal name _data__ suffix for stanc3 v2.30+
+  objects <- gsub("_data__$", "", objects)
+  # Remove model internal name underscores in case of Eigen::Maps
+  objects <- gsub("__$", "\\1", objects)
+  # Remove any bad regex matches that found the end of an Eigen::Map.
+  objects <- gsub("^[[:digit:]]+", "\\1", objects)
+  # Remove empty characters and trim whitespaces
+  objects <- objects[nzchar(trimws(objects))]
 
-  in_data <- grep("context__.vals_", cppcode, fixed = TRUE, value = TRUE)
-  in_data <- gsub('^.*\\("(.*)\"\\).*;$', "\\1", in_data)
-
-  # get them from the calling environment
-  objects <- intersect(objects, in_data)
+  # Get them from the calling environment
   stuff <- list()
   for (int in seq_along(objects)) {
    stuff[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
   }
-
   for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
     if (exists(objects[i], envir = globalenv(), mode = "numeric"))
       stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")

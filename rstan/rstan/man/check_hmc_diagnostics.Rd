@@ -60,7 +60,7 @@ The \code{get_*} functions are for programmatic access to the diagnostics.
 \itemize{
 \item \code{get_divergent_iterations} and \code{get_max_treedepth_iterations} 
 return a logical vector indicating problems for individual iterations,
-\item \code{get_num_divergences} and \code{get_num_max_treedepth} return the 
+\item \code{get_num_divergent} and \code{get_num_max_treedepth} return the 
 number of offending interations, 
 \item \code{get_num_leapfrog_per_iteration} returns an integer vector with the 
 number of leapfrog evalutions for each iteration,
@@ -72,13 +72,13 @@ The following are several of many resources that provide more information on
 these diagnostics:
 \itemize{
 \item Brief explanations of some of the problems detected by these diagnostics 
-can be found in the \href{http://mc-stan.org/misc/warnings.html}{\emph{Brief Guide to Stan's Warnings}}.
+can be found in the \href{https://mc-stan.org/misc/warnings.html}{\emph{Brief Guide to Stan's Warnings}}.
 
 \item Betancourt (2017) provides much more depth on these diagnostics
 as well as a conceptual introduction to Hamiltonian Monte Carlo in general.
 
 \item Gabry et al. (2018) and the \pkg{bayesplot}
- package \href{http://mc-stan.org/bayesplot/articles/}{vignettes} demonstrate
+ package \href{https://mc-stan.org/bayesplot/articles/}{vignettes} demonstrate
  various visualizations of these diagnostics that can be made in \R.
 }
 }
@@ -86,7 +86,7 @@ as well as a conceptual introduction to Hamiltonian Monte Carlo in general.
 \references{
   The Stan Development Team 
   \emph{Stan Modeling Language User's Guide and Reference Manual}. 
-  \url{http://mc-stan.org/}. 
+  \url{https://mc-stan.org/}.
   
   Betancourt, M. (2017). A conceptual introduction to Hamiltonian Monte Carlo.
   \url{https://arxiv.org/abs/1701.02434}.
@@ -94,7 +94,7 @@ as well as a conceptual introduction to Hamiltonian Monte Carlo in general.
   Gabry, J., Simpson, D., Vehtari, A., Betancourt, M., and Gelman, A. (2018). 
   Visualization in Bayesian workflow. 
   \emph{Journal of the Royal Statistical Society Series A}, accepted for publication.
-  arXiv preprint: http://arxiv.org/abs/1709.01449.
+  arXiv preprint: https://arxiv.org/abs/1709.01449.
 } 
 
 \examples{

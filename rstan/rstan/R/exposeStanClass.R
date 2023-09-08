@@ -24,7 +24,7 @@ exposeStanClass <- function(stanc_ret,
 
   if (any(grepl("ctor_body", stanc_ret$cppcode))) {
     ctor <- list("rstan::io::rlist_ref_var_context")
-  } else ctor <- list("")
+  } else ctor <- list(c("SEXP", "SEXP", "SEXP"))
 
   writeLines(stanc_ret$cppcode, con = header)
   meth <- names(stanc_ret$methods)

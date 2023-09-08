@@ -18,23 +18,22 @@
 expose_stan_functions_hacks <- function(code, includes = NULL) {
   code <- paste("// [[Rcpp::depends(StanHeaders)]]",
                 "// [[Rcpp::depends(rstan)]]",
+                "// [[Rcpp::plugins(rstan)]]",
                 "// [[Rcpp::depends(RcppEigen)]]",
                 "// [[Rcpp::depends(BH)]]",
-                "#include <stan/math/prim/mat/fun/Eigen.hpp>",
+                "#include <stan/math/prim/fun/Eigen.hpp>",
+                "#include <stan/math/prim/meta.hpp>",
                 "#include <boost/integer/integer_log2.hpp>",
                 "#include <exporter.h>",
                 "#include <RcppEigen.h>",
+                includes,
                 code, sep = "\n")
   code <- gsub("// [[stan::function]]",
                "// [[Rcpp::export]]", code, fixed = TRUE)
   code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
                code, fixed = TRUE)
-  code <- gsub("= nullptr", "= 0", code, fixed = TRUE)
-  if(is.null(includes)) return(code)
-  code <- sub("\n\nstan::io::program_reader prog_reader__() {",
-              paste0("\n", includes, "\nstan::io::program_reader prog_reader__() {"),
-              code, fixed = TRUE)
+  code <- gsub("pstream__(\\s*|)=(\\s*|)nullptr", "pstream__ = 0", code)
   return(code)
 }
 
@@ -61,7 +60,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   md5 <- paste("user", tools::md5sum(tf), sep = "_")
   stopifnot(stanc(model_code = mc, model_name = "User-defined functions",
                   allow_undefined = TRUE)$status)
-  r <- .Call("stanfuncs", mc, md5, allow_undefined = TRUE)
+  r <- stanc(model_code = mc, model_name = "User-defined functions",
+             allow_undefined = TRUE,
+             standalone_functions = TRUE)
   code <- expose_stan_functions_hacks(r$cppcode, includes)
 
   WINDOWS <- .Platform$OS.type == "windows"
@@ -77,21 +78,16 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
 
   if (rstan_options("required"))
-    pkgbuild::has_build_tools(debug = FALSE) || pkgbuild::has_build_tools(debug = TRUE)
+    pkgbuild::has_build_tools(debug = FALSE) ||
+    pkgbuild::has_build_tools(debug = TRUE)
 
-  old_LOCAL_LIBS <- Sys.getenv("LOCAL_LIBS")
   if (WINDOWS) {
-    TBB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
-    SH  <- system.file("libs", .Platform$r_arch, package = "StanHeaders",  mustWork = TRUE)
-    Sys.setenv(LOCAL_LIBS = paste0("-L", shQuote(TBB), " -tbb -tbbmalloc",
-                                   "-L", shQuote(SH) , " -lStanHeaders"))
-    on.exit(Sys.setenv(LOCAL_LIBS = old_LOCAL_LIBS))
-  }
-
-  has_LOCAL_CPPFLAGS <- WINDOWS && Sys.getenv("LOCAL_CPPFLAGS") != ""
-  if (WINDOWS && !grepl("32", .Platform$r_arch) && !has_LOCAL_CPPFLAGS) {
-    Sys.setenv(LOCAL_CPPFLAGS = "-march=core2")
-    on.exit(Sys.unsetenv("LOCAL_CPPFLAGS"), add = TRUE)
+    has_march = .warn_march_makevars()
+    if (has_march) {
+      user_makevar = Sys.getenv("R_MAKEVARS_USER")
+      Sys.setenv(R_MAKEVARS_USER = NULL)
+      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+    }
   }
 
   if (!isTRUE(show_compiler_warnings)) {
@@ -101,6 +97,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
   }
+  Rcpp::registerPlugin("rstan", rstanplugin)
   compiled <- pkgbuild::with_build_tools(try(suppressWarnings(
     Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)), silent = TRUE),
     required = rstan_options("required") &&
@@ -120,6 +117,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
   DOTS <- list(...)
   if (isTRUE(DOTS$dryRun)) return(code)
+  if (inherits(compiled, "try-error")) stop("Compilation failed!")
   ENV <- DOTS$env
   if (is.null(ENV)) ENV <- globalenv()
   for (x in compiled$functions) {

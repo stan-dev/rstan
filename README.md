@@ -1,19 +1,19 @@
 # RStan <img src="rstan/rstan/man/figures/stanlogo.png" align="right" width="120" />
 
 <!-- badges: start -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rstan?color=blue)](http://cran.r-project.org/package=rstan)
-[![Downloads](http://cranlogs.r-pkg.org/badges/rstan?color=blue)](http://cran.rstudio.com/package=rstan)
-[![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](http://depsy.org/package/r/rstan)
-[![Build Status](https://travis-ci.org/stan-dev/rstan.svg?branch=develop)](https://travis-ci.org/stan-dev/rstan)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/rstan?color=blue)](https://cran.r-project.org/package=rstan)
+[![Downloads](https://cranlogs.r-pkg.org/badges/rstan?color=blue)](https://cran.rstudio.com/package=rstan)
+[![Research software impact](http://depsy.org/api/package/cran/rstan/badge.svg)](https://depsy.org/package/r/rstan)
+[![R-CMD-check](https://github.com/stan-dev/rstan/workflows/R-CMD-check/badge.svg)](https://github.com/stan-dev/rstan/actions)
 <!-- badges: end -->
 
-**RStan** is the R interface to [Stan](http://mc-stan.org).
+**RStan** is the R interface to [Stan](https://mc-stan.org).
 
 ### Quick links
 
-* [mc-stan.org/rstan](http://mc-stan.org/rstan) (online RStan documentation, vignettes)
-* [Stan documentation](http://mc-stan.org/users/documentation/) (language manual, case studies, and more)
-* [Ask a question](http://discourse.mc-stan.org) (Stan Forums on Discourse)
+* [mc-stan.org/rstan](https://mc-stan.org/rstan/) (online RStan documentation, vignettes)
+* [Stan documentation](https://mc-stan.org/users/documentation/) (language manual, case studies, and more)
+* [Ask a question](https://discourse.mc-stan.org) (Stan Forums on Discourse)
 * [Open an issue](https://github.com/stan-dev/rstan/issues) (GitHub issues for bug reports, feature requests)
 
 

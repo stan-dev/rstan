@@ -1,5 +1,5 @@
 # This file is part of RStan
-# Copyright (C) 2015 Jiqiang Guo, Benjamin Goodrich, and Krzysztof Sakrejda
+# Copyright (C) 2015, 2022 Jiqiang Guo, Benjamin Goodrich, and Krzysztof Sakrejda
 #
 # RStan is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@ extract_sparse_parts <- function(A) {
   if (!requireNamespace("Matrix")) 
     stop("You have to install the Matrix package to call 'extract_sparse_parts'")
   if (!is(A, 'Matrix')) 
-    A <- Matrix::Matrix(A, sparse=TRUE)
+    A <- Matrix::Matrix(A, sparse = TRUE, doDiag = FALSE)
   A <- Matrix::t(A)
-  A <- as(A, "dgCMatrix")
+  A <- as(as(as(A, "CsparseMatrix"), "generalMatrix"), "dMatrix")
   return(.Call(extract_sparse_components, A))
 }

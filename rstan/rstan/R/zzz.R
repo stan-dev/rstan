@@ -19,48 +19,42 @@ rstan_load_time <- as.POSIXct("1970-01-01 00:00.00 UTC")
 RNG <- 0
 OUT <- 0
 
-tbbmalloc_proxyDllInfo <- NULL
-
 .onLoad <- function(libname, pkgname) {
+  if (requireNamespace("V8")) {
+    assign("stanc_ctx", V8::v8(), envir = topenv())
+  } else assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
+  stanc_js <- system.file("stanc.js", package = "StanHeaders", mustWork = TRUE)
+  if (!stanc_ctx$validate(stanc_js)) {
+    stanc_js <- system.file("exec", "stanc.js", package = "rstan", mustWork = TRUE)
+  }
+  stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))
   assignInMyNamespace("OUT", value = get_stream())
   Rcpp::loadModule("class_model_base", what = TRUE)
   Rcpp::loadModule("class_stan_fit", what = TRUE)
-  ## the tbbmalloc_proxy is not loaded by RcppParallel which is linked
-  ## in by default on macOS
-  if(Sys.info()["sysname"] == "Darwin") {
-      tbbmalloc_proxy  <- system.file("lib/libtbbmalloc_proxy.dylib", package="RcppParallel", mustWork=FALSE)
-      tbbmalloc_proxyDllInfo <<- dyn.load(tbbmalloc_proxy, local = FALSE, now = TRUE)
-  }
 }
 
 .onAttach <- function(...) {
-  rstanLib <- dirname(system.file(package = "rstan"))
-  pkgdesc <- packageDescription("rstan", lib.loc = rstanLib)
-  gitrev <- substring(git_head(), 0, 12)
-  packageStartupMessage(paste("rstan (Version ", pkgdesc$Version, ", GitRev: ", gitrev, ")", sep = ""))
+  packageStartupMessage("\nrstan version ",
+                        utils::packageVersion("rstan"),
+                        " (Stan version ",
+                        stan_version(), ")\n")
   packageStartupMessage("For execution on a local, multicore CPU with excess RAM we recommend calling\n",
                         "options(mc.cores = parallel::detectCores()).\n",
                         "To avoid recompilation of unchanged Stan programs, we recommend calling\n",
-                        "rstan_options(auto_write = TRUE)")
+                        "rstan_options(auto_write = TRUE)",
+                        "\nFor within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,\n",
+                        "change `threads_per_chain` option:\n",
+                        paste0("rstan_options(threads_per_chain = ",
+                               rstan_options("threads_per_chain"), ")\n"))
   if (.Platform$OS.type == "windows") {
-    R_version <- as.integer(R.version$major)
-    processor_msg <- ifelse(R_version >= 4,
-                            "Sys.setenv(LOCAL_CPPFLAGS = '-march=native -mtune=native')",
-                            "Sys.setenv(LOCAL_CPPFLAGS = '-march=corei7 -mtune=corei7')")
-    packageStartupMessage("For improved execution time, we recommend calling\n", processor_msg)
+    packageStartupMessage("Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file")
   }
 }
 
 .onUnload <- function(libpath) {
    # unload the package library
    library.dynam.unload("rstan", libpath)
-
-   # unload tbbmalloc_proxy if we loaded it
-   if (!is.null(tbbmalloc_proxyDllInfo)) {
-       dyn.unload(tbbmalloc_proxyDllInfo[["path"]])
-       tbbmalloc_proxyDllInfo <<- NULL
-   }
 }

@@ -216,14 +216,8 @@ ess_rfun <- function(sims) {
   }
   chains <- ncol(sims)
   n_samples <- nrow(sims)
-  if (n_samples < 3L || anyNA(sims)) {
-    return(NA)
-  }
-  if (any(!is.finite(sims))) {
-    return(NaN)
-  }
-  if (is_constant(sims)) {
-    return(NA)
+  if (n_samples < 3L || should_return_NA(sims)) {
+    return(NA_real_)
   }
   acov <- lapply(seq_len(chains), function(i) autocovariance(sims[, i]))
   acov <- do.call(cbind, acov)
@@ -366,6 +360,9 @@ ess_tail <- function(sims) {
 #'
 #' @export
 ess_quantile <- function(sims, prob) {
+  if (should_return_NA(sims)) {
+    return(NA_real_)
+  }
   I <- sims <= quantile(sims, prob, na.rm = TRUE)
   ess_rfun(split_chains(I))
 }
@@ -679,4 +676,9 @@ print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
   if (drop) names(out) <- nms
   else rownames(out) <- nms
   return(out)
+}
+
+# should NA be returned by a convergence diagnostic?
+should_return_NA <- function(x) {
+  anyNA(x) || any(!is.finite(x)) || is_constant(x)
 }

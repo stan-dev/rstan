@@ -1,16 +1,17 @@
-CXX_STD = CXX14
+CXX_STD = CXX17
 CXX14STD = -std=c++1y
-PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"." -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -DBOOST_NO_AUTO_PTR -DSTAN_THREADS
-PKG_CPPFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()")
-PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1
-PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "RcppParallel::RcppParallelLibs()")
+STANHEADERS_SRC = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" --vanilla -e "cat(system.file('include', 'src', package = 'StanHeaders'))" | tail -n 1)
+PKG_CPPFLAGS = -I"../inst/include" -I"../inst/include/boost_not_in_BH" -I"${STANHEADERS_SRC}" -DBOOST_DISABLE_ASSERTS -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION -D_REENTRANT -DSTAN_THREADS -DUSE_STANC3 -DSTRICT_R_HEADERS -D_HAS_AUTO_PTR_ETC=0
+PKG_CPPFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "RcppParallel::CxxFlags()" | tail -n 1)
+PKG_CXXFLAGS += -DRCPP_PARALLEL_USE_TBB=1 -DSTRICT_R_HEADERS
+PKG_LIBS += $(shell "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" -e "RcppParallel::RcppParallelLibs()" | tail -n 1)
 SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
 
 SOURCES_STATIC = stan_fit.cpp stan_fit_base.cpp
 OBJECTS_STATIC = $(SOURCES_STATIC:.cpp=.o)
 
-SOURCES = $(filter-out stan_fit.cpp, $(wildcard *.cpp) stan/lang/ast_def.cpp $(wildcard stan/lang/grammars/*.cpp))
+SOURCES = $(filter-out stan_fit.cpp, $(wildcard *.cpp))
 OBJECTS = $(SOURCES:.cpp=.o)
 
 all: $(SHLIB) $(OBJECTS_STATIC)
