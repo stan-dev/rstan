@@ -72,8 +72,8 @@ data {
   int<lower=1> N;
 } 
 parameters {
-  real y1[N]; 
-  real y2[N]; 
+  array[N] real y1;
+  array[N] real y2; 
 } 
 model {
   y1 ~ normal(0, 1);

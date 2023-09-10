@@ -71,8 +71,8 @@
 \examples{\dontrun{
 ex_model_code <- '
   parameters {
-    real alpha[2,3];
-    real beta[2]; 
+    array[2, 3] real alpha;
+    array[2] real beta; 
   } 
   model {
     for (i in 1:2) for (j in 1:3) 

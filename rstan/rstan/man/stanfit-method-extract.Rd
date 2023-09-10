@@ -57,8 +57,8 @@
 \examples{\dontrun{
 ex_model_code <- '
   parameters {
-    real alpha[2,3];
-    real beta[2]; 
+    array[2, 3] real alpha;
+    array[2] real beta; 
   } 
   model {
     for (i in 1:2) for (j in 1:3) 
@@ -110,7 +110,7 @@ dimnames(fit_ss2)
 # 
 excode <- '
   transformed data {
-    real y[20];
+    array[20] real y;
     y[1] <- 0.5796;  y[2]  <- 0.2276;   y[3] <- -0.2959; 
     y[4] <- -0.3742; y[5]  <- 0.3885;   y[6] <- -2.1585;
     y[7] <- 0.7111;  y[8]  <- 1.4424;   y[9] <- 2.5430; 

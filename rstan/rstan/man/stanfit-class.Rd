@@ -200,7 +200,7 @@ summarizing results and various access methods also allow the underlying data
 showClass("stanfit")
 ecode <- '
   parameters {
-    real<lower=0> y[2];
+    array[2] real<lower=0> y;
   } 
   model {
     y ~ exponential(1);
@@ -241,7 +241,7 @@ print(y1star) # y1start should equal to y1
 # 
 excode <- '
   transformed data {
-    real y[20];
+    array[20] real y;
     y[1] <- 0.5796;  y[2]  <- 0.2276;   y[3] <- -0.2959; 
     y[4] <- -0.3742; y[5]  <- 0.3885;   y[6] <- -2.1585;
     y[7] <- 0.7111;  y[8]  <- 1.4424;   y[9] <- 2.5430; 

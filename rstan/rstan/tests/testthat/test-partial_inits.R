@@ -4,7 +4,7 @@ test_that("partial_inits works", {
   stan_model_code <- "
     data {
       int<lower=0> N;
-      real y[N];
+      array[N] real y;
     }
 
     parameters {
