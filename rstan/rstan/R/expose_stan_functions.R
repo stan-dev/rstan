@@ -50,8 +50,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     mc <- get_stancode(stanmodel)
   }
   else if(is.character(stanmodel)) {
-    if(length(stanmodel) == 1) mc <- rstan:::get_model_strcode(stanmodel, NULL)
-    else mc <-  rstan:::get_model_strcode(model_code = stanmodel)
+    if(length(stanmodel) == 1) mc <- get_model_strcode(stanmodel, NULL)
+    else mc <-  get_model_strcode(model_code = stanmodel)
   }
   else stop("'stanmodel' is not a valid object")
 
@@ -63,7 +63,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   r <- stanc(model_code = mc, model_name = "User-defined functions",
              allow_undefined = TRUE,
              standalone_functions = TRUE)
-  code <- rstan:::expose_stan_functions_hacks(r$cppcode, includes)
+  code <- expose_stan_functions_hacks(r$cppcode, includes)
 
   WINDOWS <- .Platform$OS.type == "windows"
   R_version <- with(R.version, paste(major, minor, sep = "."))
