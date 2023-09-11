@@ -51,7 +51,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   }
   else if(is.character(stanmodel)) {
     if(length(stanmodel) == 1) mc <- get_model_strcode(stanmodel, NULL)
-    else mc <-  get_model_strcode(model_code = stanmodel)
+    else mc <- get_model_strcode(model_code = stanmodel)
   }
   else stop("'stanmodel' is not a valid object")
 
