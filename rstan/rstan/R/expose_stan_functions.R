@@ -30,9 +30,9 @@ expose_stan_functions_hacks <- function(code, includes = NULL) {
                 code, sep = "\n")
   code <- gsub("// [[stan::function]]",
                "// [[Rcpp::export]]", code, fixed = TRUE)
-  code <- gsub("stan::math::accumulator<double>& lp_accum__, std::ostream* pstream__ = nullptr){",
+  code <- gsub("stan::math::accumulator<double>& lp_accum__,(\\n)?(\\s*)?std::ostream\\* pstream__ = (nullptr|0))(\\s*)?\\{",
                "std::ostream* pstream__ = nullptr){\nstan::math::accumulator<double> lp_accum__;",
-               code, fixed = TRUE)
+               code)
   code <- gsub("pstream__(\\s*|)=(\\s*|)nullptr", "pstream__ = 0", code)
   return(code)
 }
@@ -50,8 +50,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     mc <- get_stancode(stanmodel)
   }
   else if(is.character(stanmodel)) {
-    if(length(stanmodel) == 1) mc <- get_model_strcode(stanmodel, NULL)
-    else mc <- get_model_strcode(model_code = stanmodel)
+    if(length(stanmodel) == 1) mc <- rstan:::get_model_strcode(stanmodel, NULL)
+    else mc <-  rstan:::get_model_strcode(model_code = stanmodel)
   }
   else stop("'stanmodel' is not a valid object")
 
@@ -63,7 +63,7 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   r <- stanc(model_code = mc, model_name = "User-defined functions",
              allow_undefined = TRUE,
              standalone_functions = TRUE)
-  code <- expose_stan_functions_hacks(r$cppcode, includes)
+  code <- rstan:::expose_stan_functions_hacks(r$cppcode, includes)
 
   WINDOWS <- .Platform$OS.type == "windows"
   R_version <- with(R.version, paste(major, minor, sep = "."))
