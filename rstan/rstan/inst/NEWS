@@ -1,3 +1,7 @@
+Sat Sep 15, 2023
+
+1. Updated Stan to C++ compiler v2.33.1.
+
 Sun Sep 10, 2023
 
 1. Fixed the deprecated array syntax.
