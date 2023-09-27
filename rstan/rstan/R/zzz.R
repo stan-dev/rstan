@@ -20,7 +20,7 @@ RNG <- 0
 OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
-  if (requireNamespace("V8")) {
+  if (requireNamespace("V8", quietly = TRUE)) {
     assign("stanc_ctx", V8::v8(), envir = topenv())
   } else assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
   stanc_js <- system.file("stanc.js", package = "StanHeaders", mustWork = TRUE)
