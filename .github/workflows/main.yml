@@ -110,6 +110,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
+          _R_CHECK_FORCE_SUGGESTS_: false
         run: |
           if (R.version$major < 4 && isTRUE(.Platform$OS.type == "windows")) {
             dotR <- file.path(Sys.getenv("HOME"), ".R")
