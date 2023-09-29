@@ -48,7 +48,7 @@ array of MCMC draws as its input rather than a \code{stanfit} object.
 \examples{\dontrun{
 ecode <- '
   parameters {
-    real<lower=0> y[2];
+    array[2] real<lower=0> y;
   } 
   model {
     y ~ exponential(1);
