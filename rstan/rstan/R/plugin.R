@@ -38,8 +38,8 @@ boost_path_fun2 <- function() {
 }
 
 PKG_CPPFLAGS_env_fun <- function() {
-   Eigen <- dir(system.file("include", "stan", "math", "prim", 
-                            package = "StanHeaders", mustWork = TRUE), 
+   Eigen <- dir(system.file("include", "stan", "math", "prim",
+                            package = "StanHeaders", mustWork = TRUE),
                 pattern = "Eigen.hpp$", full.names = TRUE, recursive = TRUE)[1]
    paste(' -I"', file.path(inc_path_fun("Rcpp"), '" '),
          ' -I"', file.path(eigen_path_fun(), '" '),
@@ -58,7 +58,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DUSE_STANC3',
          ' -DSTRICT_R_HEADERS ',
          ' -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION ',
-         ' -DBOOST_NO_AUTO_PTR ',
+         ' -D_HAS_AUTO_PTR_ETC=0 ',
          ' -include ', shQuote(Eigen), ' ',
          ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
                  ' -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 '),
@@ -145,4 +145,3 @@ inlineCxxPlugin <- function(...) {
   settings <- rstanplugin()
   settings
 }
-
