@@ -142,14 +142,12 @@ cxxfunctionplus <- function(sig = character(), body = character(),
                             ..., verbose = FALSE) {
   R_version <- with(R.version, paste(major, minor, sep = "."))
   WINDOWS <- .Platform$OS.type == "windows"
-  if (WINDOWS && R_version < "3.7.0") {
-    has_USE_CXX11 <- Sys.getenv("USE_CXX11") != ""
-    Sys.setenv(USE_CXX11 = 1) # -std=c++1y gets added anyways
-    if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"))
+  if (WINDOWS && R.version$major < 4) {
+    stop("cxxfunctionplus requires R >= 4.0 on Windows to use C++17")
   } else {
-    has_USE_CXX14 <- Sys.getenv("USE_CXX14") != ""
-    Sys.setenv(USE_CXX14 = 1)
-    if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"))
+    has_USE_CXX17 <- Sys.getenv("USE_CXX17") != ""
+    Sys.setenv(USE_CXX17 = 1)
+    if (!has_USE_CXX17) on.exit(Sys.unsetenv("USE_CXX17"))
   }
   if (rstan_options("required"))
     pkgbuild::has_build_tools(debug = FALSE) ||
@@ -183,11 +181,6 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     close(zz)
     try(file.remove(tf), silent = TRUE)
     on.exit(NULL)
-    if (WINDOWS && R_version < "3.7.0") {
-      if (!has_USE_CXX11) on.exit(Sys.unsetenv("USE_CXX11"), add = TRUE)
-    } else {
-      if (!has_USE_CXX14) on.exit(Sys.unsetenv("USE_CXX14"), add = TRUE)
-    }
   }
   dso_last_path <- dso_path(fx)
   if (grepl("^darwin", R.version$os) && grepl("clang", get_CXX(FALSE))) {
