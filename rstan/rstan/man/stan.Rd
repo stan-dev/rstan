@@ -386,7 +386,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
   }
 
   Stan treats a vector of length 1 in R as a scalar.  So technically
-  if, for example, \code{"real y[1];"} is defined in the data block, an array
+  if, for example, \code{"array[1] real y;"} is defined in the data block, an array
   such as \code{"y = array(1.0, dim = 1)"} in R should be used. This
   is also the case for specifying initial values since the same
   underlying approach for reading data from R in Stan is used, in which
@@ -425,7 +425,7 @@ stan(file, model_name = "anon_model", model_code = "", fit = NA,
 library(rstan)
 scode <- "
 parameters {
-  real y[2];
+  array[2] real y;
 }
 model {
   y[1] ~ normal(0, 1);
@@ -447,7 +447,7 @@ e2 <- extract(fit2, permuted = FALSE)
 
 excode <- '
   transformed data {
-    real y[20];
+    array[20] real y;
     y[1] = 0.5796;  y[2] = 0.2276;   y[3]  = -0.2959;
     y[4] = -0.3742; y[5] = 0.3885;   y[6]  = -2.1585;
     y[7] = 0.7111;  y[8] = 1.4424;   y[9]  = 2.5430;

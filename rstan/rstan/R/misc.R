@@ -863,7 +863,7 @@ remove_empty_pars <- function(pars, model_dims) {
   # following stan model code:
   #
   # transformed data { int n; n <- 0; }
-  # parameters { real y[n]; }
+  # parameters { array[n] real y; }
   #
   # Args:
   #   pars: a character vector of parameters names
