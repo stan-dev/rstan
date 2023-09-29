@@ -593,6 +593,7 @@ color_vector_chain <- function(n) {
   mdf <- cbind(mdf_td, div = mdf_nd$value)
   plot_data <- if (divergent == "All") mdf else mdf[mdf$div == divergent, , drop = FALSE]
   if (nrow(plot_data) == 0) return(NULL)
+  count <- NaN
 
   graph <- ggplot2::ggplot(
     data = plot_data,
