@@ -1650,19 +1650,17 @@ create_progress_html_file <- function(htmlfname, textfname) {
   cat(src2, file = htmlfname)
 }
 
-get_CXX <- function(CXX14 = TRUE) {
+get_CXX <- function(...) {
   if (.Platform$OS.type != "windows")
     return (system2(file.path(R.home(component = "bin"), "R"),
-            args = paste("CMD config", ifelse(CXX14, "CXX14", "CXX11")),
-            stdout = TRUE, stderr = FALSE))
+            args = "CMD config CXX17", stdout = TRUE, stderr = FALSE))
 
-    ls_path <- Sys.which("ls")
-    if (ls_path == "")
-        return(NULL)
+  ls_path <- Sys.which("ls")
+  if (ls_path == "") return(NULL)
 
-    install_path <- dirname(dirname(ls_path))
-    file.path(install_path,
-              paste0('mingw_', Sys.getenv('WIN')), 'bin', 'g++')
+  install_path <- dirname(dirname(ls_path))
+  file.path(install_path,
+            paste0('mingw_', Sys.getenv('WIN')), 'bin', 'g++')
 }
 
 is.sparc <- function() {
