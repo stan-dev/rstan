@@ -29,7 +29,6 @@ OUT <- 0
     stanc_js <- system.file("exec", "stanc.js", package = "rstan", mustWork = TRUE)
     stanc_ctx$source(stanc_js)
   }
-  stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()
   assignInMyNamespace("RNG", value = get_rng(0))

@@ -46,12 +46,12 @@ Imports:
     ggplot2 (>= 3.3.5)
 Depends:
     R (>= 3.4.0),
-    StanHeaders (>= 2.32.2)
+    StanHeaders (>= 2.26.28)
 LinkingTo:
     Rcpp (>= 1.0.7),
     RcppEigen (>= 0.3.3.9.3),
     BH (>= 1.75.0-0),
-    StanHeaders (>= 2.32.2),
+    StanHeaders (>= 2.26.28),
     RcppParallel (>= 5.1.4)
 Suggests:
     testthat (>= 3.0.4),
