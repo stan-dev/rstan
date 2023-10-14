@@ -21,8 +21,7 @@
 
 \section{Methods}{
   \describe{
-    \item{optimizing}{\code{signature(object = "stanmodel")}}{
-      %%  ~~describe this method here~~
+    \item{optimizing}{\code{signature(object = "stanmodel")}
       Call Stan's optimization methods to obtain a point estimate 
       for the model defined by S4 class \code{stanmodel} 
       given the data, initial values, etc. 

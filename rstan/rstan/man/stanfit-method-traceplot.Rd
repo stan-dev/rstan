@@ -16,7 +16,7 @@
 
 \section{Methods}{
   \describe{
-    \item{traceplot}{\code{signature(object = "stanfit")}}{Plot the sampling paths for all chains.}
+    \item{traceplot}{\code{signature(object = "stanfit")} Plot the sampling paths for all chains.}
   }
 }
 
