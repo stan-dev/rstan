@@ -125,6 +125,9 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
   auto_format <- isTRUE(getOption("stanc.auto_format", FALSE))
+  error_file <- tempfile()
+  stopifnot(file.create(error_file))
+  on.exit(file.remove(error_file))
   if (isTRUE(auto_format)) {
     model_code <- stanc_process(file = file,
                                 model_name = model_name,
@@ -134,7 +137,7 @@ stanc_builder <- function(file, isystem = c(dirname(file), getwd()),
     stopifnot(stanc_ctx$validate("stanc"))
     formatted_code <- try(stanc_ctx$call("stanc", model_cppname,
                           model_code, as.array("auto-format")),
-                          silent = TRUE)
+                          outFile = error_file)
     if (!inherits(formatted_code, "try-error") && !is.null(formatted_code$result)) {
       model_code <- formatted_code$result
     }
@@ -180,6 +183,9 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   model_cppname <- legitimate_model_name(model_name, obfuscate_name = obfuscate_model_name)
 
   auto_format <- isTRUE(getOption("stanc.auto_format", FALSE))
+  error_file <- tempfile()
+  stopifnot(file.create(error_file))
+  on.exit(file.remove(error_file))
   if (isTRUE(auto_format)) {
     model_code <- stanc_process(file = file,
                                 model_code = model_code,
@@ -190,7 +196,7 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
     stopifnot(stanc_ctx$validate("stanc"))
     formatted_code <- try(stanc_ctx$call("stanc", model_cppname,
                           model_code, as.array("auto-format")),
-                          silent = TRUE)
+                          outFile = error_file)
     if (!inherits(formatted_code, "try-error") && !is.null(formatted_code$result)) {
       model_code <- formatted_code$result
     }
@@ -227,8 +233,11 @@ stanc <- function(file, model_code = '', model_name = "anon_model",
   } else {
     stanc_flags <- as.array("")
   }
+  error_file <- tempfile()
+  stopifnot(file.create(error_file))
+  on.exit(file.remove(error_file))
   model_cppcode <- try(stanc_ctx$call("stanc", model_cppname, model_code, stanc_flags),
-                       silent = TRUE)
+                       outFile = error_file)
   if (inherits(model_cppcode, "try-error")) {
     stop("parser failed badly; maybe try installing the V8 package")
   } else if (length(model_cppcode$errors)) {
