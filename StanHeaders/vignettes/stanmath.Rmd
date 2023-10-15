@@ -300,7 +300,9 @@ all.equal(nonstiff(A, y0), c(0, 0), tol = 1e-5)
 all.equal(   stiff(A, y0), c(0, 0), tol = 1e-8)
 ```
 
-# Map and Parellelization
+# Parellelization
+
+## `map_rect` Function
 
 The Stan Math Library includes the `map_rect` function, which applies a function to each element
 of rectangular arrays and returns a vector, making it a bit like a restricted version of R's `sapply` 
@@ -332,7 +334,7 @@ struct is_prime {
   operator()(const Eigen::Matrix<T1, Eigen::Dynamic, 1>& eta,
              const Eigen::Matrix<T2, Eigen::Dynamic, 1>& theta,
              const std::vector<double>& x_r, const std::vector<int>& x_i,
-             std::ostream* msgs = 0) const {
+             std::ostream* msgs = nullptr) const {
     Eigen::VectorXd res(1); // can only return double or var vectors
     int n = x_i[0];
     if (n <= 3) {
@@ -374,6 +376,46 @@ odd <- seq.int(from = 2^25 - 1, to = 2^26 - 1, by = 2)
 tail(psapply(n = as.list(odd))) == 1 # check your process manager while this is running
 ```
 Thus, $2^{26} - 5 = 67,108,859$ is a prime number.
+
+## `reduce_sum` Function
+
+```{Rcpp}
+// [[Rcpp::depends(BH)]]
+// [[Rcpp::depends(RcppEigen)]]
+// [[Rcpp::depends(RcppParallel)]]
+// [[Rcpp::depends(StanHeaders)]]
+#include <stan/math.hpp>                         // pulls in everything from rev/ and prim/
+#include <Rcpp.h>
+#include <RcppEigen.h>                           // do this AFTER including stan/math
+
+// [[Rcpp::plugins(cpp17)]]
+
+template <typename T>
+struct partial_sum {
+  partial_sum() {}
+  T operator()(const std::vector<int>& k_slice, int start, int end, 
+               std::ostream* msgs, double p) {
+    double S = 0;
+    for (int n = 0; k_slice.size(); n++) {
+      int k = k_slice[n];
+      S += stan::math::pow(p, k) / k;
+    }
+    return S;
+  }
+};
+
+// [[Rcpp::export]]
+double check_logarithmic_PMF(const double p, const int N = 1000) {
+  using stan::math::reduce_sum;
+  return reduce_sum<partial_sum<double> >(std::vector<int>(1, N), 1, nullptr, p) /
+    -std::log1p(-p);
+}
+```
+
+```{r, eval=FALSE} 
+stopifnot(all.equal(1, check_logarithmic_PMF(p = 1 / sqrt(2)))) # crashes
+```
+
 
 # Defining a Stan Model in C++
 
