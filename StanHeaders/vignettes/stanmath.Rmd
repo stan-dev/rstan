@@ -27,7 +27,7 @@ local({
     hook_output(x, options)
   })
 })
-Sys.setenv(USE_CXX14 = "1")
+Sys.setenv(USE_CXX17 = "1")
 set.seed(12345)
 ```
 
@@ -379,6 +379,16 @@ Thus, $2^{26} - 5 = 67,108,859$ is a prime number.
 
 ## `reduce_sum` Function
 
+The `reduce_sum` function can be used to sum a function of recursively-partitioned
+data in parallel. The Probability Mass Function (PMF) of the logarithmic distribution is
+
+$$\Pr\left(x = k \mid p\right) = \frac{p^k}{-k\ln\left(1 - p\right)} $$
+for a positive integer $k$ and $0 < p < 1$. To verify that this PMF sums to $1$ over
+the natural numbers, we could accumulate it for a large finite number of terms, but
+would like to do so in parallel. To do so, we need to define a `partial_sum` function
+that adds the PMF for some subset of natural numbers and pass it to the `reduce_sum`
+function like
+
 ```{Rcpp}
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::depends(RcppEigen)]]
@@ -393,10 +403,11 @@ Thus, $2^{26} - 5 = 67,108,859$ is a prime number.
 template <typename T>
 struct partial_sum {
   partial_sum() {}
-  T operator()(const std::vector<int>& k_slice, int start, int end, 
+  T operator()(const std::vector<int>& k_slice, 
+               int start, int end, // these are ignored in this example
                std::ostream* msgs, double p) {
     double S = 0;
-    for (int n = 0; k_slice.size(); n++) {
+    for (int n = 0; n < k_slice.size(); n++) {
       int k = k_slice[n];
       S += stan::math::pow(p, k) / k;
     }
@@ -407,13 +418,22 @@ struct partial_sum {
 // [[Rcpp::export]]
 double check_logarithmic_PMF(const double p, const int N = 1000) {
   using stan::math::reduce_sum;
-  return reduce_sum<partial_sum<double> >(std::vector<int>(1, N), 1, nullptr, p) /
-    -std::log1p(-p);
+  std::vector<int> k(N);
+  std::iota(k.begin(), k.end(), 1);
+  return reduce_sum<partial_sum<double> >(k, 1, nullptr, p) / -std::log1p(-p);
 }
 ```
 
-```{r, eval=FALSE} 
-stopifnot(all.equal(1, check_logarithmic_PMF(p = 1 / sqrt(2)))) # crashes
+The second argument passed to `reduce_sum` is the `grainsize`, which governs
+the size (and number) of the recursive subsets of `k` that are passed to the
+`partial_sum` function. A `grainsize` of $1$ indicates that the software will
+try to automatically tune the subset size for good performance, but that may
+be worse than choosing a `grainsize` by hand in a problem-specific fashion.
+
+In any event, we can call the wrapper function `check_logarithmic_PMF` in R
+to verify that it returns $1$ to numerical tolerance:
+```{r} 
+stopifnot(all.equal(1, check_logarithmic_PMF(p = 1 / sqrt(2))))
 ```
 
 
