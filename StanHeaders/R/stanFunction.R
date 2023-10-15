@@ -21,7 +21,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
       if (is.complex(x)) {
         if (nrow(x) == 1L) {
           type <- "Eigen::Matrix<std::complex<double>, 1, -1>"
-        } else type <- "Eigen::Matrix<std::complex<double>, -1, -1>"
+        } else type <- "Eigen::MatrixXcd"
       } else if (nrow(x) == 1L) {
         type <- "stan::math::row_vector_d"
       } else type <- "stan::math::matrix_d"
@@ -31,7 +31,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
       } else {
         Eigen <- TRUE
         if (is.complex(x)) {
-          type <- "Eigen::Matrix<std::complex<double>, -1, 1>"
+          type <- "Eigen::VectorXcd"
         } else type <- "stan::math::vector_d"
       }
     } else if (is.integer(x)) {
