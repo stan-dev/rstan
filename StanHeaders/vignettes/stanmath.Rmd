@@ -40,7 +40,7 @@ LinkingTo: StanHeaders (>= 2.26.0), RcppParallel (>= 5.0.1)
 ```
 in the DESCRIPTION file of another package and put something like
 ```
-CXX_STD = CXX14
+CXX_STD = CXX17
 PKG_CXXFLAGS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::CxxFlags()") \
                $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "StanHeaders:::CxxFlags()")
 PKG_LIBS = $(shell "$(R_HOME)/bin$(R_ARCH_BIN)/Rscript" -e "RcppParallel::RcppParallelLibs()") \
@@ -120,19 +120,19 @@ using the R function `optim` below.
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppParallel)]]
 // [[Rcpp::depends(StanHeaders)]]
-#include <stan/math/mix/functor/hessian.hpp> // stuff from mix/ must come first
-#include <stan/math.hpp>                     // finally pull in everything from rev/ & prim/
+#include <stan/math/mix.hpp> // stuff from mix/ must come first
+#include <stan/math.hpp>     // finally pull in everything from rev/ and prim/
 #include <Rcpp.h>
-#include <RcppEigen.h>                       // do this AFTER including stan/math
+#include <RcppEigen.h>       // do this AFTER including stuff from stan/math
 
-// [[Rcpp::plugins(cpp14)]]
+// [[Rcpp::plugins(cpp17)]]
 
 /* Objective function */
 
 // [[Rcpp::export]]
 auto f(Eigen::VectorXd x, Eigen::VectorXd a) { // objective function in doubles
   using stan::math::dot_self;                  // dot_self() is a dot product with self
-  return dot_self( (x - a).eval() );           // .eval() yields a Eigen::VectorXd
+  return dot_self( (x - a) );
 }
 
 /* Gradient */
@@ -142,26 +142,23 @@ auto g(Eigen::VectorXd x, Eigen::VectorXd a) {  // gradient by AD using Stan
   double fx;
   Eigen::VectorXd grad_fx;
   using stan::math::dot_self;
-  stan::math::gradient([&a](auto x) { return dot_self( (x - a).eval() ); },
+  stan::math::gradient([&a](auto x) { return dot_self( (x - a) ); },
                        x, fx, grad_fx);
   return grad_fx;
 }
 
 /* Hessian */
 
-/*
 // [[Rcpp::export]]
 auto H(Eigen::VectorXd x, Eigen::VectorXd a) { // Hessian by AD using Stan
   double fx;
   Eigen::VectorXd grad_fx;
   Eigen::MatrixXd H;
   using stan::math::dot_self;
-  using stan::math::subtract; // necessary to get the type promotion correct
-  stan::math::hessian([&a](auto x) { return dot_self(subtract(x, a)); },
+  stan::math::hessian([&a](auto x) { return dot_self(x - a); },
                       x, fx, grad_fx, H);
   return H;
 }
-*/
 
 /* Jacobian */
 
@@ -171,7 +168,7 @@ auto J(Eigen::VectorXd x, Eigen::VectorXd a) { // not actually used
   Eigen::MatrixXd J;
   using stan::math::dot_self;
   stan::math::jacobian([&a](auto x) {
-    return (2 * (x - a)).eval();
+    return (2 * (x - a));
   }, x, fx, J);
   return J;
 }
@@ -183,7 +180,7 @@ struct equations_functor {
              const Eigen::Matrix<T1, Eigen::Dynamic, 1>& theta,
              const std::vector<double>& x_r, const std::vector<int>& x_i,
              std::ostream* pstream__) const {
-    return 2 * (x - stan::math::to_vector(x_r)).eval();
+    return 2 * (x - stan::math::to_vector(x_r));
   }
 };
 
@@ -205,7 +202,7 @@ a random point in three dimensions:
 x <- optim(rnorm(3), fn = f, gr = g, a = 1:3, method = "BFGS", hessian = TRUE)
 x$par
 x$hessian
-#H(x$par, a = 1:3)
+H(x$par, a = 1:3)
 J(x$par, a = 1:3)
 solution(a = 1:3, guess = rnorm(3))
 ```
@@ -224,7 +221,7 @@ below. Solving stiff systems utilizes the CVODES library, which is included in *
 #include <Rcpp.h>
 #include <RcppEigen.h>                           // do this AFTER including stan/math
 
-// [[Rcpp::plugins(cpp14)]]
+// [[Rcpp::plugins(cpp17)]]
 
 /* Definite integrals */
 
@@ -325,7 +322,7 @@ and running it in parallel via `map_rect`.
 #include <Rcpp.h>
 #include <RcppEigen.h>                           // do this AFTER including stan/math
 
-// [[Rcpp::plugins(cpp14)]]
+// [[Rcpp::plugins(cpp17)]]
 
 // see https://en.wikipedia.org/wiki/Primality_test#Pseudocode
 struct is_prime {
@@ -411,7 +408,7 @@ exposeClass("sparselm_stan",
                  "// [[Rcpp::depends(RcppEigen)]]",
                  "// [[Rcpp::depends(RcppParallel)]",
                  "// [[Rcpp::depends(StanHeaders)]]",
-                 "// [[Rcpp::plugins(cpp14)]]",
+                 "// [[Rcpp::plugins(cpp17)]]",
                  paste0("#include <", file.path(getwd(), "sparselm_stan.hpp"), ">")),
       file = tf,
       Rfile = FALSE)
