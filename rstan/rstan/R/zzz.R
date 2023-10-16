@@ -23,10 +23,10 @@ OUT <- 0
   if (requireNamespace("V8", quietly = TRUE)) {
     assign("stanc_ctx", V8::v8(), envir = topenv())
   } else assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
-  stanc_js <- system.file("stanc.js", package = "StanHeaders", mustWork = TRUE)
-  if (!file.exists(stanc_js)) {
+
+  if (packageVersion("StanHeaders") == "2.26.28") {
     stanc_js <- system.file("exec", "stanc.js", package = "rstan", mustWork = TRUE)
-  }
+  } else stanc_js <- system.file("stanc.js", package = "StanHeaders", mustWork = TRUE)
   stanc_ctx$source(stanc_js)
   assignInMyNamespace("rstan_load_time", value = Sys.time())
   set_rstan_ggplot_defaults()

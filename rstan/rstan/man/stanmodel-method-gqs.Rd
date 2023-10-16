@@ -16,7 +16,7 @@
 
 \section{Methods}{
   \describe{
-    \item{\code{object}}{\code{signature(object = "stanmodel")}}{
+    \item{\code{object}}{\code{signature(object = "stanmodel")} 
       Evaluate the generated quantities block of a Stan program
       by supplying \code{data} and the \code{draws} output from a
       previous Stan program.

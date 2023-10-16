@@ -24,8 +24,8 @@ package
   These functions are currently not exported and are typically called from a Makevars 
   or a Makevars.win file of another package as follows:
   
-  PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders:::CxxFlags()")
-  PKG_LDLIBS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders:::LdFlags()")
+  \code{PKG_CXXFLAGS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders:::CxxFlags()")}
+  \code{PKG_LDLIBS += $(shell "${R_HOME}/bin/Rscript" -e "StanHeaders:::LdFlags()")}
 }
 \value{
   If \code{as_character} is \code{\link{TRUE}}, then these functions return

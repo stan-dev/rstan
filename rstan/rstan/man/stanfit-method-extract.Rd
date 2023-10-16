@@ -15,7 +15,7 @@
 
 \section{Methods}{
   \describe{
-    \item{extract}{\code{signature(object = "stanfit")}}{
+    \item{extract}{\code{signature(object = "stanfit")}
     Extract samples from a fitted model represented by an instance of class 
     \code{\linkS4class{stanfit}}.  
     }

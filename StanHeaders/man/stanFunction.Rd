@@ -39,9 +39,10 @@ Call a function defined in the Stan Math Library from R using this wrapper aroun
     \bold{R type}  \tab \bold{Stan type} \cr
     \code{double}  \tab \code{real} \cr
     \code{integer} \tab \code{int}  \cr
-    \code{vector}  \tab \code{vector} \cr
-    \code{matrix(*, nrow = 1)} \tab \code{row_vector}\cr
-    \code{matrix}  \tab \code{matrix}
+    \code{complex} \tab \code{complex} \cr
+    \code{vector}  \tab \code{vector} or \code{complex_vector} \cr
+    \code{matrix(*, nrow = 1)} \tab \code{row_vector} or \code{complex_row_vector} \cr
+    \code{matrix}  \tab \code{matrix} or \code{complex_matrix}
   }
   and, in addition, lists of the aforementioned R types map
   to arrays of Stan types and thus must not be ragged if they are nested. The
@@ -90,6 +91,11 @@ Call a function defined in the Stan Math Library from R using this wrapper aroun
 
     # in rare cases, passing a nested list is needed
     stanFunction("dims", x = list(list(1:3)))
+    
+    # functions of complex arguments work
+    stanFunction("eigenvalues", # different ordering than base:eigen()
+                 x = matrix(complex(real = 1:9, imaginary = pi),
+                            nrow = 3, ncol = 3))
     
     # nullary functions work but are not that interesting
     stanFunction("negative_infinity")

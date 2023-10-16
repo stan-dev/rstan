@@ -18,21 +18,30 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
     Eigen <- FALSE
     if (is.matrix(x)) {
       Eigen <- TRUE
-      if (nrow(x) == 1L) type <- "stan::math::row_vector_d"
-      else type <- "stan::math::matrix_d"
+      if (is.complex(x)) {
+        if (nrow(x) == 1L) {
+          type <- "Eigen::Matrix<std::complex<double>, 1, -1>"
+        } else type <- "Eigen::MatrixXcd"
+      } else if (nrow(x) == 1L) {
+        type <- "stan::math::row_vector_d"
+      } else type <- "stan::math::matrix_d"
     } else if (length(x) > 1L) {
       if (is.integer(x)) {
         type <- "std::vector<int>"
       } else {
         Eigen <- TRUE
-        type <- "stan::math::vector_d"
+        if (is.complex(x)) {
+          type <- "Eigen::VectorXcd"
+        } else type <- "stan::math::vector_d"
       }
     } else if (is.integer(x)) {
       type <- "int"
     } else if (is.numeric(x)) {
       type <- "double"
+    } else if (is.complex(x)) {
+      type <- "std::complex<double>"
     } else stop(paste("all arguments to", function_name, "must be matrices,",
-                      "vectors, integers, doubles or lists thereof"))
+                      "vectors, integers, doubles, complexes, or lists thereof"))
     if (Eigen) type <- paste0("const ", type, "&")
     else type <- paste0("const ", type)
     return(type)
@@ -43,6 +52,8 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
   if (any(double_lists)) types[double_lists] <- "const List&"
   int_lists <- types == "const std::vector<int >&"
   if (any(int_lists)) types[int_lists] <- "const List&"
+  complex_lists <- types == "const std::vector<std::complex<double> >&"
+  if (any(complex_lists)) types[complex_lists] <- "const List&"
   code <- paste0("auto ", function_name, "(",
                  paste(types, names(types), collapse = ", "),
                  ") { return stan::math::", function_name, "(",
@@ -52,7 +63,11 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
                               ifelse(int_lists,
                                      paste0("std::vector<int>(", names(types), ".begin(), ",
                                                                  names(types), ".end())"),
-                                     names(types))), collapse = ", "), "); }")
+                                     ifelse(complex_lists,
+                                            paste0("std::vector<complex<double>(", 
+                                                   names(types), ".begin(), ",
+                                                   names(types), ".end())"),
+                                            names(types)))), collapse = ", "), "); }")
   incl <- dir(system.file("include", "stan", "math", "prim",
                           package = "StanHeaders", mustWork = TRUE),
               pattern = "hpp$")
@@ -74,11 +89,14 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
   withr::with_makevars(
     c(
       PKG_CXXFLAGS = CxxFlags(as_character = TRUE),
-      PKG_LIBS = LdFlags(as_character = TRUE)
+      PKG_LIBS = LdFlags(as_character = TRUE),
+      USE_CXX17 = 1
     ),
-    Rcpp::cppFunction(code, depends = c("StanHeaders", "RcppEigen", "BH"),
-                      includes = incl, env = env, rebuild = rebuild,
-                      cacheDir = cacheDir,
+    Rcpp::cppFunction(code, 
+                      depends = c("StanHeaders", "RcppEigen", "BH"),
+                      plugins = "cpp17",
+                      includes = incl, 
+                      env = env, rebuild = rebuild, cacheDir = cacheDir,
                       showOutput = showOutput, verbose = verbose)
   )
   if (grepl("_rng$", function_name)) {

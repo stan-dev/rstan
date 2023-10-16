@@ -25,8 +25,7 @@
 
 \section{Methods}{
   \describe{
-    \item{\code{sampling}}{\code{signature(object = "stanmodel")}}{
-      %%  ~~describe this method here~~
+    \item{\code{sampling}}{\code{signature(object = "stanmodel")}
       Call a sampler (NUTS, HMC, or Fixed_param depending on parameters) 
       to draw samples from the model defined by S4 class \code{stanmodel} 
       given the data, initial values, etc. 

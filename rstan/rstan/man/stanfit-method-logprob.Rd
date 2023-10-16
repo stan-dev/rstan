@@ -37,24 +37,24 @@
 
 \section{Methods}{
   \describe{
-    \item{log_prob}{\code{signature(object = "stanfit")}}{
+    \item{log_prob}{\code{signature(object = "stanfit")}
       Compute \code{lp__}, the log posterior (up to an additive constant)
       for the model represented by a \code{stanfit} object. Note that,
       by default, \code{log_prob} returns the log posterior in the 
       \emph{unconstrained} space Stan works in internally.
       set \code{adjust_transform = FALSE} to make the values match Stan's output.
     }
-    \item{grad_log_prob}{\code{signature(object = "stanfit")}}{Compute the gradients
+    \item{grad_log_prob}{\code{signature(object = "stanfit")} Compute the gradients
       for \code{log_prob} as well as the log posterior. The latter is returned as 
       an attribute. 
     }
-    \item{get_num_upars}{\code{signature(object = "stanfit")}}{Get the number
+    \item{get_num_upars}{\code{signature(object = "stanfit")} Get the number
       of unconstrained parameters.
     } 
-    \item{constrain_pars}{\code{signature(object = "stanfit")}}{Convert values
+    \item{constrain_pars}{\code{signature(object = "stanfit")} Convert values
       of the parameter from unconstrained space (given as a vector) to their
       constrained space (returned as a named list).}
-    \item{unconstrain_pars}{\code{signature(object = "stanfit")}}{Contrary to
+    \item{unconstrain_pars}{\code{signature(object = "stanfit")} Contrary to
       \code{constrained}, conert values of the parameters from constrained
       to unconstrained space.
     }
