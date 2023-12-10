@@ -45,7 +45,7 @@ namespace rstan {
       }
 
       virtual std::streamsize xsputn(const char_type* s, std::streamsize n) {
-        Rprintf("%.*s", n, s);
+        Rprintf("%.*s", static_cast<int>(n), s);
         return n;
       }
     };
@@ -68,7 +68,7 @@ namespace rstan {
       }
 
       virtual std::streamsize xsputn(const char_type* s, std::streamsize n) {
-        REprintf("%.*s", n, s);
+        REprintf("%.*s", static_cast<int>(n), s);
         return n;
       }
     };
