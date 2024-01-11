@@ -17,8 +17,9 @@ CxxFlags <- function(as_character = FALSE) {
 }
 
 LdFlags <- function(as_character = FALSE) {
-  if (dir.exists(Sys.getenv("TBB_LIB"))) {
-    TBB_LIB <- normalizePath(Sys.getenv("TBB_LIB"))
+  TBB_LIB <- Sys.getenv("TBB_LINK_LIB", Sys.getenv("TBB_LIB"))
+  if (dir.exists(TBB_LIB)) {
+    TBB_LIB <- normalizePath(TBB_LIB)
   } else {
     TBB_LIB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
   }
