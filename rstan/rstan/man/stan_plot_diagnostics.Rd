@@ -65,19 +65,19 @@
   plots \code{stan_diag} should generate:
   
   \itemize{
-    \item{\code{information='sample'}}{Histograms of \code{lp__} 
+    \item \code{information='sample'} Histograms of \code{lp__} 
       and \code{accept_stat}, as well as a scatterplot showing their 
-      joint distribution.}
-    \item{\code{information='stepsize'}}{Violin plots showing the 
+      joint distribution.
+    \item \code{information='stepsize'} Violin plots showing the 
       distributions of \code{lp__} and \code{accept_stat} at each of the sampled
-      step sizes (one per chain).}
-    \item{\code{information='treedepth'}}{Histogram of \code{treedepth} and 
+      step sizes (one per chain).
+    \item \code{information='treedepth'} Histogram of \code{treedepth} and 
       violin plots showing the distributions of \code{lp__} and 
-      \code{accept_stat} for each value of \code{treedepth}.}
-    \item{\code{information='divergence'}}{Violin plots showing the 
+      \code{accept_stat} for each value of \code{treedepth}.
+    \item \code{information='divergence'} Violin plots showing the 
       distributions of \code{lp__} and \code{accept_stat} for iterations that
       encountered divergent transitions (\code{divergent=1}) and those that
-      did not (\code{divergent=0}).}
+      did not (\code{divergent=0}).
     }
   }
 }
