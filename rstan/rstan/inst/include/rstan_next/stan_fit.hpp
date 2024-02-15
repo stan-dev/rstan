@@ -14,7 +14,7 @@ private:
   SEXP model_sexp_;
   Rcpp::XPtr<stan::model::model_base> model_xptr_;
   stan::model::model_base* model_;
-  boost::ecuyer1988 base_rng;
+  boost::random::mixmax base_rng;
   const std::vector<std::string> names_;
   const std::vector<std::vector<unsigned int> > dims_;
   const unsigned int num_params_;

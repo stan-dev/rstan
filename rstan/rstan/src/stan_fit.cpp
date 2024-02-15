@@ -13,7 +13,7 @@
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
-#include <boost/random/additive_combine.hpp> // L'Ecuyer RNG
+#include <boost/random/mixmax.hpp>
 #include <boost/random/uniform_real_distribution.hpp>
 
 #include <rstan/io/rlist_ref_var_context.hpp>
@@ -373,7 +373,7 @@ std::vector<double> unconstrained_to_constrained(stan::model::model_base* model,
                                                  const std::vector<double>& params) {
   std::vector<int> params_i;
   std::vector<double> constrained_params;
-  boost::ecuyer1988 rng = stan::services::util::create_rng(random_seed, id);
+  boost::random::mixmax rng = stan::services::util::create_rng(random_seed, id);
   model->write_array(rng, const_cast<std::vector<double>&>(params), params_i,
                      constrained_params);
   return constrained_params;
@@ -392,7 +392,7 @@ int command(stan_args& args,
             Rcpp::List& holder,
             const std::vector<size_t>& qoi_idx,
             const std::vector<std::string>& fnames_oi,
-            boost::ecuyer1988& base_rng) {
+            boost::random::mixmax& base_rng) {
 
   stan::math::init_threadpool_tbb();
 

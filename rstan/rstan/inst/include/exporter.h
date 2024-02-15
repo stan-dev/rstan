@@ -2,19 +2,19 @@
 #define RSTAN_EXPORTER_H
 
 #include <RcppCommon.h>
-#include <boost/random/additive_combine.hpp>
+#include <boost/random/mixmax.hpp>
 #include <iostream>
 
 namespace Rcpp {
-  SEXP wrap(boost::ecuyer1988 RNG);
-  SEXP wrap(boost::ecuyer1988& RNG);
+  SEXP wrap(boost::random::mixmax RNG);
+  SEXP wrap(boost::random::mixmax& RNG);
   SEXP wrap(std::ostream stream);
-  template <> boost::ecuyer1988 as(SEXP ptr_RNG);
-  template <> boost::ecuyer1988& as(SEXP ptr_RNG);
+  template <> boost::random::mixmax as(SEXP ptr_RNG);
+  template <> boost::random::mixmax& as(SEXP ptr_RNG);
   template <> std::ostream* as(SEXP ptr_stream);
   namespace traits {
-    template <> class Exporter<boost::ecuyer1988&>;
-    template <> struct input_parameter<boost::ecuyer1988&>;
+    template <> class Exporter<boost::random::mixmax&>;
+    template <> struct input_parameter<boost::random::mixmax&>;
   }
 }
 
@@ -22,15 +22,15 @@ namespace Rcpp {
 #include <Rcpp.h>
 
 namespace Rcpp {
-  SEXP wrap(boost::ecuyer1988 RNG){
-    boost::ecuyer1988* ptr_RNG = &RNG;
-    Rcpp::XPtr<boost::ecuyer1988> Xptr_RNG(ptr_RNG);
+  SEXP wrap(boost::random::mixmax RNG){
+    boost::random::mixmax* ptr_RNG = &RNG;
+    Rcpp::XPtr<boost::random::mixmax> Xptr_RNG(ptr_RNG);
     return Xptr_RNG;
   }
 
-  SEXP wrap(boost::ecuyer1988& RNG){
-    boost::ecuyer1988* ptr_RNG = &RNG;
-    Rcpp::XPtr<boost::ecuyer1988> Xptr_RNG(ptr_RNG);
+  SEXP wrap(boost::random::mixmax& RNG){
+    boost::random::mixmax* ptr_RNG = &RNG;
+    Rcpp::XPtr<boost::random::mixmax> Xptr_RNG(ptr_RNG);
     return Xptr_RNG;
   }
 
@@ -40,15 +40,15 @@ namespace Rcpp {
     return Xptr_stream;
   }
 
-  template <> boost::ecuyer1988 as(SEXP ptr_RNG) {
-    Rcpp::XPtr<boost::ecuyer1988> ptr(ptr_RNG);
-    boost::ecuyer1988& RNG = *ptr; 
+  template <> boost::random::mixmax as(SEXP ptr_RNG) {
+    Rcpp::XPtr<boost::random::mixmax> ptr(ptr_RNG);
+    boost::random::mixmax& RNG = *ptr; 
  		return RNG;
   }
 
-  template <> boost::ecuyer1988& as(SEXP ptr_RNG) {
-    Rcpp::XPtr<boost::ecuyer1988> ptr(ptr_RNG);
-    boost::ecuyer1988& RNG = *ptr; 
+  template <> boost::random::mixmax& as(SEXP ptr_RNG) {
+    Rcpp::XPtr<boost::random::mixmax> ptr(ptr_RNG);
+    boost::random::mixmax& RNG = *ptr; 
  		return RNG;
   }
 
@@ -59,18 +59,18 @@ namespace Rcpp {
 
 
   namespace traits {
-    template <> class Exporter<boost::ecuyer1988&> {
+    template <> class Exporter<boost::random::mixmax&> {
     public:
-      Exporter( SEXP x ) : t(Rcpp::as<boost::ecuyer1988&>(x)) {}
-      inline boost::ecuyer1988& get(){ return t ; }
+      Exporter( SEXP x ) : t(Rcpp::as<boost::random::mixmax&>(x)) {}
+      inline boost::random::mixmax& get(){ return t ; }
     private:
-      boost::ecuyer1988& t ;
+      boost::random::mixmax& t ;
     } ; 
 
     template <>
-    struct input_parameter<boost::ecuyer1988&> {
-      typedef typename Rcpp::ConstReferenceInputParameter<boost::ecuyer1988&> type ;
-      //typedef typename boost::ecuyer1988& type ;
+    struct input_parameter<boost::random::mixmax&> {
+      typedef typename Rcpp::ConstReferenceInputParameter<boost::random::mixmax&> type ;
+      //typedef typename boost::random::mixmax& type ;
     };
   }
 

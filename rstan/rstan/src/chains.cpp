@@ -21,7 +21,7 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
-#include <boost/random/additive_combine.hpp> // L'Ecuyer RNG
+#include <boost/random/mixmax.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <fstream>
 
@@ -598,7 +598,7 @@ SEXP seq_permutation(SEXP conf) {
   boost::uintmax_t DISCARD_STRIDE = static_cast<boost::uintmax_t>(1) << 50;
   int n = args.get_n();
   int cid = args.get_chain_id() + args.get_chains();
-  typedef boost::random::ecuyer1988 RNG;
+  typedef boost::random::mixmax RNG;
   RNG rng(args.get_seed());
   rng.discard(DISCARD_STRIDE * (cid - 1));
   Rcpp::IntegerVector x(n);

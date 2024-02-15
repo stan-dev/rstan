@@ -64,7 +64,7 @@ doctor_cppcode <- function(stanc_ret,
                              "boost_random_R base_rng__ = boost_random_R();")
   } else { # this could be dangerous to use with parallel chains
     protected$PRNG <- paste0(four_spaces,
-                             "mutable boost::ecuyer1988 base_rng__;")
+                             "mutable boost::random::mixmax base_rng__;")
   }
 
   if (check_logical_scalar_first(use_Rcout)) {
@@ -121,7 +121,7 @@ doctor_cppcode <- function(stanc_ret,
     lines <- gsub("typename T_lp_accum__", "typename T_lp_accum__ = double", lines)
     lines <- gsub("Class RNG",
                   paste0("Class RNG = ", ifelse(use_R_PRNG, "boost_random_R",
-                                                "boost::ecuyer1988")), lines)
+                                                "boost::random::mixmax")), lines)
   }
 
   if (check_logical_scalar_first(double_only)) {
@@ -240,7 +240,7 @@ doctor_cppcode <- function(stanc_ret,
                            "#include <boost/exception/all.hpp>")
     if (!use_R_PRNG)
       necessary_headers <- c(necessary_headers,
-                             "#include <boost/random/additive_combine.hpp>",
+                             "#include <boost/random/mixmax.hpp>",
                              "#include <boost/random/linear_congruential.hpp>")
 
   }
@@ -478,7 +478,7 @@ doctor_cppcode <- function(stanc_ret,
   }
 
   # do not create base_rng__ in ctor_body
-  mark <- grep("boost::ecuyer1988 base_rng__ =", lines, fixed = TRUE)
+  mark <- grep("boost::random::mixmax base_rng__ =", lines, fixed = TRUE)
   lines <- lines[-c(mark:(mark + 2L))]
 
   # deal with constructor

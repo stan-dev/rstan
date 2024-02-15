@@ -82,7 +82,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
     incl <- c(incl, paste0('#include ', dQuote(create_rng)))
     code <- sub(") {", ", const int random_seed = 0) {", code, fixed = TRUE)
     code <- sub(" return ",
-                "boost::ecuyer1988 base_rng__ = stan::services::util::create_rng(random_seed, 0); return ",
+                "boost::random::mixmax base_rng__ = stan::services::util::create_rng(random_seed, 0); return ",
                 code)
       code <- sub("); }", ", base_rng__); }", code, fixed = TRUE)
   }

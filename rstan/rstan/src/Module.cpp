@@ -102,7 +102,7 @@ write_array(stan::model::model_base* user_model,
             unsigned int random_seed = 0, unsigned int id = 0) {
   std::vector<int> params_i;
   std::vector<double> constrained_params;
-  boost::ecuyer1988 rng = stan::services::util::create_rng(random_seed, id);
+  boost::random::mixmax rng = stan::services::util::create_rng(random_seed, id);
   user_model->write_array(rng, params_r, params_i, constrained_params, 
                           include_tparams, include_gqs, &Rcpp::Rcout);
   return constrained_params;

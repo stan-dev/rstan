@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <boost/random/additive_combine.hpp>
+#include <boost/random/mixmax.hpp>
 
 RcppExport SEXP get_stream_() {
   std::ostream* pstream(&Rcpp::Rcout);
@@ -9,8 +9,8 @@ RcppExport SEXP get_stream_() {
 
 RcppExport SEXP get_rng_(SEXP seed) {
   int seed_ = Rcpp::as<int>(seed);
-  boost::ecuyer1988* rng = new boost::ecuyer1988(seed_);
-  Rcpp::XPtr<boost::ecuyer1988> ptr(rng, true);
+  boost::random::mixmax* rng = new boost::random::mixmax(seed_);
+  Rcpp::XPtr<boost::random::mixmax> ptr(rng, true);
   return ptr;
 }
 
