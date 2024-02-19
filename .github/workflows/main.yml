@@ -40,7 +40,7 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -60,7 +60,7 @@ jobs:
 
       - name: Cache R packages
         if: runner.os != 'Windows'
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
@@ -134,7 +134,7 @@ jobs:
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
@@ -169,20 +169,20 @@ jobs:
 
       - name: Upload StanHeaders source package
         if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
           path: build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
 
       - name: Upload RStan source package
         if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
           path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
 
       - name: Upload binary packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: R-${{ matrix.config.r }}_${{ matrix.config.os }}
           path: build_bin
