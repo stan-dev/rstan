@@ -24,8 +24,12 @@ LdFlags <- function(as_character = FALSE) {
     TBB_LIB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
   }
 
-  PKG_LIBS <- paste0("-L", shQuote(TBB_LIB), " -Wl,-rpath,", shQuote(TBB_LIB), " -ltbb -ltbbmalloc")
-
+  PKG_LIBS <- paste0("-L", shQuote(TBB_LIB))
+  if (!(.Platform$OS.type == "windows" && R.version$arch == "aarch64")) {
+    PKG_LIBS <- paste0(PKG_LIBS, " -Wl,-rpath,", shQuote(TBB_LIB))
+  }
+  PKG_LIBS <- paste0(PKG_LIBS, " -ltbb -ltbbmalloc")
+  
   if (isTRUE(as_character)) return(PKG_LIBS)
   cat(PKG_LIBS, " ")
   return(invisible(NULL))
