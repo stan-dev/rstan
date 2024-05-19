@@ -10,6 +10,7 @@ name: R-CMD-check
       - develop
       - experimental
       - StanHeaders_*
+      - workflow-check
   pull_request:
     branches:
       - develop
@@ -41,6 +42,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - uses: r-lib/actions/setup-r@v2
         with:
@@ -48,141 +51,23 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Query dependencies
-        run: |
-          options(install.packages.check.source = "no")
-          options(pkgType = ifelse(grepl("linux", R.version$os), "source", "binary"))
-          install.packages('remotes')
-          install.packages('V8')
-          saveRDS(remotes::dev_package_deps(pkg = "./rstan/rstan", dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v4
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          working-directory: StanHeaders
+          extra-packages: any::rcmdcheck, local::.
 
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
-        run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('./rstan/rstan/DESCRIPTION'))")
-          sudo -s eval "$sysreqs"
-        shell: bash
-
-      - name: Install dependencies
-        run: |
-          remotes::install_deps(pkg = "./rstan/rstan", dependencies = TRUE)
-          remotes::install_cran("rcmdcheck")
-          remotes::install_cran("rstantools", type = "source")
-          remotes::install_cran("sessioninfo")
-          if (utils::packageVersion("sessioninfo") >= "1.2.1") {
-            sessioninfo::session_info(pkgs = "installed", include_base = TRUE)
-          } else {
-            options(width = 200)
-            sessioninfo::session_info(rownames(installed.packages()), include_base = TRUE)
-          }
-        shell: Rscript {0}
-
-      - name: Install StanHeaders
-        run: |
-          try(system("sh sh_b.sh --no-build-vignettes --no-manual"))
-        shell: Rscript {0}
-
-      - name: Session info
-        run: |
-          options(width = 100)
-          pkgs <- installed.packages()[, "Package"]
-          sessioninfo::session_info(pkgs, include_base = TRUE)
-        shell: Rscript {0}
-
-      - name: Verify Math Version
-        run: |
-          readLines(system.file("include","stan","math","version.hpp", package="StanHeaders"))
-        shell: Rscript {0}
-
-      - name: Check
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          working-directory: StanHeaders
         env:
           _R_CHECK_CRAN_INCOMING_: false
-        run: |
-          if (R.version$major < 4 && isTRUE(.Platform$OS.type == "windows")) {
-            dotR <- file.path(Sys.getenv("HOME"), ".R")
-            if (!file.exists(dotR)) dir.create(dotR)
-            path_makevars <- ifelse(.Platform$OS.type == "windows", "Makevars.win", "Makevars")
-            M <- file.path(dotR, path_makevars)
-            if (!file.exists(M)) file.create(M)
-            cat("\nCXX14FLAGS=-O3",
-                "CXX14 = $(BINPREF)g++ -m$(WIN) -std=c++1y",
-                "CXX11FLAGS=-O3",
-                file = M, sep = "\n", append = TRUE)
-          }
-          rcmdcheck::rcmdcheck(path = "./rstan/rstan", args = c("--no-manual", "--as-cran", "--ignore-vignettes"), build_args = c("--no-build-vignettes"), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
 
-      - name: Show testthat output
-        if: always()
-        run: |
-          rm -rf check/rstan.Rcheck/rstan check/rstan.Rcheck/*pkg_src
-          find check -name 'testthat.Rout*' -exec cat '{}' \; || true
-        shell: bash
-
-      - name: Upload check results
-        if: failure()
-        uses: actions/upload-artifact@v4
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
-          path: check
+          working-directory: rstan/rstan
 
-      - name: Extract version and check StanHeaders source package
-        run: |
-          set -x
-          echo "STANHEADERS_VERSION=$(grep '^Version' StanHeaders/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
-          echo "RSTAN_VERSION=$(grep '^Version' rstan/rstan/DESCRIPTION  | sed 's/.*: *//')" >> $GITHUB_ENV
-          if [[ ! -f StanHeaders_*.tar.gz ]]; then
-            sh sh_b.sh --no-build-vignettes --no-manual || true
-          fi
-          mkdir -p build || true
-          cp -v StanHeaders_*.tar.gz build/ || true
-          ls -R build/
-        shell: bash
-
-      - name: Build RStan source package
-        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
-        run: |
-          src_rstan <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE)
-          file.copy(src_rstan, "build")
-        shell: Rscript {0}
-
-      - name: Build binary packages
-        run: |
-          bin1 <- pkgbuild::build("./build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
-          bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
-          dir.create("build_bin")
-          file.copy(c(bin1, bin2), "build_bin")
-        shell: Rscript {0}
-
-      - name: Upload StanHeaders source package
-        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
-        uses: actions/upload-artifact@v4
+      - uses: r-lib/actions/check-r-package@v2
         with:
-          name: StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
-          path: build/StanHeaders_${{ env.STANHEADERS_VERSION }}.tar.gz
-
-      - name: Upload RStan source package
-        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'devel'
-        uses: actions/upload-artifact@v4
-        with:
-          name: rstan_${{ env.RSTAN_VERSION }}.tar.gz
-          path: build/rstan_${{ env.RSTAN_VERSION }}.tar.gz
-
-      - name: Upload binary packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: R-${{ matrix.config.r }}_${{ matrix.config.os }}
-          path: build_bin
+          working-directory: rstan/rstan
+        env:
+          _R_CHECK_CRAN_INCOMING_: false
