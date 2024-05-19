@@ -78,16 +78,13 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           working-directory: StanHeaders
-          upload-snapshots: true
-          upload-results: true
+          error-on: '"error"'
         env:
           _R_CHECK_CRAN_INCOMING_: false
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           working-directory: rstan/rstan
-          upload-snapshots: true
-          upload-results: true
         env:
           _R_CHECK_CRAN_INCOMING_: false
 
