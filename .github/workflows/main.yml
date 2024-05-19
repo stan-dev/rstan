@@ -43,9 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          submodules: true
-
-      - run: git submodule update --init --recursive
+          submodules: recursive
 
       - uses: r-lib/actions/setup-r@v2
         with:
