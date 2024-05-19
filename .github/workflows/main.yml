@@ -66,10 +66,13 @@ jobs:
           working-directory: rstan/rstan
           extra-packages: any::rcmdcheck, local::../../StanHeaders
 
-      - name: Revert all changes due to cleanup
+      - name: Remove symlinks on Windows
+        if: runner.os == 'Windows'
         run: |
-          git reset --hard
-          git clean -fd
+          rm -Rf inst/include/src \
+            inst/include/mathlib \
+            inst/include/stan \
+            inst/include/libsundials || true
         shell: bash
 
       - uses: r-lib/actions/check-r-package@v2
