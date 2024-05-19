@@ -1,10 +1,5 @@
 #!/bin/sh
 
-rm -Rf inst/include/src \
-       inst/include/mathlib \
-       inst/include/stan \
-       inst/include/libsundials || true
-
 cp -Rf inst/include/upstream/src inst/include/src || true
 cp -Rf inst/include/upstream/lib/stan_math inst/include/mathlib || true
 cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
