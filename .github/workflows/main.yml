@@ -63,8 +63,8 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          working-directory: StanHeaders
-          extra-packages: any::rcmdcheck, local::.
+          working-directory: rstan/rstan
+          extra-packages: any::rcmdcheck, local::../../StanHeaders
 
       - name: Revert all changes due to cleanup
         run: |
@@ -77,12 +77,6 @@ jobs:
           working-directory: StanHeaders
         env:
           _R_CHECK_CRAN_INCOMING_: false
-
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          working-directory: rstan/rstan
-          # StanHeaders installed earlier
-          packages: deps::., StanHeaders=?ignore
 
       - uses: r-lib/actions/check-r-package@v2
         with:
