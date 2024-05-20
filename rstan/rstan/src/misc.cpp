@@ -40,7 +40,7 @@ extern SEXP is_Null_NS(SEXP ns);
  */
 SEXP is_Null_NS(SEXP ns) {
   SEXP ans;
-  PROTECT(ans = allocVector(LGLSXP, 1));
+  PROTECT(ans = Rf_allocVector(LGLSXP, 1));
   LOGICAL(ans)[0] = 1;
   PROTECT(ns);
   if (TYPEOF(ns) == EXTPTRSXP) {

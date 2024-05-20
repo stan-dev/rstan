@@ -59,13 +59,3 @@ test_that("ess and rhat work", {
   expect_equal(rhat2, 1.003782, tolerance = 0.001);
 })
 
-test_that("seq_perm works", {
-  # n, chains, seed, chain_id = 1
-  s <- rstan:::rstan_seq_perm(1, 4, 12345, 1)
-  expect_equal(s, 1L)
-  s2 <- rstan:::rstan_seq_perm(10, 4, 12345)
-  expect_equal(length(s2), 10L)
-  expect_equal(sort(s2), 1L:10L)
-  s3 <- rstan:::rstan_seq_perm(107, 4, 12345)
-  expect_equal(sort(s3), 1L:107L)
-})
