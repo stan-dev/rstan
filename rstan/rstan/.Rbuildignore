@@ -27,3 +27,4 @@ Rbuildignore.*$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 revdep
+^.prepare
