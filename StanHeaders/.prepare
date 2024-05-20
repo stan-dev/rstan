@@ -1,0 +1,5 @@
+#!/bin/sh
+
+git checkout experimental
+cd inst/include/upstream && git checkout develop && git pull && cd ../../..
+cd inst/include/upstream/lib/stan_math && git checkout develop && git pull && cd ../../../../..
