@@ -30,3 +30,4 @@ vignettes/.install_extras
 .*\.a$
 \.gitignore$
 Rbuildignore.*$
+.prepare
