@@ -18,6 +18,6 @@ jobs:
           GITHUB_PAT: ${{secrets.GITHUB_TOKEN}}
         with:
           url: "https://github.com/stan-dev/rstan"
-          ref: "c1f200f49f2f42e282d47dac9204b6445225ebf7"
+          ref: "cddd9e65cab6b9303c2fc1149e9e89b97332753a"
           subdir: "StanHeaders"
-          branch: "experimental"
+          branch: "build-check"
