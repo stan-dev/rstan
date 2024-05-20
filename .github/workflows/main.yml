@@ -88,31 +88,3 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
 
-      - name: Build binary packages
-        run: |
-          bin1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
-          bin2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = TRUE)
-          dir.create("build_bin")
-          file.copy(c(bin1, bin2), "build_bin")
-        shell: Rscript {0}
-
-      - name: Build source packages
-        if: matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'devel'
-        run: |
-          src1 <- pkgbuild::build("./StanHeaders", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = FALSE)
-          src2 <- pkgbuild::build("./rstan/rstan", dest_path = tempdir(), vignettes = FALSE, manual = FALSE, binary = FALSE)
-          dir.create("build_src")
-          file.copy(c(src1, src2), "build_src")
-        shell: Rscript {0}
-
-      - name: Upload source packages
-        if: matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'devel'
-        uses: actions/upload-artifact@v2
-        with:
-          path: build_src
-
-      - name: Upload binary packages
-        uses: actions/upload-artifact@v2
-        with:
-          name: R-${{ matrix.config.r }}_${{ matrix.config.os }}
-          path: build_bin
