@@ -1,13 +1,4 @@
 #!/bin/sh
 
-git checkout --recurse-submodules experimental
-
-rm cleanup
-rm cleanup.win
-
-cp -Rf inst/include/upstream/src inst/include/src || true
-cp -Rf inst/include/upstream/lib/stan_math inst/include/mathlib || true
-cp -Rf inst/include/upstream/lib/stan_math/stan inst/include/stan || true
-cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_* inst/include/libsundials || true
-cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
-cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
+cd inst/include/upstream && git checkout develop && git pull && cd ../../..
+cd inst/include/upstream/lib/stan_math && git checkout develop && git pull && cd ../../../../..
