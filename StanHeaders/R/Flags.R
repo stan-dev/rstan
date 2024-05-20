@@ -9,6 +9,11 @@ CxxFlags <- function(as_character = FALSE) {
     CXXFLAGS <- paste0("-I", shQuote(TBB_INC), " -D_REENTRANT -DSTAN_THREADS -DTBB_INTERFACE_NEW")
   } else {
     CXXFLAGS <- paste0("-I", shQuote(TBB_INC), " -D_REENTRANT -DSTAN_THREADS")
+    # RcppParallel TBB does not have assembly code for Windows ARM64
+    # so we need to use compiler builtins
+    if (.Platform$OS.type == "windows" && R.version$arch == "aarch64") {
+      CXXFLAGS <- paste(CXXFLAGS, "-DTBB_USE_GCC_BUILTINS")
+    }
   }
 
   if (isTRUE(as_character)) return(CXXFLAGS)
@@ -24,7 +29,12 @@ LdFlags <- function(as_character = FALSE) {
     TBB_LIB <- system.file("lib", .Platform$r_arch, package = "RcppParallel", mustWork = TRUE)
   }
 
-  PKG_LIBS <- paste0("-L", shQuote(TBB_LIB), " -Wl,-rpath,", shQuote(TBB_LIB), " -ltbb -ltbbmalloc")
+  PKG_LIBS <- paste0("-L", shQuote(TBB_LIB))
+  # RTools aarch64 does not support rpath, but it is not used on Windows anyway
+  if (!(.Platform$OS.type == "windows" && R.version$arch == "aarch64")) {
+    PKG_LIBS <- paste0(PKG_LIBS, " -Wl,-rpath,", shQuote(TBB_LIB))
+  }
+  PKG_LIBS <- paste0(PKG_LIBS, " -ltbb -ltbbmalloc")
 
   if (isTRUE(as_character)) return(PKG_LIBS)
   cat(PKG_LIBS, " ")
