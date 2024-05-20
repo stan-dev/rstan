@@ -1,0 +1,23 @@
+name: build-check
+
+'on':
+  push:
+    branches:
+      - build-check
+
+jobs:
+  build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - id: build
+        timeout-minutes: 60
+        name: Build source package
+        uses: r-universe-org/build-source@master
+        env:
+          MAINTAINERLOGIN:
+          GITHUB_PAT: ${{secrets.GITHUB_TOKEN}}
+        with:
+          url: "https://github.com/stan-dev/rstan"
+          ref: ""
+          subdir: "StanHeaders"
+          branch: "experimental"
