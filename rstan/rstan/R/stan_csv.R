@@ -111,7 +111,7 @@ parse_stancsv_comments <- function(comments) {
   names2 <- intersect(c("stepsize", "stepsize_jitter", "adapt_gamma", "adapt_kappa", 
                         "adapt_delta", "gamma", "kappa", "delta", "t0",
                         "adapt_t0"), names0) 
-  if ("save_warmup" %in% names(values) values[["save_warmup"]] <- as.integer(as.logical(values[["save_warmup"]]))
+  if ("save_warmup" %in% names(values)) values[["save_warmup"]] <- as.integer(as.logical(values[["save_warmup"]]))
   for (z in names1) values[[z]] <- as.integer(values[[z]])
   for (z in names2) values[[z]] <- as.numeric(values[[z]])
   if (compute_iter) values[["iter"]] <- values[["iter"]] + values[["warmup"]]
