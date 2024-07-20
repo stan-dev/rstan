@@ -216,9 +216,9 @@ read_stan_csv <- function(csvfiles, col_major = TRUE) {
 
   n_kept0 <- 1 + (iter - warmup - 1) %/% thin
   warmup2 <- 0
-  if (max(save_warmup) == 0L) { # all equal to 0L
+  if (isTRUE(max(save_warmup) == 0L)) { # all equal to 0L
     n_kept <- n_save
-  } else if (min(save_warmup) == 1L) { # all equals to 1L 
+  } else if (isTRUE(min(save_warmup) == 1L)) { # all equals to 1L 
     warmup2 <- 1 + (warmup[1] - 1) %/% thin[1]
     n_kept <- n_save - warmup2 
   } 
