@@ -84,27 +84,7 @@ stanc_process <- function(file, model_code = '', model_name = "anon_model",
 
   model_code <- gsub('#include /(.*$)', '#include "\\1"', model_code)
   has_pound <- any(grepl("#", model_code, fixed = TRUE))
-
-  if (has_pound && isFALSE(auto_format)) {
-    unprocessed <- tempfile(fileext = ".stan")
-    processed <- tempfile(fileext = ".stan")
-    on.exit(file.remove(unprocessed))
-    writeLines(model_code, con = unprocessed)
-    ARGS <- paste("-E -nostdinc -x c++ -P -C",
-                  paste("-I", isystem, " ", collapse = ""),
-                  "-o", processed, unprocessed, "-Wno-invalid-pp-token")
-    CPP <- system2(file.path(R.home(component = "bin"), "R"),
-                   args = "CMD config CC", stdout = TRUE)
-    pkgbuild::with_build_tools(system(paste(CPP, ARGS),
-                                      ignore.stdout = TRUE, ignore.stderr = TRUE),
-                               required = rstan_options("required") &&
-                                 identical(Sys.getenv("WINDOWS"), "TRUE") &&
-                                !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-    if (file.exists(processed)) {
-      on.exit(file.remove(processed), add = TRUE)
-      model_code <- paste(readLines(processed), collapse = "\n")
-    }
-  } else model_code <- paste(model_code, collapse = "\n")
+  model_code <- paste(model_code, collapse = "\n")
 
   mostattributes(model_code) <- model_attr
 
