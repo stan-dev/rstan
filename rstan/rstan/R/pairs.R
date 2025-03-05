@@ -204,5 +204,5 @@ pairs.stanfit <-
     mc$condition <- NULL
     mc$pars <- NULL
     mc$include <- NULL
-    eval(mc)
+    eval(mc, parent.frame())
   }
