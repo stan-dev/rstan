@@ -9,7 +9,7 @@ RcppExport SEXP get_stream_() {
 
 RcppExport SEXP get_rng_(SEXP seed) {
   int seed_ = Rcpp::as<int>(seed);
-  stan::rng_t* rng = stan::services::util::create_rng(seed_, 0);
-  Rcpp::XPtr<stan::rng_t> ptr(rng, true);
+  stan::rng_t rng = stan::services::util::create_rng(seed_, 0);
+  Rcpp::XPtr<stan::rng_t> ptr(&rng, true);
   return ptr;
 }
