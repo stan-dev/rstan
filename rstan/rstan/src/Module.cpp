@@ -16,7 +16,7 @@ RCPP_MODULE(class_model_base) {
 }
 */
 
-inline std::vector<std::string> 
+inline std::vector<std::string>
 get_param_names(stan::model::model_base* user_model) {
   std::vector<std::string> names;
   user_model->get_param_names(names);
@@ -41,7 +41,7 @@ constrained_param_names(stan::model::model_base* user_model,
                         bool include_tparams = true,
                         bool include_gqs = true) {
   std::vector<std::string> param_names;
-  user_model->constrained_param_names(param_names, 
+  user_model->constrained_param_names(param_names,
                                       include_tparams, include_gqs);
   return param_names;
 }
@@ -51,37 +51,37 @@ unconstrained_param_names(stan::model::model_base* user_model,
                           bool include_tparams = true,
                           bool include_gqs = true) {
   std::vector<std::string> param_names;
-  user_model->unconstrained_param_names(param_names, 
+  user_model->unconstrained_param_names(param_names,
                                         include_tparams, include_gqs);
   return param_names;
 }
 
 inline double
-log_prob(stan::model::model_base* user_model, 
+log_prob(stan::model::model_base* user_model,
          std::vector<double>& params_r) {
   std::vector<int> params_i;
   return user_model->log_prob(params_r, params_i, &Rcpp::Rcout);
 }
 
 inline double
-log_prob_jacobian(stan::model::model_base* user_model, 
+log_prob_jacobian(stan::model::model_base* user_model,
                   std::vector<double>& params_r) {
   std::vector<int> params_i;
   return user_model->log_prob_jacobian(params_r, params_i, &Rcpp::Rcout);
 }
 
 inline double // this is always 0 so should we not expose it
-log_prob_propto(stan::model::model_base* user_model, 
+log_prob_propto(stan::model::model_base* user_model,
                 std::vector<double>& params_r) {
   std::vector<int> params_i;
   return user_model->log_prob_propto(params_r, params_i, &Rcpp::Rcout);
 }
 
 inline double
-log_prob_propto_jacobian(stan::model::model_base* user_model, 
+log_prob_propto_jacobian(stan::model::model_base* user_model,
                          std::vector<double>& params_r) {
   std::vector<int> params_i;
-  return user_model->log_prob_propto_jacobian(params_r, params_i, 
+  return user_model->log_prob_propto_jacobian(params_r, params_i,
                                               &Rcpp::Rcout);
 }
 
@@ -90,7 +90,7 @@ transform_inits(stan::model::model_base* user_model,
                 const rstan::io::rlist_ref_var_context context) {
   std::vector<int> params_i;
   std::vector<double> params_r;
-  user_model->transform_inits(context, params_i, params_r, 
+  user_model->transform_inits(context, params_i, params_r,
                               &Rcpp::Rcout);
   return params_r;
 }
@@ -102,8 +102,8 @@ write_array(stan::model::model_base* user_model,
             unsigned int random_seed = 0, unsigned int id = 0) {
   std::vector<int> params_i;
   std::vector<double> constrained_params;
-  boost::random::mixmax rng = stan::services::util::create_rng(random_seed, id);
-  user_model->write_array(rng, params_r, params_i, constrained_params, 
+  stan::rng_t rng = stan::services::util::create_rng(random_seed, id);
+  user_model->write_array(rng, params_r, params_i, constrained_params,
                           include_tparams, include_gqs, &Rcpp::Rcout);
   return constrained_params;
 }
@@ -113,7 +113,7 @@ write_list(stan::model::model_base* user_model,
            std::vector<double>& params_r,
            bool include_tparams = true, bool include_gqs = true,
              unsigned int random_seed = 0, unsigned int id = 0) {
-  std::vector<double> params = 
+  std::vector<double> params =
     write_array(user_model, params_r, include_tparams,
                 include_gqs, random_seed, id);
   std::vector<std::vector<size_t> > dims;
@@ -150,7 +150,7 @@ new_model(Rcpp::XPtr<stan::model::model_base> user_model) {
 
 RCPP_MODULE(class_model_base) {
   using namespace Rcpp ;
-  
+
   class_<stan::model::model_base>("model_base")
   .factory<Rcpp::XPtr<stan::model::model_base> >(new_model)
   .method("model_name", &stan::model::model_base::model_name,
@@ -198,4 +198,3 @@ RCPP_MODULE(class_model_base) {
           "parameters with the appropriate dimensions")
   ;
 }
-

@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include <boost/random/mixmax.hpp>
+#include <stan/services/util/create_rng.hpp>
 
 RcppExport SEXP get_stream_() {
   std::ostream* pstream(&Rcpp::Rcout);
@@ -9,9 +9,7 @@ RcppExport SEXP get_stream_() {
 
 RcppExport SEXP get_rng_(SEXP seed) {
   int seed_ = Rcpp::as<int>(seed);
-  boost::random::mixmax* rng = new boost::random::mixmax(seed_);
-  Rcpp::XPtr<boost::random::mixmax> ptr(rng, true);
+  stan::rng_t* rng = new stan::rng_t(seed_);
+  Rcpp::XPtr<stan::rng_t> ptr(rng, true);
   return ptr;
 }
-
-
