@@ -60,8 +60,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION ',
          ' -D_HAS_AUTO_PTR_ETC=0 ',
          ' -include ', shQuote(Eigen), ' ',
-         ifelse (.Platform$OS.type == "windows", ' -std=c++1y',
-                 ' -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1 '),
+         ' -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1',
          sep = '')
 }
 
@@ -121,19 +120,12 @@ rstanplugin <- function() {
               paste0("-L", shQuote(RcppParallel_pkg_libs)),
               tbb_libs,
               utils::capture.output(RcppParallel::RcppParallelLibs()))
-  if (.Platform$OS.type == "windows") {
-    list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
+
+    list(includes = '// [[Rcpp::plugins(cpp17)]]\n',
          body = function(x) x,
          env = list(PKG_LIBS = PL,
                     PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
                                          PKG_CPPFLAGS_env_fun(), collapse = " ")))
-  } else {
-    list(includes = '// [[Rcpp::plugins(cpp14)]]\n',
-         body = function(x) x,
-         env = list(PKG_LIBS = PL,
-                    PKG_CPPFLAGS = paste(Rcpp_plugin$env$PKG_CPPFLAGS,
-                                         PKG_CPPFLAGS_env_fun(), collapse = " ")))
-  }
 }
 
 
