@@ -20,6 +20,9 @@ RNG <- 0
 OUT <- 0
 
 .onLoad <- function(libname, pkgname) {
+  # avoid conflict between parallel and processx
+  Sys.setenv(PROCESSX_NOTIFY_OLD_SIGCHLD = 1)
+  
   if (requireNamespace("V8", quietly = TRUE)) {
     assign("stanc_ctx", V8::v8(), envir = topenv())
   } else assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
