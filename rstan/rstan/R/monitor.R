@@ -287,10 +287,7 @@ ess_rfun <- function(sims) {
 #' 
 #' @export
 Rhat <- function(sims) {
-  bulk_rhat <- rhat_rfun(z_scale(split_chains(sims)))
-  sims_folded <- abs(sims - median(sims))
-  tail_rhat <- rhat_rfun(z_scale(split_chains(sims_folded)))
-  max(bulk_rhat, tail_rhat)
+  posterior::rhat(sims)
 }
 
 #' Bulk effective sample size (bulk-ESS)
@@ -312,7 +309,7 @@ Rhat <- function(sims) {
 #' 
 #' @export
 ess_bulk <- function(sims) {
-  ess_rfun(z_scale(split_chains(sims)))
+  posterior::ess_bulk(sims)
 }
 
 #' Tail effective sample size (tail-ESS)
@@ -334,11 +331,7 @@ ess_bulk <- function(sims) {
 #' 
 #' @export
 ess_tail <- function(sims) {
-  I05 <- sims <= quantile(sims, 0.05, na.rm = TRUE)
-  q05_ess <- ess_rfun(split_chains(I05))
-  I95 <- sims <= quantile(sims, 0.95, na.rm = TRUE)
-  q95_ess <- ess_rfun(split_chains(I95))
-  min(q05_ess, q95_ess)
+  posterior::ess_tail(sims)
 }
 
 #' Quantile effective sample size
@@ -360,11 +353,7 @@ ess_tail <- function(sims) {
 #' 
 #' @export
 ess_quantile <- function(sims, prob) {
-  if (should_return_NA(sims)) {
-    return(NA_real_)
-  }
-  I <- sims <= quantile(sims, prob, na.rm = TRUE)
-  ess_rfun(split_chains(I))
+  posterior::ess_quantile(sims, prob)
 }
 
 #' Effective sample size
@@ -385,7 +374,7 @@ ess_quantile <- function(sims, prob) {
 #' 
 #' @export
 ess_mean <- function(sims) {
-  ess_rfun(split_chains(sims))
+  posterior::ess_mean(sims)
 }
 
 #' Effective sample size
@@ -407,7 +396,9 @@ ess_mean <- function(sims) {
 #' 
 #' @export
 ess_sd <- function(sims) {
-  min(ess_rfun(split_chains(sims)), ess_rfun(split_chains(sims^2)))
+  # TODO: are these two equivalent/ok to change to posterior's implementation?
+  # min(ess_rfun(split_chains(sims)), ess_rfun(split_chains(sims^2)))
+  posterior::ess_sd(sims)
 }
 
 #' Monte Carlo diagnostics for a quantile
@@ -464,7 +455,7 @@ conv_quantile <- function(sims, prob) {
 #' 
 #' @export
 mcse_quantile <- function(sims, prob) {
-  conv_quantile(sims, prob)$mcse
+  posterior::mcse_quantile(sims, prob)
 }
 
 #' Monte Carlo standard error for mean
@@ -513,9 +504,7 @@ mcse_mean <- function(sims) {
 #' 
 #' @export
 mcse_sd <- function(sims) {
-  # assumes normality of sims and uses Stirling's approximation
-  ess_sd <- ess_sd(sims)
-  sd(sims) * sqrt(exp(1) * (1 - 1 / ess_sd)^(ess_sd - 1) - 1)
+  posterior::mcse_sd(sims)
 }
 
 #' Summary of General Simulation Results
