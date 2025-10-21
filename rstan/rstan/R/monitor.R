@@ -586,17 +586,17 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   for (i in seq_along(out)) {
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
-    quan <- unname(quantile(sims_i, probs = probs, na.rm = TRUE))
-    quan2 <- quantile(sims_i, probs = c(0.05, 0.5, 0.95), na.rm = TRUE)
+    quan <- unname(posterior::quantile2(sims_i, probs = probs))
+    quan2 <- posterior::quantile(sims_i, probs = c(0.05, 0.5, 0.95))
     mean <- mean(sims_i)
     sd <- sd(sims_i)
-    mcse_quan <- sapply(probs, mcse_quantile, sims = sims_i)
-    mcse_mean <- mcse_mean(sims_i)
-    mcse_sd <- mcse_sd(sims_i)
-    rhat <- Rhat(sims_i)
-    ess_bulk <- round(ess_bulk(sims_i))
-    ess_tail <- round(ess_tail(sims_i))
-    ess <- round(ess_rfun(sims_i))
+    mcse_quan <- sapply(probs, function(p) posterior::mcse_quantile(sims_i, probs = p))
+    mcse_mean <- posterior::mcse_mean(sims_i)
+    mcse_sd <- posterior::mcse_sd(sims_i)
+    rhat <- posterior::rhat(sims_i)
+    ess_bulk <- round(posterior::ess_bulk(sims_i))
+    ess_tail <- round(posterior::ess_tail(sims_i))
+    ess <- round(posterior::ess_bulk(sims_i))
     out[[i]] <- c(
       mean, mcse_mean, sd, quan, ess, rhat,
       valid, quan2, mcse_quan, mcse_sd, ess_bulk, ess_tail
@@ -604,7 +604,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   }
   
   out <- as.data.frame(do.call(rbind, out))
-  probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
+  probs_str <- names(posterior::quantile2(sims_i, probs = probs))
   str_quan <- paste0("Q", probs * 100)
   str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
