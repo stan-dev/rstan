@@ -288,7 +288,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
     quan <- unname(posterior::quantile2(sims_i, probs = probs))
-    quan2 <- posterior::quantile(sims_i, probs = c(0.05, 0.5, 0.95))
+    quan2 <- posterior::quantile2(sims_i, probs = c(0.05, 0.5, 0.95))
     mean <- mean(sims_i)
     sd <- sd(sims_i)
     mcse_quan <- sapply(probs, function(p) posterior::mcse_quantile(sims_i, probs = p))
