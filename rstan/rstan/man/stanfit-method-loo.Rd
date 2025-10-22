@@ -20,6 +20,7 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
     cores = getOption("mc.cores", 1),
     moment_match = FALSE,
     k_threshold = 0.7,
+    r_eff = FALSE,
     \dots)
 }
 
@@ -43,6 +44,14 @@ sampling (Vehtari, Gelman, and Gabry, 2017a,2017b).
   \item{k_threshold}{Threshold value for Pareto k values above which
   the moment matching algorithm is used. If \code{moment_match} is \code{FALSE},
   this is ignored.}
+  \item{r_eff}{\code{TRUE} or \code{FALSE} indicating whether to compute the
+  \code{r_eff} argument to pass to the \pkg{loo} package. If \code{TRUE},
+  will call \code{loo::relative_eff()}. If \code{FALSE}
+  (the default), we avoid computing \code{r_eff}, which can be very slow.
+  \code{r_eff} measures the amount of autocorrelation in MCMC draws, and is
+  used to compute more accurate ESS and MCSE estimates for pointwise and
+  total ELPDs. When \code{r_eff=FALSE}, the reported ESS and MCSE estimates
+  may be over-optimistic if the posterior draws are far from independent.}
   \item{\dots}{Ignored.}
 }
 
