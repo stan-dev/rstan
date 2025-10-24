@@ -305,7 +305,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   }
   
   out <- as.data.frame(do.call(rbind, out))
-  probs_str <- names(posterior::quantile2(sims_i, probs = probs))
+  probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
   str_quan <- paste0("Q", probs * 100)
   str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
