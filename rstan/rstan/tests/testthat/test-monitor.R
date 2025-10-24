@@ -22,4 +22,9 @@ test_that("rstan monitor snapshot is stable", {
     monitor(x) |> as.data.frame() |> round(6),
     style = "json2"
   )
+
+  expect_snapshot_value(
+    monitor(x, probs = c(0.1, 0.9)) |> as.data.frame() |> round(6),
+    style = "json2"
+  )
 })
