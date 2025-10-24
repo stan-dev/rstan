@@ -249,9 +249,9 @@ mcse_sd <- function(sims) {
 #' MCMC. \emph{arXiv preprint} \code{arXiv:1903.08008}.
 #' 
 #' @export
-monitor <- function(sims, warmup = floor(dim(sims)[1] / 2), 
-                    probs = c(0.025, 0.25, 0.50, 0.75, 0.975), 
-                    digits_summary = 1, print = TRUE, ...) { 
+monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
+                    probs = c(0.025, 0.25, 0.50, 0.75, 0.975),
+                    digits_summary = 1, print = TRUE, ...) {
   if (inherits(sims, "stanfit")) {
     chains <- sims@sim$chains
     iter <- sims@sim$iter
@@ -288,7 +288,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
     quan <- unname(posterior::quantile2(sims_i, probs = probs))
-    quan2 <- posterior::quantile2(sims_i, probs = c(0.05, 0.5, 0.95))
+    #quan2 <- posterior::quantile2(sims_i, probs = c(0.05, 0.5, 0.95))
     mean <- mean(sims_i)
     sd <- sd(sims_i)
     mcse_quan <- sapply(probs, function(p) posterior::mcse_quantile(sims_i, probs = p))
@@ -300,17 +300,19 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
     ess <- round(posterior::ess_bulk(sims_i))
     out[[i]] <- c(
       mean, mcse_mean, sd, quan, ess, rhat,
-      valid, quan2, mcse_quan, mcse_sd, ess_bulk, ess_tail
+      valid, #quan2,
+      mcse_quan, mcse_sd, ess_bulk, ess_tail
     )
   }
   
   out <- as.data.frame(do.call(rbind, out))
-  probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
+  #probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
   str_quan <- paste0("Q", probs * 100)
-  str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
+  #str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
-  colnames(out) <- c("mean", "se_mean", "sd", probs_str, "n_eff", "Rhat",
-                     "valid", str_quan2, str_mcse_quan, "MCSE_SD", "Bulk_ESS", "Tail_ESS")
+  colnames(out) <- c("mean", "se_mean", "sd", str_quan, "n_eff", "Rhat",
+                     "valid", #str_quan2,
+                     str_mcse_quan, "MCSE_SD", "Bulk_ESS", "Tail_ESS")
   rownames(out) <- parnames
 
   # replace NAs with appropriate values if draws are valid
