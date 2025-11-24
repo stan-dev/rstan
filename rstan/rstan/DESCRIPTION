@@ -3,7 +3,7 @@ Type: Package
 Title: R Interface to Stan
 Version: 2.36.0.9000
 Authors@R: c(person("Jiqiang", "Guo", email = "guojq28@gmail.com", role = "aut"),
-             person("Jonah", "Gabry", email = "jsg2201@columbia.edu", role = "aut"),
+             person("Jonah", "Gabry", email = "jgabry@gmail.com", role = "aut"),
              person("Ben", "Goodrich", email = "benjamin.goodrich@columbia.edu", role = c("cre", "aut")),
              person("Andrew", "Johnson", email = "andrew.johnson@arjohnsonau.com", role = "aut"),
              person("Sebastian", "Weber", email = "sdw.post@waebers.de", role = "aut"),
