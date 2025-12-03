@@ -35,6 +35,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::., stan-dev/pkgdown-config
+        working-directory: ./rstan/rstan
 
       - name: Build site
         run: |
@@ -44,10 +45,11 @@ jobs:
               new_process = TRUE
             )
         shell: Rscript {0}
+        working-directory: ./rstan/rstan
 
       - name: Deploy to GitHub pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           clean: false
           branch: gh-pages
-          folder: docs
+          folder: rstan/rstan/docs
