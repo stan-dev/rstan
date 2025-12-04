@@ -94,8 +94,54 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-User-facing R functions are provided to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the 'StanHeaders' package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo, rough Bayesian inference via 'variational' approximation, and (optionally penalized) maximum likelihood estimation via optimization. In all three cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.svg" class="logo" alt=""><h1 id="rstan-">RStan <a class="anchor" aria-label="anchor" href="#rstan-"></a>
+</h1>
+</div>
+<!-- badges: start -->
+
+<p><strong>RStan</strong> is the R interface to <a href="https://mc-stan.org" class="external-link">Stan</a>.</p>
+<div class="section level3">
+<h3 id="quick-links">Quick links<a class="anchor" aria-label="anchor" href="#quick-links"></a>
+</h3>
+<ul>
+<li>
+<a href="https://mc-stan.org/rstan/">mc-stan.org/rstan</a> (online RStan documentation, vignettes)</li>
+<li>
+<a href="https://mc-stan.org/users/documentation/" class="external-link">Stan documentation</a> (language manual, case studies, and more)</li>
+<li>
+<a href="https://discourse.mc-stan.org" class="external-link">Ask a question</a> (Stan Forums on Discourse)</li>
+<li>
+<a href="https://github.com/stan-dev/rstan/issues" class="external-link">Open an issue</a> (GitHub issues for bug reports, feature requests)</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h3>
+<p>For installation instructions and other tips on getting started with RStan see</p>
+<ul>
+<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started" class="external-link">RStan Getting Started</a></li>
+</ul>
+<p>Several Stan users have also contributed translations of the <em>RStan Getting Started</em> page:</p>
+<ul>
+<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Fran%C3%A7ais)" class="external-link">RStan Getting Started (French)</a></li>
+<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Japanese)" class="external-link">RStan Getting Started (Japanese)</a></li>
+<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87)" class="external-link">RStan Getting Started (繁體中文)</a></li>
+<li><a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started-(Portugu%C3%AAs)" class="external-link">RStan Getting Started (Portuguese)</a></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="source-repository">Source Repository<a class="anchor" aria-label="anchor" href="#source-repository"></a>
+</h3>
+<p>RStan’s source code repository is hosted here on GitHub. Stan’s source repository is defined as a submodule. See <a href="https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule-in-rstan-repo%3F" class="external-link">how to work with stan submodule in rstan repo</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="licensing">Licensing<a class="anchor" aria-label="anchor" href="#licensing"></a>
+</h3>
+<p>RStan is licensed under GPLv3. The Stan code packaged in RStan is licensed under new BSD.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -134,7 +180,15 @@ User-facing R functions are provided to parse, compile, test, estimate, and anal
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=rstan" class="external-link"><img src="https://www.r-pkg.org/badges/version/rstan?color=blue" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.rstudio.com/package=rstan" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/rstan?color=blue" alt="Downloads"></a></li>
+<li><a href="https://depsy.org/package/r/rstan" class="external-link"><img src="http://depsy.org/api/package/cran/rstan/badge.svg" alt="Research software impact"></a></li>
+<li><a href="https://github.com/stan-dev/rstan/actions" class="external-link"><img src="https://github.com/stan-dev/rstan/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>

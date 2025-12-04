@@ -90,9 +90,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.036 seconds (Warm-up)
-#> Chain 1:                0.022 seconds (Sampling)
-#> Chain 1:                0.058 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.035 seconds (Warm-up)
+#> Chain 1:                0.021 seconds (Sampling)
+#> Chain 1:                0.056 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 2).
@@ -115,15 +115,15 @@ fit <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.039 seconds (Warm-up)
-#> Chain 2:                0.034 seconds (Sampling)
-#> Chain 2:                0.073 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.038 seconds (Warm-up)
+#> Chain 2:                0.033 seconds (Sampling)
+#> Chain 2:                0.071 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 2e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 3: Gradient evaluation took 3e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -140,9 +140,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.039 seconds (Warm-up)
-#> Chain 3:                0.02 seconds (Sampling)
-#> Chain 3:                0.059 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.038 seconds (Warm-up)
+#> Chain 3:                0.019 seconds (Sampling)
+#> Chain 3:                0.057 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 4).
@@ -165,9 +165,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.041 seconds (Warm-up)
-#> Chain 4:                0.048 seconds (Sampling)
-#> Chain 4:                0.089 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.04 seconds (Warm-up)
+#> Chain 4:                0.046 seconds (Sampling)
+#> Chain 4:                0.086 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 144 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
