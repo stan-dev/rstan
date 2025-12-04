@@ -39,6 +39,9 @@ jobs:
           extra-packages: any::pkgdown, local::., stan-dev/pkgdown-config
           working-directory: ./rstan/rstan
 
+      - name: Copy root README into package dir
+        run: cp ./README.md ./rstan/rstan/README.md
+
       - name: Build site
         run: |
             pkgdown::build_site_github_pages(

@@ -20,3 +20,5 @@ tests/cpp/*
 R_Makevars
 
 rstan.Rcheck/ 
+
+/rstan/README.md
