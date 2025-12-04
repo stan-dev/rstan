@@ -271,12 +271,12 @@ with suffix <code>.stan</code>) or in a R character vector (of length
 one). We put the following code for the Eight Schools model into the
 file <code>schools.stan</code>:</p>
 <pre><code>data {
-  int&lt;lower=0&gt; J;          // number of schools 
-  real y[J];               // estimated treatment effects
-  real&lt;lower=0&gt; sigma[J];  // s.e. of effect estimates 
+  int&lt;lower=0&gt; J;          // number of schools
+  array[J] real y;               // estimated treatment effects
+  array[J] real&lt;lower=0&gt; sigma;  // s.e. of effect estimates
 }
 parameters {
-  real mu; 
+  real mu;
   real&lt;lower=0&gt; tau;
   vector[J] eta;
 }
@@ -389,21 +389,7 @@ samples:</p>
 <span>  cores <span class="op">=</span> <span class="fl">1</span>,              <span class="co"># number of cores (could use one per chain)</span></span>
 <span>  refresh <span class="op">=</span> <span class="fl">0</span>             <span class="co"># no progress shown</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<pre><code>Error in stanc(file = file, model_code = model_code, model_name = model_name, : 0
-Syntax error in 'string', line 3, column 9 to column 10, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    int&lt;lower=0&gt; J;          // number of schools
-     3:    real y[J];               // estimated treatment effects
-                  ^
-     4:    real&lt;lower=0&gt; sigma[J];  // s.e. of effect estimates
-     5:  }
-   -------------------------------------------------
-
-Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[J] real y;</code></pre>
+<pre><code>Trying to compile a simple C file</code></pre>
 <p>The <code>stan</code> function wraps the following three steps:</p>
 <ul>
 <li>Translate a model in Stan code to C++ code</li>
@@ -437,7 +423,27 @@ parameters from the Eight Schools model using the <code>print</code>
 method:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit1</span>, pars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"theta"</span>, <span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span><span class="op">)</span>, probs<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.1</span>,<span class="fl">.5</span>,<span class="fl">.9</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit1' not found</code></pre>
+<pre><code>Inference for Stan model: anon_model.
+4 chains, each with iter=2000; warmup=1000; thin=1; 
+post-warmup draws per chain=1000, total post-warmup draws=4000.
+
+           mean se_mean   sd    10%    50%    90% n_eff Rhat
+theta[1]  11.32    0.16 8.28   2.22  10.28  21.91  2850    1
+theta[2]   8.00    0.10 6.24   0.46   7.90  15.77  4201    1
+theta[3]   6.30    0.12 7.54  -3.21   6.76  14.88  4257    1
+theta[4]   7.77    0.09 6.38  -0.12   7.67  15.74  5581    1
+theta[5]   5.25    0.09 6.33  -2.87   5.76  13.02  4798    1
+theta[6]   6.34    0.10 6.82  -2.14   6.81  14.29  5032    1
+theta[7]  10.61    0.11 6.85   2.41  10.10  19.30  3653    1
+theta[8]   8.42    0.12 7.75  -0.67   8.29  17.61  3978    1
+mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
+tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
+lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
+
+Samples were drawn using NUTS(diag_e) at Thu Dec  4 21:34:36 2025.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at 
+convergence, Rhat=1).</code></pre>
 <p>The last line of this output, <code>lp__</code>, is the logarithm of
 the (unnormalized) posterior density as calculated by Stan. This log
 density can be used in various ways for model evaluation and comparison
@@ -533,7 +539,10 @@ posterior median for all the parameters as well as <code>lp__</code>
 (the log of posterior density function up to an additive constant):</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'plot': object 'fit1' not found</code></pre>
+<pre><code>'pars' not specified. Showing first 10 parameters by default.</code></pre>
+<pre><code>ci_level: 0.8 (80% intervals)</code></pre>
+<pre><code>outer_level: 0.95 (95% intervals)</code></pre>
+<p><img src="rstan_files/figure-html/stanfit-plot-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
 <p>The optional <code>plotfun</code> argument can be used to select
 among the various available plots. See
 <code><a href="../reference/stanfit-method-plot.html">help("plot,stanfit-method")</a></code>.</p>
@@ -541,9 +550,9 @@ among the various available plots. See
 the posterior draws. If we include the warmup draws by setting
 <code>inc_warmup=TRUE</code>, the background color of the warmup area is
 different from the post-warmup phase:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stanfit-method-traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span>, inc_warmup <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'traceplot': object 'fit1' not found</code></pre>
+<p><img src="rstan_files/figure-html/stanfit-traceplot-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
 <p>To assess the convergence of the Markov chains, in addition to
 visually inspecting traceplots we can calculate the split <span class="math inline">\(\hat{R}\)</span> statistic. Split <span class="math inline">\(\hat{R}\)</span> is an updated version of the
 <span class="math inline">\(\hat{R}\)</span> statistic proposed in <span class="citation">Gelman and Rubin (1992)</span> that is based on
@@ -551,9 +560,20 @@ splitting each chain into two halves. See the Stan manual for more
 details. The estimated <span class="math inline">\(\hat{R}\)</span> for
 each parameter is included as one of the columns in the output from the
 <code>summary</code> and <code>print</code> methods.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit1' not found</code></pre>
+<pre><code>Inference for Stan model: anon_model.
+4 chains, each with iter=2000; warmup=1000; thin=1; 
+post-warmup draws per chain=1000, total post-warmup draws=4000.
+
+    mean se_mean   sd  2.5%  25%  50%   75% 97.5% n_eff Rhat
+mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
+tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
+
+Samples were drawn using NUTS(diag_e) at Thu Dec  4 21:34:36 2025.
+For each parameter, n_eff is a crude measure of effective sample size,
+and Rhat is the potential scale reduction factor on split chains (at 
+convergence, Rhat=1).</code></pre>
 <p>Again, see the additional vignette on stanfit objects for more
 details.</p>
 </div>
@@ -570,17 +590,90 @@ instructions for using the interface with stanfit objects.</p>
 sampling problems using functions in the <strong>rstan</strong> package.
 The <code>get_sampler_params</code> function returns information on
 parameters related the performance of the sampler:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># all chains combined</span></span>
-<span><span class="va">sampler_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_sampler_params</a></span><span class="op">(</span><span class="va">fit1</span>, inc_warmup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_sampler_params': object 'fit1' not found</code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">sampler_params</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'summary': object 'sampler_params' not found</code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<span><span class="va">sampler_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_sampler_params</a></span><span class="op">(</span><span class="va">fit1</span>, inc_warmup <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">sampler_params</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<pre><code> accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
+ Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.0000  
+ 1st Qu.:0.82   1st Qu.:0.270   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.0000  
+ Median :0.96   Median :0.370   Median :3.0   Median : 15   Median :0.0000  
+ Mean   :0.84   Mean   :0.387   Mean   :3.4   Mean   : 12   Mean   :0.0086  
+ 3rd Qu.:0.99   3rd Qu.:0.415   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.0000  
+ Max.   :1.00   Max.   :6.431   Max.   :7.0   Max.   :127   Max.   :1.0000  
+    energy__ 
+ Min.   :35  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :63  </code></pre>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># each chain separately</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="va">summary</span>, digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'sampler_params' not found</code></pre>
+<pre><code>[[1]]
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
+ Min.   :0.00   Min.   :0.058   Min.   :0.0   Min.   : 1    Min.   :0.00  
+ 1st Qu.:0.72   1st Qu.:0.408   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.00  
+ Median :0.93   Median :0.415   Median :3.0   Median : 7    Median :0.00  
+ Mean   :0.81   Mean   :0.435   Mean   :3.2   Mean   :11    Mean   :0.01  
+ 3rd Qu.:0.98   3rd Qu.:0.415   3rd Qu.:3.0   3rd Qu.:15    3rd Qu.:0.00  
+ Max.   :1.00   Max.   :5.390   Max.   :6.0   Max.   :95    Max.   :1.00  
+    energy__ 
+ Min.   :35  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :44  
+ 3rd Qu.:46  
+ Max.   :58  
+
+[[2]]
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
+ Min.   :0.00   Min.   :0.042   Min.   :0.0   Min.   : 1    Min.   :0.0000  
+ 1st Qu.:0.88   1st Qu.:0.251   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.0000  
+ Median :0.97   Median :0.251   Median :4.0   Median :15    Median :0.0000  
+ Mean   :0.87   Mean   :0.362   Mean   :3.5   Mean   :13    Mean   :0.0065  
+ 3rd Qu.:0.99   3rd Qu.:0.434   3rd Qu.:4.0   3rd Qu.:15    3rd Qu.:0.0000  
+ Max.   :1.00   Max.   :6.431   Max.   :6.0   Max.   :63    Max.   :1.0000  
+    energy__ 
+ Min.   :36  
+ 1st Qu.:42  
+ Median :45  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :62  
+
+[[3]]
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
+ Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.00  
+ 1st Qu.:0.86   1st Qu.:0.270   1st Qu.:3.0   1st Qu.: 15   1st Qu.:0.00  
+ Median :0.97   Median :0.270   Median :4.0   Median : 15   Median :0.00  
+ Mean   :0.86   Mean   :0.328   Mean   :3.7   Mean   : 15   Mean   :0.01  
+ 3rd Qu.:0.99   3rd Qu.:0.330   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.00  
+ Max.   :1.00   Max.   :5.497   Max.   :7.0   Max.   :127   Max.   :1.00  
+    energy__ 
+ Min.   :35  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :63  
+
+[[4]]
+ accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+ Min.   :0.00   Min.   :0.037   Min.   :0.0   Min.   :  1   Min.   :0.000  
+ 1st Qu.:0.77   1st Qu.:0.370   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+ Median :0.95   Median :0.370   Median :3.0   Median :  7   Median :0.000  
+ Mean   :0.83   Mean   :0.421   Mean   :3.3   Mean   : 12   Mean   :0.008  
+ 3rd Qu.:0.99   3rd Qu.:0.429   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
+ Max.   :1.00   Max.   :4.710   Max.   :6.0   Max.   :127   Max.   :1.000  
+    energy__ 
+ Min.   :37  
+ 1st Qu.:42  
+ Median :44  
+ Mean   :45  
+ 3rd Qu.:47  
+ Max.   :59  </code></pre>
 <p>Here we see that there are a small number of divergent transitions,
 which are identified by <code>divergent__</code> being <span class="math inline">\(1\)</span>. Ideally, there should be no divergent
 transitions after the warmup phase. The best way to try to eliminate
@@ -604,9 +697,12 @@ structure of the object returned by <code>get_sampler_params</code>.</p>
 information using <code>pairs</code>. The “pairs”” plot can be used to
 get a sense of whether any sampling difficulties are occurring in the
 tails or near the mode:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/pairs.html" class="external-link">pairs</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span>, <span class="st">"lp__"</span><span class="op">)</span>, las <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit1' not found</code></pre>
+<pre><code>Warning in par(usr): argument 1 does not name a graphical parameter
+Warning in par(usr): argument 1 does not name a graphical parameter
+Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
+<p><img src="rstan_files/figure-html/pairs-plot-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
 <p>In the plot above, the marginal distribution of each selected
 parameter is included as a histogram along the diagonal. By default,
 draws with below-median <code>accept_stat__</code> (MCMC proposal
@@ -642,7 +738,7 @@ are replaced by a call to a user-defined function.</p>
 provides the <code>expose_stan_functions</code> function for exporting
 such functions to the R global environment so that they can be tested in
 R to ensure they are working properly. For example,</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">model_code</span> <span class="op">&lt;-</span></span>
 <span><span class="st">'</span></span>
 <span><span class="st">functions {</span></span>
@@ -663,7 +759,7 @@ In file included from &lt;command-line&gt;:
       |          ^~~~~~~~~~~
 compilation terminated.
 make: *** [/opt/R/4.5.2/lib/R/etc/Makeconf:202: foo.o] Error 1</code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">standard_normal_rng</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>[1] 0</code></pre>
 </div>
@@ -715,7 +811,7 @@ prior is specified.</p>
 <p>We first create an object of class <code>"stanmodel"</code> and then
 use the <code>optimizing</code> method, to which data and other
 arguments can be fed.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ocode</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
 <span><span class="st">  data {</span></span>
 <span><span class="st">    int&lt;lower=1&gt; N;</span></span>
@@ -745,12 +841,12 @@ Ill-formed declaration. ";" expected after variable declaration.
 It looks like you are trying to use the old array syntax.
 Please use the new syntax:
 array[N] real y;</code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">y2</span><span class="op">)</span></span></code></pre></div>
-<pre><code>[1] -0.3100302</code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<pre><code>[1] 0.1636837</code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stanmodel-method-optimizing.html">optimizing</a></span><span class="op">(</span><span class="va">sm</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y2</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y2</span><span class="op">)</span><span class="op">)</span>, hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'optimizing': object 'sm' not found</code></pre>
 </div>

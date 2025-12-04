@@ -117,12 +117,12 @@ suffix `.stan`) or in a R character vector (of length one). We put the
 following code for the Eight Schools model into the file `schools.stan`:
 
     data {
-      int<lower=0> J;          // number of schools 
-      real y[J];               // estimated treatment effects
-      real<lower=0> sigma[J];  // s.e. of effect estimates 
+      int<lower=0> J;          // number of schools
+      array[J] real y;               // estimated treatment effects
+      array[J] real<lower=0> sigma;  // s.e. of effect estimates
     }
     parameters {
-      real mu; 
+      real mu;
       real<lower=0> tau;
       vector[J] eta;
     }
@@ -245,21 +245,7 @@ fit1 <- stan(
   )
 ```
 
-    Error in stanc(file = file, model_code = model_code, model_name = model_name, : 0
-    Syntax error in 'string', line 3, column 9 to column 10, parsing error:
-       -------------------------------------------------
-         1:  data {
-         2:    int<lower=0> J;          // number of schools
-         3:    real y[J];               // estimated treatment effects
-                      ^
-         4:    real<lower=0> sigma[J];  // s.e. of effect estimates
-         5:  }
-       -------------------------------------------------
-
-    Ill-formed declaration. ";" expected after variable declaration.
-    It looks like you are trying to use the old array syntax.
-    Please use the new syntax:
-    array[J] real y;
+    Trying to compile a simple C file
 
 The `stan` function wraps the following three steps:
 
@@ -298,7 +284,27 @@ shows a summary of the parameters from the Eight Schools model using the
 print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
 ```
 
-    Error: object 'fit1' not found
+    Inference for Stan model: anon_model.
+    4 chains, each with iter=2000; warmup=1000; thin=1; 
+    post-warmup draws per chain=1000, total post-warmup draws=4000.
+
+               mean se_mean   sd    10%    50%    90% n_eff Rhat
+    theta[1]  11.32    0.16 8.28   2.22  10.28  21.91  2850    1
+    theta[2]   8.00    0.10 6.24   0.46   7.90  15.77  4201    1
+    theta[3]   6.30    0.12 7.54  -3.21   6.76  14.88  4257    1
+    theta[4]   7.77    0.09 6.38  -0.12   7.67  15.74  5581    1
+    theta[5]   5.25    0.09 6.33  -2.87   5.76  13.02  4798    1
+    theta[6]   6.34    0.10 6.82  -2.14   6.81  14.29  5032    1
+    theta[7]  10.61    0.11 6.85   2.41  10.10  19.30  3653    1
+    theta[8]   8.42    0.12 7.75  -0.67   8.29  17.61  3978    1
+    mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
+    tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
+    lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
+
+    Samples were drawn using NUTS(diag_e) at Thu Dec  4 21:34:36 2025.
+    For each parameter, n_eff is a crude measure of effective sample size,
+    and Rhat is the potential scale reduction factor on split chains (at 
+    convergence, Rhat=1).
 
 The last line of this output, `lp__`, is the logarithm of the
 (unnormalized) posterior density as calculated by Stan. This log density
@@ -394,7 +400,13 @@ density function up to an additive constant):
 plot(fit1)
 ```
 
-    Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'plot': object 'fit1' not found
+    'pars' not specified. Showing first 10 parameters by default.
+
+    ci_level: 0.8 (80% intervals)
+
+    outer_level: 0.95 (95% intervals)
+
+![](rstan_files/figure-html/stanfit-plot-1.png)
 
 The optional `plotfun` argument can be used to select among the various
 available plots. See
@@ -409,7 +421,7 @@ phase:
 traceplot(fit1, pars = c("mu", "tau"), inc_warmup = TRUE, nrow = 2)
 ```
 
-    Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'traceplot': object 'fit1' not found
+![](rstan_files/figure-html/stanfit-traceplot-1.png)
 
 To assess the convergence of the Markov chains, in addition to visually
 inspecting traceplots we can calculate the split \\\hat{R}\\ statistic.
@@ -423,7 +435,18 @@ columns in the output from the `summary` and `print` methods.
 print(fit1, pars = c("mu", "tau"))
 ```
 
-    Error: object 'fit1' not found
+    Inference for Stan model: anon_model.
+    4 chains, each with iter=2000; warmup=1000; thin=1; 
+    post-warmup draws per chain=1000, total post-warmup draws=4000.
+
+        mean se_mean   sd  2.5%  25%  50%   75% 97.5% n_eff Rhat
+    mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
+    tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
+
+    Samples were drawn using NUTS(diag_e) at Thu Dec  4 21:34:36 2025.
+    For each parameter, n_eff is a crude measure of effective sample size,
+    and Rhat is the potential scale reduction factor on split chains (at 
+    convergence, Rhat=1).
 
 Again, see the additional vignette on stanfit objects for more details.
 
@@ -445,22 +468,92 @@ the performance of the sampler:
 ``` r
 # all chains combined
 sampler_params <- get_sampler_params(fit1, inc_warmup = TRUE)
-```
-
-    Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_sampler_params': object 'fit1' not found
-
-``` r
 summary(do.call(rbind, sampler_params), digits = 2)
 ```
 
-    Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'summary': object 'sampler_params' not found
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
+     Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.0000  
+     1st Qu.:0.82   1st Qu.:0.270   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.0000  
+     Median :0.96   Median :0.370   Median :3.0   Median : 15   Median :0.0000  
+     Mean   :0.84   Mean   :0.387   Mean   :3.4   Mean   : 12   Mean   :0.0086  
+     3rd Qu.:0.99   3rd Qu.:0.415   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.0000  
+     Max.   :1.00   Max.   :6.431   Max.   :7.0   Max.   :127   Max.   :1.0000  
+        energy__ 
+     Min.   :35  
+     1st Qu.:42  
+     Median :44  
+     Mean   :45  
+     3rd Qu.:47  
+     Max.   :63  
 
 ``` r
 # each chain separately
 lapply(sampler_params, summary, digits = 2)
 ```
 
-    Error: object 'sampler_params' not found
+    [[1]]
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
+     Min.   :0.00   Min.   :0.058   Min.   :0.0   Min.   : 1    Min.   :0.00  
+     1st Qu.:0.72   1st Qu.:0.408   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.00  
+     Median :0.93   Median :0.415   Median :3.0   Median : 7    Median :0.00  
+     Mean   :0.81   Mean   :0.435   Mean   :3.2   Mean   :11    Mean   :0.01  
+     3rd Qu.:0.98   3rd Qu.:0.415   3rd Qu.:3.0   3rd Qu.:15    3rd Qu.:0.00  
+     Max.   :1.00   Max.   :5.390   Max.   :6.0   Max.   :95    Max.   :1.00  
+        energy__ 
+     Min.   :35  
+     1st Qu.:42  
+     Median :44  
+     Mean   :44  
+     3rd Qu.:46  
+     Max.   :58  
+
+    [[2]]
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
+     Min.   :0.00   Min.   :0.042   Min.   :0.0   Min.   : 1    Min.   :0.0000  
+     1st Qu.:0.88   1st Qu.:0.251   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.0000  
+     Median :0.97   Median :0.251   Median :4.0   Median :15    Median :0.0000  
+     Mean   :0.87   Mean   :0.362   Mean   :3.5   Mean   :13    Mean   :0.0065  
+     3rd Qu.:0.99   3rd Qu.:0.434   3rd Qu.:4.0   3rd Qu.:15    3rd Qu.:0.0000  
+     Max.   :1.00   Max.   :6.431   Max.   :6.0   Max.   :63    Max.   :1.0000  
+        energy__ 
+     Min.   :36  
+     1st Qu.:42  
+     Median :45  
+     Mean   :45  
+     3rd Qu.:47  
+     Max.   :62  
+
+    [[3]]
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
+     Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.00  
+     1st Qu.:0.86   1st Qu.:0.270   1st Qu.:3.0   1st Qu.: 15   1st Qu.:0.00  
+     Median :0.97   Median :0.270   Median :4.0   Median : 15   Median :0.00  
+     Mean   :0.86   Mean   :0.328   Mean   :3.7   Mean   : 15   Mean   :0.01  
+     3rd Qu.:0.99   3rd Qu.:0.330   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.00  
+     Max.   :1.00   Max.   :5.497   Max.   :7.0   Max.   :127   Max.   :1.00  
+        energy__ 
+     Min.   :35  
+     1st Qu.:42  
+     Median :44  
+     Mean   :45  
+     3rd Qu.:47  
+     Max.   :63  
+
+    [[4]]
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+     Min.   :0.00   Min.   :0.037   Min.   :0.0   Min.   :  1   Min.   :0.000  
+     1st Qu.:0.77   1st Qu.:0.370   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+     Median :0.95   Median :0.370   Median :3.0   Median :  7   Median :0.000  
+     Mean   :0.83   Mean   :0.421   Mean   :3.3   Mean   : 12   Mean   :0.008  
+     3rd Qu.:0.99   3rd Qu.:0.429   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
+     Max.   :1.00   Max.   :4.710   Max.   :6.0   Max.   :127   Max.   :1.000  
+        energy__ 
+     Min.   :37  
+     1st Qu.:42  
+     Median :44  
+     Mean   :45  
+     3rd Qu.:47  
+     Max.   :59  
 
 Here we see that there are a small number of divergent transitions,
 which are identified by `divergent__` being \\1\\. Ideally, there should
@@ -490,7 +583,11 @@ the mode:
 pairs(fit1, pars = c("mu", "tau", "lp__"), las = 1)
 ```
 
-    Error: object 'fit1' not found
+    Warning in par(usr): argument 1 does not name a graphical parameter
+    Warning in par(usr): argument 1 does not name a graphical parameter
+    Warning in par(usr): argument 1 does not name a graphical parameter
+
+![](rstan_files/figure-html/pairs-plot-1.png)
 
 In the plot above, the marginal distribution of each selected parameter
 is included as a histogram along the diagonal. By default, draws with
@@ -646,7 +743,7 @@ y2 <- rnorm(20)
 mean(y2)
 ```
 
-    [1] -0.3100302
+    [1] 0.1636837
 
 ``` r
 optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)

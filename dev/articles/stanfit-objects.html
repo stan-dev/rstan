@@ -118,24 +118,12 @@ model:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/">rstan</a></span><span class="op">)</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stan_demo.html">stan_demo</a></span><span class="op">(</span><span class="st">"eight_schools"</span>, refresh <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in stanc(file = file, model_code = model_code, model_name = model_name, : 0
-Syntax error in 'string', line 3, column 9 to column 10, parsing error:
-   -------------------------------------------------
-     1:  data {
-     2:    int&lt;lower=0&gt; J;          // number of schools
-     3:    real y[J];               // estimated treatment effects
-                  ^
-     4:    real&lt;lower=0&gt; sigma[J];  // s.e. of effect estimates
-     5:  }
-   -------------------------------------------------
-
-Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[J] real y;</code></pre>
+<pre><code>Trying to compile a simple C file</code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit' not found</code></pre>
+<pre><code>[1] "stanfit"
+attr(,"package")
+[1] "rstan"</code></pre>
 <div class="section level2">
 <h2 id="posterior-draws">Posterior draws<a class="anchor" aria-label="anchor" href="#posterior-draws"></a>
 </h2>
@@ -152,11 +140,9 @@ returns the draws in a different format.</p>
 returns a list with named components corresponding to the model
 parameters.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">list_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'extract': object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">list_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'list_of_draws' not found</code></pre>
+<code class="sourceCode R"><span><span class="va">list_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-method-extract.html">extract</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">list_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] "mu"    "tau"   "eta"   "theta" "lp__" </code></pre>
 <p>In this model the parameters <code>mu</code> and <code>tau</code> are
 scalars and <code>theta</code> is a vector with eight elements. This
 means that the draws for <code>mu</code> and <code>tau</code> will be
@@ -164,15 +150,30 @@ vectors (with length equal to the number of post-warmup iterations times
 the number of chains) and the draws for <code>theta</code> will be a
 matrix, with each column corresponding to one of the eight
 components:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_of_draws</span><span class="op">$</span><span class="va">mu</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'list_of_draws' not found</code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<pre><code>[1]  5.22198096 10.25431910 11.48222576  0.07918646 -3.30819970 13.58606549</code></pre>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_of_draws</span><span class="op">$</span><span class="va">tau</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'list_of_draws' not found</code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<pre><code>[1]  5.996095  5.909190  2.802256 11.933985  5.368431  6.944701</code></pre>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">list_of_draws</span><span class="op">$</span><span class="va">theta</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'list_of_draws' not found</code></pre>
+<pre><code>          
+iterations      [,1]      [,2]      [,3]       [,4]       [,5]      [,6]
+      [1,]  2.283421  8.578929  3.168522  6.7439015  4.6031011  6.907852
+      [2,] 11.359170  6.478249 12.446666  9.9424217  6.7237383  2.968103
+      [3,] 12.249217 10.539249  8.504100 12.0364981  8.5697172  7.527797
+      [4,] -8.860330 10.688263  6.029505  3.8369223 -0.8734694 10.821918
+      [5,] -4.906261 -3.894452 -4.229853  0.4010875 -4.9593446 -7.039061
+      [6,] 23.468212  5.095051  1.616788 13.2977748  5.4846604  9.664369
+          
+iterations      [,7]       [,8]
+      [1,]  3.594139 -0.4996312
+      [2,] 12.851494 18.5077162
+      [3,] 12.471018 13.9139741
+      [4,]  2.494871  8.9744022
+      [5,] -5.959557  1.5743520
+      [6,] 15.388620 13.4485342</code></pre>
 <p><br></p>
 </div>
 <div class="section level4">
@@ -181,47 +182,60 @@ components:</p>
 <p>The <code>as.matrix</code>, <code>as.data.frame</code>, and
 <code>as.array</code> functions can also be used to retrieve the
 posterior draws from a stanfit object:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">matrix_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">matrix_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code> [1] "mu"       "tau"      "eta[1]"   "eta[2]"   "eta[3]"   "eta[4]"  
+ [7] "eta[5]"   "eta[6]"   "eta[7]"   "eta[8]"   "theta[1]" "theta[2]"
+[13] "theta[3]" "theta[4]" "theta[5]" "theta[6]" "theta[7]" "theta[8]"
+[19] "lp__"    </code></pre>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">matrix_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit' not found</code></pre>
+<code class="sourceCode R"><span><span class="va">df_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code> [1] "mu"       "tau"      "eta[1]"   "eta[2]"   "eta[3]"   "eta[4]"  
+ [7] "eta[5]"   "eta[6]"   "eta[7]"   "eta[8]"   "theta[1]" "theta[2]"
+[13] "theta[3]" "theta[4]" "theta[5]" "theta[6]" "theta[7]" "theta[8]"
+[19] "lp__"    </code></pre>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">matrix_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'matrix_of_draws' not found</code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'df_of_draws' not found</code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">array_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">as.array</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">array_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'array_of_draws' not found</code></pre>
+<code class="sourceCode R"><span><span class="va">array_of_draws</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">as.array</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">array_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>$iterations
+NULL
+
+$chains
+[1] "chain:1" "chain:2" "chain:3" "chain:4"
+
+$parameters
+ [1] "mu"       "tau"      "eta[1]"   "eta[2]"   "eta[3]"   "eta[4]"  
+ [7] "eta[5]"   "eta[6]"   "eta[7]"   "eta[8]"   "theta[1]" "theta[2]"
+[13] "theta[3]" "theta[4]" "theta[5]" "theta[6]" "theta[7]" "theta[8]"
+[19] "lp__"    </code></pre>
 <p>The <code>as.matrix</code> and <code>as.data.frame</code> methods
 essentially return the same thing except in matrix and data frame form,
 respectively. The <code>as.array</code> method returns the draws from
 each chain separately and so has an additional dimension:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">matrix_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'matrix_of_draws' not found</code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'df_of_draws' not found</code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">array_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'array_of_draws' not found</code></pre>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">matrix_of_draws</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">df_of_draws</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">array_of_draws</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] 4000   19
+[1] 4000   19
+[1] 1000    4   19</code></pre>
 <p>By default all of the functions for retrieving the posterior draws
 return the draws for <em>all</em> parameters (and generated quantities).
 The optional argument <code>pars</code> (a character vector) can be used
 if only a subset of the parameters is desired, for example:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu_and_theta1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"theta[1]"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mu_and_theta1</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'mu_and_theta1' not found</code></pre>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mu_and_theta1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"theta[1]"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mu_and_theta1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>          parameters
+iterations        mu  theta[1]
+      [1,] 16.808565 19.377383
+      [2,]  9.085071  5.254745
+      [3,]  9.490775 12.740426
+      [4,]  7.024909  2.712334
+      [5,] 10.325071 -1.006234
+      [6,] 12.216922 13.034301</code></pre>
 <p><br></p>
 </div>
 </div>
@@ -230,12 +244,10 @@ if only a subset of the parameters is desired, for example:</p>
 </h2>
 <p>Summary statistics are obtained using the <code>summary</code>
 function. The object returned is a list with two components:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'summary': object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fit_summary</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit_summary' not found</code></pre>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fit_summary</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] "summary"   "c_summary"</code></pre>
 <p>In <code>fit_summary$summary</code> all chains are merged whereas
 <code>fit_summary$c_summary</code> contains summaries for each chain
 individually. Typically we want the summary for all chains merged, which
@@ -249,26 +261,65 @@ a subset of parameters to include in the summary.</p>
 <p>For models fit using MCMC, also included in the summary are the Monte
 Carlo standard error (<code>se_mean</code>), the effective sample size
 (<code>n_eff</code>), and the R-hat statistic (<code>Rhat</code>).</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fit_summary</span><span class="op">$</span><span class="va">summary</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'fit_summary' not found</code></pre>
+<pre><code>                  mean    se_mean        sd        2.5%         25%
+mu         8.095883193 0.10639687 5.0640173  -1.4324607   4.9183331
+tau        6.293738721 0.14506881 5.3735697   0.2015424   2.3575233
+eta[1]     0.381015597 0.01459744 0.9507598  -1.5796632  -0.2234058
+eta[2]     0.009007562 0.01417983 0.9034728  -1.7880656  -0.5770494
+eta[3]    -0.187210058 0.01452286 0.9459167  -2.0682485  -0.8217128
+eta[4]    -0.035375600 0.01382681 0.8657225  -1.7561734  -0.5939173
+eta[5]    -0.361676495 0.01413001 0.8717491  -2.0227518  -0.9591457
+eta[6]    -0.214510464 0.01409324 0.8956887  -1.9366989  -0.8332017
+eta[7]     0.350821227 0.01497281 0.9004367  -1.4300924  -0.2491383
+eta[8]     0.052958067 0.01345953 0.9322137  -1.7588616  -0.5763021
+theta[1]  11.322773164 0.15505640 8.2776572  -1.9203819   6.0332449
+theta[2]   8.004101819 0.09630841 6.2422112  -4.2607888   4.0382535
+theta[3]   6.299784074 0.11559691 7.5421778 -10.6624969   2.3119588
+theta[4]   7.767177199 0.08539246 6.3793292  -5.0272230   3.8436346
+theta[5]   5.247303714 0.09140613 6.3314446  -8.9518058   1.5579495
+theta[6]   6.336858566 0.09616920 6.8222195  -8.2020483   2.3757087
+theta[7]  10.608966215 0.11328368 6.8471616  -1.9536568   6.0474640
+theta[8]   8.422207428 0.12279133 7.7450219  -6.6975366   3.8857270
+lp__     -39.674936458 0.07277398 2.6759517 -45.6028614 -41.2705096
+                  50%         75%      97.5%    n_eff      Rhat
+mu         7.90163063  11.3031398  18.378286 2265.336 1.0007683
+tau        5.08593552   8.8503482  19.143525 1372.075 1.0005621
+eta[1]     0.39903034   1.0292366   2.190002 4242.172 0.9997237
+eta[2]     0.01004062   0.5826053   1.824950 4059.646 0.9994544
+eta[3]    -0.19934059   0.4211110   1.755174 4242.298 1.0009679
+eta[4]    -0.04264697   0.5060588   1.721352 3920.250 1.0017374
+eta[5]    -0.39280179   0.2076239   1.452278 3806.259 0.9996797
+eta[6]    -0.21183422   0.3730205   1.590079 4039.175 1.0004399
+eta[7]     0.37472434   0.9473720   2.146286 3616.594 0.9999667
+eta[8]     0.04892119   0.6660938   1.915073 4797.014 1.0002494
+theta[1]  10.27992160  15.3176698  30.916918 2849.938 0.9996924
+theta[2]   7.89781756  11.7876773  21.066178 4200.960 0.9998463
+theta[3]   6.76232287  11.1205656  19.795872 4256.975 1.0004553
+theta[4]   7.67299298  11.8187479  20.456410 5580.986 0.9994345
+theta[5]   5.75700790   9.5487355  16.429356 4797.942 0.9996267
+theta[6]   6.80506899  10.7812451  18.395870 5032.449 0.9999338
+theta[7]  10.09710317  14.5408069  26.214924 3653.310 0.9994559
+theta[8]   8.28648790  12.7220356  25.181417 3978.413 0.9997589
+lp__     -39.42810189 -37.7446463 -35.271979 1352.086 1.0019371</code></pre>
 <p>If, for example, we wanted the only quantiles included to be 10% and
 90%, and for only the parameters included to be <code>mu</code> and
 <code>tau</code>, we would specify that like this:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu_tau_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'summary': object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mu_tau_summary</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'mu_tau_summary' not found</code></pre>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mu_tau_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mu_tau_summary</span><span class="op">)</span></span></code></pre></div>
+<pre><code>        mean   se_mean       sd       10%      90%    n_eff     Rhat
+mu  8.095883 0.1063969 5.064017 1.8547907 14.36239 2265.336 1.000768
+tau 6.293739 0.1450688 5.373570 0.9052414 13.12377 1372.075 1.000562</code></pre>
 <p>Since <code>mu_tau_summary</code> is a matrix we can pull out columns
 using their names:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu_tau_80pct</span> <span class="op">&lt;-</span> <span class="va">mu_tau_summary</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10%"</span>, <span class="st">"90%"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code>Error: object 'mu_tau_summary' not found</code></pre>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mu_tau_80pct</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'mu_tau_80pct' not found</code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mu_tau_80pct</span> <span class="op">&lt;-</span> <span class="va">mu_tau_summary</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"10%"</span>, <span class="st">"90%"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mu_tau_80pct</span><span class="op">)</span></span></code></pre></div>
+<pre><code>          10%      90%
+mu  1.8547907 14.36239
+tau 0.9052414 13.12377</code></pre>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -284,32 +335,25 @@ columns corresponding to the number of sampler parameters and the column
 names provide the parameter names. The optional argument inc_warmup
 (defaulting to <code>TRUE</code>) indicates whether to include the
 warmup period.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sampler_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_sampler_params</a></span><span class="op">(</span><span class="va">fit</span>, inc_warmup <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_sampler_params': object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sampler_params_chain1</span> <span class="op">&lt;-</span> <span class="va">sampler_params</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<pre><code>Error: object 'sampler_params' not found</code></pre>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">sampler_params_chain1</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'sampler_params_chain1' not found</code></pre>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sampler_params</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_sampler_params</a></span><span class="op">(</span><span class="va">fit</span>, inc_warmup <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">sampler_params_chain1</span> <span class="op">&lt;-</span> <span class="va">sampler_params</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">sampler_params_chain1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] "accept_stat__" "stepsize__"    "treedepth__"   "n_leapfrog__" 
+[5] "divergent__"   "energy__"     </code></pre>
 <p>To do things like calculate the average value of
 <code>accept_stat__</code> for each chain (or the maximum value of
 <code>treedepth__</code> for each chain if using the NUTS algorithm,
 etc.) the <code>sapply</code> function is useful as it will apply the
 same function to each component of <code>sampler_params</code>:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mean_accept_stat_by_chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"accept_stat__"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'sampler_params' not found</code></pre>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mean_accept_stat_by_chain</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'mean_accept_stat_by_chain' not found</code></pre>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">max_treedepth_by_chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"treedepth__"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'sampler_params' not found</code></pre>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">max_treedepth_by_chain</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'max_treedepth_by_chain' not found</code></pre>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mean_accept_stat_by_chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"accept_stat__"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mean_accept_stat_by_chain</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] 0.8228008 0.9521825 0.9379850 0.8681285</code></pre>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">max_treedepth_by_chain</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">sampler_params</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">x</span><span class="op">[</span>, <span class="st">"treedepth__"</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">max_treedepth_by_chain</span><span class="op">)</span></span></code></pre></div>
+<pre><code>[1] 4 4 4 4</code></pre>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -317,18 +361,36 @@ same function to each component of <code>sampler_params</code>:</p>
 </h2>
 <p>The Stan program itself is also stored in the stanfit object and can
 be accessed using <code>get_stancode</code>:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">code</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_stancode</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_stancode': object 'fit' not found</code></pre>
 <p>The object <code>code</code> is a single string and is not very
 intelligible when printed:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">code</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'code' not found</code></pre>
+<pre><code>[1] "data {\n  int&lt;lower=0&gt; J;          // number of schools\n  array[J] real y;               // estimated treatment effects\n  array[J] real&lt;lower=0&gt; sigma;  // s.e. of effect estimates\n}\nparameters {\n  real mu;\n  real&lt;lower=0&gt; tau;\n  vector[J] eta;\n}\ntransformed parameters {\n  vector[J] theta;\n  theta = mu + tau * eta;\n}\nmodel {\n  target += normal_lpdf(eta | 0, 1);\n  target += normal_lpdf(y | theta, sigma);\n}"
+attr(,"model_name2")
+[1] "schools"</code></pre>
 <p>A readable version can be printed using <code>cat</code>:</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="va">code</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'code' not found</code></pre>
+<pre><code>data {
+  int&lt;lower=0&gt; J;          // number of schools
+  array[J] real y;               // estimated treatment effects
+  array[J] real&lt;lower=0&gt; sigma;  // s.e. of effect estimates
+}
+parameters {
+  real mu;
+  real&lt;lower=0&gt; tau;
+  vector[J] eta;
+}
+transformed parameters {
+  vector[J] theta;
+  theta = mu + tau * eta;
+}
+model {
+  target += normal_lpdf(eta | 0, 1);
+  target += normal_lpdf(y | theta, sigma);
+}</code></pre>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -338,15 +400,23 @@ intelligible when printed:</p>
 with one component per chain. Each component is itself a (named) list
 containing the initial values for each parameter for the corresponding
 chain:</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">inits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_inits</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_inits': object 'fit' not found</code></pre>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">inits_chain1</span> <span class="op">&lt;-</span> <span class="va">inits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<pre><code>Error: object 'inits' not found</code></pre>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">inits_chain1</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error: object 'inits_chain1' not found</code></pre>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">inits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stanfit-class.html">get_inits</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="va">inits_chain1</span> <span class="op">&lt;-</span> <span class="va">inits</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">inits_chain1</span><span class="op">)</span></span></code></pre></div>
+<pre><code>$mu
+[1] -1.805984
+
+$tau
+[1] 3.709496
+
+$eta
+[1] -0.8315136  0.7793653  0.3112285 -1.2241347  1.9311699 -1.7715798 -1.0577400
+[8]  1.3319387
+
+$theta
+[1] -4.8904808  1.0850681 -0.6514836 -6.3469073  5.3576824 -8.3776523 -5.7296666
+[8]  3.1348370</code></pre>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -354,9 +424,9 @@ chain:</p>
 </h2>
 <p>The <code>get_seed</code> function returns the (P)RNG seed as an
 integer:</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/stanfit-class.html">get_seed</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_seed': object 'fit' not found</code></pre>
+<pre><code>[1] 346871191</code></pre>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -364,9 +434,13 @@ integer:</p>
 </h2>
 <p>The <code>get_elapsed_time</code> function returns a matrix with the
 warmup and sampling times for each chain:</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="../reference/stanfit-class.html">get_elapsed_time</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'get_elapsed_time': object 'fit' not found</code></pre>
+<pre><code>        warmup sample
+chain:1  0.022  0.018
+chain:2  0.022  0.027
+chain:3  0.027  0.026
+chain:4  0.022  0.021</code></pre>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
