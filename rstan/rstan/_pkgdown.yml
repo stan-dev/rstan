@@ -45,6 +45,6 @@ articles:
       based calibration.
     contents:
       - rstan
-      - stanfit_objects
+      - stanfit-objects
       - external
       - SBC
