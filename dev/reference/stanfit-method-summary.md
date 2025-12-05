@@ -76,8 +76,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 3e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 1: Gradient evaluation took 4e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -94,9 +94,9 @@ fit <- stan(model_code = ecode)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 1:                0.006 seconds (Sampling)
-#> Chain 1:                0.012 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.005 seconds (Warm-up)
+#> Chain 1:                0.005 seconds (Sampling)
+#> Chain 1:                0.01 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -119,9 +119,9 @@ fit <- stan(model_code = ecode)
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.006 seconds (Warm-up)
+#> Chain 2:  Elapsed Time: 0.005 seconds (Warm-up)
 #> Chain 2:                0.005 seconds (Sampling)
-#> Chain 2:                0.011 seconds (Total)
+#> Chain 2:                0.01 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -144,9 +144,9 @@ fit <- stan(model_code = ecode)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.006 seconds (Warm-up)
+#> Chain 3:  Elapsed Time: 0.005 seconds (Warm-up)
 #> Chain 3:                0.005 seconds (Sampling)
-#> Chain 3:                0.011 seconds (Total)
+#> Chain 3:                0.01 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -175,42 +175,42 @@ fit <- stan(model_code = ecode)
 #> Chain 4: 
 s <- summary(fit, probs = c(0.1, 0.9))
 s$summary  # all chaines merged
-#>           mean    se_mean        sd        10%       90%    n_eff      Rhat
-#> y[1]  1.002613 0.01835231 0.9807767  0.1136825  2.364517 2856.005 0.9997273
-#> y[2]  1.021541 0.02185917 1.0419919  0.1211635  2.324770 2272.278 1.0012315
-#> lp__ -3.122314 0.03506663 1.1292094 -4.5617387 -2.116804 1036.957 1.0009056
+#>            mean    se_mean        sd        10%       90%     n_eff     Rhat
+#> y[1]  0.9595214 0.01819913 0.9581889  0.1054167  2.159105 2772.0503 1.000208
+#> y[2]  0.9816504 0.01882405 0.9677815  0.1013469  2.232863 2643.1905 1.000009
+#> lp__ -3.1484041 0.03789293 1.1233914 -4.6473975 -2.117413  878.9128 1.001904
 s$c_summary  # individual chains
 #> , , chains = chain:1
 #> 
 #>          stats
-#> parameter       mean        sd         10%       90%
-#>      y[1]  0.9846447 0.8879088  0.14156529  2.286021
-#>      y[2]  0.9794331 0.9806301  0.09451098  2.250496
-#>      lp__ -3.0964163 1.1156421 -4.56092285 -2.108688
+#> parameter       mean        sd        10%       90%
+#>      y[1]  0.9986302 0.9678030  0.1078815  2.232374
+#>      y[2]  0.9767451 0.9441381  0.1024321  2.237703
+#>      lp__ -3.1136490 1.0916640 -4.6080260 -2.112247
 #> 
 #> , , chains = chain:2
 #> 
 #>          stats
-#> parameter      mean        sd        10%       90%
-#>      y[1]  1.044494 1.0251767  0.1287719  2.503673
-#>      y[2]  1.019454 0.9513040  0.1459870  2.237624
-#>      lp__ -3.047046 0.9963802 -4.2953768 -2.121551
+#> parameter       mean        sd        10%       90%
+#>      y[1]  0.9039287 0.8824154  0.1171884  2.018244
+#>      y[2]  0.9613771 0.9842030  0.1082879  2.286797
+#>      lp__ -3.1312855 1.1349815 -4.4844423 -2.117125
 #> 
 #> , , chains = chain:3
 #> 
 #>          stats
 #> parameter       mean        sd         10%       90%
-#>      y[1]  1.0008474 0.9777855  0.09455245  2.391080
-#>      y[2]  0.9965311 1.0605187  0.12263733  2.252994
-#>      lp__ -3.1305049 1.1071382 -4.57698837 -2.100179
+#>      y[1]  0.9667037 0.9991372  0.09625611  2.198628
+#>      y[2]  1.0474490 0.9950988  0.11646897  2.343141
+#>      lp__ -3.1101334 1.0805761 -4.52121870 -2.104319
 #> 
 #> , , chains = chain:4
 #> 
 #>          stats
-#> parameter       mean       sd        10%       90%
-#>      y[1]  0.9804651 1.025950  0.1037339  2.260858
-#>      y[2]  1.0907465 1.160920  0.1076011  2.603155
-#>      lp__ -3.2152872 1.275162 -4.8367761 -2.129478
+#> parameter       mean        sd         10%       90%
+#>      y[1]  0.9688230 0.9782246  0.10038614  2.197503
+#>      y[2]  0.9410304 0.9447339  0.06700093  2.115310
+#>      lp__ -3.2385485 1.1803231 -4.83945038 -2.149419
 #> 
 # }
 ```
