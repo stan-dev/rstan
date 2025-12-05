@@ -55,6 +55,6 @@ jobs:
       - name: Deploy to GitHub pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          clean: true
+          clean: false
           branch: gh-pages
           folder: rstan/rstan/docs
