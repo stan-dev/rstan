@@ -100,7 +100,7 @@
                         <h4 data-toc-skip class="author">Stan
 Development Team</h4>
             
-            <h4 data-toc-skip class="date">2025-12-04</h4>
+            <h4 data-toc-skip class="date">2025-12-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/new-pkgdown-theme/vignettes/rstan.Rmd" class="external-link"><code>vignettes/rstan.Rmd</code></a></small>
       <div class="d-none name"><code>rstan.Rmd</code></div>
@@ -440,7 +440,7 @@ mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
 tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
 lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
 
-Samples were drawn using NUTS(diag_e) at Thu Dec  4 21:34:36 2025.
+Samples were drawn using NUTS(diag_e) at Fri Dec  5 01:17:27 2025.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -504,7 +504,7 @@ scalars, RStan treats vectors of length one as scalars. However,
 consider a model with a <code>data</code> block defined as</p>
 <pre><code>data {                
   int&lt;lower=1&gt; N;      
-  real y[N];
+  array[N] real y;
 } </code></pre>
 <p>in which <code>N</code> can be <span class="math inline">\(1\)</span>
 as a special case. So if we know that <code>N</code> is always larger
@@ -570,7 +570,7 @@ post-warmup draws per chain=1000, total post-warmup draws=4000.
 mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
 tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
 
-Samples were drawn using NUTS(diag_e) at Thu Dec  4 21:34:36 2025.
+Samples were drawn using NUTS(diag_e) at Fri Dec  5 01:17:27 2025.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -815,7 +815,7 @@ arguments can be fed.</p>
 <code class="sourceCode R"><span><span class="va">ocode</span> <span class="op">&lt;-</span> <span class="st">"</span></span>
 <span><span class="st">  data {</span></span>
 <span><span class="st">    int&lt;lower=1&gt; N;</span></span>
-<span><span class="st">    real y[N];</span></span>
+<span><span class="st">    array[N] real y;</span></span>
 <span><span class="st">  } </span></span>
 <span><span class="st">  parameters {</span></span>
 <span><span class="st">    real mu;</span></span>
@@ -826,21 +826,7 @@ arguments can be fed.</p>
 <span><span class="st">"</span></span>
 <span></span>
 <span><span class="va">sm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/stan_model.html">stan_model</a></span><span class="op">(</span>model_code <span class="op">=</span> <span class="va">ocode</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in stanc(file = file, model_code = model_code, model_name = model_name, : 0
-Syntax error in 'string', line 3, column 11 to column 12, parsing error:
-   -------------------------------------------------
-     1:    data {
-     2:      int&lt;lower=1&gt; N;
-     3:      real y[N];
-                    ^
-     4:    }
-     5:    parameters {
-   -------------------------------------------------
-
-Ill-formed declaration. ";" expected after variable declaration.
-It looks like you are trying to use the old array syntax.
-Please use the new syntax:
-array[N] real y;</code></pre>
+<pre><code>Trying to compile a simple C file</code></pre>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -848,7 +834,23 @@ array[N] real y;</code></pre>
 <pre><code>[1] 0.1636837</code></pre>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stanmodel-method-optimizing.html">optimizing</a></span><span class="op">(</span><span class="va">sm</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y2</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y2</span><span class="op">)</span><span class="op">)</span>, hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Error in h(simpleError(msg, call)): error in evaluating the argument 'object' in selecting a method for function 'optimizing': object 'sm' not found</code></pre>
+<pre><code>$par
+       mu 
+0.1636837 
+
+$value
+[1] -23.63411
+
+$return_code
+[1] 0
+
+$hessian
+    mu
+mu -20
+
+$theta_tilde
+            mu
+[1,] 0.1636837</code></pre>
 </div>
 <div class="section level3">
 <h3 id="model-compilation">Model Compilation<a class="anchor" aria-label="anchor" href="#model-compilation"></a>
@@ -912,24 +914,6 @@ equally important to use a different chain ID (argument
 numbers generated in Stan for all chains are essentially independent.
 This is handled automatically (internally) when <span class="math inline">\(`cores` &gt; 1\)</span>.</p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="working-with-cmdstan">Working with CmdStan<a class="anchor" aria-label="anchor" href="#working-with-cmdstan"></a>
-</h2>
-<p>The <strong>rstan</strong> package provides some functions for
-creating data for and reading output from CmdStan, the command line
-interface to Stan.</p>
-<p>First, when Stan reads data or initial values, it supports a subset
-of the syntax of R dump data formats. So if we use the <code>dump</code>
-function in base R to prepare data, Stan might not be able to read the
-contents. The <code>stan_rdump</code> function in <strong>rstan</strong>
-is designed to dump the data from R to a format that is supported by
-Stan, with semantics that are very similar to the <code>dump</code>
-function.</p>
-<p>Second, the <code>read_stan_csv</code> function creates a stanfit
-object from reading the CSV files generated by CmdStan. The resulting
-stanfit object is compatible with the various methods for diagnostics
-and posterior analysis.</p>
 </div>
 <div class="section level2">
 <h2 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>

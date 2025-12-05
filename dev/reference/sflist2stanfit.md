@@ -123,9 +123,9 @@ f1 <- stan(fit = foo, data = foo_data, chains = 1, seed = seed, chain_id = 1)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.012 seconds (Warm-up)
+#> Chain 1:  Elapsed Time: 0.011 seconds (Warm-up)
 #> Chain 1:                0.009 seconds (Sampling)
-#> Chain 1:                0.021 seconds (Total)
+#> Chain 1:                0.02 seconds (Total)
 #> Chain 1: 
 f2 <- stan(fit = foo, data = foo_data, chains = 2, seed = seed, chain_id = 2:3) 
 #> 
@@ -174,9 +174,9 @@ f2 <- stan(fit = foo, data = foo_data, chains = 2, seed = seed, chain_id = 2:3)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.011 seconds (Warm-up)
+#> Chain 3:  Elapsed Time: 0.01 seconds (Warm-up)
 #> Chain 3:                0.012 seconds (Sampling)
-#> Chain 3:                0.023 seconds (Total)
+#> Chain 3:                0.022 seconds (Total)
 #> Chain 3: 
 f12 <- sflist2stanfit(list(f1, f2)) 
 
