@@ -115,9 +115,9 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.01 seconds (Warm-up)
-#> Chain 1:                0.01 seconds (Sampling)
-#> Chain 1:                0.02 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.011 seconds (Warm-up)
+#> Chain 1:                0.011 seconds (Sampling)
+#> Chain 1:                0.022 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -141,8 +141,8 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.011 seconds (Warm-up)
-#> Chain 2:                0.011 seconds (Sampling)
-#> Chain 2:                0.022 seconds (Total)
+#> Chain 2:                0.012 seconds (Sampling)
+#> Chain 2:                0.023 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -165,9 +165,9 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.011 seconds (Warm-up)
-#> Chain 3:                0.011 seconds (Sampling)
-#> Chain 3:                0.022 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.012 seconds (Warm-up)
+#> Chain 3:                0.012 seconds (Sampling)
+#> Chain 3:                0.024 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
