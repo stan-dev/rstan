@@ -459,7 +459,7 @@ excode <- '
   parameters {
     real mu;
     real<lower=0, upper=10> sigma;
-    vector[2] z[3];
+    array[3] vector[2] z;
     real<lower=0> alpha;
   }
   model {
