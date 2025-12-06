@@ -76,8 +76,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 4e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+#> Chain 1: Gradient evaluation took 3e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -119,9 +119,9 @@ fit <- stan(model_code = ecode)
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.005 seconds (Warm-up)
+#> Chain 2:  Elapsed Time: 0.006 seconds (Warm-up)
 #> Chain 2:                0.005 seconds (Sampling)
-#> Chain 2:                0.01 seconds (Total)
+#> Chain 2:                0.011 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
