@@ -146,8 +146,8 @@ schools <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.037 seconds (Warm-up)
-#> Chain 2:                0.016 seconds (Sampling)
-#> Chain 2:                0.053 seconds (Total)
+#> Chain 2:                0.017 seconds (Sampling)
+#> Chain 2:                0.054 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
@@ -196,8 +196,8 @@ schools <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.049 seconds (Warm-up)
-#> Chain 4:                0.028 seconds (Sampling)
-#> Chain 4:                0.077 seconds (Total)
+#> Chain 4:                0.027 seconds (Sampling)
+#> Chain 4:                0.076 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 50 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
