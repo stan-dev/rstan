@@ -1,0 +1,50 @@
+url: https://mc-stan.org/rstan
+
+destination: "../.."
+
+development:
+  mode: auto
+
+template:
+  package: pkgdownconfig
+
+navbar:
+  title: "rstan"
+
+  structure:
+    left: [home, vignettes, functions, news, pkgs, stan]
+    right: [search, bluesky, forum, github, lightswitch]
+
+  components:
+    pkgs:
+      text: Other Packages
+      menu:
+        - text: bayesplot
+          href: https://mc-stan.org/bayesplot
+        - text: cmdstanr
+          href: https://mc-stan.org/cmdstanr
+        - text: loo
+          href: https://mc-stan.org/loo
+        - text: posterior
+          href: https://mc-stan.org/posterior
+        - text: projpred
+          href: https://mc-stan.org/projpred
+        - text: rstanarm
+          href: https://mc-stan.org/rstanarm
+        - text: rstantools
+          href: https://mc-stan.org/rstantools
+        - text: shinystan
+          href: https://mc-stan.org/shinystan
+
+articles:
+  - title: "Using the RStan package"
+    desc: >
+      These vignettes provide an introduction to fitting a model in
+      RStan, extracting the important contents from fitted model objects,
+      including external C++ code in a Stan program, and performing simulation
+      based calibration.
+    contents:
+      - rstan
+      - stanfit-objects
+      - external
+      - SBC

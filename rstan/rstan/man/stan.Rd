@@ -2,7 +2,7 @@
 \alias{stan}
 \title{Fit a model with Stan}
 \description{
-\if{html}{\figure{stanlogo.png}{options: width="25" alt="https://mc-stan.org/about/logo/"}}
+\if{html}{\figure{logo.svg}{options: width="25" alt="https://mc-stan.org/about/logo/"}}
 Fit a model defined in the Stan modeling language and
 return the fitted result as an instance of \code{stanfit}.
 }
@@ -459,7 +459,7 @@ excode <- '
   parameters {
     real mu;
     real<lower=0, upper=10> sigma;
-    vector[2] z[3];
+    array[3] vector[2] z;
     real<lower=0> alpha;
   }
   model {
