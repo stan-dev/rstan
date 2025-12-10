@@ -275,8 +275,8 @@ fit <- stan(model_code = ecode, iter = 10, chains = 1)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 4e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+#> Chain 1: Gradient evaluation took 3e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -330,8 +330,8 @@ fit2 <- stan(fit = fit)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 1e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+#> Chain 2: Gradient evaluation took 2e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -412,7 +412,7 @@ print(fit2)
 #> y[2]  0.97    0.02 0.98  0.02  0.25  0.65  1.40  3.53  2527    1
 #> lp__ -3.18    0.04 1.15 -6.26 -3.66 -2.81 -2.33 -2.03  1013    1
 #> 
-#> Samples were drawn using NUTS(diag_e) at Wed Dec 10 00:54:29 2025.
+#> Samples were drawn using NUTS(diag_e) at Wed Dec 10 22:33:25 2025.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
@@ -517,7 +517,7 @@ print(exfit)
 #> alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   426 0.99
 #> lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   124 1.02
 #> 
-#> Samples were drawn using NUTS(diag_e) at Wed Dec 10 00:43:35 2025.
+#> Samples were drawn using NUTS(diag_e) at Wed Dec 10 22:22:27 2025.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
