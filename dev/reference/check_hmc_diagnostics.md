@@ -146,8 +146,8 @@ schools <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.037 seconds (Warm-up)
-#> Chain 2:                0.017 seconds (Sampling)
-#> Chain 2:                0.054 seconds (Total)
+#> Chain 2:                0.016 seconds (Sampling)
+#> Chain 2:                0.053 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
