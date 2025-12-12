@@ -69,8 +69,8 @@ f <- sampling(m, iter = 300)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 2e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 1: Gradient evaluation took 1e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -187,7 +187,7 @@ f2
 #>       mean se_mean   sd  2.5%   25%  50%  75% 97.5% n_eff Rhat
 #> y_rep 0.15    0.08 1.43 -2.57 -0.79 0.08 1.07  2.83   352    1
 #> 
-#> Samples were drawn using  at Wed Dec 10 22:39:08 2025.
+#> Samples were drawn using  at Fri Dec 12 09:56:19 2025.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
