@@ -165,8 +165,8 @@ fit <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.039 seconds (Warm-up)
-#> Chain 4:                0.028 seconds (Sampling)
+#> Chain 4:  Elapsed Time: 0.038 seconds (Warm-up)
+#> Chain 4:                0.029 seconds (Sampling)
 #> Chain 4:                0.067 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 125 divergent transitions after warmup. See
