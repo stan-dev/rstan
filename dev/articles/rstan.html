@@ -95,7 +95,7 @@
                         <h4 data-toc-skip class="author">Stan
 Development Team</h4>
             
-            <h4 data-toc-skip class="date">2025-12-18</h4>
+            <h4 data-toc-skip class="date">2025-12-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/develop/vignettes/rstan.Rmd" class="external-link"><code>vignettes/rstan.Rmd</code></a></small>
       <div class="d-none name"><code>rstan.Rmd</code></div>
@@ -435,7 +435,7 @@ mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
 tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
 lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
 
-Samples were drawn using NUTS(diag_e) at Thu Dec 18 16:59:39 2025.
+Samples were drawn using NUTS(diag_e) at Wed Dec 24 14:46:22 2025.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -537,7 +537,7 @@ posterior median for all the parameters as well as <code>lp__</code>
 <pre><code>'pars' not specified. Showing first 10 parameters by default.</code></pre>
 <pre><code>ci_level: 0.8 (80% intervals)</code></pre>
 <pre><code>outer_level: 0.95 (95% intervals)</code></pre>
-<p><img src="rstan_files/figure-html/stanfit-plot-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="rstan_files/figure-html/stanfit-plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>The optional <code>plotfun</code> argument can be used to select
 among the various available plots. See
 <code><a href="../reference/stanfit-method-plot.html">help("plot,stanfit-method")</a></code>.</p>
@@ -547,7 +547,7 @@ the posterior draws. If we include the warmup draws by setting
 different from the post-warmup phase:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stanfit-method-traceplot.html">traceplot</a></span><span class="op">(</span><span class="va">fit1</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>, <span class="st">"tau"</span><span class="op">)</span>, inc_warmup <span class="op">=</span> <span class="cn">TRUE</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="rstan_files/figure-html/stanfit-traceplot-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="rstan_files/figure-html/stanfit-traceplot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>To assess the convergence of the Markov chains, in addition to
 visually inspecting traceplots we can calculate the split <span class="math inline">\(\hat{R}\)</span> statistic. Split <span class="math inline">\(\hat{R}\)</span> is an updated version of the
 <span class="math inline">\(\hat{R}\)</span> statistic proposed in <span class="citation">Gelman and Rubin (1992)</span> that is based on
@@ -565,7 +565,7 @@ post-warmup draws per chain=1000, total post-warmup draws=4000.
 mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
 tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
 
-Samples were drawn using NUTS(diag_e) at Thu Dec 18 16:59:39 2025.
+Samples were drawn using NUTS(diag_e) at Wed Dec 24 14:46:22 2025.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -697,7 +697,7 @@ tails or near the mode:</p>
 <pre><code>Warning in par(usr): argument 1 does not name a graphical parameter
 Warning in par(usr): argument 1 does not name a graphical parameter
 Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
-<p><img src="rstan_files/figure-html/pairs-plot-1.png" class="r-plt" width="672" style="display: block; margin: auto;"></p>
+<p><img src="rstan_files/figure-html/pairs-plot-1.png" class="r-plt" alt="" width="672" style="display: block; margin: auto;"></p>
 <p>In the plot above, the marginal distribution of each selected
 parameter is included as a histogram along the diagonal. By default,
 draws with below-median <code>accept_stat__</code> (MCMC proposal
