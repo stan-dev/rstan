@@ -105,8 +105,8 @@ f1 <- stan(fit = foo, data = foo_data, chains = 1, seed = seed, chain_id = 1)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 3e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 1: Gradient evaluation took 4e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -156,8 +156,8 @@ f2 <- stan(fit = foo, data = foo_data, chains = 2, seed = seed, chain_id = 2:3)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 2e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 3: Gradient evaluation took 3e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -174,9 +174,9 @@ f2 <- stan(fit = foo, data = foo_data, chains = 2, seed = seed, chain_id = 2:3)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.01 seconds (Warm-up)
+#> Chain 3:  Elapsed Time: 0.011 seconds (Warm-up)
 #> Chain 3:                0.012 seconds (Sampling)
-#> Chain 3:                0.022 seconds (Total)
+#> Chain 3:                0.023 seconds (Total)
 #> Chain 3: 
 f12 <- sflist2stanfit(list(f1, f2)) 
 
