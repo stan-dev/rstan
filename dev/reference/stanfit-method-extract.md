@@ -116,8 +116,8 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
 #> Chain 1:  Elapsed Time: 0.012 seconds (Warm-up)
-#> Chain 1:                0.013 seconds (Sampling)
-#> Chain 1:                0.025 seconds (Total)
+#> Chain 1:                0.012 seconds (Sampling)
+#> Chain 1:                0.024 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -165,9 +165,9 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.012 seconds (Warm-up)
+#> Chain 3:  Elapsed Time: 0.013 seconds (Warm-up)
 #> Chain 3:                0.013 seconds (Sampling)
-#> Chain 3:                0.025 seconds (Total)
+#> Chain 3:                0.026 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -190,9 +190,9 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.012 seconds (Warm-up)
+#> Chain 4:  Elapsed Time: 0.013 seconds (Warm-up)
 #> Chain 4:                0.014 seconds (Sampling)
-#> Chain 4:                0.026 seconds (Total)
+#> Chain 4:                0.027 seconds (Total)
 #> Chain 4: 
 
 ## extract alpha and beta with 'permuted = TRUE' 
