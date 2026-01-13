@@ -102,8 +102,8 @@ schools <- stan_demo("eight_schools")
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 8e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#> Chain 1: Gradient evaluation took 6e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -120,9 +120,9 @@ schools <- stan_demo("eight_schools")
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.041 seconds (Warm-up)
-#> Chain 1:                0.021 seconds (Sampling)
-#> Chain 1:                0.062 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.04 seconds (Warm-up)
+#> Chain 1:                0.02 seconds (Sampling)
+#> Chain 1:                0.06 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 2).
@@ -171,8 +171,8 @@ schools <- stan_demo("eight_schools")
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
 #> Chain 3:  Elapsed Time: 0.037 seconds (Warm-up)
-#> Chain 3:                0.024 seconds (Sampling)
-#> Chain 3:                0.061 seconds (Total)
+#> Chain 3:                0.023 seconds (Sampling)
+#> Chain 3:                0.06 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 4).
@@ -195,9 +195,9 @@ schools <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.049 seconds (Warm-up)
-#> Chain 4:                0.028 seconds (Sampling)
-#> Chain 4:                0.077 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.048 seconds (Warm-up)
+#> Chain 4:                0.027 seconds (Sampling)
+#> Chain 4:                0.075 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 50 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
