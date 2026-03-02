@@ -95,7 +95,7 @@
                         <h4 data-toc-skip class="author">Stan
 Development Team</h4>
             
-            <h4 data-toc-skip class="date">2026-02-23</h4>
+            <h4 data-toc-skip class="date">2026-03-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/develop/vignettes/rstan.Rmd" class="external-link"><code>vignettes/rstan.Rmd</code></a></small>
       <div class="d-none name"><code>rstan.Rmd</code></div>
@@ -435,7 +435,7 @@ mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
 tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
 lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
 
-Samples were drawn using NUTS(diag_e) at Mon Feb 23 20:34:15 2026.
+Samples were drawn using NUTS(diag_e) at Mon Mar  2 16:45:40 2026.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -565,7 +565,7 @@ post-warmup draws per chain=1000, total post-warmup draws=4000.
 mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
 tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
 
-Samples were drawn using NUTS(diag_e) at Mon Feb 23 20:34:15 2026.
+Samples were drawn using NUTS(diag_e) at Mon Mar  2 16:45:40 2026.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -746,7 +746,7 @@ R to ensure they are working properly. For example,</p>
 <span><span class="fu"><a href="../reference/expose_stan_functions.html">expose_stan_functions</a></span><span class="op">(</span><span class="fu"><a href="../reference/stanc.html">stanc</a></span><span class="op">(</span>model_code <span class="op">=</span> <span class="va">model_code</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Trying to compile a simple C file</code></pre>
 <pre><code>Running /opt/R/4.5.2/lib/R/bin/R CMD SHLIB foo.c
-using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’
+using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
 gcc -std=gnu2x -I"/opt/R/4.5.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
 In file included from &lt;command-line&gt;:
 /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:3:10: fatal error: stdexcept: No such file or directory
