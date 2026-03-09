@@ -305,8 +305,8 @@ fit2 <- stan(fit = fit)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 1e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+#> Chain 1: Gradient evaluation took 3e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -374,8 +374,8 @@ fit2 <- stan(fit = fit)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
 #> Chain 3:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 3:                0.006 seconds (Sampling)
-#> Chain 3:                0.012 seconds (Total)
+#> Chain 3:                0.007 seconds (Sampling)
+#> Chain 3:                0.013 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -408,11 +408,11 @@ print(fit2)
 #> post-warmup draws per chain=1000, total post-warmup draws=4000.
 #> 
 #>       mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
-#> y[1]  0.97    0.02 0.96  0.03  0.29  0.67  1.33  3.49  2442    1
-#> y[2]  0.97    0.02 0.98  0.02  0.25  0.65  1.40  3.53  2527    1
-#> lp__ -3.18    0.04 1.15 -6.26 -3.66 -2.81 -2.33 -2.03  1013    1
+#> y[1]  0.99    0.02 0.96  0.03  0.29  0.70  1.38  3.62  2355    1
+#> y[2]  1.03    0.02 1.03  0.02  0.28  0.71  1.45  3.73  2221    1
+#> lp__ -3.16    0.04 1.13 -6.24 -3.64 -2.81 -2.32 -2.03   931    1
 #> 
-#> Samples were drawn using NUTS(diag_e) at Thu Mar  5 18:26:36 2026.
+#> Samples were drawn using NUTS(diag_e) at Mon Mar  9 21:02:38 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
@@ -425,20 +425,20 @@ traceplot(fit2)
 ainfo <- get_adaptation_info(fit2)
 cat(ainfo[[1]])
 #> # Adaptation terminated
-#> # Step size = 0.451482
+#> # Step size = 0.690643
 #> # Diagonal elements of inverse mass matrix:
-#> # 1.94064, 1.47263
+#> # 1.34747, 1.50591
 seed <- get_seed(fit2)
 sp <- get_sampler_params(fit2)
 sp2 <- get_sampler_params(fit2, inc_warmup = FALSE)
 head(sp[[1]])
 #>      accept_stat__ stepsize__ treedepth__ n_leapfrog__ divergent__ energy__
-#> [1,]    0.85668223  0.5000000           3            7           0 5.982343
-#> [2,]    0.00000000 11.0855637           0            1           1 4.450772
-#> [3,]    0.01895122  1.7342383           1            1           0 3.228623
-#> [4,]    0.99434495  0.1721508           3           15           0 6.398959
-#> [5,]    0.99599624  0.2236939           4           15           0 4.716405
-#> [6,]    0.98383246  0.3401307           3           15           0 3.594524
+#> [1,]     0.1066173  1.0000000           2            3           0 8.541471
+#> [2,]     0.0000000  2.8345670           0            1           1 8.379200
+#> [3,]     1.0000000  0.2960130           3            7           0 4.617168
+#> [4,]     0.9998809  0.3185794           2            3           0 4.096524
+#> [5,]     0.9927056  0.4396810           3           15           0 4.735810
+#> [6,]     1.0000000  0.6817650           2            3           0 3.924150
 
 lp <- log_prob(fit, c(1, 2))
 grad <- grad_log_prob(fit, c(1, 2))
@@ -517,7 +517,7 @@ print(exfit)
 #> alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   426 0.99
 #> lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   124 1.02
 #> 
-#> Samples were drawn using NUTS(diag_e) at Thu Mar 05 18:16:14 2026.
+#> Samples were drawn using NUTS(diag_e) at Mon Mar 09 20:51:29 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).

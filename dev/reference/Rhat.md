@@ -69,9 +69,9 @@ Paul-Christian Burkner and Aki Vehtari
 # pretend these draws came from five actual Markov Chins
 sims <- matrix(rnorm(500), nrow = 100, ncol = 5)
 Rhat(sims)
-#> [1] 1.003043
+#> [1] 1.002301
 ess_bulk(sims)
-#> [1] 548.2329
+#> [1] 541.4361
 ess_tail(sims)
-#> [1] 488.97
+#> [1] 485.7733
 ```

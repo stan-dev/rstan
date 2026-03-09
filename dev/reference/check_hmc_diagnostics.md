@@ -102,8 +102,8 @@ schools <- stan_demo("eight_schools")
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 6e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#> Chain 1: Gradient evaluation took 7e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.07 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -120,9 +120,9 @@ schools <- stan_demo("eight_schools")
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.042 seconds (Warm-up)
-#> Chain 1:                0.022 seconds (Sampling)
-#> Chain 1:                0.064 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.034 seconds (Warm-up)
+#> Chain 1:                0.033 seconds (Sampling)
+#> Chain 1:                0.067 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 2).
@@ -145,15 +145,15 @@ schools <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.038 seconds (Warm-up)
-#> Chain 2:                0.017 seconds (Sampling)
-#> Chain 2:                0.055 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.035 seconds (Warm-up)
+#> Chain 2:                0.021 seconds (Sampling)
+#> Chain 2:                0.056 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 3e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 3: Gradient evaluation took 4e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -170,9 +170,9 @@ schools <- stan_demo("eight_schools")
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.039 seconds (Warm-up)
-#> Chain 3:                0.025 seconds (Sampling)
-#> Chain 3:                0.064 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.026 seconds (Warm-up)
+#> Chain 3:                0.018 seconds (Sampling)
+#> Chain 3:                0.044 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 4).
@@ -195,11 +195,11 @@ schools <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.051 seconds (Warm-up)
-#> Chain 4:                0.029 seconds (Sampling)
-#> Chain 4:                0.08 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.032 seconds (Warm-up)
+#> Chain 4:                0.021 seconds (Sampling)
+#> Chain 4:                0.053 seconds (Total)
 #> Chain 4: 
-#> Warning: There were 50 divergent transitions after warmup. See
+#> Warning: There were 55 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
 #> to find out why this is a problem and how to eliminate them.
 #> Warning: Examine the pairs() plot to diagnose sampling problems
@@ -212,7 +212,7 @@ schools <- stan_demo("eight_schools")
 check_hmc_diagnostics(schools)
 #> 
 #> Divergences:
-#> 50 of 4000 iterations ended with a divergence (1.25%).
+#> 55 of 4000 iterations ended with a divergence (1.375%).
 #> Try increasing 'adapt_delta' to remove the divergences.
 #> 
 #> Tree depth:
@@ -221,7 +221,7 @@ check_hmc_diagnostics(schools)
 #> Energy:
 #> E-BFMI indicated no pathological behavior.
 check_divergences(schools)
-#> 50 of 4000 iterations ended with a divergence (1.25%).
+#> 55 of 4000 iterations ended with a divergence (1.375%).
 #> Try increasing 'adapt_delta' to remove the divergences.
 check_treedepth(schools)
 #> 0 of 4000 iterations saturated the maximum tree depth of 10.

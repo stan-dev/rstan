@@ -321,6 +321,9 @@ f <- sampling(m, iter = 100)
 #> Chain 4:                0 seconds (Sampling)
 #> Chain 4:                0 seconds (Total)
 #> Chain 4: 
+#> Warning: The largest R-hat is 1.07, indicating chains have not mixed.
+#> Running the chains for more iterations may help. See
+#> https://mc-stan.org/misc/warnings.html#r-hat
 #> Warning: Bulk Effective Samples Size (ESS) is too low, indicating posterior means and medians may be unreliable.
 #> Running the chains for more iterations may help. See
 #> https://mc-stan.org/misc/warnings.html#bulk-ess
