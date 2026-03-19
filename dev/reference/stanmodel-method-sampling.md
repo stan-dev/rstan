@@ -187,12 +187,13 @@ An object of S4 class `stanfit` representing the fitted results. Slot
 ``` r
 # \dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
+#> recompiling to avoid crashing R session
 f <- sampling(m, iter = 100)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 3e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
+#> Chain 1: Gradient evaluation took 1e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
