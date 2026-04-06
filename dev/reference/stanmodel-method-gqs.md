@@ -69,8 +69,8 @@ f <- sampling(m, iter = 300)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 2e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 1: Gradient evaluation took 3e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -179,6 +179,9 @@ generated quantities {real y_rep = normal_rng(y, 1);}
 '
 m2 <- stan_model(model_code = mc)
 f2 <- gqs(m2, draws = as.matrix(f))
+#> 
+#>  Elapsed Time: 0 seconds (Generated Quantities)
+#> 
 f2
 #> Inference for Stan model: anon_model.
 #> 1 chains, each with iter=600; warmup=0; thin=1; 
@@ -187,7 +190,7 @@ f2
 #>       mean se_mean   sd  2.5%  25%  50%  75% 97.5% n_eff Rhat
 #> y_rep 0.07    0.08 1.31 -2.48 -0.8 0.09 1.01  2.44   304 1.01
 #> 
-#> Samples were drawn using  at Wed Mar 25 16:29:40 2026.
+#> Samples were drawn using  at Mon Apr  6 19:28:59 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).

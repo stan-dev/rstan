@@ -219,9 +219,9 @@ fit1 <- sampling(mod, data=list(N=N, y=y, mu_fixed=-1))
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.007 seconds (Warm-up)
+#> Chain 2:  Elapsed Time: 0.008 seconds (Warm-up)
 #> Chain 2:                0.007 seconds (Sampling)
-#> Chain 2:                0.014 seconds (Total)
+#> Chain 2:                0.015 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -296,8 +296,8 @@ fit2 <- sampling(mod, data=list(N=N, y=y, mu_fixed=0.5))
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
 #> Chain 1:  Elapsed Time: 0.007 seconds (Warm-up)
-#> Chain 1:                0.006 seconds (Sampling)
-#> Chain 1:                0.013 seconds (Total)
+#> Chain 1:                0.007 seconds (Sampling)
+#> Chain 1:                0.014 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -346,8 +346,8 @@ fit2 <- sampling(mod, data=list(N=N, y=y, mu_fixed=0.5))
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
 #> Chain 3:  Elapsed Time: 0.007 seconds (Warm-up)
-#> Chain 3:                0.006 seconds (Sampling)
-#> Chain 3:                0.013 seconds (Total)
+#> Chain 3:                0.007 seconds (Sampling)
+#> Chain 3:                0.014 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -396,9 +396,9 @@ fit3 <- sampling(mod, data=list(N=N, y=y, mu_fixed=0.6))
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.007 seconds (Warm-up)
+#> Chain 1:  Elapsed Time: 0.008 seconds (Warm-up)
 #> Chain 1:                0.006 seconds (Sampling)
-#> Chain 1:                0.013 seconds (Total)
+#> Chain 1:                0.014 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).

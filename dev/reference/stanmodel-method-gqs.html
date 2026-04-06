@@ -131,8 +131,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 2e-06 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 3e-06 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
@@ -241,6 +241,9 @@
 <span class="r-in"><span><span class="st">'</span></span></span>
 <span class="r-in"><span><span class="va">m2</span> <span class="op">&lt;-</span> <span class="fu"><a href="stan_model.html">stan_model</a></span><span class="op">(</span>model_code <span class="op">=</span> <span class="va">mc</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f2</span> <span class="op">&lt;-</span> <span class="fu">gqs</span><span class="op">(</span><span class="va">m2</span>, draws <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Elapsed Time: 0 seconds (Generated Quantities)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="va">f2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Inference for Stan model: anon_model.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 chains, each with iter=600; warmup=0; thin=1; </span>
@@ -249,7 +252,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>       mean se_mean   sd  2.5%  25%  50%  75% 97.5% n_eff Rhat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> y_rep 0.07    0.08 1.31 -2.48 -0.8 0.09 1.01  2.44   304 1.01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using  at Wed Mar 25 16:29:40 2026.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Samples were drawn using  at Mon Apr  6 19:28:59 2026.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> For each parameter, n_eff is a crude measure of effective sample size,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> and Rhat is the potential scale reduction factor on split chains (at </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> convergence, Rhat=1).</span>
