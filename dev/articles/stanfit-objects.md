@@ -8,6 +8,7 @@ full-rank). Throughout the document we’ll use the stanfit object
 obtained from fitting the Eight Schools example model:
 
 ``` r
+
 library(rstan)
 fit <- stan_demo("eight_schools", refresh = 0)
 ```
@@ -15,6 +16,7 @@ fit <- stan_demo("eight_schools", refresh = 0)
     Trying to compile a simple C file
 
 ``` r
+
 class(fit)
 ```
 
@@ -37,6 +39,7 @@ The `extract` function (with its default arguments) returns a list with
 named components corresponding to the model parameters.
 
 ``` r
+
 list_of_draws <- extract(fit)
 print(names(list_of_draws))
 ```
@@ -50,18 +53,21 @@ iterations times the number of chains) and the draws for `theta` will be
 a matrix, with each column corresponding to one of the eight components:
 
 ``` r
+
 head(list_of_draws$mu)
 ```
 
     [1]  5.22198096 10.25431910 11.48222576  0.07918646 -3.30819970 13.58606549
 
 ``` r
+
 head(list_of_draws$tau)
 ```
 
     [1]  5.996095  5.909190  2.802256 11.933985  5.368431  6.944701
 
 ``` r
+
 head(list_of_draws$theta)
 ```
 
@@ -90,6 +96,7 @@ The `as.matrix`, `as.data.frame`, and `as.array` functions can also be
 used to retrieve the posterior draws from a stanfit object:
 
 ``` r
+
 matrix_of_draws <- as.matrix(fit)
 print(colnames(matrix_of_draws))
 ```
@@ -100,6 +107,7 @@ print(colnames(matrix_of_draws))
     [19] "lp__"    
 
 ``` r
+
 df_of_draws <- as.data.frame(fit)
 print(colnames(df_of_draws))
 ```
@@ -110,6 +118,7 @@ print(colnames(df_of_draws))
     [19] "lp__"    
 
 ``` r
+
 array_of_draws <- as.array(fit)
 print(dimnames(array_of_draws))
 ```
@@ -132,6 +141,7 @@ method returns the draws from each chain separately and so has an
 additional dimension:
 
 ``` r
+
 print(dim(matrix_of_draws))
 print(dim(df_of_draws))
 print(dim(array_of_draws))
@@ -147,6 +157,7 @@ optional argument `pars` (a character vector) can be used if only a
 subset of the parameters is desired, for example:
 
 ``` r
+
 mu_and_theta1 <- as.matrix(fit, pars = c("mu", "theta[1]"))
 head(mu_and_theta1)
 ```
@@ -168,6 +179,7 @@ Summary statistics are obtained using the `summary` function. The object
 returned is a list with two components:
 
 ``` r
+
 fit_summary <- summary(fit)
 print(names(fit_summary))
 ```
@@ -191,6 +203,7 @@ Carlo standard error (`se_mean`), the effective sample size (`n_eff`),
 and the R-hat statistic (`Rhat`).
 
 ``` r
+
 print(fit_summary$summary)
 ```
 
@@ -240,6 +253,7 @@ If, for example, we wanted the only quantiles included to be 10% and
 specify that like this:
 
 ``` r
+
 mu_tau_summary <- summary(fit, pars = c("mu", "tau"), probs = c(0.1, 0.9))$summary
 print(mu_tau_summary)
 ```
@@ -252,6 +266,7 @@ Since `mu_tau_summary` is a matrix we can pull out columns using their
 names:
 
 ``` r
+
 mu_tau_80pct <- mu_tau_summary[, c("10%", "90%")]
 print(mu_tau_80pct)
 ```
@@ -275,6 +290,7 @@ provide the parameter names. The optional argument inc_warmup
 (defaulting to `TRUE`) indicates whether to include the warmup period.
 
 ``` r
+
 sampler_params <- get_sampler_params(fit, inc_warmup = FALSE)
 sampler_params_chain1 <- sampler_params[[1]]
 colnames(sampler_params_chain1)
@@ -289,6 +305,7 @@ using the NUTS algorithm, etc.) the `sapply` function is useful as it
 will apply the same function to each component of `sampler_params`:
 
 ``` r
+
 mean_accept_stat_by_chain <- sapply(sampler_params, function(x) mean(x[, "accept_stat__"]))
 print(mean_accept_stat_by_chain)
 ```
@@ -296,6 +313,7 @@ print(mean_accept_stat_by_chain)
     [1] 0.8228008 0.9521825 0.9379850 0.8681285
 
 ``` r
+
 max_treedepth_by_chain <- sapply(sampler_params, function(x) max(x[, "treedepth__"]))
 print(max_treedepth_by_chain)
 ```
@@ -310,6 +328,7 @@ The Stan program itself is also stored in the stanfit object and can be
 accessed using `get_stancode`:
 
 ``` r
+
 code <- get_stancode(fit)
 ```
 
@@ -317,6 +336,7 @@ The object `code` is a single string and is not very intelligible when
 printed:
 
 ``` r
+
 print(code)
 ```
 
@@ -327,6 +347,7 @@ print(code)
 A readable version can be printed using `cat`:
 
 ``` r
+
 cat(code)
 ```
 
@@ -358,6 +379,7 @@ component per chain. Each component is itself a (named) list containing
 the initial values for each parameter for the corresponding chain:
 
 ``` r
+
 inits <- get_inits(fit)
 inits_chain1 <- inits[[1]]
 print(inits_chain1)
@@ -384,6 +406,7 @@ print(inits_chain1)
 The `get_seed` function returns the (P)RNG seed as an integer:
 
 ``` r
+
 print(get_seed(fit))
 ```
 
@@ -397,11 +420,12 @@ The `get_elapsed_time` function returns a matrix with the warmup and
 sampling times for each chain:
 
 ``` r
+
 print(get_elapsed_time(fit))
 ```
 
             warmup sample
-    chain:1  0.022  0.018
+    chain:1  0.021  0.017
     chain:2  0.021  0.026
-    chain:3  0.027  0.026
+    chain:3  0.026  0.025
     chain:4  0.022  0.021

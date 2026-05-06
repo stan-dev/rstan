@@ -65,18 +65,21 @@ Assuming the above is compile to a code `stanmodel` named
 `beta_binomial`, we can then call the `sbc` function
 
 ``` r
+
 output <- sbc(beta_binomial, data = list(N = 10, a = 1, b = 1), M = 500, refresh = 0)
 ```
 
 At which point, we can then call
 
 ``` r
+
 print(output)
 ```
 
     ## 0 chains had divergent transitions after warmup
 
 ``` r
+
 plot(output, bins = 10) # it is best to specify the bins argument yourself
 ```
 

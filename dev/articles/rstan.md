@@ -180,6 +180,7 @@ its arguments, and give the page number in The Stan Development Team
 (2016) where the function is discussed.
 
 ``` r
+
 lookup("dnorm")
 ```
 
@@ -200,6 +201,7 @@ lookup("dnorm")
     553     T;real
 
 ``` r
+
 lookup(dwilcox)   # no corresponding Stan function
 ```
 
@@ -218,6 +220,7 @@ those declared in the `data` block of the Stan program. Here is the data
 for the Eight Schools example:
 
 ``` r
+
 schools_data <- list(
   J = 8,
   y = c(28,  8, -3,  7, -1,  1, 18, 12),
@@ -233,6 +236,7 @@ a file rather than to directly enter the numbers in the R script.
 Next, we can call the `stan` function to draw posterior samples:
 
 ``` r
+
 library(rstan)
 fit1 <- stan(
   file = "schools.stan",  # Stan program
@@ -281,6 +285,7 @@ shows a summary of the parameters from the Eight Schools model using the
 `print` method:
 
 ``` r
+
 print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
 ```
 
@@ -301,7 +306,7 @@ print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
     tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
     lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
 
-    Samples were drawn using NUTS(diag_e) at Wed Apr 22 11:47:35 2026.
+    Samples were drawn using NUTS(diag_e) at Wed May  6 21:57:02 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -397,6 +402,7 @@ median for all the parameters as well as `lp__` (the log of posterior
 density function up to an additive constant):
 
 ``` r
+
 plot(fit1)
 ```
 
@@ -418,6 +424,7 @@ background color of the warmup area is different from the post-warmup
 phase:
 
 ``` r
+
 traceplot(fit1, pars = c("mu", "tau"), inc_warmup = TRUE, nrow = 2)
 ```
 
@@ -432,6 +439,7 @@ estimated \\\hat{R}\\ for each parameter is included as one of the
 columns in the output from the `summary` and `print` methods.
 
 ``` r
+
 print(fit1, pars = c("mu", "tau"))
 ```
 
@@ -443,7 +451,7 @@ print(fit1, pars = c("mu", "tau"))
     mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
     tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
 
-    Samples were drawn using NUTS(diag_e) at Wed Apr 22 11:47:35 2026.
+    Samples were drawn using NUTS(diag_e) at Wed May  6 21:57:02 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -466,6 +474,7 @@ sampling problems using functions in the **rstan** package. The
 the performance of the sampler:
 
 ``` r
+
 # all chains combined
 sampler_params <- get_sampler_params(fit1, inc_warmup = TRUE)
 summary(do.call(rbind, sampler_params), digits = 2)
@@ -487,6 +496,7 @@ summary(do.call(rbind, sampler_params), digits = 2)
      Max.   :63  
 
 ``` r
+
 # each chain separately
 lapply(sampler_params, summary, digits = 2)
 ```
@@ -580,6 +590,7 @@ of whether any sampling difficulties are occurring in the tails or near
 the mode:
 
 ``` r
+
 pairs(fit1, pars = c("mu", "tau", "lp__"), las = 1)
 ```
 
@@ -623,6 +634,7 @@ R global environment so that they can be tested in R to ensure they are
 working properly. For example,
 
 ``` r
+
 model_code <-
 '
 functions {
@@ -637,17 +649,18 @@ expose_stan_functions(stanc(model_code = model_code))
 
     Trying to compile a simple C file
 
-    Running /opt/R/4.5.3/lib/R/bin/R CMD SHLIB foo.c
+    Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c
     using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
-    gcc -std=gnu2x -I"/opt/R/4.5.3/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
+    gcc -std=gnu2x -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
     In file included from <command-line>:
     /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:3:10: fatal error: stdexcept: No such file or directory
         3 | #include <stdexcept>
           |          ^~~~~~~~~~~
     compilation terminated.
-    make: *** [/opt/R/4.5.3/lib/R/etc/Makeconf:202: foo.o] Error 1
+    make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:190: foo.o] Error 1
 
 ``` r
+
 standard_normal_rng()
 ```
 
@@ -703,6 +716,7 @@ We first create an object of class `"stanmodel"` and then use the
 `optimizing` method, to which data and other arguments can be fed.
 
 ``` r
+
 ocode <- "
   data {
     int<lower=1> N;
@@ -722,16 +736,19 @@ sm <- stan_model(model_code = ocode)
     Trying to compile a simple C file
 
 ``` r
+
 y2 <- rnorm(20)
 ```
 
 ``` r
+
 mean(y2)
 ```
 
     [1] 0.1636837
 
 ``` r
+
 optimizing(sm, data = list(y = y2, N = length(y2)), hessian = TRUE)
 ```
 
@@ -839,10 +856,10 @@ essentially independent. This is handled automatically (internally) when
 ------------------------------------------------------------------------
 
 Chambers, John M. 2008. *Software for Data Analysis : Programming with
-r*. New York: Springer.
+r*. Springer.
 
 Gelman, Andrew, J. B. Carlin, Hal S. Stern, and Donald B. Rubin. 2003.
-*Bayesian Data Analysis*. 2nd ed. London: CRC Press.
+*Bayesian Data Analysis*. 2nd ed. CRC Press.
 
 Gelman, Andrew, and Donald B. Rubin. 1992. “Inference from Iterative
 Simulation Using Multiple Sequences.” *Statistical Science* 7 (4):
@@ -858,20 +875,20 @@ a Bayesian Modelling Framework: Concepts, Structure, and Extensibility.”
 
 Neal, Radford. 2011. “MCMC Using Hamiltonian Dynamics.” In *Handbook of
 Markov Chain Monte Carlo*, edited by Steve Brooks, Andrew Gelman, Galin
-L. Jones, and Xiao-Li Meng, 116–62. Chapman; Hall/CRC.
+L. Jones, and Xiao-Li Meng. Chapman; Hall/CRC.
 
 R Core Team. 2014. *R: A Language and Environment for Statistical
-Computing*. Vienna, Austria: R Foundation for Statistical Computing.
+Computing*. R Foundation for Statistical Computing.
 <https://www.R-project.org/>.
 
 Rubin, Donald B. 1981. “Estimation in Parallel Randomized Experiments.”
 *Journal of Educational and Behavioral Statistics* 6 (4): 377–401.
 
-The Stan Development Team. 2014. “RStan Getting Started.”
+The Stan Development Team. 2014. *RStan Getting Started*.
 <https://mc-stan.org/>.
 
-———. 2016. *Stan Modeling Language: User’s Guide and Reference Manual*.
-<https://mc-stan.org>.
+The Stan Development Team. 2016. *Stan Modeling Language: User’s Guide
+and Reference Manual*. <https://mc-stan.org>.
 
 Vehtari, A., and J. Ojanen. 2012. “A Survey of Bayesian Predictive
 Methods for Model Assessment, Selection and Comparison.” *Statistics

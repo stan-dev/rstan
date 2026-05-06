@@ -44,6 +44,7 @@ capabilities of the C++ toolchain to provide the function definitions in
 C++. For example, this program produces a parser error by default
 
 ``` r
+
 mc <- 
 '
 functions { int fib(int n); }
@@ -57,6 +58,7 @@ the `stan_model` function, and define a `fib` function in the named C++
 header file, then it will parse and compile
 
 ``` r
+
 stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
            includes = paste0('\n#include "', 
                              file.path(getwd(), 'fib.hpp'), '"\n'))
@@ -223,6 +225,7 @@ a function whose arguments are real numbers (or at least one of the
 arguments is). For example,
 
 ``` r
+
 mc <- 
 '
 functions { real sinc(real x); }
@@ -235,24 +238,24 @@ stan_model(model_code = mc, model_name = "external", allow_undefined = TRUE,
 
     ## Trying to compile a simple C file
 
-    ## Running /opt/R/4.5.3/lib/R/bin/R CMD SHLIB foo.c
+    ## Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c
     ## using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
-    ## gcc -std=gnu2x -I"/opt/R/4.5.3/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
+    ## gcc -std=gnu2x -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
     ## In file included from <command-line>:
     ## /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:3:10: fatal error: stdexcept: No such file or directory
     ##     3 | #include <stdexcept>
     ##       |          ^~~~~~~~~~~
     ## compilation terminated.
-    ## make: *** [/opt/R/4.5.3/lib/R/etc/Makeconf:202: foo.o] Error 1
+    ## make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:190: foo.o] Error 1
 
     ## Error in `compileCode()`:
-    ## ! ; int Option = 0; Scalar = double]’
-    ## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:0:   required from ‘double stan::mcmc::dense_e_metric<Model, BaseRNG>::T(stan::mcmc::dense_e_point&) [with Model = model261d67852838_external_namespace::model261d67852838_external; BaseRNG = boost::random::mixmax_engine<17, 36, 0>]’
+    ## !  int Option = 0; Scalar = double]’
+    ## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:0:   required from ‘double stan::mcmc::dense_e_metric<Model, BaseRNG>::T(stan::mcmc::dense_e_point&) [with Model = model289745a5189c_external_namespace::model289745a5189c_external; BaseRNG = boost::random::mixmax_engine<17, 36, 0>]’
     ## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:0:   required from here
     ## /home/runner/work/_temp/Library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:654:74: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits<double>::type’ {aka ‘__m128d’} [-Wignored-attributes]
     ##   654 |   return internal::first_aligned<int(unpacket_traits<DefaultPacketType>::alignment),Derived>(m);
     ##       |                                                                          ^~~~~~~~~
-    ## make: *** [/opt/R/4.5.3/lib/R/etc/Makeconf:211: file261d370def6.o] Error 1
+    ## make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:199: file2897269a3dc3.o] Error 1
 
     ## Error in `sink()`:
     ## ! invalid connection
@@ -294,82 +297,86 @@ call the `stanc` function in the **rstan** package with
 case, I first did
 
 ``` r
+
 try(readLines(stanc(model_code = mc, allow_undefined = TRUE)$cppcode))
 ```
 
-    ## Warning in file(con, "r"): expanded path length 13648 would be too long for
+    ## Warning in file(con, "r"): expanded path length 13631 would be too long for
     ## #ifndef USE_STANC3
     ## #define USE_STANC3
     ## #endif
     ## // Code generated by stanc v2.38.0-103-g543515f
     ## #include <stan/model/model_header.hpp>
-    ## namespace model261d1a8eaa4e_file261d5f01ff24_namespace {
+    ## namespace model289726494f1d_file28974f18ff1_namespace {
     ## using stan::model::model_base_crtp;
     ## using namespace stan::math;
     ## stan::math::profile_map profiles__;
     ## static constexpr std::array<const char*, 2> locations_array__ =
     ##   {" (found before start of program)",
-    ##   " (in 'file261d5f01ff24', line 2, column 19 to column 45)"};
-    ## class model261d1a8eaa4e_file261d5f01ff24 final : public model_base_crtp<model261d1a8eaa4e_file261d5f01ff24> {
+    ##   " (in 'file28974f18ff1', line 2, column 19 to column 45)"};
+    ## class model289726494f1d_file28974f18ff1 final : public model_base_crtp<model289726494f1d_file28974f18ff1> {
     ## private:
     ##   double sinc_pi;
     ## public:
-    ##   ~model261d1a8eaa4e_file261d5f01ff24() {}
-    ##   model261d1a8eaa4e_file261d5f01ff24(stan::io::var_context& context__,
-    ##                                      unsigned int random_seed__ = 0,
-    ##                                      std::ostream* pstream__ = nullptr)
+    ##   ~model289726494f1d_file28974f18ff1() {}
+    ##   model289726494f1d_file28974f18ff1(stan::io::var_context& context__,
+    ##                                     unsigned int random_seed__ = 0,
+    ##                                     std::ostream* pstream__ = nullptr)
     ##       : model_base_crtp(0) {
     ##     int current_statement__ = 0;
-    ##     // suppress unused var warning [... truncated]
-    ## Warning in file(con, "r"): expanded path length 13648 would be too long for
+    ##     // suppress unused var warning
+    ##     (vo [... truncated]
+    ## Warning in file(con, "r"): expanded path length 13631 would be too long for
     ## #ifndef USE_STANC3
     ## #define USE_STANC3
     ## #endif
     ## // Code generated by stanc v2.38.0-103-g543515f
     ## #include <stan/model/model_header.hpp>
-    ## namespace model261d1a8eaa4e_file261d5f01ff24_namespace {
+    ## namespace model289726494f1d_file28974f18ff1_namespace {
     ## using stan::model::model_base_crtp;
     ## using namespace stan::math;
     ## stan::math::profile_map profiles__;
     ## static constexpr std::array<const char*, 2> locations_array__ =
     ##   {" (found before start of program)",
-    ##   " (in 'file261d5f01ff24', line 2, column 19 to column 45)"};
-    ## class model261d1a8eaa4e_file261d5f01ff24 final : public model_base_crtp<model261d1a8eaa4e_file261d5f01ff24> {
+    ##   " (in 'file28974f18ff1', line 2, column 19 to column 45)"};
+    ## class model289726494f1d_file28974f18ff1 final : public model_base_crtp<model289726494f1d_file28974f18ff1> {
     ## private:
     ##   double sinc_pi;
     ## public:
-    ##   ~model261d1a8eaa4e_file261d5f01ff24() {}
-    ##   model261d1a8eaa4e_file261d5f01ff24(stan::io::var_context& context__,
-    ##                                      unsigned int random_seed__ = 0,
-    ##                                      std::ostream* pstream__ = nullptr)
+    ##   ~model289726494f1d_file28974f18ff1() {}
+    ##   model289726494f1d_file28974f18ff1(stan::io::var_context& context__,
+    ##                                     unsigned int random_seed__ = 0,
+    ##                                     std::ostream* pstream__ = nullptr)
     ##       : model_base_crtp(0) {
     ##     int current_statement__ = 0;
-    ##     // suppress unused var warning [... truncated]
+    ##     // suppress unused var warning
+    ##     (vo [... truncated]
 
     ## Warning in file(con, "r"): cannot open file '#ifndef USE_STANC3
     ## #define USE_STANC3
     ## #endif
     ## // Code generated by stanc v2.38.0-103-g543515f
     ## #include <stan/model/model_header.hpp>
-    ## namespace model261d1a8eaa4e_file261d5f01ff24_namespace {
+    ## namespace model289726494f1d_file28974f18ff1_namespace {
     ## using stan::model::model_base_crtp;
     ## using namespace stan::math;
     ## stan::math::profile_map profiles__;
     ## static constexpr std::array<const char*, 2> locations_array__ =
     ##   {" (found before start of program)",
-    ##   " (in 'file261d5f01ff24', line 2, column 19 to column 45)"};
-    ## class model261d1a8eaa4e_file261d5f01ff24 final : public model_base_crtp<model261d1a8eaa4e_file261d5f01ff24> {
+    ##   " (in 'file28974f18ff1', line 2, column 19 to column 45)"};
+    ## class model289726494f1d_file28974f18ff1 final : public model_base_crtp<model289726494f1d_file28974f18ff1> {
     ## private:
     ##   double sinc_pi;
     ## public:
-    ##   ~model261d1a8eaa4e_file261d5f01ff24() {}
-    ##   model261d1a8eaa4e_file261d5f01ff24(stan::io::var_context& context__,
-    ##                                      unsigned int random_seed__ = 0,
-    ##                                      std::ostream* pstream__ = nullptr)
+    ##   ~model289726494f1d_file28974f18ff1() {}
+    ##   model289726494f1d_file28974f18ff1(stan::io::var_context& context__,
+    ##                                     unsigned int random_seed__ = 0,
+    ##                                     std::ostream* pstream__ = nullptr)
     ##       : model_base_crtp(0) {
     ##     int current_statement__ = 0;
     ##     // suppress unused var warning
-    ##     (void) current_statement__ [... truncated]
+    ##     (void) current_statement__;
+    ##     us [... truncated]
 
     ## Error in file(con, "r") : cannot open the connection
 
