@@ -30,5 +30,5 @@ Reference Manual*. <https://mc-stan.org/>.
 
 ``` r
   stan_version() 
-#> [1] "2.38.0"
+#> [1] "2.39.0"
 ```

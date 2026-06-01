@@ -435,7 +435,7 @@ mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
 tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
 lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
 
-Samples were drawn using NUTS(diag_e) at Mon Jun  1 21:43:24 2026.
+Samples were drawn using NUTS(diag_e) at Mon Jun  1 23:41:50 2026.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -565,7 +565,7 @@ post-warmup draws per chain=1000, total post-warmup draws=4000.
 mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
 tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
 
-Samples were drawn using NUTS(diag_e) at Mon Jun  1 21:43:24 2026.
+Samples were drawn using NUTS(diag_e) at Mon Jun  1 23:41:50 2026.
 For each parameter, n_eff is a crude measure of effective sample size,
 and Rhat is the potential scale reduction factor on split chains (at 
 convergence, Rhat=1).</code></pre>
@@ -829,23 +829,8 @@ arguments can be fed.</p>
 <pre><code>[1] 0.1636837</code></pre>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/stanmodel-method-optimizing.html">optimizing</a></span><span class="op">(</span><span class="va">sm</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y2</span>, N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y2</span><span class="op">)</span><span class="op">)</span>, hessian <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code>$par
-       mu 
-0.1636837 
-
-$value
-[1] -23.63411
-
-$return_code
-[1] 0
-
-$hessian
-    mu
-mu -20
-
-$theta_tilde
-            mu
-[1,] 0.1636837</code></pre>
+<pre><code> [1m [33mError [39m in `dimnames(x) &lt;- dn`: [22m
+ [33m! [39m length of 'dimnames' [2] not equal to array extent</code></pre>
 </div>
 <div class="section level3">
 <h3 id="model-compilation">Model Compilation<a class="anchor" aria-label="anchor" href="#model-compilation"></a>
