@@ -187,7 +187,6 @@ An object of S4 class `stanfit` representing the fitted results. Slot
 ``` r
 # \dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
-#> recompiling to avoid crashing R session
 f <- sampling(m, iter = 100)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
