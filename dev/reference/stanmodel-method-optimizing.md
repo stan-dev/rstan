@@ -206,6 +206,7 @@ data, it returns `NULL`.
 ``` r
 # \dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
+#> recompiling to avoid crashing R session
 f <- optimizing(m, hessian = TRUE)
 #> Error in dimnames(x) <- dn: length of 'dimnames' [2] not equal to array extent
 # }

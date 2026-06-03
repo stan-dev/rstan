@@ -44,3 +44,6 @@ repo](https://github.com/stan-dev/rstan/wiki/How-to-work-with-the-stan-submodule
 
 RStan is licensed under GPLv3. The Stan code packaged in RStan is
 licensed under new BSD.
+
+All contributions must follow the [Stan AI Contribution
+Policy](https://github.com/stan-dev/stan/wiki/AI-Contribution-Policy).
