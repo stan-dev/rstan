@@ -187,9 +187,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.038 seconds (Warm-up)
+#> Chain 3:  Elapsed Time: 0.037 seconds (Warm-up)
 #> Chain 3:                0.026 seconds (Sampling)
-#> Chain 3:                0.064 seconds (Total)
+#> Chain 3:                0.063 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 4).
