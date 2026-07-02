@@ -10,6 +10,7 @@ name: R-CMD-check
       - develop
       - experimental
       - StanHeaders_*
+      - module-test
   pull_request:
     branches:
       - develop
@@ -65,15 +66,6 @@ jobs:
           working-directory: rstan/rstan
           extra-packages: any::rcmdcheck, local::../../StanHeaders
 
-      - name: Remove symlinks on Windows
-        if: runner.os == 'Windows'
-        run: |
-          rm -Rf inst/include/src \
-            inst/include/mathlib \
-            inst/include/stan \
-            inst/include/libsundials || true
-        shell: bash
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           working-directory: StanHeaders
@@ -86,4 +78,3 @@ jobs:
           working-directory: rstan/rstan
         env:
           _R_CHECK_CRAN_INCOMING_: false
-
