@@ -10,3 +10,7 @@
 .*\.a$
 .*\.so$
 .*\.dll$
+
+install-github.R
+inst/doc/.install_extras
+vignettes/.install_extras
