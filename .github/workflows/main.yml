@@ -10,7 +10,6 @@ name: R-CMD-check
       - develop
       - experimental
       - StanHeaders_*
-      - module-test
   pull_request:
     branches:
       - develop
