@@ -306,7 +306,7 @@ print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
     tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
     lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
 
-    Samples were drawn using NUTS(diag_e) at Tue Jun 23 16:11:04 2026.
+    Samples were drawn using NUTS(diag_e) at Tue Jul  7 19:51:27 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -451,7 +451,7 @@ print(fit1, pars = c("mu", "tau"))
     mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
     tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
 
-    Samples were drawn using NUTS(diag_e) at Tue Jun 23 16:11:04 2026.
+    Samples were drawn using NUTS(diag_e) at Tue Jul  7 19:51:27 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -649,15 +649,15 @@ expose_stan_functions(stanc(model_code = model_code))
 
     Trying to compile a simple C file
 
-    Running /opt/R/4.6.0/lib/R/bin/R CMD SHLIB foo.c
+    Running /opt/R/4.6.1/lib/R/bin/R CMD SHLIB foo.c
     using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
-    gcc -std=gnu2x -I"/opt/R/4.6.0/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
+    gcc -std=gnu2x -I"/opt/R/4.6.1/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
     In file included from <command-line>:
     /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:3:10: fatal error: stdexcept: No such file or directory
         3 | #include <stdexcept>
           |          ^~~~~~~~~~~
     compilation terminated.
-    make: *** [/opt/R/4.6.0/lib/R/etc/Makeconf:190: foo.o] Error 1
+    make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:190: foo.o] Error 1
 
 ``` r
 

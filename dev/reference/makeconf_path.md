@@ -31,5 +31,5 @@ compilers, such as clang++ or later versions of g++.
 
 ``` r
 makeconf_path() 
-#> [1] "/opt/R/4.6.0/lib/R/etc/Makeconf"
+#> [1] "/opt/R/4.6.1/lib/R/etc/Makeconf"
 ```
