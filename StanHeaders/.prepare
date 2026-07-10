@@ -1,8 +1,0 @@
-#!/bin/sh
-
-# This script is called by the R-Universe CI when building the package
-# R-Universe does not automatically clone submodules, so we need to do it manually:
-# https://github.com/r-universe-org/help/issues/411
-
-git submodule update --init --recursive
-

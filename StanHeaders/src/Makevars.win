@@ -9,37 +9,23 @@ SHLIB_LDFLAGS = $(SHLIB_CXXLDFLAGS)
 SHLIB_LD = $(SHLIB_CXXLD)
 
 SUNDIALS_CVODES := \
-	$(wildcard cvodes/*.c) \
-	$(wildcard sundials/*.c) \
-	$(wildcard sunmatrix/band/[^f]*.c) \
-	$(wildcard sunmatrix/dense/[^f]*.c) \
-	$(wildcard sunlinsol/band/[^f]*.c) \
-	$(wildcard sunlinsol/dense/[^f]*.c) \
-	$(wildcard sunnonlinsol/newton/[^f]*.c) \
-	$(wildcard sunnonlinsol/fixedpoint/[^f]*.c)
+	$(wildcard math/lib/sundials_*/src/cvodes/*.c) \
+	$(wildcard math/lib/sundials_*/src/sundials/*.c) \
+	$(wildcard math/lib/sundials_*/src/sunmatrix/band/[^f]*.c) \
+	$(wildcard math/lib/sundials_*/src/sunmatrix/dense/[^f]*.c) \
+	$(wildcard math/lib/sundials_*/src/sunlinsol/band/[^f]*.c) \
+	$(wildcard math/lib/sundials_*/src/sunlinsol/dense/[^f]*.c) \
+	$(wildcard math/lib/sundials_*/src/sunnonlinsol/newton/[^f]*.c) \
+	$(wildcard math/lib/sundials_*/src/sunnonlinsol/fixedpoint/[^f]*.c)
 
 SUNDIALS_IDAS := \
-	$(wildcard idas/*.c) \
-	$(wildcard sundials/*.c) \
-	$(wildcard sunmatrix/band/[^f]*.c) \
-	$(wildcard sunmatrix/dense/[^f]*.c) \
-	$(wildcard sunlinsol/band/[^f]*.c) \
-	$(wildcard sunlinsol/dense/[^f]*.c) \
-	$(wildcard sunnonlinsol/newton/[^f]*.c) \
-	$(wildcard sunnonlinsol/fixedpoint/[^f]*.c)
+	$(wildcard math/lib/sundials_*/src/idas/*.c)
 
 SUNDIALS_KINSOL := \
-	$(wildcard kinsol/*.c) \
-	$(wildcard sundials/*.c) \
-	$(wildcard sunmatrix/band/[^f]*.c) \
-	$(wildcard sunmatrix/dense/[^f]*.c) \
-	$(wildcard sunlinsol/band/[^f]*.c) \
-	$(wildcard sunlinsol/dense/[^f]*.c) \
-	$(wildcard sunnonlinsol/newton/[^f]*.c) \
-	$(wildcard sunnonlinsol/fixedpoint/[^f]*.c)
+	$(wildcard math/lib/sundials_*/src/kinsol/*.c)
 
 SUNDIALS_NVECSERIAL := \
-	$(addprefix , nvector/serial/nvector_serial.c sundials/sundials_math.c)
+	$(wildcard math/lib/sundials_*/src/nvector/serial/nvector_serial.c)
 
 
 SOURCES = $(SUNDIALS_CVODES) $(SUNDIALS_IDAS) $(SUNDIALS_KINSOL) $(SUNDIALS_NVECSERIAL) init.c
@@ -47,6 +33,16 @@ OBJECTS_C = $(SOURCES:.c=.o)
 OBJECTS = $(OBJECTS_C:.cpp=.o)
 
 $(SHLIB): $(OBJECTS)
+$(OBJECTS): package
+
+package:
+	@mkdir -p ../inst/include
+	@cp -Rf stan/src ../inst/include/src
+	@cp -Rf math/stan ../inst/include/stan
+	@cp -Rf math/lib/sundials_*/include/* ../inst/include/
+	@cp -Rf math/lib/sundials_*/src/sundials .
 
 clean:
 	rm $(OBJECTS)
+	rm -rf ../inst/include/
+	rm -rf sundials
