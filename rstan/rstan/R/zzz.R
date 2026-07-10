@@ -27,9 +27,9 @@ OUT <- 0
     assign("stanc_ctx", V8::v8(), envir = topenv())
   } else {
     assign("stanc_ctx", QuickJSR::JSContext$new(), envir = topenv())
-    # Empty shims are needed for (unused) Intl calls in generated js
-    stanc_ctx$source(code="globalThis.Intl = { DateTimeFormat: { prototype: {}}}")
   }
+  # Empty shims are needed for (unused) Intl calls in generated js
+  stanc_ctx$source(code="globalThis.Intl = { DateTimeFormat: { prototype: {}}}")
 
   if (packageVersion("StanHeaders") == "2.26.28") {
     stanc_js <- system.file("exec", "stanc.js", package = "rstan", mustWork = TRUE)
