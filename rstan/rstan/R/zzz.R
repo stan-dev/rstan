@@ -22,10 +22,14 @@ OUT <- 0
 .onLoad <- function(libname, pkgname) {
   # avoid conflict between parallel and processx
   Sys.setenv(PROCESSX_NOTIFY_OLD_SIGCHLD = 1)
-  
+
   if (requireNamespace("V8", quietly = TRUE)) {
     assign("stanc_ctx", V8::v8(), envir = topenv())
-  } else assign("stanc_ctx", QuickJSR::JSContext$new(stack_size = 4 * 1024 * 1024), envir = topenv())
+  } else {
+    assign("stanc_ctx", QuickJSR::JSContext$new(), envir = topenv())
+    # Empty shims are needed for (unused) Intl calls in generated js
+    stanc_ctx$source(code="globalThis.Intl = { DateTimeFormat: { prototype: {}}}")
+  }
 
   if (packageVersion("StanHeaders") == "2.26.28") {
     stanc_js <- system.file("exec", "stanc.js", package = "rstan", mustWork = TRUE)
