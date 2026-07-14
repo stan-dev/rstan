@@ -1,0 +1,287 @@
+---
+
+name: Reverse Dependencies
+run-name: Reverse Dependencies (${{ inputs.package || 'StanHeaders' }}@${{ github.sha }})
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Check rstan or just StanHeaders (default is rstan)'
+        required: false
+        default: 'rstan'
+        type: choice
+        options:
+          - rstan
+          - StanHeaders
+      batch-size:
+        description: 'Number of packages to check in each batch (default is 3)'
+        required: false
+        default: 3
+        type: number
+      max-parallel:
+        description: 'Max number of parallel jobs to use for checking (default is 5)'
+        required: false
+        default: 5
+        type: number
+  push:
+    branches:
+      - revdeps-checking
+
+jobs:
+  prepare-library:
+    runs-on: ubuntu-latest
+    name: Build & Cache Package Dependencies
+    outputs:
+      deps_matrix: ${{ steps.dep-batches.outputs.deps_matrix }}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+
+      - name: Download recursive dependencies, batch dependencies to check
+        id: dep-batches
+        run: |
+          batch_size <- ${{ inputs.batch-size || 3 }}
+          pkg <- "${{ inputs.package || 'StanHeaders' }}"
+          
+          # Parallelise building as much as possible
+          options(Ncpus = parallel::detectCores())
+          Sys.setenv(MAKEFLAGS = paste0("-j", parallel::detectCores()))
+
+          # Initialise a standalone library
+          dir.create("/tmp/PakLibrary")
+          .libPaths(c("/tmp/PakLibrary", .libPaths()))
+          install.packages(c("pak", "rstantools"))
+
+          # Lookup and (attempt to) install all dependencies for reverse-dependencies
+          pkg_deps <- tools::package_dependencies(pkg, reverse = TRUE)[[pkg]]
+          rec_deps <- unique(do.call(c, tools::package_dependencies(pkg_deps, which = 'all')))
+          install.packages(rec_deps)
+
+          # Remaining packages will be bioconductor or other non-CRAN packages, install manually
+          rec_deps <- rec_deps[!(rec_deps %in% installed.packages()[,"Package"])]
+          rec_deps <- rec_deps[!(rec_deps %in% c("blavsam", "eggCountsExtra", "BRugs", "cmdstanr", "INLA"))]
+          download.file(
+            url = "https://inla.r-inla-download.org/R/stable/src/contrib/INLA_25.10.19.tar.gz",
+            destfile = "INLA_25.10.19.tar.gz",
+            mode = "wb"
+          )
+
+          pak::pak(c(
+            rec_deps,
+            "github::stan-dev/cmdstanr",
+            "github::ecmerkle/blavsam",
+            "github::CraigWangStat/eggCountsExtra",
+            "local::./INLA_25.10.19.tar.gz"
+          ))
+
+          # Install dev versions last so that they're not used for any dependencies
+          pak::pak("local::./StanHeaders")
+          if (pkg == "rstan") {
+            pak::pak("local::./rstan/rstan")
+          }
+
+          # Split dependencies into requested batch size and
+          # restructure into format for actions 'matrix' argument
+          curr_deps <- split(pkg_deps, ceiling(seq_along(pkg_deps) / batch_size))
+          deps_matrix <- list()
+          for (i in seq_along(curr_deps)) {
+            deps_matrix[[i]] <- list(group = i, deps = jsonlite::toJSON(curr_deps[[i]]))
+          }
+          cat(paste0("deps_matrix=", jsonlite::toJSON(list(include = deps_matrix), auto_unbox = TRUE)),
+              file=Sys.getenv("GITHUB_OUTPUT"), append = TRUE)
+        shell: Rscript {0}
+
+      - name: Cache built packages
+        uses: actions/cache/save@v6
+        with:
+          path: /tmp/PakLibrary/
+          key: ${{ github.run_id }}
+
+  reverse-dependencies:
+    needs: prepare-library
+    runs-on: ubuntu-latest
+    name: Check Reverse Dependencies (Batch ${{ matrix.group }})
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ inputs.max-parallel || 5 }}
+      matrix: ${{ fromJson(needs.prepare-library.outputs.deps_matrix) }}
+    env:
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      _R_CHECK_FORCE_SUGGESTS_: false
+      R_LIBS_USER: /tmp/PakLibrary
+      NOT_CRAN:
+      _R_CHECK_CRAN_INCOMING_: false
+      _R_CHECK_CRAN_INCOMING_REMOTE_: false
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Restore built library
+        uses: actions/cache/restore@v6
+        with:
+          path: /tmp/PakLibrary/
+          key: ${{ github.run_id }}
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          
+      - name: Configure Makevars
+        run: |
+          mkdir -p ~/.R
+          cat <<EOF > ~/.R/Makevars
+          # Eigen warnings significantly bloat log size, so ignore
+          CXXFLAGS += -w
+          CXX17FLAGS += -w
+          EOF
+
+      - name: Run reverse-dependency checks
+        env:
+          R_LIBS_USER: /tmp/PakLibrary
+          NOT_CRAN:
+          _R_CHECK_CRAN_INCOMING_: false
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+        run: |
+          curr_deps <- jsonlite::fromJSON('${{ matrix.deps }}')
+
+          # Install any system dependencies needed for packages
+          pak::sysreqs_fix_installed(curr_deps)
+          system("sudo apt-get install -y pandoc")
+
+          dir.create("testdir")
+          download.packages(curr_deps, "testdir", repos = "https://cran.rstudio.com")
+          Sys.unsetenv("NOT_CRAN")
+          tools::check_packages_in_dir("testdir", check_args = "--as-cran --no-manual", Ncpus = 3)
+        shell: Rscript {0}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: checkresults-${{ matrix.group }}
+          path: |
+            testdir/**/00check.log
+            testdir/**/00install.out
+          compression-level: 9
+          retention-days: 1
+
+  summarise-results:
+    name: Summarise Results
+    needs: reverse-dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all results
+        uses: actions/download-artifact@v7
+        with:
+          path: checkresults
+          pattern: checkresults-*
+          merge-multiple: true
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+
+      - name: Generate results summary output
+        run: |
+          setwd("checkresults")
+          install.packages("knitr")
+
+          res <- tools::check_packages_in_dir_details(".")
+          all_pkgs <- gsub("^\\./(.*)\\.Rcheck", "\\1", list.dirs(".", recursive = FALSE))
+
+          install_failures <- unique(res$Package[res$Check == "whether package can be installed"])
+          check_failures <- unique(res$Package[res$Check %in% c("tests", "re-building of vignette outputs", "examples")])
+
+          summary_tbl <- knitr::kable(
+            data.frame(
+              "OK" = length(setdiff(all_pkgs, c(install_failures, check_failures))),
+              "Install Failed" = length(install_failures),
+              "Tests/Vignettes/Examples Failed" = length(check_failures),
+              check.names = FALSE
+            )
+          )
+
+          install_logs <- sapply(install_failures, \(pkg) {
+            paste0(c(
+              paste("###", pkg),
+              "<details>",
+              "<summary>Install Log</summary>",
+              "",
+              "```",
+              paste0(readLines(paste0(pkg, ".Rcheck/00install.out")), collapse = "\n"),
+              "```",
+              "",
+              "</details>\n"),
+              collapse = "\n"
+            )
+          }) |>
+            paste0(collapse = "\n")
+
+          check_logs <- sapply(check_failures, \(pkg) {
+            paste0(c(
+              paste("###", pkg),
+              "<details>",
+              "<summary>Check Log</summary>",
+              "",
+              "```",
+              paste0(readLines(paste0(pkg, ".Rcheck/00check.log")), collapse = "\n"),
+              "```",
+              "",
+              "</details>"),
+              collapse = "\n"
+            )
+          }) |>
+            paste0(collapse = "\n")
+            
+          all_logs <- sapply(all_pkgs, \(pkg) {
+              paste0(c(
+                paste0("### ", pkg),
+                "<details>",
+                "<summary>Install Log</summary>",
+                "",
+                "```",
+                paste0(readLines(paste0(pkg, ".Rcheck/00install.out")), collapse = "\n"),
+                "```",
+                "",
+                "</details>\n",
+                "<details>",
+                "<summary>Check Log</summary>",
+                "",
+                "```",
+                paste0(readLines(paste0(pkg, ".Rcheck/00check.log")), collapse = "\n"),
+                "```",
+                "",
+                "</details>\n"),
+                collapse = "\n"
+              )
+            }) |>
+              paste0(collapse = "\n")
+            
+
+          result_md <- paste0(c(
+            "# Reverse-Dependency Status",
+            "## Summary",
+            summary_tbl,
+            "## Install Failures",
+            install_logs,
+            "## Vignette/Test Failures",
+            check_logs,
+            "## All Results",
+            all_logs),
+            collapse = "\n"
+          )
+          cat(result_md, file = Sys.getenv("GITHUB_STEP_SUMMARY"), append = TRUE)
+        shell: Rscript {0}
+        
+      - name: Upload combined results
+        uses: actions/upload-artifact@v7
+        with:
+          name: all-logs
+          path: checkresults
+          compression-level: 9
