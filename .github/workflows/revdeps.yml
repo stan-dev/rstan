@@ -1,7 +1,7 @@
 ---
 
 name: Reverse Dependencies
-run-name: Reverse Dependencies (${{ inputs.package || 'StanHeaders' }}@${{ github.sha }})
+run-name: Reverse Dependencies (${{ inputs.package || 'rstan' }}@${{ github.sha }})
 on:
   workflow_dispatch:
     inputs:
@@ -23,9 +23,6 @@ on:
         required: false
         default: 5
         type: number
-  push:
-    branches:
-      - revdeps-checking
 
 jobs:
   prepare-library:
@@ -49,7 +46,7 @@ jobs:
         id: dep-batches
         run: |
           batch_size <- ${{ inputs.batch-size || 10 }}
-          pkg <- "${{ inputs.package || 'StanHeaders' }}"
+          pkg <- "${{ inputs.package || 'rstan' }}"
           
           # Parallelise building as much as possible
           options(Ncpus = parallel::detectCores())
@@ -226,7 +223,9 @@ jobs:
 
           check_logs <- sapply(check_failures, \(pkg) {
             paste0(c(
+              "",
               paste("###", pkg),
+              "",
               "<details>",
               "<summary>Check Log</summary>",
               "",
@@ -234,19 +233,19 @@ jobs:
               paste0(readLines(paste0(pkg, ".Rcheck/00check.log")), collapse = "\n"),
               "```",
               "",
-              "</details>"),
+              "</details>\n"),
               collapse = "\n"
             )
           }) |>
             paste0(collapse = "\n")
             
           result_md <- paste0(c(
-            "# Reverse-Dependency Status",
-            "## Summary",
+            "# Reverse-Dependency Status\n",
+            "## Summary\n",
             summary_tbl,
-            "## Install Failures",
+            "## Install Failure\ns",
             install_logs,
-            "## Vignette/Test Failures",
+            "## Vignette/Test Failures\n",
             check_logs),
             collapse = "\n"
           )
