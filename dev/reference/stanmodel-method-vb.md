@@ -175,8 +175,8 @@ f <- vb(m)
 #> Chain 1: 
 #> Chain 1: 
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 1e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+#> Chain 1: Gradient evaluation took 2e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
