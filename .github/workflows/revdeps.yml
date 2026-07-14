@@ -1,7 +1,7 @@
 ---
 
 name: Reverse Dependencies
-run-name: Reverse Dependencies (${{ inputs.package || 'rstan' }}@${{ github.sha }})
+run-name: Reverse Dependencies (${{ inputs.package || 'StanHeaders' }}@${{ github.sha }})
 on:
   workflow_dispatch:
     inputs:
@@ -49,7 +49,7 @@ jobs:
         id: dep-batches
         run: |
           batch_size <- ${{ inputs.batch-size || 10 }}
-          pkg <- "${{ inputs.package || 'rstan' }}"
+          pkg <- "${{ inputs.package || 'StanHeaders' }}"
           
           # Parallelise building as much as possible
           options(Ncpus = parallel::detectCores())
