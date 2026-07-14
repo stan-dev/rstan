@@ -1,7 +1,7 @@
 ---
 
 name: Reverse Dependencies
-run-name: Reverse Dependencies (${{ inputs.package || 'StanHeaders' }}@${{ github.sha }})
+run-name: Reverse Dependencies (${{ inputs.package || 'rstan' }}@${{ github.sha }})
 on:
   workflow_dispatch:
     inputs:
@@ -14,9 +14,9 @@ on:
           - rstan
           - StanHeaders
       batch-size:
-        description: 'Number of packages to check in each batch (default is 3)'
+        description: 'Number of packages to check in each batch (default is 10)'
         required: false
-        default: 3
+        default: 10
         type: number
       max-parallel:
         description: 'Max number of parallel jobs to use for checking (default is 5)'
@@ -48,8 +48,8 @@ jobs:
       - name: Download recursive dependencies, batch dependencies to check
         id: dep-batches
         run: |
-          batch_size <- ${{ inputs.batch-size || 3 }}
-          pkg <- "${{ inputs.package || 'StanHeaders' }}"
+          batch_size <- ${{ inputs.batch-size || 10 }}
+          pkg <- "${{ inputs.package || 'rstan' }}"
           
           # Parallelise building as much as possible
           options(Ncpus = parallel::detectCores())
@@ -196,7 +196,8 @@ jobs:
           all_pkgs <- gsub("^\\./(.*)\\.Rcheck", "\\1", list.dirs(".", recursive = FALSE))
 
           install_failures <- unique(res$Package[res$Check == "whether package can be installed"])
-          check_failures <- unique(res$Package[res$Check %in% c("tests", "re-building of vignette outputs", "examples")])
+          check_statuses <- c("tests", "re-building of vignette outputs", "examples", "examples with --run-donttest")
+          check_failures <- unique(res$Package[res$Check %in% check_statuses])
 
           summary_tbl <- knitr::kable(
             data.frame(
@@ -239,31 +240,6 @@ jobs:
           }) |>
             paste0(collapse = "\n")
             
-          all_logs <- sapply(all_pkgs, \(pkg) {
-              paste0(c(
-                paste0("### ", pkg),
-                "<details>",
-                "<summary>Install Log</summary>",
-                "",
-                "```",
-                paste0(readLines(paste0(pkg, ".Rcheck/00install.out")), collapse = "\n"),
-                "```",
-                "",
-                "</details>\n",
-                "<details>",
-                "<summary>Check Log</summary>",
-                "",
-                "```",
-                paste0(readLines(paste0(pkg, ".Rcheck/00check.log")), collapse = "\n"),
-                "```",
-                "",
-                "</details>\n"),
-                collapse = "\n"
-              )
-            }) |>
-              paste0(collapse = "\n")
-            
-
           result_md <- paste0(c(
             "# Reverse-Dependency Status",
             "## Summary",
@@ -271,9 +247,7 @@ jobs:
             "## Install Failures",
             install_logs,
             "## Vignette/Test Failures",
-            check_logs,
-            "## All Results",
-            all_logs),
+            check_logs),
             collapse = "\n"
           )
           cat(result_md, file = Sys.getenv("GITHUB_STEP_SUMMARY"), append = TRUE)
