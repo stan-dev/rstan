@@ -16,6 +16,10 @@ CxxFlags <- function(as_character = FALSE) {
     }
   }
 
+  if (utils::packageVersion("rstan") >= "2.36") {
+    CXXFLAGS <- paste(CXXFLAGS, "-DUSE_MIXMAX")
+  }
+
   if (isTRUE(as_character)) return(CXXFLAGS)
   cat(CXXFLAGS, " ")
   return(invisible(NULL))

@@ -12,4 +12,7 @@ cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_* inst/include/libsundia
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include/ || true
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
+# Overwrite default create_rng header with compatibility header at build time
+cp inst/include/create_rng_override.hpp inst/include/src/stan/services/util/create_rng.hpp || true
+
 exit $?
