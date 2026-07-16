@@ -64,7 +64,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
                                      paste0("std::vector<int>(", names(types), ".begin(), ",
                                                                  names(types), ".end())"),
                                      ifelse(complex_lists,
-                                            paste0("std::vector<complex<double>(", 
+                                            paste0("std::vector<complex<double>(",
                                                    names(types), ".begin(), ",
                                                    names(types), ".end())"),
                                             names(types)))), collapse = ", "), "); }")
@@ -88,14 +88,14 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
   }
   withr::with_makevars(
     c(
-      PKG_CXXFLAGS = CxxFlags(as_character = TRUE),
+      PKG_CXXFLAGS = paste(CxxFlags(as_character = TRUE), "-DUSE_MIXMAX"),
       PKG_LIBS = LdFlags(as_character = TRUE),
       USE_CXX17 = 1
     ),
-    Rcpp::cppFunction(code, 
+    Rcpp::cppFunction(code,
                       depends = c("StanHeaders", "RcppEigen", "BH"),
                       plugins = "cpp17",
-                      includes = incl, 
+                      includes = incl,
                       env = env, rebuild = rebuild, cacheDir = cacheDir,
                       showOutput = showOutput, verbose = verbose)
   )
@@ -106,4 +106,3 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
   }
   return(do.call(function_name, args = DOTS, envir = env))
 }
-
