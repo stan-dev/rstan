@@ -88,7 +88,7 @@ stanFunction <- function(function_name, ..., env = parent.frame(), rebuild = FAL
   }
   withr::with_makevars(
     c(
-      PKG_CXXFLAGS = paste(CxxFlags(as_character = TRUE), "-DUSE_MIXMAX"),
+      PKG_CXXFLAGS = paste(CxxFlags(as_character = TRUE), "-DNEW_RSTAN"),
       PKG_LIBS = LdFlags(as_character = TRUE),
       USE_CXX17 = 1
     ),

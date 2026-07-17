@@ -6,7 +6,7 @@
 
 namespace stan {
 
-#ifndef USE_MIXMAX
+#ifndef NEW_RSTAN
 using rng_t = boost::ecuyer1988;
 #else
 using rng_t = boost::random::mixmax;
@@ -15,7 +15,7 @@ using rng_t = boost::random::mixmax;
 namespace services {
 namespace util {
 
-#ifndef USE_MIXMAX
+#ifndef NEW_RSTAN
 /**
  * Creates a pseudo random number generator from a random seed
  * and a chain id by initializing the PRNG with the seed and
