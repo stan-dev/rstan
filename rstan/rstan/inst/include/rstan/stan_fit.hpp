@@ -555,8 +555,11 @@ int command(stan_args& args, Model& model, Rcpp::List& holder,
     std::vector<double> params = sample_writer.x();
     double lp = params.front();
     params.erase(params.begin());
+    double converged = params.front();
+    params.erase(params.begin());
     holder = Rcpp::List::create(Rcpp::_["par"] = params,
-                                Rcpp::_["value"] = lp);
+                                Rcpp::_["value"] = lp,
+                                Rcpp::_["converged"] = converged);
 
   }
   if (args.get_method() == SAMPLING) {

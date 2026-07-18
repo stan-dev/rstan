@@ -43,3 +43,4 @@ Depends: R (>= 3.4.0)
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.2
+Config/build/compilation-database: true

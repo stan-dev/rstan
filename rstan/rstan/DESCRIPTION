@@ -73,3 +73,4 @@ SystemRequirements: GNU make, pandoc
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 Config/testthat/edition: 3
+Config/build/compilation-database: true
