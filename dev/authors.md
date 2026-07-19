@@ -51,11 +51,11 @@ Source:
 [`inst/CITATION`](https://github.com/stan-dev/rstan/blob/develop/inst/CITATION)
 
 Stan Development Team (). RStan: the R interface to Stan. R package
-version 2.36.0.9000. https://mc-stan.org/.
+version 2.39.0.9000. https://mc-stan.org/.
 
     @Misc{,
       title = {{RStan}: the {R} interface to {Stan}},
       author = {{Stan Development Team}},
-      note = {R package version 2.36.0.9000},
+      note = {R package version 2.39.0.9000},
       url = {https://mc-stan.org/},
     }

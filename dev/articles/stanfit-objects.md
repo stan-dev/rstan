@@ -425,7 +425,7 @@ print(get_elapsed_time(fit))
 ```
 
             warmup sample
-    chain:1  0.022  0.018
-    chain:2  0.022  0.027
-    chain:3  0.028  0.027
-    chain:4  0.023  0.021
+    chain:1  0.015  0.012
+    chain:2  0.015  0.018
+    chain:3  0.018  0.018
+    chain:4  0.015  0.014
