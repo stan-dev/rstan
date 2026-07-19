@@ -1,6 +1,6 @@
 Package: StanHeaders
 Title: C++ Header Files for Stan
-Version: 2.36.0.9000
+Version: 2.39.0.9000
 Authors@R: c(person("Ben",family="Goodrich", email="benjamin.goodrich@columbia.edu", role=c('cre','aut')),
              person("Joshua", "Pritikin", role = "ctb"),
              person("Andrew", "Gelman", role = "aut"),
@@ -43,3 +43,4 @@ Depends: R (>= 3.4.0)
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.2
+Config/build/compilation-database: true
