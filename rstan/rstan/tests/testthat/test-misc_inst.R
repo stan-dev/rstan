@@ -94,7 +94,7 @@ test_that("data_preprocess works", {
     z = c(1L, 2L, 4L),
     a = 1:100,
     b = matrix(1:9 / 9, ncol = 3),
-    c = structure(1:100, .Dim = c(5, 20)),
+    c = structure(1:100, dim = c(5, 20)),
     g = array(c(3, 3, 9, 3, 3, 4, 5, 6, 9, 8, 0, 2), dim = c(2, 2, 3)),
     d = 1:100 + .1
   )
