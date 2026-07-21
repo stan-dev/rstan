@@ -76,8 +76,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 6e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#> Chain 1: Gradient evaluation took 4e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -151,8 +151,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 0 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+#> Chain 4: Gradient evaluation took 1e-06 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -170,8 +170,8 @@ fit <- stan(model_code = ecode)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.004 seconds (Warm-up)
-#> Chain 4:                0.003 seconds (Sampling)
-#> Chain 4:                0.007 seconds (Total)
+#> Chain 4:                0.004 seconds (Sampling)
+#> Chain 4:                0.008 seconds (Total)
 #> Chain 4: 
 s <- summary(fit, probs = c(0.1, 0.9))
 s$summary  # all chaines merged
