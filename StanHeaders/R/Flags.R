@@ -16,7 +16,7 @@ CxxFlags <- function(as_character = FALSE) {
     }
   }
 
-  if (utils::packageVersion("rstan") >= "2.36") {
+  if ((!("rstan" %in% installed.packages()[,"Package"]) || utils::packageVersion("rstan") >= "2.36")) {
     CXXFLAGS <- paste(CXXFLAGS, "-DNEW_RSTAN")
   }
 
