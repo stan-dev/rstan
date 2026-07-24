@@ -95,7 +95,7 @@
                         <h4 data-toc-skip class="author">Stan
 Development Team</h4>
             
-            <h4 data-toc-skip class="date">2026-07-23</h4>
+            <h4 data-toc-skip class="date">2026-07-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/develop/vignettes/external.Rmd" class="external-link"><code>vignettes/external.Rmd</code></a></small>
       <div class="d-none name"><code>external.Rmd</code></div>
@@ -313,7 +313,7 @@ Suppose you wanted to define a function whose arguments are real numbers
 <pre><code><span><span class="co">## Trying to compile a simple C file</span></span></code></pre>
 <pre><code><span><span class="co">## Running /opt/R/4.6.1/lib/R/bin/R CMD SHLIB foo.c</span></span>
 <span><span class="co">## using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’</span></span>
-<span><span class="co">## gcc -std=gnu2x -I"/opt/R/4.6.1/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
+<span><span class="co">## gcc -std=gnu2x -I"/opt/R/4.6.1/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/" -DRCPP_PARALLEL_USE_TBB=1 -DTBB_INTERFACE_NEW -I/home/runner/work/_temp/Library/RcppParallel/include -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
 <span><span class="co">## In file included from &lt;command-line&gt;:</span></span>
 <span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:3:10: fatal error: stdexcept: No such file or directory</span></span>
 <span><span class="co">##     3 | #include &lt;stdexcept&gt;</span></span>
@@ -322,12 +322,12 @@ Suppose you wanted to define a function whose arguments are real numbers
 <span><span class="co">## make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:190: foo.o] Error 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `compileCode()`:</span></span></span>
 <span><span class="co">## <span style="color: #BBBB00;">!</span>  int Option = 0; Scalar = double]’</span></span>
-<span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:0:   required from ‘double stan::mcmc::dense_e_metric&lt;Model, BaseRNG&gt;::T(stan::mcmc::dense_e_point&amp;) [with Model = model253b16452cf7_external_namespace::model253b16452cf7_external; BaseRNG = boost::random::mixmax_engine&lt;17, 36, 0&gt;]’</span></span>
+<span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:0:   required from ‘double stan::mcmc::dense_e_metric&lt;Model, BaseRNG&gt;::T(stan::mcmc::dense_e_point&amp;) [with Model = model25f020740a8e_external_namespace::model25f020740a8e_external; BaseRNG = boost::random::mixmax_engine&lt;17, 36, 0&gt;]’</span></span>
 <span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:0:   required from here</span></span>
 <span><span class="co">## /home/runner/work/_temp/Library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:654:74: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits&lt;double&gt;::type’ {aka ‘__m128d’} [-Wignored-attributes]</span></span>
 <span><span class="co">##   654 |   return internal::first_aligned&lt;int(unpacket_traits&lt;DefaultPacketType&gt;::alignment),Derived&gt;(m);</span></span>
 <span><span class="co">##       |                                                                          ^~~~~~~~~</span></span>
-<span><span class="co">## make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:199: file253b5328c93c.o] Error 1</span></span></code></pre>
+<span><span class="co">## make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:199: file25f07b38c1b6.o] Error 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `sink()`:</span></span></span>
 <span><span class="co">## <span style="color: #BBBB00;">!</span> invalid connection</span></span></code></pre>
 <p>The sinc.hpp file reads as</p>
@@ -371,19 +371,19 @@ resuling C++ code. In this case, I first did</p>
 <span><span class="co">## #endif</span></span>
 <span><span class="co">## // Code generated by stanc 5496e41</span></span>
 <span><span class="co">## #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">## namespace model253b25d1398f_file253b67aa2f58_namespace {</span></span>
+<span><span class="co">## namespace model25f02ad99e4e_file25f03d52ddab_namespace {</span></span>
 <span><span class="co">## using stan::model::model_base_crtp;</span></span>
 <span><span class="co">## using namespace stan::math;</span></span>
 <span><span class="co">## stan::math::profile_map profiles__;</span></span>
 <span><span class="co">## static constexpr std::array&lt;const char*, 2&gt; locations_array__ =</span></span>
 <span><span class="co">##   {" (found before start of program)",</span></span>
-<span><span class="co">##   " (in 'file253b67aa2f58', line 2, column 19 to column 45)"};</span></span>
-<span><span class="co">## class model253b25d1398f_file253b67aa2f58 final : public model_base_crtp&lt;model253b25d1398f_file253b67aa2f58&gt; {</span></span>
+<span><span class="co">##   " (in 'file25f03d52ddab', line 2, column 19 to column 45)"};</span></span>
+<span><span class="co">## class model25f02ad99e4e_file25f03d52ddab final : public model_base_crtp&lt;model25f02ad99e4e_file25f03d52ddab&gt; {</span></span>
 <span><span class="co">## private:</span></span>
 <span><span class="co">##   double sinc_pi;</span></span>
 <span><span class="co">## public:</span></span>
-<span><span class="co">##   ~model253b25d1398f_file253b67aa2f58() {}</span></span>
-<span><span class="co">##   model253b25d1398f_file253b67aa2f58(stan::io::var_context&amp; context__,</span></span>
+<span><span class="co">##   ~model25f02ad99e4e_file25f03d52ddab() {}</span></span>
+<span><span class="co">##   model25f02ad99e4e_file25f03d52ddab(stan::io::var_context&amp; context__,</span></span>
 <span><span class="co">##                                      unsigned int random_seed__ = 0,</span></span>
 <span><span class="co">##                                      std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">##       : model_base_crtp(0) {</span></span>
@@ -396,19 +396,19 @@ resuling C++ code. In this case, I first did</p>
 <span><span class="co">## #endif</span></span>
 <span><span class="co">## // Code generated by stanc 5496e41</span></span>
 <span><span class="co">## #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">## namespace model253b25d1398f_file253b67aa2f58_namespace {</span></span>
+<span><span class="co">## namespace model25f02ad99e4e_file25f03d52ddab_namespace {</span></span>
 <span><span class="co">## using stan::model::model_base_crtp;</span></span>
 <span><span class="co">## using namespace stan::math;</span></span>
 <span><span class="co">## stan::math::profile_map profiles__;</span></span>
 <span><span class="co">## static constexpr std::array&lt;const char*, 2&gt; locations_array__ =</span></span>
 <span><span class="co">##   {" (found before start of program)",</span></span>
-<span><span class="co">##   " (in 'file253b67aa2f58', line 2, column 19 to column 45)"};</span></span>
-<span><span class="co">## class model253b25d1398f_file253b67aa2f58 final : public model_base_crtp&lt;model253b25d1398f_file253b67aa2f58&gt; {</span></span>
+<span><span class="co">##   " (in 'file25f03d52ddab', line 2, column 19 to column 45)"};</span></span>
+<span><span class="co">## class model25f02ad99e4e_file25f03d52ddab final : public model_base_crtp&lt;model25f02ad99e4e_file25f03d52ddab&gt; {</span></span>
 <span><span class="co">## private:</span></span>
 <span><span class="co">##   double sinc_pi;</span></span>
 <span><span class="co">## public:</span></span>
-<span><span class="co">##   ~model253b25d1398f_file253b67aa2f58() {}</span></span>
-<span><span class="co">##   model253b25d1398f_file253b67aa2f58(stan::io::var_context&amp; context__,</span></span>
+<span><span class="co">##   ~model25f02ad99e4e_file25f03d52ddab() {}</span></span>
+<span><span class="co">##   model25f02ad99e4e_file25f03d52ddab(stan::io::var_context&amp; context__,</span></span>
 <span><span class="co">##                                      unsigned int random_seed__ = 0,</span></span>
 <span><span class="co">##                                      std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">##       : model_base_crtp(0) {</span></span>
@@ -420,19 +420,19 @@ resuling C++ code. In this case, I first did</p>
 <span><span class="co">## #endif</span></span>
 <span><span class="co">## // Code generated by stanc 5496e41</span></span>
 <span><span class="co">## #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">## namespace model253b25d1398f_file253b67aa2f58_namespace {</span></span>
+<span><span class="co">## namespace model25f02ad99e4e_file25f03d52ddab_namespace {</span></span>
 <span><span class="co">## using stan::model::model_base_crtp;</span></span>
 <span><span class="co">## using namespace stan::math;</span></span>
 <span><span class="co">## stan::math::profile_map profiles__;</span></span>
 <span><span class="co">## static constexpr std::array&lt;const char*, 2&gt; locations_array__ =</span></span>
 <span><span class="co">##   {" (found before start of program)",</span></span>
-<span><span class="co">##   " (in 'file253b67aa2f58', line 2, column 19 to column 45)"};</span></span>
-<span><span class="co">## class model253b25d1398f_file253b67aa2f58 final : public model_base_crtp&lt;model253b25d1398f_file253b67aa2f58&gt; {</span></span>
+<span><span class="co">##   " (in 'file25f03d52ddab', line 2, column 19 to column 45)"};</span></span>
+<span><span class="co">## class model25f02ad99e4e_file25f03d52ddab final : public model_base_crtp&lt;model25f02ad99e4e_file25f03d52ddab&gt; {</span></span>
 <span><span class="co">## private:</span></span>
 <span><span class="co">##   double sinc_pi;</span></span>
 <span><span class="co">## public:</span></span>
-<span><span class="co">##   ~model253b25d1398f_file253b67aa2f58() {}</span></span>
-<span><span class="co">##   model253b25d1398f_file253b67aa2f58(stan::io::var_context&amp; context__,</span></span>
+<span><span class="co">##   ~model25f02ad99e4e_file25f03d52ddab() {}</span></span>
+<span><span class="co">##   model25f02ad99e4e_file25f03d52ddab(stan::io::var_context&amp; context__,</span></span>
 <span><span class="co">##                                      unsigned int random_seed__ = 0,</span></span>
 <span><span class="co">##                                      std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">##       : model_base_crtp(0) {</span></span>
