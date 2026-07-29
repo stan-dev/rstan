@@ -76,8 +76,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 5e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+#> Chain 1: Gradient evaluation took 4e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -101,8 +101,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 2: Gradient evaluation took 1e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -120,8 +120,8 @@ fit <- stan(model_code = ecode)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.005 seconds (Warm-up)
-#> Chain 2:                0.006 seconds (Sampling)
-#> Chain 2:                0.011 seconds (Total)
+#> Chain 2:                0.005 seconds (Sampling)
+#> Chain 2:                0.01 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -145,8 +145,8 @@ fit <- stan(model_code = ecode)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
 #> Chain 3:  Elapsed Time: 0.005 seconds (Warm-up)
-#> Chain 3:                0.006 seconds (Sampling)
-#> Chain 3:                0.011 seconds (Total)
+#> Chain 3:                0.005 seconds (Sampling)
+#> Chain 3:                0.01 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -170,8 +170,8 @@ fit <- stan(model_code = ecode)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.005 seconds (Warm-up)
-#> Chain 4:                0.005 seconds (Sampling)
-#> Chain 4:                0.01 seconds (Total)
+#> Chain 4:                0.004 seconds (Sampling)
+#> Chain 4:                0.009 seconds (Total)
 #> Chain 4: 
 s <- summary(fit, probs = c(0.1, 0.9))
 s$summary  # all chaines merged
