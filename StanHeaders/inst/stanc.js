@@ -476,7 +476,7 @@ g=new
 Array(c+2);for(var
 f=0;f<c;f++)g[f]=e[f];g[c]=a;g[c+1]=b;return d(...g)};break}default:var
 a=function(...a){if(a.length===0)a=[undefined];return cU(d,e.concat(a))}}a.l=b;return a}}function
-Z(a,b){if(b>>>0>=a.length-1)qC();return a}function
+_(a,b){if(b>>>0>=a.length-1)qC();return a}function
 nl(a){if(Number.isFinite(a)){if(Math.abs(a)>=2.2250738585072014e-308)return 0;if(a!==0)return 1;return 2}return Number.isNaN(a)?4:3}function
 JS(a){return k6[a.caml_custom]&&k6[a.caml_custom].compare}var
 qv=1010,kY=252,mO=1000,dU=255;function
@@ -492,7 +492,7 @@ Number)return mO;else if(a?.caml_custom)return 1255;else if(a?.compare)return 12
 a==="function")return 1247;else if(typeof
 a==="symbol")return 1251}return 1001}function
 aD(a,b){if(a<b)return-1;if(a===b)return 0;return 1}function
-_(a,b){return a<b?-1:a>b?1:0}function
+Y(a,b){return a<b?-1:a>b?1:0}function
 aqt(a,b){a.t&6&&nm(a);b.t&6&&nm(b);return a.c<b.c?-1:a.c>b.c?1:0}var
 cc=250;function
 jl(a,b,c){var
@@ -1325,7 +1325,7 @@ aqs(a){var
 d={},c=-1;if(a)for(var
 b=1;b<a.length;b++){var
 e=a[b][1],h=e[0],g=gC(e[1]),f=a[b][2];c=Math.max(c,f);d[h?Ho+g:g]=f}d.next_idx=c+1;return d}function
-ew(a,b){var
+ex(a,b){var
 d=Ho+b;if(Kt){var
 e=k5(Kt,[[1,b]]);dw[e+1]=a}else if(jo.symbols){if(!jo.symidx)jo.symidx=aqs(jo.symbols);var
 c=jo.symidx[d];if(c===undefined){c=jo.symidx.next_idx++;jo.symidx[d]=c}dw[c+1]=a}dw[d]=a}function
@@ -1403,18 +1403,18 @@ mA(a,b,c,d,e,f,g,h,i,j,k){return(a.l>=0?a.l:a.l=a.length)===10?a(b,c,d,e,f,g,h,i
 ap_(a,b,c,d,e,f,g,h,i,j,k,l){return(a.l>=0?a.l:a.l=a.length)===11?a(b,c,d,e,f,g,h,i,j,k,l):cU(a,[b,c,d,e,f,g,h,i,j,k,l])}function
 Gp(a,b,c,d,e,f,g,h,i,j,k,l,m){return(a.l>=0?a.l:a.l=a.length)===12?a(b,c,d,e,f,g,h,i,j,k,l,m):cU(a,[b,c,d,e,f,g,h,i,j,k,l,m])}function
 ap8(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o){return(a.l>=0?a.l:a.l=a.length)===14?a(b,c,d,e,f,g,h,i,j,k,l,m,n,o):cU(a,[b,c,d,e,f,g,h,i,j,k,l,m,n,o])}aqM();aQ="Undefined_recursive_module";var
-yA=[L,aQ,-12];ew(yA,aQ);var
-JA=-11,xW="Assert_failure",z=[L,xW,JA];ew(z,xW);aQ="Sys_blocked_io";var
-wi=-10;ew([L,aQ,wi],aQ);aQ="Stack_overflow";var
-yz=[L,aQ,-9];ew(yz,aQ);var
-xo="Match_failure",lc=[L,xo,-8];ew(lc,xo);aQ="Not_found";var
-bH=[L,aQ,-7];ew(bH,aQ);var
-dR="Division_by_zero";ew([L,dR,-6],dR);dR="End_of_file";var
-fK=[L,dR,-5];ew(fK,dR);var
-q="Invalid_argument",hS=[L,q,-4];ew(hS,q);var
-d0=[L,qw,-3];ew(d0,qw);var
-D="Sys_error",nt=[L,D,-2];ew(nt,D);var
-S="Out_of_memory",qX=[L,S,-1];ew(qX,S);function
+yA=[L,aQ,-12];ex(yA,aQ);var
+JA=-11,xW="Assert_failure",z=[L,xW,JA];ex(z,xW);aQ="Sys_blocked_io";var
+wi=-10;ex([L,aQ,wi],aQ);aQ="Stack_overflow";var
+yz=[L,aQ,-9];ex(yz,aQ);var
+xo="Match_failure",lc=[L,xo,-8];ex(lc,xo);aQ="Not_found";var
+bH=[L,aQ,-7];ex(bH,aQ);var
+dR="Division_by_zero";ex([L,dR,-6],dR);dR="End_of_file";var
+fK=[L,dR,-5];ex(fK,dR);var
+q="Invalid_argument",hS=[L,q,-4];ex(hS,q);var
+d0=[L,qw,-3];ex(d0,qw);var
+D="Sys_error",nt=[L,D,-2];ex(nt,D);var
+S="Out_of_memory",qX=[L,S,-1];ex(qX,S);function
 bA(a){if(typeof
 a==="number")return 0;switch(a[0]){case
 0:return[0,bA(a[1])];case
@@ -1641,7 +1641,7 @@ nu(a,b){return aqu(cI(a),b)}var
 JF=1114111,i$=16777215;function
 yX(a){var
 d=u(a),e=cp(d,JF),c=0,b=0;for(;;){if(c>=d)return[0,e,b];var
-f=rj(a,c),c=c+yK(f)|0;Z(e,b)[b+1]=f&i$;b=b+1|0}}var
+f=rj(a,c),c=c+yK(f)|0;_(e,b)[b+1]=f&i$;b=b+1|0}}var
 fM=[0,l,0,0,-1];function
 rk(a,b,c){b=dx(a,b,c);a=0<=b;a=a?c[12]!==fM:a;if(a){c[11]=c[12];a=c[12];c[12]=[0,a[1],a[2],a[3],c[4]+c[6]|0]}return b}var
 nv=[0,l,1,0,0];function
@@ -1651,10 +1651,10 @@ d=Kw(b,h,0,a$(h)),d=0<d?d:(a[9]=1,0);if(a$(a[2])<(a[3]+d|0)){if(((a[3]-a[5]|0)+d
 c=gF(2*a$(a[2])|0,gE);if(c<((a[3]-a[5]|0)+d|0))ae("Lexing.lex_refill: cannot grow buffer");c=aO(c);jw(a[2],a[5],c,0,a[3]-a[5]|0);a[2]=c}c=a[5];a[4]=a[4]+c|0;a[6]=a[6]-c|0;a[5]=0;a[7]=a[7]-c|0;a[3]=a[3]-c|0;var
 g=a[10],i=g.length-2|0;if(i>=0){var
 e=0;for(;;){var
-f=Z(g,e)[e+1];if(0<=f)Z(g,e)[e+1]=f-c|0;f=e+1|0;if(i===e)break;e=f}}}jw(h,0,a[2],a[3],d);a[3]=a[3]+d|0;return 0},aO(e0),0,0,0,0,0,0,0,[0],a,c]}function
+f=_(g,e)[e+1];if(0<=f)_(g,e)[e+1]=f-c|0;f=e+1|0;if(i===e)break;e=f}}}jw(h,0,a[2],a[3],d);a[3]=a[3]+d|0;return 0},aO(e0),0,0,0,0,0,0,0,[0],a,c]}function
 nw(a,b){a=a?a[1]:1;b=rf(b);var
 c=a?nv:fM,a=a?nv:fM;return[0,function(a){a[9]=1;return 0},b,a$(b),0,0,0,0,0,1,[0],a,c]}function
-ex(a){return lh(a[2],a[5],a[6]-a[5]|0)}function
+ey(a){return lh(a[2],a[5],a[6]-a[5]|0)}function
 gH(a,b,c){return lh(a[2],b,c-b|0)}function
 fN(a,b){return k4(a[2],b)}var
 yZ=[L,"Stdlib.Parsing.Parse_error",aA(0)],hx="Map.bal";function
@@ -1676,7 +1676,7 @@ fO(a,b){b[1]=[0,a,b[1]];b[2]=b[2]+1|0;return 0}function
 jy(a){var
 b=a[1];if(!b)return 0;var
 c=b[1];a[1]=b[2];a[2]=a[2]-1|0;return[0,c]}function
-ey(a){a=a[1];if(a)return a[1];throw m(ny,1)}function
+ez(a){a=a[1];if(a)return a[1];throw m(ny,1)}function
 jz(a){a=a[1];return a?[0,a[1]]:0}var
 y0=[L,"Stdlib.Queue.Empty",aA(0)];function
 rl(a){a[1]=0;a[2]=0;a[3]=0}function
@@ -2195,9 +2195,9 @@ b=f,c=g,d=e[2];g=function(a){return as(c,[1,b,[1,a]],d)};f=0;e=h[1][1]}break;cas
 20:h=9;continue a;case
 21:h=10;continue a;case
 22:h=11;continue a;case
-23:break b;default:h=e[3];b=e[1];c=i(e[2],0);return a<50?vf(a+1|0,g,f,h,b,c):ax(vf,[0,g,f,h,b,c])}}case
-12:d=e[2];c=e[1];if(typeof
-c==="number"){if(2===c)throw m([0,z,K6],1);return a<50?ku(a+1|0,g,f,d):ax(ku,[0,g,f,d])}if(9!==c[0])return a<50?ku(a+1|0,g,f,d):ax(ku,[0,g,f,d]);b=c[2];return a<50?vg(a+1|0,g,f,b,d):ax(vg,[0,g,f,b,d]);case
+23:break b;default:h=e[3];d=e[1];c=i(e[2],0);return a<50?vf(a+1|0,g,f,h,d,c):ax(vf,[0,g,f,h,d,c])}}case
+12:b=e[2];c=e[1];if(typeof
+c==="number"){if(2===c)throw m([0,z,K6],1);return a<50?ku(a+1|0,g,f,b):ax(ku,[0,g,f,b])}if(9!==c[0])return a<50?ku(a+1|0,g,f,b):ax(ku,[0,g,f,b]);d=c[2];return a<50?vg(a+1|0,g,f,d,b):ax(vg,[0,g,f,d,b]);case
 11:var
 D=e[1];return function(a){return as(g,[5,f,a],D)};case
 10:var
@@ -2214,16 +2214,16 @@ v=e[3],w=e[2];return function(a){a=a[1];return as(g,f,bk(y7(a,bA(bY(w))),v))};ca
 t=e[3];rq(h,e[2]);var
 q=y5(h);return function(a){return as(g,[4,f,q],t)};case
 4:var
-l=e[4],b=e[3],a=e[2],k=e[1];if(typeof
+l=e[4],d=e[3],a=e[2],k=e[1];if(typeof
 a==="number"){if(typeof
-b==="number")return b?function(a,b){return as(g,[4,f,fQ(k,a,b)],l)}:function(a){return as(g,[4,f,fQ(k,ro(k),a)],l)};var
-E=b[1];return function(a){return as(g,[4,f,fQ(k,E,a)],l)}}if(0===a[0]){var
+d==="number")return d?function(a,b){return as(g,[4,f,fQ(k,a,b)],l)}:function(a){return as(g,[4,f,fQ(k,ro(k),a)],l)};var
+E=d[1];return function(a){return as(g,[4,f,fQ(k,E,a)],l)}}if(0===a[0]){var
 n=a[2],o=a[1];if(typeof
-b==="number")return b?function(a,b){return as(g,[4,f,di(o,n,fQ(k,a,b))],l)}:function(a){return as(g,[4,f,di(o,n,fQ(k,ro(k),a))],l)};var
-F=b[1];return function(a){return as(g,[4,f,di(o,n,fQ(k,F,a))],l)}}var
+d==="number")return d?function(a,b){return as(g,[4,f,di(o,n,fQ(k,a,b))],l)}:function(a){return as(g,[4,f,di(o,n,fQ(k,ro(k),a))],l)};var
+F=d[1];return function(a){return as(g,[4,f,di(o,n,fQ(k,F,a))],l)}}var
 p=a[1];if(typeof
-b==="number")return b?function(a,b,c){return as(g,[4,f,di(p,a,fQ(k,b,c))],l)}:function(a,b){return as(g,[4,f,di(p,a,fQ(k,ro(k),b))],l)};var
-G=b[1];return function(a,b){return as(g,[4,f,di(p,a,fQ(k,G,b))],l)};case
+d==="number")return d?function(a,b,c){return as(g,[4,f,di(p,a,fQ(k,b,c))],l)}:function(a,b){return as(g,[4,f,di(p,a,fQ(k,ro(k),b))],l)};var
+G=d[1];return function(a,b){return as(g,[4,f,di(p,a,fQ(k,G,b))],l)};case
 3:return rs(g,f,e[2],e[1],function(a){return a});case
 2:var
 s=e[1];return function(a){a:{b:{if(40<=a){if(92===a){a=xN;break a}if(gy<=a)break b}else{if(32>a){if(14<=a)break b;switch(a){case
@@ -2316,12 +2316,12 @@ c=b[1],b=rp(b[2]);fS(a,c);return aW(a,b);case
 8:c=b[2];fS(a,b[1]);return J(c);case
 2:case
 4:c=b[2];fS(a,b[1]);return aW(a,c);default:c=b[2];fS(a,b[1]);return ad(a,c)}}}function
-ez(a){a=a[1];var
+eA(a){a=a[1];var
 b=br(cD);return as(function(a){fS(b,a);return ae(bP(b))},0,a)}var
 K9=[0,0,4],K_=[0,[11,"invalid box description ",[3,0,0]],"invalid box description %S"];function
 y9(c){if(c===l)return K9;var
 f=u(c);function
-g(a){return i(ez(K_),c)}function
+g(a){return i(eA(K_),c)}function
 h(a){for(;;){if(a===f)return a;var
 b=C(c,a);if(9!==b&&32!==b)return a;a=a+1|0}}var
 a=h(0),b=a;for(;;){if(b===f)break;if(25<C(c,b)+ps>>>0)break;b=b+1|0}a=d2(c,a,b-a|0);b=h(b);var
@@ -2363,25 +2363,25 @@ ng="%s\n",xt="(Program not linked with -g, cannot print stack backtrace)\n",LG=[
 rw(a,b){b=zd(b);if(!b)return hV(a,LH);b=b[1];var
 e=b.length-2|0;if(e>=0){var
 c=0;for(;;){var
-d=ze(c,Z(b,c)[c+1]);if(d){d=d[1];i(hV(a,LG),d)}d=c+1|0;if(e===c)break;c=d}}}function
+d=ze(c,_(b,c)[c+1]);if(d){d=d[1];i(hV(a,LG),d)}d=c+1|0;if(e===c)break;c=d}}}function
 rx(a){for(;;){var
 b=q6[1],b=1-qD(q6,0,b,[0,a,b]);if(!b)return b}}var
 LJ=Kf([0,l,"(Cannot print locations:\n bytecode executable program file not found)","(Cannot print locations:\n bytecode executable program file appears to be corrupt)","(Cannot print locations:\n bytecode executable program file has wrong magic number)","(Cannot print locations:\n bytecode executable program file cannot be opened;\n -- too many open files. Try running with OCAMLRUNPARAM=b=2)"]),H="Fatal error: exception %s\n",LK=[0,[11,vM,[2,0,[12,10,0]]],H],LL=[0],LM=[0,[11,vM,[2,0,[12,10,0]]],H],LN=[0,[11,"Fatal error in uncaught exception handler: exception ",[2,0,[12,10,0]]],"Fatal error in uncaught exception handler: exception %s\n"];yu(HS,function(a,b){try{try{var
 d=b?LL:no(0);try{q3()}catch(f){}try{var
-c=jD(a);i(hV(cV,LK),c);rw(cV,d);c=arl(0);if(c<0){c=ld(c);yH(Z(LJ,c)[c+1])}c=e7(cV)}catch(f){c=ai(f);a=jD(a);i(hV(cV,LM),a);rw(cV,d);c=jD(c);i(hV(cV,LN),c);rw(cV,no(0));c=e7(cV)}d=c}catch(f){d=ai(f);if(d!==qX)throw m(d,0);d=yH("Fatal error: out of memory in uncaught exception handler")}return d}catch(f){return 0}});var
+c=jD(a);i(hV(cV,LK),c);rw(cV,d);c=arl(0);if(c<0){c=ld(c);yH(_(LJ,c)[c+1])}c=e7(cV)}catch(f){c=ai(f);a=jD(a);i(hV(cV,LM),a);rw(cV,d);c=jD(c);i(hV(cV,LN),c);rw(cV,no(0));c=e7(cV)}d=c}catch(f){d=ai(f);if(d!==qX)throw m(d,0);d=yH("Fatal error: out of memory in uncaught exception handler")}return d}catch(f){return 0}});var
 nC=[0,0];aqC(cp(8,nC));var
 Gl=[0,0],ap3=[0,0];function
-eA(a,b){b=[0,x4(ap3,0,1),b];if(a){a=[0,b,a[1]];for(;;){var
+eB(a,b){b=[0,x4(ap3,0,1),b];if(a){a=[0,b,a[1]];for(;;){var
 c=Gl[1];if(!(1-qD(Gl,0,c,[0,a,c])))break}}return b}function
 zf(a){for(;;){var
 c=JV(0),d=c.length-1;if(a<d)return c;var
 b=d;for(;;){if(a<b){b=cp(b,nC);rb(c,0,b,0,d);if(aqB(c,b))return b;break}b=2*b|0}}}function
-lm(a,b){a=a[1];Z(zf(a),a)[a+1]=b}var
+lm(a,b){a=a[1];_(zf(a),a)[a+1]=b}var
 LO=[0,"domain.ml",187,13];function
 cj(a){var
-b=a[1],a=a[2],c=Z(zf(b),b)[b+1];if(c!==nC)return c;a=i(a,0);var
-d=JV(0),c=Z(d,b)[b+1]===c?(d[b+1]=a,1):0;if(c)return a;a=Z(d,b)[b+1];if(a!==nC)return a;throw m([0,z,LO],1)}var
-ry=eA(0,function(a){return function(a){return 0}});function
+b=a[1],a=a[2],c=_(zf(b),b)[b+1];if(c!==nC)return c;a=i(a,0);var
+d=JV(0),c=_(d,b)[b+1]===c?(d[b+1]=a,1):0;if(c)return a;a=_(d,b)[b+1];if(a!==nC)return a;throw m([0,z,LO],1)}var
+ry=eB(0,function(a){return function(a){return 0}});function
 zg(c){var
 b=cj(ry);return lm(ry,function(a){c();return i(b,0)})}yI[1]=function(a){return i(cj(ry),0)};function
 zh(a){return a}var
@@ -2399,21 +2399,21 @@ zl(a,b,c,d){var
 e=rB();zk(e,a,b,c,d);return e}function
 zn(a,b){var
 d=b.length-1,c=aO((d*8|0)+1|0),f=d-1|0;if(f>=0){var
-e=0;for(;;){aqx(c,e*8|0,k9(Z(b,e)[e+1]));var
+e=0;for(;;){aqx(c,e*8|0,k9(_(b,e)[e+1]));var
 g=e+1|0;if(f===e)break;e=g}}dY(c,d*8|0,1);f=zj(c);dY(c,d*8|0,2);c=zj(c);d=nu(c,8);c=nu(c,0);b=nu(f,8);return zk(a,nu(f,0),b,c,d)}function
 rC(a){a=arM(0);var
 b=rB();zn(b,a);return b}var
 kU=1073741823;function
 zo(a){return qN(jq(a))&kU}function
 rD(a){return zl(jq(a),jq(a),jq(a),jq(a))}var
-LW=b9(14371852,15349651,22696),LX=b9(12230193,11438743,35013),LY=b9(1424933,15549263,2083),LZ=b9(9492471,4696708,43520),H=eA([0,rD],function(a){return zl(LZ,LY,LX,LW)});function
+LW=b9(14371852,15349651,22696),LX=b9(12230193,11438743,35013),LY=b9(1424933,15549263,2083),LZ=b9(9492471,4696708,43520),H=eB([0,rD],function(a){return zl(LZ,LY,LX,LW)});function
 Kx(d){for(;;){var
 a=q2[1];let
 b=[0,1],c=a;a=1-qD(q2,0,a,function(a){if(qD(b,0,1,0))d();return i(c,0)});if(!a)return a}}var
 Ky=dy-2|0;function
 KA(a,b){for(;;){if(!b)return 0;var
 c=b[2];a(b[1]);b=c}}var
-s=aD,bB=_;function
+s=aD,bB=Y;function
 KG(a,b){return x7(cI(a),b)}function
 KH(a,b){return aqX(x7(cI(a),b))}function
 LP(a,b){var
@@ -2429,12 +2429,12 @@ try{yU(c,B,0,82);rE=1}catch(f){B=ai(f);if(B!==bH)throw m(B,0);rE=0}function
 zp(a){return x_(10,e3,0,a)}function
 rF(a,b){return 4<=a.length-1?x_(10,e3,a[3],b)&(a[2].length-2|0):J("Hashtbl: unsupported hash table format")}function
 zq(a,b,c){var
-d=rF(a,b),h=Z(a[2],d)[d+1],f=h;for(;;){if(!f)break;var
-j=f[3];if(0===hK(f[1],b))break;f=j}if(f){f[1]=b;f[2]=c;return}Z(a[2],d)[d+1]=[0,b,c,h];a[1]=a[1]+1|0;b=a[2].length-1<<1<a[1]?1:0;if(!b)return b;b=a[2];d=(b.length-1)*2|0;c=d<dy?1:0;if(!c)return c;d=cp(d,0);c=a.length-1<4;c||=a[4]<0;c=1-c;a[2]=d;h=d.length-1;j=cp(h,0);f=b.length-2|0;if(f>=0){var
+d=rF(a,b),h=_(a[2],d)[d+1],f=h;for(;;){if(!f)break;var
+j=f[3];if(0===hK(f[1],b))break;f=j}if(f){f[1]=b;f[2]=c;return}_(a[2],d)[d+1]=[0,b,c,h];a[1]=a[1]+1|0;b=a[2].length-1<<1<a[1]?1:0;if(!b)return b;b=a[2];d=(b.length-1)*2|0;c=d<dy?1:0;if(!c)return c;d=cp(d,0);c=a.length-1<4;c||=a[4]<0;c=1-c;a[2]=d;h=d.length-1;j=cp(h,0);f=b.length-2|0;if(f>=0){var
 i=0;a:for(;;){var
-e=Z(b,i)[i+1];for(;;){if(!e){e=i+1|0;if(f===i)break a;i=e;break}var
-g=e[1],k=e[2],l=e[3],e=c?e:[0,g,k,0],g=rF(a,g),k=Z(j,g)[g+1];if(k)k[3]=e;else
-Z(d,g)[g+1]=e;Z(j,g)[g+1]=e;e=l}}}if(c){c=h-1|0;if(c>=0){d=0;for(;;){b=Z(j,d)[d+1];if(b)b[3]=0;h=d+1|0;if(c===d)break;d=h}}}}var
+e=_(b,i)[i+1];for(;;){if(!e){e=i+1|0;if(f===i)break a;i=e;break}var
+g=e[1],k=e[2],l=e[3],e=c?e:[0,g,k,0],g=rF(a,g),k=_(j,g)[g+1];if(k)k[3]=e;else
+_(d,g)[g+1]=e;_(j,g)[g+1]=e;e=l}}}if(c){c=h-1|0;if(c>=0){d=0;for(;;){b=_(j,d)[d+1];if(b)b[3]=0;h=d+1|0;if(c===d)break;d=h}}}}var
 hW=[L,"Stdlib.Format.String_tag",aA(0)];function
 ln(a,b){a[13]=a[13]+b[3]|0;return e9(b,a[29])}function
 rG(a,b){return G(a[17],b,0,u(b))}function
@@ -2501,12 +2501,12 @@ c=b[4],d=b[3],e=b[2];a[25]=b[1];a[26]=e;a[27]=d;a[28]=c}function
 zC(a){a[12]=1;a[13]=1;rl(a[29]);rH(a[1]);jx(a[2]);jx(a[3]);jx(a[4]);jx(a[5]);a[10]=0;a[14]=0;a[9]=a[6];return fT(a,0,3)}function
 rK(a,b){var
 c=a[4][1];for(;;){if(!c)break;c=c[2];zA(a)}for(;;){if(1>=a[14]){a[13]=zs;zv(a);if(b)nE(a);return zC(a)}cr(a)}}function
-eB(a,b,c){var
+eC(a,b,c){var
 d=a[14]<a[15]?1:0;return d?zx(a,b,c):d}function
-f(a,b){return eB(a,hX(a,b),b)}function
+f(a,b){return eC(a,hX(a,b),b)}function
 ck(a,b){return f(a,l+b)}function
 zD(a,b){return f(a,qZ(b))}function
-e_(a,b){return eB(a,1,fL(1,b))}function
+e_(a,b){return eC(a,1,fL(1,b))}function
 hZ(a,b){return fT(a,b,1)}function
 fU(a,b){return fT(a,b,4)}function
 e$(a,b){rK(a,0);return i(a[19],0)}function
@@ -2520,7 +2520,7 @@ rN(a,b){var
 c=1<=b?1:0;if(!c)return c;a[6]=zF(b);c=a[8]<=a[6]?a[8]:lg(lg(a[6]-a[7]|0,a[6]/2|0),1);b=1<c?1:0;if(!b)return b;b=a[6]-c|0;c=1<=b?1:0;return c?(a[7]=zF(b),a[8]=a[6]-a[7]|0,zC(a)):c}var
 qu="\n";function
 rO(a,b){return G(a[17],qu,0,1)}var
-L0=eA(0,rC),zG=fL(80,32);function
+L0=eB(0,rC),zG=fL(80,32);function
 jE(a,b){for(;;){var
 c=0<b?1:0;if(!c)return c;if(80>=b)return G(a[17],zG,0,b);G(a[17],zG,0,80);b=b-80|0}}var
 pK=">",vV="<";function
@@ -2538,13 +2538,13 @@ zH(a,b){var
 c=rP(a,b,function(a){return 0},function(a){return 0},function(a){return 0});c[20]=function(a){return rO(c)};c[21]=function(a){return jE(c,a)};c[22]=function(a){return jE(c,a)};return c}function
 zI(d){return zH(function(a,b,c){return yF(d,a,b,c)},function(a){return e7(d)})}function
 gK(d){return zH(function(a,b,c){return fP(d,a,b,c)},function(a){return 0})}var
-h0=kT,B=br(h0),c=zI(yE),bl=zI(cV),rQ=gK(B),rR=eA(0,function(a){return br(h0)});lm(rR,B);var
-zJ=eA(0,function(a){return gK(cj(rR))});lm(zJ,rQ);function
+h0=kT,B=br(h0),c=zI(yE),bl=zI(cV),rQ=gK(B),rR=eB(0,function(a){return br(h0)});lm(rR,B);var
+zJ=eB(0,function(a){return gK(cj(rR))});lm(zJ,rQ);function
 zK(a,b,c,d){return fP(cj(a),b,c,d)}function
 zL(a,b,c){b=cj(b);c=b[2];yF(a,bP(b),0,c);e7(a);return li(b)}var
-zM=eA(0,function(a){return br(h0)}),zN=eA(0,function(a){return br(h0)}),nG=eA(0,function(a){var
+zM=eB(0,function(a){return br(h0)}),zN=eB(0,function(a){return br(h0)}),nG=eB(0,function(a){var
 b=rP(function(a,b,c){return zK(zM,a,b,c)},function(a){return zL(yE,zM)},function(a){return 0},function(a){return 0},function(a){return 0});b[20]=function(a){return rO(b)};b[21]=function(a){return jE(b,a)};b[22]=function(a){return jE(b,a)};zg(function(a){return e$(b)});return b});lm(nG,c);var
-zO=eA(0,function(a){var
+zO=eB(0,function(a){var
 b=rP(function(a,b,c){return zK(zN,a,b,c)},function(a){return zL(cV,zN)},function(a){return 0},function(a){return 0},function(a){return 0});b[20]=function(a){return rO(b)};b[21]=function(a){return jE(b,a)};b[22]=function(a){return jE(b,a)};zg(function(a){return e$(b)});return b});lm(zO,bl);function
 nH(a,b){rK(b,0);b=bP(a);y2(a);return b}function
 zP(a,b,c,d){a=a?a[1]:zE;var
@@ -2581,7 +2581,7 @@ d!=="number"&&1===d[0]){b=b[2];d=d[2];c=c[1];break a}}b=b[2];break b;case
 d!=="number"&&0===d[0]){c=d[2];if(typeof
 c!=="number"&&1===c[0]){b=b[2];c=c[2];d=d[1];break c}}b=b[2];break;case
 6:d=b[2];cK(a,b[1]);return i(d,a);case
-7:cK(a,b[1]);return e$(a);default:d=b[2];cK(a,b[1]);return J(d)}cK(a,d);return e_(a,b)}cK(a,d);return eB(a,c,fL(1,b))}cK(a,c);return f(a,b)}cK(a,c);return eB(a,d,b)}function
+7:cK(a,b[1]);return e$(a);default:d=b[2];cK(a,b[1]);return J(d)}cK(a,d);return e_(a,b)}cK(a,d);return eC(a,c,fL(1,b))}cK(a,c);return f(a,b)}cK(a,c);return eC(a,d,b)}function
 dj(a,b){if(typeof
 b==="number")return;a:{b:{c:{switch(b[0]){case
 0:var
@@ -2602,8 +2602,8 @@ d!=="number"&&0===d[0]){c=d[2];if(typeof
 c!=="number"&&1===c[0]){b=b[2];c=c[2];d=d[1];break c}}b=b[2];break;case
 6:d=b[1];if(typeof
 d!=="number"&&0===d[0]){c=d[2];if(typeof
-c!=="number"&&1===c[0]){b=b[2];c=c[2];dj(a,d[1]);return eB(a,c,i(b,0))}}b=b[2];dj(a,d);return f(a,i(b,0));case
-7:dj(a,b[1]);return e$(a);default:d=b[2];dj(a,b[1]);return J(d)}dj(a,d);return e_(a,b)}dj(a,d);return eB(a,c,fL(1,b))}dj(a,c);return f(a,b)}dj(a,c);return eB(a,d,b)}function
+c!=="number"&&1===c[0]){b=b[2];c=c[2];dj(a,d[1]);return eC(a,c,i(b,0))}}b=b[2];dj(a,d);return f(a,i(b,0));case
+7:dj(a,b[1]);return e$(a);default:d=b[2];dj(a,b[1]);return J(d)}dj(a,d);return e_(a,b)}dj(a,d);return eC(a,c,fL(1,b))}dj(a,c);return f(a,b)}dj(a,c);return eC(a,d,b)}function
 zR(d,b,c){return as(function(a){cK(b,a);return d(b)},0,c[1])}function
 g(c){function
 b(a){return 0}return function(a){return zR(b,c,a)}}function
@@ -2627,13 +2627,13 @@ zU(a){var
 d=u(a)-1|0,b=0;if(d<0);else{var
 c=0;for(;;){b=(223*b|0)+C(a,c)|0;var
 e=c+1|0;if(d===c)break;c=e}}b&=kH;b=kU<b?b+2147483648|0:b;return b}var
-rW=nx([0,_]),zV=nx([0,_]),zW=nx([0,aD]),zX=yo(0,0);function
+rW=nx([0,Y]),zV=nx([0,Y]),zW=nx([0,aD]),zX=yo(0,0);function
 zY(a){return 2<a?zY((a+1|0)/2|0)*2|0:a}var
 ap2=[0,0];function
 zZ(a){x4(ap2,0,1);var
-c=a.length-1,d=cp((c*2|0)+2|0,zX);Z(d,0)[1]=c;var
-b=((zY(c)*32|0)/8|0)-1|0;Z(d,1)[2]=b;c=c-1|0;if(c>=0){b=0;for(;;){var
-e=(b*2|0)+3|0,f=Z(a,b)[b+1];Z(d,e)[e+1]=f;e=b+1|0;if(c===b)break;b=e}}return[0,2,d,zV[1],zW[1],,,rW[1],0]}function
+c=a.length-1,d=cp((c*2|0)+2|0,zX);_(d,0)[1]=c;var
+b=((zY(c)*32|0)/8|0)-1|0;_(d,1)[2]=b;c=c-1|0;if(c>=0){b=0;for(;;){var
+e=(b*2|0)+3|0,f=_(a,b)[b+1];_(d,e)[e+1]=f;e=b+1|0;if(c===b)break;b=e}}return[0,2,d,zV[1],zW[1],,,rW[1],0]}function
 L3(a,b){return fT(a,b,2)}var
 Ja=-49,Md=[0,[11,"bad character hexadecimal encoding \\",[0,[0,0]]],"bad character hexadecimal encoding \\%c%c"],Mc=[0,[11,"bad character decimal encoding \\",[0,[0,[0,0]]]],"bad character decimal encoding \\%c%c%c"];function
 Me(a,b){var
@@ -2659,7 +2659,7 @@ c=1;for(;;){d[c+1]=zU(a[c+1]);var
 e=c+1|0;if(b===c){b=d;break}c=e}}}d=zZ(b);e=a.length-2|0;if(e>=0){b=0;for(;;){c=(b*2|0)+2|0;d[3]=zV[2].call(null,a[b+1],c,d[3]);d[4]=zW[2].call(null,c,1,d[4]);c=b+1|0;if(e===b)break;b=c}}return d}var
 G_="x",bl=[0,0];if(!bl[1]){var
 dk=Mf(0),c=G_;try{B=rW[17].call(null,c,dk[7]);var
-z0=B}catch(f){B=ai(f);if(B!==bH)throw m(B,0);B=dk[1];dk[1]=B+1|0;dk[7]=rW[2].call(null,c,B,dk[7]);z0=B}x4([0,0],0,dk[1]-1|0);dk[8]=ju(dk[8]);B=3+((Z(dk[2],1)[2]*16|0)/32|0)|0;c=dk[2].length-1;var
+z0=B}catch(f){B=ai(f);if(B!==bH)throw m(B,0);B=dk[1];dk[1]=B+1|0;dk[7]=rW[2].call(null,c,B,dk[7]);z0=B}x4([0,0],0,dk[1]-1|0);dk[8]=ju(dk[8]);B=3+((_(dk[2],1)[2]*16|0)/32|0)|0;c=dk[2].length-1;var
 Mg=function(a){var
 b=yo(L,dk[1]);b[1]=dk[2];b=Kl(b);b[z0+1]=a[2];return b};if(c<B){B=cp(B,zX);rb(dk[2],0,B,0,c);dk[2]=B}bl[1]=Mg}B=[0,0];bl=i(bl[1],[0,0,B]);B[1]=[0,bl];function
 z1(a,b){var
@@ -2698,7 +2698,7 @@ z9(a){if(0===a[0])return rZ(a[1]);var
 d=z8();function
 e(a,b){if(0===b[0]){b=b[1];var
 c=rZ(b),b=c===b?1:0,a=a?b:a;if(a)ad(d,32);aW(d,c);return b}b=b[1];if(!b){aW(d,m_);return 0}c=b[2];b=b[1];ad(d,40);b=e(0,b);for(;;){if(!c){ad(d,41);return 0}a=c[2];b=e(b,c[1]);c=a}}e(0,a);return bP(d)}function
-eC(a){return[0,qZ(a)]}function
+eD(a){return[0,qZ(a)]}function
 h3(a){return[0,a]}function
 z_(a){return[0,fL(1,a)]}function
 z$(a){return[0,l+a]}var
@@ -2711,18 +2711,18 @@ rX(a,b){return b&(a[2].length-2|0)}var
 Mp=[0,0],cL=function(a){var
 b=16,c=Mp[1];for(;;){if(a<=b)break;if(dy<(b*2|0))break;b=b*2|0}a:if(c){c=bN(z2);if(cc!==c){if(aT!==c&&cf!==c)break a;cJ(z2)}}return[0,0,cp(b,0)]}(17),bv=0;function
 d4(a,b,c,d){a=a?a[1]:1;b=z3(bv,c);var
-e=rX(cL,b),d=[0,d,a];if(1-(1<=Ky))J("Obj.Ephemeron.create");a=aqE(1);JX(a,d);q5(a,0,"Obj.Ephemeron.set_key");aqH(a,0,c);a=[0,b,a,Z(cL[2],e)[e+1]];Z(cL[2],e)[e+1]=a;cL[1]=cL[1]+1|0;e=cL[2].length-1<<1<cL[1]?1:0;if(!e)return e;e=cL[2];a=e.length-1;b=a*2|0;function
+e=rX(cL,b),d=[0,d,a];if(1-(1<=Ky))J("Obj.Ephemeron.create");a=aqE(1);JX(a,d);q5(a,0,"Obj.Ephemeron.set_key");aqH(a,0,c);a=[0,b,a,_(cL[2],e)[e+1]];_(cL[2],e)[e+1]=a;cL[1]=cL[1]+1|0;e=cL[2].length-1<<1<cL[1]?1:0;if(!e)return e;e=cL[2];a=e.length-1;b=a*2|0;function
 h(a){for(;;){if(!a)return 0;var
 c=a[2],d=a[1],b=a[3];q5(c,0,"Obj.Ephemeron.check_key");if(aqD(c,0)){b=a[2];return[0,d,b,h(a[3])]}cL[1]=cL[1]-1|0;a=b}}var
 c=cL[2],d=c.length-2|0;if(d>=0){var
-f=0;for(;;){c[f+1]=h(Z(c,f)[f+1]);var
+f=0;for(;;){c[f+1]=h(_(c,f)[f+1]);var
 j=f+1|0;if(d===f)break;f=j}}d=b<dy;d=d?(a>>>1|0)<=cL[1]:d;if(d){var
 g=cp(b,0);cL[2]=g;var
 i=function(a){if(!a)return;var
-b=a[1],c=a[2];i(a[3]);a=rX(cL,b);g[a+1]=[0,b,c,Z(g,a)[a+1]]},a=a-1|0;if(a>=0){b=0;for(;;){i(Z(e,b)[b+1]);d=b+1|0;if(a===b)break;b=d}}}}function
+b=a[1],c=a[2];i(a[3]);a=rX(cL,b);g[a+1]=[0,b,c,_(g,a)[a+1]]},a=a-1|0;if(a>=0){b=0;for(;;){i(_(e,b)[b+1]);d=b+1|0;if(a===b)break;b=d}}}}function
 Aa(a,b){var
 d=q4(b)?bN(b)!==L?1<=b.length-1?b[1]:b:b:b,e="Obj.extension_constructor";a:{if(q4(d)&&bN(d)===L){var
-c=d[1];break a}c=J(e)}d=bN(c)===kY?d:J(e);e=z3(bv,d);c=rX(cL,e);c=Z(cL[2],c)[c+1];for(;;){if(c){var
+c=d[1];break a}c=J(e)}d=bN(c)===kY?d:J(e);e=z3(bv,d);c=rX(cL,e);c=_(cL[2],c)[c+1];for(;;){if(c){var
 g=c[3],f=c[2];if(e!==c[1]){c=c[3];continue}q5(f,0,"Obj.Ephemeron.get_key");c=aqF(f,0);c=c?d===c[1]?0:1:2;if(0!==c){c=g;continue}c=JW(f);if(!c){c=g;continue}}else
 c=0;if(!c)return 0;d=c[1];e=d[2];d=d[1];if(a&&!e)return 0;return[0,i(d,b)]}}function
 h4(a){var
@@ -2743,7 +2743,7 @@ bs(a,b,c){return Mv(j(V(M4),a,c),b)}function
 r0(a,b){return qG(qK(a,b),a,b)}function
 ls(a,b){return qG(a<=b?1:0,a,b)}function
 at(a,b){return a===b?1:0}var
-nL=_;function
+nL=Y;function
 lt(a){return a[1]}function
 fb(a){return a[2]}var
 D=ap$(0);function
@@ -2839,8 +2839,8 @@ Nm(a,e,c,d){return a(c,e[1],function(a,b){b=d(b);return e[2].call(null,a,b)})}fu
 Nn(a,b,c,d){return r2(function(e){return[0,a(d,b,function(a,b){a=c(a,b);return 0===a[0]?a[1]:e(a)})]})}function
 Np(a){var
 b=a[1];return[0,,,,,,,,,,,,,,function(a){return No(b,a)}]}if(D){D=cj(H);var
-zm=rB();aqm(D,zm);zn(cj(H),[0,137]);D=eA([0,function(a){return rD(a)}],function(a){return zm});cj(D);var
-ly=D}else{if(D)ae("initializing Random with a nondeterministic seed is forbidden in inline tests");ly=eA([0,function(a){return rD(a)}],rC)}function
+zm=rB();aqm(D,zm);zn(cj(H),[0,137]);D=eB([0,function(a){return rD(a)}],function(a){return zm});cj(D);var
+ly=D}else{if(D)ae("initializing Random with a nondeterministic seed is forbidden in inline tests");ly=eB([0,function(a){return rD(a)}],rC)}function
 Aq(a,b){for(;;){var
 c=Ap(a),d=9.313225746154785e-10,c=(c*d+Ap(a))*d;if(c<1.)return c*b}}var
 ky=104758188;function
@@ -2923,7 +2923,7 @@ Az(a,b){return nP(a,b,function(a,b){return[0,a,b]})}function
 ct(a,b){if(!a)return 0;var
 c=a[2],a=[0,j(b,0,a[1]),aC],f=a,e=1,d=1;for(;;){if(!c){f[e+1]=0;return a}var
 g=c[2],c=[0,j(b,d,c[1]),aC];f[e+1]=c;f=c;e=1;d=d+1|0;c=g}}function
-eD(a,d){function
+d5(a,d){function
 f(a,b){if(2===a){if(b){var
 c=b[2];if(c){a=c[1];b=b[1];c=c[2];b=0<j(d,b,a)?[0,a,[0,b,0]]:[0,b,[0,a,0]];return[0,b,c]}}}else if(3===a&&b){c=b[2];if(c){var
 e=c[2];if(e){a=e[1];c=c[1];b=b[1];e=e[2];a=0<j(d,b,c)?0<j(d,b,a)?0<j(d,c,a)?[0,a,[0,c,[0,b,0]]]:[0,c,[0,a,[0,b,0]]]:[0,c,[0,b,[0,a,0]]]:0<j(d,c,a)?0<j(d,b,a)?[0,a,[0,b,[0,c,0]]]:[0,b,[0,a,[0,c,0]]]:[0,b,[0,c,[0,a,0]]];return[0,a,e]}}}e=a>>1;b=h(e,b);c=b[1];e=h(a-e|0,b[2]);a=e[1];b=0;e=e[2];for(;;){if(c){if(a){var
@@ -3132,7 +3132,7 @@ AU(a){return i(c0(N8),0)}var
 N9=[0,[2,0,[12,32,[12,37,[12,32,[2,0,[11," in core_int.ml: modulus should be positive",0]]]]]],"%s %% %s in core_int.ml: modulus should be positive"];function
 AV(a,b){if(b<=0)G(c0(N9),l+a,l+b,0);a=yn(a,b);return a<0?a+b|0:a}var
 AW=aD;function
-si(a,b){return Z(a,b)[b+1]}function
+si(a,b){return _(a,b)[b+1]}function
 AY(a,b,c){a[b+1]=c}function
 AZ(a,b,c){a[b+1]=c}function
 sj(a,b,c){var
@@ -3249,7 +3249,7 @@ p(a){return a[1][1]}function
 A$(a){return sl(a[2])}function
 fh(a){return sm(a[2])}function
 eG(a){return A9(0,a[2])}function
-d5(a,b,c){return aZ(a[2],b,c)}function
+d6(a,b,c){return aZ(a[2],b,c)}function
 Ba(a,b){function
 c(a){for(;;){if(typeof
 a==="number")return;if(0===a[0])return b(a[1]);var
@@ -3296,7 +3296,7 @@ e=b[2];c=F(c,b[1][2],d);b=e}}function
 aR(a,b){var
 c=aP,d=a[1];for(;;){if(!b)return[0,a,c];var
 e=b[2];c=N(c,b[1],d);b=e}}function
-d6(a,b){return av(a[1],b)}function
+d7(a,b){return av(a[1],b)}function
 gO(a,d){var
 c=o[1];return[0,o,aZ(a[2],aP,function(a,b){return N(a,d(b),c)})]}function
 jN(a,g){var
@@ -3423,7 +3423,7 @@ Bn(a,b,c,d,e,f){return n2(c,[0,b,a],function(g,b,c){c=jO(c[1],g,function(a){retu
 a8(a){return a[1][1]}function
 lF(a,b){var
 c=b[1],b=b[2],d=a[1];return a[2]===c?a:[0,d,c,b]}function
-d7(a,b){var
+d8(a,b){var
 c=a8(a),c=f1(a[2],b,c);return c?c[1]:0}var
 Bf=[0,"Map.find_exn: not found"];function
 P(a,b){var
@@ -3521,21 +3521,21 @@ Gj=D-(D>>>1|0)|0;function
 sI(a,b,c,d){a=a?a[1]:1;b=b?b[1]:0;b=ls(qG(b<=1?1:0,1,b),Gj);if(b<=0)AU();b=b-1|0;b|=b>>>1|0;b|=b>>>2|0;b|=b>>>4|0;b|=b>>>8|0;b|=b>>>16|0;return[0,hO((b|b>>>32|0)+1|0,0),0,a,c,1]}function
 n6(a,b){b=i(a[4][1],b);return b&(a[1].length-2|0)}function
 sJ(a,b,c,d){var
-e=n6(a,c),g=Z(a[1],e)[e+1],f=[0,0],c=sD(g,b,ig(a),f,c,d);if(f[1])a[2]=a[2]+1|0;if(1-(c===g))Z(a[1],e)[e+1]=c;return f[1]}function
+e=n6(a,c),g=_(a[1],e)[e+1],f=[0,0],c=sD(g,b,ig(a),f,c,d);if(f[1])a[2]=a[2]+1|0;if(1-(c===g))_(a[1],e)[e+1]=c;return f[1]}function
 Bv(c){var
 b=c[1].length-1,a=b<c[2],a=a?c[3]:a;if(a){a=ls(b*2|0,Gj);if(b<a){b=c[1];c[1]=hO(a,0);c[2]=0;a=b.length-2|0;var
 e=function(a,b){sJ(c,1,a,b)};if(a>=0){var
-d=0;for(;;){sF(Z(b,d)[d+1],e);var
+d=0;for(;;){sF(_(b,d)[d+1],e);var
 f=d+1|0;if(a===d)break;d=f}}}}}function
 gR(a,b,c){sG(a);sJ(a,1,b,c);return Bv(a)}function
 OM(a){return[0,a]}function
 ON(a){return 0}function
 fj(a,b){var
-c=n6(a,b),c=Z(a[1],c)[c+1];if(typeof
+c=n6(a,b),c=_(a[1],c)[c+1];if(typeof
 c==="number")return 0;if(0===c[0])return Bt(c,ig(a),b,OM,ON);var
 d=c[1],c=c[2];return 0===j(ig(a),d,b)?[0,c]:0}function
 f5(a,b){var
-c=n6(a,b),c=Z(a[1],c)[c+1];if(typeof
+c=n6(a,b),c=_(a[1],c)[c+1];if(typeof
 c==="number")return 0;if(0===c[0])return Bt(c,ig(a),b,OJ,OK);c=c[1];return 0===j(ig(a),c,b)?1:0}function
 sK(a,b,c){if(0===a[2])return b;b=[0,b];var
 g=a[5],e=a[1].length-1;try{a[5]=0;e=e-1|0;if(e>=0){var
@@ -3553,7 +3553,7 @@ OP(a,b){return a}var
 sM=[0,"Hashtbl.find_exn: not found"];function
 OQ(a,b){throw m([0,fV,[1,[0,sM,[0,i(b[4][3],a),0]]]],1)}function
 sN(a,b){var
-c=n6(a,b),c=Z(a[1],c)[c+1];if(typeof
+c=n6(a,b),c=_(a[1],c)[c+1];if(typeof
 c==="number")throw m([0,fV,[1,[0,sM,[0,i(a[4][3],b),0]]]],1);if(0===c[0])return Bs(c,ig(a),b,a,bv,OH,OI,OP,OQ);var
 d=c[1],c=c[2];if(0===j(ig(a),d,b))return c;throw m([0,fV,[1,[0,sM,[0,i(a[4][3],b),0]]]],1)}function
 Bw(a,b){a=fj(a,b);return a?a[1]:0}function
@@ -3576,11 +3576,11 @@ b=0;a=1-b;if(!a)return a;arA(1)}());function
 By(a){return lH(0,0,[0,nL,h3,x2])}function
 Bz(a){return lH(0,0,[0,nL,h3,x2])}var
 a2=[0,bB,h3];function
-BA(a){return d6([0,a2],a)}function
+BA(a){return d7([0,a2],a)}function
 gS(a){return a[1]}function
 lJ(a,b){return 0}function
 eJ(a,b,c){return g(b)(a)}function
-d8(a,b){return a?b:lJ}function
+d9(a,b){return a?b:lJ}function
 n8(a,b){return g(b)(a)}function
 a0(a,b){return zE(a)}function
 f6(a,b){return rM(a)}function
@@ -3599,7 +3599,7 @@ gT(c){return function(a,b){fU(a,OV[1]);BB(vs,qf,c,a,b);return cr(a)}}var
 OW=[0,1];function
 BC(a,e){var
 d=a?a[1]:dQ;function
-c(a,b){return eB(a,1,d)}return function(a,b){fU(a,OW[1]);sP(c,e,a,b);c(a,b);return cr(a)}}function
+c(a,b){return eC(a,1,d)}return function(a,b){fU(a,OW[1]);sP(c,e,a,b);c(a,b);return cr(a)}}function
 n_(a,b,c,d,e){a=a?a[1]:a0;var
 f=e[2];b(d,e[1]);a(d);return j(c,d,f)}function
 BD(a,b,c,d){a=a?a[1]:lJ;if(!d)return a(c);a=d[1];return i(b(c),a)}function
@@ -3629,7 +3629,7 @@ b=a[2],c=b[1],f=d[1],a=i(b[2],a[3]);d[1]=sS[2].call(null,c,a,f);return e},c[26],
 IB="N",Jj=323557469,cA=870530776,GC="A",O4=[0,q,674,60],Gk=[0,2,function(a){return cA<=a?IB:GC},function(a){if(a===GC)return Jj;if(a!==IB)throw m([0,z,O4],1);return cA}];function
 BJ(a){a=BI(Gk,a);return a?a[1]:cA}var
 Il="m",Ig="\x1b[";function
-BK(a,b){eB(a,0,Ig);eB(a,0,b);return eB(a,0,Il)}var
+BK(a,b){eC(a,0,Ig);eC(a,0,b);return eC(a,0,Il)}var
 JE="94",IP="44",xe="34",k1=737308346,pZ=";",Jv="45",i8=4100401,qt=737455525,IA="92",GU="42",fE=15713,w9="37",hH=756711075,w8="33",Jn="47",Is="40",Jk="3",dt="1",Im="7",GL="46",GI="41",GF="43",Jh="95",vu="36",v$="31",Jc="93",mL=242899572,i0=82908052,Hr="90",kw="2",wN="32",I6="91",wF="35",vi="30",kR=-605101559,IZ="4",IY="97",Hd="96",pp=[0,3,zh,zh];function
 cM(a,b,c,d){if(cA<=BJ(c))return j(b,c,d);var
 f=BI(pp,c),g=al,i=f?f[1]:(oa(pp,g,c),g),g=-588596599,f=749039939;if(typeof
@@ -3727,10 +3727,10 @@ f=c[4]-1|0,d=b[3],e=((f+c[5]|0)-d|0)-1|0,c=qY(e,(f+c[6]|0)-d|0),d=b[4];if(d){d=d
 d="Line";e=e===c?i(V(Pu),e+1|0):j(V(Pw),e+1|0,c+1|0);b=b[2];return jQ(x(V(Pv),d,b,e,a))}var
 Px=[0,[2,0,[11,xr,[2,0,[12,39,0]]]],"%s '%s'"];function
 B5(a,b,c){var
-d=ex(c);return fk(j(V(Px),a,d),b,c)}var
+d=ey(c);return fk(j(V(Px),a,d),b,c)}var
 O$=[0,"\0\0\xfe\xff\xff\xff","\xff\xff\xff\xff\xff\xff","\x01\0\0\0\0\0","\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0","\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\0\0",l,l,l,l,l,l],Py=[0,[2,0,[11,xr,[2,0,[2,0,[12,39,0]]]]],"%s '%s%s'"];function
-d9(a,b,c){var
-j=ex(c),e=32,f=br(e),g=c[4],h=c[5];for(;;){var
+d_(a,b,c){var
+j=ey(c),e=32,f=br(e),g=c[4],h=c[5];for(;;){var
 d=0;for(;;){d=rk(O$,d,c);if(0!==d){if(1!==d){i(c[1],c);continue}if(0<e){ad(f,k4(c[2],c[5]|0));e=e-1|0;break}}c[5]=h+1|0;c[4]=g;f=bP(f);return fk(G(V(Py),a,j,f),b,c)}}}var
 jR=[L,"Yojson__Basic.Int_overflow",aA(0)];function
 s1(a,b){a[2]=a[2]+1|0;a[3]=b[4]+b[6]|0}function
@@ -3753,21 +3753,21 @@ for(;;){if(214748365<=g)throw m(jR,1);g=(10*g|0)+(k4(d,e)+fD|0)|0;var
 f=e+1|0;if(a===e)break;e=f}if(0>g)throw m(jR,1);a=[0,ce,g];return a}catch(f){a=ai(f);if(a===jR)return B5(h,b,c);throw m(a,0)}case
 8:try{a=c[5]+1|0;e=c[6]-1|0;d=c[2];f=0;if(e<a);else
 for(;;){if(f<=-214748365)throw m(jR,1);f=(10*f|0)-(k4(d,a)+fD|0)|0;g=a+1|0;if(e===a)break;a=g}if(0<f)throw m(jR,1);f=[0,ce,f];return f}catch(f){a=ai(f);if(a===jR)return B5(h,b,c);throw m(a,0)}case
-9:return[0,dq,hM(ex(c))];case
-10:e=[0,0];try{d_(b,c);a=290;for(;;){a=dx(dE,a,c);if(0===a)throw m(sW,1);if(1===a)break;i(c[1],c)}a=B9(b,c);d_(b,c);B_(b,c);d_(b,c);d=e[1];e[1]=[0,[0,a,lN(b,c)],d];for(;;){d_(b,c);a=HX;for(;;){a=dx(dE,a,c);if(3>=a>>>0)break;i(c[1],c)}switch(a){case
+9:return[0,dq,hM(ey(c))];case
+10:e=[0,0];try{d$(b,c);a=290;for(;;){a=dx(dE,a,c);if(0===a)throw m(sW,1);if(1===a)break;i(c[1],c)}a=B9(b,c);d$(b,c);B_(b,c);d$(b,c);d=e[1];e[1]=[0,[0,a,lN(b,c)],d];for(;;){d$(b,c);a=HX;for(;;){a=dx(dE,a,c);if(3>=a>>>0)break;i(c[1],c)}switch(a){case
 1:throw m(sW,1);case
-2:d9("Expected ',' or '}' but found",b,c);break;case
-3:fk(hq,b,c);break}d_(b,c);a=B9(b,c);d_(b,c);B_(b,c);d_(b,c);d=e[1];e[1]=[0,[0,a,lN(b,c)],d]}}catch(f){a=ai(f);if(a===sW)return[0,an,ju(e[1])];throw m(a,0)}break;case
-11:a=[0,0];try{d_(b,c);e=dU;for(;;){e=dx(dE,e,c);if(0===e)throw m(sV,1);if(1===e)break;i(c[1],c)}e=a[1];a[1]=[0,lN(b,c),e];for(;;){d_(b,c);e=257;for(;;){e=dx(dE,e,c);if(3>=e>>>0){switch(e){case
+2:d_("Expected ',' or '}' but found",b,c);break;case
+3:fk(hq,b,c);break}d$(b,c);a=B9(b,c);d$(b,c);B_(b,c);d$(b,c);d=e[1];e[1]=[0,[0,a,lN(b,c)],d]}}catch(f){a=ai(f);if(a===sW)return[0,an,ju(e[1])];throw m(a,0)}break;case
+11:a=[0,0];try{d$(b,c);e=dU;for(;;){e=dx(dE,e,c);if(0===e)throw m(sV,1);if(1===e)break;i(c[1],c)}e=a[1];a[1]=[0,lN(b,c),e];for(;;){d$(b,c);e=257;for(;;){e=dx(dE,e,c);if(3>=e>>>0){switch(e){case
 1:throw m(sV,1);case
-2:d9("Expected ',' or ']' but found",b,c);break;case
-3:fk(hq,b,c);break}d_(b,c);e=a[1];a[1]=[0,lN(b,c),e];break}i(c[1],c)}}}catch(f){e=ai(f);if(e===sV)return[0,cC,ju(a[1])];throw m(e,0)}break;case
-12:return d9(e,b,c);case
-13:return d9(e,b,c);case
+2:d_("Expected ',' or ']' but found",b,c);break;case
+3:fk(hq,b,c);break}d$(b,c);e=a[1];a[1]=[0,lN(b,c),e];break}i(c[1],c)}}}catch(f){e=ai(f);if(e===sV)return[0,cC,ju(a[1])];throw m(e,0)}break;case
+12:return d_(e,b,c);case
+13:return d_(e,b,c);case
 15:B7(b,c);return a<50?iX(a+1|0,b,c):ax(iX,[0,b,c]);case
 16:s1(b,c);return a<50?iX(a+1|0,b,c):ax(iX,[0,b,c]);case
 18:return fk(hq,b,c);case
-19:return d9(e,b,c);default:return a<50?iX(a+1|0,b,c):ax(iX,[0,b,c])}}function
+19:return d_(e,b,c);default:return a<50?iX(a+1|0,b,c):ax(iX,[0,b,c])}}function
 mz(a,b,c){var
 d=58;return a<50?Gm(a+1|0,b,c,d):ax(Gm,[0,b,c,d])}function
 B6(a,b){return e8(mz(0,a,b))}function
@@ -3783,9 +3783,9 @@ Gm(a,b,c,d){for(;;){d=dx(dE,d,c);if(3>=d>>>0)break;i(c[1],c)}switch(d){case
 6:d=fN(c,c[5]+1|0);var
 f=fN(c,c[5]+2|0),e=fN(c,c[5]+3|0),g=gU(fN(c,c[5]+4|0)),e=gU(e)<<4,f=gU(f)<<8,d=gU(d)<<12|f|e|g;if(wt<=d&&wE>=d){e=82;for(;;){e=dx(dE,e,c);if(2>=e>>>0)break;i(c[1],c)}switch(e){case
 0:e=fN(c,c[5]+2|0);f=fN(c,c[5]+3|0);g=fN(c,c[5]+4|0);var
-h=gU(fN(c,c[5]+5|0)),g=gU(g)<<4,f=gU(f)<<8,e=gU(e)<<12|f|g|h;if(xf<=e&&mY>=e){BW(b[1],pV+((d-55296|0)<<10|e-56320|0)|0);break a}d9("Invalid low surrogate for code point beyond U+FFFF",b,c);break a;case
-1:d9("Missing escape sequence representing low surrogate for code point beyond U+FFFF",b,c);break a;default:fk(hq,b,c);break a}}BW(b[1],d);break;case
-7:d9("Invalid escape sequence",b,c);break;default:fk(hq,b,c)}return a<50?mz(a+1|0,b,c):ax(mz,[0,b,c]);case
+h=gU(fN(c,c[5]+5|0)),g=gU(g)<<4,f=gU(f)<<8,e=gU(e)<<12|f|g|h;if(xf<=e&&mY>=e){BW(b[1],pV+((d-55296|0)<<10|e-56320|0)|0);break a}d_("Invalid low surrogate for code point beyond U+FFFF",b,c);break a;case
+1:d_("Missing escape sequence representing low surrogate for code point beyond U+FFFF",b,c);break a;default:fk(hq,b,c);break a}}BW(b[1],d);break;case
+7:d_("Invalid escape sequence",b,c);break;default:fk(hq,b,c)}return a<50?mz(a+1|0,b,c):ax(mz,[0,b,c]);case
 2:d=b[1];e=c[6]-c[5]|0;h=c[5];g=c[2];f=h<0;if(f);else{f=e<0;f||=(a$(g)-e|0)<h}if(f)J("Buffer.add_subbytes");var
 j=d[2],k=d[1],l=j+e|0,m=k[1];if(k[2]<l){rn(d,e);jw(g,h,d[1][1],d[2],e)}else
 e6(g,h,m,j,e);d[2]=l;return a<50?mz(a+1|0,b,c):ax(mz,[0,b,c]);default:return fk(hq,b,c)}}function
@@ -3793,10 +3793,10 @@ B7(a,b){for(;;){var
 c=be;a:for(;;){c=dx(dE,c,b);if(3>=c>>>0)switch(c){case
 3:break a;case
 0:return;case
-1:return d9("Unterminated comment",a,b);default:s1(a,b);break a}i(b[1],b)}}}function
+1:return d_("Unterminated comment",a,b);default:s1(a,b);break a}i(b[1],b)}}}function
 B8(a){var
 b=131;for(;;){b=dx(dE,b,a);if(0===b)return 1;if(1===b)return 0;i(a[1],a)}}function
-d_(a,b){for(;;){var
+d$(a,b){for(;;){var
 c=133;a:for(;;){c=dx(dE,c,b);if(4>=c>>>0)switch(c){case
 3:break a;case
 1:B7(a,b);break a;case
@@ -3805,12 +3805,12 @@ B9(a,b){var
 c=GN;for(;;){c=dx(dE,c,b);if(3>=c>>>0)switch(c){case
 0:li(a[1]);return B6(a,b);case
 1:return gH(b,b[5],b[6]);case
-2:return d9("Expected string or identifier but found",a,b);default:return fk(hq,a,b)}i(b[1],b)}}var
+2:return d_("Expected string or identifier but found",a,b);default:return fk(hq,a,b)}i(b[1],b)}}var
 Hp=297;function
 B_(a,b){var
 c=Hp;for(;;){c=dx(dE,c,b);if(2>=c>>>0)switch(c){case
 0:return;case
-1:return d9("Expected ':' but found",a,b);default:return fk(hq,a,b)}i(b[1],b)}}function
+1:return d_("Expected ':' but found",a,b);default:return fk(hq,a,b)}i(b[1],b)}}function
 B$(a){a=10<=a?a+87|0:a+48|0;return a7(a)}function
 ij(a,b,c,d,e){fP(d,a,b[1],c-b[1]|0);aW(d,e);b[1]=c+1|0}var
 PB=[0,[11,bB,[3,0,[11,q,[4,3,0,0,[11,s,[4,3,0,0,[12,10,[10,0]]]]]]]],D];function
@@ -3853,8 +3853,8 @@ d=br(h0),c=gK(d),a=as(function(a){cK(c,a);return nH(d,c)},0,a);for(;;){if(!b)ret
 e=b[2];a=i(a,b[1]);b=e}}function
 Cb(a){return a?[0,[0,a[1],a[2]]]:0}function
 s2(a){return a?[0,a[1],a[2]]:ae("Nonempty_list.of_list_exn: empty list")}var
-gB="__",PZ=[0,[2,0,[11,"sym",[4,0,0,0,[11,gB,0]]]],"%ssym%d__"],d$=[0,0];function
-ik(a,b){a=a?a[1]:l;d$[1]=d$[1]+1|0;b=d$[1];var
+gB="__",PZ=[0,[2,0,[11,"sym",[4,0,0,0,[11,gB,0]]]],"%ssym%d__"],ea=[0,0];function
+ik(a,b){a=a?a[1]:l;ea[1]=ea[1]+1|0;b=ea[1];var
 e=PZ[1],d=br(h0),c=gK(d);return j(as(function(a){dj(c,a);return nH(d,c)},0,e),a,b)}var
 xJ="AoS",wM="SoA",P0=[0,wM],P1=[0,xJ];function
 il(a){return a?P0:P1}function
@@ -4275,8 +4275,8 @@ b=0;return 0===a[0]?[0,b]:[1,b]}var
 hw="UserDefined",ag="StanLib",Rc=[0,ag],Rd=[0,"CompilerInternal"],Re=[0,hw];function
 Cg(a,b){switch(b[0]){case
 0:a=b[3];var
-c=[0,b[1]],b=jU(eC,b[2]);return[1,[0,Rc,[0,c,[0,b,[0,il(a),0]]]]];case
-1:return[1,[0,Rd,[0,Cf(a,b[1]),0]]];default:c=[0,b[1]];return[1,[0,Re,[0,c,[0,jU(eC,b[2]),0]]]]}}function
+c=[0,b[1]],b=jU(eD,b[2]);return[1,[0,Rc,[0,c,[0,b,[0,il(a),0]]]]];case
+1:return[1,[0,Rd,[0,Cf(a,b[1]),0]]];default:c=[0,b[1]];return[1,[0,Re,[0,c,[0,jU(eD,b[2]),0]]]]}}function
 s6(b){return function(a){switch(a[0]){case
 0:return[0,a[1],a[2],a[3]];case
 1:a=a[1];return[1,Q5(b)(a)];default:return[2,a[1],a[2]]}}}function
@@ -4284,7 +4284,7 @@ s7(c){return function(a,b){switch(b[0]){case
 0:return a;case
 1:b=b[1];return Q6(c)(a,b);default:return a}}}var
 e5="_lpmf",gz="_lupmf",GS="_lp",w1="_rng",eW="_lpdf",wL="_jacobian",ja="_lupdf",Rf=[0,1],Rg=[1,1],Rh=[0,0],Ri=[1,0];function
-ea(a){return aF(a,w1,at)?1:aF(a,GS,at)?2:aF(a,wL,at)?3:aF(a,ja,at)?Rf:aF(a,gz,at)?Rg:aF(a,eW,at)?Rh:aF(a,e5,at)?Ri:0}function
+eb(a){return aF(a,w1,at)?1:aF(a,GS,at)?2:aF(a,wL,at)?3:aF(a,ja,at)?Rf:aF(a,gz,at)?Rg:aF(a,eW,at)?Rh:aF(a,e5,at)?Ri:0}function
 of(a){var
 b=ap(f0(a,e5),function(a){return a+gz});return nV(ap(f0(a,eW),function(a){return a+ja}),b)}var
 Q7=[0,[15,0],b1];function
@@ -4318,7 +4318,7 @@ c==="number")return e_(b,58);switch(c[0]){case
 2:var
 d=c[2],c=c[1];return x(g(b)(Rp),a,c,a,d);default:return a(b,c[1])}}function
 s9(d,b,c){var
-a=gT(A([0,$],function(a,b){return og(d,a,b)}));return lK(0,d8(1-bb(c),a),b,c)}function
+a=gT(A([0,$],function(a,b){return og(d,a,b)}));return lK(0,d9(1-bb(c),a),b,c)}function
 Cj(a){for(;;){if(a){var
 b=a[2],a=typeof
 a[1]==="number"?1:0;if(!(1-a)){a=b;continue}b=1}else
@@ -4326,8 +4326,8 @@ b=0;return 1-b}}var
 ay=16161,Ry=[0,[12,39,[2,0,[12,39,0]]],"'%s'"],Rz=[0,fE,[0,ay,k1]],RA=[0,[15,[11,ar,0]],"%a, "],Rx=[0,[11,", included from\n",[15,0]],", included from\n%a"],RB=[0,[11,"line ",[4,0,0,0,[11,ar,0]]],"line %d, "],RC=[0,[15,[15,[11,"column ",[4,0,0,0,[16,0]]]]],"%a%acolumn %d%t"];function
 s_(a,b,c,d,e){a=a?a[1]:1;b=b?b[1]:1;var
 f=e[4];if(f){f=f[1];var
-h=e[1],f=j(gL(Rx),function(a,b){return s_(0,0,c,a,b)},f)}else{h=aE(c,e[1]);f=function(a){return 0}}a=d8(a,function(a,b){function
-c(a){return n8(Ry,a)}return j(g(a)(RA),function(a,b){return cM(Rz,c,a,b)},b)});b=d8(b,function(a){return n8(RB,a)});var
+h=e[1],f=j(gL(Rx),function(a,b){return s_(0,0,c,a,b)},f)}else{h=aE(c,e[1]);f=function(a){return 0}}a=d9(a,function(a,b){function
+c(a){return n8(Ry,a)}return j(g(a)(RA),function(a,b){return cM(Rz,c,a,b)},b)});b=d9(b,function(a){return n8(RB,a)});var
 i=e[3],e=e[2];return aB(g(d)(RC),a,h,b,e,i,f)}function
 f$(a,b){function
 d(a){var
@@ -4340,14 +4340,14 @@ a9="%a%a",RD=[0,[11,H,[15,0]]," to %a"],RE=[0,[15,[15,0]],a9];function
 ip(h,b,c){var
 d=c[2],c=c[1],f=c[1]===d[1],e=c[2]===d[2],i=c[3]===d[3],a=nU(c[4]);function
 k(a,b){var
-c=[0,1-e],d=[0,1-f];return j(g(a)(RD),function(a,b){return s_(d,c,h,a,b)},b)}if(a){a=f?e?i:e:f;a=1-a}a=d8(a,k);return x(g(b)(RE),function(a,b){return s_(0,0,h,a,b)},c,a,d)}var
+c=[0,1-e],d=[0,1-f];return j(g(a)(RD),function(a,b){return s_(d,c,h,a,b)},b)}if(a){a=f?e?i:e:f;a=1-a}a=d9(a,k);return x(g(b)(RE),function(a,b){return s_(0,0,h,a,b)},c,a,d)}var
 RF=[0,[15,0],b1];function
 Cl(c,b){return j(ak(RF),function(a,b){return ip(c,a,b)},b)}var
 qA="Or",vT="Greater",x0="or",hF="transpose",xY="PNot",jg="pow",xa="Equals",vG="EltDivide",wo="Geq",xV="Plus",ji="divide",w6="NEquals",xM="and",mT="minus",pT="And",vy="LDivide",xK="EltTimes",w2="Pow",pA="plus",wW="IntDivide",xF="EltPow",vr="Times",wT="Less",wS="PPlus",xA="Minus",pN="PMinus",v0="Transpose",wD="Leq",xq="Modulo",pr="Divide";function
 RG(a){var
 v="eltDivide",q="geq",p="pNot",o="nEquals",l="equals",u="less",k="eltTimes",j="modulo",n="greater",t="eltPow",s="pPlus",i="times",r="lDivide",h="pMinus",g="intDivide",m="leq",e="src/middle/Operator.ml.t";if(0===a[0]){var
-d=a[1],c=_(d,xM),b=0;for(;;){switch(b){case
-0:if(0<=c){if(0>=c){b=5;continue}b=_(d,mT);if(0<=b){if(0>=b){b=16;continue}b=_(d,s);if(0<=b){if(0>=b){b=21;continue}if(d===pA){b=20;continue}if(d===jg){b=19;continue}if(d===i){b=18;continue}if(d!==hF)break;b=17;continue}if(d===j){b=15;continue}if(d===o){b=14;continue}if(d===x0){b=13;continue}if(d===h){b=12;continue}if(d!==p)break;b=22;continue}b=_(d,q);if(0>b){if(d===ji){b=4;continue}if(d===v){b=3;continue}if(d===t){b=2;continue}if(d===k){b=1;continue}if(d!==l)break;b=11;continue}if(0>=b){b=10;continue}if(d===n){b=9;continue}if(d===g){b=8;continue}if(d===r){b=7;continue}if(d===m){b=6;continue}if(d!==u)break}else{b=_(d,wT);if(0>b){b=_(d,xa);if(0<=b){if(0>=b){b=11;continue}if(d===wo){b=10;continue}if(d===vT){b=9;continue}if(d===wW){b=8;continue}if(d===vy){b=7;continue}if(d!==wD)break;b=6;continue}if(d===pT){b=5;continue}if(d===pr){b=4;continue}if(d===vG){b=3;continue}if(d===xF){b=2;continue}if(d!==xK)break;b=1;continue}if(0<b){b=_(d,xY);if(0<=b){if(0>=b){b=22;continue}if(d===wS){b=21;continue}if(d===xV){b=20;continue}if(d===w2){b=19;continue}if(d===vr){b=18;continue}if(d!==v0)break;b=17;continue}if(d===xA){b=16;continue}if(d===xq){b=15;continue}if(d===w6){b=14;continue}if(d===qA){b=13;continue}if(d!==pN)break;b=12;continue}}case
+d=a[1],c=Y(d,xM),b=0;for(;;){switch(b){case
+0:if(0<=c){if(0>=c){b=5;continue}b=Y(d,mT);if(0<=b){if(0>=b){b=16;continue}b=Y(d,s);if(0<=b){if(0>=b){b=21;continue}if(d===pA){b=20;continue}if(d===jg){b=19;continue}if(d===i){b=18;continue}if(d!==hF)break;b=17;continue}if(d===j){b=15;continue}if(d===o){b=14;continue}if(d===x0){b=13;continue}if(d===h){b=12;continue}if(d!==p)break;b=22;continue}b=Y(d,q);if(0>b){if(d===ji){b=4;continue}if(d===v){b=3;continue}if(d===t){b=2;continue}if(d===k){b=1;continue}if(d!==l)break;b=11;continue}if(0>=b){b=10;continue}if(d===n){b=9;continue}if(d===g){b=8;continue}if(d===r){b=7;continue}if(d===m){b=6;continue}if(d!==u)break}else{b=Y(d,wT);if(0>b){b=Y(d,xa);if(0<=b){if(0>=b){b=11;continue}if(d===wo){b=10;continue}if(d===vT){b=9;continue}if(d===wW){b=8;continue}if(d===vy){b=7;continue}if(d!==wD)break;b=6;continue}if(d===pT){b=5;continue}if(d===pr){b=4;continue}if(d===vG){b=3;continue}if(d===xF){b=2;continue}if(d!==xK)break;b=1;continue}if(0<b){b=Y(d,xY);if(0<=b){if(0>=b){b=22;continue}if(d===wS){b=21;continue}if(d===xV){b=20;continue}if(d===w2){b=19;continue}if(d===vr){b=18;continue}if(d!==v0)break;b=17;continue}if(d===xA){b=16;continue}if(d===xq){b=15;continue}if(d===w6){b=14;continue}if(d===qA){b=13;continue}if(d!==pN)break;b=12;continue}}case
 23:return 17;case
 22:return 21;case
 21:return 1;case
@@ -4370,9 +4370,9 @@ d=a[1],c=_(d,xM),b=0;for(;;){switch(b){case
 4:return 5;case
 3:return 10;case
 2:return 12;case
-1:return 9}break}}else{c=a[1];if(!c)return bs(e,a,"expected a variant type, saw an empty list");c=c[1];if(0!==c[0])return bs(e,a,"expected a variant type, saw a nested list");c=c[1];d=_(c,xM);b=0;for(;;){var
+1:return 9}break}}else{c=a[1];if(!c)return bs(e,a,"expected a variant type, saw an empty list");c=c[1];if(0!==c[0])return bs(e,a,"expected a variant type, saw a nested list");c=c[1];d=Y(c,xM);b=0;for(;;){var
 f="this constructor does not take arguments";switch(b){case
-0:if(0<=d){if(0>=d){b=5;continue}b=_(c,mT);if(0<=b){if(0>=b){b=16;continue}b=_(c,s);if(0<=b){if(0>=b){b=21;continue}if(c===pA){b=20;continue}if(c===jg){b=19;continue}if(c===i){b=18;continue}if(c!==hF)break;b=17;continue}if(c===j){b=15;continue}if(c===o){b=14;continue}if(c===x0){b=13;continue}if(c===h){b=12;continue}if(c!==p)break;b=22;continue}b=_(c,q);if(0>b){if(c===ji){b=4;continue}if(c===v){b=3;continue}if(c===t){b=2;continue}if(c===k){b=1;continue}if(c!==l)break;b=11;continue}if(0>=b){b=10;continue}if(c===n){b=9;continue}if(c===g){b=8;continue}if(c===r){b=7;continue}if(c===m){b=6;continue}if(c!==u)break}else{b=_(c,wT);if(0>b){b=_(c,xa);if(0<=b){if(0>=b){b=11;continue}if(c===wo){b=10;continue}if(c===vT){b=9;continue}if(c===wW){b=8;continue}if(c===vy){b=7;continue}if(c!==wD)break;b=6;continue}if(c===pT){b=5;continue}if(c===pr){b=4;continue}if(c===vG){b=3;continue}if(c===xF){b=2;continue}if(c!==xK)break;b=1;continue}if(0<b){b=_(c,xY);if(0<=b){if(0>=b){b=22;continue}if(c===wS){b=21;continue}if(c===xV){b=20;continue}if(c===w2){b=19;continue}if(c===vr){b=18;continue}if(c!==v0)break;b=17;continue}if(c===xA){b=16;continue}if(c===xq){b=15;continue}if(c===w6){b=14;continue}if(c===qA){b=13;continue}if(c!==pN)break;b=12;continue}}case
+0:if(0<=d){if(0>=d){b=5;continue}b=Y(c,mT);if(0<=b){if(0>=b){b=16;continue}b=Y(c,s);if(0<=b){if(0>=b){b=21;continue}if(c===pA){b=20;continue}if(c===jg){b=19;continue}if(c===i){b=18;continue}if(c!==hF)break;b=17;continue}if(c===j){b=15;continue}if(c===o){b=14;continue}if(c===x0){b=13;continue}if(c===h){b=12;continue}if(c!==p)break;b=22;continue}b=Y(c,q);if(0>b){if(c===ji){b=4;continue}if(c===v){b=3;continue}if(c===t){b=2;continue}if(c===k){b=1;continue}if(c!==l)break;b=11;continue}if(0>=b){b=10;continue}if(c===n){b=9;continue}if(c===g){b=8;continue}if(c===r){b=7;continue}if(c===m){b=6;continue}if(c!==u)break}else{b=Y(c,wT);if(0>b){b=Y(c,xa);if(0<=b){if(0>=b){b=11;continue}if(c===wo){b=10;continue}if(c===vT){b=9;continue}if(c===wW){b=8;continue}if(c===vy){b=7;continue}if(c!==wD)break;b=6;continue}if(c===pT){b=5;continue}if(c===pr){b=4;continue}if(c===vG){b=3;continue}if(c===xF){b=2;continue}if(c!==xK)break;b=1;continue}if(0<b){b=Y(c,xY);if(0<=b){if(0>=b){b=22;continue}if(c===wS){b=21;continue}if(c===xV){b=20;continue}if(c===w2){b=19;continue}if(c===vr){b=18;continue}if(c!==v0)break;b=17;continue}if(c===xA){b=16;continue}if(c===xq){b=15;continue}if(c===w6){b=14;continue}if(c===qA){b=13;continue}if(c!==pN)break;b=12;continue}}case
 23:return bs(e,a,f);case
 22:return bs(e,a,f);case
 21:return bs(e,a,f);case
@@ -4422,7 +4422,7 @@ lP(a){switch(a){case
 21:return R2;default:return R3}}function
 oi(a){return 5<a-15>>>0?0:1}var
 vS=">=",dO=".^",vH="<=",gt="./",Jw="*",wg="&&",m4="!=",wK="==",aH=".*",wA="||",R6=[0,[12,42,0],Jw],R7=[0,[12,47,0],dS],R8=[0,[12,37,[12,47,[12,37,0]]],"%%/%%"],R9=[0,[12,37,0],"%%"],R_=[0,[12,92,0],HK],R$=[0,[11,aH,0],aH],Sa=[0,[11,gt,0],gt],Sb=[0,[12,94,0],"^"],Sc=[0,[11,dO,0],dO],Sd=[0,[11,wA,0],wA],Se=[0,[11,wg,0],wg],Sf=[0,[11,wK,0],wK],Sg=[0,[11,m4,0],m4],Sh=[0,[12,60,0],vV],Si=[0,[11,vH,0],vH],Sj=[0,[12,62,0],pK],Sk=[0,[11,vS,0],vS],Sl=[0,[12,33,0],"!"],Sm=[0,[12,39,0],xC],R4=[0,[12,43,0],hp],R5=[0,[12,45,0],dV];function
-eb(a,b){switch(b){case
+ec(a,b){switch(b){case
 4:return g(a)(R6);case
 5:return g(a)(R7);case
 6:return g(a)(R8);case
@@ -4597,7 +4597,7 @@ a==="number")switch(a){case
 0:return[1,[0,Sx,[0,dF(a[1]),0]]];case
 1:return[1,[0,Sy,[0,y(dF,a[1]),0]]];default:a=a[1];var
 d=a[4],b=a[3],c=a[2],a=y(function(a){var
-b=a[2],a=ga(a[1]);return[1,[0,a,[0,dF(b),0]]]},a[1]),c=ta(c),b=jU(eC,b);return[1,[0,Sz,[0,[1,[0,a,[0,c,[0,b,[0,il(d),0]]]]],0]]]}}var
+b=a[2],a=ga(a[1]);return[1,[0,a,[0,dF(b),0]]]},a[1]),c=ta(c),b=jU(eD,b);return[1,[0,Sz,[0,[1,[0,a,[0,c,[0,b,[0,il(d),0]]]]],0]]]}}var
 SA=[0,"AutoDiffable"],SB=[0,"DataOnly"],SC=[0,"TupleAD"];function
 ga(a){return typeof
 a==="number"?a?SA:SB:[1,[0,SC,[0,y(ga,a[1]),0]]]}var
@@ -4630,13 +4630,13 @@ td(a){for(;;){if(typeof
 a!=="number")switch(a[0]){case
 0:a=a[1];continue;case
 1:return 1}return 0}}function
-ec(a){if(typeof
-a!=="number"&&0===a[0]){a=ec(a[1]);return[0,a[1],a[2]+1|0]}return[0,a,0]}function
+ed(a){if(typeof
+a!=="number"&&0===a[0]){a=ed(a[1]);return[0,a[1],a[2]+1|0]}return[0,a,0]}function
 te(a){for(;;){var
 b=a[1];if(0===a[2])return b;a=[0,[0,b],a[2]-1|0]}}function
 ol(a){a:{if(typeof
 a==="number"){if(9!==a)break a}else if(2!==a[0])break a;return 1}return 0}var
-dO="tuple(",ho="real",wk="row_vector",qb="complex_matrix",mR="vector",kI="int",gt="tuple(@[%a@])",nd="matrix",aH="<h>",p_="complex_vector",er="array%s %a",xy="complex_row_vector",iY="complex",kB="array",p2=") => ",SG=[0,[11,kB,[2,0,[12,32,[15,0]]]],er],SI=[0,[11,dO,[18,[1,[0,0,l]],[15,[12,44,[17,0,[12,41,0]]]]]],"tuple(@[%a,@])"],SH=[0,[11,dO,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],gt],SJ=[0,[18,[1,[0,[11,aH,0],aH]],[12,40,[15,[11,p2,[15,[17,0,0]]]]]],"@[<h>(%a) => %a@]"];function
+dO="tuple(",ho="real",wk="row_vector",qb="complex_matrix",mR="vector",kI="int",gt="tuple(@[%a@])",nd="matrix",aH="<h>",p_="complex_vector",es="array%s %a",xy="complex_row_vector",iY="complex",kB="array",p2=") => ",SG=[0,[11,kB,[2,0,[12,32,[15,0]]]],es],SI=[0,[11,dO,[18,[1,[0,0,l]],[15,[12,44,[17,0,[12,41,0]]]]]],"tuple(@[%a,@])"],SH=[0,[11,dO,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],gt],SJ=[0,[18,[1,[0,[11,aH,0],aH]],[12,40,[15,[11,p2,[15,[17,0,0]]]]]],"@[<h>(%a) => %a@]"];function
 O(a,b){if(typeof
 b==="number")switch(b){case
 0:return f(a,kI);case
@@ -4648,7 +4648,7 @@ b==="number")switch(b){case
 6:return f(a,p_);case
 7:return f(a,xy);case
 8:return f(a,qb);default:return f(a,"<Stan Math function>")}switch(b[0]){case
-0:b=ec(b[1]);var
+0:b=ed(b[1]);var
 c=b[1],b=vs+fL(b[2],44)+qf;return G(g(a)(SG),b,O,c);case
 1:b=b[1];if(b&&!b[2]){b=b[1];return j(g(a)(SI),O,b)}c=A([0,$],O);return j(g(a)(SH),c,b);default:c=b[1];b=c[2];c=c[1];var
 d=A([0,$],gW);return x(g(a)(SJ),d,c,gb,b)}}var
@@ -4656,7 +4656,7 @@ SK=[0,[11,pP,0],pP];function
 gW(a,b){var
 c=b[2],b=tb(b[1],0);function
 d(a,b){return eJ(SK,a)}var
-b=b?1-ol(c):b;return sP(d8(b,d),O,a,c)}var
+b=b?1-ol(c):b;return sP(d9(b,d),O,a,c)}var
 hD="void";function
 gb(a,b){return b?O(a,b[1]):f(a,hD)}function
 Co(a,b){return O(a,[2,b])}function
@@ -4717,7 +4717,7 @@ a==="number"?a?1:0:fc(a[1],gX)}function
 iq(a){if(typeof
 a==="number"&&2>a)return 1;return 0}function
 ir(a,b){var
-c=ec(b)[1];function
+c=ed(b)[1];function
 d(a){if(typeof
 a==="number")switch(a){case
 2:if(typeof
@@ -4791,7 +4791,7 @@ d==="number"?[0,h(c[1],function(a){return bQ(d,a)})]:[0,aX(d[1],c[1],bQ)]}functi
 ti(a,b){function
 c(d,b){a:for(;;){if(typeof
 b!=="number")switch(b[0]){case
-0:if(td(b)){b=ec(b)[1];continue}break;case
+0:if(td(b)){b=ed(b)[1];continue}break;case
 1:break a}return[0,d,0]}return jG(b[1],function(a,b){return c(d+bW+l+(a+1|0),b)})}return c(a,b)}var
 dG=AG([0,,[0,oj,dF]]),Cq=dG[3],lU=dG[8],Cr=dG[16];function
 Q4(d,b,c){if(b===c)return 0;var
@@ -5028,11 +5028,11 @@ c==="number")switch(c){case
 8:a=11;continue;case
 9:a=12;continue}else
 switch(c[0]){case
-2:a=lO(function(a,b){return d(a,b)},b[1],c[1]);if(0!==a)return a;a=_(b[2],c[2]);return 0===a?d(b[3],c[3]):a;case
+2:a=lO(function(a,b){return d(a,b)},b[1],c[1]);if(0!==a)return a;a=Y(b[2],c[2]);return 0===a?d(b[3],c[3]):a;case
 0:a=8;continue;case
 1:a=9;continue}return-1;default:a=b[1];if(typeof
 c!=="number")switch(c[0]){case
-3:return _(a,c[1]);case
+3:return Y(a,c[1]);case
 0:a=8;continue;case
 1:a=9;continue;default:a=13;continue}switch(c){case
 15:return 1;case
@@ -5080,22 +5080,22 @@ d=a[1],a=c(a[3]),b=c(b);return[3,c(d),b,a];case
 6:b=a[2];a=a[1];b=ao(f_(c),b);return[6,c(a),b];case
 7:b=a[3];d=a[2];return[7,c(a[1]),d,b];default:d=a[2];return[8,c(a[1]),d]}}}function
 S7(e,b,c){if(b===c)return 0;a:{b:{c:{d:{e:{f:{switch(b[0]){case
-0:b=b[1];return 0===c[0]?_(b,c[1]):-1;case
+0:b=b[1];return 0===c[0]?Y(b,c[1]):-1;case
 1:var
 d=b[2],b=b[1];switch(c[0]){case
-1:b=aD(b,c[1]);c=c[2];return 0===b?_(d,c):b;case
+1:b=aD(b,c[1]);c=c[2];return 0===b?Y(d,c):b;case
 0:break a;default:return-1}case
 2:d=b[1];b=b[2];switch(c[0]){case
 2:var
 a=c[1];g:{c=c[2];if(d===a)a=0;else{switch(d[0]){case
 0:var
-h=d[1],f=d[3],d=d[2];if(0!==a[0]){a=-1;break g}h=_(h,a[1]);var
+h=d[1],f=d[3],d=d[2];if(0!==a[0]){a=-1;break g}h=Y(h,a[1]);var
 g=a[3],a=a[2];if(0!==h){a=h;break g}a=s5(aD,d,a);if(0===a){a=aD(f,g);break g}break g;case
 1:d=d[1];switch(a[0]){case
 1:a=Q4(function(a,b){return e(a,b)},d,a[1]);break g;case
 2:a=-1;break g}break;default:f=d[2];d=d[1];switch(a[0]){case
 1:a=1;break g;case
-2:d=_(d,a[1]);a=a[2];if(0===d){a=s5(aD,f,a);break g}a=d;break g}}a=1}}return 0===a?bu(function(a,b){return e(a,b)},b,c):a;case
+2:d=Y(d,a[1]);a=a[2];if(0===d){a=s5(aD,f,a);break g}a=d;break g}}a=1}}return 0===a?bu(function(a,b){return e(a,b)},b,c):a;case
 0:break a;case
 1:break b;default:return-1}case
 3:a=b[3];f=b[2];b=b[1];switch(c[0]){case
@@ -5198,7 +5198,7 @@ c=b[1];if(0===c[0]){var
 d=c[2];if(typeof
 d==="number"&&!d){d=b[2];if(d){var
 e=d[2];if(e&&!e[2]){var
-h=c[1],e=e[1],d=d[1];if(fX(jV(h))){c=c2(0,0,0,jV(h));return aB(g(a)(S_),af,d,eb,c,af,e)}}}}}b=b[2];d=A([0,$],af);return x(g(a)(S9),function(a,b){return Ch(af,a,b)},c,d,b);case
+h=c[1],e=e[1],d=d[1];if(fX(jV(h))){c=c2(0,0,0,jV(h));return aB(g(a)(S_),af,d,ec,c,af,e)}}}}}b=b[2];d=A([0,$],af);return x(g(a)(S9),function(a,b){return Ch(af,a,b)},c,d,b);case
 3:c=b[3];d=b[2];b=b[1];return aB(g(a)(S$),af,b,af,d,af,c);case
 4:c=b[2];b=b[1];return x(g(a)(Ta),af,b,af,c);case
 5:c=b[2];b=b[1];return x(g(a)(Tb),af,b,af,c);case
@@ -5214,8 +5214,8 @@ ST=dG[7],oh=[0,l,-1,-1,0],r=[0,oh,oh],n=gc(0)(r)(0)();function
 lV(a){return tj(Cu,a)}function
 tk(a,b){return Cs(function(a,b){return 0},a,b)}function
 gd(a,b){return 0===tk(a,b)?1:0}function
-Y(a){return a[2][1]}function
-ed(a){return a[2][3]}function
+Z(a){return a[2][1]}function
+ee(a){return a[2][3]}function
 tl(a){a=a[2];return[0,a[3],a[1]]}function
 it(a){var
 b=[0,1,n[2],n[3]];return[0,[1,1,ih(a)],b]}var
@@ -5263,13 +5263,13 @@ a==="number"||0!==a[0]||b[2])break a;break;default:if(b[2])break a}return 6;case
 7:if(b[2])break a;break;default:break a}return 3}return 1}return X(To,[0,function(a){return O(a,c)},0])}var
 Tp=[0,[11,"Expected Var or Indexed but found ",[16,0]],"Expected Var or Indexed but found %t"];function
 iv(c,b){var
-d=or(Y(c),[0,b,0]),a=c[2],e=c[1],d=[0,d,a[2],a[3]];switch(e[0]){case
+d=or(Z(c),[0,b,0]),a=c[2],e=c[1],d=[0,d,a[2],a[3]];switch(e[0]){case
 6:a=e[1];b=[6,a,k(e[2],[0,b,0])];break;case
 0:case
 8:b=[6,c,[0,b,0]];break;default:b=X(Tp,[0,function(a){return af(a,c)},0])}return[0,b,d]}var
 Tq=[0,[11,"Internal error: Attempted to apply tuple index to a non-tuple type: ",[16,0]],"Internal error: Attempted to apply tuple index to a non-tuple type: %t"];function
 tm(a,b){var
-c=Y(a);a:{if(typeof
+c=Z(a);a:{if(typeof
 c!=="number"&&1===c[0]){var
 d=fe(c[1],b-1|0);break a}d=X(Tq,[0,function(a){return O(a,c)},0])}var
 e=a[2];return[0,[8,a,b],[0,d,e[2],e[3]]]}function
@@ -5391,7 +5391,7 @@ d=b[3];return c(c(a,b[2]),d);case
 6:d=b[2];b=b[1];return c(ix(c)(a,b),d);case
 7:b=b[1];return bq(ix(c),a,b);default:return c(a,b[1])}}}var
 TC=[0,[11,mR,[15,0]],"vector%a"],TD=[0,[11,wk,[15,0]],"row_vector%a"],TE=[0,[11,nd,[15,0]],"matrix%a"],TF=[0,[11,p_,[15,0]],"complex_vector%a"],TG=[0,[11,xy,[15,0]],"complex_row_vector%a"],TH=[0,[11,qb,[15,0]],"complex_matrix%a"],TI=[0,[11,kB,[15,0]],"array%a"],TJ=[0,[11,dO,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],gt];function
-ee(d,b,c){if(typeof
+ef(d,b,c){if(typeof
 c==="number")switch(c){case
 0:return f(b,kI);case
 1:return f(b,ho);default:return f(b,iY)}switch(c[0]){case
@@ -5405,7 +5405,7 @@ e=[0,$],a=gT(function(a,b){return n_(e,d,d,a,b)});return j(g(b)(TE),a,c);case
 5:c=[0,c[1],c[2]];var
 h=[0,$],a=gT(function(a,b){return n_(h,d,d,a,b)});return j(g(b)(TH),a,c);case
 6:c=[0,c[1],c[2]];a=gT(function(a,b){var
-c=b[2];ee(d,a,b[1]);$(a);return d(a,c)});return j(g(b)(TI),a,c);default:a=c[1];c=A([0,$],function(a,b){return ee(d,a,b)});return j(g(b)(TJ),c,a)}}function
+c=b[2];ef(d,a,b[1]);$(a);return d(a,c)});return j(g(b)(TI),a,c);default:a=c[1];c=A([0,$],function(a,b){return ef(d,a,b)});return j(g(b)(TJ),c,a)}}function
 aj(a){if(typeof
 a==="number")switch(a){case
 0:return 0;case
@@ -5424,7 +5424,7 @@ b==="number")return 2===b?[0,a,0]:0;switch(b[0]){case
 2:return[0,b[2],[0,b[3],0]];case
 5:return[0,b[1],[0,b[2],[0,a,0]]];case
 6:a=b[2];return[0,a,to(b[1])];case
-7:return X(TK,[0,function(a){return ee(af,a,b)},0]);case
+7:return X(TK,[0,function(a){return ef(af,a,b)},0]);case
 0:case
 1:return[0,b[2],0];default:return[0,b[1],[0,a,0]]}}var
 g0=[0,[1,0,al],n],cR=[0,[1,0,dt],n];function
@@ -5532,9 +5532,9 @@ a!=="number")switch(a[0]){case
 c=a[1];break a}c=ae(GX)}return h7(c,b)}}function
 TP(b){return function(a){if(0!==a[0])return[1,a[1]];a=a[1];return[0,fm(b)(a)]}}function
 TQ(c){return function(a,b){if(0!==b[0])return a;b=b[1];return ix(c)(a,b)}}function
-CH(a,b,c){return 0===c[0]?ee(a,b,c[1]):O(b,c[1])}function
+CH(a,b,c){return 0===c[0]?ef(a,b,c[1]):O(b,c[1])}function
 g3(a){return 0===a[0]?aj(a[1]):a[1]}var
-gt="Assign",dG="decl_type",vN="Break",xc="Assignment",kZ="Profile",bF="JacobianPE",dW="NRFunApp",w3="Continue",HB="IfElse",m3="body",cG="Block",xD="While",qk="lower",qj="upper",et="Skip",vj="For",cd="TargetPE",TN=[0,"Sized"],TO=[0,"Unsized"],TS=[0,vN],TT=[0,w3],TU=[0,et],TV=[0,xc],TW=[0,cd],TX=[0,bF],TY=[0,dW],TZ=[0,p$],T0=[0,HB],T1=[0,xD],T2=[0,m3],T3=[0,qj],T4=[0,qk],T5=[0,"loopvar"],T6=[0,vj],T7=[0,kZ],T8=[0,cG],T9=[0,"SList"],T_=[0,"initialize"],T$=[0,dG],Ua=[0,"decl_id"],Ub=[0,"decl_adtype"],Uc=[0,"Decl"],Uf=[0,"Default"],Ug=[0,"Uninit"],Uh=[0,gt];function
+gt="Assign",dG="decl_type",vN="Break",xc="Assignment",kZ="Profile",bF="JacobianPE",dW="NRFunApp",w3="Continue",HB="IfElse",m3="body",cG="Block",xD="While",qk="lower",qj="upper",eu="Skip",vj="For",cd="TargetPE",TN=[0,"Sized"],TO=[0,"Unsized"],TS=[0,vN],TT=[0,w3],TU=[0,eu],TV=[0,xc],TW=[0,cd],TX=[0,bF],TY=[0,dW],TZ=[0,p$],T0=[0,HB],T1=[0,xD],T2=[0,m3],T3=[0,qj],T4=[0,qk],T5=[0,"loopvar"],T6=[0,vj],T7=[0,kZ],T8=[0,cG],T9=[0,"SList"],T_=[0,"initialize"],T$=[0,dG],Ua=[0,"decl_id"],Ub=[0,"decl_adtype"],Uc=[0,"Decl"],Uf=[0,"Default"],Ug=[0,"Uninit"],Uh=[0,gt];function
 TR(a,b,c){if(typeof
 c==="number")switch(c){case
 0:return TS;case
@@ -5608,7 +5608,7 @@ e=c[2],c=c[1];return a5(g(b)(Un),function(a,b){return CL(d,a,b)},c,e,function(a,
 UB=[0,I],UC=[0,bT];function
 CM(d,b,c){c=c[1];var
 a=[0,[1,[0,UB,[0,b(),0]]],0];return[1,[0,[1,[0,UC,[0,TR(function(a){return tj(d,a)},function(a){return CM(d,b,a)},c),0]]],a]]}var
-bT=") ",I="<v>",wv="return;",aq="<hov 2>",xQ="return %a;",je=" in ",cm="profile(",kK=" = ",kX="return ",cE="@;<1 2>",eZ="if(",p9="break;",na=" =",p4="continue;",eo="@;",Uo=[0,[18,[1,[0,[11,R,0],R]],[15,[11,na,[18,[1,[0,[11,aH,0],aH]],[17,[0,c,1,0],[15,[17,0,[12,59,[17,0,0]]]]]]]]],"@[<hov>%a =@[<h>@ %a@];@]"],Up=[0,[18,[1,[0,[11,aH,0],aH]],[11,"target +=",[17,[0,c,1,0],[15,[12,59,[17,0,0]]]]]],"@[<h>target +=@ %a;@]"],Uq=[0,[18,[1,[0,[11,aH,0],aH]],[11,"jacobian +=",[17,[0,c,1,0],[15,[12,59,[17,0,0]]]]]],"@[<h>jacobian +=@ %a;@]"],Ur=[0,[18,[1,[0,0,l]],[15,[15,[12,59,[17,0,0]]]]],"@[%a%a;@]"],Us=[0,[11,kX,[15,[12,59,0]]],xQ],Ut=[0,[11,eZ,[15,[11,bT,[15,[11," else ",[15,0]]]]]],"if(%a) %a else %a"],Uu=[0,[11,eZ,[15,[11,bT,[15,0]]]],"if(%a) %a"],Uv=[0,[11,"while(",[15,[11,bT,[15,0]]]],"while(%a) %a"],Uw=[0,[11,"for(",[2,0,[11,je,[15,[12,58,[15,[11,bT,[15,0]]]]]]]],"for(%s in %a:%a) %a"],Ux=[0,[11,cm,[2,0,[11,"){",[17,[0,cE,1,2],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,eo,1,0],[12,be,0]]]]]]]]],"profile(%s){@;<1 2>@[<v>%a@]@;}"],Uy=[0,[12,db,[17,[0,cE,1,2],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,eo,1,0],[12,be,0]]]]]]],"{@;<1 2>@[<v>%a@]@;}"],Uz=[0,[18,[1,[0,[11,aq,0],aq]],[15,[15,[17,[0,c,1,0],[2,0,[12,59,[17,0,0]]]]]]],"@[<hov 2>%a%a@ %s;@]"],UA=[0,[18,[1,[0,[11,aq,0],aq]],[15,[15,[17,[0,c,1,0],[2,0,[11,kK,[15,[12,59,[17,0,0]]]]]]]]],"@[<hov 2>%a%a@ %s = %a;@]"];function
+bT=") ",I="<v>",wv="return;",aq="<hov 2>",xQ="return %a;",je=" in ",cm="profile(",kK=" = ",kX="return ",cE="@;<1 2>",eZ="if(",p9="break;",na=" =",p4="continue;",ep="@;",Uo=[0,[18,[1,[0,[11,R,0],R]],[15,[11,na,[18,[1,[0,[11,aH,0],aH]],[17,[0,c,1,0],[15,[17,0,[12,59,[17,0,0]]]]]]]]],"@[<hov>%a =@[<h>@ %a@];@]"],Up=[0,[18,[1,[0,[11,aH,0],aH]],[11,"target +=",[17,[0,c,1,0],[15,[12,59,[17,0,0]]]]]],"@[<h>target +=@ %a;@]"],Uq=[0,[18,[1,[0,[11,aH,0],aH]],[11,"jacobian +=",[17,[0,c,1,0],[15,[12,59,[17,0,0]]]]]],"@[<h>jacobian +=@ %a;@]"],Ur=[0,[18,[1,[0,0,l]],[15,[15,[12,59,[17,0,0]]]]],"@[%a%a;@]"],Us=[0,[11,kX,[15,[12,59,0]]],xQ],Ut=[0,[11,eZ,[15,[11,bT,[15,[11," else ",[15,0]]]]]],"if(%a) %a else %a"],Uu=[0,[11,eZ,[15,[11,bT,[15,0]]]],"if(%a) %a"],Uv=[0,[11,"while(",[15,[11,bT,[15,0]]]],"while(%a) %a"],Uw=[0,[11,"for(",[2,0,[11,je,[15,[12,58,[15,[11,bT,[15,0]]]]]]]],"for(%s in %a:%a) %a"],Ux=[0,[11,cm,[2,0,[11,"){",[17,[0,cE,1,2],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,ep,1,0],[12,be,0]]]]]]]]],"profile(%s){@;<1 2>@[<v>%a@]@;}"],Uy=[0,[12,db,[17,[0,cE,1,2],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,ep,1,0],[12,be,0]]]]]]],"{@;<1 2>@[<v>%a@]@;}"],Uz=[0,[18,[1,[0,[11,aq,0],aq]],[15,[15,[17,[0,c,1,0],[2,0,[12,59,[17,0,0]]]]]]],"@[<hov 2>%a%a@ %s;@]"],UA=[0,[18,[1,[0,[11,aq,0],aq]],[15,[15,[17,[0,c,1,0],[2,0,[11,kK,[15,[12,59,[17,0,0]]]]]]]]],"@[<hov 2>%a%a@ %s = %a;@]"];function
 c4(a,b){b=b[1];if(typeof
 b==="number")switch(b){case
 0:return f(a,p9);case
@@ -5630,18 +5630,18 @@ e=b[2],b=b[1];return da(g(a)(Uw),b,af,e,af,d,c4,c);case
 c==="number")return a5(g(a)(Uz),cl,b,function(a,b){return CH(af,a,b)},d,e);c=c[1];return da(g(a)(UA),cl,b,function(a,b){return CH(af,a,b)},d,e,af,c)}}function
 iz(a){return CM(Cu,Mt,a)}function
 CN(a){var
-h=d$[1],f=ik(0),a=M(a),g=0,c=0;function
-i(a){d$[1]=h}for(;;){if(!a)return[0,g,c,i];var
+h=ea[1],f=ik(0),a=M(a),g=0,c=0;function
+i(a){ea[1]=h}for(;;){if(!a)return[0,g,c,i];var
 b=a[1];if(0===b[1][0]){a=a[2];c=[0,b,c]}else{a=a[2];var
-d=b[2][2],e=[1,Y(b)],e=[0,[11,ed(b),f,e,1],d],d=e[2],d=[0,[0,[0,[0,f],0],Y(b),b],d],c=[0,[0,[0,f],b[2]],c];f=ik(0);g=[0,e,[0,d,g]]}}}function
+d=b[2][2],e=[1,Z(b)],e=[0,[11,ee(b),f,e,1],d],d=e[2],d=[0,[0,[0,[0,f],0],Z(b),b],d],c=[0,[0,[0,f],b[2]],c];f=ik(0);g=[0,e,[0,d,g]]}}}function
 tu(a,b,c){var
-e=d$[1],d=ik(0),b=[0,[9,[0,b([0,[0,d],gc(0)(c)(0)()]),0]],c];d$[1]=e;return[0,[7,d,cR,a,b],c]}function
+e=ea[1],d=ik(0),b=[0,[9,[0,b([0,[0,d],gc(0)(c)(0)()]),0]],c];ea[1]=e;return[0,[7,d,cR,a,b],c]}function
 ge(a,b,c){if(!a)return b(0);var
 d=a[2];return tu(a[1],function(c){return ge(d,function(a){return b([0,c,a])},r)},c)}function
 fo(a,b,c,d){return tu(a,function(a){return i(b,iv(c,[0,a]))},d)}var
 pI="rows",UD=[0,pI,0,0],UE=[0,[11,"Can't iterate over ",[16,0]],"Can't iterate over %t"];function
 tv(d,b,c){var
-a=Y(b);if(typeof
+a=Z(b);if(typeof
 a==="number")switch(a){case
 9:break;case
 5:case
@@ -5692,10 +5692,10 @@ c=d(c);return[0,c,b]}function
 tx(a,b){var
 c=b[1];if(0===c[0]){b=b[2];return[0,[0,a(c[1])],b]}b=b[2];var
 d=c[2];return[0,[1,tx(a,c[1]),d],b]}function
-ef(a){for(;;){a=a[1];if(0===a[0])return a[1];a=a[1]}}function
+eg(a){for(;;){a=a[1];if(0===a[0])return a[1];a=a[1]}}function
 CP(a){var
 d=a,c=0;for(;;){var
-b=d[1];if(0===b[0])break;d=b[1];c=[0,b[2],c]}b=[0,[0,ef(a)],0];for(;;){if(!c)return b;b=[0,[1,b,c[1]],0];c=c[2]}}function
+b=d[1];if(0===b[0])break;d=b[1];c=[0,b[2],c]}b=[0,[0,eg(a)],0];for(;;){if(!c)return b;b=[0,[1,b,c[1]],0];c=c[2]}}function
 CQ(d){return function(a){var
 b=a[5],c=a[6],b=b?[0,d(b[1])]:0;return[0,a[1],a[2],a[3],a[4],b,c]}}function
 UT(d){return function(a){var
@@ -5715,10 +5715,10 @@ cE="<v2>",eZ=" {",U8=[0,[18,[1,[0,[11,cE,0],cE]],[2,0,[11,eZ,[17,[0,c,1,0],[15,[
 g4(a,b,c,d){if(!d)return;b=A([0,a0],b);return G(g(c)(U8),a,b,d)}var
 pC="//",U_=[0,[18,[1,[0,[11,aq,0],aq]],[15,[12,32,[15,[12,32,[2,0,[12,59,[17,[0,c,1,0],[11,pC,[15,[17,0,0]]]]]]]]]]],"@[<hov 2>%a %a %s;@ //%a@]"];function
 U9(d,b,c){var
-a=c[3],e=a[3],f=a[2],a=a[1],c=c[1];return da(g(b)(U_),CS,e,function(a,b){return ee(d,a,b)},f,c,function(a,b){return ee(d,a,b)},a)}var
+a=c[3],e=a[3],f=a[2],a=a[1],c=c[1];return da(g(b)(U_),CS,e,function(a,b){return ef(d,a,b)},f,c,function(a,b){return ef(d,a,b)},a)}var
 Va=[0,[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,0]]]]]],"@[<h>%a %s;@]"];function
 U$(d,b,c){var
-a=c[3],c=c[1];return G(g(b)(Va),function(a,b){return ee(d,a,b)},a,c)}var
+a=c[3],c=c[1];return G(g(b)(Va),function(a,b){return ef(d,a,b)},a,c)}var
 kF="emit_transformed_parameters__",ne="emit_generated_quantities__";function
 oB(a){return a?kF:ne}function
 CT(a){a=cI(a);var
@@ -5756,7 +5756,7 @@ tz(a){switch(a){case
 20:return Vw;case
 21:return Vx;default:return Vy}}function
 tA(a){a=eK(a);var
-b=bN(b7);a:if(cc===b)b=b7[1];else{if(aT!==b&&cf!==b){b=b7;break a}b=cJ(b7)}return eD(Bw(b,a),Cm)}var
+b=bN(b7);a:if(cc===b)b=b7[1];else{if(aT!==b&&cf!==b){b=b7;break a}b=cJ(b7)}return d5(Bw(b,a),Cm)}var
 w="@[<v>@,%a@]",VB=i(ak([0,[18,[1,[0,[11,I,0],I]],[17,[0,s,0,0],[15,[17,0,0]]]],w]),function(a,b){b=tA(b);return A([0,a0],Co)(a,b)}),VI=[0,[18,[1,[0,[11,I,0],I]],[17,[0,s,0,0],[15,[17,0,0]]]],w],Vz=[0,[0,[0,1,0],[0,[0,1,0],0]],[0,0],0,0];function
 tB(a){return 6===a?[0,j(ak(VI),Co,Vz),0]:h(tz(a),VB)}function
 l3(a){var
@@ -5770,7 +5770,7 @@ tD(a){var
 b=f5(iA,a);if(b);else{b=l3(a);if(!b)return oD(a)}return b}var
 VJ=[0,fE,kR];function
 VK(a,b){return cM(VJ,f,a,b)}function
-dH(a,b){if(a===b)return 0;a=_(a[1],b[1]);return 0===a?0:a}var
+dH(a,b){if(a===b)return 0;a=Y(a[1],b[1]);return 0===a?0:a}var
 VN=[0,dd],VO=[0,cT],VP=[0,hz],VQ=[0,"Downfrom"],VR=[0,dP];function
 CW(a,b){if(typeof
 b==="number")return VN;switch(b[0]){case
@@ -5808,7 +5808,7 @@ CY(c){return function(a,b){if(typeof
 b==="number")return a;if(3!==b[0])return c(a,b[1]);var
 d=b[2];return c(c(a,b[1]),d)}}var
 VS=[0,ag],VT=[0,hw];function
-tF(a){return 0===a[0]?[1,[0,VS,[0,jU(eC,a[1]),0]]]:[1,[0,VT,[0,jU(eC,a[1]),0]]]}var
+tF(a){return 0===a[0]?[1,[0,VS,[0,jU(eD,a[1]),0]]]:[1,[0,VT,[0,jU(eD,a[1]),0]]]}var
 ds="name",hw="BinOp",eL=[0,"id_loc"],eM=[0,ds],VV=[0,"GetTarget"],VW=[0,xL],VX=[0,hw],VY=[0,"PrefixOp"],VZ=[0,"PostfixOp"],V0=[0,"Variable"],V1=[0,"IntNumeral"],V2=[0,"RealNumeral"],V3=[0,"ImagNumeral"],V4=[0,gx],V5=[0,"CondDistApp"],V6=[0,hC],V7=[0,"ArrayExpr"],V8=[0,"RowVectorExpr"],V9=[0,"Paren"],V_=[0,kz],V$=[0,m9],Wa=[0,"TupleExpr"];function
 VU(e,b,c,d){if(typeof
 d==="number")return VV;switch(d[0]){case
@@ -5861,7 +5861,7 @@ e!=="number")switch(e[0]){case
 3:a=4;continue}return-1;case
 5:a=d[1];if(typeof
 e!=="number")switch(e[0]){case
-5:return _(a,e[1]);case
+5:return Y(a,e[1]);case
 0:a=1;continue;case
 1:a=2;continue;case
 2:a=3;continue;case
@@ -5869,7 +5869,7 @@ e!=="number")switch(e[0]){case
 4:a=5;continue}return-1;case
 6:a=d[1];if(typeof
 e!=="number")switch(e[0]){case
-6:return _(a,e[1]);case
+6:return Y(a,e[1]);case
 0:a=1;continue;case
 1:a=2;continue;case
 2:a=3;continue;case
@@ -5878,7 +5878,7 @@ e!=="number")switch(e[0]){case
 5:a=6;continue}return-1;case
 7:a=d[1];if(typeof
 e!=="number")switch(e[0]){case
-7:return _(a,e[1]);case
+7:return Y(a,e[1]);case
 0:a=1;continue;case
 1:a=2;continue;case
 2:a=3;continue;case
@@ -6084,7 +6084,7 @@ a==="number")return 0;switch(a[0]){case
 c=a[1],a=b(a[2]);return[2,b(c),a]}}}var
 Wp=[0,"PString"],Wq=[0,"PExpr"];function
 tJ(a,b){return 0===b[0]?[1,[0,Wp,[0,[0,b[1]],0]]]:[1,[0,Wq,[0,a(b[1]),0]]]}function
-tK(a,b,c){if(b===c)return 0;if(0===b[0]){a=b[1];return 0===c[0]?_(a,c[1]):-1}b=b[1];return 0===c[0]?1:a(b,c[1])}function
+tK(a,b,c){if(b===c)return 0;if(0===b[0]){a=b[1];return 0===c[0]?Y(a,c[1]):-1}b=b[1];return 0===c[0]?1:a(b,c[1])}function
 tL(b){return function(a){return 0===a[0]?[0,a[1]]:[1,b(a[1])]}}function
 C5(c){return function(d){return function(a){switch(a[0]){case
 0:return[0,a[1]];case
@@ -6127,7 +6127,7 @@ tO(a,b){return C9(function(a,b){return C2(a,b)},function(a,b){return tI(a,b)},a,
 WC(a){return tN(C4,C3,a)}function
 Da(c){return function(a){var
 b=a[2],b=b?[0,c(b[1])]:0;return[0,a[1],b]}}var
-mW="FunDef",k0="identifier",m9="ForEach",kz="args",WG=[0,vN],WH=[0,w3],WI=[0,"ReturnVoid"],WJ=[0,et],WK=[0,"assign_rhs"],WL=[0,"assign_op"],WM=[0,"assign_lhs"],WN=[0,xc],WO=[0,dW],WP=[0,cd],WQ=[0,bF],WR=[0,"truncation"],WS=[0,kz],WT=[0,"kind"],WU=[0,"distribution"],WV=[0,"arg"],WW=[0,"Tilde"],WX=[0,p$],WY=[0,"Print"],WZ=[0,"Reject"],W0=[0,"FatalError"],W1=[0,"IfThenElse"],W2=[0,xD],W3=[0,"loop_body"],W4=[0,"upper_bound"],W5=[0,"lower_bound"],W6=[0,"loop_variable"],W7=[0,vj],W8=[0,m9],W9=[0,kZ],W_=[0,cG],W$=[0,"variables"],Xa=[0,"is_global"],Xb=[0,"transformation"],Xc=[0,dG],Xd=[0,"VarDecl"],Xe=[0,m3],Xf=[0,"arguments"],Xg=[0,"funname"],Xh=[0,"returntype"],Xi=[0,mW],WD=[0,"initial_value"],WE=[0,k0],Wk=[0,"NoTruncate"],Wl=[0,"TruncateUpFrom"],Wm=[0,"TruncateDownFrom"],Wn=[0,"TruncateBetween"],Wi=[0,"OperatorAssign"],Wj=[0,gt];function
+mW="FunDef",k0="identifier",m9="ForEach",kz="args",WG=[0,vN],WH=[0,w3],WI=[0,"ReturnVoid"],WJ=[0,eu],WK=[0,"assign_rhs"],WL=[0,"assign_op"],WM=[0,"assign_lhs"],WN=[0,xc],WO=[0,dW],WP=[0,cd],WQ=[0,bF],WR=[0,"truncation"],WS=[0,kz],WT=[0,"kind"],WU=[0,"distribution"],WV=[0,"arg"],WW=[0,"Tilde"],WX=[0,p$],WY=[0,"Print"],WZ=[0,"Reject"],W0=[0,"FatalError"],W1=[0,"IfThenElse"],W2=[0,xD],W3=[0,"loop_body"],W4=[0,"upper_bound"],W5=[0,"lower_bound"],W6=[0,"loop_variable"],W7=[0,vj],W8=[0,m9],W9=[0,kZ],W_=[0,cG],W$=[0,"variables"],Xa=[0,"is_global"],Xb=[0,"transformation"],Xc=[0,dG],Xd=[0,"VarDecl"],Xe=[0,m3],Xf=[0,"arguments"],Xg=[0,"funname"],Xh=[0,"returntype"],Xi=[0,mW],WD=[0,"initial_value"],WE=[0,k0],Wk=[0,"NoTruncate"],Wl=[0,"TruncateUpFrom"],Wm=[0,"TruncateDownFrom"],Wn=[0,"TruncateBetween"],Wi=[0,"OperatorAssign"],Wj=[0,gt];function
 WF(f,b,c,d,e){if(typeof
 e==="number")switch(e){case
 0:return WG;case
@@ -6155,7 +6155,7 @@ h=b[2],b=f(b[1]),b=[1,[0,Wn,[0,b,[0,f(h),0]]]]}b=[0,[1,[0,WS,[0,y(f,c),0]]],[0,[
 13:a=[0,e[1]];return[1,[0,W9,[0,a,[0,y(b,e[2]),0]]]];case
 14:return[1,[0,W_,[0,y(b,e[1]),0]]];case
 15:b=e[3];a=e[2];d=e[1];e=[0,[1,[0,W$,[0,y(function(a){var
-b=a[1],a=[0,[1,[0,WD,[0,d3(f,a[2]),0]]],0];return[1,[0,[1,[0,WE,[0,[1,[0,[1,[0,eM,[0,[0,b[1]],0]]],[0,[1,[0,eL,[0,bf,0]]],0]]],0]]],a]]},e[4]),0]]],0];b=[0,[1,[0,Xa,[0,eC(b),0]]],e];b=[0,[1,[0,Xb,[0,jT(f,a),0]]],b];return[1,[0,Xd,[0,[1,[0,Xc,[0,iw(f,d),0]]],b]]];default:d=e[3];a=e[2];g=e[1];b=[0,[1,[0,Xe,[0,b(e[4]),0]]],0];d=[0,[1,[0,Xf,[0,y(function(a){var
+b=a[1],a=[0,[1,[0,WD,[0,d3(f,a[2]),0]]],0];return[1,[0,[1,[0,WE,[0,[1,[0,[1,[0,eM,[0,[0,b[1]],0]]],[0,[1,[0,eL,[0,bf,0]]],0]]],0]]],a]]},e[4]),0]]],0];b=[0,[1,[0,Xa,[0,eD(b),0]]],e];b=[0,[1,[0,Xb,[0,jT(f,a),0]]],b];return[1,[0,Xd,[0,[1,[0,Xc,[0,iw(f,d),0]]],b]]];default:d=e[3];a=e[2];g=e[1];b=[0,[1,[0,Xe,[0,b(e[4]),0]]],0];d=[0,[1,[0,Xf,[0,y(function(a){var
 c=a[3],b=a[2],a=ga(a[1]),b=dF(b);return[1,[0,a,[0,b,[0,[1,[0,[1,[0,eM,[0,[0,c[1]],0]]],[0,[1,[0,eL,[0,bf,0]]],0]]],0]]]]},d),0]]],b];d=[0,[1,[0,Xg,[0,[1,[0,[1,[0,eM,[0,[0,a[1]],0]]],[0,[1,[0,eL,[0,bf,0]]],0]]],0]]],d];return[1,[0,Xi,[0,[1,[0,Xh,[0,ta(g),0]]],d]]]}}function
 Xj(g,h,c,d,e,f){if(e===f)return 0;var
 a=0;for(;;)switch(a){case
@@ -6322,7 +6322,7 @@ f==="number")switch(f){case
 0:a=6;continue;case
 1:a=7;continue;case
 2:a=9;continue;default:break a}switch(f[0]){case
-13:d=_(b,f[1]);e=f[2];return 0===d?bu(function(a,b){return h(a,b)},a,e):d;case
+13:d=Y(b,f[1]);e=f[2];return 0===d?bu(function(a,b){return h(a,b)},a,e):d;case
 0:a=1;continue;case
 1:a=2;continue;case
 2:a=3;continue;case
@@ -6638,7 +6638,7 @@ a==="number")return 0;a=i3<=a[1]?a[2]:a[2][4];return[0,a]}var
 xE=888540374,hl=[aT,function(a){a=bN(nN);a:if(cc===a)a=nN[1];else{if(aT!==a&&cf!==a){a=nN;break a}a=cJ(nN)}a=fi(h(a,function(a){var
 b=a[1];return[0,b,h(a[2],function(a){return[0,[2,a],xE]})]}),a2);return[0,a2,a[1],a[2]]}];function
 l6(d,b){var
-a=u(b),a=0===ea(b)?a:u(AO(b,95)[1]),r=[0,ls(a/2|0,5)],t=yX(b),s=[0,0];Bo(d,function(a){var
+a=u(b),a=0===eb(b)?a:u(AO(b,95)[1]),r=[0,ls(a/2|0,5)],t=yX(b),s=[0,0];Bo(d,function(a){var
 h=r[1]+1|0,n=t[2],o=t[1];if(1<h){var
 f=yX(a),d=f[2],f=f[1],h=gF(lg(n,d),h);if(h<=ra(d-n|0));else{if(d<n)var
 q=f;else{q=o;o=f}if(d<n)f=d;else{f=n;n=d}d=h+1|0;var
@@ -6646,9 +6646,9 @@ g=f+1|0,k=cp(f+1|0,d);if(0===g)g=[0];else if(0<=g){var
 c=cp(g,0),g=g-1|0;if(g<1)g=c;else{var
 j=1;for(;;){c[j+1]=j;var
 m=j+1|0;if(g===j){g=c;break}j=m}}}else
-g=J(GP);f=cp(f+1|0,d);d=1;for(;;){if(n<d){k=g.length-2|0;k=Z(g,k)[k+1]}else{c=f.length-2|0;Z(f,0)[1]=d;m=gF(c,(d+h|0)-1|0);m=0<=m?m:c;c=lg(1,d-h|0);j=kH;if(m<c);else
+g=J(GP);f=cp(f+1|0,d);d=1;for(;;){if(n<d){k=g.length-2|0;k=_(g,k)[k+1]}else{c=f.length-2|0;_(f,0)[1]=d;m=gF(c,(d+h|0)-1|0);m=0<=m?m:c;c=lg(1,d-h|0);j=kH;if(m<c);else
 for(;;){var
-e=c-1|0,p=d-1|0,e=Z(q,e)[e+1],p=Z(o,p)[p+1]===e?0:1,e=c-1|0,e=Z(f,e)[e+1]+1|0,i=c-1|0,l=Z(g,c)[c+1]+1|0,i=Z(g,i)[i+1]+p|0,l=gF(i,gF(l,e));if(1<d&&1<c){e=c-2|0;i=d-1|0;e=Z(q,e)[e+1];if(Z(o,i)[i+1]===e){i=c-1|0;e=d-2|0;i=Z(q,i)[i+1];if(Z(o,e)[e+1]===i){e=c-2|0;l=gF(l,Z(k,e)[e+1]+p|0)}}}Z(f,c)[c+1]=l;j=gF(j,l);l=c+1|0;if(m===c)break;c=l}if(h>j){j=f;f=k;k=g;g=j;d=d+1|0;continue}k=h}if(h<k)break;h=k;break}}}else
+e=c-1|0,p=d-1|0,e=_(q,e)[e+1],p=_(o,p)[p+1]===e?0:1,e=c-1|0,e=_(f,e)[e+1]+1|0,i=c-1|0,l=_(g,c)[c+1]+1|0,i=_(g,i)[i+1]+p|0,l=gF(i,gF(l,e));if(1<d&&1<c){e=c-2|0;i=d-1|0;e=_(q,e)[e+1];if(_(o,i)[i+1]===e){i=c-1|0;e=d-2|0;i=_(q,i)[i+1];if(_(o,e)[e+1]===i){e=c-2|0;l=gF(l,_(k,e)[e+1]+p|0)}}}_(f,c)[c+1]=l;j=gF(j,l);l=c+1|0;if(m===c)break;c=l}if(h>j){j=f;f=k;k=g;g=j;d=d+1|0;continue}k=h}if(h<k)break;h=k;break}}}else
 h=b===a?0:h;if(h===r[1]){s[1]=[0,a,s[1]];return}if(h>=r[1])return;r[1]=h;s[1]=[0,a,0]});a=ju(s[1]);var
 c=c1(cs(h(k(l0,h(CC,function(a){return dv+a})),function(a){return b+a}),function(a){return f3(d,a)})),a=nV(c1(a),c);if(!a)return 0;a=a[1];c=bD(d,a);return c?[0,[0,a,h(c[1],j1)]]:0}var
 k3=524822024,mS=848053268,qg=-936778451,iI=[0,0];function
@@ -6705,7 +6705,7 @@ Dp(a,b){return b?O(a,b[1]):g(a)(XL)}function
 g7(a,b){return f(a,b[1])}var
 cd="%a%a%a",XM=[0,[15,[15,[15,0]]],cd];function
 l7(a,b){var
-c=16<u(b[1])?1:0,d=d8(1-c,fU),c=d8(c,fU);return aB(g(a)(XM),c,2,g7,b,d,1)}var
+c=16<u(b[1])?1:0,d=d9(1-c,fU),c=d9(c,fU);return aB(g(a)(XM),c,2,g7,b,d,1)}var
 XN=[0,[12,32,0],dr],XO=[0,[15,[15,[12,44,[15,0]]]],"%a%a,%a"],XP=[0,[12,32,0],dr];function
 oJ(a,b,c,d){var
 e=d[2],d=d[1],i=e[2];Dn(e[1]);if(d){e=d[1];d=d[2];c5(0,0,cw,c,b(e)[1]);for(;;){if(!d){a(c,e);break}var
@@ -6719,16 +6719,16 @@ b==="number")return g(a)(XS);switch(b[0]){case
 2:b=b[1];return j(g(a)(XU),W,b);default:var
 c=b[2],b=b[1];return x(g(a)(XV),W,b,W,c)}}function
 XR(a,b){return A([0,XJ],XQ)(a,b)}var
-v9=105,et="target()",hC="%a[%a]",gx="(%a)",XW=[0,[11,et,0],et],XX=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[15,[11,"? ",[15,[15,[17,[0,c,1,0],[15,[11,dT,[15,[15,[17,0,0]]]]]]]]]]]]],"@[%a@ %a? %a%a@ %a: %a%a@]"],XY=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[15,[15,[12,32,[15,[15,[17,0,0]]]]]]]]],"@[%a@ %a%a %a%a@]"],XZ=[0,[15,[15,[15,0]]],cd],X0=[0,[15,[15,0]],a9],X1=[0,[2,0,[12,v9,0]],"%si"],X2=[0,[15,[12,40,[17,[0,s,0,0],[15,[12,41,[17,0,0]]]]]],"%a(@,%a)@]"],X3=[0,[15,[12,40,[17,[0,s,0,0],[15,[15,[11," |",[17,[0,c,1,0],[15,[15,[12,41,[17,0,0]]]]]]]]]]],"%a(@,%a%a |@ %a%a)@]"],X4=[0,[15,[12,40,[17,[0,s,0,0],[15,[15,[12,41,[17,0,0]]]]]]],"%a(@,%a%a)@]"],X5=[0,[11,"CondDistApp with no arguments: ",[2,0,0]],"CondDistApp with no arguments: %s"],X6=[0,[12,db,[18,[1,[0,0,l]],[15,[12,be,[17,0,0]]]]],"{@[%a}@]"],X7=[0,[12,91,[18,[1,[0,0,l]],[15,[12,93,[17,0,0]]]]],"[@[%a]@]"],X8=[0,[12,40,[15,[12,41,0]]],gx],X9=[0,[15,[12,91,[15,[12,93,0]]]],hC],X_=[0,[15,[12,46,[4,0,0,0,0]]],"%a.%d"],X$=[0,[12,40,[18,[1,[0,[11,a_,0],a_]],[15,[2,0,[17,0,[12,41,0]]]]]],"(@[<hv>%a%s@])"];function
+v9=105,eu="target()",hC="%a[%a]",gx="(%a)",XW=[0,[11,eu,0],eu],XX=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[15,[11,"? ",[15,[15,[17,[0,c,1,0],[15,[11,dT,[15,[15,[17,0,0]]]]]]]]]]]]],"@[%a@ %a? %a%a@ %a: %a%a@]"],XY=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[15,[15,[12,32,[15,[15,[17,0,0]]]]]]]]],"@[%a@ %a%a %a%a@]"],XZ=[0,[15,[15,[15,0]]],cd],X0=[0,[15,[15,0]],a9],X1=[0,[2,0,[12,v9,0]],"%si"],X2=[0,[15,[12,40,[17,[0,s,0,0],[15,[12,41,[17,0,0]]]]]],"%a(@,%a)@]"],X3=[0,[15,[12,40,[17,[0,s,0,0],[15,[15,[11," |",[17,[0,c,1,0],[15,[15,[12,41,[17,0,0]]]]]]]]]]],"%a(@,%a%a |@ %a%a)@]"],X4=[0,[15,[12,40,[17,[0,s,0,0],[15,[15,[12,41,[17,0,0]]]]]]],"%a(@,%a%a)@]"],X5=[0,[11,"CondDistApp with no arguments: ",[2,0,0]],"CondDistApp with no arguments: %s"],X6=[0,[12,db,[18,[1,[0,0,l]],[15,[12,be,[17,0,0]]]]],"{@[%a}@]"],X7=[0,[12,91,[18,[1,[0,0,l]],[15,[12,93,[17,0,0]]]]],"[@[%a]@]"],X8=[0,[12,40,[15,[12,41,0]]],gx],X9=[0,[15,[12,91,[15,[12,93,0]]]],hC],X_=[0,[15,[12,46,[4,0,0,0,0]]],"%a.%d"],X$=[0,[12,40,[18,[1,[0,[11,a_,0],a_]],[15,[2,0,[17,0,[12,41,0]]]]]],"(@[<hv>%a%s@])"];function
 W(a,b){var
 c=b[2][1],b=b[1];if(typeof
 b!=="number")switch(b[0]){case
 10:break;case
 0:c=b[3];var
 h=b[2],d=h[2][1][1],e=c[2][1][1],b=b[1];return ap8(g(a)(XX),W,b,function(a,b){return c5(0,0,j2,a,b)},d,function(a,b){return c5(0,0,cw,a,b)},d,W,h,function(a,b){return c5(0,0,j2,a,b)},e,function(a,b){return c5(0,0,cw,a,b)},e,W,c);case
-1:c=b[3];d=c[2][1][1];e=b[2];b=b[1];return mA(g(a)(XY),W,b,function(a,b){return c5(0,0,j2,a,b)},d,eb,e,function(a,b){return c5(0,0,cw,a,b)},d,W,c);case
-2:c=b[2];b=b[1];d=c[2][1][1];return aB(g(a)(XZ),function(a,b){return c5(0,0,cw,a,b)},d,eb,b,W,c);case
-3:c=b[2];b=b[1];return x(g(a)(X0),W,b,eb,c);case
+1:c=b[3];d=c[2][1][1];e=b[2];b=b[1];return mA(g(a)(XY),W,b,function(a,b){return c5(0,0,j2,a,b)},d,ec,e,function(a,b){return c5(0,0,cw,a,b)},d,W,c);case
+2:c=b[2];b=b[1];d=c[2][1][1];return aB(g(a)(XZ),function(a,b){return c5(0,0,cw,a,b)},d,ec,b,W,c);case
+3:c=b[2];b=b[1];return x(g(a)(X0),W,b,ec,c);case
 4:return g7(a,b[1]);case
 7:c=b[1];return i(g(a)(X1),c);case
 8:d=b[2];c=[0,b[3],c];return x(g(a)(X2),l7,d,g8,c);case
@@ -6747,7 +6747,7 @@ Dq(a,b){if(0===b[0])return W(a,oH(b[1]));function
 c(a){a=0===a[0]?a[1][2][1]:a[2];return a}var
 b=[0,b[1],b[2]];return j(g(a)(Ya),function(a,b){return oJ(Dq,c,a,b)},b)}var
 Ix="=",Yc=[0,[15,[12,61,0]],"%a="],Yd=[0,[12,61,0],Ix];function
-Yb(a,b){if(!b)return g(a)(Yd);b=b[1];return j(g(a)(Yc),eb,b)}var
+Yb(a,b){if(!b)return g(a)(Yd);b=b[1];return j(g(a)(Yc),ec,b)}var
 cd=" T[",Yf=[0,[11,cd,[15,[11,", ]",0]]]," T[%a, ]"],Yg=[0,[11," T[ , ",[15,[12,93,0]]]," T[ , %a]"],Yh=[0,[11,cd,[15,[11,ar,[15,[12,93,0]]]]]," T[%a, %a]"];function
 Ye(a,b){if(typeof
 b==="number")return 0;switch(b[0]){case
@@ -6757,7 +6757,7 @@ c=b[2],b=b[1];return x(g(a)(Yh),W,b,W,c)}}function
 Yi(a,b){return 0===b[0]?f(a,b[1]):W(a,b[1])}function
 tY(a,b){var
 c=A([0,$],Yi);fT(a,0,3);c(a,b);return cr(a)}var
-cd="offset=",et="lower=",ag="upper=",dP="multiplier=",Yk=[0,[12,60,[18,[1,[0,0,l]],[11,et,[15,[17,0,[12,62,0]]]]]],"<@[lower=%a@]>"],Yl=[0,[12,60,[18,[1,[0,0,l]],[11,ag,[15,[17,0,[12,62,0]]]]]],"<@[upper=%a@]>"],Ym=[0,[12,60,[18,[1,[0,0,l]],[11,et,[15,[12,44,[17,[0,c,1,0],[11,ag,[15,[17,0,[12,62,0]]]]]]]]]],"<@[lower=%a,@ upper=%a@]>"],Yn=[0,[12,60,[18,[1,[0,0,l]],[11,cd,[15,[17,0,[12,62,0]]]]]],"<@[offset=%a@]>"],Yo=[0,[12,60,[18,[1,[0,0,l]],[11,dP,[15,[17,0,[12,62,0]]]]]],"<@[multiplier=%a@]>"],Yp=[0,[12,60,[18,[1,[0,0,l]],[11,cd,[15,[12,44,[17,[0,c,1,0],[11,dP,[15,[17,0,[12,62,0]]]]]]]]]],"<@[offset=%a,@ multiplier=%a@]>"];function
+cd="offset=",eu="lower=",ag="upper=",dP="multiplier=",Yk=[0,[12,60,[18,[1,[0,0,l]],[11,eu,[15,[17,0,[12,62,0]]]]]],"<@[lower=%a@]>"],Yl=[0,[12,60,[18,[1,[0,0,l]],[11,ag,[15,[17,0,[12,62,0]]]]]],"<@[upper=%a@]>"],Ym=[0,[12,60,[18,[1,[0,0,l]],[11,eu,[15,[12,44,[17,[0,c,1,0],[11,ag,[15,[17,0,[12,62,0]]]]]]]]]],"<@[lower=%a,@ upper=%a@]>"],Yn=[0,[12,60,[18,[1,[0,0,l]],[11,cd,[15,[17,0,[12,62,0]]]]]],"<@[offset=%a@]>"],Yo=[0,[12,60,[18,[1,[0,0,l]],[11,dP,[15,[17,0,[12,62,0]]]]]],"<@[multiplier=%a@]>"],Yp=[0,[12,60,[18,[1,[0,0,l]],[11,cd,[15,[12,44,[17,[0,c,1,0],[11,dP,[15,[17,0,[12,62,0]]]]]]]]]],"<@[offset=%a,@ multiplier=%a@]>"];function
 Yj(a,b){if(typeof
 b!=="number")switch(b[0]){case
 0:b=b[1];return j(g(a)(Yk),W,b);case
@@ -6783,7 +6783,7 @@ c=b[3],d=b[2];break c;case
 b!=="number"&&2===b[0]){c=b[2];if(bj(c,b[3])){c=j(gL(YE),W,c);break a}c=b[3];var
 f=b[2],c=x(gL(YF),W,f,W,c);break a}c=function(a){return 0}}if(typeof
 e==="number")switch(e){case
-0:return j(g(a)(Yq),function(a,b){return ee(W,a,b)},b);case
+0:return j(g(a)(Yq),function(a,b){return ef(W,a,b)},b);case
 1:return i(g(a)(Yr),d);case
 2:return i(g(a)(Ys),d);case
 3:return i(g(a)(Yt),d);case
@@ -6808,7 +6808,7 @@ c=b[1],d=c[1],b=b[2];if(typeof
 d!=="number"&&9===d[0]){c=d[3];b=d[2];d=d[1];if(!c){b=[0,b,d[2][1][2]];return x(g(a)(YM),W,d,l9,b)}c=c[1];var
 e=[0,b,d[2][1][2]];x(g(a)(YK),W,d,l9,e);e=b[1];a:{if(typeof
 e!=="number"&&14===e[0]){e=0;break a}e=1}b=b[2][1][2];g6([0,e],[0,b],[0,b],a,j2(c[2][1][1]));b=[0,c,[0,b[1],b[2]+1|0,b[3],b[4]]];c=c[2][1][1];return x(g(a)(YL),function(a,b){return c5(0,0,cw,a,b)},c,Dr,b)}return l9(a,[0,c,b])}var
-dO=") {",dP="for (",et=" = %a",ag=");",hz="while (",cT="<hv 2>",Y9=[0,[12,32,[15,0]]," %a"],Y8=[0,[15,[15,[12,32,[15,0]]]],"%a%a %a"],Y5=[0,[11,kK,[15,0]],et],Y6=[0,[15,[15,0]],a9],YN=[0,[11,p9,0],p9],YO=[0,[11,p4,0],p4],YP=[0,[11,wv,0],wv],YQ=[0,[12,59,0],pZ],YR=[0,[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[15,[12,32,[15,[12,59,[17,0,0]]]]]]]],"@[<h>%a %a %a;@]"],YS=[0,[15,[12,40,[17,[0,s,0,0],[15,[11,ag,[17,0,0]]]]]],"%a(@,%a);@]"],YT=[0,[11,"target += ",[15,[12,59,0]]],"target += %a;"],YU=[0,[11,"jacobian += ",[15,[12,59,0]]],"jacobian += %a;"],YV=[0,[15,[11," ~ ",[15,[12,40,[17,[0,s,0,0],[15,[12,41,[17,0,[15,[12,59,0]]]]]]]]]],"%a ~ %a(@,%a)@]%a;"],YW=[0,[11,kX,[15,[12,59,0]]],xQ],YX=[0,[11,"print(",[15,[11,ag,0]]],"print(%a);"],YY=[0,[11,"reject(",[15,[11,ag,0]]],"reject(%a);"],YZ=[0,[11,"fatal_error(",[15,[11,ag,0]]],"fatal_error(%a);"],Y0=[0,[11,hz,[15,[11,bT,[15,0]]]],"while (%a) %a"],Y1=[0,[18,[1,[0,[11,I,0],I]],[11,dP,[15,[11,je,[15,[11,dW,[15,[11,bT,[15,[17,0,0]]]]]]]]]],"@[<v>for (%a in %a : %a) %a@]"],Y2=[0,[11,dP,[15,[11,je,[15,[11,bT,[15,0]]]]]],"for (%a in %a) %a"],Y3=[0,[11,cm,[2,0,[11,dO,[17,[0,s,0,0],[15,[17,[0,s,0,0],[12,be,0]]]]]]],"profile(%s) {@,%a@,}"],Y4=[0,[12,db,[17,[0,s,0,0],[15,[17,[0,s,0,0],[12,be,0]]]]],"{@,%a@,}"],Y7=[0,[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[15,[12,59,[17,0,0]]]]]],"@[<h>%a %a;@]"],Y_=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[17,0,[18,[1,[0,0,l]],[18,[1,[0,[11,cT,0],cT]],[15,[12,40,[17,[0,s,0,0],[16,[17,0,[17,[0,s,0,0],[12,41,[17,0,[16,0]]]]]]]]]]]]]]],"@[%a@ @]@[@[<hv 2>%a(@,%t@]@,)@]%t"],Y$=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[17,0,[15,[12,40,[15,[16,[12,41,[17,0,[16,0]]]]]]]]]]],"@[%a@ @]%a(%a%t)@]%t"];function
+dO=") {",dP="for (",eu=" = %a",ag=");",hz="while (",cT="<hv 2>",Y9=[0,[12,32,[15,0]]," %a"],Y8=[0,[15,[15,[12,32,[15,0]]]],"%a%a %a"],Y5=[0,[11,kK,[15,0]],eu],Y6=[0,[15,[15,0]],a9],YN=[0,[11,p9,0],p9],YO=[0,[11,p4,0],p4],YP=[0,[11,wv,0],wv],YQ=[0,[12,59,0],pZ],YR=[0,[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[15,[12,32,[15,[12,59,[17,0,0]]]]]]]],"@[<h>%a %a %a;@]"],YS=[0,[15,[12,40,[17,[0,s,0,0],[15,[11,ag,[17,0,0]]]]]],"%a(@,%a);@]"],YT=[0,[11,"target += ",[15,[12,59,0]]],"target += %a;"],YU=[0,[11,"jacobian += ",[15,[12,59,0]]],"jacobian += %a;"],YV=[0,[15,[11," ~ ",[15,[12,40,[17,[0,s,0,0],[15,[12,41,[17,0,[15,[12,59,0]]]]]]]]]],"%a ~ %a(@,%a)@]%a;"],YW=[0,[11,kX,[15,[12,59,0]]],xQ],YX=[0,[11,"print(",[15,[11,ag,0]]],"print(%a);"],YY=[0,[11,"reject(",[15,[11,ag,0]]],"reject(%a);"],YZ=[0,[11,"fatal_error(",[15,[11,ag,0]]],"fatal_error(%a);"],Y0=[0,[11,hz,[15,[11,bT,[15,0]]]],"while (%a) %a"],Y1=[0,[18,[1,[0,[11,I,0],I]],[11,dP,[15,[11,je,[15,[11,dW,[15,[11,bT,[15,[17,0,0]]]]]]]]]],"@[<v>for (%a in %a : %a) %a@]"],Y2=[0,[11,dP,[15,[11,je,[15,[11,bT,[15,0]]]]]],"for (%a in %a) %a"],Y3=[0,[11,cm,[2,0,[11,dO,[17,[0,s,0,0],[15,[17,[0,s,0,0],[12,be,0]]]]]]],"profile(%s) {@,%a@,}"],Y4=[0,[12,db,[17,[0,s,0,0],[15,[17,[0,s,0,0],[12,be,0]]]]],"{@,%a@,}"],Y7=[0,[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[15,[12,59,[17,0,0]]]]]],"@[<h>%a %a;@]"],Y_=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[17,0,[18,[1,[0,0,l]],[18,[1,[0,[11,cT,0],cT]],[15,[12,40,[17,[0,s,0,0],[16,[17,0,[17,[0,s,0,0],[12,41,[17,0,[16,0]]]]]]]]]]]]]]],"@[%a@ @]@[@[<hv 2>%a(@,%t@]@,)@]%t"],Y$=[0,[18,[1,[0,0,l]],[15,[17,[0,c,1,0],[17,0,[15,[12,40,[15,[16,[12,41,[17,0,[16,0]]]]]]]]]]],"@[%a@ @]%a(%a%t)@]%t"];function
 j4(a,b){var
 e=b[2][1],c=b[1];if(typeof
 c==="number")switch(c){case
@@ -6857,7 +6857,7 @@ c=0;for(;;){if(!b){g(a)(Zd);return g(a)(Ze)}var
 d=b[2],b=b[1];if(c)g(a)(Zc);i(i(Ds[1],a),b);b=d;c=1}}var
 Zf=[0,[15,0],b1];function
 oL(a){return j(ak(Zf),Dt,a)}hR(Ds,[0,Dt]);function
-Du(a){a=ec(a)[1];if(typeof
+Du(a){a=ed(a)[1];if(typeof
 a!=="number"&&1===a[0])return[1,h(a[1],Du)];return jW(a)}var
 cT=" for a non-tuple type: ",Zj=[0,1,1],Zk=[0,3,1],Zh=[0,[11,"Found Tuple Autodiff in promotion ",[2,0,[11,cT,[16,[12,32,[16,0]]]]]],"Found Tuple Autodiff in promotion %s for a non-tuple type: %t %t"],Zi=[0,[11,"Found Tuple Promotion ",[2,0,[11,cT,[16,[12,32,[16,0]]]]]],"Found Tuple Promotion %s for a non-tuple type: %t %t"],Zg=[0,[11,"Failed to promote type with ",[2,0,[11,", unexpected type: ",[16,[12,32,[16,0]]]]]],"Failed to promote type with %s, unexpected type: %t %t"];function
 oM(b,d,c){a:{b:{if(typeof
@@ -6904,7 +6904,7 @@ b==="number"){switch(b){case
 1:if(oo(c[3])){a=ir(c[3],1);return[0,[10,e,[0,1,c[2]]],[0,c[1],c[2],a]]}break;case
 2:a=ir(c[3],1);return[0,[10,e,Zl],[0,c[1],1,a]];case
 3:a=ir(c[3],3);return[0,[10,e,Zm],[0,c[1],1,a]];case
-0:break;default:if(!th(c[3])){a=ir(c[3],3);return[0,[10,e,[0,3,c[2]]],[0,c[1],c[2],a]]}}return e}a=ec(c[3]);d=a[1];a=a[2];if(typeof
+0:break;default:if(!th(c[3])){a=ir(c[3],3);return[0,[10,e,[0,3,c[2]]],[0,c[1],c[2],a]]}}return e}a=ed(c[3]);d=a[1];a=a[2];if(typeof
 d!=="number"&&1===d[0]){d=oM(d,c[2],b);var
 f=d[2],d=d[1],g=Du(d),a=te([0,d,a]);return[0,[10,e,[0,g,f]],[0,c[1],f,a]]}return X(Zn,[0,oL(b),[0,function(a){return c6(a,e)},0]])}var
 cT=" cannot be promoted to ",Zo=[0,[11,"Tried to get promotion of mismatched types! ",[16,[12,32,[16,[11,cT,[16,[12,32,[16,0]]]]]]]],"Tried to get promotion of mismatched types! %t %t cannot be promoted to %t %t"],Zp=[0,[11,"Tried to get promotion of incompatible autodifftypes! ",[16,[11,cT,[16,0]]]],"Tried to get promotion of incompatible autodifftypes! %t cannot be promoted to %t"];function
@@ -6949,11 +6949,11 @@ a==="number")switch(a){case
 4:return 2;case
 1:case
 5:return 1;default:return 0}return Nm(bZ,[0,0,function(a,b){return a+b|0}],a[1],Dv)}var
-Zr=[0,[11,kB,[2,0,[12,32,[15,0]]]],er],Zs=[0,[12,60,[2,0,[12,62,0]]],D],Zq=[0,[12,70,[4,0,0,0,0]],"F%d"];function
+Zr=[0,[11,kB,[2,0,[12,32,[15,0]]]],es],Zs=[0,[12,60,[2,0,[12,62,0]]],D],Zq=[0,[12,70,[4,0,0,0,0]],"F%d"];function
 eN(e,b){function
 f(a,b){if(typeof
 b!=="number")switch(b[0]){case
-0:b=ec(b[1]);var
+0:b=ed(b[1]);var
 c=b[1],b=vs+fL(b[2],44)+qf;return G(g(a)(Zr),b,f,c);case
 2:c=bD(e[1],b);if(c)b=c[1];else{c=1+e[1][3]|0;c=i(ak(Zq),c);var
 d=e[1],h=a8(d),b=b6(d[2],d[3],b,c,h);e[1]=[0,d[1],b[1],b[2]];b=c}return i(g(a)(Zs),b)}return O(a,b)}return function(a){return f(b,a)}}var
@@ -6968,12 +6968,12 @@ f=a[2],a=a[1],h=A([0,$],e);return x(g(b)(Zu),h,a,d,f)}return eN(c,b)(a)}}var
 Zv=[0,[2,0,[11,kK,[18,[1,[0,[11,R,0],R]],[15,[17,0,0]]]]],"%s = @[<hov>%a@]"],Zw=[0,[17,[0,s,0,0],[15,0]],"@,%a"],Zx=[0,[18,[1,[0,[11,I,0],I]],[15,0]],"@[<v>%a"],Zy=[0,[17,[0,s,0,0],[11,"where ",[18,[1,[0,[11,I,0],I]],[15,[17,0,0]]]]],"@,where @[<v>%a@]"],Zz=[0,[17,0,0],i5];function
 t0(e,b,c,d){function
 h(b){var
-a=eD(sC(0,sz(e[1],function(a){return 1-f3(b,a)})),function(a,b){return _(a[2],b[2])});return[0,e[1],a]}function
+a=d5(sC(0,sz(e[1],function(a){return 1-f3(b,a)})),function(a,b){return Y(a[2],b[2])});return[0,e[1],a]}function
 f(a,b){var
 c=b[2],b=b[1];A([0,a0],function(a,b){var
 c=b[2],b=b[1];return G(g(a)(Zv),c,function(a){return fp(e,a)},b)})(a,c);b=h(b);c=b[2];b=b[1];var
 d=1-bb(c);return d?j(g(a)(Zw),f,[0,b,c]):d}var
-i=e[1];j(g(c)(Zx),b,d);d=eD(sC(0,sz(e[1],function(a){return 1-f3(i,a)})),function(a,b){return _(a[2],b[2])});b=e[1];if(1-bb(d))j(g(c)(Zy),f,[0,b,d]);return g(c)(Zz)}var
+i=e[1];j(g(c)(Zx),b,d);d=d5(sC(0,sz(e[1],function(a){return 1-f3(i,a)})),function(a,b){return Y(a[2],b[2])});b=e[1];if(1-bb(d))j(g(c)(Zy),f,[0,b,d]);return g(c)(Zz)}var
 ZA=[0,0],ZB=[0,1],ZD=[0,4],ZE=[0,0],ZC=[0,5];function
 g9(e,b,c){function
 f(a){return 0===a[0]?a:[1,[0,b,c,[0,a[1]]]]}if(bj(b,c))return ZA;a:if(typeof
@@ -7012,9 +7012,9 @@ b=0,a=a[2];for(;;){if(!a)return b;var
 c=a[2];b=b+Dv(a[1])|0;a=c}}),b=Ao(bZ,c,AW),a=h7(c,a);if(!b)return ZH;var
 d=b[1],b=aY(a,function(a){var
 b=a[2];return a[1]===d?[0,b]:0});if(!b)return ZG;a=b[1];return b[2]?[1,[0,h(b,lt)]]:[0,a]}function
-l$(a,b,c){a=lx(eD(aY(d7(a,eK(b)),ZF),function(a,b){return s$(a[1],b[1])}),function(a){var
+l$(a,b,c){a=lx(d5(aY(d8(a,eK(b)),ZF),function(a,b){return s$(a[1],b[1])}),function(a){var
 e=a[5],b=a[2],f=a[1],a=a[3],d=fq(0,b,c);return 0===d[0]?[0,[0,[0,[0,f,b,e],a],d[1]]]:[1,[0,[0,f,b,e],d[1]]]});b=a[2];a=Dx(a[1]);if(0===a[0]){a=a[1];b=a[1];var
-d=b[1];return[0,[0,d[1],b[2],a[2],d[3]]]}d=a[1];if(d)return[1,h(d[1],lt)];d=eE(eD(b,function(a,b){a=a[2];b=b[2];for(;;){if(0!==a[0])return 0===b[0]?1:0;var
+d=b[1];return[0,[0,d[1],b[2],a[2],d[3]]]}d=a[1];if(d)return[1,h(d[1],lt)];d=eE(d5(b,function(a,b){a=a[2];b=b[2];for(;;){if(0!==a[0])return 0===b[0]?1:0;var
 c=a[2],a=a[1];if(0!==b[0])return-1;var
 d=b[1];if(a!==d)return aD(d,a);a=b[2];if(!c)return a?-1:0;b=c[3];d=c[2];c=c[1];if(!a)return 1;if(!b)break;a=a[3];b=b[1];if(!a)return 1;c=a[1];a:{b:{switch(b[0]){case
 0:if(0===c[0])return 0;break a;case
@@ -7049,7 +7049,7 @@ ZM=[0,fE,hH];function
 a1(c){return function(a,b){return cM(ZM,c,a,b)}}var
 ZN=[0,fE,i0];function
 bI(c){return function(a,b){return cM(ZN,c,a,b)}}var
-er="argument",Dy=[0,[11,er,0],er];function
+es="argument",Dy=[0,[11,es,0],es];function
 BE(a,b){eJ(Dy,a);return e_(a,115)}var
 OZ=q8(0,BE);function
 f8(a,b){var
@@ -7061,7 +7061,7 @@ t2(j,b,c){var
 e=T(j);function
 n(a,b){var
 c=A([0,$],f);return x(g(a)(ZQ),c,b,f8,e)}var
-k=d8(0<e?1:0,function(a,b){return cM(mL,n,a,b)});function
+k=d9(0<e?1:0,function(a,b){return cM(mL,n,a,b)});function
 l(a,b){b=eO(b-e|0);return G(g(a)(ZR),b,k,j)}switch(c[0]){case
 0:var
 a=c[1],c=j5(c[2]),d=bI(f),a=j5(a),h=a1(f);return x(g(b)(ZS),h,a,d,c);case
@@ -7069,7 +7069,7 @@ a=c[1],c=j5(c[2]),d=bI(f),a=j5(a),h=a1(f);return x(g(b)(ZS),h,a,d,c);case
 m=a[1];if(!d)return x(g(b)(ZV),l,m,oO,0);var
 o=d[2],p=d[1],i=[0,[0,Cr,ib,0]];return t0(i,function(a,b){b=bI(function(a){return eN(i,a)});var
 c=a1(function(a){return eN(i,a)});return aB(g(a)(ZU),l,m,c,p,b,o)},b,0)}}var
-dd=" but found ",w="but got",du="Ill-typed arguments supplied to function ",cn="but the other is",e4=". These function types are not compatible.",bL="<v 2>",ev="The types for the ",bh="These are not compatible because:",eX=" argument are incompatible: one is",bM=" argument must be",ZX=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11," argument is ",[2,0,[11," but the other is ",[2,0,[11,e4,[17,0,0]]]]]]]]],"@[<v>The %s argument is %s but the other is %s. These function types are not compatible.@]"],ZY=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,"The return types are different.",[17,0,0]]]]]]]]]]]]]]],"@[<v>The %s argument must be@, %a@ but got@, %a@ The return types are different.@]"],ZZ=[0,[18,[1,[0,[11,I,0],I]],[11,ev,[2,0,[11,eX,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,cn,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[18,[1,[0,[11,I,0],I]],[11,bh,[17,[0,c,1,0],[18,[1,[0,[11,R,0],R]],[15,[17,0,[17,0,[17,0,0]]]]]]]]]]]]]]]]]]]]],"@[<v>The types for the %s argument are incompatible: one is@, %a@ but the other is@, %a@ @[<v>These are not compatible because:@ @[<hov>%a@]@]@]"],Z0=[0,[18,[1,[0,[11,a_,0],a_]],[11,ev,[2,0,[11,eX,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,cn,[17,[0,s,0,0],[12,32,[15,[17,0,0]]]]]]]]]]]]],"@[<hv>The types for the %s argument are incompatible: one is@, %a@ but the other is@, %a@]"],Z1=[0,[18,[1,[0,[11,R,0],R]],[11,a9,[17,[0,c,1,0],[2,0,[17,[0,c,1,0],[11,er,[15,[17,0,0]]]]]]]],"@[<hov>The@ %s@ argument%a@]"],Z2=[0,[11,"One takes ",[4,0,0,0,[12,32,[15,[11," but the other takes ",[4,0,0,0,[12,32,[15,[12,46,0]]]]]]]]],"One takes %d %a but the other takes %d %a."],Z_=[0,[15,[17,[0,c,1,0],[18,[1,[0,[11,aq,0],aq]],[11,bF,[15,[17,0,0]]]]]],"%a@ @[<hov 2>  %a@]"],Z9=[0,[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[12,41,0]]]]],"(@[<hov>%a@])"],Z3=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11," argument must be ",[15,[11,cm,[15,[11,e4,[17,0,0]]]]]]]]],"@[<v>The %s argument must be %a but got %a. These function types are not compatible.@]"],Z4=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,"The return types are not compatible.",[17,0,0]]]]]]]]]]]]]]],"@[<v>The %s argument must be@, %a@ but got@, %a@ The return types are not compatible.@]"],Z5=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[18,[1,[0,[11,bL,0],bL]],[11,bh,[17,[0,c,1,0],[18,[1,[0,[11,R,0],R]],[15,[17,0,[17,0,[17,0,0]]]]]]]]]]]]]]]]]]]]],"@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These are not compatible because:@ @[<hov>%a@]@]@]"],Z6=[0,[18,[1,[0,[11,a_,0],a_]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,0,0]]]]]]]]]]]]],"@[<hv>The %s argument must be@, %a@ but got@, %a@]"],Z7=[0,[18,[1,[0,[11,R,0],R]],[11,a9,[17,[0,c,1,0],[2,0,[17,[0,c,1,0],[11,"argument must be ",[15,[12,46,[17,[0,c,1,0],[15,[17,0,0]]]]]]]]]]],"@[<hov>The@ %s@ argument must be %a.@ %a@]"],Z8=[0,[11,cT,[15,[12,32,[15,[11,dd,[15,[12,32,[15,[12,46,0]]]]]]]]],"Expected %a %a but found %a %a."],Z$=[0,[17,[0,s,0,0],[11,"(Additional signatures omitted)",0]],"@,(Additional signatures omitted)"],_a=[0,[18,[1,[0,[11,I,0],I]],[11,du,[15,[12,58,[17,[0,c,1,0],[15,[17,[0,c,1,0],[15,[17,[0,c,1,0],[15,[15,[17,0,0]]]]]]]]]]]],"@[<v>Ill-typed arguments supplied to function %a:@ %a@ %a@ %a%a@]"];function
+dd=" but found ",w="but got",du="Ill-typed arguments supplied to function ",cn="but the other is",e4=". These function types are not compatible.",bL="<v 2>",ew="The types for the ",bh="These are not compatible because:",eX=" argument are incompatible: one is",bM=" argument must be",ZX=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11," argument is ",[2,0,[11," but the other is ",[2,0,[11,e4,[17,0,0]]]]]]]]],"@[<v>The %s argument is %s but the other is %s. These function types are not compatible.@]"],ZY=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,"The return types are different.",[17,0,0]]]]]]]]]]]]]]],"@[<v>The %s argument must be@, %a@ but got@, %a@ The return types are different.@]"],ZZ=[0,[18,[1,[0,[11,I,0],I]],[11,ew,[2,0,[11,eX,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,cn,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[18,[1,[0,[11,I,0],I]],[11,bh,[17,[0,c,1,0],[18,[1,[0,[11,R,0],R]],[15,[17,0,[17,0,[17,0,0]]]]]]]]]]]]]]]]]]]]],"@[<v>The types for the %s argument are incompatible: one is@, %a@ but the other is@, %a@ @[<v>These are not compatible because:@ @[<hov>%a@]@]@]"],Z0=[0,[18,[1,[0,[11,a_,0],a_]],[11,ew,[2,0,[11,eX,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,cn,[17,[0,s,0,0],[12,32,[15,[17,0,0]]]]]]]]]]]]],"@[<hv>The types for the %s argument are incompatible: one is@, %a@ but the other is@, %a@]"],Z1=[0,[18,[1,[0,[11,R,0],R]],[11,a9,[17,[0,c,1,0],[2,0,[17,[0,c,1,0],[11,es,[15,[17,0,0]]]]]]]],"@[<hov>The@ %s@ argument%a@]"],Z2=[0,[11,"One takes ",[4,0,0,0,[12,32,[15,[11," but the other takes ",[4,0,0,0,[12,32,[15,[12,46,0]]]]]]]]],"One takes %d %a but the other takes %d %a."],Z_=[0,[15,[17,[0,c,1,0],[18,[1,[0,[11,aq,0],aq]],[11,bF,[15,[17,0,0]]]]]],"%a@ @[<hov 2>  %a@]"],Z9=[0,[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[12,41,0]]]]],"(@[<hov>%a@])"],Z3=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11," argument must be ",[15,[11,cm,[15,[11,e4,[17,0,0]]]]]]]]],"@[<v>The %s argument must be %a but got %a. These function types are not compatible.@]"],Z4=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,"The return types are not compatible.",[17,0,0]]]]]]]]]]]]]]],"@[<v>The %s argument must be@, %a@ but got@, %a@ The return types are not compatible.@]"],Z5=[0,[18,[1,[0,[11,I,0],I]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[18,[1,[0,[11,bL,0],bL]],[11,bh,[17,[0,c,1,0],[18,[1,[0,[11,R,0],R]],[15,[17,0,[17,0,[17,0,0]]]]]]]]]]]]]]]]]]]]],"@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These are not compatible because:@ @[<hov>%a@]@]@]"],Z6=[0,[18,[1,[0,[11,a_,0],a_]],[11,ag,[2,0,[11,bM,[17,[0,s,0,0],[12,32,[15,[17,[0,c,1,0],[11,w,[17,[0,s,0,0],[12,32,[15,[17,0,0]]]]]]]]]]]]],"@[<hv>The %s argument must be@, %a@ but got@, %a@]"],Z7=[0,[18,[1,[0,[11,R,0],R]],[11,a9,[17,[0,c,1,0],[2,0,[17,[0,c,1,0],[11,"argument must be ",[15,[12,46,[17,[0,c,1,0],[15,[17,0,0]]]]]]]]]]],"@[<hov>The@ %s@ argument must be %a.@ %a@]"],Z8=[0,[11,cT,[15,[12,32,[15,[11,dd,[15,[12,32,[15,[12,46,0]]]]]]]]],"Expected %a %a but found %a %a."],Z$=[0,[17,[0,s,0,0],[11,"(Additional signatures omitted)",0]],"@,(Additional signatures omitted)"],_a=[0,[18,[1,[0,[11,I,0],I]],[11,du,[15,[12,58,[17,[0,c,1,0],[15,[17,[0,c,1,0],[15,[17,[0,c,1,0],[15,[15,[17,0,0]]]]]]]]]]]],"@[<v>Ill-typed arguments supplied to function %a:@ %a@ %a@ %a%a@]"];function
 t3(a,b){var
 c=b[3],d=[0,[0,Cr,ib,0]];function
 k(a,b){if(0!==b[0]){var
@@ -7086,7 +7086,7 @@ j=a1(function(a){return fp(d,a)}),b=eO(b);return da(g(a)(Z5),b,j,e,i,h,k,c)}}j=b
 l(a){var
 b=A([0,$],function(a){return eN(d,a)});return i(g(a)(Z9),b)}function
 m(a,b){return eJ(Z$,a)}var
-e=c[1],h=b[2],b=b[1],c=d8(c[2],function(a,b){return cM(mL,m,a,b)}),n=A([0,a0],function(a,b){var
+e=c[1],h=b[2],b=b[1],c=d9(c[2],function(a,b){return cM(mL,m,a,b)}),n=A([0,a0],function(a,b){var
 c=b[1];function
 e(a){return fp(d,a)}var
 b=b[2],c=[2,[0,c[2],c[1],0,0]];return x(g(a)(Z_),function(a,b){return t0(d,e,a,b)},c,j,b)});return mA(g(a)(_a),ab,b,function(a,b){return t0(d,l,a,b)},h,function(a,b){return cM(qt,f,a,b)},"Available signatures:",n,e,c,0)}var
@@ -7118,7 +7118,7 @@ dI(a,b){var
 e=b[1],d=b[2];if(!d)return j(g$[1],a,e);var
 c=d[2],d=d[1];if(!c){b=g$[1];c=g$[1];return x(g(a)(_m),c,e,b,d)}if(c[2]){d=s2(b[2]);c=g$[1];return x(g(a)(_k),c,e,dI,d)}c=c[1];b=g$[1];var
 f=g$[1],h=g$[1];return aB(g(a)(_l),h,e,f,d,b,c)}hR(g$,[0,a1(O)]);a9=" must be of type ";var
-wu="lupdf",bM=" was supplied.",w="Function bodies must contain a return statement of correct type in every branch.",w$="lpmf",a_=" at the end of the call to ",xS=" instead.",gs="Function ",cm=" is not implemented for distribution ",vw="lupmf",e4="Real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.",er="@[%s must be a %a.%a@]",vY="tuple",eX="@[%s must be of type %a.%a@]",cn="The hessian block size argument to ",ev=" must be a data-only ",kQ=" must be a ",bx="This",kv=" entries.",wB="lpdf",CV=[0,1,[0,0,[0,5,[0,2,[0,4,0]]]]],_Z=[0,[11,"For args ",[18,[1,[0,0,l]],[12,40,[15,[12,41,[17,0,[11,", this",0]]]]]]],"For args @[(%a)@], this"],_Y=[0,[18,[1,[0,[11,R,0],R]],[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[11,p2,[15,[17,0,0]]]]]]]],D],_T=[0,[18,[1,[0,[11,R,0],R]],[11,"Missing the hessian block size (data-only ",[15,[11,") and remaining arguments.",[17,0,0]]]]],"@[<hov>Missing the hessian block size (data-only %a) and remaining arguments.@]"],_O=[0,[11,"Typechecking failed after checking the first ",[4,0,0,0,[11," arguments.",[17,[0,c,1,0],[11,"Please ensure you are passing enough arguments and that the ",[15,[11," is a function.",0]]]]]]],"Typechecking failed after checking the first %d arguments.@ Please ensure you are passing enough arguments and that the %a is a function."],_o=[0,[11,w,0],w],_p=[0,[11,"Invalid return statement. Function is declared to return ",[15,[11,", but this statement returns ",[15,[11,xS,0]]]]],"Invalid return statement. Function is declared to return %a, but this statement returns %a instead."],_q=[0,[11,"Array expression must have entries of consistent type. Expected ",[15,[11,dd,[15,[12,46,0]]]]],"Array expression must have entries of consistent type. Expected %a but found %a."],_r=[0,0,[0,1,[0,3,0]]],_s=[0,[18,[1,[0,0,l]],[11,"Row vector expression must have all ",[15,[11,kv,[15,[17,0,0]]]]]],"@[Row vector expression must have all %a entries.%a@]"],_t=[0,4,[0,7,0]],_u=[0,[18,[1,[0,0,l]],[11,"Matrix expression must have all ",[15,[11,kv,[15,[17,0,0]]]]]],"@[Matrix expression must have all %a entries.%a@]"],_v=[0,0,0],_w=[0,[18,[1,[0,0,l]],[2,0,[11,a9,[15,[12,46,[15,[17,0,0]]]]]]],eX],_x=[0,0,[0,1,0]],_y=[0,[18,[1,[0,0,l]],[2,0,[11,a9,[15,[12,46,[15,[17,0,0]]]]]]],eX],_z=[0,[18,[1,[0,0,l]],[2,0,[11,kQ,[15,[12,46,[15,[17,0,0]]]]]]],er],_B=[0,[18,[1,[0,0,l]],[2,0,[11,kQ,[15,[12,46,[15,[17,0,0]]]]]]],er],_A=[0,[18,[1,[0,0,l]],[2,0,[11,kQ,[15,[11," or of type ",[15,[12,46,[15,[17,0,0]]]]]]]]],"@[%s must be a %a or of type %a.%a@]"],_C=[0,0,[0,[0,0],0]],_D=[0,[18,[1,[0,0,l]],[11,"Index must be of type ",[15,[11," or must be a range (int:int).",[15,[17,0,0]]]]]],"@[Index must be of type %a or must be a range (int:int).%a@]"],_E=[0,1,[0,0,0]],_F=[0,[18,[1,[0,0,l]],[11,"A (container of) ",[15,[11," was expected.",[15,[17,0,0]]]]]],"@[A (container of) %a was expected.%a@]"],_G=[0,2,[0,4,[0,5,0]]],_H=[0,[18,[1,[0,0,l]],[11,"Foreach-loop must be over ",[15,[11,ar,[15,[12,46,[15,[17,0,0]]]]]]]],"@[Foreach-loop must be over %a, %a.%a@]"],_I=[0,[11,"The second argument to reduce_sum must be an array.",[15,0]],"The second argument to reduce_sum must be an array.%a"],_J=[0,[11,"The inner type in reduce_sum array must be ",[15,[12,46,[15,0]]]],"The inner type in reduce_sum array must be %a.%a"],_K=[0,1],_L=[0,[11,gs,[15,[11," does not have a valid signature for use in ",[15,[12,58,[17,[0,c,1,0],[15,0]]]]]]],"Function %a does not have a valid signature for use in %a:@ %a"],_M=[0,[11,"Cannot call ",[15,[17,[0,c,1,0],[11,"with arguments forwarded from call to",[17,[0,c,1,0],[15,[12,58,[17,[0,c,1,0],[15,0]]]]]]]]],"Cannot call %a@ with arguments forwarded from call to@ %a:@ %a"],_N=[0,[18,[1,[0,[11,I,0],I]],[11,du,[15,[17,[0,c,1,0],[11,"for the likelihood:",[17,[0,c,1,0],[15,[17,[0,c,1,0],[11,"Expected the arguments to start with:",[17,[0,c,1,0],[18,[1,[0,0,l]],[12,40,[15,[12,41,[17,0,[17,0,0]]]]]]]]]]]]]]]],"@[<v>Ill-typed arguments supplied to function %a@ for the likelihood:@ %a@ Expected the arguments to start with:@ @[(%a)@]@]"],_P=[0,[11,"The function ",[15,[11,", called by this likelihood function,",[17,[0,c,1,0],[11,"does not currently support higher-order derivatives, and",[17,[0,c,1,0],[11,"cannot be used in an embedded Laplace approximation.",0]]]]]]],"The function %a, called by this likelihood function,@ does not currently support higher-order derivatives, and@ cannot be used in an embedded Laplace approximation."],_Q=[0,[11,"Received ",[4,0,0,0,[11," extra ",[15,[11,a_,[15,[12,46,[17,[0,c,1,0],[2,0,0]]]]]]]]],"Received %d extra %a at the end of the call to %a.@ %s"],_S=[0,[18,[1,[0,[11,R,0],R]],[11,cn,[15,[11,ev,[15,[12,46,[15,[17,0,0]]]]]]]],"@[<hov>The hessian block size argument to %a must be a data-only %a.%a@]"],_R=[0,[18,[1,[0,[11,R,0],R]],[11,cn,[15,[11,ev,[15,[12,46,[15,[17,[0,c,1,0],[15,[17,0,0]]]]]]]]]],"@[<hov>The hessian block size argument to %a must be a data-only %a.%a@ %a@]"],_U=[0,[18,[1,[0,[11,R,0],R]],[11,ag,[2,0,[11,H,[15,[17,[0,c,1,0],[11,"must be",[17,[0,c,1,0],[15,[12,46,[15,[17,0,0]]]]]]]]]]]],"@[<hov>The %s to %a@ must be@ %a.%a@]"],_V=[0,[18,[1,[0,[11,R,0],R]],[11,"The control parameters to ",[15,[17,[0,c,1,0],[11,"must all be data-only,",[17,[0,c,1,0],[11,"but the ",[2,0,[11," here is not.",[17,[0,c,1,0],[15,[17,0,0]]]]]]]]]]]],"@[<hov>The control parameters to %a@ must all be data-only,@ but the %s here is not.@ %a@]"],_X=[0,[18,[1,[0,[11,I,0],I]],[11,"Received a tuple of ",[15,[11," control ",[15,[11,a_,[15,[12,46,[17,[0,c,1,0],[11,"Expected tuple of ",[15,[11," arguments for the control parameters instead.",[17,0,0]]]]]]]]]]]]],"@[<v>Received a tuple of %a control %a at the end of the call to %a.@ Expected tuple of %a arguments for the control parameters instead.@]"],_W=[0,[11,"Missing control parameter tuple at the end of the call to ",[15,[12,46,[17,[0,c,1,0],[11,"Expected a tuple of ",[15,[11," arguments for the control parameters.",0]]]]]]],"Missing control parameter tuple at the end of the call to %a.@ Expected a tuple of %a arguments for the control parameters."],_0=[0,[11,bx,0],bx],_1=[0,[11,"No unique minimum promotion found for function ",[15,[12,46,[17,[0,c,1,0],[11,"Overloaded functions must not have multiple equally valid promotion paths.",[17,[0,c,1,0],[15,[11," function has several:",[17,[0,c,1,0],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,c,1,0],[11,"Consider defining a new signature for the exact types needed or",[17,[0,c,1,0],[11,"re-thinking existing definitions.",0]]]]]]]]]]]]]]]],"No unique minimum promotion found for function %a.@ Overloaded functions must not have multiple equally valid promotion paths.@ %a function has several:@ @[<v>%a@]@ Consider defining a new signature for the exact types needed or@ re-thinking existing definitions."],_2=[0,[11,"A returning function was expected but a non-returning function ",[15,[11,bM,0]]],"A returning function was expected but a non-returning function %a was supplied."],_3=[0,[11,"A returning function was expected but a non-function value ",[15,[11,bM,0]]],"A returning function was expected but a non-function value %a was supplied."],_4=[0,[11,gs,[15,[11,cm,[15,[12,46,0]]]]],"Function %a is not implemented for distribution %a."],_5=[0,[11,"Bad suffix: ",[2,0,0]],"Bad suffix: %s"],_6=[0,[11,gs,[15,[11,cm,[15,[11,", use ",[15,[11,xS,0]]]]]]],"Function %a is not implemented for distribution %a, use %a instead."],_7=[0,[11,"A non-returning function was expected but a returning function ",[15,[11,bM,0]]],"A non-returning function was expected but a returning function %a was supplied."],_8=[0,[11,"A non-returning function was expected but a non-function value ",[15,[11,bM,0]]],"A non-returning function was expected but a non-function value %a was supplied."],_9=[0,[11,gs,[15,[11," cannot be overloaded by return type only. Previously used return type ",[15,0]]]],"Function %a cannot be overloaded by return type only. Previously used return type %a"],__=[0,[11,gs,[15,[11," has already been declared for signature ",[15,0]]]],"Function %a has already been declared for signature %a"],_$=[0,[11,gs,[15,[11," is already declared in the Stan Math library with signature ",[15,0]]]],"Function %a is already declared in the Stan Math library with signature %a"],$a=[0,[11,gs,[15,[11," has already been declared. A definition is expected.",0]]],"Function %a has already been declared. A definition is expected."],$b=[0,[11,gs,[15,[11," is declared without specifying a definition.",0]]],"Function %a is declared without specifying a definition."],$c=[0,[18,[1,[0,0,l]],[11,e4,[15,[17,0,0]]]],"@[Real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.%a@]"],$d=[0,[18,[1,[0,0,l]],[11,e4,[17,[0,c,1,0],[11,"Instead found a void function.",[17,0,0]]]]],"@[Real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.@ Instead found a void function.@]"],$e=[0,[18,[1,[0,0,l]],[11,"Probability density functions require real variates (first argument).",[15,[17,0,0]]]],"@[Probability density functions require real variates (first argument).%a@]"],$f=[0,[18,[1,[0,0,l]],[11,"Probability mass functions require integer variates (first argument).",[15,[17,0,0]]]],"@[Probability mass functions require integer variates (first argument).%a@]"];function
+wu="lupdf",bM=" was supplied.",w="Function bodies must contain a return statement of correct type in every branch.",w$="lpmf",a_=" at the end of the call to ",xS=" instead.",gs="Function ",cm=" is not implemented for distribution ",vw="lupmf",e4="Real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.",es="@[%s must be a %a.%a@]",vY="tuple",eX="@[%s must be of type %a.%a@]",cn="The hessian block size argument to ",ew=" must be a data-only ",kQ=" must be a ",bx="This",kv=" entries.",wB="lpdf",CV=[0,1,[0,0,[0,5,[0,2,[0,4,0]]]]],_Z=[0,[11,"For args ",[18,[1,[0,0,l]],[12,40,[15,[12,41,[17,0,[11,", this",0]]]]]]],"For args @[(%a)@], this"],_Y=[0,[18,[1,[0,[11,R,0],R]],[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[11,p2,[15,[17,0,0]]]]]]]],D],_T=[0,[18,[1,[0,[11,R,0],R]],[11,"Missing the hessian block size (data-only ",[15,[11,") and remaining arguments.",[17,0,0]]]]],"@[<hov>Missing the hessian block size (data-only %a) and remaining arguments.@]"],_O=[0,[11,"Typechecking failed after checking the first ",[4,0,0,0,[11," arguments.",[17,[0,c,1,0],[11,"Please ensure you are passing enough arguments and that the ",[15,[11," is a function.",0]]]]]]],"Typechecking failed after checking the first %d arguments.@ Please ensure you are passing enough arguments and that the %a is a function."],_o=[0,[11,w,0],w],_p=[0,[11,"Invalid return statement. Function is declared to return ",[15,[11,", but this statement returns ",[15,[11,xS,0]]]]],"Invalid return statement. Function is declared to return %a, but this statement returns %a instead."],_q=[0,[11,"Array expression must have entries of consistent type. Expected ",[15,[11,dd,[15,[12,46,0]]]]],"Array expression must have entries of consistent type. Expected %a but found %a."],_r=[0,0,[0,1,[0,3,0]]],_s=[0,[18,[1,[0,0,l]],[11,"Row vector expression must have all ",[15,[11,kv,[15,[17,0,0]]]]]],"@[Row vector expression must have all %a entries.%a@]"],_t=[0,4,[0,7,0]],_u=[0,[18,[1,[0,0,l]],[11,"Matrix expression must have all ",[15,[11,kv,[15,[17,0,0]]]]]],"@[Matrix expression must have all %a entries.%a@]"],_v=[0,0,0],_w=[0,[18,[1,[0,0,l]],[2,0,[11,a9,[15,[12,46,[15,[17,0,0]]]]]]],eX],_x=[0,0,[0,1,0]],_y=[0,[18,[1,[0,0,l]],[2,0,[11,a9,[15,[12,46,[15,[17,0,0]]]]]]],eX],_z=[0,[18,[1,[0,0,l]],[2,0,[11,kQ,[15,[12,46,[15,[17,0,0]]]]]]],es],_B=[0,[18,[1,[0,0,l]],[2,0,[11,kQ,[15,[12,46,[15,[17,0,0]]]]]]],es],_A=[0,[18,[1,[0,0,l]],[2,0,[11,kQ,[15,[11," or of type ",[15,[12,46,[15,[17,0,0]]]]]]]]],"@[%s must be a %a or of type %a.%a@]"],_C=[0,0,[0,[0,0],0]],_D=[0,[18,[1,[0,0,l]],[11,"Index must be of type ",[15,[11," or must be a range (int:int).",[15,[17,0,0]]]]]],"@[Index must be of type %a or must be a range (int:int).%a@]"],_E=[0,1,[0,0,0]],_F=[0,[18,[1,[0,0,l]],[11,"A (container of) ",[15,[11," was expected.",[15,[17,0,0]]]]]],"@[A (container of) %a was expected.%a@]"],_G=[0,2,[0,4,[0,5,0]]],_H=[0,[18,[1,[0,0,l]],[11,"Foreach-loop must be over ",[15,[11,ar,[15,[12,46,[15,[17,0,0]]]]]]]],"@[Foreach-loop must be over %a, %a.%a@]"],_I=[0,[11,"The second argument to reduce_sum must be an array.",[15,0]],"The second argument to reduce_sum must be an array.%a"],_J=[0,[11,"The inner type in reduce_sum array must be ",[15,[12,46,[15,0]]]],"The inner type in reduce_sum array must be %a.%a"],_K=[0,1],_L=[0,[11,gs,[15,[11," does not have a valid signature for use in ",[15,[12,58,[17,[0,c,1,0],[15,0]]]]]]],"Function %a does not have a valid signature for use in %a:@ %a"],_M=[0,[11,"Cannot call ",[15,[17,[0,c,1,0],[11,"with arguments forwarded from call to",[17,[0,c,1,0],[15,[12,58,[17,[0,c,1,0],[15,0]]]]]]]]],"Cannot call %a@ with arguments forwarded from call to@ %a:@ %a"],_N=[0,[18,[1,[0,[11,I,0],I]],[11,du,[15,[17,[0,c,1,0],[11,"for the likelihood:",[17,[0,c,1,0],[15,[17,[0,c,1,0],[11,"Expected the arguments to start with:",[17,[0,c,1,0],[18,[1,[0,0,l]],[12,40,[15,[12,41,[17,0,[17,0,0]]]]]]]]]]]]]]]],"@[<v>Ill-typed arguments supplied to function %a@ for the likelihood:@ %a@ Expected the arguments to start with:@ @[(%a)@]@]"],_P=[0,[11,"The function ",[15,[11,", called by this likelihood function,",[17,[0,c,1,0],[11,"does not currently support higher-order derivatives, and",[17,[0,c,1,0],[11,"cannot be used in an embedded Laplace approximation.",0]]]]]]],"The function %a, called by this likelihood function,@ does not currently support higher-order derivatives, and@ cannot be used in an embedded Laplace approximation."],_Q=[0,[11,"Received ",[4,0,0,0,[11," extra ",[15,[11,a_,[15,[12,46,[17,[0,c,1,0],[2,0,0]]]]]]]]],"Received %d extra %a at the end of the call to %a.@ %s"],_S=[0,[18,[1,[0,[11,R,0],R]],[11,cn,[15,[11,ew,[15,[12,46,[15,[17,0,0]]]]]]]],"@[<hov>The hessian block size argument to %a must be a data-only %a.%a@]"],_R=[0,[18,[1,[0,[11,R,0],R]],[11,cn,[15,[11,ew,[15,[12,46,[15,[17,[0,c,1,0],[15,[17,0,0]]]]]]]]]],"@[<hov>The hessian block size argument to %a must be a data-only %a.%a@ %a@]"],_U=[0,[18,[1,[0,[11,R,0],R]],[11,ag,[2,0,[11,H,[15,[17,[0,c,1,0],[11,"must be",[17,[0,c,1,0],[15,[12,46,[15,[17,0,0]]]]]]]]]]]],"@[<hov>The %s to %a@ must be@ %a.%a@]"],_V=[0,[18,[1,[0,[11,R,0],R]],[11,"The control parameters to ",[15,[17,[0,c,1,0],[11,"must all be data-only,",[17,[0,c,1,0],[11,"but the ",[2,0,[11," here is not.",[17,[0,c,1,0],[15,[17,0,0]]]]]]]]]]]],"@[<hov>The control parameters to %a@ must all be data-only,@ but the %s here is not.@ %a@]"],_X=[0,[18,[1,[0,[11,I,0],I]],[11,"Received a tuple of ",[15,[11," control ",[15,[11,a_,[15,[12,46,[17,[0,c,1,0],[11,"Expected tuple of ",[15,[11," arguments for the control parameters instead.",[17,0,0]]]]]]]]]]]]],"@[<v>Received a tuple of %a control %a at the end of the call to %a.@ Expected tuple of %a arguments for the control parameters instead.@]"],_W=[0,[11,"Missing control parameter tuple at the end of the call to ",[15,[12,46,[17,[0,c,1,0],[11,"Expected a tuple of ",[15,[11," arguments for the control parameters.",0]]]]]]],"Missing control parameter tuple at the end of the call to %a.@ Expected a tuple of %a arguments for the control parameters."],_0=[0,[11,bx,0],bx],_1=[0,[11,"No unique minimum promotion found for function ",[15,[12,46,[17,[0,c,1,0],[11,"Overloaded functions must not have multiple equally valid promotion paths.",[17,[0,c,1,0],[15,[11," function has several:",[17,[0,c,1,0],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,c,1,0],[11,"Consider defining a new signature for the exact types needed or",[17,[0,c,1,0],[11,"re-thinking existing definitions.",0]]]]]]]]]]]]]]]],"No unique minimum promotion found for function %a.@ Overloaded functions must not have multiple equally valid promotion paths.@ %a function has several:@ @[<v>%a@]@ Consider defining a new signature for the exact types needed or@ re-thinking existing definitions."],_2=[0,[11,"A returning function was expected but a non-returning function ",[15,[11,bM,0]]],"A returning function was expected but a non-returning function %a was supplied."],_3=[0,[11,"A returning function was expected but a non-function value ",[15,[11,bM,0]]],"A returning function was expected but a non-function value %a was supplied."],_4=[0,[11,gs,[15,[11,cm,[15,[12,46,0]]]]],"Function %a is not implemented for distribution %a."],_5=[0,[11,"Bad suffix: ",[2,0,0]],"Bad suffix: %s"],_6=[0,[11,gs,[15,[11,cm,[15,[11,", use ",[15,[11,xS,0]]]]]]],"Function %a is not implemented for distribution %a, use %a instead."],_7=[0,[11,"A non-returning function was expected but a returning function ",[15,[11,bM,0]]],"A non-returning function was expected but a returning function %a was supplied."],_8=[0,[11,"A non-returning function was expected but a non-function value ",[15,[11,bM,0]]],"A non-returning function was expected but a non-function value %a was supplied."],_9=[0,[11,gs,[15,[11," cannot be overloaded by return type only. Previously used return type ",[15,0]]]],"Function %a cannot be overloaded by return type only. Previously used return type %a"],__=[0,[11,gs,[15,[11," has already been declared for signature ",[15,0]]]],"Function %a has already been declared for signature %a"],_$=[0,[11,gs,[15,[11," is already declared in the Stan Math library with signature ",[15,0]]]],"Function %a is already declared in the Stan Math library with signature %a"],$a=[0,[11,gs,[15,[11," has already been declared. A definition is expected.",0]]],"Function %a has already been declared. A definition is expected."],$b=[0,[11,gs,[15,[11," is declared without specifying a definition.",0]]],"Function %a is declared without specifying a definition."],$c=[0,[18,[1,[0,0,l]],[11,e4,[15,[17,0,0]]]],"@[Real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.%a@]"],$d=[0,[18,[1,[0,0,l]],[11,e4,[17,[0,c,1,0],[11,"Instead found a void function.",[17,0,0]]]]],"@[Real return type required for probability functions ending in _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.@ Instead found a void function.@]"],$e=[0,[18,[1,[0,0,l]],[11,"Probability density functions require real variates (first argument).",[15,[17,0,0]]]],"@[Probability density functions require real variates (first argument).%a@]"],$f=[0,[18,[1,[0,0,l]],[11,"Probability mass functions require integer variates (first argument).",[15,[17,0,0]]]],"@[Probability mass functions require integer variates (first argument).%a@]"];function
 _n(a,b){if(typeof
 b==="number")return g(a)(_o);switch(b[0]){case
 0:var
@@ -7171,7 +7171,7 @@ c=A([0,$],O);return j(g(a)(_Z),c,b)},h,c,d);case
 37:b=b[1];return j(g(a)($f),function(a,b){return BD(0,bR,a,b)},b);default:return t3(a,[0,b[1],b[2],b[3]])}}var
 D="Did you mean ",$g=[0,[17,[0,c,1,0],[11,D,[15,[12,63,0]]]],"@ Did you mean %a?"];function
 t5(a,b){if(!b)return 0;b=b[1][1];return j(g(a)($g),ab,b)}var
-H="Transformed parameters cannot be integers.",e4=").",pJ="_lccdf",cm=" was found when looking for distribution ",qd="_lcdf",bx="Parameters cannot be integers.",Gy="_ccdf",a_="Continue statements may only be used in loops.",ag="Break statements may only be used in loops.",vn="_cdf",ev="Left hand side of an assignment cannot have nested multi-indexing.",cn="Complex types do not support transformations.",VA=[0,ji,0],$7=[0,[11,"For the given left hand side (",[15,[11,"), expected the right hand side to have type",[17,[0,c,1,0],[15,[12,46,[15,0]]]]]]],"For the given left hand side (%a), expected the right hand side to have type@ %a.%a"],$8=[0,[11,"There are no valid right hand sides for the given left hand side (",[15,[11,e4,0]]],"There are no valid right hand sides for the given left hand side (%a)."],$V=[0,[15,[12,91,[16,[12,93,0]]]],"%a[%t]"],$W=[0,[15,[12,46,[21,1,0]]],"%a.%n"],$L=[0,[11,ev,0],ev],$M=[0,[11,ag,0],ag],$N=[0,[11,a_,0],a_],$O=[0,[11,"Expression return statements may only be used inside non-",[15,[11," definitions.",0]]],"Expression return statements may only be used inside non-%a definitions."],$P=[0,[11,"Empty return statements may only be used inside ",[15,[11," function definitions.",0]]],"Empty return statements may only be used inside %a function definitions."],$Q=[0,[18,[1,[0,0,l]],[11,"Bounds of integer variable must be of type ",[15,[12,46,[15,[17,0,0]]]]]],"@[Bounds of integer variable must be of type %a.%a@]"],$R=[0,[11,cn,0],cn],$S=[0,[11,"Cannot assign to function argument or loop identifier ",[15,[12,46,0]]],"Cannot assign to function argument or loop identifier %a."],$T=[0,[11,"Cannot assign to global variable ",[15,[11," declared previously in ",[2,0,[12,46,0]]]]],"Cannot assign to global variable %a declared previously in %s."],$U=[0,[11,"Cannot assign a function type (",[15,[11,") to variable ",[15,[12,46,0]]]]],"Cannot assign a function type (%a) to variable %a."],$X=[0,[18,[1,[0,[11,cE,0],cE]],[11,"The same value cannot be assigned to multiple times in one assignment:",[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]],"@[<v2>The same value cannot be assigned to multiple times in one assignment:@ @[%a@]@]"],$Y=[0,[18,[1,[0,[11,cE,0],cE]],[11,"The same variable cannot be both assigned to and read from on the left hand side of an assignment:",[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]],"@[<v2>The same variable cannot be both assigned to and read from on the left hand side of an assignment:@ @[%a@]@]"],$Z=[0,[11,"CDF and CCDF functions may not be used with distribution notation (~). Use target += ",[2,0,[12,40,[16,[11,") instead.",0]]]]],"CDF and CCDF functions may not be used with distribution notation (~). Use target += %s(%t) instead."],$0=[0,[11,"Ill-typed arguments to distribution statement (~). No function ",[15,[11,bh,[15,[11,cm,[15,[12,46,0]]]]]]],"Ill-typed arguments to distribution statement (~). No function %a or %a was found when looking for distribution %a."],$1=[0,[11,"Ill-typed arguments to ",[15,[11,"-statement. No function ",[15,[11,cm,[15,[12,46,0]]]]]]],"Ill-typed arguments to %a-statement. No function %a was found when looking for distribution %a."],$2=[0,[11,"Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.\nNo matching signature for arguments: ",[18,[1,[0,0,l]],[12,40,[15,[12,41,[17,0,0]]]]]],"Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.\nNo matching signature for arguments: @[(%a)@]"],$3=[0,[11,"Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the ",[2,0,[12,46,0]]],"Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the %s."],$4=[0,[11,H,0],H],$5=[0,[11,bx,0],bx],$9=[0,[18,[1,[0,0,l]],[11,"Ill-typed assignment operator ",[15,[11,"=.",[17,[0,c,1,0],[15,[17,0,0]]]]]]],"@[Ill-typed assignment operator %a=.@ %a@]"],$6=[0,[18,[1,[0,0,l]],[11,"Ill-typed assignment statement.",[17,[0,c,1,0],[11,"Expected the right hand side to have a type matching the destination (",[15,[11,e4,[15,[17,0,0]]]]]]]],"@[Ill-typed assignment statement.@ Expected the right hand side to have a type matching the destination (%a).%a@]"];function
+H="Transformed parameters cannot be integers.",e4=").",pJ="_lccdf",cm=" was found when looking for distribution ",qd="_lcdf",bx="Parameters cannot be integers.",Gy="_ccdf",a_="Continue statements may only be used in loops.",ag="Break statements may only be used in loops.",vn="_cdf",ew="Left hand side of an assignment cannot have nested multi-indexing.",cn="Complex types do not support transformations.",VA=[0,ji,0],$7=[0,[11,"For the given left hand side (",[15,[11,"), expected the right hand side to have type",[17,[0,c,1,0],[15,[12,46,[15,0]]]]]]],"For the given left hand side (%a), expected the right hand side to have type@ %a.%a"],$8=[0,[11,"There are no valid right hand sides for the given left hand side (",[15,[11,e4,0]]],"There are no valid right hand sides for the given left hand side (%a)."],$V=[0,[15,[12,91,[16,[12,93,0]]]],"%a[%t]"],$W=[0,[15,[12,46,[21,1,0]]],"%a.%n"],$L=[0,[11,ew,0],ew],$M=[0,[11,ag,0],ag],$N=[0,[11,a_,0],a_],$O=[0,[11,"Expression return statements may only be used inside non-",[15,[11," definitions.",0]]],"Expression return statements may only be used inside non-%a definitions."],$P=[0,[11,"Empty return statements may only be used inside ",[15,[11," function definitions.",0]]],"Empty return statements may only be used inside %a function definitions."],$Q=[0,[18,[1,[0,0,l]],[11,"Bounds of integer variable must be of type ",[15,[12,46,[15,[17,0,0]]]]]],"@[Bounds of integer variable must be of type %a.%a@]"],$R=[0,[11,cn,0],cn],$S=[0,[11,"Cannot assign to function argument or loop identifier ",[15,[12,46,0]]],"Cannot assign to function argument or loop identifier %a."],$T=[0,[11,"Cannot assign to global variable ",[15,[11," declared previously in ",[2,0,[12,46,0]]]]],"Cannot assign to global variable %a declared previously in %s."],$U=[0,[11,"Cannot assign a function type (",[15,[11,") to variable ",[15,[12,46,0]]]]],"Cannot assign a function type (%a) to variable %a."],$X=[0,[18,[1,[0,[11,cE,0],cE]],[11,"The same value cannot be assigned to multiple times in one assignment:",[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]],"@[<v2>The same value cannot be assigned to multiple times in one assignment:@ @[%a@]@]"],$Y=[0,[18,[1,[0,[11,cE,0],cE]],[11,"The same variable cannot be both assigned to and read from on the left hand side of an assignment:",[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]],"@[<v2>The same variable cannot be both assigned to and read from on the left hand side of an assignment:@ @[%a@]@]"],$Z=[0,[11,"CDF and CCDF functions may not be used with distribution notation (~). Use target += ",[2,0,[12,40,[16,[11,") instead.",0]]]]],"CDF and CCDF functions may not be used with distribution notation (~). Use target += %s(%t) instead."],$0=[0,[11,"Ill-typed arguments to distribution statement (~). No function ",[15,[11,bh,[15,[11,cm,[15,[12,46,0]]]]]]],"Ill-typed arguments to distribution statement (~). No function %a or %a was found when looking for distribution %a."],$1=[0,[11,"Ill-typed arguments to ",[15,[11,"-statement. No function ",[15,[11,cm,[15,[12,46,0]]]]]]],"Ill-typed arguments to %a-statement. No function %a was found when looking for distribution %a."],$2=[0,[11,"Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.\nNo matching signature for arguments: ",[18,[1,[0,0,l]],[12,40,[15,[12,41,[17,0,0]]]]]],"Truncation is only defined if distribution has _lcdf and _lccdf functions implemented with appropriate signature.\nNo matching signature for arguments: @[(%a)@]"],$3=[0,[11,"Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the ",[2,0,[12,46,0]]],"Top level variable sizes must be variables from the (transformed) data block or functions thereof, but this variable was declared in the %s."],$4=[0,[11,H,0],H],$5=[0,[11,bx,0],bx],$9=[0,[18,[1,[0,0,l]],[11,"Ill-typed assignment operator ",[15,[11,"=.",[17,[0,c,1,0],[15,[17,0,0]]]]]]],"@[Ill-typed assignment operator %a=.@ %a@]"],$6=[0,[18,[1,[0,0,l]],[11,"Ill-typed assignment statement.",[17,[0,c,1,0],[11,"Expected the right hand side to have a type matching the destination (",[15,[11,e4,[15,[17,0,0]]]]]]]],"@[Ill-typed assignment statement.@ Expected the right hand side to have a type matching the destination (%a).%a@]"];function
 $K(a,b){if(typeof
 b==="number")switch(b){case
 0:return g(a)($L);case
@@ -7205,7 +7205,7 @@ d=n[3],e=k[3],c=a1(O);return aB(g(a)($7),c,e,Dz,b,bR,d)}c=k[3];b=bI(O);return j(
 b=a[2];if(b&&!b[2]){b=b[1][2];return 0===g9(0,p,a[1][2])[0]?[0,b]:0}}return 0},l=function(a){var
 b=a[1];a:if(b){var
 c=b[2];if(c&&!c[2]){a=a[2];if(a){a=a[1];c=c[1];var
-f=c[2],c=c[1],b=b[1],e=b[2],b=b[1];if(bj(a,e)){b:{if(9!==d&&10!==d)break b;if(iq(a))break a}return 1===f?[0,[0,[0,[0,b,e],[0,[0,c,0],0]],0,0,1],[0,[0,[0,[0,b,e],[0,[0,c,1],0]],0,0,1],0]]:[0,[0,[0,[0,b,e],[0,[0,c,f],0]],0,0,1],0]}}}}return 0},b=5===d?VA:tz(d),b=nQ(aY(au(au(b,tA),l),m),lU);return x(g(a)($9),eb,d,o,b)}}var
+f=c[2],c=c[1],b=b[1],e=b[2],b=b[1];if(bj(a,e)){b:{if(9!==d&&10!==d)break b;if(iq(a))break a}return 1===f?[0,[0,[0,[0,b,e],[0,[0,c,0],0]],0,0,1],[0,[0,[0,[0,b,e],[0,[0,c,1],0]],0,0,1],0]]:[0,[0,[0,[0,b,e],[0,[0,c,f],0]],0,0,1],0]}}}}return 0},b=5===d?VA:tz(d),b=nQ(aY(au(au(b,tA),l),m),lU);return x(g(a)($9),ec,d,o,b)}}var
 DC=[L,"Frontend.Typechecker.TypecheckerException",aA(0)];function
 t(a){throw m([0,DC,a],1)}var
 j7=[0,0];function
@@ -7216,7 +7216,7 @@ a==="number"&&2===a)return 1}return 0}function
 DD(a){a=a[3];if(typeof
 a!=="number"){a=a[1];if(typeof
 a==="number"&&3<=a)return 1}return 0}function
-fr(d,b,c){c=ec(c)[1];if(typeof
+fr(d,b,c){c=ed(c)[1];if(typeof
 c!=="number"&&1===c[0])return[0,h(c[1],function(a){return fr(d,b,a)})];switch(b){case
 1:case
 4:case
@@ -7232,8 +7232,8 @@ b=aF(a[1],gB,at);if(b);else{b=aar;var
 d=a[1];for(;;){if(!b){b=0;break}var
 c=d===b[1]?1:0,b=b[2];if(c){b=c;break}}}return b?t([0,a[2],[1,[0,a[1]]]]):b}var
 hy=-1027682724;function
-oS(a,b,c){if(c){c=b[1];b=b[2];if(tD(c))return t([0,b,[1,[2,c]]]);if(ox(c))return t([0,b,[2,[1,c]]]);a=aY(d7(a,c),function(a){a=a[2];if(typeof
-a!=="number"&&hy===a[1])return[0,a[2][4]];return 0});if(a)return t([0,b,[1,[3,c,a[1]]]]);return}c=b[1];b=b[2];if(ox(c))return t([0,b,[1,[7,c]]]);a=aY(d7(a,c),function(a){a=a[2];if(typeof
+oS(a,b,c){if(c){c=b[1];b=b[2];if(tD(c))return t([0,b,[1,[2,c]]]);if(ox(c))return t([0,b,[2,[1,c]]]);a=aY(d8(a,c),function(a){a=a[2];if(typeof
+a!=="number"&&hy===a[1])return[0,a[2][4]];return 0});if(a)return t([0,b,[1,[3,c,a[1]]]]);return}c=b[1];b=b[2];if(ox(c))return t([0,b,[1,[7,c]]]);a=aY(d8(a,c),function(a){a=a[2];if(typeof
 a!=="number"&&hy===a[1])return[0,a[2][4]];return 0});if(a)return t([0,b,[1,[3,c,a[1]]]])}function
 DG(a){return 0===a[0]?[0,a[1][1]]:0}var
 aat=[0,[0,[0,0],[0,0,[0,0,0]]]];function
@@ -7247,13 +7247,13 @@ d!=="number"&&typeof
 d[1]!=="number"){d=1;break a}d=0}d||=6===a[1];d=1-d}return d?t([0,b,[2,[0,c[1]]]]):d}var
 mG=600422021;function
 DI(a,b,c){var
-e=c[2],d=Cb(d7(b,eK(c[1])));if(d)b=d[1];else{b=l6(b,c[1]);b=t([0,e,[1,[4,c[1],b]]])}b=b[1];DH(a,e,c);d=b[1];var
+e=c[2],d=Cb(d8(b,eK(c[1])));if(d)b=d[1];else{b=l6(b,c[1]);b=t([0,e,[1,[4,c[1],b]]])}b=b[1];DH(a,e,c);d=b[1];var
 f=b[2];if(typeof
 f==="number"){if(xE===f)return[0,fr(a,0,9),9]}else if(hy===f[1]){c=f[2];b=c[1];if(6!==b&&4<=b){c=c[4];if(a[2])return t([0,e,[3,[8,b,c]]])}return[0,fr(a,b,d),d]}a:if(typeof
 d!=="number"&&2===d[0]){e=d[1];f=e[2];var
 g=e[1];if(typeof
 e[3]!=="number"){b=b[2];e=e[4];if(typeof
-b!=="number"){b=b[1];if(i3!==b&&mG!==b)break a;d=[2,[0,g,f,ea(c[1]),e]];return[0,fr(a,1,d),d]}}}return[0,fr(a,1,d),d]}function
+b!=="number"){b=b[1];if(i3!==b&&mG!==b)break a;d=[2,[0,g,f,eb(c[1]),e]];return[0,fr(a,1,d),d]}}}return[0,fr(a,1,d),d]}function
 oT(a,b){a=[0,a];var
 c=b;function
 e(a){var
@@ -7302,14 +7302,14 @@ DN(a,b,c){if(aF(c[1],w1,at)){if(a[2])return t([0,b,$$]);c=a[3];a:{if(typeof
 c!=="number"){c=c[1];if(typeof
 c==="number"&&1===c){c=1;break a}}c=0}if(c);else{c=7===a[1];c||=3===a[1]}if(1-c)return t([0,b,aaa])}}function
 oU(a,b,c,d,e,f){c=a?[9,c,d,e]:[8,c,d,e];e=lS(f)?0:fc(h(e,function(a){return a[2][2]}),tf)?1:0;return[0,c,[0,b,bQ(e,f),f]]}function
-t9(a,b,c){c=lx(h(d7(a,eK(c[1])),b),An);a=c[2];c=Dx(c[1]);if(0===c[0])return[0,c[1]];c=c[1];return c?[1,aY(c[1],function(a){var
+t9(a,b,c){c=lx(h(d8(a,eK(c[1])),b),An);a=c[2];c=Dx(c[1]);if(0===c[0])return[0,c[1]];c=c[1];return c?[1,aY(c[1],function(a){var
 b=a[1],a=a[2];if(typeof
 b!=="number"&&2===b[0]){b=b[1];return[0,[0,b[2],b[1],a]]}return 0})]:[2,cW(a)]}var
 aax=[0,[11,"Attempting to create function variable out of ",[16,0]],"Attempting to create function variable out of %t"];function
 t_(a,b,c,d){if(typeof
 d!=="number"&&2===d[0]){var
 e=d[1],f=e[2],g=e[1];if(typeof
-e[3]==="number")return[0,[4,c],[0,b,fr(a,1,d),d]];e=e[4];f=[2,[0,g,f,ea(c[1]),e]];return[0,[4,c],[0,b,fr(a,1,f),f]]}return X(aax,[0,function(a){return O(a,d)},0])}var
+e[3]==="number")return[0,[4,c],[0,b,fr(a,1,d),d]];e=e[4];f=[2,[0,g,f,eb(c[1]),e]];return[0,[4,c],[0,b,fr(a,1,f),f]]}return X(aax,[0,function(a){return O(a,d)},0])}var
 aay=[0,[11,"Forwarded arguments to '",[2,0,[11,"' in call to '",[2,0,[12,39,0]]]]],"Forwarded arguments to '%s' in call to '%s'"],l_=0;function
 DO(a,b,c,d,e,f,g){e=e?e[1]:0;var
 i=c[1],n=d[1],i=DJ(f,j(V(aay),n,i)),e=dB(e),h=e[2],e=e[1],o=k(h,i),m=-19948471,l=902704421,b=t9(b,function(a){var
@@ -7330,15 +7330,15 @@ s=f[2],k=k[1],d=t9(d,function(a){var
 d=a[1],b=h(s,dJ),b=[0,[0,fr(c,1,d),d],b];return oN(0,r,q,j1(a),n,b)},k);switch(d[0]){case
 0:d=d[1];var
 j=d[2];return oU(a,b,aaK,e,aX([0,t_(c,b,k,d[1][1]),s],j,b$),g);case
-1:return t([0,b,[0,[23,k[1],0,d[1]]]]);default:d=d[1];a=d[2];g=d[3];d=d[1];b=j8(b,a,f);j=h(f,ha);return t([0,b,[0,[14,e[1],j,d,a,n,g]]])}}}d=c2(0,0,0,r6(oN(0,r,q,0,n,h(f,dJ))));a=d[2];g=d[3];d=d[1];b=j8(b,a,f);j=h(f,ha);return t([0,b,[0,[14,e[1],j,d,a,n,g]]])}if(!l3(e[1])){if(oD(e[1]))return DP(a,b,c,d,e,f);g=d7(d,ts(e[1]));if(g){g=g[1][2];if(typeof
+1:return t([0,b,[0,[23,k[1],0,d[1]]]]);default:d=d[1];a=d[2];g=d[3];d=d[1];b=j8(b,a,f);j=h(f,ha);return t([0,b,[0,[14,e[1],j,d,a,n,g]]])}}}d=c2(0,0,0,r6(oN(0,r,q,0,n,h(f,dJ))));a=d[2];g=d[3];d=d[1];b=j8(b,a,f);j=h(f,ha);return t([0,b,[0,[14,e[1],j,d,a,n,g]]])}if(!l3(e[1])){if(oD(e[1]))return DP(a,b,c,d,e,f);g=d8(d,ts(e[1]));if(g){g=g[1][2];if(typeof
 g!=="number"&&hy===g[1]){g=g[2][4];if(!ty(ts(e[1])))return t([0,b,[0,[25,e[1],[0,g]]]])}g=h(f,dJ);d=l$(d,e[1],g);switch(d[0]){case
-0:d=d[1];g=d[1];if(!g)return t([0,b,[0,[24,e[1],d[4]]]]);j=d[2];g=g[1];d=aX(f,d[3],b$);return oU(a,b,i(j,ea(e[1])),e,d,g);case
+0:d=d[1];g=d[1];if(!g)return t([0,b,[0,[24,e[1],d[4]]]]);j=d[2];g=g[1];d=aX(f,d[3],b$);return oU(a,b,i(j,eb(e[1])),e,d,g);case
 1:d=d[1];a=[0,h(f,ha)];return t([0,b,[0,[23,e[1],a,d]]]);default:d=d[1];a=d[2];d=d[1];g=h(f,function(a){return a[2][3]});return t([0,b,[0,[38,e[1],g,[0,d,a]]]])}}a=CF(e[1]);a:if(a){a=a[1];g=a[2];a=a[1];b:{c:{d:{e:if(g!==wB){if(g!==w$){if(g===wu)break e;if(g!==vw){j=oC;break d}}if(f3(d,a+eW)){d=[0,b,[0,[27,a,g]]];break a}j=oC;break d}if(f3(d,a+e5)){d=[0,b,[0,[27,a,g]]];break a}j=oC}for(;;){if(!j)break c;k=j[1];j=j[2];if(a===k[1])break}j=[0,k];break b}j=0}j=j?[0,j[1][2]]:0;j=j?1:0;if(j){j=CC;for(;;){if(j){k=g===j[1];j=j[2];if(!k)continue}else
 k=0;if(!k)break;d=[0,b,[0,[26,a,g]]];break a}}d=l6(d,e[1]);d=[0,b,[1,[5,e[1],d]]]}else{d=l6(d,e[1]);d=[0,b,[1,[5,e[1],d]]]}return t(d)}function
 o(a){return oN(1,aaA,aaB,0,1,h(f,dJ))}if(f){g=f[1][1];if(typeof
 g!=="number"&&4===g[0]){var
 m=f[2];if(m){j=m[1][2];var
-p=j[1],g=g[1],j=ec(j[3]),l=j[1];if(0===j[2])t([0,p,[0,[11,l]]]);else{j=CV;for(;;){if(j){var
+p=j[1],g=g[1],j=ed(j[3]),l=j[1];if(0===j[2])t([0,p,[0,[11,l]]]);else{j=CV;for(;;){if(j){var
 u=j[2],j=bj(l,j[1]);if(!j){j=u;continue}}else
 j=0;if(!(1-j))break;t([0,p,[0,[12,l]]]);break}}d=t9(d,function(a){var
 b=a[1];if(typeof
@@ -7360,7 +7360,7 @@ j=l[2];if(cq(b,aaG)){j=t([0,g[2][1],[0,[21,e[1],[0,b]]]]);b=j[2];g=j[1]}else
 b=j}else{g=t([0,g,[0,[21,e[1],0]]]);b=g[2];g=g[1]}if(b){j=b[1][1];if(typeof
 j!=="number"&&4===j[0]){b=b[2];if(b){var
 m=b[2],j=DO(c,d,e,j[1],0,b[1],aaH),c=j[2],j=j[1];if(sd(se,e[1],vk))if(m){d=m[2];b=m[1];if(d){b=d[1];d=T(m)-1|0;t([0,b[2][1],[0,[20,e[1],d]]])}else{d=fq(l_,l4,DJ(b,"Control arguments for '"+e[1]+xC));if(0!==d[0]){d=d[1];b=b[1];a:{if(typeof
-b!=="number"&&16===b[0]){b=b[1];break a}b=0}b=j8(n,d,b);t([0,b,[0,[22,e[1],d]]])}}}else{d=c2(0,0,0,r6(fq(l_,l4,0)));t([0,n,[0,[22,e[1],d]]])}else if(m){d=m[1];b=T(m);t([0,d[2][1],[0,[20,e[1],b]]])}c=k(i,[0,g,[0,j,[0,c,m]]]);j=aF(e[1],w1,at)?2:1;return oU(a,n,[0,ea(e[1])],e,c,j)}}}return o(0)}function
+b!=="number"&&16===b[0]){b=b[1];break a}b=0}b=j8(n,d,b);t([0,b,[0,[22,e[1],d]]])}}}else{d=c2(0,0,0,r6(fq(l_,l4,0)));t([0,n,[0,[22,e[1],d]]])}else if(m){d=m[1];b=T(m);t([0,d[2][1],[0,[20,e[1],b]]])}c=k(i,[0,g,[0,j,[0,c,m]]]);j=aF(e[1],w1,at)?2:1;return oU(a,n,[0,eb(e[1])],e,c,j)}}}return o(0)}function
 DQ(a,b,c,d,e,f){var
 g=d?aav:aaw,d=aaz(d,a,b,c,e,f);fs(e);g(a,e);DL(b,a,e);DM(b,a,c,e,f);DN(b,a,e);DH(b,a,e);return d}var
 aaq=[0,0];function
@@ -7395,7 +7395,7 @@ o!=="number"||5!==o)break b}if(typeof
 j==="number"&&2>j&&11===f){var
 A=x(gL(aaU),W,l,W,d),a=G(ak(aaV),function(a){return r(W,a)},[0,c,a],function(a){return s(A,a)});iJ(n[2][1],a);break a}}if(oi(f)){d=n[1];if(typeof
 d!=="number"&&1===d[0]){l=d[3];j=d[2];d=d[1];if(oi(j)){var
-w=Gp(gL(aaN),c6,d,eb,j,c6,l,c6,l,eb,f,c6,q),y=aB(gL(aaO),c6,n,eb,f,c6,q);iJ(e,x(ak(aaP),function(a){return r(W,a)},[0,c,a],function(a){return s(y,a)},function(a){return s(w,a)}))}}}}a=ma(f,h([0,n,[0,q,0]],dJ));d=oE([0,n,[0,q,0]]);if(a){a=a[1];c=a[1];if(c){a=a[2];if(a){j=a[2];if(j&&!j[2]&&d){d=d[1];a=a[1];c=c[1];j=b$(q,j[1]);return[0,[1,b$(n,a),f,j],[0,e,d,c]]}}}}return t([0,e,[2,[6,f,n[2][3],q[2][3]]]]);case
+w=Gp(gL(aaN),c6,d,ec,j,c6,l,c6,l,ec,f,c6,q),y=aB(gL(aaO),c6,n,ec,f,c6,q);iJ(e,x(ak(aaP),function(a){return r(W,a)},[0,c,a],function(a){return s(y,a)},function(a){return s(w,a)}))}}}}a=ma(f,h([0,n,[0,q,0]],dJ));d=oE([0,n,[0,q,0]]);if(a){a=a[1];c=a[1];if(c){a=a[2];if(a){j=a[2];if(j&&!j[2]&&d){d=d[1];a=a[1];c=c[1];j=b$(q,j[1]);return[0,[1,b$(n,a),f,j],[0,e,d,c]]}}}}return t([0,e,[2,[6,f,n[2][3],q[2][3]]]]);case
 2:a=c[1];d=k(c[2]);c=ma(a,[0,[0,d[2][2],d[2][3]],0]);if(c){c=c[1][1];if(c)return[0,[2,a,d],[0,e,d[2][2],c[1]]]}return t([0,e,[2,[7,a,d[2][3]]]]);case
 3:d=c[2];c=k(c[1]);a=ma(d,[0,[0,c[2][2],c[2][3]],0]);if(a){a=a[1][1];if(a)return[0,[3,c,d],[0,e,c[2][2],a[1]]]}return t([0,e,[2,[8,d,c[2][3]]]]);case
 4:a=c[1];fs(a);d=DI(p,b,a);return[0,[4,a],[0,e,d[1],d[2]]];case
@@ -7426,7 +7426,7 @@ aah=[3,0];function
 oV(j,b,c){var
 i=c[2][1],c=c[1];switch(c[0]){case
 0:c=c[1];fs(c);var
-g=c[2],a=d7(b,c[1]);if(a){a=a[1][2];if(typeof
+g=c[2],a=d8(b,c[1]);if(a){a=a[1][2];if(typeof
 a==="number"){a=0;var
 f=0,d=1,e=0}else if(i3<=a[1]){a=[0,a[2]];f=0;d=1;e=1}else{e=a[2];a=[0,e[4]];f=e[3];d=e[2];e=e[1]}}else{a=l6(b,c[1]);e=t([0,g,[1,[4,c[1],a]]]);a=e[4];f=e[3];d=e[2];e=e[1]}if(d&&e!==j[1])t([0,g,[3,[1,c[1],e,a]]]);if(f)t([0,g,[3,[0,c[1],a]]]);d=DI(j,b,c);return[0,[0,c],[0,i,d[1],d[2]]];case
 1:var
@@ -7463,7 +7463,7 @@ n=d[1],g=[0,f,g],q=h(g,dJ),f=Ao(bZ,h(l0,function(a){return[0,l$(c,n+a,q),a]}),fu
 0:return 1;case
 1:return 0}break;default:a=a[1][1];if(2!==b[0])return 1;b=b[1][1];a=T(a);return aD(T(b),a)}return-1});a:{if(f){f=f[1];a=f[1];switch(a[0]){case
 0:a=a[1];var
-j=a[3],a=a[2],a=i(a,ea(n+CE(f[2]))),a=[0,aX(g,j,b$),a];break a;case
+j=a[3],a=a[2],a=i(a,eb(n+CE(f[2]))),a=[0,aX(g,j,b$),a];break a;case
 1:a=a[1];g=[0,h(g,ha)];a=t([0,l,[0,[23,d[1],g,a]]]);break a;default:a=a[1];j=a[1];if(j){a=a[2];g=h(g,function(a){return a[2][3]});a=t([0,l,[0,[38,d[1],g,[0,j,a]]]]);break a}}}if(oD(d[1]+gz)){var
 r=DP(1,l,b,c,[0,d[1]+gz,d[2]],g),a=r[1];if(typeof
 a!=="number"&&9===a[0]){a=[0,a[3],a[1]];break a}a=X(aaX,[0,function(a){return c6(a,r)},0])}else{a=oo(cW(q)[2]);a=t([0,d[2],[3,[6,n,a]]])}}j=a[1];a=a[2];var
@@ -7529,7 +7529,7 @@ a=d[1],d=b(d[2],f);return[2,b(a,e),d];case
 a==="number")break;switch(a[0]){case
 0:a=a[1];break;case
 1:break b;default:break c}}a=ae(GX);break a}a=a[1]}return[6,h(h7(a,d),function(a){return DX(i,g,a[1],a[2])})]}}function
-DY(a,b,c,d){a=d7(a,b[1]);for(;;){if(!a)return 0;b=a[1];var
+DY(a,b,c,d){a=d8(a,b[1]);for(;;){if(!a)return 0;b=a[1];var
 e=b[1];a:{a=a[2];if(typeof
 e!=="number"&&2===e[0]){b=b[2];if(typeof
 b!=="number"&&mG===b[1]){e=e[1];b=b[2];var
@@ -7545,17 +7545,17 @@ c!=="number"&&0===c[0]){c=[0,2,[0,f,2]];break a}c=t([0,f,aam])}return[0,b,c];def
 y=0;switch(c[0]){case
 0:var
 a=c[2],e=c[3],c=DT(g,b,c[1]),k=0===c[0]?c[1][2][1]:c[2],I=function(c){var
-a=ec(c[2][3])[1];if(typeof
+a=ed(c[2][3])[1];if(typeof
 a!=="number"&&1===a[0])return jG(a[1],function(a,b){var
 d=c[2];return I([0,[2,c,a+1|0],[0,d[1],d[2],b]])});return[0,c,0]},K=function(a){return 0===a[0]?[0,a[1],0]:au(a[1],K)},r=h(au(K(c),I),oF),B=function(a,b){for(;;){var
 c=a[1],d=b[1];a:{switch(c[0]){case
 0:c=c[1];switch(d[0]){case
-0:return _(c[1],d[1][1]);case
+0:return Y(c[1],d[1][1]);case
 1:break a}break;case
 1:a=c[1];continue;default:var
 e=c[2],c=c[1];switch(d[0]){case
 2:a=aD(e,d[2]);b=d[1];if(0!==a)return a;a=c;continue;case
-1:break a}}return tO(a,b)}b=d[1]}},l=eD(r,B);a:if(l){var
+1:break a}}return tO(a,b)}b=d[1]}},l=d5(r,B);a:if(l){var
 q=l[2],l=l[1],s=0;for(;;){if(!q){l=0;break a}var
 n=q[2],o=q[1];if(0===B(l,o)){if(!s)break;q=n;l=o;s=1}else{q=n;l=o;s=0}}l=[0,o,aC];q=l;s=1;var
 d=1;for(;;){if(!n){q[s+1]=0;break}var
@@ -7582,9 +7582,9 @@ e!=="number"&&1===e[0]){var
 h=b[1],c=a[1],c=nP(c,aX(e[1],d[1],function(a,b){return[0,h,b,a]}),H),a=c?dB(c[1]):x(a,15,b),b=a[2],a=a[1],c=a;for(;;){if(c){d=c[1];a:{c=c[2];if(typeof
 d==="number"&&!d){d=0;break a}d=1}if(!d)continue;c=1}else
 c=0;return c?[0,[0,a],[0,b]]:[0,0,[0,b]]}}}return x(a,15,b)},k=H(c,e[2]),d=e[2],e=b$([0,e[1],[0,d[1],k[2],d[3]]],k[1])}return[0,b,[0,[0,c,a,e],[0,f,0]]];case
-1:e=c[2];c=h(c[3],function(a){return cO(g,b,a)});fs(e);DL(g,f,e);DM(g,f,b,e,c);DN(g,f,e);a=d7(b,e[1]);a:if(a){a=a[1][2];if(typeof
+1:e=c[2];c=h(c[3],function(a){return cO(g,b,a)});fs(e);DL(g,f,e);DM(g,f,b,e,c);DN(g,f,e);a=d8(b,e[1]);a:if(a){a=a[1][2];if(typeof
 a!=="number"&&hy===a[1]){a=a[2][4];if(!ty(e[1])){c=t([0,f,[0,[29,e[1],a]]]);break a}}a=h(c,dJ);a=l$(b,e[1],a);switch(a[0]){case
-0:a=a[1];if(a[1])c=t([0,f,[0,[28,e[1],a[4]]]]);else{d=a[2];c=aX(c,a[3],b$);c=[0,[1,i(d,ea(e[1])),e,c],[0,f,0]]}break;case
+0:a=a[1];if(a[1])c=t([0,f,[0,[28,e[1],a[4]]]]);else{d=a[2];c=aX(c,a[3],b$);c=[0,[1,i(d,eb(e[1])),e,c],[0,f,0]]}break;case
 1:a=a[1];c=[0,h(c,ha)];c=t([0,f,[0,[23,e[1],c,a]]]);break;default:a=a[1];d=a[2];a=a[1];c=h(c,ha);c=t([0,f,[0,[38,e[1],c,[0,a,d]]]])}}else{c=l6(b,e[1]);c=t([0,f,[1,[6,e[1],c]]])}return[0,b,c];case
 2:c=cO(g,b,c[1]);if(!oR(g)&&6!==g[1])t([0,f,oP]);DR(f,c);return[0,b,[0,[2,c],[0,f,0]]];case
 3:c=cO(g,b,c[1]);if(!DD(g)&&5!==g[1])t([0,f,DB]);DR(f,c);return[0,b,[0,[3,c],[0,f,0]]];case
@@ -7629,10 +7629,10 @@ a=v;if(a)t([0,f,aan]);a:{if(typeof
 d==="number"&&!d){a=0;break a}a=1}if(v){l=tp(c);a=l?a:l}else
 a=v;if(a)t([0,f,aao]);if(v){a=4===g[1];a||=5===g[1];a=a?Cp(E):a}else
 a=v;if(a)t([0,f,[3,[9,5===g[1]?1:0]]]);return[0,k,[0,[15,c,d,v,e],[0,f,0]]];default:e=c[3];d=c[2];k=c[1];a=e;c=c[4];for(;;){if(!a)break;l=a[2];fs(a[1][3]);a=l}fs(d);a=h(e,function(a){return[0,a[1],a[2]]});l=h(e,function(a){return a[3]});a:{b:{m=ow;for(;;){if(!m)break b;j=m[2];if(aF(d[1],m[1],at))break;m=j}m=1;break a}m=0}j=m?cq(k,aa0):m;if(j)t([0,f,[0,[35,k]]]);a:if(aF(d[1],eW,at)){j=ap(c1(a),fb);if(j&&!lS(j[1]))break a;t([0,f,[0,[36,j]]])}a:if(aF(d[1],e5,at)){j=ap(c1(a),fb);if(j&&lS(j[1])){j=l;break a}t([0,f,[0,[37,j]]]);j=l}else
-j=l;for(;;){if(!j)break;m=j[2];oS(b,j[1],0);j=m}a:{b:{j=eD(l,dH);for(;;){if(!j)break;m=j[2];if(!m)break;j=j[1];if(0===dH(j,m[1]))break b;j=m}m=0;break a}m=[0,j]}if(m)t([0,f,[1,[8,m[1]]]]);m=h(a,function(a){var
+j=l;for(;;){if(!j)break;m=j[2];oS(b,j[1],0);j=m}a:{b:{j=d5(l,dH);for(;;){if(!j)break;m=j[2];if(!m)break;j=j[1];if(0===dH(j,m[1]))break b;j=m}m=0;break a}m=[0,j]}if(m)t([0,f,[1,[8,m[1]]]]);m=h(a,function(a){var
 b=a[1];return typeof
 b==="number"?b?[0,4,a[2]]:[0,2,a[2]]:ae("TupleAD in function definition, this is unexpected!")});r7(Av,l,m);a:{b:{a=b;for(;;){if(!l)break;if(!m)break b;j=m[1];n=l[1];q=n[1];m=m[2];l=l[2];j=[0,j[2],[0,hy,[0,j[1],0,1,n[2]]]];n=a8(a);s=a[2];var
-Q=a[3],j=b6(s,Q,q,[0,j,aE(f1(s,q,n),0)],n);a=[0,a[1],j[1],j[2]]}if(!m)break a}a=J(Ae)}l=gV(ea(d[1]));m=g[4];j=Cn(k);l=j?[1,l,j[1]]:[0,l];m=hb([0,g[1],g[2],l,m],a,c)[2];if(3!==m[1]){l=m[2][2];l=k?2<=l?1:0:1;if(!l)t([0,f,aap])}return[0,b,[0,[16,k,d,e,m],[0,f,0]]]}}function
+Q=a[3],j=b6(s,Q,q,[0,j,aE(f1(s,q,n),0)],n);a=[0,a[1],j[1],j[2]]}if(!m)break a}a=J(Ae)}l=gV(eb(d[1]));m=g[4];j=Cn(k);l=j?[1,l,j[1]]:[0,l];m=hb([0,g[1],g[2],l,m],a,c)[2];if(3!==m[1]){l=m[2][2];l=k?2<=l?1:0:1;if(!l)t([0,f,aap])}return[0,b,[0,[16,k,d,e,m],[0,f,0]]]}}function
 iK(a,b,c){var
 e=[0,a,0,0,0];if(!c)return[0,b,0];c=c[1];var
 d=[0,b],b=c[2],c=h(c[1],function(a){a=hb(e,d[1],a);var
@@ -7652,13 +7652,13 @@ p=e===(n.length+0|0)?1:0;function
 v(a,b){var
 c=b===e?t:o;return c(function(a){return n8(Rt,a)})(a,b)}function
 q(a){var
-b=a-1|0;if(p&&a===e)return Ru;if(0<=b&&n.length-1>b)return[0,Z(n,b)[b+1]];return 0}function
+b=a-1|0;if(p&&a===e)return Ru;if(0<=b&&n.length-1>b)return[0,_(n,b)[b+1]];return 0}function
 k(a,b){var
 c=q(b);if(!c)return;c=c[1];return G(g(a)(Rv),v,b,c)}i(b,0);k(b,e-2|0);k(b,e-1|0);k(b,e);a=d[3];d=aE(q(d[2]),l);a=h_(d,0,ls(a,u(d)));d=u(a);h=aO(d);d=d-1|0;if(d>=0){var
 j=0;for(;;){var
 m=9===C(a,j)?9:32;Q(h,j,m);m=j+1|0;if(d===j)break;j=m}}h=bz(h);function
 s(a,b){return cM(Rr,e_,a,b)}var
-d=d8(p,o(f));a5(g(b)(Rw),h,function(a,b){return cM(qt,s,a,b)},94,d," (error at end of file)");k(b,e+1|0);k(b,e+2|0);return i(b,0)}var
+d=d9(p,o(f));a5(g(b)(Rw),h,function(a,b){return cM(qt,s,a,b)},94,d," (error at end of file)");k(b,e+1|0);k(b,e+2|0);return i(b,0)}var
 bT=" and ",ay="Identifier ",gv="Array expressions must contain at least one element.",e4="Argument ",bx="Functions cannot be printed.",cm="Random number generators are not allowed in top level size declarations.",cn="Tuple expressions must contain at least one element.",a_=". Available signatures: ",$q=[0,[11,cm,0],cm],$r=[0,[11,bx,0],bx],$s=[0,[11,gv,0],gv],$t=[0,[11,cn,0],cn],$u=[0,[11,"Integer literal cannot be larger than ",[15,[12,46,0]]],"Integer literal cannot be larger than %a."],$v=[0,[18,[1,[0,0,l]],[11,"Unnormalized probability functions such as ",[15,[11," can",[17,[0,c,1,0],[11,"only be used in the model block or in user-defined functions with names",[17,[0,c,1,0],[11,"ending in _lpdf or _lpmf.",[17,[0,c,1,0],[11,D,[15,[12,63,[17,0,0]]]]]]]]]]]]],"@[Unnormalized probability functions such as %a can@ only be used in the model block or in user-defined functions with names@ ending in _lpdf or _lpmf.@ Did you mean %a?@]"],$w=[0,[18,[1,[0,0,l]],[15,[11," is an invalid user-defined function name.",[17,[0,c,1,0],[11,"User-defined probability mass and density functions must",[17,[0,c,1,0],[11,"be defined as normalized",[17,[0,c,1,0],[11,"(function names should end",[17,[0,c,1,0],[11,"with",[17,[0,c,1,0],[11,"_lpdf/_lpmf not _lupdf/_lupmf).",[17,0,0]]]]]]]]]]]]]],"@[%a is an invalid user-defined function name.@ User-defined probability mass and density functions must@ be defined as normalized@ (function names should end@ with@ _lpdf/_lpmf not _lupdf/_lupmf).@]"],$x=[0,[11,"Tried to access index ",[15,[11," for a tuple of length ",[15,[12,46,[17,[0,c,1,0],[11,"Only indices between ",[15,[11,bT,[15,[11," are valid.",0]]]]]]]]]]],"Tried to access index %a for a tuple of length %a.@ Only indices between %a and %a are valid."],$y=[0,[11,"Tried to index a non-tuple type. Expression has type ",[15,[12,46,0]]],"Tried to index a non-tuple type. Expression has type %a."],$z=[0,[11,"Tried to index a scalar type. Expression has type ",[15,[12,46,0]]],"Tried to index a scalar type. Expression has type %a."],$A=[0,[11,"Too many indices. Expression only has ",[15,[11," dimensions, but received ",[15,[11," indices.",0]]]]],"Too many indices. Expression only has %a dimensions, but received %a indices."],$C=[0,[11,"Ternary expression cannot have a function type: ",[15,0]],"Ternary expression cannot have a function type: %a"],$D=[0,[11,"Type mismatch in ternary expression, expression when true is: ",[15,[11,"; expression when false is: ",[15,0]]]],"Type mismatch in ternary expression, expression when true is: %a; expression when false is: %a"],$B=[0,[18,[1,[0,0,l]],[11,"Condition in ternary expression must be type ",[15,[12,46,[15,[17,0,0]]]]]],"@[Condition in ternary expression must be type %a.%a@]"],$E=[0,qu],$F=[0,[11,"Ill-typed arguments supplied to infix operator ",[15,[11,a_,[2,0,[18,[1,[0,[11,aH,0],aH]],[11,"Instead supplied arguments of incompatible type: ",[15,[11,ar,[15,[12,46,[17,0,0]]]]]]]]]]],"Ill-typed arguments supplied to infix operator %a. Available signatures: %s@[<h>Instead supplied arguments of incompatible type: %a, %a.@]"],$G=[0,qu],$H=[0,[11,"Ill-typed arguments supplied to prefix operator ",[15,[11,a_,[2,0,[18,[1,[0,[11,aH,0],aH]],[11,"Instead supplied argument of incompatible type: ",[15,[12,46,[17,0,0]]]]]]]]],"Ill-typed arguments supplied to prefix operator %a. Available signatures: %s@[<h>Instead supplied argument of incompatible type: %a.@]"],$I=[0,qu],$J=[0,[11,"Ill-typed arguments supplied to postfix operator ",[15,[11,a_,[2,0,[11,"\nInstead supplied argument of incompatible type: ",[15,[12,46,0]]]]]]],"Ill-typed arguments supplied to postfix operator %a. Available signatures: %s\nInstead supplied argument of incompatible type: %a."],$h=[0,[11,ay,[15,[11," clashes with reserved keyword.",0]]],"Identifier %a clashes with reserved keyword."],$i=[0,[11,ay,[15,[11," clashes with model name.",0]]],"Identifier %a clashes with model name."],$j=[0,[11,ay,[15,[11," clashes with a non-overloadable Stan Math library function.",0]]],"Identifier %a clashes with a non-overloadable Stan Math library function."],$k=[0,[11,ay,[15,[11," is already in use.",0]]],"Identifier %a is already in use."],$l=[0,[18,[1,[0,0,l]],[11,ay,[15,[11," not in scope.",[15,[17,0,0]]]]]],"@[Identifier %a not in scope.%a@]"],$m=[0,[18,[1,[0,0,l]],[11,"A returning function was expected but an undeclared identifier ",[15,[11,bM,[15,[17,0,0]]]]]],"@[A returning function was expected but an undeclared identifier %a was supplied.%a@]"],$n=[0,[18,[1,[0,0,l]],[11,"A non-returning function was expected but an undeclared identifier ",[15,[11,bM,[15,[17,0,0]]]]]],"@[A non-returning function was expected but an undeclared identifier %a was supplied.%a@]"],$o=[0,[11,ay,[15,[11," has a _lupdf/_lupmf suffix, which is only allowed for functions.",0]]],"Identifier %a has a _lupdf/_lupmf suffix, which is only allowed for functions."],$p=[0,[18,[1,[0,0,l]],[11,"All function arguments must have distinct identifiers.",[17,[0,c,1,0],[11,e4,[15,[11," is duplicated.",[17,0,0]]]]]]],"@[All function arguments must have distinct identifiers.@ Argument %a is duplicated.@]"],aby=[0,[11,"Invalid character found.",[17,4,0]],"Invalid character found.@."],abz=[0,[11,"Unexpected end of input.",[17,4,0]],"Unexpected end of input.@."],abA=[0,[2,0,[17,4,0]],"%s@."],abv=[0,pZ],abw=[0,[11,Ig,[2,0,[12,109,0]]],"\x1b[%sm"],abo=[0,Jn],abp=[0,GI],abq=[0,Jv],abr=[0,GU],abs=[0,GL],abt=[0,IP],abu=[0,Is],abh=[0,wN],abj=[0,vu],abl=[0,xe],abm=[0,vi],abn=[0,GF],aa_=[0,Jc],aa$=[0,IY],aba=[0,I6],abb=[0,Jh],abc=[0,IA],abd=[0,Hd],abe=[0,JE],abf=[0,Hr],aa3=[0,w8],aa4=[0,w9],aa6=[0,Im],aa8=[0,v$],aa9=[0,wF],abk=[0,dt],abg=[0,Jk],aa5=[0,IZ],abi=[0,kw],aa7=[0,al],abB=[0,fE,i8],AX=[0];function
 $_(a,b){b=b[2];switch(b[0]){case
 0:return _n(a,b[1]);case
@@ -7689,14 +7689,14 @@ h=a1(ck),d=a1(ck),i=a1(ck),e=bI(ck);return gr(g(a)($x),e,b,i,c,d,1,h,c);case
 4:d=b[1];if(iq(d)){b=bI(O);return j(g(a)($z),b,d)}b=b[2];c=bI(ck);d=ok(d);e=a1(ck);return x(g(a)($A),e,d,c,b);case
 5:c=b[1];if(typeof
 c==="number"&&!c){c=b[2];if(ol(c)){b=bI(O);return j(g(a)($C),b,c)}b=b[3];e=bI(O);d=bI(O);return x(g(a)($D),d,c,e,b)}b=a1(O);return x(g(a)($B),b,0,bR,c);case
-6:c=b[1];d=b[3];b=b[2];e=fd($E,tB(c));return da(g(a)($F),eb,c,e,O,b,O,d);case
-7:c=b[1];b=b[2];d=fd($G,tB(c));return a5(g(a)($H),eb,c,d,O,b);default:c=b[1];b=b[2];d=fd($I,tB(c));return a5(g(a)($J),eb,c,d,O,b)}default:return $K(a,b[1])}}function
+6:c=b[1];d=b[3];b=b[2];e=fd($E,tB(c));return da(g(a)($F),ec,c,e,O,b,O,d);case
+7:c=b[1];b=b[2];d=fd($G,tB(c));return a5(g(a)($H),ec,c,d,O,b);default:c=b[1];b=b[2];d=fd($I,tB(c));return a5(g(a)($J),ec,c,d,O,b)}default:return $K(a,b[1])}}function
 abx(c,b){b=b[2];if(typeof
 b==="number")return 0===b?g(c)(aby):g(c)(abz);if(0===b[0]){b=b[1];return i(g(c)(abA),b)}var
 j=b[1];if(cA<=BJ(c))return g(c)(j);var
 d=[0,c[25],c[26],c[27],c[28]];function
 f(a){a=yV(a);var
-b=_(a,"italic");a:{b:{if(0>b){b=_(a,"bg_yellow");if(0<=b){if(0>=b)return abn;if(a==="black")return abm;if(a==="blue")return abl;if(a!=="bold"){if(a==="cyan")return abj;if(a!==Iu&&a!=="faint"){if(a==="green")return abh;if(a!=="i")break a;break b}return abi}}else if(a!==qn){if(a==="bg_black")return abu;if(a==="bg_blue")return abt;if(a==="bg_cyan")return abs;if(a==="bg_green")return abr;if(a==="bg_magenta")return abq;if(a==="bg_red")return abp;if(a!=="bg_white")break a;return abo}return abk}if(0<b){b=_(a,"magenta");if(0>b){if(a==="light_black")return abf;if(a==="light_blue")return abe;if(a==="light_cyan")return abd;if(a==="light_green")return abc;if(a==="light_magenta")return abb;if(a==="light_red")return aba;if(a==="light_white")return aa$;if(a!=="light_yellow")break a;return aa_}if(0>=b)return aa9;if(a!=="r"){if(a==="red")return aa8;if(a!=="reset"){if(a==="reverse")return aa6;if(a!=="u"&&a!=="underline"){if(a==="white")return aa4;if(a!=="yellow")break a;return aa3}return aa5}}return aa7}}return abg}return 0}var
+b=Y(a,"italic");a:{b:{if(0>b){b=Y(a,"bg_yellow");if(0<=b){if(0>=b)return abn;if(a==="black")return abm;if(a==="blue")return abl;if(a!=="bold"){if(a==="cyan")return abj;if(a!==Iu&&a!=="faint"){if(a==="green")return abh;if(a!=="i")break a;break b}return abi}}else if(a!==qn){if(a==="bg_black")return abu;if(a==="bg_blue")return abt;if(a==="bg_cyan")return abs;if(a==="bg_green")return abr;if(a==="bg_magenta")return abq;if(a==="bg_red")return abp;if(a!=="bg_white")break a;return abo}return abk}if(0<b){b=Y(a,"magenta");if(0>b){if(a==="light_black")return abf;if(a==="light_blue")return abe;if(a==="light_cyan")return abd;if(a==="light_green")return abc;if(a==="light_magenta")return abb;if(a==="light_red")return aba;if(a==="light_white")return aa$;if(a!=="light_yellow")break a;return aa_}if(0>=b)return aa9;if(a!=="r"){if(a==="red")return aa8;if(a!=="reset"){if(a==="reverse")return aa6;if(a!=="u"&&a!=="underline"){if(a==="white")return aa4;if(a!=="yellow")break a;return aa3}return aa5}}return aa7}}return abg}return 0}var
 e=[0,0,AX];function
 h(a){a=Nq(e);var
 b=0;for(;;){if(a){var
@@ -7705,14 +7705,14 @@ k=c[24];rJ(c,[0,function(a){if(a[1]!==hW)return i(d[1],a);a=a[2];var
 b=f(a);return b?(sk(e,b[1]),h()):i(d[1],[0,hW,a])},function(a){if(a[1]===hW&&fX(f(a[2]))){if(!A3(e))A4(e);return h()}return i(d[2],a)},d[3],d[4]]);zB(c,1);return rz(function(a){rJ(c,d);return zB(c,k)},function(a){g(c)(j);return e$(c)})}function
 abC(a,b){return cM(abB,f,a,b)}function
 mb(a,b){return cM(qt,abC,a,b)}var
-abD=[0,[15,[11,": file '",[2,0,[11,"' not found or cannot be opened",[17,4,0]]]]],"%a: file '%s' not found or cannot be opened@."],abE=[0,[15,[11,je,[15,[11,ar,[2,0,[12,58,[17,[0,eo,1,0],[15,[17,[0,s,0,0],[15,0]]]]]]]]]],"%a in %a, %s:@;%a@,%a"],abF=[0,[15,[11,je,[15,[12,58,[17,[0,eo,1,0],[15,[17,[0,s,0,0],[15,[17,4,0]]]]]]]]],"%a in %a:@;%a@,%a@."],abG=[0,[15,[11,dT,[2,0,0]]],"%a: %s"],abH=[0,[17,[0,c,1,0],[11,"Supplying a --debug-data-file may help",0]],"@ Supplying a --debug-data-file may help"],abI=[0,[18,[1,[0,[11,cE,0],cE]],[15,[11,je,[15,[12,58,[17,[0,c,1,0],[2,0,[15,[17,4,[17,0,0]]]]]]]]]],"@[<v2>%a in %a:@ %s%a@.@]"];function
+abD=[0,[15,[11,": file '",[2,0,[11,"' not found or cannot be opened",[17,4,0]]]]],"%a: file '%s' not found or cannot be opened@."],abE=[0,[15,[11,je,[15,[11,ar,[2,0,[12,58,[17,[0,ep,1,0],[15,[17,[0,s,0,0],[15,0]]]]]]]]]],"%a in %a, %s:@;%a@,%a"],abF=[0,[15,[11,je,[15,[12,58,[17,[0,ep,1,0],[15,[17,[0,s,0,0],[15,[17,4,0]]]]]]]]],"%a in %a:@;%a@,%a@."],abG=[0,[15,[11,dT,[2,0,0]]],"%a: %s"],abH=[0,[17,[0,c,1,0],[11,"Supplying a --debug-data-file may help",0]],"@ Supplying a --debug-data-file may help"],abI=[0,[18,[1,[0,[11,cE,0],cE]],[15,[11,je,[15,[12,58,[17,[0,c,1,0],[2,0,[15,[17,4,[17,0,0]]]]]]]]]],"@[<v2>%a in %a:@ %s%a@.@]"];function
 D4(f,h,c,d){var
 a="Error";switch(d[0]){case
 0:d=d[1];return G(g(c)(abD),mb,a,d);case
 1:a=d[1];d=a[1];var
 b=a[2],b=typeof
 b==="number"?"lexing error":0===b[0]?"include error":"parsing error",e=d[1];return ap9(g(c)(abE),mb,"Syntax error",function(a,b){return ip(f,a,b)},d,b,function(a,b){return D3(h,a,b)},e,abx,a);case
-2:d=d[1];a=d[1];e=a[1];return gr(g(c)(abF),mb,"Semantic error",function(a,b){return ip(f,a,b)},a,function(a,b){return D3(h,a,b)},e,$_,d);default:d=d[1];e=d[2];b=d[1];d=d[3];if(0===Ck(b,r))return G(g(c)(abG),mb,a,e);d=d8(1-d,function(a,b){return eJ(abH,a)});return da(g(c)(abI),mb,a,function(a,b){return ip(f,a,b)},b,e,d,0)}}var
+2:d=d[1];a=d[1];e=a[1];return gr(g(c)(abF),mb,"Semantic error",function(a,b){return ip(f,a,b)},a,function(a,b){return D3(h,a,b)},e,$_,d);default:d=d[1];e=d[2];b=d[1];d=d[3];if(0===Ck(b,r))return G(g(c)(abG),mb,a,e);d=d9(1-d,function(a,b){return eJ(abH,a)});return da(g(c)(abI),mb,a,function(a,b){return ip(f,a,b)},b,e,d,0)}}var
 D="Dynarray.",ay="dynarray.ml",Mo=[0,ay,685,4],Mn=[0,ay,690,4],Mm=[0,ay,691,4],Mk=[0,[11,D,[2,0,[11,": cannot grow to requested length ",[4,0,0,0,[11," (max_array_length is ",[4,0,0,0,[12,41,0]]]]]]],"Dynarray.%s: cannot grow to requested length %d (max_array_length is %d)"],Mj=[0,[11,D,[2,0,[11,": negative capacity ",[4,0,0,0,[11," requested",0]]]]],"Dynarray.%s: negative capacity %d requested"],cZ=[0,0,[0],bl];function
 D5(a,b,c){var
 e=c?0:1;if(e)b=[0,b,1,0,0];else{e=aO(5);var
@@ -7722,10 +7722,10 @@ j(gJ(J,Mj),d,c);if(!(1-z1(cZ,b)))break}b=[0,e,1,0,0]}a[11]=b;a[12]=b}var
 bl=": index ",Ml=[0,[2,0,[11,": missing element at position ",[4,0,0,0,[11," < length ",[4,0,0,0,0]]]]],"%s: missing element at position %d < length %d"],Mh=[0,[11,D,[2,0,[11,bl,[4,0,0,0,[11," out of bounds (empty dynarray)",0]]]]],"Dynarray.%s: index %d out of bounds (empty dynarray)"],Mi=[0,[11,D,[2,0,[11,bl,[4,0,0,0,[11," out of bounds (0..",[4,0,0,0,[12,41,0]]]]]]],"Dynarray.%s: index %d out of bounds (0..%d)"];function
 d(a){var
 b=a[1],e=a[4],f=a[3],a=a[2];if(q_(C(b,0),0)){b=x7(rf(b),1);var
-c=Z(cZ[2],b)[b+1];if(c===cZ[3]){c=cZ[1];var
+c=_(cZ[2],b)[b+1];if(c===cZ[3]){c=cZ[1];var
 d="get",c=b<c?G(gJ(J,Ml),"Invalid dynarray (unsynchronized concurrent length change)",b,c):0===c?j(gJ(J,Mh),d,b):G(gJ(J,Mi),d,b,c-1|0)}d=c[2];b=c[1]}else
 d=0;return[0,b,a,e-f|0,d]}var
-JC=126,D=": at character number ",bl="invalid format ",y_=[0,0,l],y$=[0,eo,1,0],D6=[0,0,l],Lw=[0,[11,"bad input: format type mismatch between ",[3,0,[11,bT,[3,0,0]]]],"bad input: format type mismatch between %S and %S"],Lb=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,", duplicate flag ",[1,0]]]]]],"invalid format %S: at character number %d, duplicate flag %C"],Lc=[0,1,0],Ld=[0,0],Le=[1,0],Lf=[1,1],Lh=[1,1],Lg=[1,1],Lj=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,", flag ",[1,[11," is only allowed after the '",[12,37,[11,"', before padding and precision",0]]]]]]]]],"invalid format %S: at character number %d, flag %C is only allowed after the '%%', before padding and precision"],Li=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,', invalid conversion "',[12,37,[0,[12,34,0]]]]]]]],'invalid format %S: at character number %d, invalid conversion "%%%c"'],Lk=[0,[12,64,0]],Ll=[0,c,1,0],Lm=[0,s,0,0],Ln=[2,60],Lo=[0,[11,bl,[3,0,[11,": '",[12,37,[11,"' alone is not accepted in character sets, use ",[12,37,[12,37,[11," instead at position ",[4,0,0,0,[12,46,0]]]]]]]]]],"invalid format %S: '%%' alone is not accepted in character sets, use %%%% instead at position %d."],Lp=[0,[11,bl,[3,0,[11,": integer ",[4,0,0,0,[11," is greater than the limit ",[4,0,0,0,0]]]]]],"invalid format %S: integer %d is greater than the limit %d"],Lq=[0,S,2866,11],Lr=[0,[11,bl,[3,0,[11,': unclosed sub-format, expected "',[12,37,[0,[11,'" at character number ',[4,0,0,0,0]]]]]]],'invalid format %S: unclosed sub-format, expected "%%%c" at character number %d'],Ls=[0,S,2928,34],Lt=[0,S,2964,28],Lu=[0,S,2986,11],Lv=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,ar,[2,0,[11," is incompatible with '",[0,[11,"' in sub-format ",[3,0,0]]]]]]]]]],"invalid format %S: at character number %d, %s is incompatible with '%c' in sub-format %S"],La=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,ar,[2,0,[11," expected, read ",[1,0]]]]]]]],"invalid format %S: at character number %d, %s expected, read %C"],K$=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,ar,[2,0,0]]]]]],"invalid format %S: at character number %d, %s"],Mb=[0,[11,"looking for ",[1,[11,", found ",[1,0]]]],"looking for %C, found %C"];function
+JC=126,D=": at character number ",bl="invalid format ",y_=[0,0,l],y$=[0,ep,1,0],D6=[0,0,l],Lw=[0,[11,"bad input: format type mismatch between ",[3,0,[11,bT,[3,0,0]]]],"bad input: format type mismatch between %S and %S"],Lb=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,", duplicate flag ",[1,0]]]]]],"invalid format %S: at character number %d, duplicate flag %C"],Lc=[0,1,0],Ld=[0,0],Le=[1,0],Lf=[1,1],Lh=[1,1],Lg=[1,1],Lj=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,", flag ",[1,[11," is only allowed after the '",[12,37,[11,"', before padding and precision",0]]]]]]]]],"invalid format %S: at character number %d, flag %C is only allowed after the '%%', before padding and precision"],Li=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,', invalid conversion "',[12,37,[0,[12,34,0]]]]]]]],'invalid format %S: at character number %d, invalid conversion "%%%c"'],Lk=[0,[12,64,0]],Ll=[0,c,1,0],Lm=[0,s,0,0],Ln=[2,60],Lo=[0,[11,bl,[3,0,[11,": '",[12,37,[11,"' alone is not accepted in character sets, use ",[12,37,[12,37,[11," instead at position ",[4,0,0,0,[12,46,0]]]]]]]]]],"invalid format %S: '%%' alone is not accepted in character sets, use %%%% instead at position %d."],Lp=[0,[11,bl,[3,0,[11,": integer ",[4,0,0,0,[11," is greater than the limit ",[4,0,0,0,0]]]]]],"invalid format %S: integer %d is greater than the limit %d"],Lq=[0,S,2866,11],Lr=[0,[11,bl,[3,0,[11,': unclosed sub-format, expected "',[12,37,[0,[11,'" at character number ',[4,0,0,0,0]]]]]]],'invalid format %S: unclosed sub-format, expected "%%%c" at character number %d'],Ls=[0,S,2928,34],Lt=[0,S,2964,28],Lu=[0,S,2986,11],Lv=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,ar,[2,0,[11," is incompatible with '",[0,[11,"' in sub-format ",[3,0,0]]]]]]]]]],"invalid format %S: at character number %d, %s is incompatible with '%c' in sub-format %S"],La=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,ar,[2,0,[11," expected, read ",[1,0]]]]]]]],"invalid format %S: at character number %d, %s expected, read %C"],K$=[0,[11,bl,[3,0,[11,D,[4,0,0,0,[11,ar,[2,0,0]]]]]],"invalid format %S: at character number %d, %s"],Mb=[0,[11,"looking for ",[1,[11,", found ",[1,0]]]],"looking for %C, found %C"];function
 iL(a,b){var
 E=b[2],b=d(b[1]),b=[0,b,d(E)],L=dQ+yT(a)+dQ,Q=u(L),D=[0,0],c=[0,0,rS,0,0,0,0,function(a){if(Q<=D[1])throw m(fK,1);a=C(L,D[1]);D[1]++;return a},br(e0)],h="a String";function
 F(a,b){for(;;){var
@@ -7737,11 +7737,11 @@ a=zS(c);function
 P(a){return e8(F(0,a))}if(c[1])throw m(fK,1);if(34===a)P(gM(yB,c));else
 h1(j(V(Mb),34,a));a=c[8];var
 l=bP(a);li(a);c[6]=c[6]+1|0;try{var
-k=function(a,b){return G(ez(K$),l,a,b)},r=function(a,b,c){return x(ez(La),l,a,b,c)},o="unexpected end of format",n=function(a,b){var
+k=function(a,b){return G(eA(K$),l,a,b)},r=function(a,b,c){return x(eA(La),l,a,b,c)},o="unexpected end of format",n=function(a,b){var
 c=a;for(;;){if(c===b)return A(a,c,0);var
 d=C(l,c);if(37===d)break;if(64===d)return A(a,c,N(c+1|0,b)[1]);c=c+1|0}d=c+1|0;if(d===b)k(b,o);d=95===C(l,d)?H(c,d+1|0,b,1):H(c,d,b,0);return A(a,c,d[1])},H=function(a,b,c,d){function
 m(a,b){var
-c=b[1],c=c?0:c;if(c){c=C(l,a);G(ez(Lb),l,a,c)}b[1]=1}var
+c=b[1],c=c?0:c;if(c){c=C(l,a);G(eA(Lb),l,a,c)}b[1]=1}var
 f=[0,0],e=[0,0],g=[0,0],h=[0,0],i=[0,0];a:for(;;){if(b===c)k(c,o);var
 j=C(l,b)+pB|0;if(16<j>>>0)break;switch(j){case
 0:m(b,h);b=b+1|0;break;case
@@ -7813,7 +7813,7 @@ u=C(l,o)+y|0;b:{if(32>=u>>>0)switch(u){case
 35:case
 43:case
 45:case
-95:a=G(ez(Lj),l,s,k);break a;case
+95:a=G(eA(Lj),l,s,k);break a;case
 88:case
 100:case
 105:case
@@ -7836,7 +7836,7 @@ u=C(l,o)+y|0;b:{if(32>=u>>>0)switch(u){case
 3:e=7;break b}if(e){if(70===k){e=8;break b}}else if(70===k){e=5;break b}throw m([0,z,Lu],1)}r=n(o,c)[1];a=[0,a,e];if(b()){a=typeof
 i==="number"?i?B(s,o,95,J):0:[0,i[1]];a=[0,[23,[6,q(95),a],r]];break a}r=ll(A(),i,r);a=[0,[8,a,r[1],r[2],r[3]]];break a}if(p<=k){if(a>k)switch(k+r|0){case
 0:a=v(s,bv,d,e,f,C(l,o));d=n(o+1|0,c)[1];if(b()){a=[0,[23,[3,a,q(95)],d]];break a}f=ll(x(),i,d);a=[0,[5,a,f[1],f[2],f[3]]];break a;case
-2:a=v(s,bv,d,e,f,C(l,o));f=n(o+1|0,c)[1];if(b()){a=[0,[23,[4,a,q(95)],f]];break a}f=ll(x(),i,f);a=[0,[6,a,f[1],f[2],f[3]]];break a}}else if(76===k){a=v(s,bv,d,e,f,C(l,o));c=n(o+1|0,c)[1];if(b()){a=[0,[23,[5,a,q(95)],c]];break a}c=ll(x(),i,c);a=[0,[7,a,c[1],c[2],c[3]]];break a}a=G(ez(Li),l,o-1|0,k)}c=1-F[1];c=c?g:c;a:if(c){if(38<=k){if(44===k||64===k)break a}else if(33===k||37<=k)break a;B(s,o,k,"'_'")}return a},M=-123,N=function(a,b){if(a===b)return Lk;var
+2:a=v(s,bv,d,e,f,C(l,o));f=n(o+1|0,c)[1];if(b()){a=[0,[23,[4,a,q(95)],f]];break a}f=ll(x(),i,f);a=[0,[6,a,f[1],f[2],f[3]]];break a}}else if(76===k){a=v(s,bv,d,e,f,C(l,o));c=n(o+1|0,c)[1];if(b()){a=[0,[23,[5,a,q(95)],c]];break a}c=ll(x(),i,c);a=[0,[7,a,c[1],c[2],c[3]]];break a}a=G(eA(Li),l,o-1|0,k)}c=1-F[1];c=c?g:c;a:if(c){if(38<=k){if(44===k||64===k)break a}else if(33===k||37<=k)break a;B(s,o,k,"'_'")}return a},M=-123,N=function(a,b){if(a===b)return Lk;var
 e=C(l,a);if(65<=e){if(94<=e){var
 c=e+M|0;if(2>=c>>>0)switch(c){case
 0:return K(1,a+1|0,b);case
@@ -7858,7 +7858,7 @@ f=n(e+1|0,c)[1],d=[0,n(b,e+1|0)[1],d],d=a?[0,d]:[1,d];return[0,[18,d,f]]}catch(f
 f=y3();function
 h(a,b){if(b>=a)for(;;){hT(f,le(a));var
 c=a+1|0;if(b===a)break;a=c}}function
-i(a){return j(ez(Lo),l,a)}function
+i(a){return j(eA(Lo),l,a)}function
 g(a,b,c){for(;;){if(b===c)k(c,o);var
 d=C(l,b);if(45!==d){if(93===d)return b+1|0;b=b+1|0;return a<50?e(a+1|0,b,c,d):ax(e,[0,b,c,d])}hT(f,45);b=b+1|0}}function
 e(a,b,c,d){for(;;){if(b===c)k(c,o);var
@@ -7868,8 +7868,8 @@ d=1,a=a+1|0;else
 d=0;if(a===b)k(b,o);b=n(a+1|0,b,C(l,a));a=re(f);if(d){d=y3();var
 c=0;for(;;){dY(d,c,le(C(a,c)^dU));var
 m=c+1|0;if(31===c){a=bz(d);break}c=m}}return[0,b,a]},f=function(a,b){for(;;){if(a===b)k(b,o);if(32!==C(l,a))return a;a=a+1|0}},q=function(a,b,c){for(;;){if(a===b)k(b,o);var
-d=C(l,a);if(9<d+fD>>>0)return[0,a,c];c=(c*10|0)+(d-48|0)|0;if(gE<c)return G(ez(Lp),l,c,gE);a=a+1|0}},w=function(a,b){if(a===b)k(b,o);var
-c=C(l,a);if(48<=c){if(58>c)return q(a,b,0)}else if(45===c){if((a+1|0)===b)k(b,o);c=C(l,a+1|0);if(9<c+fD>>>0)return r(a+1|0,"digit",c);c=q(a+1|0,b,0);return[0,c[1],-c[2]|0]}throw m([0,z,Lq],1)},A=function(a,b,c){b=b-a|0;return 0===b?[0,c]:1===b?[0,[12,C(l,a),c]]:[0,[11,d2(l,a,b),c]]},t=function(a,b,c){for(;;){if(a===b)G(ez(Lr),l,c,b);if(37===C(l,a)){if((a+1|0)===b)k(b,o);if(C(l,a+1|0)===c)return a;var
+d=C(l,a);if(9<d+fD>>>0)return[0,a,c];c=(c*10|0)+(d-48|0)|0;if(gE<c)return G(eA(Lp),l,c,gE);a=a+1|0}},w=function(a,b){if(a===b)k(b,o);var
+c=C(l,a);if(48<=c){if(58>c)return q(a,b,0)}else if(45===c){if((a+1|0)===b)k(b,o);c=C(l,a+1|0);if(9<c+fD>>>0)return r(a+1|0,"digit",c);c=q(a+1|0,b,0);return[0,c[1],-c[2]|0]}throw m([0,z,Lq],1)},A=function(a,b,c){b=b-a|0;return 0===b?[0,c]:1===b?[0,[12,C(l,a),c]]:[0,[11,d2(l,a,b),c]]},t=function(a,b,c){for(;;){if(a===b)G(eA(Lr),l,c,b);if(37===C(l,a)){if((a+1|0)===b)k(b,o);if(C(l,a+1|0)===c)return a;var
 d=C(l,a+1|0);if(95<=d){if(db<=d){if(JC>d)switch(d+M|0){case
 0:a=t(a+2|0,b,be)+2|0;continue;case
 2:return r(a+1|0,"character ')'",be)}}else if(96>d){if((a+2|0)===b)k(b,o);d=C(l,a+2|0);if(40===d){a=t(a+3|0,b,41)+2|0;continue}if(db===d){a=t(a+3|0,b,be)+2|0;continue}a=a+3|0;continue}}else{if(40===d){a=t(a+2|0,b,41)+2|0;continue}if(41===d)return r(a+1|0,"character '}'",41)}a=a+2|0}else
@@ -7892,8 +7892,8 @@ a=a+1|0}},v=function(a,b,c,d,e,f){for(;;){a:{if(c){if(!d){if(e)break a;if(e3===f
 12:case
 17:case
 29:d=0;continue}}if(c)if(e)e=0;else
-c=0;else{if(!e)throw m([0,z,Lt],1);e=0}}},B=function(a,b,c,d){b=d2(l,a,b-a|0);return a5(ez(Lv),l,a,d,c,b)},e=D6[2],a=D6[1],E=n(0,u(l))[1];try{var
-g=[0,y7(E,bC(a)),l]}catch(f){g=ai(f);if(g!==b4)throw m(g,0);g=j(ez(Lw),l,e)}e=g}catch(f){e=ai(f);if(e[1]!==d0)throw m(e,0);e=h1(e[2])}return D2(e,b)}function
+c=0;else{if(!e)throw m([0,z,Lt],1);e=0}}},B=function(a,b,c,d){b=d2(l,a,b-a|0);return a5(eA(Lv),l,a,d,c,b)},e=D6[2],a=D6[1],E=n(0,u(l))[1];try{var
+g=[0,y7(E,bC(a)),l]}catch(f){g=ai(f);if(g!==b4)throw m(g,0);g=j(eA(Lw),l,e)}e=g}catch(f){e=ai(f);if(e[1]!==d0)throw m(e,0);e=h1(e[2])}return D2(e,b)}function
 oY(a){var
 b=a[2],a=a[1];if(!b)return a;b=M(b);for(;;){if(!b)return a;a=[6,a,b[1]];b=b[2]}}function
 D7(a){return iL('@{<light_red>Ill-formed identifier.@} Expected a new identifier but found reserved keyword @{<green>"'+a[1]+'"@}.\n',a[2])}function
@@ -7901,7 +7901,7 @@ iM(a,b){a=tU(a);return a?a[1]:iL("@{<light_red>Ill-formed assignment.@} Expected
 D8(a,b){for(;;){if(0===b)return a;a=[0,a];b=b-1|0}}function
 D9(a,b){a=(99*a|0)+b|0;return(aV('3\0\xdc\x88\x11\0\x80 \x01\x007\x98@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0&\x01\xb9\x10"\x01\0@\0\0o0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\x01\0\0\0\0\x02\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x98\x06\xe4@\x88\x04\x01\0\0\x01\xbc\xc0\0\0\0\0\0\0@\0\0\0\0\0\x02`\x1b\x91\x02 \x10\x04\0\0\x06\xf3\b\0\0\0\0\0\0\0\0\0\0\x01\0\t\x80n\xc4\b\x80@\x10\0\0\x1b\xcc \0\0\x10\0\0\0\0\0\0\0\x04\0&\x01\xb9\x10"\x01\0@\0\0o0\x80\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0=\xc0\xee\xf49\xaaR\xda\x8e\x02?\xee @\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0=\xc0\xee\xf49\xaaP\xda\x8e\x02?\xee \0\0\0\0\0\0\0\0\0\0\x04\0&\x01\xbb\x10"\x01\0@\0\0o0\x80\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x0fp;\x9d\x0ej\x94\x16\xa3\x80\x8f\xf3\x88\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0&\x01\xbb\x10"\x01\0@\0\0\xef0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x13\0\xdc\x88\x11\0\x80 \0\x007\x98Op;\x9d\x0ej\x94\x16\xa3\x80\x8f\xf3\x88\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0 \0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x14\xe0w\xbe\x9d@q\xbbC\0\x9f\xe7P\0\0\0\0\0\x02\0\0\0\0\0\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\0\0\0\0\0\b\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0 @\x04\x01\0Q\x92@\0\x80\0@\x04\b\0\x80 \n2H\0\x10\0\b\0\x81\0\x14\x04\x01FI\0\x02\0\x01\0\x10 \x02\0\x80(\xc9 \0@\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\x80\xc1\xe1*W@\xb0\x9a\xa0\x18\x88\x04\b\b\x80 \n2H\0\x10\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"\0\x80\xc2T\x8c\x81a4@!\x10\0\0\0\0\0\0\0\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\x80\xc1\xe1*F@\xb0\x9a \x18\x88\x04\b\0\x80 \n2H\0\x10\0\b\0F\x03\x07\x84\xa9\x19\x02\xc2h\x80b \x10 \x02\0\x80(\xc9 \0@\0 \x01\x18\f\x1e\x12\xa4d\v\t\xa2\x01\x88\x80@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04`0xJ\x91\x90,&\x88\x06"\0\x8c\x06\x0f\tR:\x05\x84\xd5\0\xc4@ @\x05\x01\0Q\x92@\0\x80\x18@\x04\b\0\xa0 \n2H\0\x10\x02\b\0D\0\x05\x84\xa9\x19\x02\xc2h\x80@ \x10 \x02\0\x80(\xc9 \0@\0 \x01\x18\f\x1e\x12\xa4d\v\t\xa2\x01\x88\x80@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04`0xJ\x91\x90,&\x88\x06"\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\x80\xc1\xe1*F@\xb0\x9a \x18\x88\x04\b\0\x80 \n2H\0\x10\0\b\0F\x03\x07\x84\xa9\x19\x02\xc2h\x80b \x10 \x02\0\x80(\xc9 \0@\0 \x01\x18\f\x1e\x12\xa4d\v\t\xa2\x01\x88\x80@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04`0xJ\x91\x90,&\x88\x06"\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\x80\xc1\xe1*F@\xb0\x9a \x18\x88\x04\b\0\x80 \n2H\0\x10\0\b\0F\x03\x07\x84\xa9\x19\x02\xc2h\x80b \x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\0\x06\x12\xa4d\v\t\xa2\0\x80\x80@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04`0xJ\x91\x90,&\x88\x06"\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\x80\xc1\xe1*F@\xb0\x9a \x18\x88\x04\b\0\x80 \n2H\0\x10\0\b\0F\x03\x07\x84\xa9\x19\x02\xc2h\x80b \x10 \x02\0\x80(\xc9 \0@\0 \x01\x18\f\x1e\x12\xa4d\v\t\xa2\x01\x88\x80@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04`0xJ\x91\x90,&\x88\x06"\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\x80\xc1\xe1*F@\xb0\x9a \x18\x88\x04\b\0\x80 \n2H\0\x10\0\b\0F\x03\x07\x84\xa9\x19\x02\xc2h\x80b \x10 \x02\0\x80(\xc9 \0@\0 \x01\x18\f\x1e\x12\xa4d\v\t\xa2\x01\x88\x80\0\0\x02\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\x01\x02\0(\b\x02\x8c\x92\0\x04\0\xc2\0\0\0\x01\0\0\0\0\0\0\0\x10\0\x02 \0,%H\xc8\x16\x13D\x03\x01\0\x81\0\x14\x04\x01FI\0\x02\0A\0\b\x80\0\xb0\x95# XM\x10\b\x04\0\0\0\0\0\0\0\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\x88\x02\x0f\tR2\x05\x84\xd1\0\x80@ @D\x01\0Q\x92@\0\x80\0@\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\xc0`\xf0\x95# XM\x10\fD\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x11\0@a*F@\xb0\x9a \x10\b\0\0\0\0\0\0\0\0\0\0\0\0\0\x81\x01\x10\x04\x01FI\0\x02\0\x01\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0#\x01\x83\xc2T\x8c\x81a4@1\x10\x04`0xJ\x91\x90,&\x88\x06"\0\x88\x02\x03\tR2\x05\x84\xd1\0\0T\xe0w\xbe\x1d@q\xbbC\0\x9f\xe7P\0\0\0\0\0\0(\0\0\0\0\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80\0\xb0\x95# XM\x10\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\x010\r\xc8\x81\x10\b\x02\0\0\x03y\x84\0\0\0\0\0\0\n\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0,%H\xc8\x16\x13D\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\x0fp;\xbd\x0ej\x946\xa3\x80\x8f\xfb\x88\0\0\0\0\0\0\x14\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0\x18J\x91\x90,&\x88\x04\x02\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\x01a*F@\xb0\x9a \0\b\0\0\0\0\0\0\0\0\0\0\0\0{\x81\xdd\xe8sT\xa1\xb5\x1c\x04\x7f\xdc@\0\0\0\0\0\0\xa0\0\0\0\0\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\x02\xc2T\x8c\x81a4@\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\n\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0,%H\xc8\x16\x13D\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xa0\0\0\0\0\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\0\xc2T\x8c\x81a4@ \x10\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\0\v\tR2\x05\x84\xd1\0\0@\0\0\0\0\0\0\0\0\0\0\0\x03\xdc\x0e\xefC\x9a\xa5\r\xa8\xe0#\xfe\xe2\0\0\0\0\0\0\x04\0\0\0\0\0\0\x10 \x02\0\x80(\xc9 \0@\0 \0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0&\x01\xbb\x10"\x01\0@\0\0o0\x80\0\0@\0\0\0\0\0\0\0\x10\0\x98\x06\xe4@\x88\x04\x01\0\0\x01\xbc\xc2\0\0\x01\0\0\0\0\0\0\0\0@\x02`\x1b\x91\x02 \x10\x04\0\0\x06\xf3\b\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\x07\xb8\x1d\xde\x875J\x1bQ\xc0G\xfd\xc4\b\0\0\0\0\0\0\0\0\0\0\0\x1e\xe0wz\x1c\xd5(mG\x01\x1f\xf7\x10\0\0\0\0\0\0\b\0\0\0\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\x0fp;\xbd\x0ej\x946\xa3\x80\x8f\xfb\x88\0\0\x04\0\0\0\0\0\0\0\x01\0\t\x80nD\b\x80@\x10\0\0\x1b\xcc \0\0\0\0\0\0\0\0\0\0\0\0&\x01\xb9\x10"\x01\0@\0\0o0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0&\x01\xbb\x10"\x01\0@\0\0o0\x80\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\x02`\x1b\xb1\x02 \x10\x04\0\0\x06\xf3\b\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\x04\0\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\x80a*F@\xb0\x9a \0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10 B\0\x80(\xc9 \0@\0 \0\0\0\0\0\0\0\0\0\0\0\0\0"\x01\0\xc2T\x8c\x81a4@\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0 H\x04\x01\0Q\x92@\0\x80\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\b\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\x12\x01\0@\x14d\x90\0 \0\x10\0\0\x02\0\0\0\0\0\0\0\0\x80\0\x11\0@a*F@\xb0\x9a \x10\b\0\0\0\0\0\x02\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0)\xc0\xef}:\x80\xe3v\x86\x01?\xce\xa0\0\0\0\0\0\x04\0\0\0\0\0\0\x01\x02@ \b\x02\x8c\x92\0\x04\0\x02\0\0\0@\0\0\0\0\0\0\0\x10\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\np;\xdfN\xa08\xdd\xa1\x80O\xf3\xa8\0\0\0\0 \0\0\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@ \x18J\x91\x90,&\x88\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\x04\b\0\x80 \n2H\0\x10\0\b\0D\x01\x01\x84\xa9\x19\x02\xc2h\x80\0*p;\xdf\x0e\xa08\xdd\xa1\x80O\xf3\xa8\0\0\0\0\0\x01\0\0\0\0\0\0\0@\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0@a*F@\xb0\x9a \b\n\x9c\x0e\xf7\xc3\xa8\x0e7h`\x13\xfc\xea\0\0\0\0\0\0@\0\0\0\0\0\0\x10$\x02\0\x80(\xc9 \0@\0 \0\0\x04\0\0\0\0\0\0\0\x01\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xf7\x03\xb9\xd0\xe6\xa9Aj8\b\xff8\x80\0\0\x80\0\0\0\0\0\0\0\x10\x03\xdc\x0e\xe7C\x9a\xa5\x05\xa8\xe0#\xfc\xe2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\0\0 \x07\xb8\x1d\xce\x875J\vQ\xc0G\xf9\xc4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\x10 \x04\b\0\x80 \n2H\0\x10\0\b\0D\x02\x01\x84\xa9\x19\x02\xc2h\x80@ \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\x10 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x0fp;\x9d\x0ej\x94\x16\xa3\x80\x8f\xf3\x88\0\0\b\0\0\0\0\0\0\0\x01\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\b\0\0\0\0\x81\0 @\x04\x01\0Q\x92@\0\x80\0@\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x018\0\x0e2\xadt\v\v\xee\x01\x02\x80@\x80\x88\x02\0\xa3$\x80\x01\0\0\x80\0\0\x10\0\0\0\0\0\0\0\0\0\0\x9c\x04\x07\x19V:\x05\x85\xf7\0\x81@\0\0\0\0\0\0\0\0\0\0\0\0\x020\0\f%H\xc8\x16\x13D\0\x01\0\x80\0\0\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0\x02\x04\x04@\x10\x05\x19$\0\b\0\x04\0\0\0\x80\0\0\0\0\0\0\0\0\0\b\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\x10@\0\0\0\0\0\0\0\0\0\0\x02\0\0\x81\0\x14\x04\x01FI\0\x02\0\x01\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"\0\x02\xc2T\x8c\x81a4@ \x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0N\0\x03\x8c\xab\x1d\x02\xc2\xfb\x80@\xa0\x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\b\x06\x12\xa4d\v\t\xa2\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\x04\x03\tR2\x05\x84\xd1\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\x04\b\0\x80 \n2H\0\x10\0\b\0D\x02\x01\x84\xa9\x19\x02\xc2h\x80\0 \0\0\0\0\0\0\0\0\0\0\0\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\x01\0\xc2T\x8c\x81a4@\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\x80a*F@\xb0\x9a \0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80@0\x95# XM\x10\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@ \x18J\x91\x90,&\x88\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\xdc\x0e\xe7C\x9a\xa5\x05\xa8\xe0#\xfc\xe2\0\0\x02\0\0\0\0\0\0\0\0@\0\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\x10\x18J\x91\x90,&\x88\0\x02\xa7\x03\xbd\xf0\xea\x03\x8d\xda\x18\x04\xff:\x80\0\0\0\0\0\0\0\0\0\0\0\x02\x9c\x0e\xf7\xd3\xa8\x0e7h`3\xfc\xeaS\x81\xde\xf8u\x01\xc6\xed\f\x02\x7f\x9d@\0\0\0\0\0\0\0\0\0\0\0\x01N\x07{\xe9\xd4\x07\x1b\xb40\t\xfeu\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x11\x80\0\xe1*F@\xb0\x9a \x10\b\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\0\x04\0&\x01\xb9\x10"\x01\0@\0\0\xef0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xcc\x03r(D\x02\0\x80\x04\0\xdea\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\0\0\0 @\0\x03\x10\x04\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\f\xc07"\x84@ \b\0\0\r\xe6\x10\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xc0\0\0\b\x10\0\0\x84\x01\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\x010\r\xe8\xa1\x10\b\x02\0\0\x07y\x84\0\0\0\0\0\0\n\0\0\0\0\0\x02\0\0\0\0\x14\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\x10 \x02\0\x80(\xc9 \0@\0 \x02\x04\0@\x10\x05\x19$\0\b\0\x04\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0\x10@\x90\x80(\x06\x88\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0\b H@\x14\x03D\x02\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80\0 \x81!\0P\r\x10\b\0\x01\x10\0\x04\x10$0\n\x01\xaa\x01\0\0"\0\0\x82\x04\x84\x01@4@ \0\x04@\0\x10@\x90\x80(\x06\x88\x04\0\0\x88\0\x02\b\x12\x10\x05\0\xd1\0\x80\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0\b H@\x14\x03D\x02\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80\0 \x81!\0P\r\x10\b\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\0\x82\x04\x84\x01@4@ \0\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\0\x02\b\x12\x10\x05\0\xd1\0\x80\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0\b H@\x14\x03D\x02\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80\0 \x81!\0P\r\x10\b\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\0\x82\x04\x84\x01@4@ \0\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\0\x02\b\x12\x10\x05\0\xd1\0\x80\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0\b H@\x14\x03D\x02\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\0\x82\x04\x84\x01@4@\0\0\0\0\0\0\0\0\0\0\0\0\0\b\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\0A\x02B\0\xa0\x1a \x10\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\0\x04\x10$ \n\x01\xa2\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\0\x02\b\x12\x10\x05\0\xd1\0\x80\0\0\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80\0 \x81!\0P\r\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0\x10@\x90\x80(\x06\x88\x04\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \x04\b\0\x80 \n2H\0\x10\0\b\0D\0\x01\x04\t\b\x02\x80h\x80\0\0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0,%H\xc8\x16\x13D\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0XJ\x91\x90,&\x88\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0\x98\x06\xe4@\x88\x04\x01\0\0\x01\xbc\xc2\0\0\0\0\0\0\x04\0\0\0\0\0\0\x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\0\x16\x12\xa4d\v\t\xa2\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\0a*F@\xb0\x9a \x10\b\x04\b\0\x80 \n2H\0\x10\0\b\0D\0\x05\x84\xa9\x19\x02\xc2h\x80\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0\x18J\x91\x90,&\x88\x04\x02\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\x01a*F@\xb0\x9a \0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0\x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\0\x06\x12\xa4d\v\t\xa2\x01\0\x80@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0XJ\x91\x90,&\x88\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\x04\b\0\x80 \n2H\0\x10\0\b\0D\0\x05\x84\xa9\x19\x02\xc2h\x80\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x14\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\0\0\0\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\0\v\tR2\x05\x84\xd1\0\0@\0\0\0\0\0\0\0\0\0\0\0\x03\xdc\x0e\xefC\x9a\xa5\r\xa8\xe0#\xfe\xe2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\x02\xc2T\x8c\x81a4@\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0,%H\xc8\x16\x13D\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xa0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0\0@\x80\b\x02\0\xa3$\x80\x01\0\0\x80\x04@\0\x18J\x91\x90,&\x88\x04\x02\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\x01a*F@\xb0\x9a \0\b\0\0\0\0\0\0\0\0\0\0\0\0{\x81\xdd\xe8sT\xa1\xb5\x1c\x04\x7f\xdcA\0\0\0\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\0\0\0\b\x10\x01\0@\x14d\x90\0 \0\x10\0\x88\0\v\tR2\x05\x84\xd1\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\x81\0\x10\x04\x01FI\0\x02\0\x01\0\b\x80\0\xb0\x95# XM\x10\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\x80\0\0\0\0\0\0\0\0\0\0\0@\0\0\0\0\0\x01\x02\0 \b\x02\x8c\x92\0\x04\0\x02\0\x11\0\x01a*F@\xb0\x9a \0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x05\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\x02\x04\0@\x10\x05\x19$\0\b\0\x04\0"\0\x02\xc2T\x8c\x81a4@\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\n\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\x04\b\0\x80 \n2H\0\x10\0\b\0D\0\x01\x84\xa9\x19\x02\xc2h\x80@ \x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\0\x16\x12\xa4d\v\t\xa2\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\x07\xb8\x1d\xde\x875J\x1bQ\xc0G\xfd\xc4\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\x04\b\0\x80 \n2H\0\x10\0\b\0D\0\x05\x84\xa9\x19\x02\xc2h\x80@ \x10 \x02\0\x80(\xc9 \0@\0 \x01\x10\0\x16\x12\xa4d\v\t\xa2\0\0\x80\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0 @\x04\x01\0Q\x92@\0\x80\0@\x02 \0,%H\xc8\x16\x13D\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0L\x03v D\x02\0\x80\0\0\xdea\0\0\0\x80\0\0\0\0\0\0\0 \x010\r\xc8\x81\x10\b\x02\0\0\x03y\x84\0\0\x02\0\0\0\0\0\0\0\0\x80\x04\xc07"\x04@ \b\0\0\r\xe6\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\0\0@\x02`\x1b\x91\x02 \x10\x04\0\0\x06\xf3\b\0\0\0\0\0\0\0\0\0\0\0\0\t\x80nD\b\x80@\x10\0\0\x1b\xcc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\t\x80n\xc4\b\x80@\x10\0\0\x1b\xcc \0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\x98\x06\xec@\x88\x04\x01\0\0\x01\xbc\xc2\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xf7\x03\xb9\xd0\xe6\xa9Aj8\b\xff8\x80\0\0\x80\0\0\0\0\0\0\0\x10\x03\xdc\x0e\xe7C\x9a\xa5\x05\xa8\xe0#\xfc\xe2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\0\0\0\0\0\0\0\b\x01\xee\x07s\xa1\xcdR\x82\xd4p\x11\xfeq\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\0\0\x04\b\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\0\0\0\0\0\0\0\0\x81\0\0\0\0\0\0\0\0\0\0\0\0\x03\xdc\x0e\xe7C\x9a\xa5\x05\xa8\xe0#\xfc\xe2\0\0\x02\0\0\0\0\0\0\0\0@\0\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\0\0\0\x02\0\0\0\0 @\b\x10\x01\0@\x14d\x90\0 \0\x10\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x98\x06\xf4P\x88\x04\x01\0\0\x03\xbc\xc2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\xee\x07s\xa1\xcdR\x82\xd4p\x11\xfeq\0\0\x01\0\0\0\0\0\0\0\0 \0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\0\0\x02\x04\0\0!\0\0\0\0\0\0\0\0\0\0@\0\0\0\0\x01N\x07{\xe9\xd4\x07\x1b\xb40\t\xfeu\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xf7\x03\xb9\xd0\xe6\xa9Aj8\b\xff8\x80\0\0\x80\0\0\0\0\0\0\0\x10\0\0\0\x10\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\np;\xdfN\xa08\xdd\xa1\x80O\xf3\xa9\xee\x07s\xa1\xcdR\x82\xd4p\x11\xfeq\0\0\x01\0\0\0\0\0\0\0\0 \0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\x01\0\0\0\0\x10 \x04\b\0\x80 \n2H\0\x10\0\b\0\0\0\x04\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1e\xe0w:\x1c\xd5(-G\x01\x1f\xe7\x10\0\0\x10\0\0\0\0\0\0\0\x02\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0@\0\0\x04\b\0\0B\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\x98\x06\xf4P\x88\x04\x01\0\0\x03\xbc\xc2\0\0\0\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x10\0\0\0\x02\0\0\x10\x80\0\0\0\0\0\0\0\0\0 \0\0\0\0\0\xa7\x03\xbd\xf4\xea\x03\x8d\xda\x18\x04\xff:\x80\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\x04 \0\0\0\0\0\0\0\0\0\b\0\0\0\0\0)\xc0\xef}:\x80\xe3v\x86\x01?\xce\xa0\0\0\0 \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b@\0\0\0\0\0\0\0\0\0\x10\0\0\0\0\0S\x81\xde\xfau\x01\xc6\xed\f\x02\x7f\x9d@\0\0\0@\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x80\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',a>>>3|0)>>>((a^-1)&7)|0)&1}function
 D_(a,b){return lM('\x03i\x03i\x03i\x03i\x02\xf5\x03i\x03i\x03i\x076\x03\xca\x03\x1d\0\x8d\x07Z\x03\r\x03i\x03i\x03i\x05\xf6\x03i\x03i\x03i\v^\x03i\x03i\x03i\x03i\x02\xe5\x03i\0\x16\x02\xf2\x02\xb5\x035\x03i\x03i\x03i\x05\xba\x07r\x03i\x03i\vs\x03i\v\x1a\x03i\x07z\x03i\vV\x07\x9a\x03i\x03\r\x03i\x05\xc2\x07b\x03i\x01\xee\x07\x1a\x03i\x04\x81\x03i\x03i\x05\xd6\x03i\x07j\x03i\x07:\0\xaa\vj\x03i\x03i\x03i\x03\r\x049\x02\xf5\x07\x82\x07B\x03\r\x07\x8a\x03i\n\x1e\x05~\x07\x92\x03i\x03i\x03i\x03i\x03i\x03i\x03i\x03i\x03i\x02\xf6\x03i\x03i\x03i\x03\xba\x02\xf5\0\x89\x03i\x05q\x05q\x05q\x05q\x05\xea\x05q\x05q\x05q\x076\x03\xaa\x02=\0\x85\x07Z\v2\x05q\x05q\x05q\x02A\x05q\x05q\x05q\x01\xd6\x05q\x05q\x05q\x05q\n*\x05q\n\xde\x03z\x03Y\0}\x05q\x05q\x05q\x04i\x07r\x05q\x05q\x06\xd6\x05q\x05\xf2\x05q\x07z\x05q\x05\xfa\x07\x9a\x05q\x03-\x05q\x06\x02\x07b\0\xb2\x01\xda\0\xba\x05q\x06\n\x05q\x05q\x06\x1a\x05q\x07j\x05q\x07:\x02\xf5\vN\x05q\x05q\x05q\x03-\x02\xf6\x05~\x07\x82\x07B\x03-\x07\x8a\x05q\0n\x04e\x07\x92\x05q\x05q\x05q\x05q\x05q\x05q\x05q\x05q\x05q\x04y\x05q\x05q\x05q\x01\xde\v>\x03^\x05q\x07\x1e\0\x0e\x03n\x01\x02\t\xba\x03%\n\xa6\x03b\x04a\0y\x04r\0\x1a\0\x1e\v\x0e\0"\0&\0*\x04\x82\x02y\x03v\x04\x86\x04\x96\x01\xf2\x03\x86\vJ\x02a\x02\xfd\0\xb6\x04\xbe\x04\xd2\x006\x04M\x01\xf6\x03%\0:\x04Q\x04I\x07\xb2\v&\x07\xce\x03%\x04v\x01\xfa\x03\x8a\x01\xfe\x02\xed\x07\xea\t\xb2\x02\x02\x04\xe6\x02\xed\x04\xea\x02\n\x03\xa2\x01\xea\x02\x0e\x04\xfa\nr\x01f\x05r\x04\xaa\x03%\x03Q\x05\n\x05"\x04\xde\x03%\x03\x8e\x05.\0\x81\x02*\v\x1e\x04\x89\x02\x12\t\xc6\x06\x8a\x056\0F\0J\x05>\x03\xa6\x03\xb6\x03\xc6\x03\xde\0\xbe\x03\x15\0^\0b\x05F\x01\xde\x02\x16\x07\x16\x03\xe2\x02\xfd\b*\b:\x01\x02\x03\xfe\v\x06\x06\xb6\n6\x04\x06\x04.\x04r\bB\bR\x06\xc2\bj\b\x82\b\x9a\x04\x82\x02\x81\b\xaa\x04\x86\x04\x96\x01\xf2\b\xbe\n\xe6\x02Y\x06\xce\n\xd6\x04\xbe\x04\xd2\b\xc6\x06\xe3\x01\xf6\x04\xb2\b\xd6\x04\xb2\x06\xfa\x07\x02\x04\xb2\0\xca\x07\x12\x04\xb2\x01\xfa\b\xe6\x01\xfe\0\x96\x07"\n\xb2\x02\x02\x04\xe6\0\xd6\x04\xea\x02\n\t\x02\n\xaa\x02\x0e\x04\xfa\x07\xa6\x01f\x05^\x07\xaa\0\xde\x07\xb6\x05\n\x05"\x07\xc2\x07\xc6\x07\xd2\x07\xde\x07\xe2\x07\xee\x07\xfa\x07\xfe\x02\x12\b\n\b\x12\n\xae\t\x0e\t\x1e\x05>\t.\tB\tV\tr\b\x1a\b.\tz\t\x96\x05F\b>\x02\x16\bF\x03\xe2\x03i\x03i\x03i\x03i\bV\x03i\x03i\x03i\x076\bn\nj\b\x86\x07Z\b\x9e\x03i\x03i\x03i\b\xb2\x03i\x03i\x03i\nR\x03i\x03i\x03i\x03i\b\xca\x03i\n:\b\xda\x03]\b\xee\x03i\x03i\x03i\t\x12\x07r\x03i\x03i\t"\x03i\t6\x03i\x07z\x03i\n\x12\x07\x9a\x03i\n\x06\x03i\tJ\x07b\t\xfe\x03"\t\x06\x03i\t^\x03i\x03i\t\xf6\x03i\x07j\x03i\x07:\t~\x03.\x03i\x03i\x03i\t\x92\t\x9a\x036\x07\x82\x07B\t\xaa\x07\x8a\x03i\t\xee\nz\x07\x92\x03i\x03i\x03i\x03i\x03i\x03i\x03i\x03i\x03i\t\xe6\x03i\x03i\x03i\n\xc2\0j\x03J\x03i\x04\x99\x04\x99\x04\x99\x04\x99\x03r\x04\x99\x04\x99\x04\x99\x076\v6\vb\x03\xe6\x07Z\x03\xee\x04\x99\x04\x99\x04\x99\x03\xf6\x04\x99\x04\x99\x04\x99\x04\x12\x04\x99\x04\x99\x04\x99\x04\x99\x04\x1a\x04\x99\x04"\x04&\x02\xb9\0z\x04\x99\x04\x99\x04\x99\x04N\x07r\x04\x99\x04\x99\x04V\x04\x99\x04^\x04\x99\x07z\x04\x99\x04f\x07\x9a\x04\x99\x04n\x04\x99\0\x86\x07b\x04\x9a\n\x96\0u\x04\x99\x04\xae\x04\x99\x04\x99\x04\xc2\x04\x99\x07j\x04\x99\x07:\x04\xca\x04\xce\x04\x99\x04\x99\x04\x99\x04\xd6\x04\xe2\0\x8e\x07\x82\x07B\x04\xee\x07\x8a\x04\x99\x04\xfe\x05\x0e\x07\x92\x04\x99\x04\x99\x04\x99\x04\x99\x04\x99\x04\x99\x04\x99\x04\x99\x04\x99\x05\x16\x04\x99\x04\x99\x04\x99\n\x9e\x01\xb6\x05&\x04\x99\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x052\x04\xb9\x04\xb9\x04\xb9\x02\xdd\x02\xdd\x05:\x05B\x05J\x01\xd2\x04\xb9\x04\xb9\x04\xb9\x05\x96\x04\xb9\x04\xb9\x04\xb9\0\xa2\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x01\xe2\x04\xb9\x05\xb2\0\0\0\0\0\0\x04\xb9\x04\xb9\x04\xb9\0\0\x02\xdd\x04\xb9\x04\xb9\0\0\x04\xb9\0\0\x04\xb9\x02\xdd\x04\xb9\0\0\0\0\x04\xb9\0\0\x04\xb9\0\0\0\0\0\0\0\0\0\x95\x04\xb9\0\0\x04\xb9\x04\xb9\0\0\x04\xb9\0\0\x04\xb9\0\0\x02\xdd\x06\xf6\x04\xb9\x04\xb9\x04\xb9\x02\xdd\0\0\0\0\0\0\0\0\0\0\0\0\x04\xb9\0\0\0\0\x02\xdd\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x04\xb9\x04\xb9\0\0\x04\xb9\x04\xb9\x04\xb9\0\0\0\0\0\0\x04\xb9\x05e\x05e\x05e\x05e\0\0\x05e\x05e\x05e\x02\xcd\x02\xcd\0\0\0\0\0\0\0\0\x05e\x05e\x05e\0\0\x05e\x05e\x05e\0\0\x05e\x05e\x05e\x05e\0\0\x05e\0\0\0\0\0\0\0\0\x05e\x05e\x05e\0\0\x02\xcd\x05e\x05e\0\0\x05e\0\0\x05e\x02\xcd\x05e\0\0\0\0\x05e\0\0\x05e\0\0\0\0\0\0\0\0\0\xba\x05e\0\0\x05e\x05e\0\0\x05e\0\0\x05e\0\0\x02\xcd\0\0\x05e\x05e\x05e\x02\xcd\0\0\0\0\0\0\0\0\0\0\0\0\x05e\0\0\0\0\x07\x0e\x05e\x05e\x05e\x05e\x05e\x05e\x05e\x05e\x05e\0\0\x05e\x05e\x05e\0\0\0\0\0\0\x05e\x04\x95\x04\x95\x04\x95\x04\x95\0\0\x04\x95\x04\x95\x04\x95\0\0\0\0\0\0\0\0\0\0\0\0\x04\x95\x04\x95\x04\x95\0\0\x04\x95\x04\x95\x04\x95\0\0\x04\x95\x04\x95\x04\x95\x04\x95\0\0\x04\x95\0\0\0\0\0\0\0\0\x04\x95\x04\x95\x04\x95\0\0\0\0\x04\x95\x04\x95\0\0\x04\x95\0\0\x04\x95\0\0\x04\x95\0\0\0\0\x04\x95\0\0\x04\x95\0\0\0\0\0\0\0\0\0q\x04\x95\0\0\x04\x95\x04\x95\0\0\x04\x95\0\0\x04\x95\0\0\0\0\0\0\x04\x95\x04\x95\x04\x95\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\x95\0\0\0\0\0\0\x04\x95\x04\x95\x04\x95\x04\x95\x04\x95\x04\x95\x04\x95\x04\x95\x04\x95\0\0\x04\x95\x04\x95\x04\x95\0\0\0\0\0\0\x04\x95\x04\xbd\x04\xbd\x04\xbd\x04\xbd\0\0\x04\xbd\x04\xbd\x04\xbd\0\0\0\0\0\0\0\0\0\0\0\0\x04\xbd\x04\xbd\x04\xbd\0\0\x04\xbd\x04\xbd\x04\xbd\0\0\x04\xbd\x04\xbd\x04\xbd\x04\xbd\0\0\x04\xbd\0\0\0\0\0\0\0\0\x04\xbd\x04\xbd\x04\xbd\0\0\0\0\x04\xbd\x04\xbd\0\0\x04\xbd\0\0\x04\xbd\0\0\x04\xbd\0\0\0\0\x04\xbd\0\0\x04\xbd\0\0\0\0\0\0\0\0\0\x99\x04\xbd\0\0\x04\xbd\x04\xbd\0\0\x04\xbd\0\0\x04\xbd\0\0\0\0\0\0\x04\xbd\x04\xbd\x04\xbd\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\xbd\0\0\0\0\0\0\x04\xbd\x04\xbd\x04\xbd\x04\xbd\x04\xbd\x04\xbd\x04\xbd\x04\xbd\x04\xbd\0\0\x04\xbd\x04\xbd\x04\xbd\0\0\0\0\0\0\x04\xbd\x04\xb5\x04\xb5\x04\xb5\x04\xb5\0\0\x04\xb5\x04\xb5\x04\xb5\0\0\0\0\0\0\0\0\0\0\0\0\x04\xb5\x04\xb5\x04\xb5\0\0\x04\xb5\x04\xb5\x04\xb5\0\0\x04\xb5\x04\xb5\x04\xb5\x04\xb5\0\0\x04\xb5\0\0\0\0\0\0\0\0\x04\xb5\x04\xb5\x04\xb5\0\0\0\0\x04\xb5\x04\xb5\0\0\x04\xb5\0\0\x04\xb5\0\0\x04\xb5\0\0\0\0\x04\xb5\0\0\x04\xb5\0\0\0\0\0\0\0\0\0\x91\x04\xb5\0\0\x04\xb5\x04\xb5\0\0\x04\xb5\0\0\x04\xb5\0\0\0\0\0\0\x04\xb5\x04\xb5\x04\xb5\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\xb5\0\0\0\0\0\0\x04\xb5\x04\xb5\x04\xb5\x04\xb5\x04\xb5\x04\xb5\x04\xb5\x04\xb5\x04\xb5\0\0\x04\xb5\x04\xb5\x04\xb5\0\0\0\0\0\0\x04\xb5\x04\x91\x04\x91\x04\x91\x04\x91\0\0\x04\x91\x04\x91\x04\x91\0\0\0\0\0\0\0\0\0\0\0\0\x04\x91\x04\x91\x04\x91\0\0\x04\x91\x04\x91\x04\x91\0\0\x04\x91\x04\x91\x04\x91\x04\x91\0\0\x04\x91\0\0\0\0\0\0\0\0\x04\x91\x04\x91\x04\x91\0\0\0\0\x04\x91\x04\x91\0\0\x04\x91\0\0\x04\x91\0\0\x04\x91\0\0\0\0\x04\x91\0\0\x04\x91\0\0\0\0\0\0\0\0\0m\x04\x91\0\0\x04\x91\x04\x91\0\0\x04\x91\0\0\x04\x91\0\0\0\0\0\0\x04\x91\x04\x91\x04\x91\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\x91\0\0\0\0\0\0\x04\x91\x04\x91\x04\x91\x04\x91\x04\x91\x04\x91\x04\x91\x04\x91\x04\x91\0\0\x04\x91\x04\x91\x04\x91\x02\x99\0\0\x02\x99\x04\x91\0\0\x02\x99\x02\x99\x02\x99\0\0\0\0\0\0\0\0\0\0\0\0\x02\x99\x02\x99\x02\x99\0\0\x02\x99\x02\x99\x02\x99\x02\x99\0\0\x02\x99\x02\x99\x02\x99\x02\x99\x02\x99\0\0\x02\x99\0\0\0\0\x02\x99\x02\x99\x02\x99\0\0\x02\x99\0\0\x02\x99\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\x99\x02\x99\x02\x99\0\0\0\0\0\0\x02\x99\x02\x99\0\0\x02\x99\x02\x99\x02\x99\0\0\x02\x99\x02\x99\0\0\x02\x99\0\0\0\0\0\0\0\0\x02\x99\x02\x99\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x06\xa2\x02\x99\0\0\0\0\x02\x99\x02\x99\x02\x99\x02\x99\x02\x99\x02\x99\x02\x99\x02\x99\0\0\0\0\x02\x99\x02\x99\x02\x99\0\0\x02\x99\0\0\x02\x99\0\xea\0\xee\0\xf2\0\xf6\0\0\0\xfa\0\xfe\x01\x02\x01\xf5\0\0\0\0\x06&\x01\xf5\x01\xf5\x01\x06\x01\n\x01\x0e\0\0\x01\x12\x01\x16\x01\x1a\x01\xf5\x01\xf5\x01\x1e\x01"\x01&\0\0\x01*\x01\xf5\x01\xf5\x01\xf5\x01\xf5\x01.\x012\x016\x062\x01\xf5\x01:\x01>\x01\xf5\x01B\x01\xf5\x01F\x01\xf5\x01J\x06>\x01\xf5\x01N\0\0\x01R\x01\xf5\x01\xf5\x02Z\0\0\x01\xf5\x01V\0\0\x01Z\x01^\0\0\x01b\x01\xf5\x01f\x01\xf5\x01\xf5\0\0\x01j\x01n\x01r\x01\xf5\0\0\x06J\x01\xf5\x01\xf5\x06V\x01\xf5\x01v\x03\n\x06b\x01\xf5\x01z\x01~\x01\x82\x01\x86\x01\x8a\x01\x8e\x01\x92\x01\x96\x01\xf5\x01\xf5\x01\x9a\x01\x9e\x01\xa2\x01\xf5\0\0\x06n\x01\xa6\x01\xf5\0\x9d\0\0\0\0\0\x9d\0\x9d\0\x9d\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x9d\0\x9d\0\x9d\0\0\0\0\0\0\0\x9d\0\x9d\0\0\0\0\0\x9d\0\0\0\x9d\0\0\0\x9d\0\0\0\x9d\0\x9d\0\0\x05\xce\0\0\0\x9d\0\x9d\0\x9d\0\0\0\x9d\0\0\0\0\0\0\0\0\0\0\0\0\0\x9d\0\0\0\x9d\0\x9d\0\0\0\0\0\0\0\0\0\x9d\0\0\0\x9d\0\x9d\0\x9d\0\x9d\0\x9d\0\0\0\x9d\0\x9d\0\x9d\0\xb9\0\0\0\0\0\xb9\0\xb9\0\xb9\0\0\0\0\0\x9d\0\0\0\0\0\0\0\0\x05\xda\0\0\0\x9d\0\0\0\x9d\0\0\0\0\0\0\0\xb9\0\xb9\0\xb9\0\0\0\0\0\0\0\xb9\0\xb9\0\0\0\0\0\xb9\0\0\0\xb9\0\0\0\xb9\0\0\0\xb9\0\xb9\0\0\0\0\0\0\0\xb9\0\xb9\0\xb9\0\0\0\xb9\0\0\0\0\0\0\0\0\0\0\0\0\0\xb9\0\0\0\xb9\0\xb9\0\0\0\0\0\0\0\0\0\xb9\0\0\0\xb9\0\xb9\0\xb9\0\xb9\0\xb9\0\0\0\xb9\0\xb9\0\xb9\0\x9d\0\0\0\0\0\0\0\x9d\0\x9d\0\0\0\0\0\xb9\0\0\0\0\0\0\0\0\0\x9d\0\x9d\0\xb9\0\0\0\xb9\0\0\0\0\0\x9d\0\x9d\0\x9d\0\x9d\0\0\0\0\0\0\0\0\0\x9d\0\0\0\0\0\x9d\0\0\0\x9d\0\0\0\x9d\0\0\0\0\0\x9d\0\0\x02\x1e\0\0\0\x9d\0\x9d\0\x9d\0\0\0\x9d\0\0\0\0\0\0\0\0\0\0\0\0\0\x9d\0\0\0\x9d\0\x9d\0\0\0\0\0\0\0\0\0\x9d\0\0\0\0\0\x9d\0\x9d\0\0\0\x9d\0\0\0\x9d\x022\0\x9d\0\0\0\0\x026\x05\xe2\0\0\0\0\0\0\0\0\0\x9d\0\x9d\0\0\x06j\x04A\0\x9d\0\0\0\0\0\0\0\x9d\x04A\x04A\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x026\x01\xd9\0\0\0\0\0\0\0\0\x03\x0e\x02\xe6\0\0\x01\xd9\x01\xd9\x03\x1a\0\0\0\0\0\0\x02\xde\x01\xd9\x01\xd9\x01\xd9\x01\xd9\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xd9\0\0\x01\xd9\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x01\xd9\x02>\0\0\0\0\x01\xd9\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xd9\0\0\0\0\0\0\0\0\x01\xd9\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x026\x01\x99\0\0\0\0\0\0\0\0\x01\xd9\x01\xd9\0\0\x01\x99\x01\x99\x01\xd9\0\0\0\0\0\0\x01\xd9\x01\x99\x01\x99\x01\x99\x01\x99\0\0\0\0\0\0\0\0\x01\x99\0\0\0\0\x01\x99\0\0\x01\x99\0\0\x02v\0\0\0\0\x01\x99\0\0\0\0\0\0\x01\x99\x02>\0\0\0\0\x01\x99\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\x99\0\0\0\0\0\0\0\0\x01\x99\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xa1\x01\xa1\0\0\0\0\0\0\0\0\x01\x99\x01\x99\0\0\x01\xa1\x01\xa1\x01\x99\0\0\0\0\0\0\x01\x99\x01\xa1\x01\xa1\x01\xa1\x01\xa1\0\0\0\0\0\0\0\0\x01\xa1\0\0\0\0\x01\xa1\0\0\x01\xa1\0\0\x01\xa1\0\0\0\0\x01\xa1\0\0\0\0\0\0\x01\xa1\x02>\0\0\0\0\x01\xa1\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xa1\0\0\0\0\0\0\0\0\x01\xa1\0\0\0\0\x01\xa1\x02N\0\0\x01\xa1\0\0\0\0\x022\x01\xa1\0\0\0\0\x01\xed\x01\xed\0\0\0\0\0\0\0\0\x01\xa1\x01\xa1\0\0\x01\xed\x01\xed\x01\xa1\0\0\0\0\0\0\x01\xa1\x01\xed\x01\xed\x01\xed\x01\xed\0\0\0\0\0\0\0\0\x01\xed\0\0\0\0\x01\xed\0\0\x01\xed\0\0\x01\xed\0\0\0\0\x01\xed\0\0\0\0\0\0\x01\xed\x01\xed\0\0\0\0\x01\xed\0\0\0\0\0\0\0\0\0\0\0\0\x01\xed\0\0\x02F\x01\xed\0\0\0\0\0\0\0\0\x01\xed\0\0\0\0\x01\xed\x02N\0\0\x01\xed\0\0\0\0\x022\x01\xed\0\0\0\0\x026\x01\xc5\0\0\0\0\0\0\0\0\x01\xed\x01\xed\0\0\x01\xc5\x01\xc5\x01\xed\0\0\0\0\0\0\x01\xed\x01\xc5\x01\xc5\x02f\x01\xc5\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xc5\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xb1\x01\xb1\0\0\0\0\0\0\0\0\x01\xc5\x01\xc5\0\0\x01\xb1\x01\xb1\x01\xc5\0\0\0\0\0\0\x02\xde\x01\xb1\x01\xb1\x01\xb1\x01\xb1\0\0\0\0\0\0\0\0\x01\xb1\0\0\0\0\x01\xb1\0\0\x01\xb1\0\0\x01\xb1\0\0\0\0\x01\xb1\0\0\0\0\0\0\x01\xb1\x01\xb1\0\0\0\0\x01\xb1\0\0\0\0\0\0\0\0\0\0\0\0\x01\xb1\0\0\x02F\x01\xb1\0\0\0\0\0\0\0\0\x01\xb1\0\0\0\0\x01\xb1\x02N\0\0\x01\xb1\0\0\0\0\x022\x01\xb1\0\0\0\0\x026\x01\xcd\0\0\0\0\0\0\0\0\x01\xb1\x01\xb1\0\0\x01\xcd\x01\xcd\x01\xb1\0\0\0\0\0\0\x01\xb1\x01\xcd\x01\xcd\x02f\x01\xcd\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xcd\0\0\x01\xcd\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x01\xcd\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x026\x01\xdd\0\0\0\0\0\0\0\0\x01\xcd\x01\xcd\0\0\x01\xdd\x01\xdd\x01\xcd\0\0\0\0\0\0\x01\xcd\x01\xdd\x01\xdd\x01\xdd\x01\xdd\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xdd\0\0\x01\xdd\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x01\xdd\x02>\0\0\0\0\x01\xdd\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xdd\0\0\0\0\0\0\0\0\x01\xdd\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x026\x01\x9d\0\0\0\0\0\0\0\0\x01\xdd\x01\xdd\0\0\x01\x9d\x01\x9d\x01\xdd\0\0\0\0\0\0\x01\xdd\x01\x9d\x01\x9d\x01\x9d\x01\x9d\0\0\0\0\0\0\0\0\x01\x9d\0\0\0\0\x01\x9d\0\0\x01\x9d\0\0\x02v\0\0\0\0\x01\x9d\0\0\0\0\0\0\x01\x9d\x02>\0\0\0\0\x01\x9d\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\x9d\0\0\0\0\0\0\0\0\x01\x9d\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x026\x01\x95\0\0\0\0\0\0\0\0\x01\x9d\x01\x9d\0\0\x01\x95\x01\x95\x01\x9d\0\0\0\0\0\0\x01\x9d\x01\x95\x01\x95\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xe9\x01\xe9\0\0\0\0\0\0\0\0\x01\x95\x01\x95\0\0\x01\xe9\x01\xe9\x01\x95\0\0\0\0\0\0\x02\xde\x01\xe9\x01\xe9\x01\xe9\x01\xe9\0\0\0\0\0\0\0\0\x01\xe9\0\0\0\0\x01\xe9\0\0\x01\xe9\0\0\x01\xe9\0\0\0\0\x01\xe9\0\0\0\0\0\0\x01\xe9\x01\xe9\0\0\0\0\x01\xe9\0\0\0\0\0\0\0\0\0\0\0\0\x01\xe9\0\0\x02F\x01\xe9\0\0\0\0\0\0\0\0\x01\xe9\0\0\0\0\x01\xe9\x02N\0\0\x01\xe9\0\0\0\0\x022\x01\xe9\0\0\0\0\x01\xa5\x01\xa5\0\0\0\0\0\0\0\0\x01\xe9\x01\xe9\0\0\x01\xa5\x01\xa5\x01\xe9\0\0\0\0\0\0\x01\xe9\x01\xa5\x01\xa5\x01\xa5\x01\xa5\0\0\0\0\0\0\0\0\x01\xa5\0\0\0\0\x01\xa5\0\0\x01\xa5\0\0\x01\xa5\0\0\0\0\x01\xa5\0\0\0\0\0\0\x01\xa5\x02>\0\0\0\0\x01\xa5\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xa5\0\0\0\0\0\0\0\0\x01\xa5\0\0\0\0\x01\xa5\x02N\0\0\x01\xa5\0\0\0\0\x022\x01\xa5\0\0\0\0\x026\x01\xd5\0\0\0\0\0\0\0\0\x01\xa5\x01\xa5\0\0\x01\xd5\x01\xd5\x01\xa5\0\0\0\0\0\0\x01\xa5\x01\xd5\x01\xd5\x01\xd5\x01\xd5\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xd5\0\0\x01\xd5\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x01\xd5\x02>\0\0\0\0\x01\xd5\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xd5\0\0\0\0\0\0\0\0\x01\xd5\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xad\x01\xad\0\0\0\0\0\0\0\0\x01\xd5\x01\xd5\0\0\x01\xad\x01\xad\x01\xd5\0\0\0\0\0\0\x01\xd5\x01\xad\x01\xad\x01\xad\x01\xad\0\0\0\0\0\0\0\0\x01\xad\0\0\0\0\x01\xad\0\0\x01\xad\0\0\x01\xad\0\0\0\0\x01\xad\0\0\0\0\0\0\x01\xad\x02>\0\0\0\0\x01\xad\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xad\0\0\0\0\0\0\0\0\x01\xad\0\0\0\0\x01\xad\x02N\0\0\x01\xad\0\0\0\0\x022\x01\xad\0\0\0\0\x01\xa9\x01\xa9\0\0\0\0\0\0\0\0\x01\xad\x01\xad\0\0\x01\xa9\x01\xa9\x01\xad\0\0\0\0\0\0\x01\xad\x01\xa9\x01\xa9\x01\xa9\x01\xa9\0\0\0\0\0\0\0\0\x01\xa9\0\0\0\0\x01\xa9\0\0\x01\xa9\0\0\x01\xa9\0\0\0\0\x01\xa9\0\0\0\0\0\0\x01\xa9\x01\xa9\0\0\0\0\x01\xa9\0\0\0\0\0\0\0\0\0\0\0\0\x01\xa9\0\0\x02F\x01\xa9\0\0\0\0\0\0\0\0\x01\xa9\0\0\0\0\x01\xa9\x02N\0\0\x01\xa9\0\0\0\0\x022\x01\xa9\0\0\0\0\x026\x01\xc9\0\0\0\0\0\0\0\0\x01\xa9\x01\xa9\0\0\x01\xc9\x01\xc9\x01\xa9\0\0\0\0\0\0\x01\xa9\x01\xc9\x01\xc9\x02f\x01\xc9\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xc9\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xb5\x01\xb5\0\0\0\0\0\0\0\0\x01\xc9\x01\xc9\0\0\x01\xb5\x01\xb5\x01\xc9\0\0\0\0\0\0\x01\xc9\x01\xb5\x01\xb5\x01\xb5\x01\xb5\0\0\0\0\0\0\0\0\x01\xb5\0\0\0\0\x01\xb5\0\0\x01\xb5\0\0\x01\xb5\0\0\0\0\x01\xb5\0\0\0\0\0\0\x01\xb5\x02>\0\0\0\0\x01\xb5\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xb5\0\0\0\0\0\0\0\0\x01\xb5\0\0\0\0\x01\xb5\x02N\0\0\x01\xb5\0\0\0\0\x022\x01\xb5\0\0\0\0\x01\xbd\x01\xbd\0\0\0\0\0\0\0\0\x01\xb5\x01\xb5\0\0\x01\xbd\x01\xbd\x01\xb5\0\0\0\0\0\0\x01\xb5\x01\xbd\x01\xbd\x01\xbd\x01\xbd\0\0\0\0\0\0\0\0\x01\xbd\0\0\0\0\x01\xbd\0\0\x01\xbd\0\0\x01\xbd\0\0\0\0\x01\xbd\0\0\0\0\0\0\x01\xbd\x01\xbd\0\0\0\0\x01\xbd\0\0\0\0\0\0\0\0\0\0\0\0\x01\xbd\0\0\x02F\x01\xbd\0\0\0\0\0\0\0\0\x01\xbd\0\0\0\0\x01\xbd\x02N\0\0\x01\xbd\0\0\0\0\x022\x01\xbd\0\0\0\0\x026\x01\xd1\0\0\0\0\0\0\0\0\x01\xbd\x01\xbd\0\0\x01\xd1\x01\xd1\x01\xbd\0\0\0\0\0\0\x01\xbd\x01\xd1\x01\xd1\x02f\x01\xd1\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xd1\0\0\x01\xd1\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x01\xd1\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xb9\x01\xb9\0\0\0\0\0\0\0\0\x01\xd1\x01\xd1\0\0\x01\xb9\x01\xb9\x01\xd1\0\0\0\0\0\0\x01\xd1\x01\xb9\x01\xb9\x01\xb9\x01\xb9\0\0\0\0\0\0\0\0\x01\xb9\0\0\0\0\x01\xb9\0\0\x01\xb9\0\0\x01\xb9\0\0\0\0\x01\xb9\0\0\0\0\0\0\x01\xb9\x02>\0\0\0\0\x01\xb9\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xb9\0\0\0\0\0\0\0\0\x01\xb9\0\0\0\0\x01\xb9\x02N\0\0\x01\xb9\0\0\0\0\x022\x01\xb9\0\0\0\0\x026\x01\xe1\0\0\0\0\0\0\0\0\x01\xb9\x01\xb9\0\0\x01\xe1\x01\xe1\x01\xb9\0\0\0\0\0\0\x01\xb9\x01\xe1\x01\xe1\x01\xe1\x01\xe1\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x01\xe1\0\0\x01\xe1\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x01\xe1\x02>\0\0\0\0\x01\xe1\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x01\xe1\0\0\0\0\0\0\0\0\x01\xe1\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x022\x02\x96\0\0\0\0\x01\xe5\x01\xe5\0\0\0\0\0\0\0\0\x01\xe1\x01\xe1\0\0\x01\xe5\x01\xe5\x01\xe1\0\0\0\0\0\0\x01\xe1\x01\xe5\x01\xe5\x01\xe5\x01\xe5\0\0\0\0\0\0\0\0\x01\xe5\0\0\0\0\x01\xe5\0\0\x01\xe5\0\0\x01\xe5\0\0\0\0\x01\xe5\0\0\0\0\0\0\x01\xe5\x01\xe5\0\0\0\0\x01\xe5\0\0\0\0\0\0\0\0\0\0\0\0\x01\xe5\0\0\x02F\x01\xe5\0\0\0\0\0\0\0\0\x01\xe5\0\0\0\0\x01\xe5\x02N\0\0\x01\xe5\0\0\0\0\x022\x01\xe5\0\0\0\0\x01\xc1\x01\xc1\0\0\0\0\0\0\0\0\x01\xe5\x01\xe5\0\0\x01\xc1\x01\xc1\x01\xe5\0\0\0\0\0\0\x01\xe5\x01\xc1\x01\xc1\x01\xc1\x01\xc1\0\0\0\0\0\0\0\0\x01\xc1\0\0\0\0\x01\xc1\0\0\x01\xc1\0\0\x01\xc1\0\0\0\0\x01\xc1\0\0\0\0\0\0\x01\xc1\x01\xc1\0\0\0\0\x01\xc1\0\0\0\0\0\0\0\0\0\0\0\0\x01\xc1\0\0\x02F\x01\xc1\0\0\0\0\0\0\0\0\x01\xc1\0\0\0\0\x01\xc1\x02N\0\0\x01\xc1\0\0\0\x06\0\n\x01\xc1\0\0\0\x0e\0\x12\x01\x02\0\0\0\0\0\0\0\0\x01\xc1\x01\xc1\x01\xe6\0\x1a\0\x1e\x01\xc1\0"\0&\0*\x01\xc1\x02\x89\0.\0\0\0\0\x01\xf2\x002\x02\xd5\x02I\0\0\0\0\0\0\0\0\x006\0\0\x01\xf6\0\0\0:\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\xfa\0>\x01\xfe\0\0\0\0\0\0\x02\x02\x02\x06\0\0\0\0\x02\n\0B\0\0\x02\x0e\0\0\0\0\x01f\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02I\0\0\0\0\0\0\0\0\x022\0\0\x02\x12\0\0\x026\0\0\0F\0J\0\0\0N\0R\0V\0Z\x06^\x05\x1e\0^\0b\0\0\0\0\x02\x16\x029\0f\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\x022\0\0\x02\x86\x02N\x026\x02\x8e\0\0\0\0\0\0\x02\x96\0\0\0\0\0\0\x04\xf6\x05\x06\0\0\0\0\0\0\x029\x06\x8e\x02-\0\0\x02f\x02\xa6\0\0\0\0\0\0\x02\xde\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\x07\x16\0\0\x02\x96\b*\b:\0\0\0\0\0\0\0\0\0\0\0\0\x02-\x03\x02\bB\bR\0\0\bj\b\x82\b\x9a\n\n\x02\xde\b\xaa\0\0\0\0\0\0\b\xbe\0\0\x02Q\0\0\0\0\0\0\0\0\b\xc6\0\0\0\0\0\0\b\xd6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\b\xe6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\t\x02\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x022\0\0\0\0\0\0\x026\n\x0e\t\x0e\t\x1e\0\0\t.\tB\tV\tr\x04~\x06\x96\tz\t\x96\0\0\0\0\0\0\x025\x03\xe2\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\x022\0\0\x02\xd6\0\0\x026\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\0\0\x02\x96\x06.\x03I\0\0\0\0\0\0\0\0\0\0\t>\x025\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x02\xde\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\x022\0\0\x02\xd6\0\0\x026\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\0\0\x02\x96\x06F\x03Z\0\0\0\0\0\0\0\0\0\0\x03\x05\x03I\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x02\xde\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\x022\0\0\x02\xd6\0\0\x026\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\0\0\x02\x96\x06R\x03>\0\0\0\0\0\0\0\0\0\0\b"\t\x86\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x02\xde\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x02\xc5\x02\x96\0\0\x02\xc5\x02\xc5\x01\x02\0\0\0\0\0\0\0\0\x03B\0\0\x01\xe6\x02\xc5\x02\xc5\0\0\x02\xc5\x02\xc5\x02\xc5\x02\xde\x02i\x02\xc5\0\0\0\0\x01\xf2\x02\xc5\0\0\0\0\0\0\0\0\0\0\0\0\x02\xc5\0\0\x07&\0\0\x02\xc5\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x07*\x02\xc5\x01\xfe\0\0\0\0\0\0\x02\x02\x02\x06\0\0\0\0\x02\n\x02\xc5\0\0\x02\x0e\0\0\0\0\x01f\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x022\0\0\x02\x12\0\0\x026\x01\xba\x02\xc5\x02\xc5\0\0\x02\xc5\x02\xc5\x02\xc5\x02\xc5\x04\x92\0\0\x02\xc5\x02\xc5\0\0\0\0\x07.\x03\xc2\x02\xc5\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\0\0\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\x06v\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b\x96\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\tf\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\x02\xf9\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\tR\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\b\x8e\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\x06:\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x02\xd9\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x02\xf9\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x03\xda\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x02\xd9\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\tn\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x03\xd2\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\t*\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\b\xf6\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b\xfe\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\b^\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\t\x1a\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\x03\x96\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x03j\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\bv\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\bN\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\bf\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b~\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b\xa6\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b\xba\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x03\x82\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b\xd2\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x03\x9e\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b\xe2\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\b6\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x03\xb2\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\t\xa2\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\x022\0\0\0\0\x02~\x026\x02F\x02\xce\0\0\0\0\0\0\0\0\x02\xd6\0\0\0\0\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\x03\t\x02\x96\x02f\x02\xa6\0\0\0\0\0\0\0\0\x02n\0\0\0\0\x02\xae\0\0\x02\xb6\0\0\x02v\0\0\0\0\x02\x9e\x02\xde\0\0\0\0\x02\xbe\x02>\0\0\0\0\x02\xc6\0\0\0\0\0\0\0\0\0\0\0\0\x02~\0\0\x02F\x02\xce\0\0\0\0\0\n\0\0\x02\xd6\0\x0e\0\x82\x02\x86\x02N\0\0\x02\x8e\0\0\0\0\0\0\x02\x96\0\x1a\0\x1e\0\0\0"\0&\0*\0\0\0\0\0.\0\0\0\0\0\0\x002\0\0\0\0\0\0\0\0\x02\xde\0\0\x006\0\0\0\0\0\0\0:\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0>\0\0\0\0\0\0\0\0\0\0\0\0\x01\x02\0\0\0\0\0B\0\0\0\0\0\0\x01\xe6\0\0\0\0\x04\x9e\0\0\0\0\0\0\x04\x8a\x02q\0\0\0\0\0\0\x01\xf2\0\0\x02%\0\0\0\0\0\0\0\0\0\0\0F\0J\x01\xf6\0N\0R\0V\0Z\0\0\0\0\0^\0b\0\0\x01\xfa\x01\x11\x01\xfe\0\0\0\0\x01\x11\x02\x02\x02\x06\0\0\0\0\x02\n\0\0\0\0\x02\x0e\0\0\0\0\x01f\0\0\0\0\0\0\0\0\0\0\0\0\x01\x11\0\0\0\0\0\0\0\0\x01\x02\x01\x11\0\0\x02\x12\0\0\0\0\0\0\x01\xe6\x01\x11\0\0\0\0\x01\x11\0\0\0\0\x02%\x02^\x01\x11\x02Z\0\0\x01\xf2\x02\x16\x02q\0\0\0\0\0\0\0\0\x01\x11\0\0\x01\x11\x01\xf6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\x11\x01\x11\x01\xfa\x01\x11\x01\xfe\x03\n\x01\x02\x01\x11\x02\x02\x02\x06\0\0\0\0\x02\n\x01\xe6\0\0\x02\x0e\x01\x11\0\0\x01f\0\0\0\0\0\0\0\0\0\0\0\0\x01\xf2\0\0\x02)\0\0\0\0\0\0\0\0\0\0\x02\x12\0\0\x01\xf6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x02\xd5\x01\xfa\0\0\x01\xfe\0\0\x01\x02\x02\x16\x02\x02\x02\x06\0\0\0\0\x02\n\x01\xe6\0\0\x02\x0e\0\0\0\0\x01f\0\0\0\0\0\0\0\0\0\0\0\0\x01\xf2\0\0\x021\0\0\0\0\0\0\0\0\0\0\x02\x12\0\0\x01\xf6\0\0\x076\0\0\0\0\0\0\0\xe9\0\0\0\0\x02)\x01\xfa\0\0\x01\xfe\0\0\0\0\x02\x16\x02\x02\x02\x06\0\0\0\0\x02\n\x076\0\0\x02\x0e\0\xe9\0\xfd\x01f\0\0\0\0\0\0\0\xe9\0\0\0\0\0\0\0\0\0\0\0\0\0\xe9\0\0\0\0\0\xe9\x02\x12\0\0\0\xfd\0\0\x07b\0\0\0\0\0\0\0\xfd\0\0\0\0\x021\0\0\0\0\x07j\0\xfd\x07:\x02\x16\0\xfd\0\0\x076\0\0\0\0\0\xfd\0\xf5\0\xe9\x07B\0\0\0\xe9\0\0\0\0\0\0\0\xe9\0\xfd\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xe9\0\xf5\x07Z\0\xfd\x07B\0\0\0\xfd\0\xf5\0\0\0\0\0\xfd\0\0\0\0\0\0\0\xf5\0\0\0\0\0\xf5\0\0\0\xfd\x02\xc1\0\0\x07b\0\0\0\0\0\0\x07r\0\0\0\0\0\0\0\0\0\0\x07j\x07z\x07:\0\0\x07\x9a\0\0\x076\0\0\0\0\x07b\0\xf9\0\xf5\x07B\0\0\0\xf5\0\0\0\0\0\0\0\xf5\x07j\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xf5\0\xf9\x01\x01\x07\x82\x07B\0\0\x07\x8a\0\xf9\0\0\0\0\x07\x92\0\0\0\0\0\0\0\xf9\0\0\0\0\0\xf9\0\0\x07\xda\x01\x01\0\0\0\xf9\0\0\0\0\0\0\x01\x01\0\0\0\0\0\0\0\0\0\0\0\xf9\x01\x01\x07:\0\0\x01\x01\0\0\x076\0\0\0\0\x01\x01\0\xf1\0\xf9\x07B\0\0\0\xf9\0\0\0\0\0\0\0\xf9\x01\x01\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xf9\0\xf1\x01\t\x01\x01\x07B\0\0\x01\x01\0\xf1\0\0\0\0\x01\x01\0\0\0\0\0\0\0\xf1\0\0\0\0\0\xf1\0\0\x01\x01\x01\t\0\0\x07b\0\0\0\0\0\0\x01\t\0\0\0\0\0\0\0\0\0\0\x07j\x01\t\x07:\0\0\x01\t\0\0\x076\0\0\0\0\x01\t\0\xed\0\xf1\x07B\0\0\0\xf1\0\0\0\0\0\0\0\xf1\x01\t\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xf1\0\xed\x01\x05\x01\t\x07B\0\0\x01\t\0\xed\0\0\0\0\x01\t\0\0\0\0\0\0\0\xed\0\0\0\0\0\xed\0\0\x01\t\x01\x05\0\0\0\xed\0\0\0\0\0\0\x01\x05\0\0\0\0\0\0\0\0\0\0\0\xed\x01\x05\x07:\0\0\x01\x05\0\0\x076\0\0\0\0\x01\x05\x07Z\0\xed\x07B\0\0\0\xed\0\0\0\0\0\0\0\xed\x01\x05\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xed\x02\xbd\x07Z\x01\x05\x07B\0\0\x01\x05\x07r\0\0\0\0\x01\x05\0\0\0\0\0\0\x07z\0\0\0\0\x07\x9a\0\0\x01\x05\x03e\0\0\x07b\0\0\0\0\0\0\x07r\0\0\0\0\0\0\0\0\0\0\x07j\x07z\x07:\0\0\x07\x9a\0\0\x076\0\0\0\0\x07b\0\xdd\x07\x82\x07B\0\0\x07\x8a\0\0\0\0\0\0\x07\x92\x07j\0\0\x07:\0\0\0\0\0\0\x076\0\0\x07\xbe\0\xdd\0\xe5\x07\x82\x07B\0\0\x07\x8a\0\xdd\0\0\0\0\x07\x92\0\0\0\0\0\0\0\xdd\0\0\0\0\0\xdd\0\0\x07\xa2\0\xe5\0\0\x07b\0\0\0\0\0\0\0\xe5\0\0\0\0\0\0\0\0\0\0\x07j\0\xe5\x07:\0\0\0\xe5\0\0\x076\0\0\0\0\0\xe5\x07Z\0\xdd\x07B\0\0\0\xdd\0\0\0\0\0\0\0\xdd\0\xe5\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xdd\0\xd5\x07Z\0\xe5\x07B\0\0\0\xe5\0\xd5\0\0\0\0\0\xe5\0\0\0\0\0\0\x07z\0\0\0\0\0\xd5\0\0\0\xe5\0\xd9\0\0\x07b\0\0\0\0\0\0\0\xd9\0\0\0\0\0\0\0\0\0\0\x07j\x07z\x07:\0\0\0\xd9\0\0\x076\0\0\0\0\x07b\x07Z\x07\x82\x07B\0\0\x07\x8a\0\0\0\0\0\0\x07\x92\x07j\0\0\x07:\0\0\0\0\0\0\x076\0\0\0\xd5\x03a\0\xe1\x07\x82\x07B\0\0\x07\x8a\x07r\0\0\0\0\x07\x92\0\0\0\0\0\0\x07z\0\0\0\0\x07\x9a\0\0\0\xd9\0\xe1\0\0\x07b\0\0\0\0\0\0\0\xe1\0\0\0\0\0\0\0\0\0\0\x07j\0\xe1\x07:\0\0\0\xe1\0\0\0\0\0\0\0\0\x07b\0\0\x07\x82\x07B\0\0\x07\x8a\0\0\0\0\0\0\x07\x92\x07j\0\0\x07:\0\0\0\0\0\0\0\0\0\0\x07\xf6\0\0\0\0\0\xe1\x07B\0\0\0\xe1\0\0\0\0\0\0\0\xe1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\xe1',BQ(lM(`\x19L\0\0\0\0\0\0\0+\x19L\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03J\0\xaa\0\xaa\0\0\x03\xbe\0\0'\x04\x03\xbc\x19L\x03\x96\x19L\x01\xe6\x19L\0\0\x04\x9c\0\0\0v\0\0\0\xc0\x01\xb0\0\0\x02"\0\0\0\0\x02^\0\0\x05<\x01\xf0\x19L\x02\x8a\0\0\0\0\t\xc0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\x14\x1dd\0\0\0\0\x19L\t\xc0\0\0\x04h\0\xc0\0\0\x01z\x04N'b\x01\x8e\0<\0\0\0\0'b'b'b'\xe8'b\0\0\0\0\0\0'b\v\x94'b\0\0\x01\xe2\0\0\f \0\0'b\r\xc4'b\x0fh'b\x15\xf8'b\x18\xb4\t\xc0'b(>\x1bj'b\x10\x80'b\r8'b\x13\xc8'b\x14T'b\x15l'b\x17\x10'b\x12\xb0'b\x11\f'b\f 'b\x0e\xdc'b\x16\x84'b\f\xac'b\x13<'b\x17\x9c'b\x0f\xf4'b\x14\xe0'b\x11\x98\0\0\0\0'b\0\x9c\x1aN(\x94\x19\xd2\0\0'b\0\0\f 'b\x034\0\0\x18(\x03>\0\0\x03L\0\0\x1c\xcc\0\0'b\x03\x88\0\0\x12$\x0eP\x1cV\x01z\x01('b!n\0\0\x03\`\x01z\0\x92'b#\xc6\0\0\x05\xfe\x01\xa0'b \xa6'b$\x8e\0\0\bD\0j'b%\xba\0\0\0P'b\x1d\xea\0\0\0Y'b\x1fz'b\x1fz\0\0\x03\xb8\x03f'b\x03\x9a\0\0\x03*\x01z\x01\x94\x01z\x01\x9c\x01z\0\0\x03\xda\x04z\x03\xe4\x06\xc0\x03\x84\x03\xea\x07\x82\x01\x9e\x01z\0\0\x01z\0\0\0\0\0\0\0\0\x03\xd2\0\0\x03V\x01z\x03\xde\0\0\x03b\x01z\x03\xec\0\0\x01\x8e'b\x1bj\0\0\0\0'b\0\0\x1d\xea\0\0\x03\xc0'b\0\0\0\0\x01\xce\x03\xfe\0\0'b\x01\xd2\x1b\xe0\x03\xce'b\x04\f\x03\xd0\x01z\x03\xe2'b\x01\xd8\x04\x1a\0\0\x01z\x04\x06'b\x1aN\0\0\x03\xf2'b\x1aN\x01z\x03\xf4\x024\x03\xf6'b\x19\xd2\x01z\x04\x16'b\x01\xde\x04X\0\0\x04\x86\0\0\x04f\0\0\x04h\0\0\0\0\0\0\t\xc0\x02\x02\t\xc0\0\0\0\0\0\0\x01H\t\xc0\0\0\0\x90'b\x1e\xb2\0\0\0\0\0\0\x04r\0\0\0\x90\0\0\0\0\t\xc0\x02\x02\x04\x88\0\0\0%'b\0*\0\0\0\0\nt'b\0H\v\x04\0\0\f \x024\0h'b\0\xe6\0\x12\0\xb2'\xe8\0t\x19L\0\xf8\0\0\x1f\x16\0\0\x01\f\0\0\0\0\t\xc0'b\x1b\xe0\0\0'b\x1f\x16\0\0'b\x1cV\0\0'b\x1c\xcc\0\0'b\x19\xd2\0\0'b\f \0\0'b\x1eN\0\0\0\0\t\xc0\x02\x02\x01\xee\0\0'b\x1bj\x01z\0\0\b\xfe\x01z\0\0\x01z\0\0\x02\x0e\0\0\f \x02\x1c\0\0\0\0\x026\0\0\0^\x1dd\0\0\x01\xee\0\0\0\0\x19L\0\0\x04x\x02\x1a\x19L\x02L\0\0\0\0\x05:\x02"\x1a\xe4\0\x03\x01|\x01\xda\x1dd\x1dd\x1dd\x1dd)\xe2\0\0\x1dd)\xbc\x1dd(\xf6'\xb0*\xce*X+D\x1dd+\x94\x1dd*\xa8\x1dd+\xba\x1dd,\n\x1dd(\xd0\x1dd*2\x1dd)F\x1dd,\xa6\x1dd,0\x02L\x01\xf6\x1dd\x02\xf6\x01\xfa\x1dd+\x1e\x02j\x02\x02\x1dd\0\x03\x02\x04\x1dd)l\x02t\x02\b\x1dd\x03\xb8\x02\n\x1dd,\x80\x02\xc4\x02\x0e\x1dd\0\xc0\x02\x94\0\0\x02\x96\0\0\x02|'b\x1c\xcc\0\0\0\0\x02~'b%V\0\0\x02\x8e\x024\x02\x8a'b!\xd2\0\0\x02\x96'b B'b"6\0\0\x02\xa0'b!\n'b"\x9a\0\0\x02\xa4'b\x1eN'b\x1eN\0\0\x02\xa8'b"\xfe\0\0\0\x03\x02\xb0'b#b\0\0\0\x03\0\0\x02\xc2'b$*\0\0\x02\xc8'b$\xf2\0\0\0\x03\x02\xcc'b\x1f\xde'b \xa6\0\0\x02\xf6\x01|\0\0\x02\xd4'b!\n\0\0\x02\xdc'b B\0\0\0\x03\x02\xe0'b\x1b\xe0\0\0\0\x03\x02\xf2'b\x1e\xb2\0\0\0\x03\x02\xfe'b\x1d\xea'b\x1f\xde\0\0\0\x03\0\0\x03\x0e'b\x1cV'b&\x82\x03H\0\0\x03\x1a'b&\x1e\0\0\x02\xda\x024\x010\x024\0\xda\x024\0\0\x01f\x024\0\0\x024\0\0\0\0\0\0\0\0\x03|\0\0\x02\xe0\x024\x03@\0\0\x02\xae\x024\x03*\0\0\0\0\x03H\0\0\t\xc0\0\x19\t\xc0\0\0\0D\t\xc0\0\0\x01\x8c\x03&\0\0\0\0\0\0\0\0\0\0\x02\xf6\0\0\x01\x8c\0\0\t\xc0\0\x19\x02\xe0\0\0\x01\x8c'b\x03Z\0\0\x1a\xe4\0\0\0\0\t\xc0\0\x19\x03\xf8\0\0\x048\0\0\x01z\x02>\x024\x02\x92\0\0\t\xc0\x02\x02\x03\x86\0\0\x024\t\xc0\x02\x02\x02H\0\0\0\x90'b\x024\0\0\0\0\0\0\0\0\0\0\t\xc0\x02\x02\x02\x1c\0\0\x01b\0\0\0\0\0\x06\x01\xa6\x1a\xe4\x01\x94\0\0\0\0\0\xc8\x03\`\x024\x01B\0\0\0\0\x01Z\0\xd8\x01z\0\x1e\0\0\0[\x03b\x024\0F\0\0\0A\0\0\0\0\0\0\0\0\0\0`,a))+b|0)}var
-wy="multiplier",e2="the UNREACHABLE token should never be produced",IR="jacobian",xg="offset",Jy="model",pX="functions",Jr="fatal_error",D="} ",Ik="reject",bl="@[<hv2>%a@]",Gx="print",S="{<i>It looks like you are trying to use the old array syntax.",xz="else",HZ="return",eo="} expected after variable declaration.",hv="target",ay="Please use the new syntax:",bM="{<light_red>Ill-formed declaration.",a_='@[<v 2>%@{<light_red>Ill-formed declaration.%@} %@{<green>";"%@} expected after variable declaration.@ %@{<i>It looks like you are trying to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a %s;@]@]@\n',cn='{<green>";"',Pq=[0,[18,[1,[0,[11,co,0],co]],[15,[17,0,0]]],bl],abZ=[0,0],abY=[0,2],abX=[0,4],abW=[0,5],abV=[0,9],abU=[0,10],abT=[0,[18,[1,[0,[11,bL,0],bL]],[12,64,[11,bM,[12,64,[11,D,[12,64,[11,cn,[12,64,[11,eo,[17,[0,c,1,0],[12,64,[11,S,[17,[0,c,1,0],[11,ay,[12,64,[12,be,[17,[0,c,1,0],[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,[17,0,[17,3,0]]]]]]]]]]]]]]]]]]]]]]]]],a_],abS=[0,[18,[1,[0,[11,bL,0],bL]],[12,64,[11,bM,[12,64,[11,D,[12,64,[11,cn,[12,64,[11,eo,[17,[0,c,1,0],[12,64,[11,S,[17,[0,c,1,0],[11,ay,[12,64,[12,be,[17,[0,c,1,0],[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,[17,0,[17,3,0]]]]]]]]]]]]]]]]]]]]]]]]],a_],abR=[0,[18,[1,[0,[11,bL,0],bL]],[12,64,[11,bM,[12,64,[11,D,[12,64,[11,cn,[12,64,[11,eo,[17,[0,c,1,0],[12,64,[11,S,[17,[0,c,1,0],[11,ay,[12,64,[12,be,[17,[0,c,1,0],[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,[17,0,[17,3,0]]]]]]]]]]]]]]]]]]]]]]]]],a_],abQ=[0,0,0],abP=[0,0,0],abO=[0,0,0],abN=[0,1,0],abM=[0,2,0],b_=[0,0,0],oX=[0,0];function
+wy="multiplier",e2="the UNREACHABLE token should never be produced",IR="jacobian",xg="offset",Jy="model",pX="functions",Jr="fatal_error",D="} ",Ik="reject",bl="@[<hv2>%a@]",Gx="print",S="{<i>It looks like you are trying to use the old array syntax.",xz="else",HZ="return",ep="} expected after variable declaration.",hv="target",ay="Please use the new syntax:",bM="{<light_red>Ill-formed declaration.",a_='@[<v 2>%@{<light_red>Ill-formed declaration.%@} %@{<green>";"%@} expected after variable declaration.@ %@{<i>It looks like you are trying to use the old array syntax.@ Please use the new syntax:%@}@ @[<h>%a %s;@]@]@\n',cn='{<green>";"',Pq=[0,[18,[1,[0,[11,co,0],co]],[15,[17,0,0]]],bl],abZ=[0,0],abY=[0,2],abX=[0,4],abW=[0,5],abV=[0,9],abU=[0,10],abT=[0,[18,[1,[0,[11,bL,0],bL]],[12,64,[11,bM,[12,64,[11,D,[12,64,[11,cn,[12,64,[11,ep,[17,[0,c,1,0],[12,64,[11,S,[17,[0,c,1,0],[11,ay,[12,64,[12,be,[17,[0,c,1,0],[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,[17,0,[17,3,0]]]]]]]]]]]]]]]]]]]]]]]]],a_],abS=[0,[18,[1,[0,[11,bL,0],bL]],[12,64,[11,bM,[12,64,[11,D,[12,64,[11,cn,[12,64,[11,ep,[17,[0,c,1,0],[12,64,[11,S,[17,[0,c,1,0],[11,ay,[12,64,[12,be,[17,[0,c,1,0],[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,[17,0,[17,3,0]]]]]]]]]]]]]]]]]]]]]]]]],a_],abR=[0,[18,[1,[0,[11,bL,0],bL]],[12,64,[11,bM,[12,64,[11,D,[12,64,[11,cn,[12,64,[11,ep,[17,[0,c,1,0],[12,64,[11,S,[17,[0,c,1,0],[11,ay,[12,64,[12,be,[17,[0,c,1,0],[18,[1,[0,[11,aH,0],aH]],[15,[12,32,[2,0,[12,59,[17,0,[17,0,[17,3,0]]]]]]]]]]]]]]]]]]]]]]]]],a_],abQ=[0,0,0],abP=[0,0,0],abO=[0,0,0],abN=[0,1,0],abM=[0,2,0],b_=[0,0,0],oX=[0,0];function
 Pp(a,b,c){var
 d=a?a[1]:0;return j(g(b)(Pq),function(a,b){return ob(1,d,a,b)},c)}var
 ab0=[0,function(a){a=a[3];var
@@ -8083,7 +8083,7 @@ b=a[5],c=a[4],d=a[3],e=a[1];return[0,e,ap(a[2],fb),d,c,b]},function(a){a=a[3];va
 c=a[5],b=c[5][5],e=b[3],a=a[4],f=b[5],b=b[1],c=c[2],g=d(e);return[0,b,[0,c,[0,g,d(a)]],e,a,f]},function(a){a=a[3];return[0,a[1],[0,[1,a[2]],0],a[3],a[4],a[5]]},function(a){a=a[3];return[0,a[1],[0,[0,a[2]],0],a[3],a[4],a[5]]},function(a){a=a[3];var
 b=a[5][5],c=b[5],d=b[3],e=b[1],f=a[4];return[0,e,k(b[2],a[2]),d,f,c]},function(a){a=a[3];var
 c=a[5],e=c[5],f=e[5],g=f[5],h=g[5],i=h[5],b=i[5],l=b[2],i=i[2],h=h[2],g=g[2],f=f[2],e=e[2],c=c[2],m=b[5],n=b[3],b=b[1],a=a[4];if(bb(nR([0,l,[0,i,[0,h,[0,g,[0,f,[0,e,[0,c,0]]]]]]]))){var
-j=ey(b_),k=j[12],j=d(j[11]),k=d(k);oX[1]=[0,[0,[0,[0,j[1],1,0,j[4]],k],"Empty model detected; this is a valid Stan model but likely unintended!"],oX[1]]}return[0,b,[0,l,i,h,g,f,e,c,0],n,a,m]},function(a){a=a[3];var
+j=ez(b_),k=j[12],j=d(j[11]),k=d(k);oX[1]=[0,[0,[0,[0,j[1],1,0,j[4]],k],"Empty model detected; this is a valid Stan model but likely unintended!"],oX[1]]}return[0,b,[0,l,i,h,g,f,e,c,0],n,a,m]},function(a){a=a[3];var
 c=a[5][5][5][5],b=c[5][5];return[0,b[1],[2,c[2],a[2]],b[3],a[4],b[5]]},function(a){a=a[3];var
 c=a[5][5][5][5],b=c[5][5];return[0,b[1],[2,a[2],c[2]],b[3],a[4],b[5]]},function(a){a=a[3];var
 b=a[5][5];return[0,b[1],[0,a[2]],b[3],a[4],b[5]]},function(a){a=a[3];var
@@ -8305,7 +8305,7 @@ e=typeof
 b==="number"?0:b[1],b=ab1(b),c=a[4];if(1!==D9(c,b))return[3,[0,1,a[2],a[3],a[4]]];b=D_(c,b);c=b&3;b=b>>>2|0;if(2>c)return b<2?[4,a[3][2]]:[2,a,b];var
 d=a[2];return[1,a,[0,a[1],a[2],[0,a[4],e,d[2],d[3],a[3]],b],2===c?1:0]}function
 BS(a,b){var
-c=b-2|0,c=i(Z(ab0,c)[c+1],a),b=lM("\x01\xab\x01U\0\x89\x02u\x01^\x01\x82\x01V\0\xbf\0\x87\x02v\x01Z\0%\0\x87\0p\x01z\x01i\x01j\0\xc0\x01\xab\x01U\x01\xb7\x02\x8c\0\xcb\0\x87\x01V\x02\x90\x001\0\x96\x01Z\x02d\x01\xd0\x01\xd3\x01\x84\x01i\x01j\x02\xd7\x02\xdc\0\xd2\x02\xd1\0q\x02C\0\xfd\0\x96\x02l\x02\xdf\0\x87\0q\x02\xcb\0t\x02n\x01[\x01\x15\x01r\x01\\\0\xc6\x02\xcc\x01\xab\x01U\x02x\x01\xad\x01_\x02\xde\x01V\x007\0\x96\x01s\x02\xd2\0 \x01[\x02\x8a\x01r\x01i\x01j\x02\xa9\x01\xaf\0\x1e\x009\x01\xb0\x02\x8d\x01\x88\x01\xb5\x01\x04\x01\x06\x01s\x01\x89\x01\b\x01\x9f\x01\xb5\x01\xa0\x01\x0e\0(\0*\x01x\x02y\0,\x01\xab\x01U\x01\x88\0:\x01\x04\x01\x06\x01V\x01\x89\x01\b\x01\x9f\x02\xe0\x01\xa0\x01\x0e\x01r\0\x1d\x01i\x01j\x01Y\x01\xab\x01U\x01\xb3\x01\x04\x01\x06\x01Z\x01V\x01\b\x01s\0k\x01\x19\x01\x0e\x02q\x02^\x02t\x01i\x01j\x01x\0k\x01E\x02l\0\x87\x01\x88\x01\xc0\x01\x04\x01\x06\x02n\x01\x89\x01\b\x01\x9f\0\xf6\x01\xa0\x01\x0e\x01\xbb\x01r\x02w\0k\x02\n\x01\xaa\x01U\0\x96\x02\xd5\0(\0*\x01V\x01[\0,\x01s\x01\\\0l\x02\x89\x02\x99\x01r\x01i\x01j\x01_\x01x\x01Z\0l\x01\xac\x02\x9c\x01\x88\x01\x0f\x01\x04\x01\x06\x01s\x01\x89\x01\b\x01\x9f\0m\x01\xa0\x01\x0e\x01\x10\0\x89\x01x\x02W\0l\x01\xa7\x01U\x01\x88\x01\xa1\x01\x04\x01\x06\x01V\x01\x89\x01\b\x01\x9f\x01g\x01\xa0\x01\x0e\x01r\x02\x9e\x01i\x01j\x01d\x01\xb2\x01U\x01[\x02\x8a\x02\n\x012\x01V\x02q\x01s\x02t\0\x89\x02\xc1\x02\x8d\0\xc8\x01d\x01i\x01j\x01x\0\0\0\0\x02R\0\x87\x01\x88\0\xff\x01\x04\x01\x06\x02\xb5\x01\x89\x01\b\x01\x9f\0\xc6\x01\xa0\x01\x0e\x01\x01\x01r\x01T\x01U\0\0\x01\x12\0\x87\0\x96\x01V\x01\x04\x01\x06\x02\n\0\x8a\x01\b\x01s\0\xc6\x02j\x01i\x01j\x01r\0\x87\0\0\x02{\x01x\0\x87\0\x96\0\0\x02\x97\x01\x88\0\x8c\x01\x04\x01\x06\x01s\x01\x89\x01\b\x01\x9f\x02\x92\x01\xa0\x01\x0e\0\x96\x01\x17\x01x\x01\xfa\x01\xd3\x01\xa8\x01U\x01\x88\x01\x85\x01\x04\x01\x06\x01V\x01\x89\x01\b\x01\x9f\x01r\x01\xa0\x01\x0e\x01)\x02M\x01i\x01j\x01)\x02\x91\0\0\x02l\x01\x04\x01\x06\x01s\x01d\x01\b\x02n\x02\x92\x01\v\x01\x0e\x017\x01\x86\x01x\x01\xc2\x01*\x02x\x02\xb0\x01\x88\x02\n\x01\x04\x01\x06\0\x87\x01\x89\x01\b\x01\x9f\x02\xae\x01\xa0\x01\x0e\0\0\x01\xc3\x02\xb2\x02\xb3\x01r\x02\xbb\x02\x7f\x02\xbc\x02t\x02l\0k\x01\xd8\x01\xd3\x02\xae\x02\xc5\x02n\0\x87\x01s\x02\xb2\x02\xb3\0\x87\x02\xbb\x02\x81\x02\xbc\x02p\x01/\x01x\0\x87\x02\xe1\x01/\0\0\x01\x88\0k\x01\x04\x01\x06\0\x96\x01\x89\x01\b\x01\x9f\0\x96\x01\xa0\x01\x0e\x02\xc6\x02\xae\x01r\x01\xf6\x01\xd3\x02;\x02\xb2\x02\xb3\0l\x02\xbb\x02\xbd\x02\xbc\x02q\0\0\x02t\x01s\0\0\x02\xae\x01r\0s\0\0\x02\x93\x02\xb2\x02\xb3\x01x\x02\xbb\x02\xcf\x02\xbc\x02\xbe\x02\n\0l\x01s\x02\x87\x02\x9a\x01\x89\0\0\x01\x9f\x02\xbf\0\0\x02t\x01x\x02\x96\x02\x93\x01)\x02\xbe\x009\0\0\0\xff\x01r\x02q\x01\x89\x02t\x01\x9f\x02\xbf\x02\x94\x02t\x02\xda\x01\x01\0\xff\x01d\x01K\x01s\x01\x12\x021\x01r\x02,\0k\0:\x01\x01\0\xff\x01x\x01\xa2\x02\xc3\x01\x12\x02\xbe\0\0\x02\x06\x01s\0\xff\x01\x01\x01\x89\0\0\x01\x9f\x02\xbf\x01\x03\x02t\x01x\x02\n\x01\x01\x02\n\x02\xbe\0\0\0\xff\x01\x11\0\x87\x02\x02\x01\x89\x01\x1b\x01\x9f\x02\xbf\x02\n\x02t\x01\x01\x01/\0%\x01\xb8\0l\x01\r\x01\x13\x009\x02\xb4\x01b\x02l\0\x96\x01\xba\x01\xbb\x02\x04\x02\xb7\x02n\0'\x01c\0%\x01\x04\x01\x06\0(\0*\x01\b\x02s\0,\x01\v\x01\x0e\0:\x02l\x01\x04\x01\x06\0\0\x001\x01\b\x02n\x005\x01\v\x01\x0e\0\0\x02\x86\x01\x04\x01\x06\0\x87\x02x\x01\b\x02\x98\x02\xa0\x01\v\x01\x0e\x01\x04\x01\x06\0\x89\x02\x86\x01\b\0\0\0\0\x01\v\x01\x0e\x02\x98\x02\xa0\x01\xde\x01\xd3\x02\x93\x01\x04\x01\x06\x01\xbc\x02\x86\x01\b\0\0\x002\x01\v\x01\x0e\x02\x98\x02\xa0\x02\xa5\x01\xbb\0\0\0k\x02}\0(\0*\x01)\0\0\0,\0(\0*\x01|\x01d\0,\x01\x80\x02q\0k\x02t\0\0\0\x87\x02\xc9\0(\0*\x01.\x01e\0,\0\xc5\0\x89\0\xc6\0\x89\0r\x02\xb9\0\x87\x02\xa1\0\xfb\x02q\x02\xa2\x02t\0\x96\0(\0*\x01\x84\0l\0,\x02\xa4\0#\x02\xa3\x02\xa7\x02t\x02\xa2\0k\0\x96\0\xcb\x02\x96\0(\0*\0l\0\x87\x004\x02\xa3\x01k\x02t\0\xcd\x02\xa2\x01u\0\0\x01/\x01n\0k\0\x87\0\x87\0k\0\x87\x02\xa3\0\x87\x02t\0\x96\0\x87\0\xc6\0\xc6\x01p\0\x8c\0\0\0\xc6\0\x87\0\0\0\xc6\0\x87\0\x96\0\x96\0l\0\x96\0\0\0\x96\x01W\0\x87\0\x96\0\xbc\0\x87\0\0\0\0\x01g\x01\xdc\x01\xd3\0\xc6\x01\xe6\x01\xd3\0\xc0\0l\0(\0*\0l\x02\xc0\0,\0\x96\x02\xaf\0\0\0\x96\0\x87\x01g\0\x87\0\x87\x01g\0\x87\0(\0*\0\x87\0\xcf\0,\0\xe5\x024\0\0\0\xc6\0\0\0\x87\x02\x13\x01d\0\x96\0\x87\0\x96\0\x96\0\x87\0\x96\x01\xa5\0\0\0\x96\0\x87\0\xa7\x01l\0\x87\x02\r\0\x87\0\x87\0\x96\0\x87\0\xab\0\0\0\x96\0\xad\0\x87\0\x96\0\xaf\0\x87\0\xa3\0\0\0\x96\0\x87\0\x87\0\x96\x01\xe0\x01\xd3\0\x96\0\x87\0\x96\0\x87\0\xa1\0\xa9\x01\xec\x01\xd3\0\x87\x01\xe4\x01\xd3\0\x87\0\x9d\0\0\0\x96\0\x96\0\x87\0\x9b\0\0\x02\x01\x01\xd3\0\0\0\x96\0\x87\0\x87\x02?\0\0\0\x96\0\x87\x01\xd5\x01\xd3\0\x87\0\xb3\x01\x8b\0\0\0\x96\0\x87\x02#\0\0\0\x87\0\xca\0\0\0\x96\0\x96\0\x87\x01\x9a\0\0\0\x96\0\x95\0\0\0\x96\0\x87\0\x87\x02=\0\0\0\x96\0\x87\0\x87\0\x96\0\x87\0\xbb\0\x91\0\0\0\x96\0\x87\x02%\0\xc2\0\0\0\xe0\0\0\0\x96\0\x96\0\x87\x02.\0\0\0\x96\0\x96\0\x87\0\x96\0\x87\0\x87\0\x8f\0\0\0\x96\0\x87\0\x87\x01\x9d\0\0\x02Y\x02[\0\0\0\x96\0\x87\x02a\0\x93\0\0\0\x96\0\x87\0\x96\0\x96\0\x87\x02\x1f\0\x87\0\x96\0\x96\0\x87\x02\x1d\0\x87\0\x87\0\xb5\0\x87\0\x96\0\x87\0\x87\0\x99\0\x87\0\x96\0\xa5\0\x87\0\x96\x01\xda\x01\xd3\0\x9f\0\x87\0\x96\x01\xe2\x01\xd3\0\x96\x01\xe8\x01\xd3\x01\xf3\x01\xd3\0\x96\x01\xfd\x01\xd3\0\x87\x01\xd2\x01\xd3\0\x87\x01h\0\x87\x01\xd4\x01\xd3\0\x87\x02\b\0\0\0\x87\0\xb1\x01c\0\0\0\0\0\x87\x02\x17\0\0\0\x96\0\xb9\0\0\0\x96\x01\xef\x01\xd3\x02)\0\0\0\x96\0\x87\0\x87\0\x96\0\x87\0\x87\0\x87\0\x87\0\x96\0\x87\x028\x02J\0\0\x02F\x02T\x02h\x02c\0\0\x01\x97\0\0\0\x96\0\x96\0\x87\0\x96\0\x96\0\x96\0\x96\0\x87\0\x96\0\x87\0\x87\x02O\0\0\0\x87\0\x87\0\x87\0\xda\0\0\x01\x94\x01\x91\0\0\0\x96\x01\x8e\0\xe7\0\xd4\0\0\0\x96\0\x87\0\x96\0\x96\0\x87\0\x87\0\x96\0\x96\0\x96\0\x87\0\xec\0\x87\0\x87\0\xf0\0\xd6\0\0\0\x87\0\x87\x02\x19\0\x87\0\x96\x01G\0\0\0\x96\0\x96\x01A\x01=\0\0\0\x96\x01\xcd\x01\xd3\0\x96\0\x87\0\x87\0\x87\0\x96\0\x96\x01\xd6\x01\xd3\0\x87\0\x87\x01\x1f\x01$\x01a\0\0\0\x87\0\0\0\0\0\xb7\0\xf4\0\0\0\x96\0\x96\0\x96\0\xd5\0\0\0\0\0\0\0\x96\0\x96\0\0\0\0\0\0\0\0\0\x96",BQ(lM('\x03@\0\0\0\0\0\0\0\0\x03\xfc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0|\0\x14\0X\0\0\0\0\0\0\x04\x1a\0\0\x04\xa6\0\0\x03\xd8\0\0\x03\xb6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x0e\0\0\0\0\0\0\0\xd0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x19\0\0\0\0\x04\x88\x02x\0\0\0\0\0\0\0\0\0l\0\0\x06\xce\0\0\0\0\0\0\0\0\x07\x1e\x06\xae\x04\xba\x04Z\x04\x8c\0\0\0\0\0\0\x05b\0\0\x01\x84\0\0\0\0\0\0\0\0\0\0\x05\xb4\0\0\x05\x8c\0\0\x05\xce\0\0\x05r\0\0\0\0\x04\x92\x05\xf6\0\0\x054\0\0\x05*\0\0\x06\x06\0\0\x05\x1a\0\0\x05\x02\0\0\x05\xfc\0\0\x04\xe2\0\0\x05\x1c\0\0\x04\xf2\0\0\x04\xf8\0\0\x04\xfe\0\0\x068\0\0\x05R\0\0\x05\xec\0\0\x07\x12\0\0\x06H\0\0\x05\x8a\0\0\0\0\0\0\0w\0\0\0\0\x05\x96\0\0\0\0\x04X\0\0\0\0\x01D\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0-\0\0\0\0\0\0\0\0\0\0\x01\x9c\0\0\x06\x9e\0\0\0\0\0\0\0B\0\0\x05\x9a\0\0\0\0\0\0\0\0\x04\xbe\0\0\x06\xac\0\0\0\0\0\0\0\0\x06\xc6\0\0\0\0\0\0\x06\xcc\0\0\0\0\0\0\x07\x14\0\0\0\x86\0\0\0\0\0\0\0\0\x04h\0\0\0\0\0\0\x03R\0\0\x03z\0\0\x03h\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\x96\0\0\x01N\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\xbe\0\0\0\0\0\0\x03<\0\0\0\0\0\0\x07\x04\0\0\0\0\0\0\x07\x06\0\0\0\0\0\0\0\0\x02<\0\0\0\0\0\0\0\0\0\0\x04@\0\0\0\0\0\0\x01\x8a\0\0\0\0\0 \0\0\x024\0\0\0\0\0\0\0\x05\0\0\x06\xe6\0\0\0\0\0\0\x06\xe4\0\0\x026\0\0\0\x82\0\0\x06\xdc\0\0\x01\xe2\0\0\x03$\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\x82\x042\0\xb6\0\0\0\0\0\0\0\0\0#\0\0\x03\x84\x07\b\0\0\0\0\0\0\0\0\0\0\0\0\x06x\0\0\0\0\x04>\x05*\0\0\0\0\x06x\x04\xc4\0\0\0\0\0\0\0\0\x04^\0\0\0\0\0\0\0\0\0k\0\0\x03\xf4\0\0\x02.\0\0\x04\x0e\0\0\0Y\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x05T\0\0\0\0\x06\xaa\0\0\0\0\x06\xa4\0\0\0\0\x06\xa2\0\0\0\0\x06z\0\0\0\0\x05l\0\0\0\0\x05\xbe\0\0\0\0\0\0\0\xf4\x03*\0\0\0\0\x04\xda\0\0\x01x\0\0\0\0\x01*\0\0\0\xde\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\v\0\0\0\0\0\0\0\0\x03\xc0\0\0\x02<\0\0\0\x90\0\0\0\0\0\0\0.\0\0\x044\x03z\x03n\0\0\x06\xea\x05:\x06\x1a\x06\xda\0\0\0\0\0o\0\0\x06\x10\0\0\0\0\0\0\0\0\0\0\x02\x06\0\0\x05\xf0\0\0\x04v\0\0\x03\x8c\0\0\x04\xfc\0\0\x05\xfa\0\0\x05\x12\0\0\x04|\0\0\x06\0\0\0\0\0\0\0\x05\f\0\0\0\0\x06<\0\0\0\0\0\0\x06\x04\0\0\0\0\x02J\0\0\0\0\0\0\x01\x8c\0\0\0\0\x06\n\0\0\0\0\0\0\x05&\0\0\0\0\0\0\0\0\0\0\0\0\x062\0\0\0\0\0\0\0\0\x04\xe8\0\0\0\0\0\0\x01\xf4\0\0\x04\xca\0\0\0\0\0\0\x06B\0\0\x06\xd6\0\0\0\0\0\0\x05\xe6\0\0\x05\xdc\0\0\0\0\0\0\x05\\\0\0\x05\x94\0\0\0\0\0\0\x06R\0\0\0\0\x03d\0\0\x05\xa4\0\0\0\0\x03`\0\0\0\0\x04\xc0\0\0\0\0\0\0\x06j\0\0\0\0\x02\xec\0\0\x05|\0\0\x05D\0\0\0\0\0\x14\x03n\0\0\0\0\x06p\0\0\0\0\0\0\x06l\0\0\0\0\x02J\0\0\x06\x94\0\0\0\0\x01\xbc\0\0\x06r\0\0\0\0\x01l\0\0\x05\xc2\0\0\x05\xc4\0\0\0\0\0\xf0\0\0\0\0\x05\xcc\0\x1d\x06v\0\0\0\0\0\0\0\0\x06t\0\0\0\0\0\0\0H\0\0\0\xfc\0\0\x02\x9e\0\0\0\0\x03\xc0\0\0\0\t\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\xe8\0\0\0\0\0\0\x02T\0\0\0\0\0\0\0\0\0\0\x02\xa4\x03\n\x01\x1e\0\0\0\0\0\x02\0\0\x02\x18\x009\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\xd2\0\0\0\xbe\x02\xe0\0\0\0\0\x01\xd2\x01h\0\0\0\0\x04\x18\0\0\0\0\x04"\x04\x02\0\0\0\0\0\0\0\0\x02\xa0\0\0\x03\x02\0\0\0\0\x04\xac\x020\0\0\0\0\x02\x86\x03<\x01\x82\0\0\0\0\x06x\x04b\0\0\0\0\0\0\0\0\0\0\0\0\x04\xa6\x01d\0\0\0\0\0\0\0\0\0\0\0\x1a\0\0\x03\xfe\0\0\0\0\0\0\x008\0\0\x02\xa6\0\0\0\0\0\0\0\x17\0\0\0\xba\0\0\0\0\0\x17\0\0\x02\xe2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',c[1]))+aV(`\x01\0\\[ZZYYXXXXXXXXXXXXXXXXXXXWWWWWWWWWWWWVVVVVVVVVVVVVVUUUUUUUUUUUUUUUUTTTTTTTSSSSSRQQQQQPPPPPOOOOONNMMLLLLLLLLLLLLLLLLLLLLLLLLLKJJIHGFEDCCBBBBBBBAA@@??>>==<<;;::9988766666665444433221100//..--,,++**))((''&&%%$#"!!! \x1f\x1f\x1f\x1f\x1e\x1e\x1d\x1c\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1a\x1a\x19\x19\x18\x18\x17\x17\x17\x17\x17\x17\x16\x16\x16\x16\x16\x16\x15\x15\x14\x14\x13\x13\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x11\x11\x10\x0f\x0e\x0e\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\f\f\v\n\t\b\b\b\x07\x07\x07\x06\x06\x05\x04\x04\x04\x04\x04\x03\x02\x02`,b)|0)-1|0;return sU([0,a[1],a[2],c,b],0)}var
+c=b-2|0,c=i(_(ab0,c)[c+1],a),b=lM("\x01\xab\x01U\0\x89\x02u\x01^\x01\x82\x01V\0\xbf\0\x87\x02v\x01Z\0%\0\x87\0p\x01z\x01i\x01j\0\xc0\x01\xab\x01U\x01\xb7\x02\x8c\0\xcb\0\x87\x01V\x02\x90\x001\0\x96\x01Z\x02d\x01\xd0\x01\xd3\x01\x84\x01i\x01j\x02\xd7\x02\xdc\0\xd2\x02\xd1\0q\x02C\0\xfd\0\x96\x02l\x02\xdf\0\x87\0q\x02\xcb\0t\x02n\x01[\x01\x15\x01r\x01\\\0\xc6\x02\xcc\x01\xab\x01U\x02x\x01\xad\x01_\x02\xde\x01V\x007\0\x96\x01s\x02\xd2\0 \x01[\x02\x8a\x01r\x01i\x01j\x02\xa9\x01\xaf\0\x1e\x009\x01\xb0\x02\x8d\x01\x88\x01\xb5\x01\x04\x01\x06\x01s\x01\x89\x01\b\x01\x9f\x01\xb5\x01\xa0\x01\x0e\0(\0*\x01x\x02y\0,\x01\xab\x01U\x01\x88\0:\x01\x04\x01\x06\x01V\x01\x89\x01\b\x01\x9f\x02\xe0\x01\xa0\x01\x0e\x01r\0\x1d\x01i\x01j\x01Y\x01\xab\x01U\x01\xb3\x01\x04\x01\x06\x01Z\x01V\x01\b\x01s\0k\x01\x19\x01\x0e\x02q\x02^\x02t\x01i\x01j\x01x\0k\x01E\x02l\0\x87\x01\x88\x01\xc0\x01\x04\x01\x06\x02n\x01\x89\x01\b\x01\x9f\0\xf6\x01\xa0\x01\x0e\x01\xbb\x01r\x02w\0k\x02\n\x01\xaa\x01U\0\x96\x02\xd5\0(\0*\x01V\x01[\0,\x01s\x01\\\0l\x02\x89\x02\x99\x01r\x01i\x01j\x01_\x01x\x01Z\0l\x01\xac\x02\x9c\x01\x88\x01\x0f\x01\x04\x01\x06\x01s\x01\x89\x01\b\x01\x9f\0m\x01\xa0\x01\x0e\x01\x10\0\x89\x01x\x02W\0l\x01\xa7\x01U\x01\x88\x01\xa1\x01\x04\x01\x06\x01V\x01\x89\x01\b\x01\x9f\x01g\x01\xa0\x01\x0e\x01r\x02\x9e\x01i\x01j\x01d\x01\xb2\x01U\x01[\x02\x8a\x02\n\x012\x01V\x02q\x01s\x02t\0\x89\x02\xc1\x02\x8d\0\xc8\x01d\x01i\x01j\x01x\0\0\0\0\x02R\0\x87\x01\x88\0\xff\x01\x04\x01\x06\x02\xb5\x01\x89\x01\b\x01\x9f\0\xc6\x01\xa0\x01\x0e\x01\x01\x01r\x01T\x01U\0\0\x01\x12\0\x87\0\x96\x01V\x01\x04\x01\x06\x02\n\0\x8a\x01\b\x01s\0\xc6\x02j\x01i\x01j\x01r\0\x87\0\0\x02{\x01x\0\x87\0\x96\0\0\x02\x97\x01\x88\0\x8c\x01\x04\x01\x06\x01s\x01\x89\x01\b\x01\x9f\x02\x92\x01\xa0\x01\x0e\0\x96\x01\x17\x01x\x01\xfa\x01\xd3\x01\xa8\x01U\x01\x88\x01\x85\x01\x04\x01\x06\x01V\x01\x89\x01\b\x01\x9f\x01r\x01\xa0\x01\x0e\x01)\x02M\x01i\x01j\x01)\x02\x91\0\0\x02l\x01\x04\x01\x06\x01s\x01d\x01\b\x02n\x02\x92\x01\v\x01\x0e\x017\x01\x86\x01x\x01\xc2\x01*\x02x\x02\xb0\x01\x88\x02\n\x01\x04\x01\x06\0\x87\x01\x89\x01\b\x01\x9f\x02\xae\x01\xa0\x01\x0e\0\0\x01\xc3\x02\xb2\x02\xb3\x01r\x02\xbb\x02\x7f\x02\xbc\x02t\x02l\0k\x01\xd8\x01\xd3\x02\xae\x02\xc5\x02n\0\x87\x01s\x02\xb2\x02\xb3\0\x87\x02\xbb\x02\x81\x02\xbc\x02p\x01/\x01x\0\x87\x02\xe1\x01/\0\0\x01\x88\0k\x01\x04\x01\x06\0\x96\x01\x89\x01\b\x01\x9f\0\x96\x01\xa0\x01\x0e\x02\xc6\x02\xae\x01r\x01\xf6\x01\xd3\x02;\x02\xb2\x02\xb3\0l\x02\xbb\x02\xbd\x02\xbc\x02q\0\0\x02t\x01s\0\0\x02\xae\x01r\0s\0\0\x02\x93\x02\xb2\x02\xb3\x01x\x02\xbb\x02\xcf\x02\xbc\x02\xbe\x02\n\0l\x01s\x02\x87\x02\x9a\x01\x89\0\0\x01\x9f\x02\xbf\0\0\x02t\x01x\x02\x96\x02\x93\x01)\x02\xbe\x009\0\0\0\xff\x01r\x02q\x01\x89\x02t\x01\x9f\x02\xbf\x02\x94\x02t\x02\xda\x01\x01\0\xff\x01d\x01K\x01s\x01\x12\x021\x01r\x02,\0k\0:\x01\x01\0\xff\x01x\x01\xa2\x02\xc3\x01\x12\x02\xbe\0\0\x02\x06\x01s\0\xff\x01\x01\x01\x89\0\0\x01\x9f\x02\xbf\x01\x03\x02t\x01x\x02\n\x01\x01\x02\n\x02\xbe\0\0\0\xff\x01\x11\0\x87\x02\x02\x01\x89\x01\x1b\x01\x9f\x02\xbf\x02\n\x02t\x01\x01\x01/\0%\x01\xb8\0l\x01\r\x01\x13\x009\x02\xb4\x01b\x02l\0\x96\x01\xba\x01\xbb\x02\x04\x02\xb7\x02n\0'\x01c\0%\x01\x04\x01\x06\0(\0*\x01\b\x02s\0,\x01\v\x01\x0e\0:\x02l\x01\x04\x01\x06\0\0\x001\x01\b\x02n\x005\x01\v\x01\x0e\0\0\x02\x86\x01\x04\x01\x06\0\x87\x02x\x01\b\x02\x98\x02\xa0\x01\v\x01\x0e\x01\x04\x01\x06\0\x89\x02\x86\x01\b\0\0\0\0\x01\v\x01\x0e\x02\x98\x02\xa0\x01\xde\x01\xd3\x02\x93\x01\x04\x01\x06\x01\xbc\x02\x86\x01\b\0\0\x002\x01\v\x01\x0e\x02\x98\x02\xa0\x02\xa5\x01\xbb\0\0\0k\x02}\0(\0*\x01)\0\0\0,\0(\0*\x01|\x01d\0,\x01\x80\x02q\0k\x02t\0\0\0\x87\x02\xc9\0(\0*\x01.\x01e\0,\0\xc5\0\x89\0\xc6\0\x89\0r\x02\xb9\0\x87\x02\xa1\0\xfb\x02q\x02\xa2\x02t\0\x96\0(\0*\x01\x84\0l\0,\x02\xa4\0#\x02\xa3\x02\xa7\x02t\x02\xa2\0k\0\x96\0\xcb\x02\x96\0(\0*\0l\0\x87\x004\x02\xa3\x01k\x02t\0\xcd\x02\xa2\x01u\0\0\x01/\x01n\0k\0\x87\0\x87\0k\0\x87\x02\xa3\0\x87\x02t\0\x96\0\x87\0\xc6\0\xc6\x01p\0\x8c\0\0\0\xc6\0\x87\0\0\0\xc6\0\x87\0\x96\0\x96\0l\0\x96\0\0\0\x96\x01W\0\x87\0\x96\0\xbc\0\x87\0\0\0\0\x01g\x01\xdc\x01\xd3\0\xc6\x01\xe6\x01\xd3\0\xc0\0l\0(\0*\0l\x02\xc0\0,\0\x96\x02\xaf\0\0\0\x96\0\x87\x01g\0\x87\0\x87\x01g\0\x87\0(\0*\0\x87\0\xcf\0,\0\xe5\x024\0\0\0\xc6\0\0\0\x87\x02\x13\x01d\0\x96\0\x87\0\x96\0\x96\0\x87\0\x96\x01\xa5\0\0\0\x96\0\x87\0\xa7\x01l\0\x87\x02\r\0\x87\0\x87\0\x96\0\x87\0\xab\0\0\0\x96\0\xad\0\x87\0\x96\0\xaf\0\x87\0\xa3\0\0\0\x96\0\x87\0\x87\0\x96\x01\xe0\x01\xd3\0\x96\0\x87\0\x96\0\x87\0\xa1\0\xa9\x01\xec\x01\xd3\0\x87\x01\xe4\x01\xd3\0\x87\0\x9d\0\0\0\x96\0\x96\0\x87\0\x9b\0\0\x02\x01\x01\xd3\0\0\0\x96\0\x87\0\x87\x02?\0\0\0\x96\0\x87\x01\xd5\x01\xd3\0\x87\0\xb3\x01\x8b\0\0\0\x96\0\x87\x02#\0\0\0\x87\0\xca\0\0\0\x96\0\x96\0\x87\x01\x9a\0\0\0\x96\0\x95\0\0\0\x96\0\x87\0\x87\x02=\0\0\0\x96\0\x87\0\x87\0\x96\0\x87\0\xbb\0\x91\0\0\0\x96\0\x87\x02%\0\xc2\0\0\0\xe0\0\0\0\x96\0\x96\0\x87\x02.\0\0\0\x96\0\x96\0\x87\0\x96\0\x87\0\x87\0\x8f\0\0\0\x96\0\x87\0\x87\x01\x9d\0\0\x02Y\x02[\0\0\0\x96\0\x87\x02a\0\x93\0\0\0\x96\0\x87\0\x96\0\x96\0\x87\x02\x1f\0\x87\0\x96\0\x96\0\x87\x02\x1d\0\x87\0\x87\0\xb5\0\x87\0\x96\0\x87\0\x87\0\x99\0\x87\0\x96\0\xa5\0\x87\0\x96\x01\xda\x01\xd3\0\x9f\0\x87\0\x96\x01\xe2\x01\xd3\0\x96\x01\xe8\x01\xd3\x01\xf3\x01\xd3\0\x96\x01\xfd\x01\xd3\0\x87\x01\xd2\x01\xd3\0\x87\x01h\0\x87\x01\xd4\x01\xd3\0\x87\x02\b\0\0\0\x87\0\xb1\x01c\0\0\0\0\0\x87\x02\x17\0\0\0\x96\0\xb9\0\0\0\x96\x01\xef\x01\xd3\x02)\0\0\0\x96\0\x87\0\x87\0\x96\0\x87\0\x87\0\x87\0\x87\0\x96\0\x87\x028\x02J\0\0\x02F\x02T\x02h\x02c\0\0\x01\x97\0\0\0\x96\0\x96\0\x87\0\x96\0\x96\0\x96\0\x96\0\x87\0\x96\0\x87\0\x87\x02O\0\0\0\x87\0\x87\0\x87\0\xda\0\0\x01\x94\x01\x91\0\0\0\x96\x01\x8e\0\xe7\0\xd4\0\0\0\x96\0\x87\0\x96\0\x96\0\x87\0\x87\0\x96\0\x96\0\x96\0\x87\0\xec\0\x87\0\x87\0\xf0\0\xd6\0\0\0\x87\0\x87\x02\x19\0\x87\0\x96\x01G\0\0\0\x96\0\x96\x01A\x01=\0\0\0\x96\x01\xcd\x01\xd3\0\x96\0\x87\0\x87\0\x87\0\x96\0\x96\x01\xd6\x01\xd3\0\x87\0\x87\x01\x1f\x01$\x01a\0\0\0\x87\0\0\0\0\0\xb7\0\xf4\0\0\0\x96\0\x96\0\x96\0\xd5\0\0\0\0\0\0\0\x96\0\x96\0\0\0\0\0\0\0\0\0\x96",BQ(lM('\x03@\0\0\0\0\0\0\0\0\x03\xfc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0|\0\x14\0X\0\0\0\0\0\0\x04\x1a\0\0\x04\xa6\0\0\x03\xd8\0\0\x03\xb6\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x0e\0\0\0\0\0\0\0\xd0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x19\0\0\0\0\x04\x88\x02x\0\0\0\0\0\0\0\0\0l\0\0\x06\xce\0\0\0\0\0\0\0\0\x07\x1e\x06\xae\x04\xba\x04Z\x04\x8c\0\0\0\0\0\0\x05b\0\0\x01\x84\0\0\0\0\0\0\0\0\0\0\x05\xb4\0\0\x05\x8c\0\0\x05\xce\0\0\x05r\0\0\0\0\x04\x92\x05\xf6\0\0\x054\0\0\x05*\0\0\x06\x06\0\0\x05\x1a\0\0\x05\x02\0\0\x05\xfc\0\0\x04\xe2\0\0\x05\x1c\0\0\x04\xf2\0\0\x04\xf8\0\0\x04\xfe\0\0\x068\0\0\x05R\0\0\x05\xec\0\0\x07\x12\0\0\x06H\0\0\x05\x8a\0\0\0\0\0\0\0w\0\0\0\0\x05\x96\0\0\0\0\x04X\0\0\0\0\x01D\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0-\0\0\0\0\0\0\0\0\0\0\x01\x9c\0\0\x06\x9e\0\0\0\0\0\0\0B\0\0\x05\x9a\0\0\0\0\0\0\0\0\x04\xbe\0\0\x06\xac\0\0\0\0\0\0\0\0\x06\xc6\0\0\0\0\0\0\x06\xcc\0\0\0\0\0\0\x07\x14\0\0\0\x86\0\0\0\0\0\0\0\0\x04h\0\0\0\0\0\0\x03R\0\0\x03z\0\0\x03h\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\x96\0\0\x01N\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\xbe\0\0\0\0\0\0\x03<\0\0\0\0\0\0\x07\x04\0\0\0\0\0\0\x07\x06\0\0\0\0\0\0\0\0\x02<\0\0\0\0\0\0\0\0\0\0\x04@\0\0\0\0\0\0\x01\x8a\0\0\0\0\0 \0\0\x024\0\0\0\0\0\0\0\x05\0\0\x06\xe6\0\0\0\0\0\0\x06\xe4\0\0\x026\0\0\0\x82\0\0\x06\xdc\0\0\x01\xe2\0\0\x03$\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x04\x82\x042\0\xb6\0\0\0\0\0\0\0\0\0#\0\0\x03\x84\x07\b\0\0\0\0\0\0\0\0\0\0\0\0\x06x\0\0\0\0\x04>\x05*\0\0\0\0\x06x\x04\xc4\0\0\0\0\0\0\0\0\x04^\0\0\0\0\0\0\0\0\0k\0\0\x03\xf4\0\0\x02.\0\0\x04\x0e\0\0\0Y\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x05T\0\0\0\0\x06\xaa\0\0\0\0\x06\xa4\0\0\0\0\x06\xa2\0\0\0\0\x06z\0\0\0\0\x05l\0\0\0\0\x05\xbe\0\0\0\0\0\0\0\xf4\x03*\0\0\0\0\x04\xda\0\0\x01x\0\0\0\0\x01*\0\0\0\xde\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\v\0\0\0\0\0\0\0\0\x03\xc0\0\0\x02<\0\0\0\x90\0\0\0\0\0\0\0.\0\0\x044\x03z\x03n\0\0\x06\xea\x05:\x06\x1a\x06\xda\0\0\0\0\0o\0\0\x06\x10\0\0\0\0\0\0\0\0\0\0\x02\x06\0\0\x05\xf0\0\0\x04v\0\0\x03\x8c\0\0\x04\xfc\0\0\x05\xfa\0\0\x05\x12\0\0\x04|\0\0\x06\0\0\0\0\0\0\0\x05\f\0\0\0\0\x06<\0\0\0\0\0\0\x06\x04\0\0\0\0\x02J\0\0\0\0\0\0\x01\x8c\0\0\0\0\x06\n\0\0\0\0\0\0\x05&\0\0\0\0\0\0\0\0\0\0\0\0\x062\0\0\0\0\0\0\0\0\x04\xe8\0\0\0\0\0\0\x01\xf4\0\0\x04\xca\0\0\0\0\0\0\x06B\0\0\x06\xd6\0\0\0\0\0\0\x05\xe6\0\0\x05\xdc\0\0\0\0\0\0\x05\\\0\0\x05\x94\0\0\0\0\0\0\x06R\0\0\0\0\x03d\0\0\x05\xa4\0\0\0\0\x03`\0\0\0\0\x04\xc0\0\0\0\0\0\0\x06j\0\0\0\0\x02\xec\0\0\x05|\0\0\x05D\0\0\0\0\0\x14\x03n\0\0\0\0\x06p\0\0\0\0\0\0\x06l\0\0\0\0\x02J\0\0\x06\x94\0\0\0\0\x01\xbc\0\0\x06r\0\0\0\0\x01l\0\0\x05\xc2\0\0\x05\xc4\0\0\0\0\0\xf0\0\0\0\0\x05\xcc\0\x1d\x06v\0\0\0\0\0\0\0\0\x06t\0\0\0\0\0\0\0H\0\0\0\xfc\0\0\x02\x9e\0\0\0\0\x03\xc0\0\0\0\t\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x03\xe8\0\0\0\0\0\0\x02T\0\0\0\0\0\0\0\0\0\0\x02\xa4\x03\n\x01\x1e\0\0\0\0\0\x02\0\0\x02\x18\x009\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x01\xd2\0\0\0\xbe\x02\xe0\0\0\0\0\x01\xd2\x01h\0\0\0\0\x04\x18\0\0\0\0\x04"\x04\x02\0\0\0\0\0\0\0\0\x02\xa0\0\0\x03\x02\0\0\0\0\x04\xac\x020\0\0\0\0\x02\x86\x03<\x01\x82\0\0\0\0\x06x\x04b\0\0\0\0\0\0\0\0\0\0\0\0\x04\xa6\x01d\0\0\0\0\0\0\0\0\0\0\0\x1a\0\0\x03\xfe\0\0\0\0\0\0\x008\0\0\x02\xa6\0\0\0\0\0\0\0\x17\0\0\0\xba\0\0\0\0\0\x17\0\0\x02\xe2\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0',c[1]))+aV(`\x01\0\\[ZZYYXXXXXXXXXXXXXXXXXXXWWWWWWWWWWWWVVVVVVVVVVVVVVUUUUUUUUUUUUUUUUTTTTTTTSSSSSRQQQQQPPPPPOOOOONNMMLLLLLLLLLLLLLLLLLLLLLLLLLKJJIHGFEDCCBBBBBBBAA@@??>>==<<;;::9988766666665444433221100//..--,,++**))((''&&%%$#"!!! \x1f\x1f\x1f\x1f\x1e\x1e\x1d\x1c\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1b\x1a\x1a\x19\x19\x18\x18\x17\x17\x17\x17\x17\x17\x16\x16\x16\x16\x16\x16\x15\x15\x14\x14\x13\x13\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x12\x11\x11\x10\x0f\x0e\x0e\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\f\f\v\n\t\b\b\b\x07\x07\x07\x06\x06\x05\x04\x04\x04\x04\x04\x03\x02\x02`,b)|0)-1|0;return sU([0,a[1],a[2],c,b],0)}var
 BP=0;function
 BT(a,b){var
 c=[];hR(c,[0,a,BP,b,b,c]);return sU([0,0,[0,0,b,b],c,a],1)}function
@@ -8374,29 +8374,29 @@ e=0<=c,e=e?b[12]!==fM:e;if(e){b[11]=b[12];e=b[12];b[12]=[0,e[1],e[2],e[3],b[4]+b
 91:return 24;case
 92:return 63;case
 93:return 7;case
-94:gH(b,b[5],b[6]);return[2,ex(b)];case
-95:gH(b,b[5],b[6]);return[1,ex(b)];case
-96:gH(b,b[5],b[6]);return[5,ex(b)];case
-97:gH(b,b[5],b[6]);return[3,ex(b)];case
+94:gH(b,b[5],b[6]);return[2,ey(b)];case
+95:gH(b,b[5],b[6]);return[1,ey(b)];case
+96:gH(b,b[5],b[6]);return[5,ey(b)];case
+97:gH(b,b[5],b[6]);return[3,ey(b)];case
 98:return 14;case
-99:gH(b,b[5],b[6]);return[0,ex(b)];case
-100:gH(b,b[5],b[6]);return[4,ex(b)];case
-101:if(1===b_[2])return 65;b=b_[1];if(!b)throw m(ny,1);b_[1]=b[2];b_[2]=b_[2]-1|0;b=ey(b_);return a<50?dM(a+1|0,b):ax(dM,[0,b]);default:b=ey(b_);c=b[12];b=d(b[11]);throw m([0,D1,[0,b,d(c)]],1)}switch(c){case
+99:gH(b,b[5],b[6]);return[0,ey(b)];case
+100:gH(b,b[5],b[6]);return[4,ey(b)];case
+101:if(1===b_[2])return 65;b=b_[1];if(!b)throw m(ny,1);b_[1]=b[2];b_[2]=b_[2]-1|0;b=ez(b_);return a<50?dM(a+1|0,b):ax(dM,[0,b]);default:b=ez(b_);c=b[12];b=d(b[11]);throw m([0,D1,[0,b,d(c)]],1)}switch(c){case
 0:ue(b);return a<50?dM(a+1|0,b):ax(dM,[0,b]);case
 1:return a<50?dM(a+1|0,b):ax(dM,[0,b]);case
 2:c=br(16);c=[0,[0,b[12],0],c];for(;;){e=467;for(;;){e=rk(uf,e,b);if(3>=e>>>0)break;i(b[1],b)}switch(e){case
 0:e=c[1];var
 g=e[2],e=e[1],c=[0,bP(c[2]),g],g=b[12],c=ju(c),e=d(e);e9([2,c,[0,e,d(g)]],jA);return a<50?dM(a+1|0,b):ax(dM,[0,b]);case
-1:c=ey(b_);a=c[12];c=d(c[11]);throw m([0,D0,[0,c,d(a)]],1);case
-2:ue(b);e=c[1];g=e[2];e=e[1];c=[0,bP(c[2]),g];c=[0,[0,e,c],br(16)];break;default:e=ex(b);aW(c[2],e)}}break;case
+1:c=ez(b_);a=c[12];c=d(c[11]);throw m([0,D0,[0,c,d(a)]],1);case
+2:ue(b);e=c[1];g=e[2];e=e[1];c=[0,bP(c[2]),g];c=[0,[0,e,c],br(16)];break;default:e=ey(b);aW(c[2],e)}}break;case
 3:c=br(16);c=[0,b[12],c];for(;;){e=475;a:for(;;){e=rk(uf,e,b);if(2>=e>>>0){switch(e){case
 0:Eb(c,b[12]);ue(b);break;case
-1:Eb(c,b[12]);break;default:e=ex(b);aW(c[2],e);break a}return a<50?dM(a+1|0,b):ax(dM,[0,b])}i(b[1],b)}}break;case
-4:c=Z(b[10],0)[1];c=gH(b,Z(b[10],1)[2],c);e=b[12];b=d(b[11]);e9([1,c,[0,b,d(e)]],jA);b=d(ey(b_)[11]);e=ud[1];a:{var
+1:Eb(c,b[12]);break;default:e=ey(b);aW(c[2],e);break a}return a<50?dM(a+1|0,b):ax(dM,[0,b])}i(b[1],b)}}break;case
+4:c=_(b[10],0)[1];c=gH(b,_(b[10],1)[2],c);e=b[12];b=d(b[11]);e9([1,c,[0,b,d(e)]],jA);b=d(ez(b_)[11]);e=ud[1];a:{var
 k="None";if(0===e[0]){e=e[1];g=e;for(;;){if(!g)break;var
-h=g[2],j=g[1];try{g=j+dS+c;g=[0,yY(0,q1(g)),g];break a}catch(f){g=h}}c=G(ak(abJ),c,function(a,b){return yP(b)?f(a,k):A([0,$],f)(a,b)},e);a=ey(b_);g=a[12];b=d(a[11]);throw m([0,oW,c,[0,b,d(g)]],1)}g=e[1];e=bD(g,c);if(!e){a=G(ak(abK),c,function(a,b){b=n4(b);return yP(b)?f(a,k):A([0,$],f)(a,b)},g);c=ey(b_);e=c[12];c=d(c[11]);throw m([0,oW,a,[0,c,d(e)]],1)}g=[0,nw(0,e[1]),c]}e=g[2];g=g[1];a:{if(aF(e,Cc,at)){h=mc[1];for(;;){if(h){j=h[2];h=0===hK(h[1],e);if(!h){h=j;continue}}else
+h=g[2],j=g[1];try{g=j+dS+c;g=[0,yY(0,q1(g)),g];break a}catch(f){g=h}}c=G(ak(abJ),c,function(a,b){return yP(b)?f(a,k):A([0,$],f)(a,b)},e);a=ez(b_);g=a[12];b=d(a[11]);throw m([0,oW,c,[0,b,d(g)]],1)}g=e[1];e=bD(g,c);if(!e){a=G(ak(abK),c,function(a,b){b=n4(b);return yP(b)?f(a,k):A([0,$],f)(a,b)},g);c=ez(b_);e=c[12];c=d(c[11]);throw m([0,oW,a,[0,c,d(e)]],1)}g=[0,nw(0,e[1]),c]}e=g[2];g=g[1];a:{if(aF(e,Cc,at)){h=mc[1];for(;;){if(h){j=h[2];h=0===hK(h[1],e);if(!h){h=j;continue}}else
 h=0;if(!h)break;g=nw(0,l);break a}}mc[1]=[0,e,mc[1]]}D5(g,e,[0,b]);e=b[4];b=b[1];for(;;){if(e){e=e[1];j=e[4];if(b!==e[1]){e=j;continue}b=1}else
-b=0;if(b){g=i(V(abL),c);a=ey(b_);b=a[12];a=d(a[11]);throw m([0,oW,g,[0,a,d(b)]],1)}fO(g,b_);return a<50?dM(a+1|0,g):ax(dM,[0,g])}case
+b=0;if(b){g=i(V(abL),c);a=ez(b_);b=a[12];a=d(a[11]);throw m([0,oW,g,[0,a,d(b)]],1)}fO(g,b_);return a<50?dM(a+1|0,g):ax(dM,[0,g])}case
 5:return 61;case
 6:return 74;case
 7:return 10;case
@@ -8443,7 +8443,7 @@ b=0;if(b){g=i(V(abL),c);a=ey(b_);b=a[12];a=d(a[11]);throw m([0,oW,g,[0,a,d(b)]],
 48:return 15;case
 49:return 16;case
 50:return 85;default:return 84}}var
-S='"parameters"',mF='"functions {"',cn=" blocks.",eo="Ill-formed compound assignment statement.",ay='";"',bM="(not containing binary logical operators) after ",a_='"else"',gv=" Expected a comma separated list of expressions followed by ",bx="Ill-formed program.",cm='"while"',ag='")"',ev="https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section",du='"{"',kQ=", non-array type after ",er=" for the test of the if statement.",eX='"data"',a9='">"',kv=" loop.",dd="Ill-formed phrase.",w=" Expected ",aN="<r>",vL="unconstrained",G7=" Expected an expression or ",G6='"T["',IM="<blue>",Jz=" in top-level variable declaration.",HN="Ill-formed index.",Jx='"for ("',wr=" after variable declaration.",IK=" Did not expect ",wq=" Expected an expression (not containing binary logical operators)",wp="Ill-formed function argument.",G3="<u>",ni=" Expected an expression after ",pY="For example, this means a type like ",wn=" next.",G1=" (not containing binary logical operators).",IG='"vector"',cF="Ill-formed expression.",qe="-statement.",GZ='"target"',bX="Ill-formed constraint.",IC='"lower = "',pW="optional expression",qp='"parameters {"',HL='"offset ="',dN='"("',wl="Ill-formed function.",xR="  See the complete table of types at:",xP='"matrix[3,4]"',jd='"~"',It='"data {"',eY="Ill-formed block.",HI=" after the value being assigned.",Ip="statement",vz='"multiplier = "',aM="Ill-formed type.",i6='"generated quantities {"',b="<light_red>",wj='"corr_matrix"',Io=')"',kx="after ",pD="Use ",GO='"upper = "',e="<i>",wh="(not containing binary logical operators) ",w4="unsized",Ji=" (not containing binary logical operators) ",ep="<light_yellow>",HF=" Functions do not enforce type constraints.",jc=" Expected an expression followed by ",we=", or end-of-file.",Ij='"];"',GJ='"()"',aa="expression",fG='"<"',a="<green>",ql=" instead",m2='"transformed parameters {"',wb=" Expected a statement after ",Ie='"multiplier ="',bo='"]"',b0="<light_blue>",aI=" after ",bg="Ill-formed statement.",wV='"lower ="',GA="strings followed by ",wU='"transformed data {"',Ia=" Expected a comma separated list of either expressions or strings followed by ",mE='");"',H_='@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) after @{<green>"lower"@}.@.',v5=" to complete tuple.",wR='"in"',dc="Ill-formed declaration.",Hx='"lower"',Hy="https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section",xB='"offset = "',vo=" Expected an ",I$="constraint",m1=" Expected a ",by='"["',v2=" Expected either ",Hu='"upper"',H2=", or ",eq="<f>",H1='"for"',xx=" declaration.",fB='"}"',vX='"upper ="',pM="Ill-formed ",bU='","',Hn=" Constrained types are not supported in local (or model block) variable declarations.",qi=", not ",Hl="Ill-formed assignment statement.",kC='"model {"',kP='"matrix"',HU="<b>",pu='"array"',i_='"="',He=" Found ",mB='":"',ab8=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,vo,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,ep,0],ep]],[11,vL,[17,1,[17,1,[11,kQ,[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[11,xx,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,wj,[17,1,[17,1,[11,bh,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,xP,[17,1,[17,1,[12,46,[17,4,[11,xR,[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,ev,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@} or @{<r>@{<green>"matrix[3,4]"@}@}.@.  See the complete table of types at:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}@.'],ab9=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,HF,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,IG,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Functions do not enforce type constraints.@.  @{<i>Use @{<r>@{<green>"vector"@}@} instead@}.@.'],ab_=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,HF,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Functions do not enforce type constraints.@.  @{<i>Use @{<r>@{<green>"matrix"@}@} instead@}.@.'],aca=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,vo,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,ep,0],ep]],[11,w4,[17,1,[17,1,[11," type in function signature.",[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,xP,[17,1,[17,1,[12,46,[17,4,[11,"  If you are trying to use the old array syntax, you will need to use",[17,4,[11,"  the new syntax, see:",[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,Hy,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unsized@}@} type in function signature.@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"matrix[3,4]"@}@}.@.  If you are trying to use the old array syntax, you will need to use@.  the new syntax, see:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section@}@.'],acc=[0,[18,[0,[0,[11,b,0],b]],[11,wl,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," after function name.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed function.@} Expected @{<green>"("@} after function name.@.'],ace=[0,[18,[0,[0,[11,b,0],b]],[11,wp,[17,1,[11," Expected a type after the ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11," specifier.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed function argument.@} Expected a type after the @{<green>"data"@} specifier.@.'],acf=[0,[18,[0,[0,[11,b,0],b]],[11,wl,[17,1,[11,v2,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,Ip,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," for a function definition or ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," for a function forward declaration.",[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed function.@} Expected either @{<green>"{"@} @{<i>statement@} @{<green>"}"@} for a function definition or @{<green>";"@} for a function forward declaration.@.'],ach=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,Ip,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,cm,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} @{<i>statement@} after @{<green>"while"@}.@.'],ack=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,'"+"',[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"+"@}.@.'],acl=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,'"-"',[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"-"@}.@.'],acn=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,gv,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions followed by @{<green>"]"@} after @{<green>"["@}.@.'],aco=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11," in array expression.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"{"@} in array expression.@.'],acu=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,G7,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.@.'],acv=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11,He,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,". Expected either an infix or postfix operator, or ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,wn,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Found @{<green>":"@} @{<i>expression@}. Expected either an infix or postfix operator, or @{<green>","@} or @{<green>"["@} or @{<green>"]"@} next.@.'],acx=[0,[18,[0,[0,[11,b,0],b]],[11,HN,[17,1,[11," Expected index after indices followed by ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed index.@} Expected index after indices followed by @{<green>","@}.@.'],acz=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Expected a comma separated list of expressions.",[17,4,0]]]]],"@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions.@."],acD=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,wb,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," for the body of the ",[18,[0,[0,[11,a,0],a]],[11,cm,[17,1,[11,kv,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>")"@} for the body of the @{<green>"while"@} loop.@.'],acJ=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Expected expressions for size of array.",[17,4,0]]]]],"@{<light_red>Ill-formed type.@} Expected expressions for size of array.@."],acP=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,vo,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,ep,0],ep]],[11,vL,[17,1,[17,1,[11,kQ,[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[11,xx,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,wj,[17,1,[17,1,[12,46,[17,4,[11,xR,[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,ev,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@}.@.  See the complete table of types at:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}@.'],acQ=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11,v2,[18,[0,[0,[11,a,0],a]],[11,'"+="',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,GJ,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,GZ,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Expected either @{<green>"+="@} @{<i>expression@} or @{<green>"()"@} after @{<green>"target"@}.@.'],acW=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," after profile name.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>")"@} after profile name.@.'],acX=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11," to begin profile block.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"{"@} to begin profile block.@.'],acY=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," followed by a comma separated list of expressions or",[17,4,[11,GA,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"print"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} followed by a comma separated list of expressions or@.strings followed by @{<green>");"@} after @{<green>"print"@}.@.'],ac0=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"print(',[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,eq,0],eq]],[11,pE,[17,1,[17,1,[11,Io,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a @{<green>";"@} after @{<green>"print(@{<r>@{<f>...@}@})"@}.@.'],ac1=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11," Expected either a list of statements followed by a ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," for a block, or a list of expressions expressions followed by a ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," for an array literal.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Expected either a list of statements followed by a @{<green>"}"@} for a block, or a list of expressions expressions followed by a @{<green>"}"@} for an array literal.@.'],ac4=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,er,[17,4,[11,"A valid expression was found, but it was not followed by a closing parenthesis.",[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.@.A valid expression was found, but it was not followed by a closing parenthesis.@.'],ac5=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected a statement for the true branch of conditional.",[17,4,0]]]]],"@{<light_red>Ill-formed statement.@} Expected a statement for the true branch of conditional.@."],ac6=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,H1,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} after @{<green>"for"@}.@.'],ac7=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected (loop) identifier after ",[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected (loop) identifier after @{<green>"("@}.@.'],ac8=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wR,[17,1,[11," after loop identifier.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"in"@} after loop identifier.@.'],adb=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"continue"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after @{<green>"continue"@}.@.'],adc=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"break"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after @{<green>"break"@}.@.'],adf=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected an expression followed by @{<green>";"@} after @{<green>"="@}.@.'],adg=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," to complete the definition or a ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," to start a new declaration of the same type.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected a @{<green>";"@} to complete the definition or a @{<green>","@} to start a new declaration of the same type.@.'],adj=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11," Found a well-formed function application. Expected either a ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or a valid continuation of the expression.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Found a well-formed function application. Expected either a @{<green>";"@} or a valid continuation of the expression.@.'],adk=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,1,[11," Expected an distribution name after ",[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected an distribution name after @{<green>"~"@}.@.'],adl=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected @{<green>"("@} after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.@.'],adn=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,"-statement",[17,1,[11,". Expected either ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or a truncation with the format ",[18,[0,[0,[11,a,0],a]],[11,G6,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,Ij,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement@}. Expected either @{<green>";"@} or a truncation with the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.@.'],adp=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," after truncated ",[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after truncated @{<green>"~"@}-statement.@.'],ads=[0,[18,[0,[0,[11,b,0],b]],[11,Hl,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wn,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed assignment statement.@} Expected an expression followed by @{<green>";"@} next.@.'],adt=[0,[18,[0,[0,[11,b,0],b]],[11,Hl,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,HI,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed assignment statement.@} Expected a @{<green>";"@} after the value being assigned.@.'],adv=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a_,[17,1,[11,", a statement, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," to end the block.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"else"@}, a statement, or @{<green>"}"@} to end the block.@.'],adw=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,wb,[18,[0,[0,[11,a,0],a]],[11,a_,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>"else"@}.@.'],adx=[0,[18,[0,[0,[11,b,0],b]],[11,wp,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," after function argument declaration.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed function argument.@} Expected @{<green>","@} or @{<green>")"@} after function argument declaration.@.'],adz=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,mF,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,It,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,wU,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,H2,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"functions {"@}, @{<green>"data {"@}, @{<green>"transformed data {"@}, @{<green>"parameters {"@},@.@{<green>"transformed parameters {"@}, @{<green>"model {"@}, or @{<green>"generated quantities {"@}.@.'],adA=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"functions"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"functions"@}.@.'],adB=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected a function forward declaration, definition, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,mF,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected a function forward declaration, definition, or @{<green>"}"@} after @{<green>"functions {"@}.@.'],adC=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,It,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,wU,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11,we,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"data {"@}, @{<green>"transformed data {"@}, @{<green>"parameters {"@},@.@{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.@.'],adD=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11," followed by a list of top-level variable declarations after ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} followed by a list of top-level variable declarations after @{<green>"data"@}.@.'],adE=[0,[18,[0,[0,[11,b,0],b]],[11,"Invalid type in declaration.",[17,1,[12,32,[18,[0,[0,[11,IM,0],IM]],[11,"Valid types:",[17,1,[17,4,[11,"  int, real, vector, row_vector, matrix,",[17,4,[11,"  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,",[17,4,[11,"  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,",[17,4,[11,"  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,",[17,4,[11,"  tuple(",[18,[0,[0,[11,eq,0],eq]],[11,pE,[17,1,[12,41,[17,4,[11,"optionally preceded by a ",[18,[0,[0,[11,G3,0],G3]],[11,"single",[17,1,[11," array[",[18,[0,[0,[11,eq,0],eq]],[11,pE,[17,1,[12,93,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],"@{<light_red>Invalid type in declaration.@} @{<blue>Valid types:@}@.  int, real, vector, row_vector, matrix,@.  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,@.  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,@.  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,@.  tuple(@{<f>...@})@.optionally preceded by a @{<u>single@} array[@{<f>...@}]@."],adF=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wV,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,vX,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,HL,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,Ie,[17,1,[11," followed by an expression after ",[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.@.'],adG=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11," after seeing ",[18,[0,[0,[11,a,0],a]],[11,Hu,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.@.'],adK=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wV,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,Ji,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,'"<upper ="',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,Jz,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"lower ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@}@.after @{<green>"<upper ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.@.'],adL=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,Hx,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],H_],adN=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,IC,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"lower = "@} @{<i>expression@}.@.'],adR=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,vz,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.@.'],adS=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,wh,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"multiplier"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier"@}.@.'],adT=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11," Expected and expression (not containing binary logical operators)",[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,Ie,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected and expression (not containing binary logical operators)@.after @{<green>"multiplier ="@}.@.'],adV=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,'"offset"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) after @{<green>"offset"@}.@.'],adW=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,wq,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,HL,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators)@.after @{<green>"offset ="@}.@.'],adX=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,xB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.@.'],adY=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,Hx,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],H_],adZ=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,vX,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,Ji,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,'"<lower ="',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,Jz,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"upper ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@}@.after @{<green>"<lower ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.@.'],ad0=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,Hu,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) after @{<green>"upper"@}.@.'],ad_=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,IC,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,GO,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11," for integer bounds.",[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"lower = "@} @{<i>expression@} or @{<green>"upper = "@} @{<i>expression@} for integer bounds.@.'],aee=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Expected a non-array type after ",[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[11,xx,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected a non-array type after @{<green>"array"@} declaration.@.'],aeh=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Only top-level variable declarations are allowed in the ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11,bT,[18,[0,[0,[11,a,0],a]],[11,S,[17,1,[11,cn,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Only top-level variable declarations are allowed in the @{<green>"data"@} and @{<green>"parameters"@} blocks.@.'],aei=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wU,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11,we,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"transformed data {"@}, @{<green>"parameters {"@},@.@{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.@.'],aej=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"transformed data"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"{"@} after @{<green>"transformed data"@}.@.'],aem=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11,we,[17,4,0]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"parameters {"@}, @{<green>"transformed parameters {"@},@.@{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.@.'],aen=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,S,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"parameters"@}.@.'],aeo=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected top-level variable declaration or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected top-level variable declaration or @{<green>"}"@}.@.'],aep=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11," after end of parameters block.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"transformed parameters {"@}, @{<green>"model {"@} or @{<green>"generated quantities {"@} after end of parameters block.@.'],aeq=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"transformed parameters"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"transformed parameters"@}.@.'],aer=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11," after end of transformed parameters block.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"model {"@} or @{<green>"generated quantities {"@} after end of transformed parameters block.@.'],aes=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"model"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"model"@}.@.'],aet=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11," or end of file after end of model block.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"generated quantities {"@} or end of file after end of model block.@.'],aeu=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"generated quantities"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"generated quantities"@}.@.'],aev=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11," Expected end of file after end of generated quantities block.",[17,4,0]]]]],"@{<light_red>Ill-formed program.@} Expected end of file after end of generated quantities block.@."],adh=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wr,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,"It looks like you are trying to use the old array syntax.",[17,4,[11,"  Please use the new syntax, see:",[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,Hy,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} after variable declaration.@.  @{<i>It looks like you are trying to use the old array syntax.@.  Please use the new syntax, see:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section@}@.'],ab7=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,"(list of commas)",[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," in an ",[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,ep,0],ep]],[11,w4,[17,1,[17,1,[11," type in a function signature.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} in an @{<i>@{<light_yellow>unsized@}@} type in a function signature.@.'],acm=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Expected an expression or comma separated list of expressions followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression or comma separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.@.'],ab5=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Expected a comma separated list of types between ",[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11,bT,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," to declare tuple variable.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected a comma separated list of types between @{<green>"("@} and @{<green>")"@} to declare tuple variable.@.'],acM=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,v2,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," followed by",[17,4,[11,"further types and ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,v5,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected either @{<green>")"@} or @{<green>","@} followed by@.further types and @{<green>")"@} to complete tuple.@.'],acK=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," followed by further types and ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,v5,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>","@} followed by further types and @{<green>")"@} to complete tuple.@.'],acL=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Incomplete type specification, expected further types followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,v5,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Incomplete type specification, expected further types followed by @{<green>")"@} to complete tuple.@.'],ab6=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,"array sizes",[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," followed by type after ",[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>array sizes@} @{<green>"]"@} followed by type after @{<green>"array"@}.@.'],acV=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected profile name as string in parenthesis",[17,4,0]]]]],"@{<light_red>Ill-formed statement.@} Expected profile name as string in parenthesis@."],aci=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," for the test of a ",[18,[0,[0,[11,a,0],a]],[11,cm,[17,1,[11,kv,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"("@} for the test of a @{<green>"while"@} loop.@.'],adq=[0,[18,[0,[0,[11,b,0],b]],[11,eo,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wn,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed compound assignment statement.@} Expected an expression followed by @{<green>";"@} next.@.'],adr=[0,[18,[0,[0,[11,b,0],b]],[11,eo,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,HI,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed compound assignment statement.@} Expected a @{<green>";"@} after the value being assigned.@.'],adi=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11," Expected a statement, but found a partial value before this point.",[17,4,[11,"Did you mean for this to be the start of an assignment or ",[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,"-statement?",[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Expected a statement, but found a partial value before this point.@.Did you mean for this to be the start of an assignment or @{<green>"~"@}-statement?@.'],acA=[0,[18,[0,[0,[11,b,0],b]],[11,"Ill-formed conditional distribution evaluation.",[17,1,[11,gv,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"|"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed conditional distribution evaluation.@} Expected a comma separated list of expressions followed by @{<green>")"@} after @{<green>"|"@}.@.'],ac2=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"jacobian +="',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected an expression followed by @{<green>";"@} after @{<green>"jacobian +="@}.@.'],acR=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"target +="',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected an expression followed by @{<green>";"@} after @{<green>"target +="@}.@.'],acj=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,GJ,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,GZ,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected @{<green>"()"@} after @{<green>"target"@}.@.'],acS=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or expression followed by ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"return"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} or expression followed by @{<green>";"@} after @{<green>"return"@}.@.'],acr=[0,[18,[0,[0,[11,b,0],b]],[11,"Ill-formed function application.",[17,1,[11,gv,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed function application.@} Expected a comma separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.@.'],ac$=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,Ia,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"fatal_error("',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings followed by @{<green>");"@} after @{<green>"fatal_error("@}.@.'],acT=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,Ia,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"reject("',[17,1,[11,",.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings followed by @{<green>");"@} after @{<green>"reject("@},.@.'],acU=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected a comma separated list of either expressions or strings, followed by ",[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.@.'],adm=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,1,[11," Expected a comma separated list of expressions for arguments to the distribution, followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.@.'],ado=[0,[18,[0,[0,[11,b,0],b]],[11,"Ill-formed truncation.",[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,G6,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,Ij,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed truncation.@} Expected @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.@.'],acy=[0,[18,[0,[0,[11,b,0],b]],[11,HN,[17,1,[11,G7,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed index.@} Expected an expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.@.'],acC=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Found an expression. Expected an infix or postfix operator or ",[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[17,4,0]]]]]]]],'@{<light_red>Ill-formed expression.@} Found an expression. Expected an infix or postfix operator or @{<green>"["@}@.'],acw=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Found an incomplete ternary expression, should be ",[18,[0,[0,[11,a,0],a]],[11,'"(',[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,eq,0],eq]],[11,"condition",[17,1,[17,1,[11,") ? (",[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,eq,0],eq]],[11,"true branch",[17,1,[17,1,[11,") : (",[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,eq,0],eq]],[11,"false branch",[17,1,[17,1,[11,Io,[17,1,[12,46,[17,4,[11,"Did you forget to add a colon or a false branch?",[17,4,[11,"For example, this returns ",[18,[0,[0,[11,HU,0],HU]],[18,[0,[0,[11,a,0],a]],[11,"3.0",[17,1,[17,1,[12,58,[17,4,[11,bF,[18,[0,[0,[11,a,0],a]],[11,"1 ? 3.0 : 0.0",[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Found an incomplete ternary expression, should be @{<green>"(@{<r>@{<f>condition@}@}) ? (@{<r>@{<f>true branch@}@}) : (@{<r>@{<f>false branch@}@})"@}.@.Did you forget to add a colon or a false branch?@.For example, this returns @{<b>@{<green>3.0@}@}:@.  @{<green>1 ? 3.0 : 0.0@}@.'],acs=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Found an incomplete binary expression.",[17,4,[11,"Are you missing the right hand side?",[17,4,0]]]]]]],"@{<light_red>Ill-formed expression.@} Found an incomplete binary expression.@.Are you missing the right hand side?@."],acq=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Unexpected input after the conclusion of a valid expression.",[17,4,[11,"You may be missing a ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," between expressions, an operator, or a terminating ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,H2,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Unexpected input after the conclusion of a valid expression.@.You may be missing a @{<green>","@} between expressions, an operator, or a terminating @{<green>"}"@}, @{<green>")"@}, @{<green>"]"@}, or @{<green>";"@}.@.'],acZ=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected a comma separated list of expressions or",[17,4,[11,GA,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"print("',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of expressions or@.strings followed by @{<green>");"@} after @{<green>"print("@}.@.'],acB=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11,He,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," followed by expression. Expected a ",[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," or an infix or postfix operator.",[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Found @{<green>"("@} followed by expression. Expected a @{<green>"["@}, @{<green>","@} or @{<green>")"@} or an infix or postfix operator.@.'],act=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Expected a comma separated list of expressions, followed by ",[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions, followed by @{<green>"]"@}.@.'],ac3=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,er,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.@.'],ac9=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,Jx,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,k0,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,wR,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression followed by @{<green>")"@} or @{<green>":"@} after @{<green>"for ("@} @{<i>identifier@} @{<green>"in"@}.@.'],adu=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,Jx,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,k0,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,wR,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression followed by @{<green>")"@} after @{<green>"for ("@} @{<i>identifier@} @{<green>"in"@} @{<i>expression@} @{<green>":"@}.@.'],ac_=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,wb,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," for the loop body of the ",[18,[0,[0,[11,a,0],a]],[11,H1,[17,1,[11,kv,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>")"@} for the loop body of the @{<green>"for"@} loop.@.'],acp=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,'"!"',[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"!"@}.@.'],acE=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for vector size.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for vector size.@.'],acg=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected unconstrained variable declaration, statement, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected unconstrained variable declaration, statement, or @{<green>"}"@}.@.'],aek=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected top-level variable declaration, statement, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected top-level variable declaration, statement, or @{<green>"}"@}.@.'],acF=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for row_vector size.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for row_vector size.@.'],ada=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," The ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11," specifier is only valid in function arguments, not declarations.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed declaration.@} The @{<green>"data"@} specifier is only valid in function arguments, not declarations.@.'],acI=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,IK,[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[11,". Constrained types are not supported in local (or model block) variable declarations.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Did not expect @{<green>"<"@}. Constrained types are not supported in local (or model block) variable declarations.@.'],acO=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,Hn,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Constrained types are not supported in local (or model block) variable declarations.@.  @{<i>Use @{<r>@{<green>"matrix"@}@} instead@}.@.'],acN=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,Hn,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,IG,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Constrained types are not supported in local (or model block) variable declarations.@.  @{<i>Use @{<r>@{<green>"vector"@}@} instead@}.@.'],acG=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected an identifier after type in local (or model block) variable declaration.",[17,4,0]]]]],"@{<light_red>Ill-formed declaration.@} Expected an identifier after type in local (or model block) variable declaration.@."],acH=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for matrix sizes.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for matrix sizes.@.'],ab$=[0,[18,[0,[0,[11,b,0],b]],[11,wl,[17,1,[11," Expected an identifier after the type.",[17,4,0]]]]],"@{<light_red>Ill-formed function.@} Expected an identifier after the type.@."],acd=[0,[18,[0,[0,[11,b,0],b]],[11,wp,[17,1,[11," Expected an argument declaration (",[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,ep,0],ep]],[11,w4,[17,1,[17,1,[11,bT,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,ep,0],ep]],[11,vL,[17,1,[17,1,[11," type followed by identifier).",[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,wj,[17,1,[17,1,[11,bh,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,xP,[17,1,[17,1,[12,46,[17,4,[11,xR,[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,ev,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed function argument.@} Expected an argument declaration (@{<i>@{<light_yellow>unsized@}@} and @{<i>@{<light_yellow>unconstrained@}@} type followed by identifier).@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@} or @{<r>@{<green>"matrix[3,4]"@}@}.@.  See the complete table of types at:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}@.'],acb=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,IK,[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[11,". Functions do not support type constraints.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Did not expect @{<green>"<"@}. Functions do not support type constraints.@.'],ady=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," or a function definition or declaration.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected a @{<green>"}"@} or a function definition or declaration.@.'],aeg=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wr,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} after variable declaration.@.'],ade=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or plain assignment after variable declaration.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} or plain assignment after variable declaration.@.'],add=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected a new identifier after comma in declaration.",[17,4,[11,"All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.",[17,4,0]]]]]]],"@{<light_red>Ill-formed declaration.@} Expected a new identifier after comma in declaration.@.All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.@."],aef=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Cannot assign to variables in the ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,S,[17,1,[11,cn,[17,4,[11,cT,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wr,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Cannot assign to variables in the @{<green>"data"@} or @{<green>"parameters"@} blocks.@.Expected @{<green>";"@} after variable declaration.@.'],ael=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected an identifier and optional assignment after type in variable declaration.",[17,4,0]]]]],"@{<light_red>Ill-formed declaration.@} Expected an identifier and optional assignment after type in variable declaration.@."],aeb=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected identifier after type in variable declaration.",[17,4,0]]]]],"@{<light_red>Ill-formed declaration.@} Expected identifier after type in variable declaration.@."],adH=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,wq,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,vX,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators)@.after @{<green>"upper ="@}.@.'],adI=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11," Expected an expression (not containing binary logical operators).",[17,4,0]]]]],"@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators).@."],adU=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,'", offset = "',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,wh,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,vz,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} or @{<green>", offset = "@} @{<i>expression@}@.(not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.@.'],adM=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,wq,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,wV,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators)@.after @{<green>"lower ="@}.@.'],adJ=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,GO,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"upper = "@} @{<i>expression@}.@.'],adO=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,xB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,G1,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"offset = "@} @{<i>expression@} (not containing binary logical operators).@.'],adP=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,'", multiplier = "',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,wh,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,xB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} or @{<green>", multiplier = "@} @{<i>expression@}@.(not containing binary logical operators) @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.@.'],adQ=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,vz,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,G1,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"multiplier = "@} @{<i>expression@} (not containing binary logical operators).@.'],ad1=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of unit_vector.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of unit_vector.@.'],ad6=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of simplex.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of simplex.@.'],ad7=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,I$,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11," or identifier next as part of top-level variable declaration.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>"<"@} @{<i>constraint@} @{<green>">"@} or identifier next as part of top-level variable declaration.@.'],ad8=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of positive_ordered.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of positive_ordered.@.'],ad9=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of ordered.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of ordered.@.'],ad3=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of sum_to_zero_matrix.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_matrix.@.'],ad2=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of sum_to_zero_vector.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_vector.@.'],ad5=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of column_stochastic_matrix.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of column_stochastic_matrix.@.'],ad4=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of row_stochastic_matrix.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of row_stochastic_matrix.@.'],ad$=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of cov_matrix.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cov_matrix.@.'],aea=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of corr_matrix.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of corr_matrix.@.'],aec=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of cholesky_factor_cov.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} or @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_cov.@.'],aed=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of cholesky_factor_corr.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_corr.@.'],ab4=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11," Only function definitions/declarations are expected in ",[18,[0,[0,[11,b0,0],b0]],[11,"'.stanfunctions'",[17,1,[11," files.",[17,4,0]]]]]]]]],"@{<light_red>Ill-formed program.@} Only function definitions/declarations are expected in @{<light_blue>'.stanfunctions'@} files.@."];function
+S='"parameters"',mF='"functions {"',cn=" blocks.",ep="Ill-formed compound assignment statement.",ay='";"',bM="(not containing binary logical operators) after ",a_='"else"',gv=" Expected a comma separated list of expressions followed by ",bx="Ill-formed program.",cm='"while"',ag='")"',ew="https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section",du='"{"',kQ=", non-array type after ",es=" for the test of the if statement.",eX='"data"',a9='">"',kv=" loop.",dd="Ill-formed phrase.",w=" Expected ",aN="<r>",vL="unconstrained",G7=" Expected an expression or ",G6='"T["',IM="<blue>",Jz=" in top-level variable declaration.",HN="Ill-formed index.",Jx='"for ("',wr=" after variable declaration.",IK=" Did not expect ",wq=" Expected an expression (not containing binary logical operators)",wp="Ill-formed function argument.",G3="<u>",ni=" Expected an expression after ",pY="For example, this means a type like ",wn=" next.",G1=" (not containing binary logical operators).",IG='"vector"',cF="Ill-formed expression.",qe="-statement.",GZ='"target"',bX="Ill-formed constraint.",IC='"lower = "',pW="optional expression",qp='"parameters {"',HL='"offset ="',dN='"("',wl="Ill-formed function.",xR="  See the complete table of types at:",xP='"matrix[3,4]"',jd='"~"',It='"data {"',eY="Ill-formed block.",HI=" after the value being assigned.",Ip="statement",vz='"multiplier = "',aM="Ill-formed type.",i6='"generated quantities {"',b="<light_red>",wj='"corr_matrix"',Io=')"',kx="after ",pD="Use ",GO='"upper = "',e="<i>",wh="(not containing binary logical operators) ",w4="unsized",Ji=" (not containing binary logical operators) ",eq="<light_yellow>",HF=" Functions do not enforce type constraints.",jc=" Expected an expression followed by ",we=", or end-of-file.",Ij='"];"',GJ='"()"',aa="expression",fG='"<"',a="<green>",ql=" instead",m2='"transformed parameters {"',wb=" Expected a statement after ",Ie='"multiplier ="',bo='"]"',b0="<light_blue>",aI=" after ",bg="Ill-formed statement.",wV='"lower ="',GA="strings followed by ",wU='"transformed data {"',Ia=" Expected a comma separated list of either expressions or strings followed by ",mE='");"',H_='@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) after @{<green>"lower"@}.@.',v5=" to complete tuple.",wR='"in"',dc="Ill-formed declaration.",Hx='"lower"',Hy="https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section",xB='"offset = "',vo=" Expected an ",I$="constraint",m1=" Expected a ",by='"["',v2=" Expected either ",Hu='"upper"',H2=", or ",er="<f>",H1='"for"',xx=" declaration.",fB='"}"',vX='"upper ="',pM="Ill-formed ",bU='","',Hn=" Constrained types are not supported in local (or model block) variable declarations.",qi=", not ",Hl="Ill-formed assignment statement.",kC='"model {"',kP='"matrix"',HU="<b>",pu='"array"',i_='"="',He=" Found ",mB='":"',ab8=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,vo,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,eq,0],eq]],[11,vL,[17,1,[17,1,[11,kQ,[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[11,xx,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,wj,[17,1,[17,1,[11,bh,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,xP,[17,1,[17,1,[12,46,[17,4,[11,xR,[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,ew,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@} or @{<r>@{<green>"matrix[3,4]"@}@}.@.  See the complete table of types at:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}@.'],ab9=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,HF,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,IG,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Functions do not enforce type constraints.@.  @{<i>Use @{<r>@{<green>"vector"@}@} instead@}.@.'],ab_=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,HF,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Functions do not enforce type constraints.@.  @{<i>Use @{<r>@{<green>"matrix"@}@} instead@}.@.'],aca=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,vo,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,eq,0],eq]],[11,w4,[17,1,[17,1,[11," type in function signature.",[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,xP,[17,1,[17,1,[12,46,[17,4,[11,"  If you are trying to use the old array syntax, you will need to use",[17,4,[11,"  the new syntax, see:",[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,Hy,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unsized@}@} type in function signature.@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"matrix[3,4]"@}@}.@.  If you are trying to use the old array syntax, you will need to use@.  the new syntax, see:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section@}@.'],acc=[0,[18,[0,[0,[11,b,0],b]],[11,wl,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," after function name.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed function.@} Expected @{<green>"("@} after function name.@.'],ace=[0,[18,[0,[0,[11,b,0],b]],[11,wp,[17,1,[11," Expected a type after the ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11," specifier.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed function argument.@} Expected a type after the @{<green>"data"@} specifier.@.'],acf=[0,[18,[0,[0,[11,b,0],b]],[11,wl,[17,1,[11,v2,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,Ip,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," for a function definition or ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," for a function forward declaration.",[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed function.@} Expected either @{<green>"{"@} @{<i>statement@} @{<green>"}"@} for a function definition or @{<green>";"@} for a function forward declaration.@.'],ach=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,Ip,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,cm,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} @{<i>statement@} after @{<green>"while"@}.@.'],ack=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,'"+"',[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"+"@}.@.'],acl=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,'"-"',[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"-"@}.@.'],acn=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,gv,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions followed by @{<green>"]"@} after @{<green>"["@}.@.'],aco=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11," in array expression.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"{"@} in array expression.@.'],acu=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,G7,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.@.'],acv=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11,He,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,". Expected either an infix or postfix operator, or ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,wn,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Found @{<green>":"@} @{<i>expression@}. Expected either an infix or postfix operator, or @{<green>","@} or @{<green>"["@} or @{<green>"]"@} next.@.'],acx=[0,[18,[0,[0,[11,b,0],b]],[11,HN,[17,1,[11," Expected index after indices followed by ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed index.@} Expected index after indices followed by @{<green>","@}.@.'],acz=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Expected a comma separated list of expressions.",[17,4,0]]]]],"@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions.@."],acD=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,wb,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," for the body of the ",[18,[0,[0,[11,a,0],a]],[11,cm,[17,1,[11,kv,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>")"@} for the body of the @{<green>"while"@} loop.@.'],acJ=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Expected expressions for size of array.",[17,4,0]]]]],"@{<light_red>Ill-formed type.@} Expected expressions for size of array.@."],acP=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,vo,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,eq,0],eq]],[11,vL,[17,1,[17,1,[11,kQ,[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[11,xx,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,wj,[17,1,[17,1,[12,46,[17,4,[11,xR,[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,ew,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected an @{<i>@{<light_yellow>unconstrained@}@}, non-array type after @{<green>"array"@} declaration.@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@}.@.  See the complete table of types at:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}@.'],acQ=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11,v2,[18,[0,[0,[11,a,0],a]],[11,'"+="',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,GJ,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,GZ,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Expected either @{<green>"+="@} @{<i>expression@} or @{<green>"()"@} after @{<green>"target"@}.@.'],acW=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," after profile name.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>")"@} after profile name.@.'],acX=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11," to begin profile block.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"{"@} to begin profile block.@.'],acY=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," followed by a comma separated list of expressions or",[17,4,[11,GA,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"print"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} followed by a comma separated list of expressions or@.strings followed by @{<green>");"@} after @{<green>"print"@}.@.'],ac0=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"print(',[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,er,0],er]],[11,pE,[17,1,[17,1,[11,Io,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a @{<green>";"@} after @{<green>"print(@{<r>@{<f>...@}@})"@}.@.'],ac1=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11," Expected either a list of statements followed by a ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," for a block, or a list of expressions expressions followed by a ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," for an array literal.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Expected either a list of statements followed by a @{<green>"}"@} for a block, or a list of expressions expressions followed by a @{<green>"}"@} for an array literal.@.'],ac4=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,es,[17,4,[11,"A valid expression was found, but it was not followed by a closing parenthesis.",[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.@.A valid expression was found, but it was not followed by a closing parenthesis.@.'],ac5=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected a statement for the true branch of conditional.",[17,4,0]]]]],"@{<light_red>Ill-formed statement.@} Expected a statement for the true branch of conditional.@."],ac6=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,H1,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} after @{<green>"for"@}.@.'],ac7=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected (loop) identifier after ",[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected (loop) identifier after @{<green>"("@}.@.'],ac8=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wR,[17,1,[11," after loop identifier.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"in"@} after loop identifier.@.'],adb=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"continue"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after @{<green>"continue"@}.@.'],adc=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"break"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after @{<green>"break"@}.@.'],adf=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected an expression followed by @{<green>";"@} after @{<green>"="@}.@.'],adg=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," to complete the definition or a ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," to start a new declaration of the same type.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected a @{<green>";"@} to complete the definition or a @{<green>","@} to start a new declaration of the same type.@.'],adj=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11," Found a well-formed function application. Expected either a ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or a valid continuation of the expression.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Found a well-formed function application. Expected either a @{<green>";"@} or a valid continuation of the expression.@.'],adk=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,1,[11," Expected an distribution name after ",[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected an distribution name after @{<green>"~"@}.@.'],adl=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected @{<green>"("@} after distribution name, followed by a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.@.'],adn=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,"-statement",[17,1,[11,". Expected either ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or a truncation with the format ",[18,[0,[0,[11,a,0],a]],[11,G6,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,Ij,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement@}. Expected either @{<green>";"@} or a truncation with the format @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.@.'],adp=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," after truncated ",[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} after truncated @{<green>"~"@}-statement.@.'],ads=[0,[18,[0,[0,[11,b,0],b]],[11,Hl,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wn,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed assignment statement.@} Expected an expression followed by @{<green>";"@} next.@.'],adt=[0,[18,[0,[0,[11,b,0],b]],[11,Hl,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,HI,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed assignment statement.@} Expected a @{<green>";"@} after the value being assigned.@.'],adv=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a_,[17,1,[11,", a statement, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," to end the block.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"else"@}, a statement, or @{<green>"}"@} to end the block.@.'],adw=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,wb,[18,[0,[0,[11,a,0],a]],[11,a_,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>"else"@}.@.'],adx=[0,[18,[0,[0,[11,b,0],b]],[11,wp,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," after function argument declaration.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed function argument.@} Expected @{<green>","@} or @{<green>")"@} after function argument declaration.@.'],adz=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,mF,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,It,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,wU,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,H2,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"functions {"@}, @{<green>"data {"@}, @{<green>"transformed data {"@}, @{<green>"parameters {"@},@.@{<green>"transformed parameters {"@}, @{<green>"model {"@}, or @{<green>"generated quantities {"@}.@.'],adA=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"functions"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"functions"@}.@.'],adB=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected a function forward declaration, definition, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,mF,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected a function forward declaration, definition, or @{<green>"}"@} after @{<green>"functions {"@}.@.'],adC=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,It,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,wU,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11,we,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"data {"@}, @{<green>"transformed data {"@}, @{<green>"parameters {"@},@.@{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.@.'],adD=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11," followed by a list of top-level variable declarations after ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} followed by a list of top-level variable declarations after @{<green>"data"@}.@.'],adE=[0,[18,[0,[0,[11,b,0],b]],[11,"Invalid type in declaration.",[17,1,[12,32,[18,[0,[0,[11,IM,0],IM]],[11,"Valid types:",[17,1,[17,4,[11,"  int, real, vector, row_vector, matrix,",[17,4,[11,"  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,",[17,4,[11,"  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,",[17,4,[11,"  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,",[17,4,[11,"  tuple(",[18,[0,[0,[11,er,0],er]],[11,pE,[17,1,[12,41,[17,4,[11,"optionally preceded by a ",[18,[0,[0,[11,G3,0],G3]],[11,"single",[17,1,[11," array[",[18,[0,[0,[11,er,0],er]],[11,pE,[17,1,[12,93,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],"@{<light_red>Invalid type in declaration.@} @{<blue>Valid types:@}@.  int, real, vector, row_vector, matrix,@.  unit_vector, simplex, sum_to_zero_vector, ordered, positive_ordered,@.  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov,@.  sum_to_zero_matrix, row_stochastic_matrix, column_stochastic_matrix,@.  tuple(@{<f>...@})@.optionally preceded by a @{<u>single@} array[@{<f>...@}]@."],adF=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wV,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,vX,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,HL,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,Ie,[17,1,[11," followed by an expression after ",[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"lower ="@}, @{<green>"upper ="@}, @{<green>"offset ="@} or @{<green>"multiplier ="@} followed by an expression after @{<green>"<"@}.@.'],adG=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11," after seeing ",[18,[0,[0,[11,a,0],a]],[11,Hu,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@} @{<green>">"@} after seeing @{<green>"upper"@}.@.'],adK=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wV,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,Ji,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,'"<upper ="',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,Jz,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"lower ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@}@.after @{<green>"<upper ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.@.'],adL=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,Hx,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],H_],adN=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,IC,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"lower = "@} @{<i>expression@}.@.'],adR=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,vz,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.@.'],adS=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,wh,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"multiplier"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier"@}.@.'],adT=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11," Expected and expression (not containing binary logical operators)",[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,Ie,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected and expression (not containing binary logical operators)@.after @{<green>"multiplier ="@}.@.'],adV=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,'"offset"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) after @{<green>"offset"@}.@.'],adW=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,wq,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,HL,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators)@.after @{<green>"offset ="@}.@.'],adX=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,xB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.@.'],adY=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,Hx,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],H_],adZ=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,vX,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,Ji,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,'"<lower ="',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,Jz,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"upper ="@} @{<i>expression@} (not containing binary logical operators) @{<green>">"@}@.after @{<green>"<lower ="@} @{<i>expression@} @{<green>","@} in top-level variable declaration.@.'],ad0=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i_,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,bM,[18,[0,[0,[11,a,0],a]],[11,Hu,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"="@} @{<i>expression@}@.(not containing binary logical operators) after @{<green>"upper"@}.@.'],ad_=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,IC,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,GO,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11," for integer bounds.",[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"lower = "@} @{<i>expression@} or @{<green>"upper = "@} @{<i>expression@} for integer bounds.@.'],aee=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Expected a non-array type after ",[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[11,xx,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected a non-array type after @{<green>"array"@} declaration.@.'],aeh=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Only top-level variable declarations are allowed in the ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11,bT,[18,[0,[0,[11,a,0],a]],[11,S,[17,1,[11,cn,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Only top-level variable declarations are allowed in the @{<green>"data"@} and @{<green>"parameters"@} blocks.@.'],aei=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,wU,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11,we,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"transformed data {"@}, @{<green>"parameters {"@},@.@{<green>"transformed parameters {"@}, @{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.@.'],aej=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"transformed data"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"{"@} after @{<green>"transformed data"@}.@.'],aem=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,qp,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[12,44,[17,4,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11,we,[17,4,0]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"parameters {"@}, @{<green>"transformed parameters {"@},@.@{<green>"model {"@}, @{<green>"generated quantities {"@}, or end-of-file.@.'],aen=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,S,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"parameters"@}.@.'],aeo=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected top-level variable declaration or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected top-level variable declaration or @{<green>"}"@}.@.'],aep=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,m2,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11," after end of parameters block.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"transformed parameters {"@}, @{<green>"model {"@} or @{<green>"generated quantities {"@} after end of parameters block.@.'],aeq=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"transformed parameters"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"transformed parameters"@}.@.'],aer=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,kC,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11," after end of transformed parameters block.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"model {"@} or @{<green>"generated quantities {"@} after end of transformed parameters block.@.'],aes=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"model"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"model"@}.@.'],aet=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,i6,[17,1,[11," or end of file after end of model block.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed program.@} Expected @{<green>"generated quantities {"@} or end of file after end of model block.@.'],aeu=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,du,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"generated quantities"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected @{<green>"{"@} after @{<green>"generated quantities"@}.@.'],aev=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11," Expected end of file after end of generated quantities block.",[17,4,0]]]]],"@{<light_red>Ill-formed program.@} Expected end of file after end of generated quantities block.@."],adh=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wr,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,"It looks like you are trying to use the old array syntax.",[17,4,[11,"  Please use the new syntax, see:",[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,Hy,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} after variable declaration.@.  @{<i>It looks like you are trying to use the old array syntax.@.  Please use the new syntax, see:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#array-data-types.section@}@.'],ab7=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,"(list of commas)",[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," in an ",[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,eq,0],eq]],[11,w4,[17,1,[17,1,[11," type in a function signature.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>(list of commas)@} @{<green>"]"@} in an @{<i>@{<light_yellow>unsized@}@} type in a function signature.@.'],acm=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Expected an expression or comma separated list of expressions followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression or comma separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.@.'],ab5=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Expected a comma separated list of types between ",[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11,bT,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," to declare tuple variable.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected a comma separated list of types between @{<green>"("@} and @{<green>")"@} to declare tuple variable.@.'],acM=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,v2,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," followed by",[17,4,[11,"further types and ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,v5,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected either @{<green>")"@} or @{<green>","@} followed by@.further types and @{<green>")"@} to complete tuple.@.'],acK=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," followed by further types and ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,v5,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>","@} followed by further types and @{<green>")"@} to complete tuple.@.'],acL=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11," Incomplete type specification, expected further types followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,v5,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Incomplete type specification, expected further types followed by @{<green>")"@} to complete tuple.@.'],ab6=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,"array sizes",[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," followed by type after ",[18,[0,[0,[11,a,0],a]],[11,pu,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>array sizes@} @{<green>"]"@} followed by type after @{<green>"array"@}.@.'],acV=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected profile name as string in parenthesis",[17,4,0]]]]],"@{<light_red>Ill-formed statement.@} Expected profile name as string in parenthesis@."],aci=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," for the test of a ",[18,[0,[0,[11,a,0],a]],[11,cm,[17,1,[11,kv,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"("@} for the test of a @{<green>"while"@} loop.@.'],adq=[0,[18,[0,[0,[11,b,0],b]],[11,ep,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wn,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed compound assignment statement.@} Expected an expression followed by @{<green>";"@} next.@.'],adr=[0,[18,[0,[0,[11,b,0],b]],[11,ep,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,HI,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed compound assignment statement.@} Expected a @{<green>";"@} after the value being assigned.@.'],adi=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11," Expected a statement, but found a partial value before this point.",[17,4,[11,"Did you mean for this to be the start of an assignment or ",[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,"-statement?",[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Expected a statement, but found a partial value before this point.@.Did you mean for this to be the start of an assignment or @{<green>"~"@}-statement?@.'],acA=[0,[18,[0,[0,[11,b,0],b]],[11,"Ill-formed conditional distribution evaluation.",[17,1,[11,gv,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"|"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed conditional distribution evaluation.@} Expected a comma separated list of expressions followed by @{<green>")"@} after @{<green>"|"@}.@.'],ac2=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"jacobian +="',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected an expression followed by @{<green>";"@} after @{<green>"jacobian +="@}.@.'],acR=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"target +="',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected an expression followed by @{<green>";"@} after @{<green>"target +="@}.@.'],acj=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,GJ,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,GZ,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected @{<green>"()"@} after @{<green>"target"@}.@.'],acS=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or expression followed by ",[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"return"',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>";"@} or expression followed by @{<green>";"@} after @{<green>"return"@}.@.'],acr=[0,[18,[0,[0,[11,b,0],b]],[11,"Ill-formed function application.",[17,1,[11,gv,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed function application.@} Expected a comma separated list of expressions followed by @{<green>")"@} after @{<green>"("@}.@.'],ac$=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,Ia,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"fatal_error("',[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings followed by @{<green>");"@} after @{<green>"fatal_error("@}.@.'],acT=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,Ia,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"reject("',[17,1,[11,",.",[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings followed by @{<green>");"@} after @{<green>"reject("@},.@.'],acU=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected a comma separated list of either expressions or strings, followed by ",[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of either expressions or strings, followed by @{<green>");"@}.@.'],adm=[0,[18,[0,[0,[11,b,0],b]],[11,pM,[18,[0,[0,[11,a,0],a]],[11,jd,[17,1,[11,qe,[17,1,[11," Expected a comma separated list of expressions for arguments to the distribution, followed by ",[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[12,46,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed @{<green>"~"@}-statement.@} Expected a comma separated list of expressions for arguments to the distribution, followed by @{<green>")"@}.@.'],ado=[0,[18,[0,[0,[11,b,0],b]],[11,"Ill-formed truncation.",[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,G6,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,pW,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,Ij,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed truncation.@} Expected @{<green>"T["@} @{<i>optional expression@} @{<green>","@} @{<i>optional expression@} @{<green>"];"@}.@.'],acy=[0,[18,[0,[0,[11,b,0],b]],[11,HN,[17,1,[11,G7,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed index.@} Expected an expression or @{<green>"]"@} or @{<green>","@} after @{<green>":"@}.@.'],acC=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Found an expression. Expected an infix or postfix operator or ",[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[17,4,0]]]]]]]],'@{<light_red>Ill-formed expression.@} Found an expression. Expected an infix or postfix operator or @{<green>"["@}@.'],acw=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Found an incomplete ternary expression, should be ",[18,[0,[0,[11,a,0],a]],[11,'"(',[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,er,0],er]],[11,"condition",[17,1,[17,1,[11,") ? (",[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,er,0],er]],[11,"true branch",[17,1,[17,1,[11,") : (",[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,er,0],er]],[11,"false branch",[17,1,[17,1,[11,Io,[17,1,[12,46,[17,4,[11,"Did you forget to add a colon or a false branch?",[17,4,[11,"For example, this returns ",[18,[0,[0,[11,HU,0],HU]],[18,[0,[0,[11,a,0],a]],[11,"3.0",[17,1,[17,1,[12,58,[17,4,[11,bF,[18,[0,[0,[11,a,0],a]],[11,"1 ? 3.0 : 0.0",[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Found an incomplete ternary expression, should be @{<green>"(@{<r>@{<f>condition@}@}) ? (@{<r>@{<f>true branch@}@}) : (@{<r>@{<f>false branch@}@})"@}.@.Did you forget to add a colon or a false branch?@.For example, this returns @{<b>@{<green>3.0@}@}:@.  @{<green>1 ? 3.0 : 0.0@}@.'],acs=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Found an incomplete binary expression.",[17,4,[11,"Are you missing the right hand side?",[17,4,0]]]]]]],"@{<light_red>Ill-formed expression.@} Found an incomplete binary expression.@.Are you missing the right hand side?@."],acq=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Unexpected input after the conclusion of a valid expression.",[17,4,[11,"You may be missing a ",[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11," between expressions, an operator, or a terminating ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,H2,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Unexpected input after the conclusion of a valid expression.@.You may be missing a @{<green>","@} between expressions, an operator, or a terminating @{<green>"}"@}, @{<green>")"@}, @{<green>"]"@}, or @{<green>";"@}.@.'],acZ=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11," Expected a comma separated list of expressions or",[17,4,[11,GA,[18,[0,[0,[11,a,0],a]],[11,mE,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,'"print("',[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a comma separated list of expressions or@.strings followed by @{<green>");"@} after @{<green>"print("@}.@.'],acB=[0,[18,[0,[0,[11,b,0],b]],[11,dd,[17,1,[11,He,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[11," followed by expression. Expected a ",[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[11,ar,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," or an infix or postfix operator.",[17,4,0]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed phrase.@} Found @{<green>"("@} followed by expression. Expected a @{<green>"["@}, @{<green>","@} or @{<green>")"@} or an infix or postfix operator.@.'],act=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11," Expected a comma separated list of expressions, followed by ",[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected a comma separated list of expressions, followed by @{<green>"]"@}.@.'],ac3=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,dN,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,es,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected @{<green>"("@} @{<i>expression@} @{<green>")"@} for the test of the if statement.@.'],ac9=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,Jx,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,k0,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,wR,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression followed by @{<green>")"@} or @{<green>":"@} after @{<green>"for ("@} @{<i>identifier@} @{<green>"in"@}.@.'],adu=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,jc,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,Jx,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,k0,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,wR,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,mB,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression followed by @{<green>")"@} after @{<green>"for ("@} @{<i>identifier@} @{<green>"in"@} @{<i>expression@} @{<green>":"@}.@.'],ac_=[0,[18,[0,[0,[11,b,0],b]],[11,bg,[17,1,[11,wb,[18,[0,[0,[11,a,0],a]],[11,ag,[17,1,[11," for the loop body of the ",[18,[0,[0,[11,a,0],a]],[11,H1,[17,1,[11,kv,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed statement.@} Expected a statement after @{<green>")"@} for the loop body of the @{<green>"for"@} loop.@.'],acp=[0,[18,[0,[0,[11,b,0],b]],[11,cF,[17,1,[11,ni,[18,[0,[0,[11,a,0],a]],[11,'"!"',[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed expression.@} Expected an expression after @{<green>"!"@}.@.'],acE=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for vector size.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for vector size.@.'],acg=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected unconstrained variable declaration, statement, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected unconstrained variable declaration, statement, or @{<green>"}"@}.@.'],aek=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11," Expected top-level variable declaration, statement, or ",[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[12,46,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected top-level variable declaration, statement, or @{<green>"}"@}.@.'],acF=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for row_vector size.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for row_vector size.@.'],ada=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," The ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11," specifier is only valid in function arguments, not declarations.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed declaration.@} The @{<green>"data"@} specifier is only valid in function arguments, not declarations.@.'],acI=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,IK,[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[11,". Constrained types are not supported in local (or model block) variable declarations.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Did not expect @{<green>"<"@}. Constrained types are not supported in local (or model block) variable declarations.@.'],acO=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,Hn,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Constrained types are not supported in local (or model block) variable declarations.@.  @{<i>Use @{<r>@{<green>"matrix"@}@} instead@}.@.'],acN=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,Hn,[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pD,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,IG,[17,1,[17,1,[11,ql,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Constrained types are not supported in local (or model block) variable declarations.@.  @{<i>Use @{<r>@{<green>"vector"@}@} instead@}.@.'],acG=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected an identifier after type in local (or model block) variable declaration.",[17,4,0]]]]],"@{<light_red>Ill-formed declaration.@} Expected an identifier after type in local (or model block) variable declaration.@."],acH=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for matrix sizes.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for matrix sizes.@.'],ab$=[0,[18,[0,[0,[11,b,0],b]],[11,wl,[17,1,[11," Expected an identifier after the type.",[17,4,0]]]]],"@{<light_red>Ill-formed function.@} Expected an identifier after the type.@."],acd=[0,[18,[0,[0,[11,b,0],b]],[11,wp,[17,1,[11," Expected an argument declaration (",[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,eq,0],eq]],[11,w4,[17,1,[17,1,[11,bT,[18,[0,[0,[11,e,0],e]],[18,[0,[0,[11,eq,0],eq]],[11,vL,[17,1,[17,1,[11," type followed by identifier).",[17,4,[11,bF,[18,[0,[0,[11,e,0],e]],[11,pY,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,kP,[17,1,[17,1,[11,qi,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,wj,[17,1,[17,1,[11,bh,[18,[0,[0,[11,aN,0],aN]],[18,[0,[0,[11,a,0],a]],[11,xP,[17,1,[17,1,[12,46,[17,4,[11,xR,[17,1,[17,4,[11,bF,[18,[0,[0,[11,b0,0],b0]],[11,ew,[17,1,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed function argument.@} Expected an argument declaration (@{<i>@{<light_yellow>unsized@}@} and @{<i>@{<light_yellow>unconstrained@}@} type followed by identifier).@.  @{<i>For example, this means a type like @{<r>@{<green>"matrix"@}@}, not @{<r>@{<green>"corr_matrix"@}@} or @{<r>@{<green>"matrix[3,4]"@}@}.@.  See the complete table of types at:@}@.  @{<light_blue>https://mc-stan.org/docs/reference-manual/types.html#variable-declaration.section@}@.'],acb=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,IK,[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[11,". Functions do not support type constraints.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed type.@} Did not expect @{<green>"<"@}. Functions do not support type constraints.@.'],ady=[0,[18,[0,[0,[11,b,0],b]],[11,eY,[17,1,[11,m1,[18,[0,[0,[11,a,0],a]],[11,fB,[17,1,[11," or a function definition or declaration.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed block.@} Expected a @{<green>"}"@} or a function definition or declaration.@.'],aeg=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wr,[17,4,0]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} after variable declaration.@.'],ade=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11," or plain assignment after variable declaration.",[17,4,0]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>";"@} or plain assignment after variable declaration.@.'],add=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected a new identifier after comma in declaration.",[17,4,[11,"All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.",[17,4,0]]]]]]],"@{<light_red>Ill-formed declaration.@} Expected a new identifier after comma in declaration.@.All variables declared must be of the same type, and any initializing assignment must follow the identifier before the next comma.@."],aef=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Cannot assign to variables in the ",[18,[0,[0,[11,a,0],a]],[11,eX,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,S,[17,1,[11,cn,[17,4,[11,cT,[18,[0,[0,[11,a,0],a]],[11,ay,[17,1,[11,wr,[17,4,0]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Cannot assign to variables in the @{<green>"data"@} or @{<green>"parameters"@} blocks.@.Expected @{<green>";"@} after variable declaration.@.'],ael=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected an identifier and optional assignment after type in variable declaration.",[17,4,0]]]]],"@{<light_red>Ill-formed declaration.@} Expected an identifier and optional assignment after type in variable declaration.@."],aeb=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11," Expected identifier after type in variable declaration.",[17,4,0]]]]],"@{<light_red>Ill-formed declaration.@} Expected identifier after type in variable declaration.@."],adH=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,wq,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,vX,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators)@.after @{<green>"upper ="@}.@.'],adI=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11," Expected an expression (not containing binary logical operators).",[17,4,0]]]]],"@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators).@."],adU=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,'", offset = "',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,wh,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,vz,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} or @{<green>", offset = "@} @{<i>expression@}@.(not containing binary logical operators) @{<green>">"@} after @{<green>"multiplier = "@} @{<i>expression@}.@.'],adM=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,wq,[17,4,[11,kx,[18,[0,[0,[11,a,0],a]],[11,wV,[17,1,[12,46,[17,4,0]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected an expression (not containing binary logical operators)@.after @{<green>"lower ="@}.@.'],adJ=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,GO,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} after @{<green>"upper = "@} @{<i>expression@}.@.'],adO=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,xB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,G1,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"offset = "@} @{<i>expression@} (not containing binary logical operators).@.'],adP=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,'", multiplier = "',[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[17,4,[11,wh,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11,aI,[18,[0,[0,[11,a,0],a]],[11,xB,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,46,[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>">"@} or @{<green>", multiplier = "@} @{<i>expression@}@.(not containing binary logical operators) @{<green>">"@} after @{<green>"offset = "@} @{<i>expression@}.@.'],adQ=[0,[18,[0,[0,[11,b,0],b]],[11,bX,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,vz,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[11,G1,[17,4,0]]]]]]]]]]]]],'@{<light_red>Ill-formed constraint.@} Expected @{<green>"multiplier = "@} @{<i>expression@} (not containing binary logical operators).@.'],ad1=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of unit_vector.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of unit_vector.@.'],ad6=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of simplex.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of simplex.@.'],ad7=[0,[18,[0,[0,[11,b,0],b]],[11,dc,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,fG,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,I$,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,a9,[17,1,[11," or identifier next as part of top-level variable declaration.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed declaration.@} Expected @{<green>"<"@} @{<i>constraint@} @{<green>">"@} or identifier next as part of top-level variable declaration.@.'],ad8=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of positive_ordered.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of positive_ordered.@.'],ad9=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of ordered.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of ordered.@.'],ad3=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of sum_to_zero_matrix.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_matrix.@.'],ad2=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of sum_to_zero_vector.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of sum_to_zero_vector.@.'],ad5=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of column_stochastic_matrix.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of column_stochastic_matrix.@.'],ad4=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of row_stochastic_matrix.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of row_stochastic_matrix.@.'],ad$=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of cov_matrix.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cov_matrix.@.'],aea=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of corr_matrix.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of corr_matrix.@.'],aec=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11,bh,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bU,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of cholesky_factor_cov.",[17,4,0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} or @{<green>"["@} @{<i>expression@} @{<green>","@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_cov.@.'],aed=[0,[18,[0,[0,[11,b,0],b]],[11,aM,[17,1,[11,w,[18,[0,[0,[11,a,0],a]],[11,by,[17,1,[12,32,[18,[0,[0,[11,e,0],e]],[11,aa,[17,1,[12,32,[18,[0,[0,[11,a,0],a]],[11,bo,[17,1,[11," for size of cholesky_factor_corr.",[17,4,0]]]]]]]]]]]]]]]]],'@{<light_red>Ill-formed type.@} Expected @{<green>"["@} @{<i>expression@} @{<green>"]"@} for size of cholesky_factor_corr.@.'],ab4=[0,[18,[0,[0,[11,b,0],b]],[11,bx,[17,1,[11," Only function definitions/declarations are expected in ",[18,[0,[0,[11,b0,0],b0]],[11,"'.stanfunctions'",[17,1,[11," files.",[17,4,0]]]]]]]]],"@{<light_red>Ill-formed program.@} Only function definitions/declarations are expected in @{<light_blue>'.stanfunctions'@} files.@."];function
 ab3(a){if(731>=a>>>0){var
 b=0;a:for(;;){switch(b){case
 0:b=a;if(381<=b){if(531<=b){if(644<=b)switch(b){case
@@ -8906,10 +8906,10 @@ oZ(a,b){oX[1]=0;if(781515420<=b[1]){b=b[2];try{var
 g=[0,q1(b)]}catch(f){g=[1,[0,b]]}b=0===g[0]?[0,[0,yY(0,g[1]),b]]:g}else
 b=[0,[0,nw(0,b[2]),w5]];if(0===b[0]){b=b[1];g=b[1];var
 f=cZ[1],h=cZ[2];a:{b=b[2];var
-i=cZ[3];if(f>0){cZ[1]=0;f=f-0|0;if(0<=f&&(h.length-1-f|0)>=0){aql(h,0,f,i);break a}J("Array.fill")}}rl(jA);mc[1]=0;jx(b_);fO(g,b_);D5(g,b,0);b=ey(b_)[12];try{var
+i=cZ[3];if(f>0){cZ[1]=0;f=f-0|0;if(0<=f&&(h.length-1-f|0)>=0){aql(h,0,f,i);break a}J("Array.fill")}}rl(jA);mc[1]=0;jx(b_);fO(g,b_);D5(g,b,0);b=ez(b_)[12];try{var
 c=a(b);a:{c=[0,c,c];b:for(;;){b=c[2];c=c[1];if(typeof
 b==="number")break;switch(b[0]){case
-0:c=ab2(ey(b_));a=ey(b_);c=[0,c,a[11],a[12]];c=[0,b,BU(b)(c)];break;case
+0:c=ab2(ez(b_));a=ez(b_);c=[0,c,a[11],a[12]];c=[0,b,BU(b)(c)];break;case
 4:var
 e=b[1],c=q$(rm(jA)),e=[0,e[1],e[2],e[3],e[4],e[5],e[6],e[7],c];break a;case
 3:break b;default:c=[0,c,BV(0,b)]}}b:{if(typeof
@@ -8930,7 +8930,7 @@ c=0;G(g(e)(aex),f,function(a,b){return oI(c,oK,a,b)},[0,j,i]);f=m}f=aY(iI[1],fun
 1:return[0,[0,k3,[0,a[1],0],a[2]]];case
 2:return[0,[0,qg,a[1],a[2]]];default:return 0}});f=k(g5[1],f);g5[1]=0;iI[1]=0;return g6(0,0,0,e,f)}var
 v3="type",aeE=[0,[11,"Unexpected unsized type in unsized_basetype_json: ",[16,0]],"Unexpected unsized type in unsized_basetype_json: %t"];function
-md(a){a=ec(a);var
+md(a){a=ed(a);var
 b=a[2],d=a[1],a="dimensions";if(typeof
 d==="number"){var
 c=v3;switch(d){case
@@ -9089,7 +9089,7 @@ c=0;if(c){a=c[1];return[0,aeU,a[1],a[2]]}c=ty(b[1]+e5)?0:1;return[0,aeV,a,c]}}fu
 l(a,b,c,d){var
 e=c[2][2],b=lT(j[2][3])?[0,[8,aeW,[0,b,e],[0,j,0]],[0,e,j[2][2],1]]:j,b=[0,ac(b),[0,c,0]];return[0,[5,[0,[2,[0,aL(a),0,0],b],n],[0,[1,aeR],e],[0,d]],e]}function
 p(a,b){var
-c=Y(b);if(typeof
+c=Z(b);if(typeof
 a==="number"&&!a)return b;if(typeof
 c==="number"&&!c){c=b[2];return[0,[7,b,1,b[2][3]],[0,1,c[2],c[3]]]}return b}function
 q(a,b){return oo(a)?[0,[2,[0,aL(2),0,0],[0,b,[0,cR,0]]],n]:p(a,b)}function
@@ -9107,7 +9107,7 @@ w=c[2],a=c[3],c=c[1],e=fe(w,e),i=e[2],e=tu([0,[2,[1,0],[0,e,0]],[0,0,i[2],i[3]]]
 a=m(v(h(w,function(a){return lT(a[2][1])?iv(a,[0,c]):a}))),b=f[2][2];return[0,[1,[0,[2,[0,aL(3),0,0],[0,a,0]],n]],b]},f[2][2]);a();a=e[2];e=[0,[9,k(c,[0,e,0])],a]}else{e=m(v(eP(d)));c=f[2][2];e=[0,[1,[0,[2,[0,aL(3),0,0],[0,e,0]],n]],c]}return[0,l(17,xl,u,l(19,vA,f,e)),0]}}function
 uo(c,b){return h(b,function(a){if(0!==a[0])return ac(a[1]);a=a[1];a=34===C(a,0)?34===C(a,u(a)-1|0)?sh(h$(a,1),1):a:a;return[0,[1,3,a],gc(1)(c)(0)()]})}var
 vC="check_matching_dims",aeY=[0,vC,0,0];function
-hd(a,b,c,d,e){return iq(Y(d))?0:[0,[0,[3,aeY,[0,[0,[1,3,I$],n],[0,[0,[1,3,a],n],[0,b,[0,[0,[1,3,c],n],[0,d,0]]]]]],e],0]}function
+hd(a,b,c,d,e){return iq(Z(d))?0:[0,[0,[3,aeY,[0,[0,[1,3,I$],n],[0,[0,[1,3,a],n],[0,b,[0,[0,[1,3,c],n],[0,d,0]]]]]],e],0]}function
 Ei(a,b,c,d){if(typeof
 d!=="number")switch(d[0]){case
 0:return hd(a,b,qk,d[1],c);case
@@ -9121,14 +9121,14 @@ mg(a,b){if(iq(b[2][1]))return b;a=os(a);if(!a)return b;var
 c=b[2],d=c[3],c=c[2];return[0,[6,b,a],[0,or(b[2][1],a),c,d]]}var
 ae1=[0,[11,"To shrink a vector, the first argument must be a univariate function, got: ",[16,0]],"To shrink a vector, the first argument must be a univariate function, got: %t"],ae2=[0,[11,"Expecting SVector or SMatrix, got ",[16,0]],"Expecting SVector or SMatrix, got %t"];function
 up(d,b,c){function
-e(a){return 0===d[0]?i(d[1],a):X(ae1,[0,function(a){return ee(af,a,c)},0])}if(typeof
+e(a){return 0===d[0]?i(d[1],a):X(ae1,[0,function(a){return ef(af,a,c)},0])}if(typeof
 c!=="number")switch(c[0]){case
 0:b=c[1];return[0,b,e(c[2])];case
 1:b=c[1];return[1,b,e(c[2])];case
 2:var
 f=c[3],g=c[2],a=c[1];if(0!==d[0])return[0,a,j(d[1],g,f)];var
 h=d[1],b=b(f);return[2,a,i(h,g),b];case
-6:a=c[2];return[6,up(d,b,c[1]),a]}return X(ae2,[0,function(a){return ee(af,a,c)},0])}function
+6:a=c[2];return[6,up(d,b,c[1]),a]}return X(ae2,[0,function(a){return ef(af,a,c)},0])}function
 Ej(a,b){function
 f(a,b){return up([1,a],function(a){return a},b)}function
 g(c,b){return f(function(a,b){return c(a)},b)}function
@@ -9195,7 +9195,7 @@ a==="number")switch(a){case
 1:return[0,[0,1,d],0];case
 2:return[0,[0,ae9,d],0];default:return[0,[0,2,d],0]}switch(a[0]){case
 0:c=a[1];if(0!==c[0]){var
-e=a[3],x=a[2],c=c[1],a=d$[1],j=ik(0),f=e[2][3],g=[0,[11,e[2][2],j,[1,f],0],e[2][1]],i=g[2],i=[0,[0,[0,[0,j],0],f,ac(e)],i],C=[0,[4,[0,j,r]],e[2]],B=[0,d],c=bt(ct(c,function(a,b){return n([0,[0,b,x,ae7(C,a)],B])}));d$[1]=a;return[0,[0,[9,[0,g,[0,i,c]]],d],0]}g=a[3];a=a[2];var
+e=a[3],x=a[2],c=c[1],a=ea[1],j=ik(0),f=e[2][3],g=[0,[11,e[2][2],j,[1,f],0],e[2][1]],i=g[2],i=[0,[0,[0,[0,j],0],f,ac(e)],i],C=[0,[4,[0,j,r]],e[2]],B=[0,d],c=bt(ct(c,function(a,b){return n([0,[0,b,x,ae7(C,a)],B])}));ea[1]=a;return[0,[0,[9,[0,g,[0,i,c]]],d],0]}g=a[3];a=a[2];var
 p=function(a,b){var
 c=b[1];switch(c[0]){case
 0:return bb(a)?b:[0,[1,b,a],b[2]];case
@@ -9224,10 +9224,10 @@ g!=="number"&&9===g[0])break a;a=[0,[9,[0,a,0]],a[2]]}c=ac(c);e=ac(e);return[0,[
 12:var
 s=a[1],f=a[3],a=ac(a[2]),f=m(f),c=f[1];a:{if(typeof
 c!=="number"&&9===c[0]){var
-t=c[1];break a}t=[0,f,0]}c=Y(a);a:{if(typeof
+t=c[1];break a}t=[0,f,0]}c=Z(a);a:{if(typeof
 c==="number"&&5===c){var
 o=1;break a}o=or(c,[0,[0,cR],0])}c=s[1];var
-y=[0,[11,ed(a),c,[1,o],1],d],u=function(a){return[0,[9,[0,y,[0,[0,[0,[0,[0,s[1]],0],o,a],d],t]]],d]};if(0===a[1][0])a=tv(u,a,d);else{a=CN([0,a,0]);c=a[3];f=a[1];a=tv(u,cW(a[2]),d);c();c=a[2];a=[0,[9,k(f,[0,a,0])],c]}return[0,a,0];case
+y=[0,[11,ee(a),c,[1,o],1],d],u=function(a){return[0,[9,[0,y,[0,[0,[0,[0,[0,s[1]],0],o,a],d],t]]],d]};if(0===a[1][0])a=tv(u,a,d);else{a=CN([0,a,0]);c=a[3];f=a[1];a=tv(u,cW(a[2]),d);c();c=a[2];a=[0,[9,k(f,[0,a,0])],c]}return[0,a,0];case
 13:c=a[1];return[0,[0,[8,c,au(a[2],n)],d],0];case
 14:return[0,[0,[9,au(a[1],n)],d],0];case
 15:var
@@ -9240,7 +9240,7 @@ c!=="number"&&16===c[0]){var
 g=c[2],f=c[3],j=c[1],b=b[2][1],e=j9(a,afd,c[4]);a:{a=0;if(e){c=e[1];var
 d=c[1];if(typeof
 d==="number"){if(2===d&&!e[2]){d=0;break a}}else if(9===d[0]&&!e[2]){d=[0,c];break a}}var
-i=A(0,c4),d=X(ae6,[0,function(a){return i(a,e)},0])}c=h(f,aeS);f=gV(ea(g[1]));return[0,[0,j,g[1],f,c,d,b],a]}return ae("Found non-function definition statement in function block")}var
+i=A(0,c4),d=X(ae6,[0,function(a){return i(a,e)},0])}c=h(f,aeS);f=gV(eb(g[1]));return[0,[0,j,g[1],f,c,d,b],a]}return ae("Found non-function definition statement in function block")}var
 afh=[0,"check_greater_or_equal",0,0],aff=[0,[2,0,[12,95,[4,0,0,0,[11,"dim__",0]]]],"%s_%ddim__"],afg=[0,0],afe=[0,[15,0],b1],fZ=1;function
 El(m,h,i,d){function
 f(a,b,c){var
@@ -9319,7 +9319,7 @@ e==="number"&&2>e)return a;return[0,[2,Eq,[0,a,0]],a[2]]}if(2===a[0]){var
 d=a[1];if(0===d[0]){var
 f=a[2],i=d[1],m=d[3],d=d[2];if(aK(ap4,i)){a=bD(apZ,i);a:{b=b[2];if(a){a=a[1];b:for(;;){if(a){var
 c=a[1],a=a[2];for(;;){if(c){var
-e=c[1],c=c[2],g=e[3],j=e[2],e=fe(f,e[1]),g=bj(Y(e),g),j=g?lR(ed(e),j):g;if(!(1-j))continue;c=1}else
+e=c[1],c=c[2],g=e[3],j=e[2],e=fe(f,e[1]),g=bj(Z(e),g),j=g?lR(ee(e),j):g;if(!(1-j))continue;c=1}else
 c=0;if(1-c){a=1;break}continue b}}else
 a=0;if(!a)break;break a}}f=h(f,l)}return[0,[2,[0,i,d,m],f],b]}}}b=b[2];return[0,gZ(function(a){return Er(k,a)})(a),b]}function
 Es(a){for(;;){if(typeof
@@ -9344,7 +9344,7 @@ a!=="number"&&7===a[0]){a=a[1];var
 m=a,j=ct(a,function(a,b){return q+bW+l+(a+1|0)});break a}m=0;j=0}var
 w=function(a){var
 b=f[2],c=f[1],c=[0,c,k(b,h(M(a),function(a){return[0,a]}))],a=aX(j,m,function(a,b){b=aj(b);var
-c=bQ(0,b),c=[0,b,n[2],c];return[0,[0,ka(a)],c]}),b=[1,h(a,Y)],d=[0,h(a,ed)];return[0,[0,[0,c,i,[0,[2,oq,a],[0,b,n[2],d]]],r],0]},a=aX(j,m,function(a,b){a=ka(a);return[0,[11,bQ(0,aj(b)),a,[0,b],1],r]});return[0,[0,[9,k(a,[0,ge(M(v),function(a){a=w(a);return[0,[10,k(bt(aX(j,m,function(a,b){var
+c=bQ(0,b),c=[0,b,n[2],c];return[0,[0,ka(a)],c]}),b=[1,h(a,Z)],d=[0,h(a,ee)];return[0,[0,[0,c,i,[0,[2,oq,a],[0,b,n[2],d]]],r],0]},a=aX(j,m,function(a,b){a=ka(a);return[0,[11,bQ(0,aj(b)),a,[0,b],1],r]});return[0,[0,[9,k(a,[0,ge(M(v),function(a){a=w(a);return[0,[10,k(bt(aX(j,m,function(a,b){var
 c=[0,[0,[0,ka(a)],0],,b],d=T(v);return ut(a,te([0,aj(b),d]),c)})),a)],r]},r),0])],r],0]}break;case
 7:g=d[1];o=ct(g,function(a,b){return[0,[0,[1,f,a+1|0],0],r,b]});return bt(aX(ct(g,function(a,b){return q+bW+l+(a+1|0)}),o,function(a,b){return ut(a,p,b)}))}c=o2(c)+vx;var
 t=[0,[0,hf],n],u=[0,[0,c],[0,a,r,0]];return[0,[0,[9,[0,[0,[11,1,c,[1,a],1],r],[0,[0,[0,[0,[0,c],0],a,b],r],[0,[0,[0,[0,[0,hf],0],0,cR],r],[0,CO(d,function(a,b){a=[0,[0,[0,[0,[0,hf],0],0,[0,[2,[0,aL(0),0,0],[0,t,[0,cR,0]]],n]],r],0];var
@@ -9364,7 +9364,7 @@ a!=="number"&&7===a[0]){a=a[1];var
 o=a,m=ct(a,function(a,b){return i+bW+l+(a+1|0)});break a}o=0;m=0}var
 v=function(a){var
 b=g[2],c=g[1],c=[0,c,k(b,h(M(a),function(a){return[0,a]}))],a=aX(m,o,function(a,b){b=aj(b);var
-c=bQ(0,b),c=[0,b,n[2],c];return[0,[0,ka(a)],c]}),b=[1,h(a,Y)],d=[0,h(a,ed)];return[0,[0,[0,c,j,[0,[2,oq,a],[0,b,n[2],d]]],r],0]},a=aX(m,o,function(a,b){a=ka(a);return[0,[11,bQ(0,aj(b)),a,[0,b],1],r]});return[0,[0,[9,k(b,k(a,[0,ge(M(u),function(a){a=v(a);return[0,[10,k(bt(aX(m,o,function(a,b){var
+c=bQ(0,b),c=[0,b,n[2],c];return[0,[0,ka(a)],c]}),b=[1,h(a,Z)],d=[0,h(a,ee)];return[0,[0,[0,c,j,[0,[2,oq,a],[0,b,n[2],d]]],r],0]},a=aX(m,o,function(a,b){a=ka(a);return[0,[11,bQ(0,aj(b)),a,[0,b],1],r]});return[0,[0,[9,k(b,k(a,[0,ge(M(u),function(a){a=v(a);return[0,[10,k(bt(aX(m,o,function(a,b){var
 c=[0,[0,[0,ka(a)],0],,b],d=T(u);return ut(a,te([0,aj(b),d]),c)})),a)],r]},r),0]))],e],0]}break;case
 7:return au(ct(d[1],function(a,b){var
 c=0===a?e:r;return[0,[0,[1,g,a+1|0],0],c,b]}),uu)}b=s(i);c=f[2];c=[0,a,c[2],c[3]];var
@@ -9554,7 +9554,7 @@ e=a6(a,f);b:{c:{d:{if(35<=e){if(92!==e){if(gy<=e)break c;break d}}else{if(32>e){
 9:Q(c,b,92);b=b+1|0;Q(c,b,wX);break b;case
 10:Q(c,b,92);b=b+1|0;Q(c,b,mX);break b;case
 13:Q(c,b,92);b=b+1|0;Q(c,b,wf);break b;default:break c}}if(34>e)break d}Q(c,b,92);b=b+1|0;Q(c,b,e);break b}Q(c,b,e);break b}Q(c,b,92);b=b+1|0;Q(c,b,a7(48+(e/64|0)|0));b=b+1|0;Q(c,b,a7(48+((e/8|0)%8|0)|0));b=b+1|0;Q(c,b,a7(48+(e%8|0)|0))}b=b+1|0;e=f+1|0;if(d===f)break;f=e}}}a=re(c)}return[0,dQ+a+dQ]}function
-eh(a,b){return o5(a,b,0,0)}function
+ei(a,b){return o5(a,b,0,0)}function
 eR(a,b){return o5(a,b[1],0,b[2])}function
 uz(a,b){return o5(a,b[1],b[2],b[3])}function
 kc(a,b){return[7,a,jv(b)]}function
@@ -9568,20 +9568,20 @@ b=a[5],c=a[4],d=a[3],e=a[2],a=a[1];if(typeof
 b==="number")b=agW;else
 switch(b[0]){case
 0:b=[1,[0,agX,[0,aG(b[1]),0]]];break;case
-1:b=[1,[0,agY,[0,y(aG,b[1]),0]]];break;default:b=[1,[0,agZ,[0,y(aG,b[1]),0]]]}c=[0,[1,[0,ag2,[0,bc(d),0]]],[0,[1,[0,ag1,[0,[0,c],0]]],[0,[1,[0,ag0,[0,b,0]]],0]]];c=[0,[1,[0,ag3,[0,eC(e),0]]],c];return[1,[0,[1,[0,ag4,[0,eC(a),0]]],c]]}var
+1:b=[1,[0,agY,[0,y(aG,b[1]),0]]];break;default:b=[1,[0,agZ,[0,y(aG,b[1]),0]]]}c=[0,[1,[0,ag2,[0,bc(d),0]]],[0,[1,[0,ag1,[0,[0,c],0]]],[0,[1,[0,ag0,[0,b,0]]],0]]];c=[0,[1,[0,ag3,[0,eD(e),0]]],c];return[1,[0,[1,[0,ag4,[0,eD(a),0]]],c]]}var
 ag5=[0,vN],ag6=[0,w3],ag7=[0,"Expression"],ag8=[0,"VariableDefn"],ag9=[0,vj],ag_=[0,m9],ag$=[0,xD],aha=[0,HB],ahb=[0,"ConstexprIf"],ahc=[0,"TryCatch"],ahd=[0,cG],ahe=[0,p$],ahf=[0,"Throw"],ahg=[0,"Using"],ahh=[0,"Comment"];function
-ei(a){if(typeof
+ej(a){if(typeof
 a==="number")return 0===a?ag5:ag6;switch(a[0]){case
 0:return[1,[0,ag7,[0,aG(a[1]),0]]];case
 1:return[1,[0,ag8,[0,uA(a[1]),0]]];case
 2:var
-b=a[4],d=a[3],c=a[2],a=uA(a[1]),c=aG(c),d=aG(d);return[1,[0,ag9,[0,a,[0,c,[0,d,[0,ei(b),0]]]]]];case
-3:c=a[1];b=a[3];a=a[2];d=c[2];c=[1,[0,bc(c[1]),[0,[0,d],0]]];a=aG(a);return[1,[0,ag_,[0,c,[0,a,[0,ei(b),0]]]]];case
-4:c=a[2];a=aG(a[1]);return[1,[0,ag$,[0,a,[0,ei(c),0]]]];case
-5:c=a[3];b=a[2];a=aG(a[1]);b=ei(b);return[1,[0,aha,[0,a,[0,b,[0,d3(ei,c),0]]]]];case
-6:b=a[2];a=bc(a[1]);return[1,[0,ahb,[0,a,[0,ei(b),0]]]];case
-7:b=a[2];c=a[3];a=y(ei,a[1]);d=b[2];b=[1,[0,bc(b[1]),[0,[0,d],0]]];return[1,[0,ahc,[0,a,[0,b,[0,y(ei,c),0]]]]];case
-8:return[1,[0,ahd,[0,y(ei,a[1]),0]]];case
+b=a[4],d=a[3],c=a[2],a=uA(a[1]),c=aG(c),d=aG(d);return[1,[0,ag9,[0,a,[0,c,[0,d,[0,ej(b),0]]]]]];case
+3:c=a[1];b=a[3];a=a[2];d=c[2];c=[1,[0,bc(c[1]),[0,[0,d],0]]];a=aG(a);return[1,[0,ag_,[0,c,[0,a,[0,ej(b),0]]]]];case
+4:c=a[2];a=aG(a[1]);return[1,[0,ag$,[0,a,[0,ej(c),0]]]];case
+5:c=a[3];b=a[2];a=aG(a[1]);b=ej(b);return[1,[0,aha,[0,a,[0,b,[0,d3(ej,c),0]]]]];case
+6:b=a[2];a=bc(a[1]);return[1,[0,ahb,[0,a,[0,ej(b),0]]]];case
+7:b=a[2];c=a[3];a=y(ej,a[1]);d=b[2];b=[1,[0,bc(b[1]),[0,[0,d],0]]];return[1,[0,ahc,[0,a,[0,b,[0,y(ej,c),0]]]]];case
+8:return[1,[0,ahd,[0,y(ej,a[1]),0]]];case
 9:return[1,[0,ahe,[0,d3(aG,a[1]),0]]];case
 10:return[1,[0,ahf,[0,aG(a[1]),0]]];case
 11:b=[0,a[1]];return[1,[0,ahg,[0,b,[0,d3(bc,a[2]),0]]]];default:return[1,[0,ahh,[0,[0,a[1]],0]]]}}function
@@ -9612,12 +9612,12 @@ e=a?a[1]:0;return function(h){return function(a){return[0,b,c,f,g,d,e,h]}}}}}}}}
 ahF=[0,"Include"],ahG=[0,"IfNDef"],ahH=[0,"MacroApply"],ahI=[0,"destructor_body"],ahJ=[0,"constructor"],ahK=[0,"public_members"],ahL=[0,"private_members"],ahM=[0,"public_base"],ahN=[0,"final"],ahO=[0,"class_name"],ahP=[0,m3],ahQ=[0,"struct_name"],ahR=[0,"param"],ahS=[0,mW],ahT=[0,"Class"],ahU=[0,"Struct"],ahV=[0,"GlobalVariableDefn"],ahW=[0,"GlobalComment"],ahX=[0,"GlobalUsing"],ahY=[0,"Namespace"],ahZ=[0,"Preprocessor"],ahC=[0,m3],ahD=[0,"init_list"],ahE=[0,kz],ahv=[0,m3],ahw=[0,"cv_qualifiers"],ahx=[0,kz],ahy=[0,ds],ahz=[0,dG],ahA=[0,S],ahB=[0,"templates_init"];function
 kg(a){switch(a[0]){case
 0:a=a[1];var
-d=a[7],c=a[1],f=a[6],g=a[5],b=a[4],e=a[3],a=a[2],d=d?[1,[0,y(ei,d[1]),0]]:fa,d=[0,[1,[0,ahw,[0,y(ahq,f),0]]],[0,[1,[0,ahv,[0,d,0]]],0]],g=[0,[1,[0,ahy,[0,[0,b],0]]],[0,[1,[0,ahx,[0,y(function(a){var
-b=a[2];return[1,[0,bc(a[1]),[0,[0,b],0]]]},g),0]]],d]],e=[0,[1,[0,ahz,[0,bc(e),0]]],g],a=[0,[1,[0,ahA,[0,eC(a),0]]],e],e=c[2],c=y(function(a){return y(EB,a)},c[1]);return[1,[0,ahS,[0,[1,[0,[1,[0,ahB,[0,[1,[0,c,[0,eC(e),0]]],0]]],a]],0]]];case
-1:a=a[1];c=a[6];e=a[5];g=a[4];d=a[3];b=a[2];f=a[1];a=[0,[1,[0,ahI,[0,y(ei,a[7]),0]]],0];var
-h=c[2],i=c[1],c=[0,[1,[0,ahC,[0,y(ei,c[3]),0]]],0],c=[0,[1,[0,ahD,[0,y(function(a){var
+d=a[7],c=a[1],f=a[6],g=a[5],b=a[4],e=a[3],a=a[2],d=d?[1,[0,y(ej,d[1]),0]]:fa,d=[0,[1,[0,ahw,[0,y(ahq,f),0]]],[0,[1,[0,ahv,[0,d,0]]],0]],g=[0,[1,[0,ahy,[0,[0,b],0]]],[0,[1,[0,ahx,[0,y(function(a){var
+b=a[2];return[1,[0,bc(a[1]),[0,[0,b],0]]]},g),0]]],d]],e=[0,[1,[0,ahz,[0,bc(e),0]]],g],a=[0,[1,[0,ahA,[0,eD(a),0]]],e],e=c[2],c=y(function(a){return y(EB,a)},c[1]);return[1,[0,ahS,[0,[1,[0,[1,[0,ahB,[0,[1,[0,c,[0,eD(e),0]]],0]]],a]],0]]];case
+1:a=a[1];c=a[6];e=a[5];g=a[4];d=a[3];b=a[2];f=a[1];a=[0,[1,[0,ahI,[0,y(ej,a[7]),0]]],0];var
+h=c[2],i=c[1],c=[0,[1,[0,ahC,[0,y(ej,c[3]),0]]],0],c=[0,[1,[0,ahD,[0,y(function(a){var
 b=[0,a[1]];return[1,[0,b,[0,y(aG,a[2]),0]]]},h),0]]],c],a=[0,[1,[0,ahJ,[0,[1,[0,[1,[0,ahE,[0,y(function(a){var
-b=a[2];return[1,[0,bc(a[1]),[0,[0,b],0]]]},i),0]]],c]],0]]],a],a=[0,[1,[0,ahK,[0,y(kg,e),0]]],a],a=[0,[1,[0,ahL,[0,y(kg,g),0]]],a],a=[0,[1,[0,ahM,[0,bc(d),0]]],a];return[1,[0,ahT,[0,[1,[0,[1,[0,ahO,[0,[0,f],0]]],[0,[1,[0,ahN,[0,eC(b),0]]],a]]],0]]];case
+b=a[2];return[1,[0,bc(a[1]),[0,[0,b],0]]]},i),0]]],c]],0]]],a],a=[0,[1,[0,ahK,[0,y(kg,e),0]]],a],a=[0,[1,[0,ahL,[0,y(kg,g),0]]],a],a=[0,[1,[0,ahM,[0,bc(d),0]]],a];return[1,[0,ahT,[0,[1,[0,[1,[0,ahO,[0,[0,f],0]]],[0,[1,[0,ahN,[0,eD(b),0]]],a]]],0]]];case
 2:a=a[1];f=a[2];b=a[1];a=[0,[1,[0,ahQ,[0,[0,f],0]]],[0,[1,[0,ahP,[0,y(kg,a[3]),0]]],0]];return[1,[0,ahU,[0,[1,[0,[1,[0,ahR,[0,d3(EB,b),0]]],a]],0]]];case
 3:return[1,[0,ahV,[0,uA(a[1]),0]]];case
 4:return[1,[0,ahW,[0,[0,a[1]],0]]];case
@@ -9706,7 +9706,7 @@ b==="number")return 0;switch(b[0]){case
 1:b=b[1];var
 c=A([0,$],aw);return j(g(a)(aiB),c,b);default:c=b[1];b=A([0,$],aw);return j(g(a)(aiC),b,c)}}var
 b=b[1]?"static ":l,c=c?"constexpr ":l;return da(g(a)(aiD),b,c,bm,f,e,h,d)}var
-S="/@[<v>*@[@ %a@]@,@]*/",aq="%a;",gx="using %s%a;",na="if (@[%a@])",hC="//@[<h> %s@]",dW="using ",dG="; ",aiN=[0,[11,cd,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],na],aiT=[0,[11,kK,[15,0]],et],aiO=[0,[11,"if constexpr (",[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],"if constexpr (@[%a@])"],aiJ=[0,[11,cd,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],na],aiI=[0,[11,hz,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],"while (@[%a@])"],aiH=[0,[11,dP,[18,[1,[0,[11,R,0],R]],[15,[12,32,[15,[11,dT,[15,[17,0,[12,41,0]]]]]]]]],"for (@[<hov>%a %a: %a@])"],aiG=[0,[11,dP,[18,[1,[0,[11,R,0],R]],[15,[11,dG,[15,[11,dG,[15,[17,0,[12,41,0]]]]]]]]],"for (@[<hov>%a; %a; %a@])"],aiE=[0,[18,[1,[0,[11,q,0],q]],[15,[12,59,[17,0,0]]]],"@[<2>%a;@]"],aiF=[0,[15,[12,59,0]],aq],aiK=[0,[11,xz,0],xz],aiL=[0,0],aiM=[0,[15,[12,32,[15,0]]],"%a %a"],aiP=[0,[18,[1,[0,[11,bL,0],bL]],[11,"try {",[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[18,[1,[0,[11,bL,0],bL]],[11,"} catch (",[15,[12,32,[15,[11,dO,[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[12,be,0]]]]]]]]]]]]]]]]],"@[<v 2>try {@ %a@]@,@[<v 2>} catch (%a %a) {@ %a@]@,}"],aiQ=[0,[18,[1,[0,[11,I,0],I]],[18,[1,[0,[11,bL,0],bL]],[12,db,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[12,be,[17,0,0]]]]]]]]],"@[<v>@[<v 2>{@,%a@]@,}@]"],aiR=[0,[11,kX,[15,[12,59,0]]],xQ],aiS=[0,[11,"throw ",[15,[12,59,0]]],"throw %a;"],aiU=[0,[11,dW,[2,0,[15,[12,59,0]]]],gx],aiV=[0,[12,47,[18,[1,[0,[11,I,0],I]],[12,42,[18,[1,[0,0,l]],[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[17,0,[11,kZ,0]]]]]]]]]],S],aiW=[0,[11,pC,[18,[1,[0,[11,aH,0],aH]],[12,32,[2,0,[17,0,0]]]]],hC];function
+S="/@[<v>*@[@ %a@]@,@]*/",aq="%a;",gx="using %s%a;",na="if (@[%a@])",hC="//@[<h> %s@]",dW="using ",dG="; ",aiN=[0,[11,cd,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],na],aiT=[0,[11,kK,[15,0]],eu],aiO=[0,[11,"if constexpr (",[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],"if constexpr (@[%a@])"],aiJ=[0,[11,cd,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],na],aiI=[0,[11,hz,[18,[1,[0,0,l]],[15,[17,0,[12,41,0]]]]],"while (@[%a@])"],aiH=[0,[11,dP,[18,[1,[0,[11,R,0],R]],[15,[12,32,[15,[11,dT,[15,[17,0,[12,41,0]]]]]]]]],"for (@[<hov>%a %a: %a@])"],aiG=[0,[11,dP,[18,[1,[0,[11,R,0],R]],[15,[11,dG,[15,[11,dG,[15,[17,0,[12,41,0]]]]]]]]],"for (@[<hov>%a; %a; %a@])"],aiE=[0,[18,[1,[0,[11,q,0],q]],[15,[12,59,[17,0,0]]]],"@[<2>%a;@]"],aiF=[0,[15,[12,59,0]],aq],aiK=[0,[11,xz,0],xz],aiL=[0,0],aiM=[0,[15,[12,32,[15,0]]],"%a %a"],aiP=[0,[18,[1,[0,[11,bL,0],bL]],[11,"try {",[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[18,[1,[0,[11,bL,0],bL]],[11,"} catch (",[15,[12,32,[15,[11,dO,[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[12,be,0]]]]]]]]]]]]]]]]],"@[<v 2>try {@ %a@]@,@[<v 2>} catch (%a %a) {@ %a@]@,}"],aiQ=[0,[18,[1,[0,[11,I,0],I]],[18,[1,[0,[11,bL,0],bL]],[12,db,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[12,be,[17,0,0]]]]]]]]],"@[<v>@[<v 2>{@,%a@]@,}@]"],aiR=[0,[11,kX,[15,[12,59,0]]],xQ],aiS=[0,[11,"throw ",[15,[12,59,0]]],"throw %a;"],aiU=[0,[11,dW,[2,0,[15,[12,59,0]]]],gx],aiV=[0,[12,47,[18,[1,[0,[11,I,0],I]],[12,42,[18,[1,[0,0,l]],[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[17,0,[11,kZ,0]]]]]]]]]],S],aiW=[0,[11,pC,[18,[1,[0,[11,aH,0],aH]],[12,32,[2,0,[17,0,0]]]]],hC];function
 hh(a,b){if(typeof
 b==="number")return 0===b?f(a,p9):f(a,p4);switch(b[0]){case
 0:b=b[1];return j(g(a)(aiE),aw,b);case
@@ -9746,9 +9746,9 @@ ai7(a,b){var
 c=b[2],d=c[2];function
 f(a,b){var
 c=b[2],b=b[1],d=A([0,$],aw);return G(g(a)(ai8),b,d,c)}var
-e=c[3],c=c[1],b=b[1],h=A([0,a0],hh),i=d8(1-bb(d),function(a,b){var
+e=c[3],c=c[1],b=b[1],h=A([0,a0],hh),i=d9(1-bb(d),function(a,b){var
 c=A([0,$],f);return j(g(a)(ai9),c,b)}),k=[0,f6],l=A([0,$],function(a,b){return n_(k,bm,kh,a,b)});return da(g(a)(ai_),b,l,c,i,d,h,e)}var
-q="<v 1>",kX="};",ai$=[0,[11,"#include <",[2,0,[12,62,0]]],"#include <%s>"],aja=[0,[18,[1,[0,[11,I,0],I]],[11,"#ifndef ",[2,0,[17,[0,s,0,0],[15,[17,[0,s,0,0],[11,"#endif",0]]]]]]],"@[<v>#ifndef %s@,%a@,#endif"],ajb=[0,[18,[1,[0,[11,aH,0],aH]],[2,0,[12,40,[15,[12,41,[17,0,0]]]]]],"@[<h>%s(%a)@]"],ajc=[0,[18,[1,[0,[11,q,0],q]],[11,"class ",[2,0,[2,0,[11," : public ",[15,[11,eZ,[17,[0,s,0,0],[18,[1,[0,[11,q,0],q]],[11,"private:",[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[18,[1,[0,[11,q,0],q]],[11,"public:",[17,[0,s,0,0],[15,[17,[0,s,0,0],[15,[17,[0,s,0,0],[15,[17,0,[17,0,[17,[0,s,0,0],[11,kX,0]]]]]]]]]]]]]]]]]]]]]]]]]],"@[<v 1>class %s%s : public %a {@,@[<v 1>private:@,%a@]@,@[<v 1>public:@,%a@,%a@,%a@]@]@,};"],ajd=[0,[15,[18,[1,[0,[11,bL,0],bL]],[11,"struct ",[2,0,[11,eZ,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[11,kX,0]]]]]]]]]],"%a@[<v 2>struct %s {@,%a@]@,};"],ajh=[0,[11,kK,[15,0]],et],aje=[0,[15,[12,59,0]],aq],ajf=[0,[12,47,[18,[1,[0,[11,I,0],I]],[12,42,[18,[1,[0,0,l]],[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[17,0,[11,kZ,0]]]]]]]]]],S],ajg=[0,[11,pC,[18,[1,[0,[11,aH,0],aH]],[12,32,[2,0,[17,0,0]]]]],hC],aji=[0,[11,dW,[2,0,[15,[12,59,0]]]],gx],ajj=[0,[18,[1,[0,[11,I,0],I]],[11,"namespace ",[2,0,[11,eZ,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[12,be,0]]]]]]]]],"@[<v>namespace %s {@,%a@]@,}"],ai2=[0,[18,[1,[0,0,l]],[15,[2,0,[15,[17,[0,c,1,0],[15,[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[12,41,[15,[17,0,0]]]]]]]]]]]]],"@[%a%s%a@ %a(@[<hov>%a@])%a@]"],ai3=[0,[18,[1,[0,[11,bL,0],bL]],[15,[11,eZ,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[12,be,0]]]]]]]],"@[<v 2>%a {@,%a@]@,}"],ai4=[0,[15,[12,59,0]],aq];function
+q="<v 1>",kX="};",ai$=[0,[11,"#include <",[2,0,[12,62,0]]],"#include <%s>"],aja=[0,[18,[1,[0,[11,I,0],I]],[11,"#ifndef ",[2,0,[17,[0,s,0,0],[15,[17,[0,s,0,0],[11,"#endif",0]]]]]]],"@[<v>#ifndef %s@,%a@,#endif"],ajb=[0,[18,[1,[0,[11,aH,0],aH]],[2,0,[12,40,[15,[12,41,[17,0,0]]]]]],"@[<h>%s(%a)@]"],ajc=[0,[18,[1,[0,[11,q,0],q]],[11,"class ",[2,0,[2,0,[11," : public ",[15,[11,eZ,[17,[0,s,0,0],[18,[1,[0,[11,q,0],q]],[11,"private:",[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[18,[1,[0,[11,q,0],q]],[11,"public:",[17,[0,s,0,0],[15,[17,[0,s,0,0],[15,[17,[0,s,0,0],[15,[17,0,[17,0,[17,[0,s,0,0],[11,kX,0]]]]]]]]]]]]]]]]]]]]]]]]]],"@[<v 1>class %s%s : public %a {@,@[<v 1>private:@,%a@]@,@[<v 1>public:@,%a@,%a@,%a@]@]@,};"],ajd=[0,[15,[18,[1,[0,[11,bL,0],bL]],[11,"struct ",[2,0,[11,eZ,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[11,kX,0]]]]]]]]]],"%a@[<v 2>struct %s {@,%a@]@,};"],ajh=[0,[11,kK,[15,0]],eu],aje=[0,[15,[12,59,0]],aq],ajf=[0,[12,47,[18,[1,[0,[11,I,0],I]],[12,42,[18,[1,[0,0,l]],[17,[0,c,1,0],[15,[17,0,[17,[0,s,0,0],[17,0,[11,kZ,0]]]]]]]]]],S],ajg=[0,[11,pC,[18,[1,[0,[11,aH,0],aH]],[12,32,[2,0,[17,0,0]]]]],hC],aji=[0,[11,dW,[2,0,[15,[12,59,0]]]],gx],ajj=[0,[18,[1,[0,[11,I,0],I]],[11,"namespace ",[2,0,[11,eZ,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[12,be,0]]]]]]]]],"@[<v>namespace %s {@,%a@]@,}"],ai2=[0,[18,[1,[0,0,l]],[15,[2,0,[15,[17,[0,c,1,0],[15,[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[12,41,[15,[17,0,0]]]]]]]]]]]]],"@[%a%s%a@ %a(@[<hov>%a@])%a@]"],ai3=[0,[18,[1,[0,[11,bL,0],bL]],[15,[11,eZ,[17,[0,s,0,0],[15,[17,0,[17,[0,s,0,0],[12,be,0]]]]]]]],"@[<v 2>%a {@,%a@]@,}"],ai4=[0,[15,[12,59,0]],aq];function
 ki(a,b){switch(b[0]){case
 0:b=b[1];var
 c=b[7],e=b[1],m=b[6],n=b[5],o=b[4],p=b[3],q=b[2],r=e[2],s=e[1],k=function(a,b){b=A([0,lJ],ai1);var
@@ -9787,11 +9787,11 @@ b=fj(iA,a);return b?[0,T(b[1][4])]:l3(a)?1:0}var
 vR="_functor__",HH="_rsfunctor__",o7=HH,ajB=[0,[11,"_variadic",[4,0,0,0,[11,vR,0]]],"_variadic%d_functor__"];function
 EF(a){if(typeof
 a==="number")return a?o7:vR;a=a[1];return i(V(ajB),a)}function
-hi(a){a=Y(a);if(typeof
+hi(a){a=Z(a);if(typeof
 a==="number"&&2!==a&&4>a)return 1;return 0}function
-EG(a){a=Y(a);a:if(typeof
+EG(a){a=Z(a);a:if(typeof
 a==="number"){if(5!==a&&8!==a)break a;return 1}return 0}function
-ej(a){return fe(a,0)}function
+ek(a){return fe(a,0)}function
 uF(a){return fe(a,1)}function
 EH(a){if(typeof
 a!=="number")switch(a[0]){case
@@ -9801,7 +9801,7 @@ EI(a){if(typeof
 a!=="number"&&0===a[0])return 1;return 0}function
 o8(a){var
 c=0;for(;;){if(!a)return c;var
-b=a[2],a=ed(a[1]);if(typeof
+b=a[2],a=ee(a[1]);if(typeof
 a==="number"&&a){c=1;a=b}else
 a=b}}var
 gA="lp_accum__",e1="lp__",kG="base_rng__",ajD=[0,kG,0],ajE=[0,e1,[0,gA,0]],ajF=[0,e1,[0,gA,0]],ajG=[0,e1,0];function
@@ -9812,7 +9812,7 @@ b==="number")switch(b){case
 3:return a?ajF:ajG}return 0}function
 o9(a){for(;;){if(typeof
 a==="number"){if(0===a)return 2}else if(0===a[0]){a=a[1];continue}return 3}}var
-eu="propto__",fF="jacobian__",ajI=[0,[1,fF],0],ajH=[0,[1,eu],0],ajJ=[0,[1,eu],0],ajK=[0,[1,kL],0];function
+ev="propto__",fF="jacobian__",ajI=[0,[1,fF],0],ajH=[0,[1,ev],0],ajJ=[0,[1,ev],0],ajK=[0,[1,kL],0];function
 uH(a,b){if(typeof
 b!=="number")return b[1]?ajJ:ajK;if(2===b){if(a)return ajH}else if(3<=b)return ajI;return 0}var
 ajL=[0,[11,"Attempting to make a local scalar tuple: type ",[16,[11,cb,[16,0]]]],"Attempting to make a local scalar tuple: type %t ad %t"];function
@@ -9862,36 +9862,36 @@ b=a[2];return[0,oe(0,a[1]),b]}),jp([[0,Iw,"stan::math::multiply_log"],[0,"lchoos
 EL(a,b,c){function
 d(a){return[4,"stan::math::primitive_value",0,[0,U(a),0]]}var
 c=d(c);return[3,[18,d(b),a,c]]}function
-ek(a,b){return[4,a,0,ca(b)]}function
-o_(a,b,c){a=a?a[1]:0;a=a?[7,b,-1,1,0]:[7,b,1,-1,0];if(bb(c))return[7,a,[0,[0,al],0]];a=[7,a,[0,[0,l+T(c)],0]];return eh([17,a,ca(c)],"finished")}function
-kj(a,b,c){if(hi(ej(c))&&hi(uF(c))){b=U(uF(c));return[3,[18,U(ej(c)),a,b]]}return ek(b,c)}function
+el(a,b){return[4,a,0,ca(b)]}function
+o_(a,b,c){a=a?a[1]:0;a=a?[7,b,-1,1,0]:[7,b,1,-1,0];if(bb(c))return[7,a,[0,[0,al],0]];a=[7,a,[0,[0,l+T(c)],0]];return ei([17,a,ca(c)],"finished")}function
+kj(a,b,c){if(hi(ek(c))&&hi(uF(c))){b=U(uF(c));return[3,[18,U(ek(c)),a,b]]}return el(b,c)}function
 ajP(a,b){function
 f(a){var
 b=a[1];if(7===b[0]){b=b[1];if(hi(b))return b}return a}var
 c=jF(b,hi)?h(b,f):b,d="stan::math::pow";switch(a){case
 0:return kj(2,"stan::math::add",c);case
-1:return U(ej(c));case
+1:return U(ek(c));case
 2:return kj(3,"stan::math::subtract",c);case
-3:return hi(ej(c))?[19,U(ej(c))]:[4,"stan::math::minus",0,[0,U(ej(c)),0]];case
+3:return hi(ek(c))?[19,U(ek(c))]:[4,"stan::math::minus",0,[0,U(ek(c)),0]];case
 4:return kj(0,"stan::math::multiply",c);case
-7:return ek("stan::math::modulus",c);case
-8:return ek("stan::math::mdivide_left",c);case
+7:return el("stan::math::modulus",c);case
+8:return el("stan::math::mdivide_left",c);case
 9:return kj(0,"stan::math::elt_multiply",c);case
 10:return kj(1,"stan::math::elt_divide",c);case
-11:return ek(d,c);case
-12:return ek(d,c);case
-15:return ek("stan::math::logical_eq",c);case
-16:return ek("stan::math::logical_neq",c);case
-17:return ek("stan::math::logical_lt",c);case
-18:return ek("stan::math::logical_lte",c);case
-19:return ek("stan::math::logical_gt",c);case
-20:return ek("stan::math::logical_gte",c);case
-21:return[4,"stan::math::logical_negation",0,[0,U(ej(c)),0]];case
-22:return hi(ej(c))?U(ej(c)):[4,"stan::math::transpose",0,[0,U(ej(c)),0]];case
+11:return el(d,c);case
+12:return el(d,c);case
+15:return el("stan::math::logical_eq",c);case
+16:return el("stan::math::logical_neq",c);case
+17:return el("stan::math::logical_lt",c);case
+18:return el("stan::math::logical_lte",c);case
+19:return el("stan::math::logical_gt",c);case
+20:return el("stan::math::logical_gte",c);case
+21:return[4,"stan::math::logical_negation",0,[0,U(ek(c)),0]];case
+22:return hi(ek(c))?U(ek(c)):[4,"stan::math::transpose",0,[0,U(ek(c)),0]];case
 5:case
-6:a:if(EG(uF(c))){if(!EG(ej(c))){d=Y(ej(c));b:{c:if(typeof
-d==="number"){if(4!==d&&7!==d)break c;d=1;break b}d=0}if(!d)break a}return ek("stan::math::mdivide_right",c)}var
-e=function(a){return 0===Y(a)?1:0},c=jF(c,e)?jF(b,e)?c:b:c;return kj(1,"stan::math::divide",c);default:return ae("And/Or should have been converted to an expression")}}var
+6:a:if(EG(uF(c))){if(!EG(ek(c))){d=Z(ek(c));b:{c:if(typeof
+d==="number"){if(4!==d&&7!==d)break c;d=1;break b}d=0}if(!d)break a}return el("stan::math::mdivide_right",c)}var
+e=function(a){return 0===Z(a)?1:0},c=jF(c,e)?jF(b,e)?c:b:c;return kj(1,"stan::math::divide",c);default:return ae("And/Or should have been converted to an expression")}}var
 i9="pstream__",Ha="append_row",vI="rep_row_vector",HD="append_col",xw="rep_vector",vW="rep_matrix",ajT=[0,[1,e1],[0,[1,gA],0]],ajV=[0,[2,0,[12,60,[2,0,[2,0,[12,62,0]]]]],"%s<%s%s>"],ajU=[0,[2,0,[12,60,[2,0,[11,ar,[2,0,[12,62,0]]]]]],"%s<%s, %s>"];function
 uJ(p,b,c,d,e){b=aE(bD(apX,b),b);var
 a=AP(b,95);if(a){a=a[1];var
@@ -9972,7 +9972,7 @@ a==="number"){if(5===a)return o$(U(d),c);a=c}else
 a=c}else
 a=c}else
 a=c;for(;;){if(!a)break d;b=a[1];e:{a=a[2];if(typeof
-b!=="number"&&0===b[0]){b=b[1][1];if(0===b[0]){b=1-CD(b[1]);break e}}b=0}if(1-b)break}a=1;break c}a=0}if(1-a){a=[0,Y(d),c];for(;;){b=a[1];c:{if(typeof
+b!=="number"&&0===b[0]){b=b[1][1];if(0===b[0]){b=1-CD(b[1]);break e}}b=0}if(1-b)break}a=1;break c}a=0}if(1-a){a=[0,Z(d),c];for(;;){b=a[1];c:{if(typeof
 b==="number")switch(b){case
 5:case
 8:if(a[2]){a=1;break c}a=0;break c}else if(0===b[0]){a=a[2];if(a){a=[0,b[1],a[2]];continue}}a=0}if(a)break;return o$(U(d),c)}}a=lL(af,d);c=h(c,EN);a=[0,cP(a),0];return[4,"stan::model::rvalue",0,k([0,U(d),a],c)]}var
@@ -10016,7 +10016,7 @@ f=[0,gj(2,b),0],e=[0,U(e),f];return[6,a,kE,0,[0,U(d),e]];case
 4:e=c[1];a=hj(c,b);d=[0,gj(2,b),0];return[6,a,kE,0,[0,U(e),d]]}return apY}f=hj(c,b);d=[0,U(a),[0,d,0]];return[6,f,kE,0,[0,U(e),d]]}e=hj(c,b);return[6,e,kE,0,[0,U(a),[0,d,0]]]}d=b[1];if(typeof
 c!=="number")switch(c[0]){case
 7:e=c[1];a=hj(c,b);return[8,a,aX(e,d,gj)];case
-6:break a}}return X(aki,[0,function(a){return ee(af,a,c)},[0,function(a){return cl(a,b)},0]])}a=c[1];d=c[2];e=ou(a);e=fv(b,aj(c),e);a=gj(a,b);return kc(e,[0,U(d),a])}function
+6:break a}}return X(aki,[0,function(a){return ef(af,a,c)},[0,function(a){return cl(a,b)},0]])}a=c[1];d=c[2];e=ou(a);e=fv(b,aj(c),e);a=gj(a,b);return kc(e,[0,U(d),a])}function
 EO(a,b,c){return typeof
 c==="number"?c?[0,gj(a,b)]:0:[0,U(c[1])]}var
 az="matrix_cl<double>",H="matrix_cl<int>",pa=[5,az],akk=[5,H];function
@@ -10024,13 +10024,13 @@ EP(a,b,c){a:{if(aF(a,j$,at)){if(typeof
 b!=="number"){if(0!==b[0]){b=pa;break a}b=b[1];if(typeof
 b!=="number"){b=pa;break a}if(b){b=pa;break a}b=akk;break a}if(b>=2){b=pa;break a}}b=eS(0,c,b)}return aS(0)(0)(b)(a)(0)()}function
 EQ(a){var
-b=Y(a);if(typeof
+b=Z(a);if(typeof
 b==="number"&&1===b)return[4,"stan::math::as_bool",0,[0,U(a),0]];return U(a)}function
 pc(a){if(0===a[0])return[1,a[1]];var
 b=a[1],c=b[1],b=b[2],a=a[2],b=b?jF(b,EI)?o$(pc(c),b):ae("Multi-index must be the last (rightmost) index."):pc(c);return[4,Ez,[0,[6,a-1|0],0],[0,b,0]]}var
 Gq="stan::math::stan_print",akp=[5,"std::stringstream"];function
 ER(a,b){var
-c="errmsg_stream__",d=[1,aS(0)(0)(akp)(c)(0)()],a=[0,[10,[4,a,0,[0,eh([1,c],"str"),0]]],0];return c7(k([0,d,h(b,function(a){return[0,[4,Gq,0,[0,[2,c],[0,U(a),0]]]]})],a))}var
+c="errmsg_stream__",d=[1,aS(0)(0)(akp)(c)(0)()],a=[0,[10,[4,a,0,[0,ei([1,c],"str"),0]]],0];return c7(k([0,d,h(b,function(a){return[0,[4,Gq,0,[0,[2,c],[0,U(a),0]]]]})],a))}var
 vO="function__",S="stan::math::profile_map",Hi="profiles__",uL=[1,i9],ET=[1,cG],pb=[5,az],aks=[1,15],akq=[0,0,0],akr=[0,1,0],akt=[1,gA],aku=[1,gA],akv=[1,fF],akw=[0,[0,"std::endl"],0],akm=[0,[1,Hi],0],akn=[0,[8,[5,S]],0],ako=[5,"stan::math::profile<local_scalar_t__>"],akl=[5,H],akf=[0,"stan::math::validate_non_negative_index"],akg=[0,"stan::math::validate_positive_index"],akh=[0,"stan::math::validate_unit_vector_index"],akc=[0,"cholesky_factor"],akd=[0,"greater_or_equal"],ake=[0,"less_or_equal"];function
 iR(a){var
 b=a[1];a:{b:{a=a[2];if(typeof
@@ -10051,7 +10051,7 @@ i==="number"&&2!==i&&4>i)break b;if(2!==c[0])break a;c=c[1];if(1!==c[0])break a;
 c==="number"){if(5!==c)break a}else if(0!==c[0])break a}b=U(e);b=[0,[0,[16,pc(d),b]],0];break}if(0===d[0]){e=b[2];c=f[2];d=d[1];if(typeof
 e==="number"&&2!==e&&4>e){e=b[3];if(jF(c,EI)){b=U(e);b=[0,[0,[16,o$([1,d],c),b]],0];break}}}b=b[3];var
 l=CP(f),j=function(a){var
-b=a[1];if(iq(Y(a)))return a;if(2===b[0]&&1===b[1][0])return a;b=oA(a);b=b?bj(CP(b[1]),l):0;if(b)return[0,[2,aks,[0,a,0]],a[2]];b=a[2];a=a[1];return[0,gZ(j)(a),b]},c=b[1];if(7===c[0]){d=c[1];c=c[2];b=typeof
+b=a[1];if(iq(Z(a)))return a;if(2===b[0]&&1===b[1][0])return a;b=oA(a);b=b?bj(CP(b[1]),l):0;if(b)return[0,[2,aks,[0,a,0]],a[2]];b=a[2];a=a[1];return[0,gZ(j)(a),b]},c=b[1];if(7===c[0]){d=c[1];c=c[2];b=typeof
 c==="number"?d:1===c[0]?b:d}b=j(b);c=f[2];d=f[1];c=Cj(c)?0:c;c=h(c,EN);f=[0,cP("assigning variable "+oz(f)),0];b=[0,U(b),f];b=[0,[0,[4,"stan::model::assign",0,k([0,pc(d),b],c)]],0];break;case
 1:b=[0,[0,eR(akt,[0,jb,[0,U(b[1]),0]])],0];break;case
 2:b=[0,[6,akv,[8,[0,[0,eR(aku,[0,jb,[0,U(b[1]),0]])],0]]],0];break;case
@@ -10124,7 +10124,7 @@ EU(a){function
 c(a){if(!a)return 3;var
 b=a[2],a=a[1],b=bb(b)?0:[0,c(b),0];return[11,"stan::return_type_t",k(a,b)]}function
 f(a,b){var
-c=b[2],d=b[1];if(oo(c))return 0;if(td(c)){b=ec(c);var
+c=b[2],d=b[1];if(oo(c))return 0;if(td(c)){b=ed(c);var
 e=b[1],g=0<b[2]?[11,ux,[0,a,0]]:a;if(typeof
 e!=="number"&&1===e[0])return bt(ct(h(e[1],function(a){return[0,d,a]}),function(a){var
 b=[11,Ey,[0,[6,a],[0,g,0]]];return function(a){return f(b,a)}}));return X(akL,[0,function(a){return O(a,c)},[0,function(a){return O(a,e)},[0,function(a){return cl(a,d)},0]]])}if(typeof
@@ -10142,21 +10142,21 @@ dp=[5,bx],akR=[0,[0,[0,k2]]],akS=[0,1],akT=[0,1];function
 akQ(a,b,c){var
 d=[11,jf,[0,EU(a)]];a:{a=h(aY(a,function(a){var
 b=a[2];return cN(a[3])?[0,b]:0}),function(a){return[1,aS(0)(0)([9,[8,0]])(a)([0,[0,[4,"stan::math::to_ref",0,[0,[1,a+Ju],0]]]])()]});if(typeof
-b==="number"&&2>b){b=[0,[1,aS(akT)(akS)(dp)(eu)(akR)()],[0,hg,[0,[0,[11,1,[1,eu]]],0]]];break a}b=0}c=k(b,k(kf,kd(iR(c))));return k(k([0,d,ke],a),c)}function
+b==="number"&&2>b){b=[0,[1,aS(akT)(akS)(dp)(ev)(akR)()],[0,hg,[0,[0,[11,1,[1,ev]]],0]]];break a}b=0}c=k(b,k(kf,kd(iR(c))));return k(k([0,d,ke],a),c)}function
 EW(a,b){return h(h7(a,b),function(a){return[0,[8,[1,a[1]]],a[2]]})}var
 akI=[0,[15,0],b1];function
 akH(a){var
 b=a[3],c=a[2],a=a[1],b=[0,[0,xs,[0,a3,j(ak(akI),CS,b)]],0],b=[0,[0,v3,uM(c)],b];return[0,an,[0,[0,ds,[0,a3,eF(a,he)]],b]]}var
 Ii="_namespace::",alb=[9,[10,[5,aa]]],alc=[0,1],ald=[0,1];function
-uN(a,b){a=[0,[0,cP(a+Ii+b)]];return k([0,[1,aS(ald)(alc)(alb)(vO)(a)()],0],[0,hg,[0,[0,[11,1,[1,vO]]],0]])}function
+uN(a,b){b=[0,[0,cP(a+Ii+b)]];return k([0,[1,aS(ald)(alc)(alb)(vO)(b)()],0],[0,hg,[0,[0,[11,1,[1,vO]]],0]])}function
 E1(a){a=a[1];if(typeof
 a!=="number")switch(a[0]){case
 10:return au(a[1],E1);case
 11:if(a[2]!==mD){var
 b=g3(a[3]);return[0,[0,a[2],b],0]}break}return 0}var
-eg=[5,"size_t"],alj=[1,px];function
+eh=[5,"size_t"],alj=[1,px];function
 uO(d,b,c){if(aF(b,gB,at))return 0;if(iy(c)){b=ti(b,aj(c));return bt(aX(b,tr(c),function(a,b){return uO(d,a,b)}))}var
-a=to(c),e=bd(0,eg),a=[0,[8,e,h(a,function(a){return[4,uy,[0,eg,0],[0,U(a),0]]})],0],a=[0,cP(lL(bm,o9(aj(c)))),a],b=[0,cP(eF(b,he)),a];return[0,[0,eR(alj,[0,"validate_dims",[0,cP(d),b]])],0]}var
+a=to(c),e=bd(0,eh),a=[0,[8,e,h(a,function(a){return[4,uy,[0,eh,0],[0,U(a),0]]})],0],a=[0,cP(lL(bm,o9(aj(c)))),a],b=[0,cP(eF(b,he)),a];return[0,[0,eR(alj,[0,"validate_dims",[0,cP(d),b]])],0]}var
 GQ="_data__";function
 E2(a,b,c){if(typeof
 b==="number"||!(b[0]<6))var
@@ -10169,17 +10169,17 @@ g=b[3],d=b[2];break c;case
 0:case
 1:d=b[2];break;case
 3:case
-4:d=b[1];break;default:break b}d=[0,U(d),0];d=[0,eh([1,e],i7),d];a=[0,[0,[15,a,o4(hj(b,0)),d]]];break a}g=[0,U(g),0];d=[0,U(d),g];e=[0,eh([1,e],i7),d];a=[0,[0,[15,a,o4(hj(b,0)),e]]];break a}a=0}return nR([0,f,[0,a,0]])}var
+4:d=b[1];break;default:break b}d=[0,U(d),0];d=[0,ei([1,e],i7),d];b=[0,[0,[15,a,o4(hj(b,0)),d]]];break a}g=[0,U(g),0];d=[0,U(d),g];e=[0,ei([1,e],i7),d];b=[0,[0,[15,a,o4(hj(b,0)),e]]];break a}b=0}return nR([0,f,[0,b,0]])}var
 alk=[0,"0U"];function
 E3(a){a=ca(a);if(a){var
 b=a[1],a=a[2];for(;;){if(!a){b=[0,b];break}b=[18,b,2,a[1]];a=a[2]}}else
 b=0;return b?b[1]:alk}var
 p1="size",Id="temp",uQ=[1,Id];function
 pe(a,b,c){a=[1,a];if(bb(c))return 0;var
-d="end",e=[0,eh(uQ,d),0],e=[0,eh(uQ,"begin"),e],e=[0,[0,eR(a,[0,"insert",[0,eh(a,d),e]])],0],d=eh(uQ,p1),d=[0,[0,eR(a,[0,"reserve",[0,[18,eh(a,p1),2,d],0]])],e];return[0,[1,aS(0)(0)(b)(Id)([0,[2,c]])()],d]}var
+d="end",e=[0,ei(uQ,d),0],e=[0,ei(uQ,"begin"),e],e=[0,[0,eR(a,[0,"insert",[0,ei(a,d),e]])],0],d=ei(uQ,p1),d=[0,[0,eR(a,[0,"reserve",[0,[18,ei(a,p1),2,d],0]])],e];return[0,[1,aS(0)(0)(b)(Id)([0,[2,c]])()],d]}var
 pU=951901561;function
 E6(a,b,c,d){a=a?a[1]:0;if(!c)return d(b,a);var
-g=c[2],c=c[1],f=d$[1],e=ik(0),a=c7(E6([0,[0,[0,pU,e],a]],b,g,d)),e=EA(e,U(cR),c,a);d$[1]=f;return[0,e,0]}var
+g=c[2],c=c[1],f=ea[1],e=ik(0),a=c7(E6([0,[0,[0,pU,e],a]],b,g,d)),e=EA(e,U(cR),c,a);ea[1]=f;return[0,e,0]}var
 I8="param_names__",eQ=[5,"std::string"],al9=[0,"'.'"],al_=[0,"':'"],al$=[1,I8];function
 uR(a,b){a=cP(a);var
 e=[7,eQ,0];for(;;){if(!b)return[0,eR(al$,[0,"emplace_back",[0,[18,e,2,a],0]])];var
@@ -10198,13 +10198,13 @@ c=b[3],d=b[2],b=b[1],e=[0,[0,[8,bd(0,eQ)],I8],[0,[0,dp,pt],[0,[0,dp,qr],0]]],c=[
 ame=[0,[0,0,0]],amf=[0,1];function
 E8(a,b){b=[0,cC,h(b,akH)];var
 c=br(cD);sZ(c,b);aW(c,l);b=bP(c);li(c);b=[0,[0,[9,[0,[7,eQ,[0,[0,dQ+fY(fZ,fY(fZ,fY(fZ,fY(fZ,b,dQ)(v6),'\\"+')('" +'),'+\\"')('+ "'),mU)(l)+dQ],0]]]],0]];return[0,bK(0)(amf)(eQ)(a)(0)(ame)(b)()]}var
-IS="num_gen_quantities",p0="num_params_r__",az="RNG",IO="unconstrain_array_impl",m8="params_unconstrained",es="params_i",GT="write_array_impl",gw="params_r",Jm="num_transformed",qo="context",H="pstream",mQ="log_prob",m6="transform_inits",Ih="transform_inits_impl",If="log_prob_impl",a4="emit_generated_quantities",w0="num_to_write",q="T_",v_="unconstrain_array",wP="write_array",xv="params_constrained",iZ="pstream__ = nullptr",ht="vars",s="emit_transformed_parameters",B="base_rng",Hg="params_r_vec",HT="num_params__",mi=[5,"stan::io::var_context"],fu=[5,"std::ostream"],E9=[0,[0,[0,[0,az],0],0],0],E_=[0,[0,[0,[1,eu],[0,[1,fF],[0,[0,q],0]]],0],0],uS=[1,Hg],amh=[1,IS],ami=[1,Jm],amj=[1,HT],amk=[1,a4],aml=[1,s],amm=[0,[1,B],[0,[1,gw],[0,[1,es],[0,[1,ht],[0,[1,s],[0,[1,a4],[0,[1,H],0]]]]]]],amn=[1,w0],amo=[0,[0,0,0]],amp=[0,[8,[1,az]],B],amq=[0,1],amr=[1,w0],ams=[0,[0,0,0]],amt=[0,[8,[1,az]],B],amu=[0,1],amv=[0,[1,gw],[0,[1,es],[0,[1,H],0]]],amw=[0,[1,eu],[0,[1,fF],0]],amx=[0,[0,0,0]],amy=[1,q],amz=[1,q],amA=[0,1],amB=[0,[0,0,0]],amC=[1,q],amD=[1,q],amE=[0,1],amF=[0,[1,qo],[0,[1,ht],[0,[1,i9],0]]],amG=[0,"resize",[0,[1,p0],0]],amH=[1,ht],amI=[0,[0,0,0]],amJ=[0,1],amK=[0,[1,H],0],amL=[1,es],amM=[1,qo],amN=[1,gw],amO=[0,[0,0,[0,1,0]]],amP=[0,1],amQ=[0,[1,xv],[0,[1,es],[0,[1,m8],[0,[1,H],0]]]],amR=[1,p0],amS=[0,[0,0,0]],amT=[0,1],amU=[1,p0],amV=[0,[0,0,0]],amW=[0,1];function
+IS="num_gen_quantities",p0="num_params_r__",az="RNG",IO="unconstrain_array_impl",m8="params_unconstrained",et="params_i",GT="write_array_impl",gw="params_r",Jm="num_transformed",qo="context",H="pstream",mQ="log_prob",m6="transform_inits",Ih="transform_inits_impl",If="log_prob_impl",a4="emit_generated_quantities",w0="num_to_write",q="T_",v_="unconstrain_array",wP="write_array",xv="params_constrained",iZ="pstream__ = nullptr",ht="vars",s="emit_transformed_parameters",B="base_rng",Hg="params_r_vec",HT="num_params__",mi=[5,"stan::io::var_context"],fu=[5,"std::ostream"],E9=[0,[0,[0,[0,az],0],0],0],E_=[0,[0,[0,[1,ev],[0,[1,fF],[0,[0,q],0]]],0],0],uS=[1,Hg],amh=[1,IS],ami=[1,Jm],amj=[1,HT],amk=[1,a4],aml=[1,s],amm=[0,[1,B],[0,[1,gw],[0,[1,et],[0,[1,ht],[0,[1,s],[0,[1,a4],[0,[1,H],0]]]]]]],amn=[1,w0],amo=[0,[0,0,0]],amp=[0,[8,[1,az]],B],amq=[0,1],amr=[1,w0],ams=[0,[0,0,0]],amt=[0,[8,[1,az]],B],amu=[0,1],amv=[0,[1,gw],[0,[1,et],[0,[1,H],0]]],amw=[0,[1,ev],[0,[1,fF],0]],amx=[0,[0,0,0]],amy=[1,q],amz=[1,q],amA=[0,1],amB=[0,[0,0,0]],amC=[1,q],amD=[1,q],amE=[0,1],amF=[0,[1,qo],[0,[1,ht],[0,[1,i9],0]]],amG=[0,"resize",[0,[1,p0],0]],amH=[1,ht],amI=[0,[0,0,0]],amJ=[0,1],amK=[0,[1,H],0],amL=[1,et],amM=[1,qo],amN=[1,gw],amO=[0,[0,0,[0,1,0]]],amP=[0,1],amQ=[0,[1,xv],[0,[1,et],[0,[1,m8],[0,[1,H],0]]]],amR=[1,p0],amS=[0,[0,0,0]],amT=[0,1],amU=[1,p0],amV=[0,[0,0,0]],amW=[0,1];function
 amg(a){var
 m=a[9];function
 i(a){return E3(h(a,function(a){return lY(a[2])}))}function
 j(b){return aY(m,function(a){a=a[3];return a[3]===b?[0,a]:0})}var
-a=i(j(0)),g=i(j(1)),d=i(j(2)),b=[0,[1,aS(0)(0)([9,eg])(w0)([0,[0,[18,[18,amj,2,ami],2,amh]]])()],0],d=[0,[1,aS(0)(0)([9,eg])(IS)([0,[0,[18,amk,0,[3,d]]]])()],b],d=[0,[1,aS(0)(0)([9,eg])(Jm)([0,[0,[18,aml,0,[3,g]]]])()],d],a=[0,[1,aS(0)(0)([9,eg])(HT)([0,[0,a]])()],d],d=[0,[4,GT,0,amm]],g=[0,k(a,[0,[0,[16,[1,ht],kc(bd(0,3),[0,amn,kb])]],[0,d,0]])],b="emit_generated_quantities = true",c="emit_transformed_parameters = true",f=[0,[10,fu],"pstream = nullptr"],e=k([0,[0,dp,c],[0,[0,dp,b],0]],[0,f,0]),l=[0,[0,[8,bd(0,3)],ht],0],l=[0,[0,[8,bd(0,2)],es],l],e=[0,k([0,amp,[0,[0,[8,bd(0,3)],gw],l]],e)],e=[0,[0,bK([0,E9])(amq)(1)(wP)(e)(amo)(g)()],0],g=bd(0,2),g=[0,k(a,[0,[1,aS(0)(0)(g)(es)(0)()],[0,[0,[16,[1,ht],[6,[7,3,-1,1,0],kE,0,[0,amr,[0,kb,0]]]]],[0,d,0]]])],a=[9,dp],a=[0,k([0,amt,[0,[0,[8,[7,3,-1,1,0]],gw],[0,[0,[8,[7,3,-1,1,0]],ht],0]]],k([0,[0,a,c],[0,[0,a,b],0]],[0,f,0]))],g=[0,[0,bK([0,E9])(amu)(1)(wP)(a)(ams)(g)()],e],e=[0,[0,[8,bd(0,2)],es],[0,f,0]],e=[0,[0,[0,[8,bd(0,amy)],gw],e]],a=[9,[0,[4,If,amw,amv]]],e=[0,[0,bK([0,E_])(amA)(amz)(mQ)(e)(amx)([0,[0,a,0]])()],0],a=[0,[0,[1,aS(0)(0)([7,2,-1,1,0])(es)(0)()],[0,a,0]]],e=[0,[0,bK([0,E_])(amE)(amD)(mQ)([0,[0,[0,[8,[7,amC,-1,1,0]],gw],[0,f,0]]])(amB)(a)()],e],a=o4([7,3,-1,1,0]),b=[0,[0,[8,bd(0,3)],ht],[0,[0,[10,fu],iZ],0]],b=[0,[0,[9,[8,mi]],qo],[0,[0,[8,bd(0,2)],es],b]],c=[0,[0,[0,eR(amH,amG)],[0,[0,[4,Ih,0,amF]],0]]],b=[0,[0,bK(0)(amJ)(1)(m6)([0,b])(amI)(c)()],0],c=eh(uS,p1),c=[0,[0,[4,m6,0,[0,amM,[0,amL,[0,uS,amK]]]]],[0,[0,[16,[1,gw],kc(a,[0,eh(uS,i7),c])]],0]],a=bd(0,2),c=[0,[1,aS(0)(0)(a)(es)(0)()],c],a=[0,[1,[0,o5(amN,p1,0,0),0]]],d=bd(0,3),d=[0,[0,[1,aS(0)(0)(d)(Hg)(a)()],c]],d=[0,[0,bK(0)(amP)(1)(m6)([0,[0,[0,[9,[8,mi]],qo],[0,[0,[8,[7,3,-1,1,0]],gw],[0,f,0]]]])(amO)(d)()],b],b=[9,bd(0,2)],c=[0,[4,IO,0,amQ]],b=[0,[0,[1,aS(0)(0)(b)(es)(0)()],[0,[0,[16,[1,m8],[6,[7,3,-1,1,0],kE,0,[0,amR,[0,kb,0]]]]],[0,c,0]]]],b=[0,[0,bK(0)(amT)(1)(v_)([0,[0,[0,[9,[8,[7,3,-1,1,0]]],xv],[0,[0,[8,[7,3,-1,1,0]],m8],[0,f,0]]]])(amS)(b)()],0],c=[0,[0,[16,[1,m8],kc(bd(0,3),[0,amU,kb])]],[0,c,0]],a=[9,bd(0,2)],a=[0,[0,[1,aS(0)(0)(a)(es)(0)()],c]],f=[0,[0,[8,bd(0,3)],m8],[0,f,0]],f=[0,[0,[0,[9,[8,bd(0,3)]],xv],f]];return k([0,[4,"Begin method overload boilerplate"],g],k(e,k(d,[0,[0,bK(0)(amW)(1)(v_)(f)(amV)(a)()],b])))}var
-H="VecI",s="stan::scalar_type_t",q="T__",a4="std::is_floating_point",kJ=3506791,B="stan::require_vector_t",py="sum",bx="std::is_integral",cG="VecVar",b0="0.0",cb="VecR",aq="stan::require_vector_like_vt",bL="<1>",EJ=[0,dt],EZ=[0,[5,kL],0],EY=[0,[1,eu],0],EX=[0,0,0],uP=[5,q],E4=[1,gA],E5=[0,[1,eu],[0,[1,fF],[0,[0,cb],[0,[0,H],[0,[2,"stan::require_vector_like_t",[0,cb,0]],[0,[2,aq,[0,bx,[0,H,0]]],0]]]]]],ak_=[0,ww,[0,"stan::math::accumulator<double>",0]],ak$=[0,e1,[0,gA,0]],ak6=[0,"stan::rng_t",0],ak7=[0,kG,0],ak9=[0,[5,k2],0],ak8=[0,i9,0],ak4=[0,[1,eu]],ak3=[0,[1,fF],0],ak1=[0,i9,0],ak2=[0,[0,0,0]],ak0=[1,fF],akZ=[1,eu],akX=[0,[18,[1,[0,[11,bL,0],bL]],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,c,1,0],[2,0,[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[12,41,[17,0,0]]]]]]]]]]]],"@[<1>@[<v>%a@]@ %s(@[<hov>%a@])@]"],akV=[0,[0,e1,[0,gA,0]],[0,"T_lp__",[0,"T_lp_accum__",0]]],akU=[0,[0,kG,0],[0,az,0]],al3=[0,2],al4=[1,ne],al5=[0,2],al6=[1,kF],al7=[0,[0,0,0]],al8=[0,1],alZ=[1,ne],al0=[1,kF],al1=[0,[0,0,0]],al2=[0,1],alS=[0,[0,cG],[0,[0,H],[0,[2,B,[0,cG,0]],[0,[2,aq,[0,bx,[0,H,0]]],0]]]],alT=[0,[8,[1,cG]],bB],alU=[1,H],alV=[1,cG],alW=[11,jf,[0,3]],alX=[0,[0,0,0]],alY=[0,1],alN=[0,[0,cG],[0,[2,B,[0,cG,0]],0]],alO=[0,[8,[1,cG]],bB],alP=[11,jf,[0,3]],alQ=[0,[0,0,0]],alR=[0,1],alz=[0,[0,az],[0,[0,cb],[0,[0,H],[0,[0,cG],[0,[2,aq,[0,a4,[0,cb,0]]],[0,[2,aq,[0,bx,[0,H,0]]],[0,[2,"stan::require_vector_vt",[0,a4,[0,cG,0]]],0]]]]]]],alA=[0,[8,[1,cG]],bB],alB=[0,[8,[1,H]],qx],alC=[0,[8,[1,cb]],pz],alD=[0,[8,[1,az]],kG],alE=[0,[0,[0,kL]]],alF=[0,1],alG=[0,[0,[0,b0]]],alH=[0,[0,[0,k2]]],alI=[0,1],alJ=[0,1],alK=[11,jf,[0,3]],alL=[0,[0,0,0]],alM=[0,1],alw=[0,[0,0,0]],alx=[11,s,[0,[1,cb],0]],aly=[0,1],alp=[0,[8,[1,H]],qx],alq=[0,[8,[1,cb]],pz],alr=[0,[1,[0,[0,b0],0]]],als=[11,q,[0,[11,s,[0,[1,cb],0]]]],alt=[0,jb,[0,[1,e1],0]],alu=[0,[2,"stan::require_not_st_var",[0,cb,0]],0],alv=[0,[2,"stan::require_st_var",[0,cb,0]],0],alg=[0,al],alh=[0,w],ali=[0,[11,"Error during Map data construction for ",[2,0,[11," of type ",[16,0]]]],"Error during Map data construction for %s of type %t"];function
+a=i(j(0)),g=i(j(1)),d=i(j(2)),b=[0,[1,aS(0)(0)([9,eh])(w0)([0,[0,[18,[18,amj,2,ami],2,amh]]])()],0],d=[0,[1,aS(0)(0)([9,eh])(IS)([0,[0,[18,amk,0,[3,d]]]])()],b],d=[0,[1,aS(0)(0)([9,eh])(Jm)([0,[0,[18,aml,0,[3,g]]]])()],d],a=[0,[1,aS(0)(0)([9,eh])(HT)([0,[0,a]])()],d],d=[0,[4,GT,0,amm]],g=[0,k(a,[0,[0,[16,[1,ht],kc(bd(0,3),[0,amn,kb])]],[0,d,0]])],b="emit_generated_quantities = true",c="emit_transformed_parameters = true",f=[0,[10,fu],"pstream = nullptr"],e=k([0,[0,dp,c],[0,[0,dp,b],0]],[0,f,0]),l=[0,[0,[8,bd(0,3)],ht],0],l=[0,[0,[8,bd(0,2)],et],l],e=[0,k([0,amp,[0,[0,[8,bd(0,3)],gw],l]],e)],e=[0,[0,bK([0,E9])(amq)(1)(wP)(e)(amo)(g)()],0],g=bd(0,2),g=[0,k(a,[0,[1,aS(0)(0)(g)(et)(0)()],[0,[0,[16,[1,ht],[6,[7,3,-1,1,0],kE,0,[0,amr,[0,kb,0]]]]],[0,d,0]]])],a=[9,dp],a=[0,k([0,amt,[0,[0,[8,[7,3,-1,1,0]],gw],[0,[0,[8,[7,3,-1,1,0]],ht],0]]],k([0,[0,a,c],[0,[0,a,b],0]],[0,f,0]))],g=[0,[0,bK([0,E9])(amu)(1)(wP)(a)(ams)(g)()],e],e=[0,[0,[8,bd(0,2)],et],[0,f,0]],e=[0,[0,[0,[8,bd(0,amy)],gw],e]],a=[9,[0,[4,If,amw,amv]]],e=[0,[0,bK([0,E_])(amA)(amz)(mQ)(e)(amx)([0,[0,a,0]])()],0],a=[0,[0,[1,aS(0)(0)([7,2,-1,1,0])(et)(0)()],[0,a,0]]],e=[0,[0,bK([0,E_])(amE)(amD)(mQ)([0,[0,[0,[8,[7,amC,-1,1,0]],gw],[0,f,0]]])(amB)(a)()],e],a=o4([7,3,-1,1,0]),b=[0,[0,[8,bd(0,3)],ht],[0,[0,[10,fu],iZ],0]],b=[0,[0,[9,[8,mi]],qo],[0,[0,[8,bd(0,2)],et],b]],c=[0,[0,[0,eR(amH,amG)],[0,[0,[4,Ih,0,amF]],0]]],b=[0,[0,bK(0)(amJ)(1)(m6)([0,b])(amI)(c)()],0],c=ei(uS,p1),c=[0,[0,[4,m6,0,[0,amM,[0,amL,[0,uS,amK]]]]],[0,[0,[16,[1,gw],kc(a,[0,ei(uS,i7),c])]],0]],a=bd(0,2),c=[0,[1,aS(0)(0)(a)(et)(0)()],c],a=[0,[1,[0,o5(amN,p1,0,0),0]]],d=bd(0,3),d=[0,[0,[1,aS(0)(0)(d)(Hg)(a)()],c]],d=[0,[0,bK(0)(amP)(1)(m6)([0,[0,[0,[9,[8,mi]],qo],[0,[0,[8,[7,3,-1,1,0]],gw],[0,f,0]]]])(amO)(d)()],b],b=[9,bd(0,2)],c=[0,[4,IO,0,amQ]],b=[0,[0,[1,aS(0)(0)(b)(et)(0)()],[0,[0,[16,[1,m8],[6,[7,3,-1,1,0],kE,0,[0,amR,[0,kb,0]]]]],[0,c,0]]]],b=[0,[0,bK(0)(amT)(1)(v_)([0,[0,[0,[9,[8,[7,3,-1,1,0]]],xv],[0,[0,[8,[7,3,-1,1,0]],m8],[0,f,0]]]])(amS)(b)()],0],c=[0,[0,[16,[1,m8],kc(bd(0,3),[0,amU,kb])]],[0,c,0]],a=[9,bd(0,2)],a=[0,[0,[1,aS(0)(0)(a)(et)(0)()],c]],f=[0,[0,[8,bd(0,3)],m8],[0,f,0]],f=[0,[0,[0,[9,[8,bd(0,3)]],xv],f]];return k([0,[4,"Begin method overload boilerplate"],g],k(e,k(d,[0,[0,bK(0)(amW)(1)(v_)(f)(amV)(a)()],b])))}var
+H="VecI",s="stan::scalar_type_t",q="T__",a4="std::is_floating_point",kJ=3506791,B="stan::require_vector_t",py="sum",bx="std::is_integral",cG="VecVar",b0="0.0",cb="VecR",aq="stan::require_vector_like_vt",bL="<1>",EJ=[0,dt],EZ=[0,[5,kL],0],EY=[0,[1,ev],0],EX=[0,0,0],uP=[5,q],E4=[1,gA],E5=[0,[1,ev],[0,[1,fF],[0,[0,cb],[0,[0,H],[0,[2,"stan::require_vector_like_t",[0,cb,0]],[0,[2,aq,[0,bx,[0,H,0]]],0]]]]]],ak_=[0,ww,[0,"stan::math::accumulator<double>",0]],ak$=[0,e1,[0,gA,0]],ak6=[0,"stan::rng_t",0],ak7=[0,kG,0],ak9=[0,[5,k2],0],ak8=[0,i9,0],ak4=[0,[1,ev]],ak3=[0,[1,fF],0],ak1=[0,i9,0],ak2=[0,[0,0,0]],ak0=[1,fF],akZ=[1,ev],akX=[0,[18,[1,[0,[11,bL,0],bL]],[18,[1,[0,[11,I,0],I]],[15,[17,0,[17,[0,c,1,0],[2,0,[12,40,[18,[1,[0,[11,R,0],R]],[15,[17,0,[12,41,[17,0,0]]]]]]]]]]]],"@[<1>@[<v>%a@]@ %s(@[<hov>%a@])@]"],akV=[0,[0,e1,[0,gA,0]],[0,"T_lp__",[0,"T_lp_accum__",0]]],akU=[0,[0,kG,0],[0,az,0]],al3=[0,2],al4=[1,ne],al5=[0,2],al6=[1,kF],al7=[0,[0,0,0]],al8=[0,1],alZ=[1,ne],al0=[1,kF],al1=[0,[0,0,0]],al2=[0,1],alS=[0,[0,cG],[0,[0,H],[0,[2,B,[0,cG,0]],[0,[2,aq,[0,bx,[0,H,0]]],0]]]],alT=[0,[8,[1,cG]],bB],alU=[1,H],alV=[1,cG],alW=[11,jf,[0,3]],alX=[0,[0,0,0]],alY=[0,1],alN=[0,[0,cG],[0,[2,B,[0,cG,0]],0]],alO=[0,[8,[1,cG]],bB],alP=[11,jf,[0,3]],alQ=[0,[0,0,0]],alR=[0,1],alz=[0,[0,az],[0,[0,cb],[0,[0,H],[0,[0,cG],[0,[2,aq,[0,a4,[0,cb,0]]],[0,[2,aq,[0,bx,[0,H,0]]],[0,[2,"stan::require_vector_vt",[0,a4,[0,cG,0]]],0]]]]]]],alA=[0,[8,[1,cG]],bB],alB=[0,[8,[1,H]],qx],alC=[0,[8,[1,cb]],pz],alD=[0,[8,[1,az]],kG],alE=[0,[0,[0,kL]]],alF=[0,1],alG=[0,[0,[0,b0]]],alH=[0,[0,[0,k2]]],alI=[0,1],alJ=[0,1],alK=[11,jf,[0,3]],alL=[0,[0,0,0]],alM=[0,1],alw=[0,[0,0,0]],alx=[11,s,[0,[1,cb],0]],aly=[0,1],alp=[0,[8,[1,H]],qx],alq=[0,[8,[1,cb]],pz],alr=[0,[1,[0,[0,b0],0]]],als=[11,q,[0,[11,s,[0,[1,cb],0]]]],alt=[0,jb,[0,[1,e1],0]],alu=[0,[2,"stan::require_not_st_var",[0,cb,0]],0],alv=[0,[2,"stan::require_st_var",[0,cb,0]],0],alg=[0,al],alh=[0,w],ali=[0,[11,"Error during Map data construction for ",[2,0,[11," of type ",[16,0]]]],"Error during Map data construction for %s of type %t"];function
 ajC(a,b){if(a===b)return 0;if(typeof
 a==="number"){if(!a){if(typeof
 b==="number"&&!b)return 0;return-1}if(typeof
@@ -10267,18 +10267,18 @@ c=a[3],b=c[1],a=a[1];switch(c[3]){case
 c=a[3],b=c[2],a=a[1];switch(c[3]){case
 0:return[0,kJ,[0,a,b]];case
 1:return[0,i2,[0,a,b]];default:return[0,jh,[0,a,b]]}})),f];function
-q(a){return[4,uy,[0,eg,0],[0,U(a),0]]}function
-j(a){return h(h(tr(a),function(a){return h(to(a),q)}),function(a){return[8,[2,eg],a]})}var
+q(a){return[4,uy,[0,eh,0],[0,U(a),0]]}function
+j(a){return h(h(tr(a),function(a){return h(to(a),q)}),function(a){return[8,[2,eh],a]})}var
 c=jH(a[9],function(a){a=a[3];var
 b=a[2];switch(a[3]){case
 0:return[0,kJ,j(b)];case
-1:return[0,i2,j(b)];default:return[0,jh,j(b)]}}),g=c[3],b=c[2],c=c[1],e="dimss__",d=[0,[0,[8,bd(0,bd(0,eg))],e],[0,[0,[9,dp],pt],[0,[0,[9,dp],qr],0]]],g=bt(g),g=[0,[5,al4,c7(pe(e,bd(al3,eg),g)),0],0],b=bt(b),g=[0,[5,al6,c7(pe(e,bd(al5,eg),b)),0],g],c=bt(c),c=[0,[0,[0,[16,[1,e],[8,[2,bd(0,eg)],c]]],g]],c=[0,[0,bK(0)(al8)(1)("get_dims")([0,d])(al7)(c)()],f];function
+1:return[0,i2,j(b)];default:return[0,jh,j(b)]}}),g=c[3],b=c[2],c=c[1],e="dimss__",d=[0,[0,[8,bd(0,bd(0,eh))],e],[0,[0,[9,dp],pt],[0,[0,[9,dp],qr],0]]],g=bt(g),g=[0,[5,al4,c7(pe(e,bd(al3,eh),g)),0],0],b=bt(b),g=[0,[5,al6,c7(pe(e,bd(al5,eh),b)),0],g],c=bt(c),c=[0,[0,[0,[16,[1,e],[8,[2,bd(0,eh)],c]]],g]],c=[0,[0,bK(0)(al8)(1)("get_dims")([0,d])(al7)(c)()],f];function
 i(a,b){return h(ti(a,aj(b)),function(a){return cP(eF(a,he))})}var
 f=jH(a[9],function(a){var
 c=a[3],b=c[2],a=a[1];switch(c[3]){case
 0:return[0,kJ,i(a,b)];case
 1:return[0,i2,i(a,b)];default:return[0,jh,i(a,b)]}}),d=f[3],g=f[2],f=f[1],e="names__",b=[0,[0,[8,bd(0,eQ)],e],[0,[0,[9,dp],pt],[0,[0,[9,dp],qr],0]]],d=bt(d),d=[0,[5,alZ,c7(pe(e,bd(0,eQ),d)),0],0],g=bt(g),d=[0,[5,al0,c7(pe(e,bd(0,eQ),g)),0],d],d=[0,k([0,[0,[16,[1,e],[8,[2,eQ],bt(f)]]],0],d)],d=[0,[0,bK(0)(al2)(1)("get_param_names")([0,b])(al1)(d)()],c],c=a[9],b=a[7],f=k([0,alP,[0,uC,ke]],kf),c=bt(aY(c,function(a){var
-b=a[3],c=b[2],d=a[2],a=a[1];if(b[3])return 0;a=uO("parameter initialization",a,c);return[0,k(uK(d),a)]})),b=[0,k(f,kd(k(c,iS(b))))],d=[0,[0,bK([0,[0,[0,alN,0],1]])(alR)(1)(Ih)([0,[0,[0,[9,[8,mi]],px],[0,alO,[0,[0,[10,fu],iZ],0]]]])(alQ)(b)()],d],b=a[8],c=k([0,alW,[0,uB,[0,uC,0]]],k(ke,kf)),c=[0,k(c,kd(iS(b)))],d=[0,[0,bK([0,[0,[0,alS,0],1]])(alY)(1)(IO)([0,[0,[0,[9,[8,alV]],pz],[0,[0,[9,[8,alU]],qx],[0,alT,[0,[0,[10,fu],iZ],0]]]]])(alX)(c)()],d],c=a[6],b=uN(a[10],wP),b=k([0,[1,aS(0)(alF)(dp)(fF)(alE)()],[0,hg,[0,[0,[11,1,[1,fF]]],0]]],b),f=gA,e="stan::math::accumulator",b=k(ke,k([0,[1,aS(0)(0)([11,e,[0,3,0]])(f)(0)()],kf],b)),b=k([0,hg,[0,[0,[11,1,[1,eu]]],0]],k([0,[1,aS(0)(0)(3)(e1)(alG)()],[0,hg,[0,[0,[11,1,[1,e1]]],0]]],b)),b=k([0,alK,[0,uB,[0,uC,[0,[1,aS(alJ)(alI)(dp)(eu)(alH)()],0]]]],b),b=[0,k(b,kd(iS(c)))],d=k([0,[0,bK([0,[0,[0,alz,0],1]])(alM)(1)(GT)([0,[0,alD,[0,alC,[0,alB,[0,alA,[0,[0,[9,dp],pt],[0,[0,[9,dp],qr],[0,[0,[10,fu],iZ],0]]]]]]]])(alL)(b)()],d],l),b=a[5],l=a[4],a=k(ke,k(kf,uN(a[10],mQ))),e=[0,[1,aS(0)(0)([11,e,[0,uP,0]])(f)(0)()],[0,uB,0]],o=k([0,als,[0,[11,jf,[0,uP]],[0,[1,aS(0)(0)(uP)(e1)(alr)()],e]]],a),e=[0,[9,[0,eh(E4,py)]],0],p=[0,[0,eR(E4,alt)],e],e=k(E5,alu),n=[0,alq,[0,alp,[0,[0,[10,fu],iZ],0]]];function
+b=a[3],c=b[2],d=a[2],a=a[1];if(b[3])return 0;a=uO("parameter initialization",a,c);return[0,k(uK(d),a)]})),b=[0,k(f,kd(k(c,iS(b))))],d=[0,[0,bK([0,[0,[0,alN,0],1]])(alR)(1)(Ih)([0,[0,[0,[9,[8,mi]],px],[0,alO,[0,[0,[10,fu],iZ],0]]]])(alQ)(b)()],d],b=a[8],c=k([0,alW,[0,uB,[0,uC,0]]],k(ke,kf)),c=[0,k(c,kd(iS(b)))],d=[0,[0,bK([0,[0,[0,alS,0],1]])(alY)(1)(IO)([0,[0,[0,[9,[8,alV]],pz],[0,[0,[9,[8,alU]],qx],[0,alT,[0,[0,[10,fu],iZ],0]]]]])(alX)(c)()],d],c=a[6],b=uN(a[10],wP),b=k([0,[1,aS(0)(alF)(dp)(fF)(alE)()],[0,hg,[0,[0,[11,1,[1,fF]]],0]]],b),f=gA,e="stan::math::accumulator",b=k(ke,k([0,[1,aS(0)(0)([11,e,[0,3,0]])(f)(0)()],kf],b)),b=k([0,hg,[0,[0,[11,1,[1,ev]]],0]],k([0,[1,aS(0)(0)(3)(e1)(alG)()],[0,hg,[0,[0,[11,1,[1,e1]]],0]]],b)),b=k([0,alK,[0,uB,[0,uC,[0,[1,aS(alJ)(alI)(dp)(ev)(alH)()],0]]]],b),b=[0,k(b,kd(iS(c)))],d=k([0,[0,bK([0,[0,[0,alz,0],1]])(alM)(1)(GT)([0,[0,alD,[0,alC,[0,alB,[0,alA,[0,[0,[9,dp],pt],[0,[0,[9,dp],qr],[0,[0,[10,fu],iZ],0]]]]]]]])(alL)(b)()],d],l),b=a[5],l=a[4],a=k(ke,k(kf,uN(a[10],mQ))),e=[0,[1,aS(0)(0)([11,e,[0,uP,0]])(f)(0)()],[0,uB,0]],o=k([0,als,[0,[11,jf,[0,uP]],[0,[1,aS(0)(0)(uP)(e1)(alr)()],e]]],a),e=[0,[9,[0,ei(E4,py)]],0],p=[0,[0,eR(E4,alt)],e],e=k(E5,alu),n=[0,alq,[0,alp,[0,[0,[10,fu],iZ],0]]];function
 m(a,b){b=[0,k(o,k(kd(iS(b)),p))];return[0,bK([0,[0,[0,a,0],1]])(aly)(alx)(If)([0,n])(alw)(b)()]}var
 b=[0,[4,"Reverse mode autodiff log prob"],[0,m(k(E5,alv),b),0]];return k([0,[4,"Base log prob"],[0,m(e,l),b]],d)}function
 uT(d,b,c){c=c[1];return is(function(a,b){return uT(d,d(a,b),b)})(b,c)}function
@@ -10375,7 +10375,7 @@ b=a[2];return aR(o,k(b,io(a[1])));case
 2:case
 5:case
 6:a=a[1];break;default:break a}return[0,,[0,a]]}return E}function
-cQ(a,d){return d5(a,E,function(a,b){b=d(b);var
+cQ(a,d){return d6(a,E,function(a,b){b=d(b);var
 c=p(a),c=F(a[2],b[2],c);return[0,a[1],c]})}function
 mn(a){return cQ(Fe(a),gk)}var
 cH="Plus__";function
@@ -10387,7 +10387,7 @@ mo(c,b){var
 a=c(b);if(a)return a[1];a=b[2];b=b[1];return[0,gZ(function(a){return mo(c,a)})(b),a]}function
 uY(a,b,c){if(typeof
 c!=="number"&&0===c[0]){var
-d=c[1],e=c[2],f=d[2],d=d[1],a=a(c[3]);return[0,[0,d,h(f,b)],e,a]}return dm(a)(function(a){return a})(c)}function
+d=c[1],e=c[2],f=d[2],d=d[1],c=a(c[3]);return[0,[0,d,h(f,b)],e,c]}return dm(a)(function(a){return a})(c)}function
 mp(c,b){return mo(function(a){a=a[1];return 0===a[0]?bD(c,a[1]):0},b)}function
 Ff(c){var
 b=f_(function(a){return mp(c,a)});function
@@ -10411,7 +10411,7 @@ b=a[1],a=fw(a[2]);return r0(fw(b),a)}function
 c8(f,b){var
 a=b[1];function
 i(a){for(;;){if(a){var
-c=a[2];if(!gX(ed(a[1]))){a=c;continue}c=1}else
+c=a[2];if(!gX(ee(a[1]))){a=c;continue}c=1}else
 c=0;c=c?1:0;return bQ(c,b[2][1])}}switch(a[0]){case
 0:if(aK(f,a[1]))return b;a=bQ(0,b[2][1]);var
 c=b[2];return[0,b[1],[0,c[1],c[2],a]];case
@@ -10519,9 +10519,9 @@ o=b[1],A=b[2];switch(o[0]){case
 c=o[1],B=[0,a],o=h(o[2],function(a){return c9(B,a)});if(0===c[0]){var
 z=c[3],s=c[2],r=c[1],u=function(a){a=[0,z,a];for(;;){if(a){var
 b=a[2];if(1!==a[1]){a=b;continue}b=1}else
-b=0;return b?1:0}},n=_(r,"multi_normal_lpdf");a:{b:{c:{var
+b=0;return b?1:0}},n=Y(r,"multi_normal_lpdf");a:{b:{c:{var
 g="diag_post_multiply",i="diag_pre_multiply",j="diag_matrix",d="quad_form";d:{e:{f:{g:{var
-q="sqrt",f="square",e="exp";if(0<=n)if(0<n){a=_(r,"poisson_rng");if(0<=a)if(0<a)if(r!==jg)if(r!=="rows_dot_product")if(r!==q)if(r!==f){q="trace";if(r!==py){if(r===q){if(!o)break b;f=o[1][1];switch(f[0]){case
+q="sqrt",f="square",e="exp";if(0<=n)if(0<n){a=Y(r,"poisson_rng");if(0<=a)if(0<a)if(r!==jg)if(r!=="rows_dot_product")if(r!==q)if(r!==f){q="trace";if(r!==py){if(r===q){if(!o)break b;f=o[1][1];switch(f[0]){case
 2:j=f[1];if(0!==j[0])break b;b=j[1];if(b!==aJ){if(b!==d)break b;d=j[2];if(typeof
 d!=="number")break b;if(d)break b;f=f[2];if(!f)break b;d=f[2];if(!d)break b;if(d[2])break b;if(o[2])break b;c=d[1];f=f[1];c=[2,[0,"trace_quad_form",s,u([0,j[3],0])],[0,f,[0,c,0]]];break a}d=j[2];if(typeof
 d!=="number")break b;if(d)break b;d=f[2];if(!d)break b;b=d[1][1];if(2!==b[0])break b;g=b[1];j=j[3];if(0!==g[0])break b;if(g[1]!==aJ)break b;i=g[2];if(typeof
@@ -10545,42 +10545,42 @@ g!=="number")break b;if(g)break b;g=f[2];if(!g)break b;if(g[2])break b;if(o[2])b
 1:break;default:break b}}else if(r!==xH)if(r!==G9)if(r!=="neg_binomial_2_rng")if(r!==Gt)if(r!==ws){if(r===I9){if(!o)break b;f=o[2];if(f){q=f[1][1];a=o[1];switch(q[0]){case
 2:b=q[1];if(0!==b[0])break b;if(b[1]!==e)break b;i=b[2];if(typeof
 i!=="number")break b;if(i)break b;i=q[2];if(!i)break b;g=i[1];j=g[1];d=b[3];h:if(2===j[0]){b=j[1];if(0===b[0]){e=b[1];if(e!==cH){if(e===aJ){e=b[2];if(typeof
-e==="number"&&!e){j=j[2];if(j){e=j[2];if(e&&!e[2]){if(i[2])break b;if(f[2])break b;j=j[1];e=e[1];b=b[3];if(5===Y(j)){c=[2,[0,hs,s,u([0,d,[0,b,0]])],[0,a,[0,j,[0,g0,[0,e,0]]]]];break a}}}}}}else{e=b[2];if(typeof
+e==="number"&&!e){j=j[2];if(j){e=j[2];if(e&&!e[2]){if(i[2])break b;if(f[2])break b;j=j[1];e=e[1];b=b[3];if(5===Z(j)){c=[2,[0,hs,s,u([0,d,[0,b,0]])],[0,a,[0,j,[0,g0,[0,e,0]]]]];break a}}}}}}else{e=b[2];if(typeof
 e==="number"&&!e){j=j[2];if(j){e=j[1];b=b[3];q=j[2];if(q){n=q[1][1];if(2===n[0]){var
 p=n[1];if(0===p[0]&&p[1]===aJ){var
 k=p[2];if(typeof
-k==="number"&&!k){n=n[2];if(n){k=n[2];if(k&&!k[2]){if(q[2])break h;if(i[2])break b;if(f[2])break b;q=n[1];k=k[1];p=p[3];if(5===Y(q)){c=[2,[0,hs,s,u([0,d,[0,b,[0,p,0]]])],[0,a,[0,q,[0,e,[0,k,0]]]]];break a}}}}}}e=e[1];if(2===e[0]){q=e[1];if(0===q[0]&&q[1]===aJ){k=q[2];if(typeof
-k==="number"&&!k){e=e[2];if(e){k=e[2];if(k&&!k[2]){j=j[2];if(!j[2]){if(i[2])break b;if(f[2])break b;e=e[1];j=j[1];k=k[1];q=q[3];if(5===Y(e)){c=[2,[0,hs,s,u([0,d,[0,b,[0,q,0]]])],[0,a,[0,e,[0,j,[0,k,0]]]]];break a}}}}}}}}}}}}}if(i[2])break b;if(f[2])break b;c=[2,[0,ws,s,u([0,d,0])],[0,a,[0,g,0]]];break a;case
+k==="number"&&!k){n=n[2];if(n){k=n[2];if(k&&!k[2]){if(q[2])break h;if(i[2])break b;if(f[2])break b;q=n[1];k=k[1];p=p[3];if(5===Z(q)){c=[2,[0,hs,s,u([0,d,[0,b,[0,p,0]]])],[0,a,[0,q,[0,e,[0,k,0]]]]];break a}}}}}}e=e[1];if(2===e[0]){q=e[1];if(0===q[0]&&q[1]===aJ){k=q[2];if(typeof
+k==="number"&&!k){e=e[2];if(e){k=e[2];if(k&&!k[2]){j=j[2];if(!j[2]){if(i[2])break b;if(f[2])break b;e=e[1];j=j[1];k=k[1];q=q[3];if(5===Z(e)){c=[2,[0,hs,s,u([0,d,[0,b,[0,q,0]]])],[0,a,[0,e,[0,j,[0,k,0]]]]];break a}}}}}}}}}}}}}if(i[2])break b;if(f[2])break b;c=[2,[0,ws,s,u([0,d,0])],[0,a,[0,g,0]]];break a;case
 1:break;default:break b}}}}else{if(!o)break b;e=o[2];if(e){q=e[1][1];f=o[1];switch(q[0]){case
 2:b=q[1];if(0!==b[0])break b;i=b[1];if(i!==cH){if(i!==aJ)break b;i=b[2];if(typeof
-i!=="number")break b;if(i)break b;q=q[2];if(!q)break b;i=q[2];if(!i)break b;if(i[2])break b;if(e[2])break b;q=q[1];e=i[1];b=b[3];if(5!==Y(q))break b;c=[2,[0,hs,s,u([0,b,0])],[0,f,[0,q,[0,g0,[0,e,0]]]]];break a}i=b[2];if(typeof
+i!=="number")break b;if(i)break b;q=q[2];if(!q)break b;i=q[2];if(!i)break b;if(i[2])break b;if(e[2])break b;q=q[1];e=i[1];b=b[3];if(5!==Z(q))break b;c=[2,[0,hs,s,u([0,b,0])],[0,f,[0,q,[0,g0,[0,e,0]]]]];break a}i=b[2];if(typeof
 i!=="number")break b;if(i)break b;i=q[2];if(!i)break b;j=i[1];b=b[3];g=i[2];if(!g)break b;d=g[1][1];if(2===d[0]){q=d[1];if(0===q[0]&&q[1]===aJ){a=q[2];if(typeof
-a==="number"&&!a){d=d[2];if(d){a=d[2];if(a&&!a[2]){if(g[2])break b;if(e[2])break b;g=d[1];d=a[1];q=q[3];if(5===Y(g)){c=[2,[0,hs,s,u([0,b,[0,q,0]])],[0,f,[0,g,[0,j,[0,d,0]]]]];break a}}}}}}g=j[1];if(2!==g[0])break b;j=g[1];if(0!==j[0])break b;if(j[1]!==aJ)break b;d=j[2];if(typeof
-d!=="number")break b;if(d)break b;d=g[2];if(!d)break b;g=d[2];if(!g)break b;if(g[2])break b;i=i[2];if(i[2])break b;if(e[2])break b;d=d[1];i=i[1];g=g[1];j=j[3];if(5!==Y(d))break b;c=[2,[0,hs,s,u([0,b,[0,j,0]])],[0,f,[0,d,[0,i,[0,g,0]]]]];break a;case
+a==="number"&&!a){d=d[2];if(d){a=d[2];if(a&&!a[2]){if(g[2])break b;if(e[2])break b;g=d[1];d=a[1];q=q[3];if(5===Z(g)){c=[2,[0,hs,s,u([0,b,[0,q,0]])],[0,f,[0,g,[0,j,[0,d,0]]]]];break a}}}}}}g=j[1];if(2!==g[0])break b;j=g[1];if(0!==j[0])break b;if(j[1]!==aJ)break b;d=j[2];if(typeof
+d!=="number")break b;if(d)break b;d=g[2];if(!d)break b;g=d[2];if(!g)break b;if(g[2])break b;i=i[2];if(i[2])break b;if(e[2])break b;d=d[1];i=i[1];g=g[1];j=j[3];if(5!==Z(d))break b;c=[2,[0,hs,s,u([0,b,[0,j,0]])],[0,f,[0,d,[0,i,[0,g,0]]]]];break a;case
 1:break;default:break b}}}else{if(!o)break b;e=o[2];if(e){f=e[1][1];a=o[1];switch(f[0]){case
 2:g=f[1];if(0!==g[0])break b;i=g[1];if(i!==cH){if(i!==aJ)break b;i=g[2];if(typeof
-i!=="number")break b;if(i)break b;f=f[2];if(!f)break b;i=f[2];if(!i)break b;if(i[2])break b;e=e[2];if(!e)break b;if(e[2])break b;f=f[1];e=e[1];i=i[1];g=g[3];if(5!==Y(f))break b;c=[2,[0,mH,s,u([0,g,0])],[0,a,[0,f,[0,g0,[0,i,[0,e,0]]]]]];break a}i=g[2];if(typeof
+i!=="number")break b;if(i)break b;f=f[2];if(!f)break b;i=f[2];if(!i)break b;if(i[2])break b;e=e[2];if(!e)break b;if(e[2])break b;f=f[1];e=e[1];i=i[1];g=g[3];if(5!==Z(f))break b;c=[2,[0,mH,s,u([0,g,0])],[0,a,[0,f,[0,g0,[0,i,[0,e,0]]]]]];break a}i=g[2];if(typeof
 i!=="number")break b;if(i)break b;i=f[2];if(!i)break b;d=i[1];g=g[3];j=i[2];if(!j)break b;b=j[1][1];if(2===b[0]){f=b[1];if(0===f[0]&&f[1]===aJ){q=f[2];if(typeof
-q==="number"&&!q){b=b[2];if(b){q=b[2];if(q&&!q[2]){if(j[2])break b;j=e[2];if(!j)break b;if(j[2])break b;b=b[1];j=j[1];q=q[1];f=f[3];if(5===Y(b)){c=[2,[0,mH,s,u([0,g,[0,f,0]])],[0,a,[0,b,[0,d,[0,q,[0,j,0]]]]]];break a}}}}}}j=d[1];if(2!==j[0])break b;d=j[1];if(0!==d[0])break b;if(d[1]!==aJ)break b;b=d[2];if(typeof
-b!=="number")break b;if(b)break b;j=j[2];if(!j)break b;b=j[2];if(!b)break b;if(b[2])break b;i=i[2];if(i[2])break b;e=e[2];if(!e)break b;if(e[2])break b;j=j[1];e=e[1];i=i[1];b=b[1];d=d[3];if(5!==Y(j))break b;c=[2,[0,mH,s,u([0,g,[0,d,0]])],[0,a,[0,j,[0,i,[0,b,[0,e,0]]]]]];break a;case
+q==="number"&&!q){b=b[2];if(b){q=b[2];if(q&&!q[2]){if(j[2])break b;j=e[2];if(!j)break b;if(j[2])break b;b=b[1];j=j[1];q=q[1];f=f[3];if(5===Z(b)){c=[2,[0,mH,s,u([0,g,[0,f,0]])],[0,a,[0,b,[0,d,[0,q,[0,j,0]]]]]];break a}}}}}}j=d[1];if(2!==j[0])break b;d=j[1];if(0!==d[0])break b;if(d[1]!==aJ)break b;b=d[2];if(typeof
+b!=="number")break b;if(b)break b;j=j[2];if(!j)break b;b=j[2];if(!b)break b;if(b[2])break b;i=i[2];if(i[2])break b;e=e[2];if(!e)break b;if(e[2])break b;j=j[1];e=e[1];i=i[1];b=b[1];d=d[3];if(5!==Z(j))break b;c=[2,[0,mH,s,u([0,g,[0,d,0]])],[0,a,[0,j,[0,i,[0,b,[0,e,0]]]]]];break a;case
 1:break;default:break b}}}else{if(!o)break b;f=o[1][1];switch(f[0]){case
 2:b=f[1];if(0!==b[0])break b;if(b[1]!==e)break b;d=b[2];if(typeof
 d!=="number")break b;if(d)break b;d=f[2];if(!d)break b;if(d[2])break b;g=o[2];if(!g)break b;if(g[2])break b;c=g[1];d=d[1];c=[2,[0,"neg_binomial_2_log_rng",s,u([0,b[3],0])],[0,d,[0,c,0]]];break a;case
 1:break;default:break b}}else{if(!o)break b;f=o[2];if(f){a=f[1][1];q=o[1];switch(a[0]){case
 2:i=a[1];if(0!==i[0])break b;if(i[1]!==e)break b;d=i[2];if(typeof
 d!=="number")break b;if(d)break b;d=a[2];if(!d)break b;j=d[1];g=j[1];i=i[3];h:if(2===g[0]){b=g[1];if(0===b[0]){a=b[1];if(a!==cH){if(a===aJ){a=b[2];if(typeof
-a==="number"&&!a){g=g[2];if(g){a=g[2];if(a&&!a[2]){if(d[2])break b;e=f[2];if(!e)break b;if(e[2])break b;g=g[1];e=e[1];a=a[1];b=b[3];if(5===Y(g)){c=[2,[0,hn,s,u([0,i,[0,b,0]])],[0,q,[0,g,[0,g0,[0,a,[0,e,0]]]]]];break a}}}}}}else{a=b[2];if(typeof
+a==="number"&&!a){g=g[2];if(g){a=g[2];if(a&&!a[2]){if(d[2])break b;e=f[2];if(!e)break b;if(e[2])break b;g=g[1];e=e[1];a=a[1];b=b[3];if(5===Z(g)){c=[2,[0,hn,s,u([0,i,[0,b,0]])],[0,q,[0,g,[0,g0,[0,a,[0,e,0]]]]]];break a}}}}}}else{a=b[2];if(typeof
 a==="number"&&!a){g=g[2];if(g){a=g[1];b=b[3];e=g[2];if(e){k=e[1][1];if(2===k[0]){p=k[1];if(0===p[0]&&p[1]===aJ){n=p[2];if(typeof
-n==="number"&&!n){k=k[2];if(k){n=k[2];if(n&&!n[2]){if(e[2])break h;if(d[2])break b;e=f[2];if(!e)break b;if(e[2])break b;k=k[1];e=e[1];n=n[1];p=p[3];if(5===Y(k)){c=[2,[0,hn,s,u([0,i,[0,b,[0,p,0]]])],[0,q,[0,k,[0,a,[0,n,[0,e,0]]]]]];break a}}}}}}a=a[1];if(2===a[0]){e=a[1];if(0===e[0]&&e[1]===aJ){n=e[2];if(typeof
-n==="number"&&!n){a=a[2];if(a){n=a[2];if(n&&!n[2]){g=g[2];if(!g[2]){if(d[2])break b;k=f[2];if(!k)break b;if(k[2])break b;a=a[1];k=k[1];g=g[1];n=n[1];e=e[3];if(5===Y(a)){c=[2,[0,hn,s,u([0,i,[0,b,[0,e,0]]])],[0,q,[0,a,[0,g,[0,n,[0,k,0]]]]]];break a}}}}}}}}}}}}}if(d[2])break b;b=f[2];if(!b)break b;if(b[2])break b;c=b[1];c=[2,[0,xH,s,u([0,i,0])],[0,q,[0,j,[0,c,0]]]];break a;case
+n==="number"&&!n){k=k[2];if(k){n=k[2];if(n&&!n[2]){if(e[2])break h;if(d[2])break b;e=f[2];if(!e)break b;if(e[2])break b;k=k[1];e=e[1];n=n[1];p=p[3];if(5===Z(k)){c=[2,[0,hn,s,u([0,i,[0,b,[0,p,0]]])],[0,q,[0,k,[0,a,[0,n,[0,e,0]]]]]];break a}}}}}}a=a[1];if(2===a[0]){e=a[1];if(0===e[0]&&e[1]===aJ){n=e[2];if(typeof
+n==="number"&&!n){a=a[2];if(a){n=a[2];if(n&&!n[2]){g=g[2];if(!g[2]){if(d[2])break b;k=f[2];if(!k)break b;if(k[2])break b;a=a[1];k=k[1];g=g[1];n=n[1];e=e[3];if(5===Z(a)){c=[2,[0,hn,s,u([0,i,[0,b,[0,e,0]]])],[0,q,[0,a,[0,g,[0,n,[0,k,0]]]]]];break a}}}}}}}}}}}}}if(d[2])break b;b=f[2];if(!b)break b;if(b[2])break b;c=b[1];c=[2,[0,xH,s,u([0,i,0])],[0,q,[0,j,[0,c,0]]]];break a;case
 1:break;default:break b}}}else{if(!o)break b;f=o[2];if(f){a=f[1][1];e=o[1];switch(a[0]){case
 2:d=a[1];if(0!==d[0])break b;j=d[1];if(j!==cH){if(j!==aJ)break b;j=d[2];if(typeof
-j!=="number")break b;if(j)break b;a=a[2];if(!a)break b;j=a[2];if(!j)break b;if(j[2])break b;f=f[2];if(!f)break b;if(f[2])break b;a=a[1];f=f[1];j=j[1];d=d[3];if(5!==Y(a))break b;c=[2,[0,hn,s,u([0,d,0])],[0,e,[0,a,[0,g0,[0,j,[0,f,0]]]]]];break a}j=d[2];if(typeof
+j!=="number")break b;if(j)break b;a=a[2];if(!a)break b;j=a[2];if(!j)break b;if(j[2])break b;f=f[2];if(!f)break b;if(f[2])break b;a=a[1];f=f[1];j=j[1];d=d[3];if(5!==Z(a))break b;c=[2,[0,hn,s,u([0,d,0])],[0,e,[0,a,[0,g0,[0,j,[0,f,0]]]]]];break a}j=d[2];if(typeof
 j!=="number")break b;if(j)break b;j=a[2];if(!j)break b;b=j[1];d=d[3];i=j[2];if(!i)break b;g=i[1][1];if(2===g[0]){a=g[1];if(0===a[0]&&a[1]===aJ){q=a[2];if(typeof
-q==="number"&&!q){g=g[2];if(g){q=g[2];if(q&&!q[2]){if(i[2])break b;i=f[2];if(!i)break b;if(i[2])break b;g=g[1];i=i[1];q=q[1];a=a[3];if(5===Y(g)){c=[2,[0,hn,s,u([0,d,[0,a,0]])],[0,e,[0,g,[0,b,[0,q,[0,i,0]]]]]];break a}}}}}}g=b[1];if(2!==g[0])break b;i=g[1];if(0!==i[0])break b;if(i[1]!==aJ)break b;b=i[2];if(typeof
-b!=="number")break b;if(b)break b;g=g[2];if(!g)break b;b=g[2];if(!b)break b;if(b[2])break b;j=j[2];if(j[2])break b;f=f[2];if(!f)break b;if(f[2])break b;g=g[1];f=f[1];j=j[1];b=b[1];i=i[3];if(5!==Y(g))break b;c=[2,[0,hn,s,u([0,d,[0,i,0]])],[0,e,[0,g,[0,j,[0,b,[0,f,0]]]]]];break a;case
+q==="number"&&!q){g=g[2];if(g){q=g[2];if(q&&!q[2]){if(i[2])break b;i=f[2];if(!i)break b;if(i[2])break b;g=g[1];i=i[1];q=q[1];a=a[3];if(5===Z(g)){c=[2,[0,hn,s,u([0,d,[0,a,0]])],[0,e,[0,g,[0,b,[0,q,[0,i,0]]]]]];break a}}}}}}g=b[1];if(2!==g[0])break b;i=g[1];if(0!==i[0])break b;if(i[1]!==aJ)break b;b=i[2];if(typeof
+b!=="number")break b;if(b)break b;g=g[2];if(!g)break b;b=g[2];if(!b)break b;if(b[2])break b;j=j[2];if(j[2])break b;f=f[2];if(!f)break b;if(f[2])break b;g=g[1];f=f[1];j=j[1];b=b[1];i=i[3];if(5!==Z(g))break b;c=[2,[0,hn,s,u([0,d,[0,i,0]])],[0,e,[0,g,[0,j,[0,b,[0,f,0]]]]]];break a;case
 1:break;default:break b}}}}else{if(!o)break b;f=o[2];if(f){a=f[2];if(a){b=a[1][1];if(2!==b[0])break b;g=b[1];d=f[1];i=o[1];if(0!==g[0])break b;if(g[1]!=="inverse")break b;f=g[2];if(typeof
-f!=="number")break b;if(f)break b;b=b[2];if(!b)break b;if(b[2])break b;if(a[2])break b;c=b[1];c=[2,[0,"multi_normal_prec_lpdf",s,u([0,g[3],0])],[0,i,[0,d,[0,c,0]]]];break a}}}else{k=_(r,H7);n="log";p="inv_logit";if(0<=k)if(0<k)if(r!=="categorical_lpmf")if(r!=="categorical_rng")if(r!=="columns_dot_product")if(r!=="dot_product")if(r!=="inv"){if(r===n){if(!o)break b;f=o[1][1];switch(f[0]){case
+f!=="number")break b;if(f)break b;b=b[2];if(!b)break b;if(b[2])break b;if(a[2])break b;c=b[1];c=[2,[0,"multi_normal_prec_lpdf",s,u([0,g[3],0])],[0,i,[0,d,[0,c,0]]]];break a}}}else{k=Y(r,H7);n="log";p="inv_logit";if(0<=k)if(0<k)if(r!=="categorical_lpmf")if(r!=="categorical_rng")if(r!=="columns_dot_product")if(r!=="dot_product")if(r!=="inv"){if(r===n){if(!o)break b;f=o[1][1];switch(f[0]){case
 2:i=f[1];if(0!==i[0])break b;g=i[1];if(g!==hu){j="log_sum_exp";if(g!==cH){if(g!=="abs"&&g!=="fabs"){if(g==="falling_factorial"){e=i[2];if(typeof
 e!=="number")break b;if(e)break b;if(o[2])break b;c=f[2];c=[2,[0,"log_falling_factorial",s,u([0,i[3],0])],c];break a}if(g===p){e=i[2];if(typeof
 e!=="number")break b;if(e)break b;if(o[2])break b;c=f[2];c=[2,[0,"log_inv_logit",s,u([0,i[3],0])],c];break a}if(g==="rising_factorial"){g=i[2];if(typeof
@@ -10616,16 +10616,16 @@ b!=="number")break b;if(b)break b;b=n[2];if(!b)break b;if(b[2])break b;if(o[2])b
 1:break;default:break b}}}else{if(!o)break b;n=o[2];if(n){a=n[1][1];e=o[1];switch(a[0]){case
 2:g=a[1];if(0!==g[0])break b;if(g[1]!==p)break b;d=g[2];if(typeof
 d!=="number")break b;if(d)break b;i=a[2];if(!i)break b;d=i[1];b=d[1];g=g[3];h:if(2===b[0]){j=b[1];if(0===j[0]){a=j[1];if(a!==cH){if(a===aJ){a=j[2];if(typeof
-a==="number"&&!a){b=b[2];if(b){a=b[2];if(a&&!a[2]){if(i[2])break b;if(n[2])break b;b=b[1];a=a[1];j=j[3];if(5===Y(b)){c=[2,[0,hr,s,u([0,g,[0,j,0]])],[0,e,[0,b,[0,g0,[0,a,0]]]]];break a}}}}}}else{a=j[2];if(typeof
+a==="number"&&!a){b=b[2];if(b){a=b[2];if(a&&!a[2]){if(i[2])break b;if(n[2])break b;b=b[1];a=a[1];j=j[3];if(5===Z(b)){c=[2,[0,hr,s,u([0,g,[0,j,0]])],[0,e,[0,b,[0,g0,[0,a,0]]]]];break a}}}}}}else{a=j[2];if(typeof
 a==="number"&&!a){b=b[2];if(b){a=b[1];j=j[3];p=b[2];if(p){f=p[1][1];if(2===f[0]){q=f[1];if(0===q[0]&&q[1]===aJ){k=q[2];if(typeof
-k==="number"&&!k){f=f[2];if(f){k=f[2];if(k&&!k[2]){if(p[2])break h;if(i[2])break b;if(n[2])break b;f=f[1];k=k[1];q=q[3];if(5===Y(f)){c=[2,[0,hr,s,u([0,g,[0,j,[0,q,0]]])],[0,e,[0,f,[0,a,[0,k,0]]]]];break a}}}}}}a=a[1];if(2===a[0]){f=a[1];if(0===f[0]&&f[1]===aJ){k=f[2];if(typeof
-k==="number"&&!k){a=a[2];if(a){k=a[2];if(k&&!k[2]){b=b[2];if(!b[2]){if(i[2])break b;if(n[2])break b;a=a[1];b=b[1];k=k[1];f=f[3];if(5===Y(a)){c=[2,[0,hr,s,u([0,g,[0,j,[0,f,0]]])],[0,e,[0,a,[0,b,[0,k,0]]]]];break a}}}}}}}}}}}}}if(i[2])break b;if(n[2])break b;c=[2,[0,vv,s,u([0,g,0])],[0,e,[0,d,0]]];break a;case
+k==="number"&&!k){f=f[2];if(f){k=f[2];if(k&&!k[2]){if(p[2])break h;if(i[2])break b;if(n[2])break b;f=f[1];k=k[1];q=q[3];if(5===Z(f)){c=[2,[0,hr,s,u([0,g,[0,j,[0,q,0]]])],[0,e,[0,f,[0,a,[0,k,0]]]]];break a}}}}}}a=a[1];if(2===a[0]){f=a[1];if(0===f[0]&&f[1]===aJ){k=f[2];if(typeof
+k==="number"&&!k){a=a[2];if(a){k=a[2];if(k&&!k[2]){b=b[2];if(!b[2]){if(i[2])break b;if(n[2])break b;a=a[1];b=b[1];k=k[1];f=f[3];if(5===Z(a)){c=[2,[0,hr,s,u([0,g,[0,j,[0,f,0]]])],[0,e,[0,a,[0,b,[0,k,0]]]]];break a}}}}}}}}}}}}}if(i[2])break b;if(n[2])break b;c=[2,[0,vv,s,u([0,g,0])],[0,e,[0,d,0]]];break a;case
 1:break;default:break b}}}else{if(!o)break b;n=o[2];if(n){a=n[1][1];e=o[1];switch(a[0]){case
 2:i=a[1];if(0!==i[0])break b;g=i[1];if(g!==cH){if(g!==aJ)break b;j=i[2];if(typeof
-j!=="number")break b;if(j)break b;a=a[2];if(!a)break b;j=a[2];if(!j)break b;if(j[2])break b;if(n[2])break b;a=a[1];n=j[1];i=i[3];if(5!==Y(a))break b;c=[2,[0,hr,s,u([0,i,0])],[0,e,[0,a,[0,g0,[0,n,0]]]]];break a}g=i[2];if(typeof
+j!=="number")break b;if(j)break b;a=a[2];if(!a)break b;j=a[2];if(!j)break b;if(j[2])break b;if(n[2])break b;a=a[1];n=j[1];i=i[3];if(5!==Z(a))break b;c=[2,[0,hr,s,u([0,i,0])],[0,e,[0,a,[0,g0,[0,n,0]]]]];break a}g=i[2];if(typeof
 g!=="number")break b;if(g)break b;g=a[2];if(!g)break b;j=g[1];i=i[3];b=g[2];if(!b)break b;d=b[1][1];if(2===d[0]){a=d[1];if(0===a[0]&&a[1]===aJ){k=a[2];if(typeof
-k==="number"&&!k){d=d[2];if(d){k=d[2];if(k&&!k[2]){if(b[2])break b;if(n[2])break b;d=d[1];b=k[1];a=a[3];if(5===Y(d)){c=[2,[0,hr,s,u([0,i,[0,a,0]])],[0,e,[0,d,[0,j,[0,b,0]]]]];break a}}}}}}d=j[1];if(2!==d[0])break b;j=d[1];if(0!==j[0])break b;if(j[1]!==aJ)break b;b=j[2];if(typeof
-b!=="number")break b;if(b)break b;b=d[2];if(!b)break b;d=b[2];if(!d)break b;if(d[2])break b;g=g[2];if(g[2])break b;if(n[2])break b;b=b[1];g=g[1];d=d[1];j=j[3];if(5!==Y(b))break b;c=[2,[0,hr,s,u([0,i,[0,j,0]])],[0,e,[0,b,[0,g,[0,d,0]]]]];break a;case
+k==="number"&&!k){d=d[2];if(d){k=d[2];if(k&&!k[2]){if(b[2])break b;if(n[2])break b;d=d[1];b=k[1];a=a[3];if(5===Z(d)){c=[2,[0,hr,s,u([0,i,[0,a,0]])],[0,e,[0,d,[0,j,[0,b,0]]]]];break a}}}}}}d=j[1];if(2!==d[0])break b;j=d[1];if(0!==j[0])break b;if(j[1]!==aJ)break b;b=j[2];if(typeof
+b!=="number")break b;if(b)break b;b=d[2];if(!b)break b;d=b[2];if(!d)break b;if(d[2])break b;g=g[2];if(g[2])break b;if(n[2])break b;b=b[1];g=g[1];d=d[1];j=j[3];if(5!==Z(b))break b;c=[2,[0,hr,s,u([0,i,[0,j,0]])],[0,e,[0,b,[0,g,[0,d,0]]]]];break a;case
 1:break;default:break b}}}else{if(!o)break b;e=o[1];k=e[1];h:if(2===k[0]){f=k[1];if(0===f[0]){q=f[1];p="quad_form_diag";if(q!==j)if(q!==i)if(q!=="matrix_exp"){if(q===hF){p=f[2];if(typeof
 p==="number"&&!p){p=k[2];if(p&&!p[2]){q=o[2];if(!q)break b;var
 v=q[1][1];if(2!==v[0])break b;var
@@ -10635,7 +10635,7 @@ p==="number"&&!p){p=k[2];if(p){w=p[1];q=w[1];f=f[3];i:if(2===q[0]){v=q[1];if(0==
 t=v[2];if(typeof
 t==="number"&&!t){q=q[2];if(q){t=q[2];if(t&&!t[2]){if(p[2])break h;var
 y=o[2];if(!y)break b;if(y[2])break b;y=y[1];t=t[1];q=q[1];v=v[3];var
-x="scale_matrix_exp_multiply";if(0!==Y(q)&&1!==Y(q)){if(0!==Y(t)&&1!==Y(t))break i;c=[2,[0,x,s,u([0,f,[0,v,0]])],[0,t,[0,q,[0,y,0]]]];break a}c=[2,[0,x,s,u([0,f,[0,v,0]])],[0,q,[0,t,[0,y,0]]]];break a}}}}}if(!p[2]){n=o[2];if(!n)break b;if(n[2])break b;c=n[1];c=[2,[0,"matrix_exp_multiply",s,u([0,f,0])],[0,w,[0,c,0]]];break a}}}}else{w=f[2];if(typeof
+x="scale_matrix_exp_multiply";if(0!==Z(q)&&1!==Z(q)){if(0!==Z(t)&&1!==Z(t))break i;c=[2,[0,x,s,u([0,f,[0,v,0]])],[0,t,[0,q,[0,y,0]]]];break a}c=[2,[0,x,s,u([0,f,[0,v,0]])],[0,q,[0,t,[0,y,0]]]];break a}}}}}if(!p[2]){n=o[2];if(!n)break b;if(n[2])break b;c=n[1];c=[2,[0,"matrix_exp_multiply",s,u([0,f,0])],[0,w,[0,c,0]]];break a}}}}else{w=f[2];if(typeof
 w==="number"&&!w){w=k[2];if(w){t=w[2];if(t&&!t[2]){v=o[2];if(!v)break b;y=v[1][1];if(2!==y[0])break b;x=y[1];w=w[1];t=t[1];f=f[3];if(0!==x[0])break b;if(x[1]===j){b=x[2];if(typeof
 b!=="number")break b;if(b)break b;b=y[2];if(!b)break b;if(b[2])break b;if(v[2])break b;e=x[3];if(!gd(w,b[1]))break d;c=[2,[0,p,s,u([0,f,[0,e,0]])],[0,t,[0,w,0]]];break a}}}}}else{t=f[2];if(typeof
 t==="number"&&!t){t=k[2];if(t&&!t[2]){w=o[2];if(!w)break b;x=w[1][1];if(2!==x[0])break d;v=x[1];t=t[1];f=f[3];if(0!==v[0])break d;if(v[1]===g){k=v[2];if(typeof
@@ -10668,13 +10668,13 @@ b!=="number")break b;if(3!==b)break b;b=o[2];if(!b)break b;j=b[1];i=j[1];if(1!==
 a==="number"&&!a){a=o[2];if(!a)break b;n=a[1][1];if(1!==n[0])break b;if(n[1])break b;if(a[2])break b;if(0===dC(n[2]))throw m([0,mq,b[2][2],"Integer division by zero"],1)}}if(!o)break b;a=o[1][1];if(1===a[0]){b=a[1];if(1===b){b=o[2];if(!b)break b;n=b[1][1];a=a[2];switch(n[0]){case
 1:if(n[1])break b;if(b[2])break b;d=n[2];break c;case
 2:break;default:break b}}else if(!b){b=o[2];if(!b)break b;n=b[1][1];a=a[2];switch(n[0]){case
-1:if(n[1])break b;if(b[2])break b;d=_(r,mI);e:{j=n[2];if(0<=d){if(0<d&&r!==hu&&r!==qy&&r!==mC&&r!==xd&&r!==cH&&r!==aJ)break e}else if(r!==v7&&r!==hB&&r!==m5&&r!==kV&&r!==mZ&&r!==m7&&r!==mJ)break e;c=dC(j);d=dC(a);j=_(r,mI);f:{g:{if(0>j){if(r!==hB){if(r===m5){d=d===c?1:0;break f}if(r===kV){d=c<=d?1:0;break f}if(r===mZ){d=c<d?1:0;break f}if(r!==m7){if(r!==mJ)break g;d=d<=c?1:0;break f}}d=aqA(d,c);break f}if(0>=j){d=d<c?1:0;break f}if(r===hu){d=d-c|0;break f}if(r===qy){d=AV(d,c);break f}if(r===mC){d=d!==c?1:0;break f}if(r===cH){d=d+c|0;break f}if(r===aJ){d=jr(d,c);break f}}d=X(anY,[0,r,0])}c=[1,0,l+d];break a}c=[2,c,o];break a;case
+1:if(n[1])break b;if(b[2])break b;d=Y(r,mI);e:{j=n[2];if(0<=d){if(0<d&&r!==hu&&r!==qy&&r!==mC&&r!==xd&&r!==cH&&r!==aJ)break e}else if(r!==v7&&r!==hB&&r!==m5&&r!==kV&&r!==mZ&&r!==m7&&r!==mJ)break e;c=dC(j);d=dC(a);j=Y(r,mI);f:{g:{if(0>j){if(r!==hB){if(r===m5){d=d===c?1:0;break f}if(r===kV){d=c<=d?1:0;break f}if(r===mZ){d=c<d?1:0;break f}if(r!==m7){if(r!==mJ)break g;d=d<=c?1:0;break f}}d=aqA(d,c);break f}if(0>=j){d=d<c?1:0;break f}if(r===hu){d=d-c|0;break f}if(r===qy){d=AV(d,c);break f}if(r===mC){d=d!==c?1:0;break f}if(r===cH){d=d+c|0;break f}if(r===aJ){d=jr(d,c);break f}}d=X(anY,[0,r,0])}c=[1,0,l+d];break a}c=[2,c,o];break a;case
 2:break;default:break b}}}}if(r!==aJ)break b;a=o[1];b=a[1];if(2===b[0]){n=b[1];if(0===n[0]&&n[1]===aJ){k=n[2];if(typeof
 k==="number"&&!k){k=b[2];if(k){p=k[1][1];if(2===p[0]){e=p[1];n=n[3];if(0===e[0]&&e[1]===hF){v=e[2];if(typeof
 v==="number"&&!v){p=p[2];if(p&&!p[2]){k=k[2];if(k&&!k[2]){v=o[2];if(!v)break b;if(v[2])break b;p=p[1];k=k[1];e=e[3];if(gd(p,v[1])){c=[2,[0,d,s,u([0,n,[0,e,0]])],[0,k,[0,p,0]]];break a}}}}}}}}}}n=o[2];if(!n)break b;k=n[1][1];if(2===k[0]){e=k[1];if(0===e[0]&&e[1]===j){d=e[2];if(typeof
 d==="number"&&!d){k=k[2];if(k&&!k[2]){if(n[2])break b;c=k[1];c=[2,[0,g,s,u([0,e[3],0])],[0,a,[0,c,0]]];break a}}}}if(2!==b[0])break b;a=b[1];if(0!==a[0])break b;if(a[1]!==j)break b;j=a[2];if(typeof
-j!=="number")break b;if(j)break b;b=b[2];if(!b)break b;if(b[2])break b;j=o[2];if(j[2])break b;c=j[1];b=b[1];c=[2,[0,i,s,u([0,a[3],0])],[0,b,[0,c,0]]];break a}i=_(r,mI);c:{d:{if(0<=i){if(0>=i)break d;if(r!==hu){if(r===mC)break d;if(r===xd)break d;if(r!==cH&&r!==aJ)break c}}else{if(r===v7)break d;if(r!==hB){if(r===m5)break d;if(r===kV)break d;if(r===mZ)break d;if(r!==mJ)break c;break d}}c=dl(d);i=dl(a);c=r!==hB?r!==hu?r!==cH?r!==aJ?X(anZ,[0,r,0]):i*c:i+c:i-c:i/c;c=[1,1,ih(c)];break a}c=dl(d);d=dl(a);c=r!==m5?r!==kV?r!==mZ?r!==mJ?r!==mI?r!==mC?X(an0,[0,r,0]):cq(d,c):J_(d,c):qQ(d,c):J1(d,c):qK(d,c):bj(d,c);c=[1,0,l+c];break a}c=[2,c,o];break a}c=[2,c,o]}if(2===c[0]){a=c[1];if(0===a[0]){c=c[2];b=a[3];i=a[1];a=a[2];j=h(c,function(a){var
-b=Y(a);return[0,ed(a),b]});g=jV(i);e=fj(iA,i);e=e?[0,[0,e[1][1]]]:l3(i)?aas:DG(t1(i,j));e=g?ap(ma(g[1],j),lt):e;c=e?[2,[0,i,a,b],c]:[2,[0,r,s,b],o]}}}else
+j!=="number")break b;if(j)break b;b=b[2];if(!b)break b;if(b[2])break b;j=o[2];if(j[2])break b;c=j[1];b=b[1];c=[2,[0,i,s,u([0,a[3],0])],[0,b,[0,c,0]]];break a}i=Y(r,mI);c:{d:{if(0<=i){if(0>=i)break d;if(r!==hu){if(r===mC)break d;if(r===xd)break d;if(r!==cH&&r!==aJ)break c}}else{if(r===v7)break d;if(r!==hB){if(r===m5)break d;if(r===kV)break d;if(r===mZ)break d;if(r!==mJ)break c;break d}}c=dl(d);i=dl(a);c=r!==hB?r!==hu?r!==cH?r!==aJ?X(anZ,[0,r,0]):i*c:i+c:i-c:i/c;c=[1,1,ih(c)];break a}c=dl(d);d=dl(a);c=r!==m5?r!==kV?r!==mZ?r!==mJ?r!==mI?r!==mC?X(an0,[0,r,0]):cq(d,c):J_(d,c):qQ(d,c):J1(d,c):qK(d,c):bj(d,c);c=[1,0,l+c];break a}c=[2,c,o];break a}c=[2,c,o]}if(2===c[0]){a=c[1];if(0===a[0]){c=c[2];b=a[3];i=a[1];a=a[2];j=h(c,function(a){var
+b=Z(a);return[0,ee(a),b]});g=jV(i);e=fj(iA,i);e=e?[0,[0,e[1][1]]]:l3(i)?aas:DG(t1(i,j));e=g?ap(ma(g[1],j),lt):e;c=e?[2,[0,i,a,b],c]:[2,[0,r,s,b],o]}}}else
 c=[2,c,o];break;case
 3:c=o[3];b=o[2];o=c9([0,a],o[1]);b=c9([0,a],b);c=c9([0,a],c);if(cy(0,o))c=c[1];else{a=o[1];if(1===a[0]&&!a[1]){c=b[1];break}c=[3,o,b,c]}break;case
 4:c=o[2];b=c9([0,a],o[1]);c=c9([0,a],c);o=b[1];a:if(1===o[0]){if(!o[1]){a=c[1];if(1!==a[0])break a;if(!a[1]){c=o[2];b=dC(a[2]);c=0!==dC(c)?1:0;c=c?0!==b?1:0:c;c=[1,0,l+c];break}}a=c[1];if(1===a[0]){c=o[2];b=dl(a[2]);c=dl(c)!==0.?1:0;c=c?b!==0.?1:0:c;c=[1,0,l+c];break}}c=[4,b,c];break;case
@@ -10744,7 +10744,7 @@ a==="number")break a;return bS(a[1]);case
 kl(a,b,c){a=a?a[1]:0;b=b?b[1]:1;c=Fm(function(a){return a[1]},function(a){return a[2]},c);b=Fo([0,a],[0,b],c);a=b[2];b=b[1];var
 d=f2(c[2],function(a){return[0,a[1],a[2]]});return[0,[0,AW,gq,N3,b,a],[0,c[1],d]]}function
 mr(a){var
-c=a[1],d=a[3],e=a[2],f=aR(o,n4(sA(a[5],fh))),b=a[5],g=f2(b[2],function(a){return E});return[0,c,e,d,f,f4(a[5],[0,b[1],g,b[3]],function(e,b,c){return d5(b,c,function(a,b){var
+c=a[1],d=a[3],e=a[2],f=aR(o,n4(sA(a[5],fh))),b=a[5],g=f2(b[2],function(a){return E});return[0,c,e,d,f,f4(a[5],[0,b[1],g,b[3]],function(e,b,c){return d6(b,c,function(a,b){var
 c=P(a,b),d=p(c),d=N(c[2],e,d),c=[0,c[1],d],d=a8(a),c=b6(a[2],a[3],b,c,d);return[0,a[1],c[1],c[2]]})})]}function
 u3(c,b){b=P(c,b)[1];if(typeof
 b!=="number")switch(b[0]){case
@@ -10752,7 +10752,7 @@ b!=="number")switch(b[0]){case
 11:return[0,o,[0,b[2]]]}return E}function
 Fv(a){if(typeof
 a!=="number")switch(a[0]){case
-0:return[0,o,[0,ef(a[1])]];case
+0:return[0,o,[0,eg(a[1])]];case
 3:a=a[1];if(1!==a[0]){a=a[2];if(typeof
 a==="number"&&2<=a)return[0,o,[0,hv]]}break;case
 7:return[0,o,[0,a[1]]];case
@@ -10767,35 +10767,35 @@ kt=[0,tk,lV],fA=[0,kt,aP],eT=[0,kt];function
 cz(a){var
 b=a[1];switch(b[0]){case
 2:var
-d=b[2],b=d6(eT,h(k(d,io(b[1])),cz));break;case
+d=b[2],b=d7(eT,h(k(d,io(b[1])),cz));break;case
 3:d=b[2];var
-c=b[1],b=[0,cz(b[3]),0],b=[0,cz(d),b],b=d6(eT,[0,cz(c),b]);break;case
-6:c=b[1];b=h(b[2],function(a){return Fx(cz,a)});b=d6(eT,[0,cz(c),b]);break;case
+c=b[1],b=[0,cz(b[3]),0],b=[0,cz(d),b],b=d7(eT,[0,cz(c),b]);break;case
+6:c=b[1];b=h(b[2],function(a){return Fx(cz,a)});b=d7(eT,[0,cz(c),b]);break;case
 7:case
 8:b=cz(b[1]);break;case
 4:case
-5:c=b[1];b=[0,cz(b[2]),0];b=d6(eT,[0,cz(c),b]);break;default:b=fA}a=[0,kt,[0,a]];c=p(a);c=F(a[2],b[2],c);return[0,a[1],c]}function
+5:c=b[1];b=[0,cz(b[2]),0];b=d7(eT,[0,cz(c),b]);break;default:b=fA}a=[0,kt,[0,a]];c=p(a);c=F(a[2],b[2],c);return[0,a[1],c]}function
 Fx(a,b){if(typeof
 b==="number")return fA;if(2!==b[0])return a(b[1]);var
 c=b[1],b=a(b[2]),c=a(c),a=p(c),a=F(c[2],b[2],a);return[0,c[1],a]}function
 u4(c,b){var
-a=b[1],b=d6(eT,h(b[2],function(a){return Fx(c,a)}));if(0===a[0])return b;a=u4(c,a[1]);var
+a=b[1],b=d7(eT,h(b[2],function(a){return Fx(c,a)}));if(0===a[0])return b;a=u4(c,a[1]);var
 d=p(b);return[0,,F(b[2],a[2],d)]}function
 iV(c,b){a:if(typeof
 b!=="number"){b:{c:{switch(b[0]){case
 0:var
 a=b[3],b=u4(c,b[1]),a=c(a),d=p(a),b=F(a[2],b[2],d);return[0,a[1],b];case
-3:a=b[2];return d6(eT,h(k(a,io(b[1])),c));case
+3:a=b[2];return d7(eT,h(k(a,io(b[1])),c));case
 4:b=b[1];if(!b)break a;b=b[1];break b;case
-5:a=b[3];d=b[2];b=b[1];if(a){a=[0,iV(c,a[1][1]),0];d=[0,iV(c,d[1]),a];return d6(eT,[0,c(b),d])}break c;case
+5:a=b[3];d=b[2];b=b[1];if(a){a=[0,iV(c,a[1][1]),0];d=[0,iV(c,d[1]),a];return d7(eT,[0,c(b),d])}break c;case
 6:d=b[2];b=b[1];break c;case
 7:var
-e=b[3],a=b[2],f=[0,[0,kt,[0,[0,[0,b[1]],[0,0,r,0]]]],0],b=[0,iV(c,b[4][1]),f],b=[0,c(e),b];return d6(eT,[0,c(a),b]);case
+e=b[3],a=b[2],f=[0,[0,kt,[0,[0,[0,b[1]],[0,0,r,0]]]],0],b=[0,iV(c,b[4][1]),f],b=[0,c(e),b];return d7(eT,[0,c(a),b]);case
 8:b=b[2];break;case
 11:b=b[4];if(typeof
 b==="number")break a;b=b[1];break b;case
 1:case
-2:b=b[1];break b;default:b=b[1]}return d6(eT,h(b,function(a){return iV(c,a[1])}))}a=iV(c,d[1]);b=c(b);e=p(b);e=F(b[2],a[2],e);return[0,b[1],e]}return c(b)}return fA}function
+2:b=b[1];break b;default:b=b[1]}return d7(eT,h(b,function(a){return iV(c,a[1])}))}a=iV(c,d[1]);b=c(b);e=p(b);e=F(b[2],a[2],e);return[0,b[1],e]}return c(b)}return fA}function
 Fy(a,b){return dD(a,function(a){a=bS(a);return 1-fh(c3(a,Fw(b)))})}var
 apW=[0,[1,[1,"Stack.pop of empty stack"]]];function
 gl(c,b,h){return[0,function(a){var
@@ -10821,9 +10821,9 @@ b=[0,av(o,h(a[3],pg)),[0,[0,o,[0,hv]],0]],b=[0,aR(o,h(a[2],gS)),b];return av(o,[
 FA(a,b){a=dD(a,function(a){return bj(a[1],b)});var
 c=o[1];return[0,,aZ(a[2],aP,function(a,b){return N(a,b[2],c)})]}function
 u5(g,b,c,d){b=b?b[1]:E;if(aK(c,d))return c;var
-a=p(c),a=N(c[2],d,a),c=[0,c[1],a],d=P(g,d),a=d[2],d=mn(d[1]),h=o[1],d=[0,o,aZ(d[2],aP,function(a,b){return N(a,b[1],h)})],f=a[3],e=p(d),b=cQ([0,,cu(d[2],b[2],e)],function(a){return FA(f,a)}),a=a[2],e=p(a);return d5([0,,F(a[2],b[2],e)],c,function(b){return function(a){return u5(g,0,b,a)}})}function
+a=p(c),a=N(c[2],d,a),c=[0,c[1],a],d=P(g,d),a=d[2],d=mn(d[1]),h=o[1],d=[0,o,aZ(d[2],aP,function(a,b){return N(a,b[1],h)})],f=a[3],e=p(d),b=cQ([0,,cu(d[2],b[2],e)],function(a){return FA(f,a)}),a=a[2],e=p(a);return d6([0,,F(a[2],b[2],e)],c,function(b){return function(a){return u5(g,0,b,a)}})}function
 FB(e,b,c,d){b=b?b[1]:E;d=P(e,d)[2];var
-f=d[3],a=p(c),c=cQ([0,,cu(c[2],b[2],a)],function(a){return FA(f,a)}),d=d[2],a=p(d),g=[0,b];return d5([0,,F(d[2],c[2],a)],E,function(a,b){return u5(e,g,a,b)})}var
+f=d[3],a=p(c),c=cQ([0,,cu(c[2],b[2],a)],function(a){return FA(f,a)}),d=d[2],a=p(d),g=[0,b];return d6([0,,F(d[2],c[2],a)],E,function(a,b){return u5(e,g,a,b)})}var
 an$=[0,1];function
 u6(m,b){b=kl([0,an$[1]],[0,1],b);var
 g=b[2],e=mr(b[1]),b=e[4];for(;;){var
@@ -10877,7 +10877,7 @@ g=u7(b),e=FD(g,1),c=ml(0,0,b),b=iT([0,aoe[1]],b),l=o[1],b=aZ(b[2],aP,function(a,
 b=a[2],a=a[1];return[0,a,b,c3(i,aoc(g,i,[0,a,b]))]}),d=bZ(h(e,function(a){var
 b=a[3];return n5([0,a[2],a[1]])(b)}),bE,u2),f=[0,d,bZ(au(e,function(a){var
 b=a[2],c=a[1];return h(eG(a[3]),function(a){return n5(a)([0,o,[0,[0,b,c]]])})}),bE,u2)];if(!a)return f;var
-j=o[1],c=[0,,aZ(c[2],aP,function(a,b){return N(a,[0,b],j)})],a=cQ(c,function(a){return aE(bD(f[2],a),E)});return d5(a,d5(c,f,FE),aod)}function
+j=o[1],c=[0,,aZ(c[2],aP,function(a,b){return N(a,[0,b],j)})],a=cQ(c,function(a){return aE(bD(f[2],a),E)});return d6(a,d6(c,f,FE),aod)}function
 aof(h,b,c,d){var
 e=d[1],a=f2(e[2],function(a){return Bc(a,h)}),g=[0,e[1],a],d=ie(d[2],h),b=eG(P(g,b)),a=E;for(;;){if(b){e=b[2];b=b[1];if(aK(a,b)){b=e;continue}var
 f=p(a),f=N(a[2],b,f),a=[0,a[1],f],b=cQ(P(d,b),function(a){return P(g,a)});if(fh(c3(b,c))){b=k(e,eG(b));continue}d=1}else
@@ -10904,7 +10904,7 @@ switch(a[0]){case
 c=a[1],d=c[1];if(0===d[0]&&!c[2]){c=d[1];d=a[2];a=ph(mp(b,a[3]));var
 e=a[1];a:{switch(e[0]){case
 7:if(1!==e[1][1][0])break a;break;case
-1:break;default:break a}if(f&&on(d))break a;d=a8(b);c=b6(b[2],b[3],c,a,d);b=[0,b[1],c[1],c[2]];break}b=ie(b,c);break}b=ie(b,ef(c));break;case
+1:break;default:break a}if(f&&on(d))break a;d=a8(b);c=b6(b[2],b[3],c,a,d);b=[0,b[1],c[1],c[2]];break}b=ie(b,c);break}b=ie(b,eg(c));break;case
 11:b=ie(b,a[2]);break}return[0,b]}]}function
 an5(a,j,c){var
 i=a?a[1]:0;return[0,function(a,b){if(!b)return 0;b=b[1];a=P(c,a)[1];function
@@ -10912,19 +10912,19 @@ f(a,c){return sB(a,function(a,b){a=a===c;b=a||aK(bS(b),c);return 1-b})}a:if(type
 a==="number");else{switch(a[0]){case
 0:var
 d=a[1],e=d[1];if(0===e[0]&&!d[2]){d=a[3];e=e[1];a=a[2];var
-g=f(b,e);if(j(d)){b=g;break a}if(aK(bS(d),e)){b=g;break a}if(i&&on(a)){b=g;break a}d=mp(b,d);a=a8(b);d=b6(b[2],b[3],e,d,a);b=[0,b[1],d[1],d[2]];break a}b=f(b,ef(d));break a;case
+g=f(b,e);if(j(d)){b=g;break a}if(aK(bS(d),e)){b=g;break a}if(i&&on(a)){b=g;break a}d=mp(b,d);a=a8(b);d=b6(b[2],b[3],e,d,a);b=[0,b[1],d[1],d[2]];break a}b=f(b,eg(d));break a;case
 8:a=a[2];break;case
 9:a=a[1];break;case
-11:b=f(b,a[2]);break a;default:break a}b=d5(av(o,h(a,function(a){return u3(c,a)})),b,f)}return[0,b]}]}function
+11:b=f(b,a[2]);break a;default:break a}b=d6(av(o,h(a,function(a){return u3(c,a)})),b,f)}return[0,b]}]}function
 an6(i,g){return[0,function(a,b){if(!b)return 0;b=b[1];a=P(g,a)[1];function
 e(a,c){return sB(a,function(a,b){a=a===c;b=a||bj(b[1],[0,c]);return 1-b})}a:if(typeof
 a==="number");else{switch(a[0]){case
 0:var
 c=a[1],d=c[1];if(0===d[0]&&!c[2]){a=a[3];var
-f=a[1];if(0===f[0]){c=d[1];a=a[2];f=f[1];d=e(b,c);if(aK(i,c))break a;b=a8(d);b=b6(d[2],d[3],c,[0,[0,f],a],b);b=[0,d[1],b[1],b[2]];break a}}b=e(b,ef(c));break a;case
+f=a[1];if(0===f[0]){c=d[1];a=a[2];f=f[1];d=e(b,c);if(aK(i,c))break a;b=a8(d);b=b6(d[2],d[3],c,[0,[0,f],a],b);b=[0,d[1],b[1],b[2]];break a}}b=e(b,eg(c));break a;case
 8:a=a[2];break;case
 9:a=a[1];break;case
-11:b=e(b,a[2]);break a;default:break a}b=d5(av(o,h(a,function(a){return u3(g,a)})),b,e)}return[0,b]}]}function
+11:b=e(b,a[2]);break a;default:break a}b=d6(av(o,h(a,function(a){return u3(g,a)})),b,e)}return[0,b]}]}function
 an7(a){return[0,kt,[0,a]]}function
 an8(a,b,c,d){var
 e=[0,ms(uW(c,P(c,1))[1]),0],e=[0,aR(o,h(a[9],gS)),e],i=av(o,[0,aR(o,h(a[2],gS)),e]);function
@@ -10954,9 +10954,9 @@ d=iV(cz,uW(c,P(c,1))[1]),e=f4(c,bE,function(a,b,c){b=b[1];a:if(typeof
 b==="number")b=fA;else{switch(b[0]){case
 0:var
 d=b[3],b=u4(cz,b[1]),d=cz(d),e=p(d),b=F(d[2],b[2],e),b=[0,d[1],b];break a;case
-3:d=b[2];b=d6(eT,h(k(d,io(b[1])),cz));break a;case
+3:d=b[2];b=d7(eT,h(k(d,io(b[1])),cz));break a;case
 4:b=b[1];if(!b){b=fA;break a}b=b[1];break;case
-7:d=b[2];b=[0,cz(b[3]),0];b=d6(eT,[0,cz(d),b]);break a;case
+7:d=b[2];b=[0,cz(b[3]),0];b=d7(eT,[0,cz(d),b]);break a;case
 11:b=b[4];if(typeof
 b==="number"){b=fA;break a}b=b[1];break;case
 1:case
@@ -10973,11 +10973,11 @@ d=P(j,a)[1],a=P(f,a),b=p(a),b=F(a[2],d[2],b);return 1-aK([0,a[1],b],c)})}),d=a8(
 c=p(a),c=F(a[2],b[2],c);return[0,a[1],c]},fA],[0,function(a,b){var
 c=P(e,a),a=P(g,a),d=p(b),c=F(b[2],c[2],d),c=[0,b[1],c],b=p(c),b=cu(c[2],a[2],b);return[0,c[1],b]}])[1].call(null)]}function
 aoi(a,b){var
-c=aD(a[1],b[1]),d=a[3],a=a[2],e=b[3],b=b[2];if(0!==c)return c;c=aD(a,b);return 0===c?_(d,e):c}var
+c=aD(a[1],b[1]),d=a[3],a=a[2],e=b[3],b=b[2];if(0!==c)return c;c=aD(a,b);return 0===c?Y(d,e):c}var
 u8=[0,0];function
 c_(a,b,c,d){var
 e=AL(d),e=e||AL(c);if(1-e)u8[1]=[0,[0,b,a,c+dr+d],u8[1]]}function
-gm(a){return d5(a,l,function(a,b){return a===l?a+b:a+ar+b})}function
+gm(a){return d6(a,l,function(a,b){return a===l?a+b:a+ar+b})}function
 FG(a){for(;;){var
 c=a[2],a=a[1],b=function(a){return av(o,h(a,FG))};if(!gY(c[1]))return E;switch(a[0]){case
 0:return[0,o,[0,[0,[0,a[1]],c]]];case
@@ -11002,8 +11002,8 @@ b!=="number"){switch(b[0]){case
 4:if(0<e)return 1;break}}return 0}}var
 H0="Transpose__";function
 FI(a,b){if(tD(a))return 0;a=eK(a);var
-c=_(a,mI);if(0<=c)if(0<c){c=_(a,xG);a=0<=c?0<c?a!==m0?a!==cH?a!=="Pow__"?a!==aJ?a!==H0?a:hF:GY:jg:jb:pA:Gs:a!==hu?a!==qy?a!==mC?a!==xd?a!==kM?a:mT:Hm:Jo:HV:vl}else
-a=H9;else{c=_(a,m5);a=0<=c?0<c?a!==kV?a!==mZ?a!==m7?a!=="LDivide__"?a!==mJ?a:JD:IQ:ji:Jl:Hw:Jq:a!==v7?a!==hB?a!=="EltDivide__"?a!=="EltPow__"?a!==xZ?a:pL:jg:II:ji:GD}c=bN(b7);a:if(cc===c)c=b7[1];else{if(aT!==c&&cf!==c){c=b7;break a}c=cJ(b7)}a=cs(Bw(c,a),function(a){return 0===fq(l_,a[1],b)[0]?1:0});for(;;){if(!a)return 0;c=a[2];if(1===a[1][4])return 1;a=c}}function
+c=Y(a,mI);if(0<=c)if(0<c){c=Y(a,xG);a=0<=c?0<c?a!==m0?a!==cH?a!=="Pow__"?a!==aJ?a!==H0?a:hF:GY:jg:jb:pA:Gs:a!==hu?a!==qy?a!==mC?a!==xd?a!==kM?a:mT:Hm:Jo:HV:vl}else
+a=H9;else{c=Y(a,m5);a=0<=c?0<c?a!==kV?a!==mZ?a!==m7?a!=="LDivide__"?a!==mJ?a:JD:IQ:ji:Jl:Hw:Jq:a!==v7?a!==hB?a!=="EltDivide__"?a!=="EltPow__"?a!==xZ?a:pL:jg:II:ji:GD}c=bN(b7);a:if(cc===c)c=b7[1];else{if(aT!==c&&cf!==c){c=b7;break a}c=cJ(b7)}a=cs(Bw(c,a),function(a){return 0===fq(l_,a[1],b)[0]?1:0});for(;;){if(!a)return 0;c=a[2];if(1===a[1][4])return 1;a=c}}function
 FJ(a,b){return FI(a,h(b,tl))}var
 Ib="Accessed by element in a for loop:";function
 pj(j,b,c,d){d=d[1];function
@@ -11020,8 +11020,8 @@ b=a[1],a=i(a[2]),b=i(b),c=p(b),c=F(b[2],a[2],c);return[0,b[1],c]}));if(FH(j,f,a)
 4:case
 5:e=d[2];d=d[1];a=g(c)(e);c=g(c)(d);f=p(c);f=F(c[2],a[2],f);c=[0,c[1],f];e=g(c)(e);c=g(c)(d);d=p(c);d=F(c[2],e[2],d);return[0,c[1],d];default:return c}}function
 FK(i,b,c,d,e){var
-g=av(o,h(e,fy)),f=bZ(e,c,function(c){return function(a){return pj(i,b,c,a)}}),a=p(f),a=[0,,F(f[2],g[2],a)];switch(d[0]){case
-0:d=d[1];if(d===vC)return c;if(FJ(d,e)){d=p(c);d=F(c[2],f[2],d);return[0,c[1],d]}c_(1,b,gs+d+" is not supported:",gm(c3(c,g)));d=p(c);d=F(c[2],a[2],d);return[0,c[1],d];case
+f=av(o,h(e,fy)),g=bZ(e,c,function(c){return function(a){return pj(i,b,c,a)}}),a=p(g),a=[0,,F(g[2],f[2],a)];switch(d[0]){case
+0:d=d[1];if(d===vC)return c;if(FJ(d,e)){f=p(c);f=F(c[2],g[2],f);return[0,c[1],f]}c_(1,b,gs+d+" is not supported:",gm(c3(c,f)));d=p(c);d=F(c[2],a[2],d);return[0,c[1],d];case
 1:d=d[1];if(typeof
 d==="number"&&2>=d-1>>>0){c_(1,b,"Used in {} make array or make row vector compiler functions:",gm(c3(c,a)));d=p(c);a=F(c[2],a[2],d);return[0,c[1],a]}return c;default:c_(1,b,"Used in user defined function:",gm(c3(c,a)));d=p(c);d=F(c[2],a[2],d);return[0,c[1],d]}}var
 aol=[0,[0,1,2],0],aom=[0,[0,1,4],0],aon=[0,[0,1,5],0],aoo=[0,[0,1,1],[0,[0,0,[0,1]],0]],aop=[0,[0,1,1],[0,[0,0,4],0]];function
@@ -11057,7 +11057,7 @@ d=a[4],e=e[2];if(c[2]!==dt)break c;if(e!==dt)break c;c=d;break;case
 1:case
 2:a=a[1];return k(b)(a);default:break h}}a=a[1];break d}d=a[3];e=a[2];if(0===d[0]){a=a[4];e=tp(d[1])?(c_(1,j,"Complex-valued types cannot be SoA:",e),[0,o,[0,e]]):E;if(typeof
 a==="number")a=E;else{a=a[1];a=k(b)(a)}d=p(e);a=F(e[2],a[2],d);d=p(b);a=F(b[2],a,d);return[0,b[1],a]}}return b}a=a[2]}return av(o,h(a,function(a){return kn(q,b,a)}))}d=a[3];c=a[2];a=kn(1,b,a[4]);d=k(b)(d);c=k(b)(c);e=p(c);d=F(c[2],d[2],e);d=[0,c[1],d];c=p(d);c=F(d[2],a[2],c);return[0,d[1],c]}c=a[3];e=a[2];a=a[1];a=k(b)(a);c=c?kn(q,a,c[1]):E;a=av(o,[0,a,[0,kn(q,a,e),[0,c,0]]]);c=p(b);a=F(b[2],a[2],c);return[0,b[1],a]}c=a[3];var
-m=c[2],g=m[3],e=a[1],m=m[1],a=a[2],n=ef(e),i=e[2],d=b,f=i;for(;;){if(!f)break;var
+m=c[2],g=m[3],e=a[1],m=m[1],a=a[2],n=eg(e),i=e[2],d=b,f=i;for(;;){if(!f)break;var
 r=f[2],f=f[1],s=function(b){return function(a){return pj(q,j,b,a)}};if(typeof
 f==="number")f=r;else if(2===f[0]){var
 t=f[2],f=f[1],d=s(d)(f);d=av(o,[0,d,[0,s(d)(t),0]]);f=r}else{f=f[1];d=s(d)(f);f=r}}if(FH(q,a,i)){i=aK(b,n)?l:n;c_(1,j,Ib,i);i=p(d);i=N(d[2],n,i);d=[0,d[1],i]}i=k(b)(c);f=p(d);f=F(d[2],i[2],f);f=[0,d[1],f];if(0===e[1][0]);else{e=fy(c);c_(1,j,"Used in tuple:",gm(e));d=p(f);e=F(f[2],e[2],d);f=[0,f[1],e];e=p(f);e=N(f[2],n,e);f=[0,f[1],e]}a:if(gY(c[2][1])){b:{if(gY(m)&&typeof
@@ -11094,7 +11094,7 @@ a!=="number")switch(a[0]){case
 0:var
 d=a[1],e=a[3],k=e[1];if(2===k[0]){var
 c=k[1],f=a[2];if(1===c[0]){c=c[1];if(typeof
-c!=="number"&&0===c[0]){a=k[2];if(aK(b,ef(d))){e=e[2];a=h(a,g(1));return[0,d,f,[0,[2,[1,[0,c[1],c[2],0]],a],e]]}e=e[2];a=h(a,g(0));return[0,d,f,[0,[2,[1,[0,c[1],c[2],1]],a],e]]}}}c=a[3];a=a[2];return aK(b,ef(d))?[0,d,a,g(1)(c)]:[0,d,a,g(0)(c)];case
+c!=="number"&&0===c[0]){a=k[2];if(aK(b,eg(d))){e=e[2];a=h(a,g(1));return[0,d,f,[0,[2,[1,[0,c[1],c[2],0]],a],e]]}e=e[2];a=h(a,g(0));return[0,d,f,[0,[2,[1,[0,c[1],c[2],1]],a],e]]}}}c=a[3];a=a[2];return aK(b,eg(d))?[0,d,a,g(1)(c)]:[0,d,a,g(0)(c)];case
 1:a=a[1];return[1,g(0)(a)];case
 2:a=a[1];return[2,g(0)(a)];case
 3:a=FL(0,b,a[1],a[2]);return[3,a[1],a[2]];case
@@ -11158,7 +11158,7 @@ d=mu(a,"early_ret_check");function
 e(a,b){if(typeof
 b!=="number")switch(b[0]){case
 4:b=b[1];if(!f)return b?ae("Expected a void function but found a non-empty return statement."):1<a?0:aoA;var
-c=f[1];if(!b)return ae("Function should return a value but found an empty return statement.");b=b[1];return 1<a?[10,[0,[0,[0,[0,[0,d],0],0,[0,aoz,[0,0,r,0]]],r],[0,[0,[0,[0,[0,c],0],Y(b),b],r],[0,[0,0,r],0]]]]:[0,[0,[0,c],0],Y(b),b];case
+c=f[1];if(!b)return ae("Function should return a value but found an empty return statement.");b=b[1];return 1<a?[10,[0,[0,[0,[0,[0,d],0],0,[0,aoz,[0,0,r,0]]],r],[0,[0,[0,[0,[0,c],0],Z(b),b],r],[0,[0,0,r],0]]]]:[0,[0,[0,c],0],Z(b),b];case
 7:if(1<a)return[10,[0,[0,b,r],[0,[0,[5,[0,[0,d],[0,0,r,0]],[0,0,r],0],r],0]]];break}return b}var
 b=FR(c);if(1>=b)return dK(function(a){return e(b,a)},c)[1];c=dK(function(a){return e(b,a)},c);return[10,[0,[0,[11,0,d,aoE,1],r],[0,[0,[0,[0,[0,d],0],0,[0,aoD,[0,0,r,0]]],r],[0,[0,[7,mu(a,"iterator"),[0,aoC,[0,0,r,0]],[0,aoB,[0,0,r,0]],c],r],0]]]]}function
 u9(a,b){a=h(b,a);b=bt(M(h(a,function(a){return a[1]})));var
@@ -11187,7 +11187,7 @@ d=a[2],a=bn(j,b,c,a[1]),e=a[3],f=a[2],a=a[1],d=bn(j,b,c,d),g=d[1],e=[2,e,d[3]],d
 7:h=a[3];e=a[2];a=bn(j,b,c,a[1]);return[0,a[1],a[2],[0,[7,a[3],e,h],d[2]]];case
 8:h=a[2];a=bn(j,b,c,a[1]);return[0,a[1],a[2],[0,[8,a[3],h],d[2]]];default:return[0,0,0,d]}}var
 aoK=[0,"Internal error in inline optimization: lhs could not be converted round-trip to expression"],aoL=[4,0];function
-el(i,b,c,d){var
+em(i,b,c,d){var
 a=d[1],d=d[2];if(typeof
 a==="number")switch(a){case
 0:a=0;break;case
@@ -11202,21 +11202,21 @@ f=[3,f,g]}else
 f=[3,f,g];a=gn(k(a,e),f);break;case
 4:a=a[1];if(a){a=bn(i,b,c,a[1]);g=[4,[0,a[3]]];a=gn(k(a[1],a[2]),g)}else
 a=aoL;break;case
-5:g=a[3];e=a[2];a=bn(i,b,c,a[1]);f=a[3];j=a[2];a=a[1];g=ap(g,function(a){return el(i,b,c,a)});e=[5,f,el(i,b,c,e),g];a=gn(k(a,j),e);break;case
-6:j=a[2];a=bn(i,b,c,a[1]);e=a[2];g=a[3];a=a[1];if(bb(e))j=el(i,b,c,j);else{f=kp(e);j=[0,[9,k([0,el(i,b,c,j),0],f)],r]}a=gn(k(a,e),[6,g,j]);break;case
+5:g=a[3];e=a[2];a=bn(i,b,c,a[1]);f=a[3];j=a[2];a=a[1];g=ap(g,function(a){return em(i,b,c,a)});e=[5,f,em(i,b,c,e),g];a=gn(k(a,j),e);break;case
+6:j=a[2];a=bn(i,b,c,a[1]);e=a[2];g=a[3];a=a[1];if(bb(e))j=em(i,b,c,j);else{f=kp(e);j=[0,[9,k([0,em(i,b,c,j),0],f)],r]}a=gn(k(a,e),[6,g,j]);break;case
 7:g=a[4];e=a[3];j=a[1];a=bn(i,b,c,a[2]);f=a[3];l=a[2];a=a[1];e=bn(i,b,c,e);m=e[2];var
-n=e[3],e=e[1];if(bb(m))g=el(i,b,c,g);else
+n=e[3],e=e[1];if(bb(m))g=em(i,b,c,g);else
 var
-o=kp(m),g=[0,[9,k([0,el(i,b,c,g),0],o)],r];a=gn(k(a,k(e,k(l,m))),[7,j,f,n,g]);break;case
-8:l=a[1];a=[8,l,h(a[2],function(a){return el(i,b,c,a)})];break;case
-9:a=[9,h(a[1],function(a){return el(i,b,c,a)})];break;case
-10:a=[10,h(a[1],function(a){return el(i,b,c,a)})];break;default:l=a[4];if(typeof
+o=kp(m),g=[0,[9,k([0,em(i,b,c,g),0],o)],r];a=gn(k(a,k(e,k(l,m))),[7,j,f,n,g]);break;case
+8:l=a[1];a=[8,l,h(a[2],function(a){return em(i,b,c,a)})];break;case
+9:a=[9,h(a[1],function(a){return em(i,b,c,a)})];break;case
+10:a=[10,h(a[1],function(a){return em(i,b,c,a)})];break;default:l=a[4];if(typeof
 l==="number");else{n=a[3];m=a[2];a=a[1];l=bn(i,b,c,l[1]);a=[11,a,m,n,[0,l[3]]];a=gn(k(l[1],l[2]),a)}}return[0,a,d]}function
 FU(s,b){var
 a=bE;for(;;){if(!b)return a;var
 g=b[2],b=b[1],e=b[5],d=b[2],c=b[4],b=b[1];if(e){let
 n=a,p=e[1],q=c,r=b;var
-i=function(a){a=el(a,s,n,p);var
+i=function(a){a=em(a,s,n,p);var
 b=h(q,function(a){return a[2]});return[0,ap(Cn(r),function(a){return[1,a]}),b,a]},b=of(d);if(b){b=b[1];c=i(0);b=fi([0,[0,d,c],[0,[0,b,i(1)],0]],o);b=[0,o,b[1],b[2]];var
 k=function(a,b,c){return b},d=a8(a),c=b[3],e=a[3],j=b[2],f=a[2],d=c<=e?Bn(e,f,j,Oy,k,d):Bn(c,j,f,Oz,k,d),a=b[3]<=a[3]?a:b;a=lF(a,d);b=g}else{a:{b=i(1);try{f=a[1][2];c=a8(a);b=ic(a[2],a[3],d,b,c,f,0);var
 l=[0,a[1],b[1],b[2]]}catch(f){b=ai(f);if(b!==lB)throw m(b,0);b=HM;break a}b=[0,,l]}if(typeof
@@ -11277,7 +11277,7 @@ FZ(c){return FO(c,function(a){a=kl(0,0,a);var
 b=a[2],e=an9(c,a[1],b);return mm(b,function(a,b){a=P(e,a)[1];if(typeof
 b!=="number")switch(b[0]){case
 0:var
-c=b[1],d=b[3];if(!aK(a,ef(c))&&!fz(hk,d)){a=c[2];for(;;){if(a){c=a[2];if(!FV(aoX,a[1])){a=c;continue}a=1}else
+c=b[1],d=b[3];if(!aK(a,eg(c))&&!fz(hk,d)){a=c[2];for(;;){if(a){c=a[2];if(!FV(aoX,a[1])){a=c;continue}a=1}else
 a=0;if(a)break;return 2}}return b;case
 5:a=b[3];c=b[2];b=b[1];a:if(!fz(hk,b)&&2===c[1]){if(!bj(ap(a,function(a){return a[1]}),aoZ)&&0!==ap(a,function(a){return a[1]}))break a;return 2}d=b[1];return cy(0,b)?a?a[1][1]:2:1===d[0]?c[1]:[5,b,c,a];case
 6:a=b[2];b=b[1];if(!fz(hk,b)&&0===a[1])return 2;return cy(0,b)?2:[6,b,a];case
@@ -11291,10 +11291,10 @@ a[1]==="number"?1:0;if(f)return 2}return[7,b,d,c,a];case
 c!=="number"){c=c[1];if(!aK(a,b[2])&&!fz(hk,c))return[11,b[1],b[2],b[3],0];return b}break}return b},P(b,1))})}function
 ao0(a,b){b=b[1];if(typeof
 b!=="number"&&0===b[0]){var
-d=b[3],c=b[2],b=b[1],e=ef(b);a:{b=b[2];if(a===e){a=gk(d);var
+d=b[3],c=b[2],b=b[1],e=eg(b);a:{b=b[2];if(a===e){a=gk(d);var
 f=o[1];if(!aK([0,o,aZ(a[2],aP,function(a,b){return N(a,b[1][1],f)})],e)){if(0===d[2][3]){b:{if(typeof
 c!=="number"&&0===c[0]){c=1;break b}c=0}if(c)break a}return[0,b]}}}return 0}return 0}function
-em(a){function
+en(a){function
 e(a,b){var
 c=a[1];if(typeof
 c!=="number")switch(c[0]){case
@@ -11302,13 +11302,13 @@ c!=="number")switch(c[0]){case
 d=c[1],c=ap(c[3],function(a){return e(a,0)}),a=a[2];return[0,[5,d,e(b,0),c],a];case
 6:b=c[2];a=c[1];c=b[2];return[0,[6,a,e(b,0)],c];case
 7:a=a[2];b=e(c[4],0);return[0,[7,c[1],c[2],c[3],b],a];case
-8:b=c[1];a=a[2];return[0,[8,b,em(c[2])],a];case
-9:b=a[2];return[0,[9,em(c[1])],b];case
-10:a=a[2];return[0,[10,em(c[1])],a];case
+8:b=c[1];a=a[2];return[0,[8,b,en(c[2])],a];case
+9:b=a[2];return[0,[9,en(c[1])],b];case
+10:a=a[2];return[0,[10,en(c[1])],a];case
 11:d=c[4];if(typeof
 d==="number"&&d){d=c[2];b=c1(b);if(!b)return a;d=ao0(d,b[1]);if(d&&Cj(d[1]))return[0,[11,c[1],c[2],c[3],0],a[2]];return a}break}return a}var
 b=c1(a);if(!b)return a;b=b[1];var
-c=As(a);if(!c)return a;a=c[1];c=em(a);return[0,e(b,a),c]}function
+c=As(a);if(!c)return a;a=c[1];c=en(a);return[0,e(b,a),c]}function
 F0(o,n,c,d,e,f){f=kl(0,0,f);var
 h=f[2],i=f[1],g=mr(i),f=g[5],a=g[1],b=g[3],j=g[2],k=g[4],m=lD(f[2],function(a,b){if(!aK(i[4],a))return b;a=g[4];var
 c=p(b),c=F(b[2],a[2],c);return[0,b[1],c]}),l=gl([0,a,j,b,k,[0,f[1],m]],[0,function(a,b){return ia(a,b)},e,function(a,b){var
@@ -11328,8 +11328,8 @@ aoM(a){var
 c=jP,b=a[1];for(;;){if(!b)break;var
 e=b[2],b=b[1][2],f=a8(c),b=jO(c[2],b,function(a){return a?0:1},c[3],f);c=[0,c[1],b[1],b[2]];b=e}b=cs(a[1],function(a){return P(c,a[2])});var
 g=FU(0,b),i=FU(1,b);function
-d(a){return el(1,1,i,a)}var
-b=a[11],k=a[10],l=a[9],e=h(a[8],d),n=h(a[7],d),j=h(a[6],function(a){return el(1,0,g,a)}),m=h(a[5],d),f=h(a[4],d);return[0,a[1],a[2],a[3],f,m,j,n,e,l,k,b]}function
+d(a){return em(1,1,i,a)}var
+b=a[11],k=a[10],l=a[9],e=h(a[8],d),n=h(a[7],d),j=h(a[6],function(a){return em(1,0,g,a)}),m=h(a[5],d),f=h(a[4],d);return[0,a[1],a[2],a[3],f,m,j,n,e,l,k,b]}function
 aoQ(a){return ko(a,aoN)}function
 aoU(a){return ko(a,aoR)}function
 aoW(a){return ko(a,aoV)}function
@@ -11343,8 +11343,8 @@ b=a[5];if(b){var
 d=b[1],c=d[1];if(typeof
 c==="number");else
 switch(c[0]){case
-9:b=d[2];b=[0,[0,[9,em(c[1])],b]];break;case
-10:b=d[2];b=[0,[0,[10,em(c[1])],b]];break}}return[0,a[1],a[2],a[3],a[4],b,a[6]]}),c=a[11],d=a[10],e=a[9],f=em(a[8]),g=em(a[7]),i=em(a[6]),j=em(a[5]),k=em(a[4]),l=em(a[3]);return[0,b,a[2],l,k,j,i,g,f,e,d,c]}function
+9:b=d[2];b=[0,[0,[9,en(c[1])],b]];break;case
+10:b=d[2];b=[0,[0,[10,en(c[1])],b]];break}}return[0,a[1],a[2],a[3],a[4],b,a[6]]}),c=a[11],d=a[10],e=a[9],f=en(a[8]),g=en(a[7]),i=en(a[6]),j=en(a[5]),k=en(a[4]),l=en(a[3]);return[0,b,a[2],l,k,j,i,g,f,e,d,c]}function
 ao2(a,b){var
 g=a?a[1]:0;function
 i(a){if(typeof
@@ -11374,9 +11374,9 @@ d==="number"&&2<=d&&!c[2])return[7,a[1],a[2],a[3],b[1]]}}}break}return a}return 
 d=a[2],a=a[1],a=an_(mr(a),a,d),e=a[2];function
 f(a,b){if(b[1][0]<2)return a;if(FX([0,g],b)){b=b[1];return is(f)(a,b)}var
 c=ik(ao4),d=a8(a),c=b6(a[2],a[3],b,c,d);return[0,a[1],c[1],c[2]]}var
-j=a[1],c=d5(iV(an7,b[1]),[0,kt,ib,0],f),b=f4(c,0,function(a,b,c){var
-d=[1,Y(a)];return[0,[0,[11,ed(a),b,d,1],r],c]});return dK(l,[0,[10,k(b,[0,mm(d,function(f,b){var
-a=P(e,f)[1],g=c3(P(j,f),a),a=h(eD(eG(dD(g,function(a){return f3(c,a)})),function(a,b){b=fw(b);return aD(fw(a),b)}),function(a){var
+j=a[1],c=d6(iV(an7,b[1]),[0,kt,ib,0],f),b=f4(c,0,function(a,b,c){var
+d=[1,Z(a)];return[0,[0,[11,ee(a),b,d,1],r],c]});return dK(l,[0,[10,k(b,[0,mm(d,function(f,b){var
+a=P(e,f)[1],g=c3(P(j,f),a),a=h(d5(eG(dD(g,function(a){return f3(c,a)})),function(a,b){b=fw(b);return aD(fw(a),b)}),function(a){var
 b=a[2][1];return[0,[0,[0,[0,P(c,a)],0],b,a],r]}),m=lD(c[2],function(a,b){return[0,[0,b],a[2]]}),d=sz([0,c[1],m,c[3]],function(a){var
 b=aK(g,a);return b?b:aK(P(e,f)[2],a)});function
 i(a){a:if(typeof
@@ -11404,7 +11404,7 @@ ao6(a){var
 d=aR(o,aY(a[9],function(a){var
 b=a[1];return a[3][3]?0:[0,b]}));function
 e(a,b,c){a=P(a,b)[1];if(typeof
-a!=="number"&&0===a[0]){b=a[1];if(gX(ed(c8(c,a[3]))))return[0,o,[0,ef(b)]]}return E}function
+a!=="number"&&0===a[0]){b=a[1];if(gX(ee(c8(c,a[3]))))return[0,o,[0,eg(b)]]}return E}function
 f(a){return[0,,[0,a+"_in__"]]}function
 g(a,b){if(typeof
 a!=="number"&&11===a[0]){var
@@ -11419,7 +11419,7 @@ f(a,b,c){a=P(a,b);b=a[2][2][2];a=a[1];if(typeof
 a!=="number"){var
 e="Right hand side contains only AoS expressions:";switch(a[0]){case
 0:var
-d=a[3],a=ef(a[1]),d=fy(d);if(aK(c,a)){c_(1,b,e,a);b=p(d);b=N(d[2],a,b);return[0,d[1],b]}if(!pi(c,d))return E;e=gm(c3(c,d));c_(1,b,i(ak(aoq),e),a);e=p(d);e=N(d[2],a,e);return[0,d[1],e];case
+d=a[3],a=eg(a[1]),d=fy(d);if(aK(c,a)){c_(1,b,e,a);b=p(d);b=N(d[2],a,b);return[0,d[1],b]}if(!pi(c,d))return E;e=gm(c3(c,d));c_(1,b,i(ak(aoq),e),a);e=p(d);e=N(d[2],a,e);return[0,d[1],e];case
 11:d=a[4];if(typeof
 d!=="number"){a=a[2];d=fy(d[1]);if(aK(c,a)){c_(1,b,e,a);b=p(d);b=N(d[2],a,b);return[0,d[1],b]}if(!pi(c,d))return E;c=gm(c3(c,d));c_(1,b,i(ak(aor),c),a);b=p(d);b=N(d[2],a,b);return[0,d[1],b]}break}}return E}for(;;){if(!c)break;var
 e=c[2];d=kn(0,d,c[1]);c=e}c=a[11];var
@@ -11429,7 +11429,7 @@ F3(a,b){a=a?a[1]:F2;var
 e=a[14],d=[0,[0,aoQ,a[2]],[0,[0,FZ,a[10]],[0,[0,aoW,a[4]],[0,[0,ao6,a[13]],[0,[0,ao7,a[15]],[0,[0,ao1,a[6]],[0,[0,ao5,a[5]],0]]]]]]],c=a[7],c=[0,[0,u$([0,e]),c],d],f=[0,e],g=[0,e],c=[0,[0,FZ,a[10]],[0,[0,aoU,a[3]],[0,[0,function(a){return aoY(g,a)},a[8]],[0,[0,an3,a[11]],[0,[0,function(a){return ao2(f,a)},a[12]],[0,[0,FY,a[9]],c]]]]]],d=a[7],d=[0,[0,u$([0,e]),d],c],d=[0,[0,FY,a[9]],d],c=a[7],c=[0,[0,u$([0,e]),c],d],c=aY([0,[0,aoM,a[1]],c],function(a){var
 b=a[1];return a[2]?[0,b]:0});for(;;){if(!c)return b;a=c[2];b=i(c[1],b);c=a}}function
 ao9(a,b){var
-c=a[2],d=b[2],a=Ck(a[1],b[1]);return 0===a?_(c,d):a}function
+c=a[2],d=b[2],a=Ck(a[1],b[1]);return 0===a?Y(c,d):a}function
 F4(e,b,c,d){c=c?c[1]:0;if(c){c=gk(c[1]);var
 h=o[1],c=[0,o,aZ(c[2],aP,function(a,b){return N(a,b[1],h)})],g=o[1],a=[0,,aZ(c[2],aP,function(a,b){return N(a,b[1],g)})],b=FB(e,0,c,b)}else{a=E;b=u5(e,0,E,b)}b=cQ(b,function(a){return mn(P(e,a)[1])});var
 f=o[1],b=[0,o,aZ(b[2],aP,function(a,b){return N(a,b[1][1],f)})],c=p(b);return c3(d,[0,,F(b[2],a[2],c)])}function
@@ -11447,15 +11447,15 @@ b=a[5],a=aR(o,h(a[4],function(a){return a[2]}));if(!b)return E;b=b[1];var
 c=p(a),c=F(a[2],e[2],c);return u6([0,a[1],c],b)})),0],a=[0,f(b[6]),a],a=[0,f(b[5]),a],a=[0,f(b[4]),a],a=dD(av(o,[0,u6(d,[0,[10,b[3]],r]),a]),function(a){return cq(a[1],r)}),j=Bz(),a=jN(a,function(a){var
 b=a[2],a=a[1];return f5(j,b)?0:(lI(j,b),[0,[0,a,b]])}),n=o[1];return[0,o,aZ(a[2],aP,function(a,b){var
 c=b[2],b=b[1];return N(a,[0,b,i(V(aps),c)],n)})]}function
-F7(a){return eD(eG(a),ao9)}var
+F7(a){return d5(eG(a),ao9)}var
 az="an inverse overdispersion control parameter",H="chance of success",a4="cutpoints",s="a count parameter",bB="a precision parameter",uZ=[0,"[0,1]",[0,[0,[0,[0,0.,1]],[0,[0,1.,1]]]]],u0=[0,"(0,1)",[0,[0,[0,[0,0.,0]],[0,[0,1.,0]]]]],K=[0,"strictly positive",[0,[0,[0,[0,0.,0]],0]]],Fi=[0,"non-negative",[0,[0,[0,[0,0.,1]],0]]],u1=[0,p3,2],Fj=[0,qz,0],fx=[0,"covariance",7],iU=[0,"Cholesky factor of covariance",5],PW=[0,[18,[1,[0,[11,co,0],co]],[15,[17,0,0]]],bl],anN=[0,[0,2,H]],anO=[0,[0,2,bB]],anP=[0,[0,1,"a unit mean parameter"]],anQ=[0,[0,3,"a prior failure count"]],anR=[0,[0,2,"a prior success count"]],anS=[0,[0,2,s]],anT=[0,[0,1,s]],anU=[0,[0,1,H]],anL=[0,[0,1,s]],anM=[0,[0,1,"a vector of outcome probabilities"]],anJ=[0,[0,4,"system covariance matrix"]],anK=[0,[0,3,"observation covariance matrix"]],anI=[0,[0,1,"a kernel matrix"]],anF=[0,[0,1,"a distribution parameter"]],anG=[0,[0,2,"a precision matrix"]],anA=[0,[0,2,a4]],anB=[0,[0,2,a4]],anC=[0,[0,4,az]],anD=[0,[0,2,az]],anE=[0,[0,2,bB]],any=[0,[0,1,"a rate parameter"]],anv=[0,[0,3,"an a-priori bias parameter"]],anw=[0,[0,2,"a non-decision time parameter"]],anx=[0,[0,1,"a boundary separation parameter"]],anz=[0,[0,1,"a positive minimum parameter"]],anH=[0,[0,1,"Cholesky factor of the kernel matrix"]],ank=[0,"correlation",6],anl=[0,"Cholesky factor of correlation",4],apd=[0,"INTERNAL ERROR: Pedantic mode found CF dependent on an arg, but the arg is mismatched. Please report a bug.\n"];function
 PV(a,b,c){var
 d=a?a[1]:0;return j(g(b)(PW),function(a,b){return jS(1,d,a,b)},c)}function
 ane(b){return bZ(h(l0,function(a){return f0(b,a)}),0,nV)}function
 anu(h){var
-a=h[1],c=_(a,"multi_gp_cholesky");a:{var
-b="a scale parameter",f="a scale matrix",g="an inverse scale parameter",d="a shape parameter",e="degrees of freedom";if(0<=c){if(0>=c){a=[0,function(a){return v(iU,anH,a)},0];break a}c=_(a,"pareto");if(0<=c){if(0>=c){var
-z=[0,[0,2,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,anz,a)},[0,function(a){return v(K,z,a)},0]]];break a}g=_(a,"student_t");if(0<=g){if(0>=g){var
+a=h[1],c=Y(a,"multi_gp_cholesky");a:{var
+b="a scale parameter",f="a scale matrix",g="an inverse scale parameter",d="a shape parameter",e="degrees of freedom";if(0<=c){if(0>=c){a=[0,function(a){return v(iU,anH,a)},0];break a}c=Y(a,"pareto");if(0<=c){if(0>=c){var
+z=[0,[0,2,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,anz,a)},[0,function(a){return v(K,z,a)},0]]];break a}g=Y(a,"student_t");if(0<=g){if(0>=g){var
 q=[0,[0,3,b]],r=[0,[0,1,e]],a=[0,function(a){return v(K,r,a)},[0,function(a){return v(K,q,a)},0]];break a}if(a==="uniform"){a=[0,ans,0];break a}if(a==="von_mises"){var
 p=[0,[0,2,b]],a=[0,function(a){return v(K,p,a)},0];break a}if(a==="weibull"){var
 n=[0,[0,2,b]],o=[0,[0,1,d]],a=[0,function(a){return v(Fi,0,a)},[0,function(a){return v(K,o,a)},[0,function(a){return v(K,n,a)},0]]];break a}if(a==="wiener"){a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,anx,a)},[0,function(a){return v(K,anw,a)},[0,function(a){return v(uZ,anv,a)},0]]]];break a}if(a==="wishart"){var
@@ -11464,7 +11464,7 @@ j=[0,[0,2,f]],k=[0,[0,1,e]],a=[0,function(a){return v(iU,0,a)},[0,function(a){re
 x=[0,[0,3,d]],y=[0,[0,2,b]],a=[0,function(a){return v(K,y,a)},[0,function(a){return v(K,x,a)},0]];break a}if(a==="poisson"){a=[0,function(a){return v(K,any,a)},0];break a}if(a===Gu){a=0;break a}if(a==="poisson_log_glm"){a=0;break a}if(a==="rayleigh"){var
 w=[0,[0,1,b]],a=[0,function(a){return v(Fi,0,a)},[0,function(a){return v(K,w,a)},0]];break a}if(a==="scaled_inv_chi_square"){var
 t=[0,[0,2,b]],u=[0,[0,1,e]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,u,a)},[0,function(a){return v(K,t,a)},0]]];break a}if(a==="skew_normal"){var
-s=[0,[0,2,b]],a=[0,function(a){return v(K,s,a)},0];break a}}}else{c=_(a,"neg_binomial_2");if(0<=c){if(0>=c){var
+s=[0,[0,2,b]],a=[0,function(a){return v(K,s,a)},0];break a}}}else{c=Y(a,"neg_binomial_2");if(0<=c){if(0>=c){var
 C=[0,[0,1,d]],a=[0,function(a){return v(K,C,a)},[0,function(a){return v(K,anE,a)},0]];break a}if(a===I2){a=[0,function(a){return v(K,anD,a)},0];break a}if(a==="neg_binomial_2_log_glm"){a=[0,function(a){return v(K,anC,a)},0];break a}if(a==="normal"){var
 B=[0,[0,2,b]],a=[0,function(a){return v(K,B,a)},0];break a}if(a==="normal_id_glm"){var
 A=[0,[0,4,b]],a=[0,function(a){return v(K,A,a)},0];break a}if(a==="ordered_logistic"){a=[0,function(a){return v(Fj,anB,a)},0];break a}if(a==="ordered_probit"){a=[0,function(a){return v(Fj,anA,a)},0];break a}}else{b="a covariance matrix";if(a==="multi_normal"){var
@@ -11472,8 +11472,8 @@ L=[0,[0,2,b]],a=[0,function(a){return v(fx,L,a)},0];break a}if(a==="multi_normal
 J=[0,[0,2,b]],a=[0,function(a){return v(iU,J,a)},0];break a}if(a==="multi_normal_prec"){a=[0,function(a){return v(fx,anG,a)},0];break a}if(a==="multi_student_t"){var
 H=[0,[0,3,f]],I=[0,[0,1,e]],a=[0,function(a){return v(K,I,a)},[0,function(a){return v(fx,H,a)},0]];break a}if(a==="multi_student_t_cholesky"){var
 F=[0,[0,3,b]],G=[0,[0,1,e]],a=[0,function(a){return v(K,G,a)},[0,function(a){return v(iU,F,a)},0]];break a}if(a==="multinomial"){a=[0,function(a){return v(u1,anF,a)},0];break a}if(a==="neg_binomial"){var
-D=[0,[0,2,g]],E=[0,[0,1,d]],a=[0,function(a){return v(K,E,a)},[0,function(a){return v(K,D,a)},0]];break a}}}}else{c=_(a,"exponential");if(0<=c){if(0>=c){var
-ab=[0,[0,1,b]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,ab,a)},0]];break a}c=_(a,"inv_wishart");if(0<=c){if(0>=c){var
+D=[0,[0,2,g]],E=[0,[0,1,d]],a=[0,function(a){return v(K,E,a)},[0,function(a){return v(K,D,a)},0]];break a}}}}else{c=Y(a,"exponential");if(0<=c){if(0>=c){var
+ab=[0,[0,1,b]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,ab,a)},0]];break a}c=Y(a,"inv_wishart");if(0<=c){if(0>=c){var
 S=[0,[0,2,f]],T=[0,[0,1,e]],a=[0,function(a){return v(fx,0,a)},[0,function(a){return v(K,T,a)},[0,function(a){return v(fx,S,a)},0]]];break a}if(a==="inv_wishart_cholesky"){var
 Q=[0,[0,2,f]],R=[0,[0,1,e]],a=[0,function(a){return v(iU,0,a)},[0,function(a){return v(K,R,a)},[0,function(a){return v(iU,Q,a)},0]]];break a}if(a==="lkj_corr"){var
 P=[0,[0,1,d]],a=[0,ant,[0,function(a){return v(ank,0,a)},[0,function(a){return v(K,P,a)},0]]];break a}if(a==="lkj_corr_cholesky"){var
@@ -11481,10 +11481,10 @@ O=[0,[0,1,d]],a=[0,function(a){return v(anl,0,a)},[0,function(a){return v(K,O,a)
 N=[0,[0,2,b]],a=[0,function(a){return v(K,N,a)},0];break a}if(a==="lognormal"){var
 M=[0,[0,2,b]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,M,a)},0]];break a}if(a==="multi_gp"){a=[0,function(a){return v(fx,anI,a)},0];break a}}else{if(a==="frechet"){var
 $=[0,[0,2,b]],aa=[0,[0,1,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,aa,a)},[0,function(a){return v(K,$,a)},0]]];break a}if(a==="gamma"){var
-Y=[0,[0,2,g]],Z=[0,[0,1,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,Z,a)},[0,function(a){return v(K,Y,a)},[0,Fk,0]]]];break a}if(a==="gaussian_dlm_obs"){a=[0,function(a){return v(fx,anK,a)},[0,function(a){return v(fx,anJ,a)},0]];break a}if(a==="gumbel"){var
+Z=[0,[0,2,g]],_=[0,[0,1,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,_,a)},[0,function(a){return v(K,Z,a)},[0,Fk,0]]]];break a}if(a==="gaussian_dlm_obs"){a=[0,function(a){return v(fx,anK,a)},[0,function(a){return v(fx,anJ,a)},0]];break a}if(a==="gumbel"){var
 X=[0,[0,2,b]],a=[0,function(a){return v(K,X,a)},0];break a}if(a==="hypergeometric"){a=0;break a}if(a==="inv_chi_square"){var
 W=[0,[0,1,e]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,W,a)},0]];break a}if(a==="inv_gamma"){var
-U=[0,[0,2,b]],V=[0,[0,1,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,V,a)},[0,function(a){return v(K,U,a)},[0,Fk,0]]]];break a}}}else{f=_(a,"binomial_logit");if(0<=f){if(0>=f){a=0;break a}if(a==="categorical"){a=[0,function(a){return v(u1,anM,a)},0];break a}if(a==="cauchy"){var
+U=[0,[0,2,b]],V=[0,[0,1,d]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,V,a)},[0,function(a){return v(K,U,a)},[0,Fk,0]]]];break a}}}else{f=Y(a,"binomial_logit");if(0<=f){if(0>=f){a=0;break a}if(a==="categorical"){a=[0,function(a){return v(u1,anM,a)},0];break a}if(a==="cauchy"){var
 ag=[0,[0,2,b]],a=[0,function(a){return v(K,ag,a)},0];break a}if(a==="chi_square"){var
 af=[0,[0,1,e]],a=[0,function(a){return v(K,0,a)},[0,function(a){return v(K,af,a)},0]];break a}if(a==="dirichlet"){a=[0,function(a){return v(u1,0,a)},[0,function(a){return v(K,anL,a)},0]];break a}if(a==="double_exponential"){var
 ae=[0,[0,2,b]],a=[0,function(a){return v(K,ae,a)},0];break a}if(a==="exp_mod_normal"){var
@@ -11537,8 +11537,8 @@ d=iW(a,c)+5.,c=iW(a,c);break a;case
 6:break;default:break b}c=X(apx,[0,function(a){return mx(b,a)},0]);d=c[2];c=c[1];break a}d=7.}if(d<c){a=q0(d);var
 e=q0(c);x(r1(Nu),HR,e,a,0)}return c+Aq(ly,d-c)}function
 pm(a,b){return lz(a,function(a){return b})}function
-en(a,b){return lz(a,function(a){return b()})}function
-gp(a){return en(a,function(a){return Aq(ly,2.)})}function
+eo(a,b){return lz(a,function(a){return b()})}function
+gp(a){return eo(a,function(a){return Aq(ly,2.)})}function
 va(a,b){var
 e=b[1];if(2===e[0]){var
 c=e[1];switch(c[0]){case
@@ -11558,7 +11558,7 @@ switch(c[0]){case
 a=[0,4,n[2],n[3]];return[0,[2,iu,h(b,it)],a];case
 1:b=kq(d,b,function(a){return go(d,[1,a])},c[1]);a=[0,4,n[2],n[3]];return[0,[2,iu,h(b,it)],a];case
 2:b=vb(d,b,function(a){return go(d,a)},c[1],c[2]);a=[0,4,n[2],n[3]];return[0,[2,iu,h(b,it)],a];case
-6:break;default:break a}return X(apy,[0,function(a){return mx(c,a)},0])}b=en(b,function(a){return go(d,c)});a=[0,4,n[2],n[3]];return[0,[2,iu,h(b,it)],a]}function
+6:break;default:break a}return X(apy,[0,function(a){return mx(c,a)},0])}b=eo(b,function(a){return go(d,c)});a=[0,4,n[2],n[3]];return[0,[2,iu,h(b,it)],a]}function
 F$(d){var
 b=gp(d),c=0.,a=b;for(;;){if(!a)break;c+=a[1];a=a[2]}return h(b,function(a){return a-c/d})}function
 vc(a){a=gp(a);var
@@ -11575,14 +11575,14 @@ lW=[1,3],g2=[1,3],apB=[0,[11,"Unknown transformation for matrix: ",[16,0]],"Unkn
 apA(f,b,c,d){a:{if(typeof
 d==="number")switch(d){case
 5:var
-e=en(b-1|0,function(a){return F$(c)}),a=pm(c,0.),g=e;for(;;){if(!g)break;var
+e=eo(b-1|0,function(a){return F$(c)}),a=pm(c,0.),g=e;for(;;){if(!g)break;var
 i=g[2];a=aX(a,g[1],M5);g=i}a=k(e,[0,h(a,function(a){return-a}),0]);g=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],g];case
 6:a=Gc(b);e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
-7:a=Gb(Ga(gp(c)));if(b<=c){e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e]}a=k(a,en(b-c|0,function(a){return gp(c)}));e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
+7:a=Gb(Ga(gp(c)));if(b<=c){e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e]}a=k(a,eo(b-c|0,function(a){return gp(c)}));e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
 8:a=Gc(b);a=F9(a,mw(a));e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
 9:a=F_(gp(jr(b,b)),b);a=F9(a,mw(a));e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
-10:a=en(b,function(a){return vc(c)});e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
-11:a=mw(en(c,function(a){return vc(b)}));e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
+10:a=eo(b,function(a){return vc(c)});e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
+11:a=mw(eo(c,function(a){return vc(b)}));e=[0,5,n[2],n[3]];return[0,[2,g2,h(a,g1)],e];case
 0:break a}else
 switch(d[0]){case
 0:a=d[1];e=a[2][1];if(typeof
@@ -11592,7 +11592,7 @@ e!=="number")break a;if(5!==e)break a;a=kq(f,b,function(a){return kr(f,c,[1,a])}
 2:a=d[1];e=a[2][1];b:{if(typeof
 e==="number"&&5===e){e=d[2];break b}e=d[2];i=e[2][1];if(typeof
 i!=="number")break a;if(5!==i)break a}a=vb(f,b,function(a){return kr(f,c,a)},a,e);return[0,[2,lW,a],[0,5,n[2],n[3]]];case
-6:break;default:break a}return X(apB,[0,function(a){return mx(d,a)},0])}a=en(b,function(a){return kr(f,c,d)});return[0,[2,lW,a],[0,5,n[2],n[3]]]}function
+6:break;default:break a}return X(apB,[0,function(a){return mx(d,a)},0])}a=eo(b,function(a){return kr(f,c,d)});return[0,[2,lW,a],[0,5,n[2],n[3]]]}function
 vd(a){a=go(bE,0);return[0,go(bE,0),a]}var
 lX=[1,1],Cw=[1,3],Tm=[0,[11,"Cannot transpose ",[16,0]],"Cannot transpose %t"],apz=[0,[11,"Unknown transformation for vector: ",[16,0]],"Unknown transformation for vector: %t"],apw=[0,[11,"Unknown transformation for int: ",[16,0]],"Unknown transformation for int: %t"];function
 ks(e,b,c){if(typeof
@@ -11609,7 +11609,7 @@ a=0.,d=b;for(;;){if(!d)break;a+=Math.pow(d[1],2.);d=d[2]}var
 o=Math.sqrt(a);return jY(h(b,function(a){return a/o}));case
 5:return jY(F$(b));case
 0:break a}else if(6!==c[0])break a;return X(apz,[0,function(a){return mx(c,a)},0])}b=kr(e,b,c);var
-i=Y(b);a:{if(typeof
+i=Z(b);a:{if(typeof
 i==="number")switch(i){case
 2:a=4;break a;case
 4:a=2;break a;case
@@ -11619,22 +11619,22 @@ i==="number")switch(i){case
 8:a=i;break a}a=X(Tm,[0,function(a){return O(a,i)},0])}b=[2,[0,aL(22),0,0],[0,b,0]];return[0,b,[0,a,n[2],n[3]]];case
 1:return kr(e,c$(e,b[2]),c);case
 2:a=b[2];b=c$(e,b[3]);return apA(e,c$(e,a),b,c);case
-3:return Cv(en(c$(e,b[1]),vd));case
-4:b=en(c$(e,b[1]),vd);a=[0,7,n[2],n[3]];return[0,[2,op,h(b,jX)],a];case
+3:return Cv(eo(c$(e,b[1]),vd));case
+4:b=eo(c$(e,b[1]),vd);a=[0,7,n[2],n[3]];return[0,[2,op,h(b,jX)],a];case
 5:a=b[1];var
-q=c$(e,b[2]),b=en(c$(e,a),function(a){a=en(q,vd);var
+q=c$(e,b[2]),b=eo(c$(e,a),function(a){a=eo(q,vd);var
 b=[0,7,n[2],n[3]];return[0,[2,op,h(a,jX)],b]});return[0,[2,Cw,b],[0,8,n[2],n[3]]];case
 6:var
 j=b[1],b=c$(e,b[2]),p=function(a){return ks(e,j,c)};if(typeof
 c!=="number")switch(c[0]){case
 0:a=c[1];d=a[2][1];if(typeof
-d!=="number"&&0===d[0]){b=kq(e,b,function(a){return ks(e,j,[0,a])},a);a=jJ(c1(b),1,Y);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]]}break;case
+d!=="number"&&0===d[0]){b=kq(e,b,function(a){return ks(e,j,[0,a])},a);a=jJ(c1(b),1,Z);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]]}break;case
 1:a=c[1];d=a[2][1];if(typeof
-d!=="number"&&0===d[0]){b=kq(e,b,function(a){return ks(e,j,[1,a])},a);a=jJ(c1(b),1,Y);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]]}break;case
+d!=="number"&&0===d[0]){b=kq(e,b,function(a){return ks(e,j,[1,a])},a);a=jJ(c1(b),1,Z);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]]}break;case
 2:a=c[1];d=a[2][1];a:{if(typeof
 d!=="number"&&0===d[0]){d=c[2];break a}d=c[2];var
 f=d[2][1];if(typeof
-f==="number")break;if(0!==f[0])break}b=vb(e,b,function(a){return ks(e,j,a)},a,d);a=jJ(c1(b),1,Y);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]]}b=en(b,p);a=jJ(c1(b),1,Y);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]];default:b=h(l1(b,tt(c)),function(a){return ks(e,a[1],a[2])});a=[1,h(b,Y)];d=[0,h(b,ed)];return[0,[2,oq,b],[0,a,n[2],d]]}switch(b){case
+f==="number")break;if(0!==f[0])break}b=vb(e,b,function(a){return ks(e,j,a)},a,d);a=jJ(c1(b),1,Z);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]]}b=eo(b,p);a=jJ(c1(b),1,Z);return[0,[2,lX,b],[0,[0,a],n[2],n[3]]];default:b=h(l1(b,tt(c)),function(a){return ks(e,a[1],a[2])});a=[1,h(b,Z)];d=[0,h(b,ee)];return[0,[2,oq,b],[0,a,n[2],d]]}switch(b){case
 0:a:{if(typeof
 c==="number"){if(0===c){d=6;b=2;break a}}else
 switch(c[0]){case
@@ -11662,7 +11662,7 @@ Gd(a,b,c){a=a?a[1]:0;var
 i=b?b[1]:bE;try{b=[0,0,i];for(;;){if(!c)break;var
 g=c[2],c=c[1],f=c[3],e=b[2],b=b[1],k=c[2],c=c[1],d=bD(e,f);if(d){b=[0,[0,[0,f,d[1]],b],e];c=g}else{c=ks(e,c,k);d=a8(e);d=b6(e[2],e[3],f,c,d);b=[0,[0,[0,f,c],b],[0,e[1],d[1],d[2]]];c=g}}b=h(M(b[1]),apD);a=a?cs(b,function(a){return nU(bD(i,a[1]))}):b;a=[0,j(ak(PX),function(a,b){return PV(0,a,b)},[0,an,a])];return a}catch(f){a=ai(f);if(a[1]!==mq)throw m(a,0);g=a[3];a=a[2];d=typeof
 i[2]==="number"?1:0;return[1,[3,[0,a,g,1-d]]]}}var
-az="<v4>",H="seed",a4="The parameter ",G8="input_vars",IH="output_vars",Js="prepare_data",Iy="model_base_crtp",GG="msg_stream",vq="stan_model",s="unsigned int",wO=748543309,I7=508345160,I5="generate_quantities",HW="data_context",bB="@[<v>%a@]",o0=[0,an,0],Eo=[4,0],j_=[0,2,0],E$=[7,[0,"stan/model/model_header.hpp"]],Pr=[0,[15,0],b1],U6=[0,[18,[1,[0,[11,cE,0],cE]],[15,[12,32,[2,0,[15,[11,eZ,[17,[0,c,1,0],[15,[17,0,[17,[0,c,1,0],[12,be,0]]]]]]]]]]],"@[<v2>%a %s%a {@ %a@]@ }"],U7=[0,[18,[1,[0,[11,cE,0],cE]],[11,"extern ",[15,[12,32,[2,0,[15,[12,59,[17,0,0]]]]]]]],"@[<v2>extern %a %s%a;@]"],UG=[0,"fdloc"],UH=[0,"fdbody"],UI=[0,"fdargs"],UJ=[0,"fdsuffix"],UK=[0,"fdname"],UL=[0,"fdrt"],VG=[0,[18,[1,[0,0,l]],[2,0,[11,dT,[15,[17,0,0]]]]],"@[%s: %a@]"],VH=[0,[18,[1,[0,[11,I,0],I]],[15,[17,0,0]]],bB],VD=[0,[2,0,[12,40,[18,[1,[0,[11,aH,0],aH]],[15,[17,0,[11,p2,[15,0]]]]]]],"%s(@[<h>%a@]) => %a"],VE=[0,[18,[1,[0,[11,I,0],I]],[15,[17,0,0]]],bB],VM=[0,[18,[1,[0,[11,az,0],az]],[15,[11,je,[18,[1,[0,0,l]],[15,[17,0,[12,58,[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]]]]]]],"@[<v4>%a in @[%a@]:@ @[%a@]@]"],aa1=[0,[11,"Type checked AST does not match original AST.",[17,3,[2,0,[17,3,[2,0,0]]]]],"Type checked AST does not match original AST.@\n%s@\n%s"],aeC=[0,[15,0],b1],aeA=[0,[15,0],b1],aeB=[0,[11,"Pretty-printed program failed to parse!",[17,3,[11,"Error ",[2,0,[17,3,[2,0,[17,3,[2,0,0]]]]]]]],"Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"],aez=[0,[11,"Pretty-printed program does not match the original!",[17,3,[2,0,[17,3,[2,0,0]]]]],"Pretty-printed program does not match the original!@\n%s@\n%s"],aeF=[0,an,0],afj=[0,1,1],afk=[0,0,1],afy=[0,0],afz=[0,kF],afl=[0,"eval",0,0],ago=[9,[10,[5,aa]]],aj$=[0,1],aka=[0,1],akb=[5,S],am4=[0,[5,s],H],am5=[0,[9,[0,[0,"*m"]]],0],am6=[0,[0,[14,[5,vq],[0,[1,HW],[0,[1,H],[0,[1,GG],0]]]]]],am7=[10,[5,vq]],am8=[8,[5,"stan::model::model_base"]],am9=[8,[5,S]],am2=[0,1],amY=[0,[0,0,[0,2,0]]],amZ=[0,1],am0=[0,[0,0,[0,1,0]]],am1=[0,1],all=[0,[5,s],"random_seed__ = 0"],alm=[0,[1,"random_seed__"],[0,[0,al],0]],aln=[11,jf,[0,3]],alo=[0,[0,[0,Iy,[0,[0,al],0]],0]],am3=[0,[5,"stan::model::model_base_crtp",0],[0,[5,"namespace stan::math",0],0]],am_=[7,[0,"stan/math/mix.hpp"]],aoh=[0,1],aox=[0,[15,[12,32,[2,0,[11,dT,[15,0]]]]],"%a %s: %a"],aoy=[0,[18,[1,[0,[11,I,0],I]],[15,[17,4,[17,0,0]]]],"@[<v>%a@.@]"],aok=[0,[11,"Optimization hazard warning (Line ",[4,3,0,0,[11,"): ",[2,0,[11," warning: ",[2,0,0]]]]]],"Optimization hazard warning (Line %i): %s warning: %s"],apq=[0,[11,a4,[2,0,[11," has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive.",0]]],"The parameter %s has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive."],apr=[0,[11,a4,[2,0,[11," has ",[4,0,0,0,[11," priors.",0]]]]],"The parameter %s has %d priors."],app=[0,[11,a4,[2,0,[11," was declared but was not used in the density calculation.",0]]],"The parameter %s was declared but was not used in the density calculation."],apn=[0,ar],apo=[0,[11,"A control flow statement inside function ",[2,0,[11," depends on argument ",[2,0,[11,". At ",[2,0,[11,", the value of ",[2,0,[11," depends on parameter(s): ",[2,0,[12,46,0]]]]]]]]]]],"A control flow statement inside function %s depends on argument %s. At %s, the value of %s depends on parameter(s): %s."],apl=[0,ar],apm=[0,[11,"A control flow statement depends on parameter(s): ",[2,0,[12,46,0]]],"A control flow statement depends on parameter(s): %s."],apk=[0,[11,a4,[2,0,[11," is on the left-hand side of more than one tilde statement.",0]]],"The parameter %s is on the left-hand side of more than one tilde statement."],apj=[0,[11,"Your Stan program has a parameter ",[2,0,[11," with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.",0]]],"Your Stan program has a parameter %s with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution."],api=[0,[11,q,[2,0,[11," has constraints that don't make sense. The lower bound should be strictly less than the upper bound.",0]]],"Parameter %s has constraints that don't make sense. The lower bound should be strictly less than the upper bound."],aph=[0,[11,e4,[2,0,[11," suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors",0]]],"Argument %s suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors"],apb=jp([jb,"append_block",Ha,HD,xs,a,xU,by,pI,Hv,bo,aM,mT,"negative_infinity","not_a_number",vW,xw,vI,"positive_infinity",e,vl,py,"to_vector","to_row_vector","to_matrix","to_array_1d","to_array_2d",hF]),apc=[0,0,[0,1,[0,2,[0,3,[0,21,[0,22,0]]]]]],ao$=[0,-549934370],apa=[0,I7],ao_=[0,0],E0=[0,l],ah0=[4,"Code generated by stanc d9ed797"];function
+az="<v4>",H="seed",a4="The parameter ",G8="input_vars",IH="output_vars",Js="prepare_data",Iy="model_base_crtp",GG="msg_stream",vq="stan_model",s="unsigned int",wO=748543309,I7=508345160,I5="generate_quantities",HW="data_context",bB="@[<v>%a@]",o0=[0,an,0],Eo=[4,0],j_=[0,2,0],E$=[7,[0,"stan/model/model_header.hpp"]],Pr=[0,[15,0],b1],U6=[0,[18,[1,[0,[11,cE,0],cE]],[15,[12,32,[2,0,[15,[11,eZ,[17,[0,c,1,0],[15,[17,0,[17,[0,c,1,0],[12,be,0]]]]]]]]]]],"@[<v2>%a %s%a {@ %a@]@ }"],U7=[0,[18,[1,[0,[11,cE,0],cE]],[11,"extern ",[15,[12,32,[2,0,[15,[12,59,[17,0,0]]]]]]]],"@[<v2>extern %a %s%a;@]"],UG=[0,"fdloc"],UH=[0,"fdbody"],UI=[0,"fdargs"],UJ=[0,"fdsuffix"],UK=[0,"fdname"],UL=[0,"fdrt"],VG=[0,[18,[1,[0,0,l]],[2,0,[11,dT,[15,[17,0,0]]]]],"@[%s: %a@]"],VH=[0,[18,[1,[0,[11,I,0],I]],[15,[17,0,0]]],bB],VD=[0,[2,0,[12,40,[18,[1,[0,[11,aH,0],aH]],[15,[17,0,[11,p2,[15,0]]]]]]],"%s(@[<h>%a@]) => %a"],VE=[0,[18,[1,[0,[11,I,0],I]],[15,[17,0,0]]],bB],VM=[0,[18,[1,[0,[11,az,0],az]],[15,[11,je,[18,[1,[0,0,l]],[15,[17,0,[12,58,[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]]]]]]],"@[<v4>%a in @[%a@]:@ @[%a@]@]"],aa1=[0,[11,"Type checked AST does not match original AST.",[17,3,[2,0,[17,3,[2,0,0]]]]],"Type checked AST does not match original AST.@\n%s@\n%s"],aeC=[0,[15,0],b1],aeA=[0,[15,0],b1],aeB=[0,[11,"Pretty-printed program failed to parse!",[17,3,[11,"Error ",[2,0,[17,3,[2,0,[17,3,[2,0,0]]]]]]]],"Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"],aez=[0,[11,"Pretty-printed program does not match the original!",[17,3,[2,0,[17,3,[2,0,0]]]]],"Pretty-printed program does not match the original!@\n%s@\n%s"],aeF=[0,an,0],afj=[0,1,1],afk=[0,0,1],afy=[0,0],afz=[0,kF],afl=[0,"eval",0,0],ago=[9,[10,[5,aa]]],aj$=[0,1],aka=[0,1],akb=[5,S],am4=[0,[5,s],H],am5=[0,[9,[0,[0,"*m"]]],0],am6=[0,[0,[14,[5,vq],[0,[1,HW],[0,[1,H],[0,[1,GG],0]]]]]],am7=[10,[5,vq]],am8=[8,[5,"stan::model::model_base"]],am9=[8,[5,S]],am2=[0,1],amY=[0,[0,0,[0,2,0]]],amZ=[0,1],am0=[0,[0,0,[0,1,0]]],am1=[0,1],all=[0,[5,s],"random_seed__ = 0"],alm=[0,[1,"random_seed__"],[0,[0,al],0]],aln=[11,jf,[0,3]],alo=[0,[0,[0,Iy,[0,[0,al],0]],0]],am3=[0,[5,"stan::model::model_base_crtp",0],[0,[5,"namespace stan::math",0],0]],am_=[7,[0,"stan/math/mix.hpp"]],aoh=[0,1],aox=[0,[15,[12,32,[2,0,[11,dT,[15,0]]]]],"%a %s: %a"],aoy=[0,[18,[1,[0,[11,I,0],I]],[15,[17,4,[17,0,0]]]],"@[<v>%a@.@]"],aok=[0,[11,"Optimization hazard warning (Line ",[4,3,0,0,[11,"): ",[2,0,[11," warning: ",[2,0,0]]]]]],"Optimization hazard warning (Line %i): %s warning: %s"],apq=[0,[11,a4,[2,0,[11," has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive.",0]]],"The parameter %s has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive."],apr=[0,[11,a4,[2,0,[11," has ",[4,0,0,0,[11," priors.",0]]]]],"The parameter %s has %d priors."],app=[0,[11,a4,[2,0,[11," was declared but was not used in the density calculation.",0]]],"The parameter %s was declared but was not used in the density calculation."],apn=[0,ar],apo=[0,[11,"A control flow statement inside function ",[2,0,[11," depends on argument ",[2,0,[11,". At ",[2,0,[11,", the value of ",[2,0,[11," depends on parameter(s): ",[2,0,[12,46,0]]]]]]]]]]],"A control flow statement inside function %s depends on argument %s. At %s, the value of %s depends on parameter(s): %s."],apl=[0,ar],apm=[0,[11,"A control flow statement depends on parameter(s): ",[2,0,[12,46,0]]],"A control flow statement depends on parameter(s): %s."],apk=[0,[11,a4,[2,0,[11," is on the left-hand side of more than one tilde statement.",0]]],"The parameter %s is on the left-hand side of more than one tilde statement."],apj=[0,[11,"Your Stan program has a parameter ",[2,0,[11," with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.",0]]],"Your Stan program has a parameter %s with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution."],api=[0,[11,q,[2,0,[11," has constraints that don't make sense. The lower bound should be strictly less than the upper bound.",0]]],"Parameter %s has constraints that don't make sense. The lower bound should be strictly less than the upper bound."],aph=[0,[11,e4,[2,0,[11," suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors",0]]],"Argument %s suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors"],apb=jp([jb,"append_block",Ha,HD,xs,a,xU,by,pI,Hv,bo,aM,mT,"negative_infinity","not_a_number",vW,xw,vI,"positive_infinity",e,vl,py,"to_vector","to_row_vector","to_matrix","to_array_1d","to_array_2d",hF]),apc=[0,0,[0,1,[0,2,[0,3,[0,21,[0,22,0]]]]]],ao$=[0,-549934370],apa=[0,I7],ao_=[0,0],E0=[0,l],ah0=[4,"Code generated by stanc ac69570"];function
 UF(a,b){var
 d=b[4],c=b[3],e=b[2],f=b[1],a=[0,[1,[0,UH,[0,d3(a,b[5]),0]]],[0,[1,[0,UG,[0,bf,0]]],0]],a=[0,[1,[0,UI,[0,y(function(a){var
 b=a[3],c=a[2],a=ga(a[1]);return[1,[0,a,[0,[0,c],[0,dF(b),0]]]]},d),0]]],a],c=[0,[1,[0,UK,[0,[0,e],0]]],[0,[1,[0,UJ,[0,jU(r_,c),0]]],a]];return[1,[0,[1,[0,UL,[0,ta(f),0]]],c]]}function
@@ -11675,7 +11675,7 @@ c(a,b){var
 c=b[2],d=c[2],b=b[1],c=h(c[1],fb),e=A([0,$],O);return a5(g(a)(VD),b,e,c,gb,d)}var
 b=bN(b7);a:{var
 d=function(a,b){var
-d=h(tA(b),function(a){return[0,b,a]});return A([0,a0],c)(a,d)};if(cc===b)b=b7[1];else{if(aT!==b&&cf!==b){b=b7;break a}b=cJ(b7)}}b=eD(sK(b,0,function(a,b,c){return[0,a,c]}),nL);var
+d=h(tA(b),function(a){return[0,b,a]});return A([0,a0],c)(a,d)};if(cc===b)b=b7[1];else{if(aT!==b&&cf!==b){b=b7;break a}b=cJ(b7)}}b=d5(sK(b,0,function(a,b,c){return[0,a,c]}),nL);var
 e=A([0,a0],d);return j(g(a)(VE),e,b)}function
 VF(a,b){b=A([0,a0],function(a,b){var
 c=b[2],b=b[1],d=A([0,$],f);return G(g(a)(VG),b,d,c)});return j(g(a)(VH),b,oC)}function
@@ -11690,14 +11690,14 @@ w=d[2],d=d[1],f=d[1];if(typeof
 f==="number"||!(16===f[0]))d=w;else{d=d[2][1];var
 e=f[2],l=f[1],k=f[4],f=h(f[3],tV);a:if(!fX(DY(c,e,f,l))){let
 b=f;var
-g=cs(d7(c,e[1]),function(a){a=a[1];if(typeof
+g=cs(d8(c,e[1]),function(a){a=a[1];if(typeof
 a!=="number"&&2===a[0]){a=h(a[1][1],fb);if(bj(h(b,fb),a))return 1}return 0});if(g){g=g[1];var
 j=g[1];if(typeof
 j!=="number"&&2===j[0]){j=j[1][2];if(cq(l,j)){g=j1(g);t([0,d,[0,[30,e[1],l,j,g]]]);break a}}g=g[2];if(typeof
-g==="number"){g=[2,[0,f,l,ea(e[1]),0]];t([0,d,[0,[32,e[1],g]]])}else{g=i3<=g[1]?g[2]:g[2][4];j=[2,[0,f,l,ea(e[1]),0]];t([0,d,[0,[31,e[1],j,g]]])}}}oS(c,e,1);k=k[1];a:{if(typeof
-k==="number"&&3<=k){k=DY(c,e,f,l);if(k){d=t([0,d,[0,[33,e[1],k[1]]]]);break a}d=[0,mG,e[2]];break a}d=[0,i3,e[2]]}f=[2,[0,f,l,ea(e[1]),0]];if(typeof
+g==="number"){g=[2,[0,f,l,eb(e[1]),0]];t([0,d,[0,[32,e[1],g]]])}else{g=i3<=g[1]?g[2]:g[2][4];j=[2,[0,f,l,eb(e[1]),0]];t([0,d,[0,[31,e[1],j,g]]])}}}oS(c,e,1);k=k[1];a:{if(typeof
+k==="number"&&3<=k){k=DY(c,e,f,l);if(k){d=t([0,d,[0,[33,e[1],k[1]]]]);break a}d=[0,mG,e[2]];break a}d=[0,i3,e[2]]}f=[2,[0,f,l,eb(e[1]),0]];if(typeof
 d!=="number"&&i3===d[1]){let
-g=f;d=cs(d7(c,e[1]),function(a){var
+g=f;d=cs(d8(c,e[1]),function(a){var
 b=a[2];if(typeof
 b!=="number"&&mG===b[1]&&bj(a[1],g))return 0;return 1});d=[0,[0,f,[0,i3,e[2]]],d];f=e[1];e=a8(c);d=b6(c[2],c[3],f,d,e);c=[0,c[1],d[1],d[2]];d=w;continue}e=e[1];l=a8(c);k=c[2];j=c[3];d=b6(k,j,e,[0,[0,f,d],aE(f1(k,e,l),0)],l);c=[0,c[1],d[1],d[2]];d=w}}}n=iK(1,c,n)[2];if(1-a)Bp(c,function(a,b){b=M(b);for(;;){if(!b)return;var
 c=b[2],b=b[1][2];if(typeof
@@ -11845,7 +11845,7 @@ am$(a,b,c){a=a?a[1]:0;var
 e=16;for(;;){if(64<=e)break;if(dy<(e*2|0))break;e=e*2|0}var
 o=rE?zo(cj(L0)):0,s=[0,0,cp(e,0),o,e],e=0,u=[0,0,0,0];e9([0,e,r],u);zq(s,r,e);function
 B(a){var
-c=rF(s,a),c=Z(s[2],c)[c+1];if(c){var
+c=rF(s,a),c=_(s[2],c)[c+1];if(c){var
 b=c[3],d=c[2];if(0===hK(a,c[1]))b=[0,d];else if(b){d=b[3];c=b[2];if(0===hK(a,b[1]))b=[0,c];else if(d){b=d[2];c=d[3];if(0===hK(a,d[1]))b=[0,b];else
 for(;;){if(!c){b=0;break}b=c[2];d=c[3];if(0===hK(a,c[1])){b=[0,b];break}c=d}}else
 b=0}else
@@ -11861,10 +11861,10 @@ c=b[1];if(c===pO){var
 e=a[2];if(e){var
 f=e[1][1];if(0===f[0]){a=z[1]+1|0;c=b[3];b=b[2];e9([0,a,f[1]+vR],z);return[0,[2,[0,pO,b,c],ao(t,[0,[0,[1,0,l+a],n],e])],d]}}}if(!v[1]&&oD(c)){v[1]=1;return[0,a,d]}}}return[0,a,d]}var
 e=l2(t)(C)(B)(c),c=ao(function(a){return a[2]},yO(function(a,b){return aD(a[1],b[1])},q$(rm(u)))),o=yO(function(a,b){var
-c=aD(a[1],b[1]),b=b[2],a=a[2];return 0===c?_(a,b):c},q$(rm(z))),A=e[10]+"_namespace",w=v[1];if(a)var
+c=aD(a[1],b[1]),b=b[2],a=a[2];return 0===c?Y(a,b):c},q$(rm(z))),A=e[10]+"_namespace",w=v[1];if(a)var
 i=0;else{i=e[10];var
 f=au(e[3],E1),j=h(cs(f,function(a){var
-b=a[1],a=cN(a[2]),b=a?1-aF(b,j$,at):a;return b}),alf),f=k(h(f,ale),j),j=amX(e),g=[0,cP("stancflags = "+E0[1]),0],g=[0,[0,[9,[0,[8,[2,eQ],[0,cP("stanc_version = stanc3 d9ed797"),g]]]],0]],m=bd(0,eQ),g=[0,[0,bK(0)(amZ)(m)("model_compile_info")(0)(amY)(g)()],0],m=[0,[0,[9,[0,cP(i)]],0]],g=k([0,[0,bK(0)(am1)(eQ)("model_name")(0)(am0)(m)()],g],j),m=e[10],j=e[9],d=e[3],D=e[2],m=k([0,hg,[0,[0,[11,1,[1,kG]]],0]],k(uN(m,m),kf)),m=k(ke,k([0,aln,[0,[1,aS(0)(0)(0)(kG)([0,[0,[4,"stan::services::util::create_rng",0,alm]]])()],0]],m)),E=aR(a2,h(D,gS)),d=kd(au(d,function(a){var
+b=a[1],a=cN(a[2]),b=a?1-aF(b,j$,at):a;return b}),alf),f=k(h(f,ale),j),j=amX(e),g=[0,cP("stancflags = "+E0[1]),0],g=[0,[0,[9,[0,[8,[2,eQ],[0,cP("stanc_version = stanc3 ac69570"),g]]]],0]],m=bd(0,eQ),g=[0,[0,bK(0)(amZ)(m)("model_compile_info")(0)(amY)(g)()],0],m=[0,[0,[9,[0,cP(i)]],0]],g=k([0,[0,bK(0)(am1)(eQ)("model_name")(0)(am0)(m)()],g],j),m=e[10],j=e[9],d=e[3],D=e[2],m=k([0,hg,[0,[0,[11,1,[1,kG]]],0]],k(uN(m,m),kf)),m=k(ke,k([0,aln,[0,[1,aS(0)(0)(0)(kG)([0,[0,[4,"stan::services::util::create_rng",0,alm]]])()],0]],m)),E=aR(a2,h(D,gS)),d=kd(au(d,function(a){var
 b=a[1],e=a[2];if(typeof
 b!=="number"&&11===b[0]){var
 c=b[4],d=b[3],b=b[2];if(b!==mD){if(0!==d[0])return 0;a=d[1];if(aK(E,b)){c=E2(b,a,c);a=k(uO("data initialization",b,a),c)}else
@@ -11880,22 +11880,22 @@ d=e[1],f=jP;for(;;){if(!d)break;j=d[2];g=d[1][5];if(g){d=j;f=p(f,g[1])}else
 d=j}d=e[2];for(;;){if(!d)break;g=d[2];j=d[1][3];d=g;f=ix(q)(f,j)}d=bq(p,f,e[3]);d=bq(p,d,e[4]);d=bq(p,d,e[5]);d=bq(p,d,e[6]);d=bq(p,d,e[7]);d=bq(p,d,e[8]);f=e[9];var
 y=d;for(;;){if(!f)break;d=f[1][3];f=f[2];g=d[1];g=ix(q)(y,g);j=d[2];g=ix(q)(g,j);d=d[4];y=im(q)(g,d)}var
 x=By(),f=dB(aY(e[1],function(a){var
-c=akY(nQ(d7(y,a[2]),ajC),a),b=c[1],c=c[2];for(;;){if(!c)break;var
-e=c[1],f=e[2],c=c[2],d=fj(x,f);if(d){d=d[1];e=k(d[3],e[3]);e=[0,d[1],d[2],e]}gR(x,f,e)}if(nU(a[5]))return 0;c=[0,b[1],b[2],b[3],b[4],b[5],b[6],0];b=[0,[0,[0,[0,b[1][1],0],b[2],b[3],b[4],b[5],b[6],b[7]]],0];return[0,[0,[0,c],[0,akW(a),b]]]})),d=f[2],f=f[1],g=h(sK(x,0,function(a,b,c){return[0,b,c]}),function(a){return[2,a]}),f=k(k(f,k(g,bt(d))),i),i=ao(cP,[0," (found before start of program)",ao(function(a){return" (in "+Cl(b,a)+pG},yN(function(a){return cq(a,r)},c))]),c=[3,ago,yL(i)],i=[0,[3,aS(aka)(aj$)(c)(Hf)([0,[0,[9,i]]])()],0],f=[6,A,k(am3,k([0,[3,aS(0)(0)(akb)(Hi)(0)()],i],f))],w=w?[0,[4,"Including the mix header for embedded laplace usage"],[0,am_,[0,E$,0]]]:[0,E$,0];if(a)o=au(e[1],function(a){return ak5(A,a)});else{o=ao(function(a){return[7,[2,"STAN_REGISTER_MAP_RECT",[0,l+a[1],[0,A+v8+a[2],0]]]]},o);i=e[10];c=[0,[0,[1,aS(0)(0)(am7)(Il)(am6)()],am5]];e=[0,bK(0)(0)(am8)("new_model")([0,[0,[0,[8,mi],HW],[0,am4,[0,[0,[10,fu],GG],0]]]])(0)(c)()];o=k([0,[5,vq,[0,[5,i+Ii+i]]],[0,[7,[1,"USING_R",[0,[4,"Boilerplate"],[0,e,[0,[0,bK(0)(0)(am9)("get_stan_profile_data")(0)(0)([0,[0,[9,[0,[0,i+"_namespace::profiles__"]]],0]])()],0]]]]],0]],o)}return k([0,ah0,w],[0,f,o])}function
+c=akY(nQ(d8(y,a[2]),ajC),a),b=c[1],c=c[2];for(;;){if(!c)break;var
+e=c[1],f=e[2],c=c[2],d=fj(x,f);if(d){d=d[1];e=k(d[3],e[3]);e=[0,d[1],d[2],e]}gR(x,f,e)}if(nU(a[5]))return 0;c=[0,b[1],b[2],b[3],b[4],b[5],b[6],0];b=[0,[0,[0,[0,b[1][1],0],b[2],b[3],b[4],b[5],b[6],b[7]]],0];return[0,[0,[0,c],[0,akW(a),b]]]})),d=f[2],f=f[1],g=h(d5(sK(x,0,function(a,b,c){return[0,b,c]}),function(a,b){return Y(a[2],b[2])}),function(a){return[2,a]}),f=k(k(f,k(g,bt(d))),i),i=ao(cP,[0," (found before start of program)",ao(function(a){return" (in "+Cl(b,a)+pG},yN(function(a){return cq(a,r)},c))]),c=[3,ago,yL(i)],i=[0,[3,aS(aka)(aj$)(c)(Hf)([0,[0,[9,i]]])()],0],f=[6,A,k(am3,k([0,[3,aS(0)(0)(akb)(Hi)(0)()],i],f))],w=w?[0,[4,"Including the mix header for embedded laplace usage"],[0,am_,[0,E$,0]]]:[0,E$,0];if(a)o=au(e[1],function(a){return ak5(A,a)});else{o=ao(function(a){return[7,[2,"STAN_REGISTER_MAP_RECT",[0,l+a[1],[0,A+v8+a[2],0]]]]},o);i=e[10];c=[0,[0,[1,aS(0)(0)(am7)(Il)(am6)()],am5]];e=[0,bK(0)(0)(am8)("new_model")([0,[0,[0,[8,mi],HW],[0,am4,[0,[0,[10,fu],GG],0]]]])(0)(c)()];o=k([0,[5,vq,[0,[5,i+Ii+i]]],[0,[7,[1,"USING_R",[0,[4,"Boilerplate"],[0,e,[0,[0,bK(0)(0)(am9)("get_stan_profile_data")(0)(0)([0,[0,[9,[0,[0,i+"_namespace::profiles__"]]],0]])()],0]]]]],0]],o)}return k([0,ah0,w],[0,f,o])}function
 aoj(a){return h(nQ(u8[1],aoi),function(a){var
 b=a[3],c=a[1],a=a[2]?wM:xJ;return G(V(aok),c,a,b)})}function
 aow(a,b){b=M(pf(fW,function(a,b){b=b[1];if(typeof
 b!=="number"&&11===b[0]){var
 c=b[3],b=b[2];if(0===c[0]){c=c[1];if(Cz(c))return[0,[0,b,c],a]}}return a},0,b[5]));var
 c=A(0,function(a,b){var
-c=b[2],b=b[1],d=ou(c);return a5(g(a)(aox),function(a,b){return ee(af,a,b)},c,b,Cd,d)});return i(i(g(a)(aoy),c),b)}function
+c=b[2],b=b[1],d=ou(c);return a5(g(a)(aox),function(a,b){return ef(af,a,b)},c,b,Cd,d)});return i(i(g(a)(aoy),c),b)}function
 apu(a){var
 c=F3([0,apt],a),a=aY(c[1],function(a){return a[5]}),a=pf(function(a,b){var
 e=b[1];a:{if(2===e[0]){var
 d=e[1];if(0===d[0]){var
 f=d[2],d=d[1];if(typeof
 f!=="number"&&f[1]){e=e[2];d=c2(0,0,0,ane(d));var
-g=iT(0,c),i=ml(0,0,c),e=h(e,function(a){return apg(g,i,a)}),d=[0,[0,d,b[2][2],e]];break a}}}d=0}if(!d)return a;d=d[1];b=p(a);b=N(a[2],d,b);return[0,a[1],b]},fW,E,k(c[4],a)),e=FF(0,c),d=[0,cQ(a,function(a){return aR(o,anu(a))}),0],n=aE([0,e],FF(0,c)),b=iT(0,c),C=o[1],b=[0,,aZ(b[2],aP,function(a,b){return N(a,[0,[0,b[1]],b[3]],C)})],g=ml(0,0,c),B=o[1],m=[0,o,aZ(g[2],aP,function(a,b){return N(a,[0,b],B)})],g=ml(0,aoh,c),A=o[1],g=aZ(g[2],aP,function(a,b){return N(a,[0,b],A)}),l=p(m),q=d5([0,,cu(m[2],g,l)],n,FE),b=dD(f4(d5(b,bE,function(a,b){var
+g=iT(0,c),i=ml(0,0,c),e=h(e,function(a){return apg(g,i,a)}),d=[0,[0,d,b[2][2],e]];break a}}}d=0}if(!d)return a;d=d[1];b=p(a);b=N(a[2],d,b);return[0,a[1],b]},fW,E,k(c[4],a)),e=FF(0,c),d=[0,cQ(a,function(a){return aR(o,anu(a))}),0],n=aE([0,e],FF(0,c)),b=iT(0,c),C=o[1],b=[0,,aZ(b[2],aP,function(a,b){return N(a,[0,[0,b[1]],b[3]],C)})],g=ml(0,0,c),B=o[1],m=[0,o,aZ(g[2],aP,function(a,b){return N(a,[0,b],B)})],g=ml(0,aoh,c),A=o[1],g=aZ(g[2],aP,function(a,b){return N(a,[0,b],A)}),l=p(m),q=d6([0,,cu(m[2],g,l)],n,FE),b=dD(f4(d6(b,bE,function(a,b){var
 d=b[1],b=b[2],b=[0,aog(d,m,q),b],e=a[1][2],c=a8(a),c=ic(a[2],a[3],d,b,c,e,1);return[0,a[1],c[1],c[2]]}),E,function(a,b,c){var
 d=b[1],b=b[2],a=a[1];if(!d)return c;b=[0,a,A$(d[1]),b];d=p(c);d=N(c[2],b,d);return[0,c[1],d]}),function(a){return 1!==a[2]?1:0}),D=o[1],d=[0,[0,o,aZ(b[2],aP,function(a,b){var
 c=b[2],d=b[1],b=b[3],c=0===c?i(V(apq),d):j(V(apr),d,c);return N(a,[0,b,c],D)})],d],r=u7(c),b=cQ(aR(o,c[1]),function(b){return gO(apf(c,r,b),function(a){return[0,b[2],a[1],a[2],a[3],a[4]]})}),J=o[1],d=[0,[0,o,aZ(b[2],aP,function(a,b){var
@@ -11977,9 +11977,9 @@ a==="number")switch(a){case
 6:return k(j,b,Cv);case
 7:a=aY(b,j);b=T(b);if(T(a)!==b)return 0;b=[0,7,n[2],n[3]];return[0,[0,[2,op,h(a,jX)],b]];case
 8:a=aY(b,function(a){return e(7,a)});b=T(b);return T(a)!==b?0:[0,[0,[2,Cw,a],[0,8,n[2],n[3]]]]}else if(0===a[0]){var
-o=a[1],c=aY(b,function(a){return e(o,a)}),b=T(b);if(T(c)!==b)return 0;b=jJ(c1(c),1,Y);return[0,[0,[2,lX,c],[0,[0,b],n[2],n[3]]]]}}else if(an===c&&typeof
-a!=="number"&&1===a[0]){a=a[1];return ap(r4(aX(a,eD(b[2],function(a,b){a=a[1];b=dC(b[1]);return aD(dC(a),b)}),function(a,b){return e(a,b[2])})),function(a){var
-b=[1,h(a,Y)],c=[0,h(a,ed)];return[0,[2,oq,a],[0,b,n[2],c]]})}}else if(ce===c){c=b[2];if(typeof
+o=a[1],c=aY(b,function(a){return e(o,a)}),b=T(b);if(T(c)!==b)return 0;b=jJ(c1(c),1,Z);return[0,[0,[2,lX,c],[0,[0,b],n[2],n[3]]]]}}else if(an===c&&typeof
+a!=="number"&&1===a[0]){a=a[1];return ap(r4(aX(a,d5(b[2],function(a,b){a=a[1];b=dC(b[1]);return aD(dC(a),b)}),function(a,b){return e(a,b[2])})),function(a){var
+b=[1,h(a,Z)],c=[0,h(a,ee)];return[0,[2,oq,a],[0,b,n[2],c]]})}}else if(ce===c){c=b[2];if(typeof
 a==="number"&&2>a)return[0,[0,[1,0,l+c],n]]}else if(dq<=c){b=b[2];if(typeof
 a==="number"&&2>a){a=[0,1,n[2],n[3]];return[0,[0,[1,1,ih(b)],a]]}}}return 0}var
 c=typeof
@@ -11996,15 +11996,15 @@ b=a[3],a=[0,a[1]],c=b[3],d=b[2],e=b[1],b=[0,[1,[0,UP,[0,jT(lV,b[4]),0]]],0];swit
 1:c=UN;break;default:c=UO}b=[0,[1,[0,UR,[0,iw(lV,d),0]]],[0,[1,[0,UQ,[0,c,0]]],b]];return[1,[0,a,[0,bf,[0,[1,[0,[1,[0,US,[0,iw(lV,e),0]]],b]],0]]]]},b[9]),0]]],l],b=[0,[1,[0,UX,[0,y(iz,c),0]]],b],b=[0,[1,[0,UY,[0,y(iz,d),0]]],b],b=[0,[1,[0,UZ,[0,y(iz,e),0]]],b],b=[0,[1,[0,U0,[0,y(iz,f),0]]],b],b=[0,[1,[0,U1,[0,y(iz,g),0]]],b],b=[0,[1,[0,U2,[0,y(iz,h),0]]],b],b=[0,[1,[0,U3,[0,y(function(a){var
 b=[0,a[1]];return[1,[0,b,[0,bf,[0,iw(lV,a[3]),0]]]]},i),0]]],b];return a([1,pn([1,[0,[1,[0,U4,[0,y(function(a){return UF(iz,a)},k),0]]],b]])]);default:return a([1,j(ak(apG),Vb,b)])}}var
 GV=".stan",ao8=[0,1,0,0,1,1,1,1,0,1,1,1,0,0,0,1],apJ=[0,[15,[15,[17,3,0]]],"%a%a@\n"],apK=[0,0],apL=[0,0],apM=[0,[18,[1,[0,[11,cE,0],cE]],[11,"Failed to parse ",[2,0,[11," for debug generation:",[17,[0,c,1,0],[15,[17,0,0]]]]]]],"@[<v2>Failed to parse %s for debug generation:@ %a@]"],apI=[0,[2,0,0],wY];function
-apH(j,b,c,d){d$[1]=0;ud[1]=c[6];function
+apH(j,b,c,d){ea[1]=0;ud[1]=c[6];function
 g(a){var
 b=a+fD|0;a:{b:{if(42<b>>>0){if(25<b+Ja>>>0)break b}else if(6>=b+wi>>>0)break b;b=1;break a}b=0}if(!b&&a!==95)return 45===a?dv:G_+l+a;return NW(a)}var
-e=cW(M(sg(j,47))),a=f0(e,GV),a=aE(nV(f0(e,Cc),a),e);t6[1]=j===a?AR(0,j,g):AR(0,a+"_model",g);if(c[8])d([4,i(ak(apI),"stanc3 d9ed797")]);b=c[3]?oZ(Ea,b):oZ(D$,b);a=b[1];d([6,b[2]]);if(0!==a[0])return a;a=a[1];if(c[10][1])d([1,pn(iH(j0,a))]);a=aa2([0,c[2]],a);function
+e=cW(M(sg(j,47))),a=f0(e,GV),a=aE(nV(f0(e,Cc),a),e);t6[1]=j===a?AR(0,j,g):AR(0,a+"_model",g);if(c[8])d([4,i(ak(apI),"stanc3 ac69570")]);b=c[3]?oZ(Ea,b):oZ(D$,b);a=b[1];d([6,b[2]]);if(0!==a[0])return a;a=a[1];if(c[10][1])d([1,pn(iH(j0,a))]);a=aa2([0,c[2]],a);function
 h(a){var
 b=a[1],a=a[2];if(c[10][2])d([1,pn(iH(Xs,b))]);d([6,a]);if(c[7])d([3,aeG(b)]);a=c[12][1]?0:aeH(b);d([6,a]);if(c[9]){a=aeK(b,c[12]);d([0,aeD([0,c[3]],[0,c[11]],[0,c[12][4]],[0,c[12][5]],a)])}a=afi(j,b);if(c[14])d([6,F7(F6(a))]);if(c[13])d([6,apu(a)]);ve(d,a,c[10][3]);var
 e=c[10][11];if(e){e=e[1];var
 i=e[2],e=e[1];try{try{var
-h=nw(0,i),g=[0,br(cD),1,0,0];d_(g,h);if(B8(h))throw m(BY,1);i=lN(g,h);d_(g,h);if(1-B8(h))d9("Junk after end of JSON value:",g,h);h=i}catch(f){h=ai(f);if(h!==BY)throw m(h,0);h=jQ("Blank input data")}g=[0,apC(ur(b[2]),h)]}catch(f){g=ai(f);if(g[1]!==BX)throw m(g,0);g=g[2];g=[1,[3,[0,r,G(ak(apM),e,OY,g),1]]]}}else
+h=nw(0,i),g=[0,br(cD),1,0,0];d$(g,h);if(B8(h))throw m(BY,1);i=lN(g,h);d$(g,h);if(1-B8(h))d_("Junk after end of JSON value:",g,h);h=i}catch(f){h=ai(f);if(h!==BY)throw m(h,0);h=jQ("Blank input data")}g=[0,apC(ur(b[2]),h)]}catch(f){g=ai(f);if(g[1]!==BX)throw m(g,0);g=g[2];g=[1,[3,[0,r,G(ak(apM),e,OY,g),1]]]}}else
 g=[0,bE];if(0!==g[0])return g;e=g[1];if(c[10][9]){g=Gd(0,[0,e],ur(b[2]));g=0===g[0]?[0,d([5,g[1]])]:g}else
 g=apL;if(0!==g[0])return g;if(c[10][10]){e=Gd(0,[0,e],ur(b[4]));e=0===e[0]?[0,d([5,e[1]])]:e}else
 e=apK;if(0!==e[0])return e;a=afx([0,c[5]],a);ve(d,a,c[10][4]);e=c[10][7];switch(c[1]){case
@@ -12047,7 +12047,7 @@ c=b}else
 c=a;if(0===c[0]){c=c[1];var
 F=c[3],G=c[2],a=c[4],J=c[1];try{var
 x=[0,0],g=r2(function(b){return apH(J,[0,wO,G],F,function(a){return 6===a[0]?(x[1]=k(x[1],a[1]),0):b([0,a[1]])})}),g=[0,[0,g,x[1]]]}catch(f){g=ai(f);if(aqq(0)){c=zd(no(0));if(c){c=c[1];var
-C=br(e0),b=c.length-2|0;if(b>=0){d=0;for(;;){n=ze(d,Z(c,d)[d+1]);if(n){n=n[1];i(as(function(a){gI(C,a);return 0},0,LI[1]),n)}n=d+1|0;if(b===d)break;d=n}}c=bP(C)}else
+C=br(e0),b=c.length-2|0;if(b>=0){d=0;for(;;){n=ze(d,_(c,d)[d+1]);if(n){n=n[1];i(as(function(a){gI(C,a);return 0},0,LI[1]),n)}n=d+1|0;if(b===d)break;d=n}}c=bP(C)}else
 c=xt}else
 c="Backtrace missing.";g=g[1]===d0?g[2]:jD(g);g=[1,j(ak(PY),g,c)]}if(0===g[0]){g=g[1];g=[0,[0,g[1],g[2],F[15],G,a]]}}else
 g=c;if(0!==g[0])return Gi(D,g[1]);c=g[1];g=c[5];var
