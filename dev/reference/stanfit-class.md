@@ -275,8 +275,8 @@ fit <- stan(model_code = ecode, iter = 10, chains = 1)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 6e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#> Chain 1: Gradient evaluation took 8e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -323,15 +323,15 @@ fit2 <- stan(fit = fit)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.004 seconds (Warm-up)
-#> Chain 1:                0.004 seconds (Sampling)
-#> Chain 1:                0.008 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.006 seconds (Warm-up)
+#> Chain 1:                0.005 seconds (Sampling)
+#> Chain 1:                0.011 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 1e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+#> Chain 2: Gradient evaluation took 2e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -348,9 +348,9 @@ fit2 <- stan(fit = fit)
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.004 seconds (Warm-up)
-#> Chain 2:                0.004 seconds (Sampling)
-#> Chain 2:                0.008 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.005 seconds (Warm-up)
+#> Chain 2:                0.005 seconds (Sampling)
+#> Chain 2:                0.01 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -373,9 +373,9 @@ fit2 <- stan(fit = fit)
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.004 seconds (Warm-up)
-#> Chain 3:                0.004 seconds (Sampling)
-#> Chain 3:                0.008 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.006 seconds (Warm-up)
+#> Chain 3:                0.006 seconds (Sampling)
+#> Chain 3:                0.012 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -398,9 +398,9 @@ fit2 <- stan(fit = fit)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.004 seconds (Warm-up)
-#> Chain 4:                0.004 seconds (Sampling)
-#> Chain 4:                0.008 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.006 seconds (Warm-up)
+#> Chain 4:                0.006 seconds (Sampling)
+#> Chain 4:                0.012 seconds (Total)
 #> Chain 4: 
 print(fit2)
 #> Inference for Stan model: anon_model.
@@ -412,7 +412,7 @@ print(fit2)
 #> y[2]  1.03    0.02 1.03  0.02  0.28  0.71  1.45  3.73  2221    1
 #> lp__ -3.16    0.04 1.13 -6.24 -3.64 -2.81 -2.32 -2.03   931    1
 #> 
-#> Samples were drawn using NUTS(diag_e) at Sun Aug  2 12:26:06 2026.
+#> Samples were drawn using NUTS(diag_e) at Tue Aug  4 15:41:21 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
@@ -517,7 +517,7 @@ print(exfit)
 #> alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   426 0.99
 #> lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   124 1.02
 #> 
-#> Samples were drawn using NUTS(diag_e) at Sun Aug 02 12:17:03 2026.
+#> Samples were drawn using NUTS(diag_e) at Tue Aug 04 15:30:14 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
