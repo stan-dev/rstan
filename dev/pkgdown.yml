@@ -6,7 +6,7 @@ articles:
   rstan: rstan.html
   SBC: SBC.html
   stanfit-objects: stanfit-objects.html
-last_built: 2026-08-04T15:30Z
+last_built: 2026-08-05T19:27Z
 urls:
   reference: https://mc-stan.org/rstan/reference
   article: https://mc-stan.org/rstan/articles
