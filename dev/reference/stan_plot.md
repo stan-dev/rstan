@@ -176,8 +176,8 @@ fit <- stan_demo("eight_schools")
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 6e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+#> Chain 1: Gradient evaluation took 8e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -270,8 +270,8 @@ fit <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.043 seconds (Warm-up)
-#> Chain 4:                0.043 seconds (Sampling)
-#> Chain 4:                0.086 seconds (Total)
+#> Chain 4:                0.042 seconds (Sampling)
+#> Chain 4:                0.085 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 173 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
