@@ -122,8 +122,8 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 2: Gradient evaluation took 3e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -191,8 +191,8 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.011 seconds (Warm-up)
-#> Chain 4:                0.011 seconds (Sampling)
-#> Chain 4:                0.022 seconds (Total)
+#> Chain 4:                0.01 seconds (Sampling)
+#> Chain 4:                0.021 seconds (Total)
 #> Chain 4: 
 
 ## extract alpha and beta with 'permuted = TRUE' 
