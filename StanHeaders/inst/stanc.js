@@ -4431,31 +4431,31 @@ d==="number")switch(d){case
 5:c=6;continue;case
 6:c=7;continue;case
 7:c=8;continue;default:c=9;continue}switch(d[0]){case
-2:b=d[1];e=c[3];a=c[2];d=b[3];var
+2:b=d[1];e=c[3];d=c[2];a=b[3];var
 f=b[2],g=c[4],c=c[1],h=b[4],b=b[1],b=q8(function(a,b){var
-c=a[2],d=b[2],a=ne(a[1],b[1]);return a?nd(c,d):a})(c,b);if(b){b=a===f?1:a?f?nd(a[1],f[1]):0:f?0:1;if(b){b:if(e===d)d=1;else{c:{d:{e:{if(typeof
+c=a[2],d=b[2],a=ne(a[1],b[1]);return a?nd(c,d):a})(c,b);if(b){b=d===f?1:d?f?nd(d[1],f[1]):0:f?0:1;if(b){b:if(e===a)a=1;else{c:{d:{e:{if(typeof
 e==="number"){switch(e){case
 0:if(typeof
-d==="number"&&!d){d=1;break b}d=0;break b;case
+a==="number"&&!a){a=1;break b}a=0;break b;case
 1:if(typeof
-d==="number"){if(1===d){d=1;break b}if(!d)break c}d=0;break b;case
+a==="number"){if(1===a){a=1;break b}if(!a)break c}a=0;break b;case
 2:if(typeof
-d==="number")switch(d){case
-2:d=1;break b;case
-3:d=0;break b;case
-0:break c;default:break d}if(0===d[0])break e;break;default:if(typeof
-d==="number")switch(d){case
-2:d=0;break b;case
-3:d=1;break b;case
-0:break c;default:break d}if(0===d[0])break e}d=0;break b}if(0===e[0]){e=e[1];if(typeof
-d==="number")switch(d){case
+a==="number")switch(a){case
+2:a=1;break b;case
+3:a=0;break b;case
+0:break c;default:break d}if(0===a[0])break e;break;default:if(typeof
+a==="number")switch(a){case
+2:a=0;break b;case
+3:a=1;break b;case
+0:break c;default:break d}if(0===a[0])break e}a=0;break b}if(0===e[0]){e=e[1];if(typeof
+a==="number")switch(a){case
 0:break c;case
-1:break d}else if(0===d[0]){d=e===d[1]?1:0;break b}d=0;break b}b=e[1];if(typeof
-d==="number")switch(d){case
+1:break d}else if(0===a[0]){a=e===a[1]?1:0;break b}a=0;break b}b=e[1];if(typeof
+a==="number")switch(a){case
 0:break c;case
-1:break d;default:d=0;break b}if(0!==d[0]){d=b===d[1]?1:0;break b}}d=0;break b}d=0;break b}d=0}if(d)return g===h?1:0}else
-d=b}else
-d=b;return d;case
+1:break d;default:a=0;break b}if(0!==a[0]){a=b===a[1]?1:0;break b}}a=0;break b}a=0;break b}a=0}if(a)return g===h?1:0}else
+a=b}else
+a=b;return a;case
 0:c=10;continue;default:c=11;continue}case
 13:c=e[1];if(typeof
 d==="number")switch(d){case
@@ -4469,7 +4469,7 @@ d==="number")switch(d){case
 7:c=8;continue;case
 8:c=9;continue}else
 switch(d[0]){case
-1:e=d[1];return q8(function(a,b){return nd(a,b)})(c,e);case
+1:b=d[1];return q8(function(a,b){return nd(a,b)})(c,b);case
 0:c=10;continue}return 0;case
 12:switch(e){case
 0:if(typeof
@@ -4905,35 +4905,25 @@ zA(a){var
 b=[0,7,n[2],n[3]],a=[0,[0,[2,nn,h(jn,a)],b],0],a=[2,[0,aG(22),0,0],a];return[0,a,[0,6,n[2],n[3]]]}var
 OB=[0,[11,"Can't index ",[16,0]],"Can't index %t"];function
 np(a,b){a:{var
-c=a;for(;;){if(!b)return c;a=b[1];b:{if(typeof
-a!=="number"&&a[0]-1>>>0>=2)break b;if(!b[2])return c}if(typeof
-c==="number")break;if(0!==c[0])break a;a=b[1];var
-d=c[1];if(typeof
-a!=="number"&&0===a[0]){c=d;b=b[2];continue}return[0,np(d,b[2])]}b:{c:switch(c){case
+d=a;for(;;){if(!b)return d;a=b[1];b:{if(typeof
+a!=="number"&&0===a[0])break b;if(!b[2])return d}if(typeof
+d==="number")break;if(0!==d[0])break a;a=b[1];var
+c=d[1];if(typeof
+a!=="number"&&0===a[0]){d=c;b=b[2];continue}return[0,np(c,b[2])]}b:{c:{switch(d){case
 5:a=b[1];if(typeof
-a==="number"){b=b[2];a=b[1];if(typeof
-a==="number"||0!==a[0]||b[2])break a}else
-switch(a[0]){case
-0:b=b[2];if(b){a=b[1];if(typeof
-a==="number")break a;if(0!==a[0])break a;if(b[2])break a;break b}break;case
-1:b=b[2];a=b[1];if(typeof
-a==="number"||0!==a[0]||b[2])break a;break;case
-2:b=b[2];a=b[1];if(typeof
-a==="number"||0!==a[0]||b[2])break a;break;default:if(b[2])break a}return 2;case
+a!=="number"&&0===a[0]){a=b[2];if(!a)return 4;c=a[1];if(typeof
+c!=="number"&&0===c[0]){if(a[2])break b;break c}if(a[2])break b;return 4}a=b[2];c=a[1];if(typeof
+c==="number")break b;if(0!==c[0])break b;if(a[2])break b;return 2;case
 8:a=b[1];if(typeof
-a==="number"){b=b[2];a=b[1];if(typeof
-a==="number"||0!==a[0]||b[2])break a}else
-switch(a[0]){case
-0:b=b[2];if(b){a=b[1];if(typeof
-a==="number")break a;if(0!==a[0])break a;if(b[2])break a;break c}break;case
-1:b=b[2];a=b[1];if(typeof
-a==="number"||0!==a[0]||b[2])break a;break;case
-2:b=b[2];a=b[1];if(typeof
-a==="number"||0!==a[0]||b[2])break a;break;default:if(b[2])break a}return 6;case
+a!=="number"&&0===a[0]){a=b[2];if(!a)return 7;c=a[1];if(typeof
+c!=="number"&&0===c[0]){if(a[2])break b;break}if(a[2])break b;return 7}a=b[2];c=a[1];if(typeof
+c==="number")break b;if(0!==c[0])break b;if(a[2])break b;return 6;case
 2:case
-4:if(b[2])break a;break b;case
+4:a=b[1];if(typeof
+a==="number")break a;if(0!==a[0])break a;if(b[2])break a;break c;case
 6:case
-7:if(b[2])break a;break;default:break a}return 3}return 1}return R(OB,[0,function(a){return J(a,c)},0])}var
+7:a=b[1];if(typeof
+a==="number"||0!==a[0]||b[2])break a;break;default:break a}return 3}return 1}b=b[2];if(b&&b[2])break a;return d}return R(OB,[0,function(a){return J(a,d)},0])}var
 OC=[0,[11,"Expected Var or Indexed but found ",[16,0]],"Expected Var or Indexed but found %t"];function
 hZ(c,b){var
 d=np(T(c),[0,b,0]),a=c[2],e=c[1],d=[0,d,a[2],a[3]];switch(e[0]){case
@@ -6648,7 +6638,7 @@ f(a,b){var
 c=b[2],b=b[1];x([0,aP],function(a,b){var
 c=b[2],b=b[1];return D(g(a)(UK),c,function(a){return fa(e,a)},b)})(a,c);b=h(b);c=b[2];b=b[1];var
 d=1-aO(c);return d?i(g(a)(UL),f,[0,b,c]):d}var
-j=e[1];i(g(c)(UM),b,d);b=eA[27].call(null,function(a,b){return 1-eA[33].call(null,a,j)},e[1]);b=c7(function(a,b){return V(a[2],b[2])},eA[38].call(null,b));d=e[1];if(1-aO(b))i(g(c)(UN),f,[0,d,b]);return g(c)(UO)}var
+j=e[1];i(g(c)(UM),b,d);d=eA[27].call(null,function(a,b){return 1-eA[33].call(null,a,j)},e[1]);d=c7(function(a,b){return V(a[2],b[2])},eA[38].call(null,d));b=e[1];if(1-aO(d))i(g(c)(UN),f,[0,b,d]);return g(c)(UO)}var
 UP=[0,0],UQ=[0,1],US=[0,4],UT=[0,0],UR=[0,5];function
 gN(e,b,c){if(a9(b,c))return UP;a:if(typeof
 b==="number"){switch(b){case
@@ -10467,7 +10457,7 @@ b==="number")break a;b=b[1];break b;case
 1:case
 2:b=b[1];break b;default:b=b[1]}b=h(function(a){return ip(c,a[1])},b);return ac[45].call(null,b)}a=ip(c,d[1]);b=c(b);return ac[5].call(null,b,a)}return c(b)}return ac[1]}function
 CG(a,b){return ac[26].call(null,function(a){a=bJ(a);return 1-et(cu(a,CE(b)))},a)}function
-to(a,b,c){a=ac[5].call(null,a,b);return ac[8].call(null,a,c)}function
+to(a,b,c){b=ac[5].call(null,a,b);return ac[8].call(null,b,c)}function
 f4(c,f,h){return[0,function(a){var
 e=[0,0,0];Cf(function(c,b){return q2(function(a){return dP([0,c,a],e)},b)},c[2]);var
 d=hA(0,32);Cf(function(a,b){b=bB(a,c[1])?f[2]:f[4];return gr(d,a,b)},c[2]);for(;;){if(0===e[2])break;a=ql(e);var
@@ -10797,8 +10787,8 @@ c(a){var
 b=a[1];if(0!==b[0])return 0;b=y[18].call(null,b[1],d);return b?[0,[0,[0,b[1]],a[2]]]:0}var
 e=fR(function(a){return lB(c,a)});function
 f(a){return lB(c,a)}return dv(function(a){return tg(f,e,a)},b)}function
-om(a,b){b=eX(a,b);var
-c=Cn(y[39].call(null,b));return function(a){return dv(c,a)}}function
+om(a,b){a=eX(a,b);var
+c=Cn(y[39].call(null,a));return function(a){return dv(c,a)}}function
 C4(a){a=a[1];return jp(hz)(function(a,b){var
 c=b[1];if(typeof
 c!=="number"&&4===c[0])return a+1|0;return a+C4(b)|0})(0,a)}var
@@ -11308,7 +11298,7 @@ Lb=[0,[15,0],bS];function
 Dq(a,b,c){a=a?a[1]:0;var
 g=b?b[1]:y[1];try{b=[0,0,g];for(;;){if(!c)break;var
 j=c[2],c=c[1],d=c[3],f=b[2],b=b[1],k=c[2],c=c[1],e=y[18].call(null,d,f);if(e){c=j;b=[0,[0,[0,d,e[1]],b],f]}else{e=jU(f,c,k);c=j;b=[0,[0,[0,d,e],b],y[2].call(null,d,e,f)]}}b=h(ak0,H(b[1]));a=a?b2(function(a){return y[33].call(null,a[1],g)},b):b;a=[0,i(ae(Lb),function(a,b){return K$(ea,a,b)},[0,ak,a])];return a}catch(f){a=ab(f);if(a[1]!==lD)throw m(a,0);d=a[3];a=a[2];return[1,[3,[0,a,d,1-y[31].call(null,g)]]]}}var
-z="<v4>",Ed="msg_stream",ah="seed",aR="The parameter ",E8="input_vars",t4="stan_model",aw="unsigned int",ES="output_vars",Gm="prepare_data",tU=748543309,FJ=508345160,EE="model_base_crtp",FH="generate_quantities",DI="data_context",bw="@[<v>%a@]",nY=[0,ak,0],Bu=[4,0],jA=[0,2,0],Cd=[7,[0,"stan/model/model_header.hpp"]],KO=[0,[15,0],bS],Qg=[0,[18,[1,[0,[11,ck,0],ck]],[15,[12,32,[2,0,[15,[11,eN,[17,[0,c,1,0],[15,[17,0,[17,[0,c,1,0],[12,bb,0]]]]]]]]]]],"@[<v2>%a %s%a {@ %a@]@ }"],Qh=[0,[18,[1,[0,[11,ck,0],ck]],[11,"extern ",[15,[12,32,[2,0,[15,[12,59,[17,0,0]]]]]]]],"@[<v2>extern %a %s%a;@]"],PS=[0,"fdloc"],PT=[0,"fdbody"],PU=[0,"fdargs"],PV=[0,"fdsuffix"],PW=[0,"fdname"],PX=[0,"fdrt"],QS=[0,[18,[1,[0,0,l]],[2,0,[11,fr,[15,[17,0,0]]]]],"@[%s: %a@]"],QT=[0,[18,[1,[0,[11,E,0],E]],[15,[17,0,0]]],bw],QP=[0,[2,0,[12,40,[18,[1,[0,[11,aB,0],aB]],[15,[17,0,[11,ot,[15,0]]]]]]],"%s(@[<h>%a@]) => %a"],QQ=[0,[18,[1,[0,[11,E,0],E]],[15,[17,0,0]]],bw],Q1=[0,[18,[1,[0,[11,z,0],z]],[15,[11,iC,[18,[1,[0,0,l]],[15,[17,0,[12,58,[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]]]]]]],"@[<v4>%a in @[%a@]:@ @[%a@]@]"],Ye=[0,[11,"Type checked AST does not match original AST.",[17,3,[2,0,[17,3,[2,0,0]]]]],"Type checked AST does not match original AST.@\n%s@\n%s"],$Q=[0,[15,0],bS],$O=[0,[15,0],bS],$P=[0,[11,"Pretty-printed program failed to parse!",[17,3,[11,"Error ",[2,0,[17,3,[2,0,[17,3,[2,0,0]]]]]]]],"Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"],$N=[0,[11,"Pretty-printed program does not match the original!",[17,3,[2,0,[17,3,[2,0,0]]]]],"Pretty-printed program does not match the original!@\n%s@\n%s"],$T=[0,ak,0],aaz=[0,1,1],aaA=[0,0,1],aaS=[0,0],aaT=[0,ki],aaD=[0,"eval",0,0],abI=[9,[10,[5,S]]],aft=[0,1],afu=[0,1],afv=[5,C],agm=[0,0],aim=[0,[5,aw],ah],ain=[0,[9,[0,[0,"*m"]]],0],aio=[0,[0,[14,[5,t4],[0,[1,DI],[0,[1,ah],[0,[1,Ed],0]]]]]],aip=[10,[5,t4]],aiq=[8,[5,"stan::model::model_base"]],air=[8,[5,C]],aik=[0,1],aig=[0,[0,0,[0,2,0]]],aih=[0,1],aii=[0,[0,0,[0,1,0]]],aij=[0,1],agF=[0,[5,aw],"random_seed__ = 0"],agG=[0,[1,"random_seed__"],[0,[0,ai],0]],agH=[11,iD,[0,3]],agI=[0,[0,[0,EE,[0,[0,ai],0]],0]],ail=[0,[5,"stan::model::model_base_crtp",0],[0,[5,"namespace stan::math",0],0]],ais=[7,[0,"stan/math/mix.hpp"]],ajM=[0,1],aj2=[0,[15,[12,32,[2,0,[11,fr,[15,0]]]]],"%a %s: %a"],aj3=[0,[18,[1,[0,[11,E,0],E]],[15,[17,4,[17,0,0]]]],"@[<v>%a@.@]"],ajP=[0,[11,"Optimization hazard warning (Line ",[4,3,0,0,[11,"): ",[2,0,[11," warning: ",[2,0,0]]]]]],"Optimization hazard warning (Line %i): %s warning: %s"],akN=[0,[11,aR,[2,0,[11," has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive.",0]]],"The parameter %s has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive."],akO=[0,[11,aR,[2,0,[11," has ",[4,0,0,0,[11," priors.",0]]]]],"The parameter %s has %d priors."],akM=[0,[11,aR,[2,0,[11," was declared but was not used in the density calculation.",0]]],"The parameter %s was declared but was not used in the density calculation."],akL=[0,[11,"A control flow statement inside function ",[2,0,[11," depends on argument ",[2,0,[11,". At ",[2,0,[11,", the value of ",[2,0,[11," depends on parameter(s): ",[2,0,[12,46,0]]]]]]]]]]],"A control flow statement inside function %s depends on argument %s. At %s, the value of %s depends on parameter(s): %s."],akK=[0,[11,"A control flow statement depends on parameter(s): ",[2,0,[12,46,0]]],"A control flow statement depends on parameter(s): %s."],akJ=[0,[11,aR,[2,0,[11," is on the left-hand side of more than one tilde statement.",0]]],"The parameter %s is on the left-hand side of more than one tilde statement."],akI=[0,[11,"Your Stan program has a parameter ",[2,0,[11," with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.",0]]],"Your Stan program has a parameter %s with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution."],akH=[0,[11,bm,[2,0,[11," has constraints that don't make sense. The lower bound should be strictly less than the upper bound.",0]]],"Parameter %s has constraints that don't make sense. The lower bound should be strictly less than the upper bound."],akG=[0,[11,ha,[2,0,[11," suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors",0]]],"Argument %s suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors"],akC=iV([iw,"append_block",Fb,F5,u_,B,v1,a,oU,FQ,au,e,mn,"negative_infinity","not_a_number",va,vf,uF,"positive_infinity",bl,tR,oJ,"to_vector","to_row_vector","to_matrix","to_array_1d","to_array_2d",he]),akD=[0,0,[0,1,[0,2,[0,3,[0,21,[0,22,0]]]]]],akA=[0,-549934370],akB=[0,FJ],akz=[0,0],B4=[0,l],adi=[4,"Code generated by stanc 54fc9cc"];function
+z="<v4>",Ed="msg_stream",ah="seed",aR="The parameter ",E8="input_vars",t4="stan_model",aw="unsigned int",ES="output_vars",Gm="prepare_data",tU=748543309,FJ=508345160,EE="model_base_crtp",FH="generate_quantities",DI="data_context",bw="@[<v>%a@]",nY=[0,ak,0],Bu=[4,0],jA=[0,2,0],Cd=[7,[0,"stan/model/model_header.hpp"]],KO=[0,[15,0],bS],Qg=[0,[18,[1,[0,[11,ck,0],ck]],[15,[12,32,[2,0,[15,[11,eN,[17,[0,c,1,0],[15,[17,0,[17,[0,c,1,0],[12,bb,0]]]]]]]]]]],"@[<v2>%a %s%a {@ %a@]@ }"],Qh=[0,[18,[1,[0,[11,ck,0],ck]],[11,"extern ",[15,[12,32,[2,0,[15,[12,59,[17,0,0]]]]]]]],"@[<v2>extern %a %s%a;@]"],PS=[0,"fdloc"],PT=[0,"fdbody"],PU=[0,"fdargs"],PV=[0,"fdsuffix"],PW=[0,"fdname"],PX=[0,"fdrt"],QS=[0,[18,[1,[0,0,l]],[2,0,[11,fr,[15,[17,0,0]]]]],"@[%s: %a@]"],QT=[0,[18,[1,[0,[11,E,0],E]],[15,[17,0,0]]],bw],QP=[0,[2,0,[12,40,[18,[1,[0,[11,aB,0],aB]],[15,[17,0,[11,ot,[15,0]]]]]]],"%s(@[<h>%a@]) => %a"],QQ=[0,[18,[1,[0,[11,E,0],E]],[15,[17,0,0]]],bw],Q1=[0,[18,[1,[0,[11,z,0],z]],[15,[11,iC,[18,[1,[0,0,l]],[15,[17,0,[12,58,[17,[0,c,1,0],[18,[1,[0,0,l]],[15,[17,0,[17,0,0]]]]]]]]]]]],"@[<v4>%a in @[%a@]:@ @[%a@]@]"],Ye=[0,[11,"Type checked AST does not match original AST.",[17,3,[2,0,[17,3,[2,0,0]]]]],"Type checked AST does not match original AST.@\n%s@\n%s"],$Q=[0,[15,0],bS],$O=[0,[15,0],bS],$P=[0,[11,"Pretty-printed program failed to parse!",[17,3,[11,"Error ",[2,0,[17,3,[2,0,[17,3,[2,0,0]]]]]]]],"Pretty-printed program failed to parse!@\nError %s@\n%s@\n%s"],$N=[0,[11,"Pretty-printed program does not match the original!",[17,3,[2,0,[17,3,[2,0,0]]]]],"Pretty-printed program does not match the original!@\n%s@\n%s"],$T=[0,ak,0],aaz=[0,1,1],aaA=[0,0,1],aaS=[0,0],aaT=[0,ki],aaD=[0,"eval",0,0],abI=[9,[10,[5,S]]],aft=[0,1],afu=[0,1],afv=[5,C],agm=[0,0],aim=[0,[5,aw],ah],ain=[0,[9,[0,[0,"*m"]]],0],aio=[0,[0,[14,[5,t4],[0,[1,DI],[0,[1,ah],[0,[1,Ed],0]]]]]],aip=[10,[5,t4]],aiq=[8,[5,"stan::model::model_base"]],air=[8,[5,C]],aik=[0,1],aig=[0,[0,0,[0,2,0]]],aih=[0,1],aii=[0,[0,0,[0,1,0]]],aij=[0,1],agF=[0,[5,aw],"random_seed__ = 0"],agG=[0,[1,"random_seed__"],[0,[0,ai],0]],agH=[11,iD,[0,3]],agI=[0,[0,[0,EE,[0,[0,ai],0]],0]],ail=[0,[5,"stan::model::model_base_crtp",0],[0,[5,"namespace stan::math",0],0]],ais=[7,[0,"stan/math/mix.hpp"]],ajM=[0,1],aj2=[0,[15,[12,32,[2,0,[11,fr,[15,0]]]]],"%a %s: %a"],aj3=[0,[18,[1,[0,[11,E,0],E]],[15,[17,4,[17,0,0]]]],"@[<v>%a@.@]"],ajP=[0,[11,"Optimization hazard warning (Line ",[4,3,0,0,[11,"): ",[2,0,[11," warning: ",[2,0,0]]]]]],"Optimization hazard warning (Line %i): %s warning: %s"],akN=[0,[11,aR,[2,0,[11," has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive.",0]]],"The parameter %s has no priors. This means either no prior is provided, or the prior(s) depend on data variables. In the later case, this may be a false positive."],akO=[0,[11,aR,[2,0,[11," has ",[4,0,0,0,[11," priors.",0]]]]],"The parameter %s has %d priors."],akM=[0,[11,aR,[2,0,[11," was declared but was not used in the density calculation.",0]]],"The parameter %s was declared but was not used in the density calculation."],akL=[0,[11,"A control flow statement inside function ",[2,0,[11," depends on argument ",[2,0,[11,". At ",[2,0,[11,", the value of ",[2,0,[11," depends on parameter(s): ",[2,0,[12,46,0]]]]]]]]]]],"A control flow statement inside function %s depends on argument %s. At %s, the value of %s depends on parameter(s): %s."],akK=[0,[11,"A control flow statement depends on parameter(s): ",[2,0,[12,46,0]]],"A control flow statement depends on parameter(s): %s."],akJ=[0,[11,aR,[2,0,[11," is on the left-hand side of more than one tilde statement.",0]]],"The parameter %s is on the left-hand side of more than one tilde statement."],akI=[0,[11,"Your Stan program has a parameter ",[2,0,[11," with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution.",0]]],"Your Stan program has a parameter %s with a lower and upper bound in its declaration. These hard constraints are not recommended, for two reasons: (a) Except when there are logical or physical constraints, it is very unusual for you to be sure that a parameter will fall inside a specified range, and (b) The infinite gradient induced by a hard constraint can cause difficulties for Stan's sampling algorithm. As a consequence, we recommend soft constraints rather than hard constraints; for example, instead of constraining an elasticity parameter to fall between 0, and 1, leave it unconstrained and give it a normal(0.5,0.5) prior distribution."],akH=[0,[11,bm,[2,0,[11," has constraints that don't make sense. The lower bound should be strictly less than the upper bound.",0]]],"Parameter %s has constraints that don't make sense. The lower bound should be strictly less than the upper bound."],akG=[0,[11,ha,[2,0,[11," suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors",0]]],"Argument %s suggests there may be parameters that are not unit scale; consider rescaling with a multiplier, see: https://mc-stan.org/docs/stan-users-guide/efficiency-tuning.html#standardizing-predictors"],akC=iV([iw,"append_block",Fb,F5,u_,B,v1,a,oU,FQ,au,e,mn,"negative_infinity","not_a_number",va,vf,uF,"positive_infinity",bl,tR,oJ,"to_vector","to_row_vector","to_matrix","to_array_1d","to_array_2d",he]),akD=[0,0,[0,1,[0,2,[0,3,[0,21,[0,22,0]]]]]],akA=[0,-549934370],akB=[0,FJ],akz=[0,0],B4=[0,l],adi=[4,"Code generated by stanc 66f569f"];function
 PR(a,b){var
 d=b[4],c=b[3],e=b[2],f=b[1],a=[0,[1,[0,PT,[0,e2(a,b[5]),0]]],[0,[1,[0,PS,[0,a$,0]]],0]],a=[0,[1,[0,PU,[0,w(function(a){var
 b=a[3],c=a[2],a=fT(a[1]);return[1,[0,a,[0,[0,c],[0,dZ(b),0]]]]},d),0]]],a],c=[0,[1,[0,PW,[0,[0,e],0]]],[0,[1,[0,PV,[0,jk(qY,c),0]]],a]];return[1,[0,[1,[0,PX,[0,ru(f),0]]],c]]}function
@@ -11509,7 +11499,7 @@ c=la(r)(D)(C)(c),i=h(function(a){return a[2]},c7(function(a,b){return aK(a[1],b[
 c=aK(a[1],b[1]),b=b[2],a=a[2];return 0===c?V(a,b):c},gl(qn(A))),B=c[10]+"_namespace",G=u[1];if(a)var
 m=0;else{m=c[10];var
 d=am(B5,c[3]),g=h(agz,b2(function(a){var
-b=a[1],a=cx(a[2]),b=a?1-at(jB,b):a;return b},d)),d=k(h(agy,d),g),g=aif(c),f=[0,cz("stancflags = "+B4[1]),0],f=[0,[0,[9,[0,[8,[2,eE],[0,cz("stanc_version = stanc3 54fc9cc"),f]]]],0]],j=a7(0,eE),f=[0,[0,bE(0)(aih)(j)("model_compile_info")(0)(aig)(f)()],0],j=[0,[0,[9,[0,cz(m)]],0]],f=k([0,[0,bE(0)(aij)(eE)("model_name")(0)(aii)(j)()],f],g),j=c[10],g=c[9],e=c[3],x=c[2],j=k([0,gW,[0,[0,[11,1,[1,jY]]],0]],k(s6(j,j),jH)),j=k(jG,k([0,agH,[0,[1,aL(0)(0)(0)(jY)([0,[0,[4,"stan::services::util::create_rng",0,agG]]])()],0]],j)),x=h(dT,x),H=ag[39].call(null,x),e=jF(am(function(a){var
+b=a[1],a=cx(a[2]),b=a?1-at(jB,b):a;return b},d)),d=k(h(agy,d),g),g=aif(c),f=[0,cz("stancflags = "+B4[1]),0],f=[0,[0,[9,[0,[8,[2,eE],[0,cz("stanc_version = stanc3 66f569f"),f]]]],0]],j=a7(0,eE),f=[0,[0,bE(0)(aih)(j)("model_compile_info")(0)(aig)(f)()],0],j=[0,[0,[9,[0,cz(m)]],0]],f=k([0,[0,bE(0)(aij)(eE)("model_name")(0)(aii)(j)()],f],g),j=c[10],g=c[9],e=c[3],x=c[2],j=k([0,gW,[0,[0,[11,1,[1,jY]]],0]],k(s6(j,j),jH)),j=k(jG,k([0,agH,[0,[1,aL(0)(0)(0)(jY)([0,[0,[4,"stan::services::util::create_rng",0,agG]]])()],0]],j)),x=h(dT,x),H=ag[39].call(null,x),e=jF(am(function(a){var
 b=a[1],e=a[2];if(typeof
 b!=="number"&&11===b[0]){var
 c=b[4],d=b[3],b=b[2];if(b!==lS){if(0!==d[0])return 0;a=d[1];if(ag[32].call(null,b,H)){c=B6(b,a,c);a=k(s7("data initialization",b,a),c)}else
@@ -11684,7 +11674,7 @@ n=a[3],q=a[2],u=a[1],a=a[4],b=amU(uu),b=b?1-i1("b=0",qi(44,b[1])):1;amN(b);try{v
 F=[_,oG,a_(0)],B=[0,0],z=[0,1];try{var
 o=function(a){if(6===a[0]){B[1]=k(B[1],a[1]);return 0}a=[0,a[1]];if(z[1])throw[0,F,a];return ad("Called return outside of with_return scope!")};dW[1]=0;sw[1]=n[6];var
 Q=function(a){var
-b=a+fp|0;a:{b:{if(42<b>>>0){if(25<b+FU>>>0)break b}else if(6>=b+vN>>>0)break b;b=1;break a}b=0}if(!b&&95!==a)return 45===a?c0:E_+l+a;return go(1,a)},G=function(a){return Kb(Q,a)(l)},g=c5(H(qi(47,u))),e=e5(N,g),g=aD(m1(e5(zl,g),e),g);sn[1]=u===g?G(u):G(g+"_model");if(n[8])o([4,j(ae(ak4),"stanc3 54fc9cc")]);g=[0,tU,q];g=n[3]?nX(Bh,g):nX(Bg,g);e=g[1];o([6,g[2]]);if(0===e[0]){e=e[1];if(n[10][1])o([1,op(h$(jq,e))]);e=Yf([0,n[2]],e);var
+b=a+fp|0;a:{b:{if(42<b>>>0){if(25<b+FU>>>0)break b}else if(6>=b+vN>>>0)break b;b=1;break a}b=0}if(!b&&95!==a)return 45===a?c0:E_+l+a;return go(1,a)},G=function(a){return Kb(Q,a)(l)},g=c5(H(qi(47,u))),e=e5(N,g),g=aD(m1(e5(zl,g),e),g);sn[1]=u===g?G(u):G(g+"_model");if(n[8])o([4,j(ae(ak4),"stanc3 66f569f")]);g=[0,tU,q];g=n[3]?nX(Bh,g):nX(Bg,g);e=g[1];o([6,g[2]]);if(0===e[0]){e=e[1];if(n[10][1])o([1,op(h$(jq,e))]);e=Yf([0,n[2]],e);var
 S=function(a){var
 b=a[1],a=a[2];if(n[10][2])o([1,op(h$(SH,b))]);o([6,a]);if(n[7])o([3,$U(b)]);a=n[12][1]?0:$X(b);o([6,a]);if(n[9]){a=$0(b,n[12]);o([0,$R([0,n[3]],[0,n[11]],[0,n[12][4]],[0,n[12][5]],a)])}a=aay(u,b);if(n[14])o([6,Di(Dh(a))]);if(n[13])o([6,akR(a)]);tA(o,a,n[10][3]);var
 c=n[10][11];if(c){c=c[1];var
