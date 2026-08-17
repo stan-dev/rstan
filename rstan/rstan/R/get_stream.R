@@ -1,5 +1,5 @@
 get_stream <- function() {
-  return(.Call('get_stream_'))
+  return(.Call(get_stream_))
 }
 
 
