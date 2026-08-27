@@ -13,6 +13,7 @@ cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/include/* inst/include
 cp -Rf inst/include/upstream/lib/stan_math/lib/sundials_*/src/* src/ || true
 
 sed -i 's/SUNDIALS_EXPORT SUNMemory SUNMemoryNewEmpty();/SUNDIALS_EXPORT SUNMemory SUNMemoryNewEmpty(void);/' inst/include/sundials/sundials_memory.h
+sed -i 's/SUNMemory SUNMemoryNewEmpty()/SUNMemory SUNMemoryNewEmpty(void)/' src/sundials/sundials_memory.c
 sed -i 's/static sunTimerStruct\* sunTimerStructNew()/static sunTimerStruct* sunTimerStructNew(void)/' src/sundials/sundials_profiler.c
 
 # Overwrite default headers with compatibility headers at build time
