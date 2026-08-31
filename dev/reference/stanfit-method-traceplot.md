@@ -131,7 +131,7 @@ print(exfit)
 #> alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   426 0.99
 #> lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   124 1.02
 #> 
-#> Samples were drawn using NUTS(diag_e) at Mon Aug 31 20:00:14 2026.
+#> Samples were drawn using NUTS(diag_e) at Mon Aug 31 20:52:11 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
