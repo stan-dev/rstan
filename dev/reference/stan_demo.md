@@ -68,8 +68,8 @@ Reference Manual*. <https://mc-stan.org/>.
 #> 
 #> SAMPLING FOR MODEL 'dogs' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000215 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.15 seconds.
+#> Chain 1: Gradient evaluation took 0.000173 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.73 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -86,15 +86,15 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 2.181 seconds (Warm-up)
-#> Chain 1:                2.023 seconds (Sampling)
-#> Chain 1:                4.204 seconds (Total)
+#> Chain 1:  Elapsed Time: 1.337 seconds (Warm-up)
+#> Chain 1:                1.268 seconds (Sampling)
+#> Chain 1:                2.605 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'dogs' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 0.00019 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.9 seconds.
+#> Chain 2: Gradient evaluation took 0.00014 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 1.4 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -111,15 +111,15 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 2.095 seconds (Warm-up)
-#> Chain 2:                2.056 seconds (Sampling)
-#> Chain 2:                4.151 seconds (Total)
+#> Chain 2:  Elapsed Time: 1.3 seconds (Warm-up)
+#> Chain 2:                1.288 seconds (Sampling)
+#> Chain 2:                2.588 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'dogs' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 0.000191 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 1.91 seconds.
+#> Chain 3: Gradient evaluation took 0.000118 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 1.18 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -136,15 +136,15 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 2.181 seconds (Warm-up)
-#> Chain 3:                2.01 seconds (Sampling)
-#> Chain 3:                4.191 seconds (Total)
+#> Chain 3:  Elapsed Time: 1.346 seconds (Warm-up)
+#> Chain 3:                1.237 seconds (Sampling)
+#> Chain 3:                2.583 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'dogs' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 0.000193 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 1.93 seconds.
+#> Chain 4: Gradient evaluation took 0.000119 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 1.19 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -161,9 +161,9 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 2.056 seconds (Warm-up)
-#> Chain 4:                2.006 seconds (Sampling)
-#> Chain 4:                4.062 seconds (Total)
+#> Chain 4:  Elapsed Time: 1.285 seconds (Warm-up)
+#> Chain 4:                1.243 seconds (Sampling)
+#> Chain 4:                2.528 seconds (Total)
 #> Chain 4: 
      fit1 <- stan_demo(1) # run model_names[1]
 #> 
@@ -183,8 +183,8 @@ Reference Manual*. <https://mc-stan.org/>.
 #> 
 #> SAMPLING FOR MODEL 'ideo_interactions' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 9e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.09 seconds.
+#> Chain 1: Gradient evaluation took 1e-05 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -201,9 +201,9 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.115 seconds (Warm-up)
-#> Chain 1:                0.13 seconds (Sampling)
-#> Chain 1:                0.245 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.099 seconds (Warm-up)
+#> Chain 1:                0.109 seconds (Sampling)
+#> Chain 1:                0.208 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'ideo_interactions' NOW (CHAIN 2).
@@ -226,9 +226,9 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.121 seconds (Warm-up)
-#> Chain 2:                0.13 seconds (Sampling)
-#> Chain 2:                0.251 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.103 seconds (Warm-up)
+#> Chain 2:                0.11 seconds (Sampling)
+#> Chain 2:                0.213 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'ideo_interactions' NOW (CHAIN 3).
@@ -251,15 +251,15 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.113 seconds (Warm-up)
-#> Chain 3:                0.119 seconds (Sampling)
-#> Chain 3:                0.232 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.092 seconds (Warm-up)
+#> Chain 3:                0.1 seconds (Sampling)
+#> Chain 3:                0.192 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'ideo_interactions' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 4e-06 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+#> Chain 4: Gradient evaluation took 5e-06 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -276,9 +276,9 @@ Reference Manual*. <https://mc-stan.org/>.
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.117 seconds (Warm-up)
-#> Chain 4:                0.116 seconds (Sampling)
-#> Chain 4:                0.233 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.093 seconds (Warm-up)
+#> Chain 4:                0.091 seconds (Sampling)
+#> Chain 4:                0.184 seconds (Total)
 #> Chain 4: 
   # }
 ```
