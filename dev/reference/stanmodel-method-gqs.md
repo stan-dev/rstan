@@ -190,7 +190,7 @@ f2
 #>       mean se_mean   sd  2.5%  25%  50%  75% 97.5% n_eff Rhat
 #> y_rep 0.07    0.08 1.31 -2.48 -0.8 0.09 1.01  2.44   304 1.01
 #> 
-#> Samples were drawn using  at Mon Aug 31 02:32:00 2026.
+#> Samples were drawn using  at Mon Aug 31 13:44:06 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
