@@ -54,7 +54,7 @@ stanc_process <- function(file, model_code = '', model_name = "anon_model",
     model_name <- attr(model_code, "model_name2")
 
   model_attr <- attributes(model_code)
-  model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE)
+  model_code <- scan(text = model_code, what = character(), sep = "\n", quiet = TRUE, blank.lines.skip=FALSE)
 
   # Remove trailing whitespaces
   model_code <- trimws(model_code, "r")
