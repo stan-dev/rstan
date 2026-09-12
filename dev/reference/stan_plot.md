@@ -201,8 +201,8 @@ fit <- stan_demo("eight_schools")
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 2: Gradient evaluation took 3e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.03 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -220,8 +220,8 @@ fit <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.036 seconds (Warm-up)
-#> Chain 2:                0.022 seconds (Sampling)
-#> Chain 2:                0.058 seconds (Total)
+#> Chain 2:                0.021 seconds (Sampling)
+#> Chain 2:                0.057 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
