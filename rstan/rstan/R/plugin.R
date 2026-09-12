@@ -56,6 +56,7 @@ PKG_CPPFLAGS_env_fun <- function() {
          ' -DBOOST_PENDING_INTEGER_LOG2_HPP ',
          ' -DSTAN_THREADS ',
          ' -DUSE_STANC3',
+         ' -DNEW_RSTAN',
          ' -DSTRICT_R_HEADERS ',
          ' -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION ',
          ' -D_HAS_AUTO_PTR_ETC=0 ',
