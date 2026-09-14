@@ -47,7 +47,6 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="../index.html" aria-label="Go to homepage"><span class="fa fa-home fa-lg"></span></a></li>
-<li class="active nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Functions</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-other-packages" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Other Packages</button>
@@ -95,7 +94,7 @@
                         <h4 data-toc-skip class="author">Stan
 Development Team</h4>
             
-            <h4 data-toc-skip class="date">2026-09-12</h4>
+            <h4 data-toc-skip class="date">2026-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stan-dev/rstan/blob/develop/vignettes/external.Rmd" class="external-link"><code>vignettes/external.Rmd</code></a></small>
       <div class="d-none name"><code>external.Rmd</code></div>
@@ -321,13 +320,13 @@ Suppose you wanted to define a function whose arguments are real numbers
 <span><span class="co">## compilation terminated.</span></span>
 <span><span class="co">## make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:190: foo.o] Error 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `compileCode()`:</span></span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> &gt;; int Option = 0; Scalar = double]’</span></span>
-<span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:0:   required from ‘double stan::mcmc::dense_e_metric&lt;Model, BaseRNG&gt;::T(stan::mcmc::dense_e_point&amp;) [with Model = model259add17d70_external_namespace::model259add17d70_external; BaseRNG = boost::random::mixmax_engine&lt;17, 36, 0&gt;]’</span></span>
+<span><span class="co">## <span style="color: #BBBB00;">!</span>  int Option = 0; Scalar = double]’</span></span>
+<span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:22:0:   required from ‘double stan::mcmc::dense_e_metric&lt;Model, BaseRNG&gt;::T(stan::mcmc::dense_e_point&amp;) [with Model = model25c9208fbd14_external_namespace::model25c9208fbd14_external; BaseRNG = boost::random::mixmax_engine&lt;17, 36, 0&gt;]’</span></span>
 <span><span class="co">## /home/runner/work/_temp/Library/StanHeaders/include/src/stan/mcmc/hmc/hamiltonians/dense_e_metric.hpp:21:0:   required from here</span></span>
 <span><span class="co">## /home/runner/work/_temp/Library/RcppEigen/include/Eigen/src/Core/DenseCoeffsBase.h:654:74: warning: ignoring attributes on template argument ‘Eigen::internal::packet_traits&lt;double&gt;::type’ {aka ‘__m128d’} [-Wignored-attributes]</span></span>
 <span><span class="co">##   654 |   return internal::first_aligned&lt;int(unpacket_traits&lt;DefaultPacketType&gt;::alignment),Derived&gt;(m);</span></span>
 <span><span class="co">##       |                                                                          ^~~~~~~~~</span></span>
-<span><span class="co">## make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:199: file259a6df10af0.o] Error 1</span></span></code></pre>
+<span><span class="co">## make: *** [/opt/R/4.6.1/lib/R/etc/Makeconf:199: file25c912c01392.o] Error 1</span></span></code></pre>
 <pre><code><span><span class="co">## <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;"> in `sink()`:</span></span></span>
 <span><span class="co">## <span style="color: #BBBB00;">!</span> invalid connection</span></span></code></pre>
 <p>The sinc.hpp file reads as</p>
@@ -365,81 +364,81 @@ package with <code>allow_undefined = TRUE</code> and inspect the
 resuling C++ code. In this case, I first did</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="fu"><a href="../reference/stanc.html">stanc</a></span><span class="op">(</span>model_code <span class="op">=</span> <span class="va">mc</span>, allow_undefined <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">cppcode</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in file(con, "r"): expanded path length 13622 would be too long for</span></span>
+<pre><code><span><span class="co">## Warning in file(con, "r"): expanded path length 13605 would be too long for</span></span>
 <span><span class="co">## #ifndef USE_STANC3</span></span>
 <span><span class="co">## #define USE_STANC3</span></span>
 <span><span class="co">## #endif</span></span>
 <span><span class="co">## // Code generated by stanc v2.39.0</span></span>
 <span><span class="co">## #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">## namespace model259a52afa1c8_file259a1870645b_namespace {</span></span>
+<span><span class="co">## namespace model25c93834bac7_file25c9c58e814_namespace {</span></span>
 <span><span class="co">## using stan::model::model_base_crtp;</span></span>
 <span><span class="co">## using namespace stan::math;</span></span>
 <span><span class="co">## stan::math::profile_map profiles__;</span></span>
 <span><span class="co">## static constexpr std::array&lt;const char*, 2&gt; locations_array__ =</span></span>
 <span><span class="co">##   {" (found before start of program)",</span></span>
-<span><span class="co">##   " (in 'file259a1870645b', line 2, column 19 to column 45)"};</span></span>
-<span><span class="co">## class model259a52afa1c8_file259a1870645b final : public model_base_crtp&lt;model259a52afa1c8_file259a1870645b&gt; {</span></span>
+<span><span class="co">##   " (in 'file25c9c58e814', line 2, column 19 to column 45)"};</span></span>
+<span><span class="co">## class model25c93834bac7_file25c9c58e814 final : public model_base_crtp&lt;model25c93834bac7_file25c9c58e814&gt; {</span></span>
 <span><span class="co">## private:</span></span>
 <span><span class="co">##   double sinc_pi;</span></span>
 <span><span class="co">## public:</span></span>
-<span><span class="co">##   ~model259a52afa1c8_file259a1870645b() {}</span></span>
-<span><span class="co">##   model259a52afa1c8_file259a1870645b(stan::io::var_context&amp; context__,</span></span>
-<span><span class="co">##                                      unsigned int random_seed__ = 0,</span></span>
-<span><span class="co">##                                      std::ostream* pstream__ = nullptr)</span></span>
+<span><span class="co">##   ~model25c93834bac7_file25c9c58e814() {}</span></span>
+<span><span class="co">##   model25c93834bac7_file25c9c58e814(stan::io::var_context&amp; context__,</span></span>
+<span><span class="co">##                                     unsigned int random_seed__ = 0,</span></span>
+<span><span class="co">##                                     std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">##       : model_base_crtp(0) {</span></span>
 <span><span class="co">##     int current_statement__ = 0;</span></span>
 <span><span class="co">##     // suppress unused var warning</span></span>
-<span><span class="co">##     (void) c [... truncated]</span></span>
-<span><span class="co">## Warning in file(con, "r"): expanded path length 13622 would be too long for</span></span>
+<span><span class="co">##     (void) current_s [... truncated]</span></span>
+<span><span class="co">## Warning in file(con, "r"): expanded path length 13605 would be too long for</span></span>
 <span><span class="co">## #ifndef USE_STANC3</span></span>
 <span><span class="co">## #define USE_STANC3</span></span>
 <span><span class="co">## #endif</span></span>
 <span><span class="co">## // Code generated by stanc v2.39.0</span></span>
 <span><span class="co">## #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">## namespace model259a52afa1c8_file259a1870645b_namespace {</span></span>
+<span><span class="co">## namespace model25c93834bac7_file25c9c58e814_namespace {</span></span>
 <span><span class="co">## using stan::model::model_base_crtp;</span></span>
 <span><span class="co">## using namespace stan::math;</span></span>
 <span><span class="co">## stan::math::profile_map profiles__;</span></span>
 <span><span class="co">## static constexpr std::array&lt;const char*, 2&gt; locations_array__ =</span></span>
 <span><span class="co">##   {" (found before start of program)",</span></span>
-<span><span class="co">##   " (in 'file259a1870645b', line 2, column 19 to column 45)"};</span></span>
-<span><span class="co">## class model259a52afa1c8_file259a1870645b final : public model_base_crtp&lt;model259a52afa1c8_file259a1870645b&gt; {</span></span>
+<span><span class="co">##   " (in 'file25c9c58e814', line 2, column 19 to column 45)"};</span></span>
+<span><span class="co">## class model25c93834bac7_file25c9c58e814 final : public model_base_crtp&lt;model25c93834bac7_file25c9c58e814&gt; {</span></span>
 <span><span class="co">## private:</span></span>
 <span><span class="co">##   double sinc_pi;</span></span>
 <span><span class="co">## public:</span></span>
-<span><span class="co">##   ~model259a52afa1c8_file259a1870645b() {}</span></span>
-<span><span class="co">##   model259a52afa1c8_file259a1870645b(stan::io::var_context&amp; context__,</span></span>
-<span><span class="co">##                                      unsigned int random_seed__ = 0,</span></span>
-<span><span class="co">##                                      std::ostream* pstream__ = nullptr)</span></span>
+<span><span class="co">##   ~model25c93834bac7_file25c9c58e814() {}</span></span>
+<span><span class="co">##   model25c93834bac7_file25c9c58e814(stan::io::var_context&amp; context__,</span></span>
+<span><span class="co">##                                     unsigned int random_seed__ = 0,</span></span>
+<span><span class="co">##                                     std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">##       : model_base_crtp(0) {</span></span>
 <span><span class="co">##     int current_statement__ = 0;</span></span>
 <span><span class="co">##     // suppress unused var warning</span></span>
-<span><span class="co">##     (void) c [... truncated]</span></span></code></pre>
+<span><span class="co">##     (void) current_s [... truncated]</span></span></code></pre>
 <pre><code><span><span class="co">## Warning in file(con, "r"): cannot open file '#ifndef USE_STANC3</span></span>
 <span><span class="co">## #define USE_STANC3</span></span>
 <span><span class="co">## #endif</span></span>
 <span><span class="co">## // Code generated by stanc v2.39.0</span></span>
 <span><span class="co">## #include &lt;stan/model/model_header.hpp&gt;</span></span>
-<span><span class="co">## namespace model259a52afa1c8_file259a1870645b_namespace {</span></span>
+<span><span class="co">## namespace model25c93834bac7_file25c9c58e814_namespace {</span></span>
 <span><span class="co">## using stan::model::model_base_crtp;</span></span>
 <span><span class="co">## using namespace stan::math;</span></span>
 <span><span class="co">## stan::math::profile_map profiles__;</span></span>
 <span><span class="co">## static constexpr std::array&lt;const char*, 2&gt; locations_array__ =</span></span>
 <span><span class="co">##   {" (found before start of program)",</span></span>
-<span><span class="co">##   " (in 'file259a1870645b', line 2, column 19 to column 45)"};</span></span>
-<span><span class="co">## class model259a52afa1c8_file259a1870645b final : public model_base_crtp&lt;model259a52afa1c8_file259a1870645b&gt; {</span></span>
+<span><span class="co">##   " (in 'file25c9c58e814', line 2, column 19 to column 45)"};</span></span>
+<span><span class="co">## class model25c93834bac7_file25c9c58e814 final : public model_base_crtp&lt;model25c93834bac7_file25c9c58e814&gt; {</span></span>
 <span><span class="co">## private:</span></span>
 <span><span class="co">##   double sinc_pi;</span></span>
 <span><span class="co">## public:</span></span>
-<span><span class="co">##   ~model259a52afa1c8_file259a1870645b() {}</span></span>
-<span><span class="co">##   model259a52afa1c8_file259a1870645b(stan::io::var_context&amp; context__,</span></span>
-<span><span class="co">##                                      unsigned int random_seed__ = 0,</span></span>
-<span><span class="co">##                                      std::ostream* pstream__ = nullptr)</span></span>
+<span><span class="co">##   ~model25c93834bac7_file25c9c58e814() {}</span></span>
+<span><span class="co">##   model25c93834bac7_file25c9c58e814(stan::io::var_context&amp; context__,</span></span>
+<span><span class="co">##                                     unsigned int random_seed__ = 0,</span></span>
+<span><span class="co">##                                     std::ostream* pstream__ = nullptr)</span></span>
 <span><span class="co">##       : model_base_crtp(0) {</span></span>
 <span><span class="co">##     int current_statement__ = 0;</span></span>
 <span><span class="co">##     // suppress unused var warning</span></span>
 <span><span class="co">##     (void) current_statement__;</span></span>
-<span><span class="co">##     using l [... truncated]</span></span></code></pre>
+<span><span class="co">##     using local_sca [... truncated]</span></span></code></pre>
 <pre><code><span><span class="co">## Error in file(con, "r") : cannot open the connection</span></span></code></pre>
 <p>to see what function signatures needed to be written for
 sinc.hpp.</p>
