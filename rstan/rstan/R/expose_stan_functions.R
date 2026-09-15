@@ -95,8 +95,8 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     on.exit(sink(type = "output"), add = TRUE)
   }
   Rcpp::registerPlugin("rstan", rstanplugin)
-  compiled <- pkgbuild::with_build_tools(try(suppressWarnings(
-    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...)), silent = TRUE),
+  compiled <- pkgbuild::with_build_tools(
+    Rcpp::sourceCpp(code = paste(code, collapse = "\n"), ...),
     required = rstan_options("required") &&
     # workaround for packages with src/install.libs.R
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
