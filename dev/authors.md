@@ -48,7 +48,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/stan-dev/rstan/blob/update-pkgdown-navbar/inst/CITATION)
+[`inst/CITATION`](https://github.com/stan-dev/rstan/blob/develop/inst/CITATION)
 
 Stan Development Team (). RStan: the R interface to Stan. R package
 version 2.39.0.9000. https://mc-stan.org/.
