@@ -43,7 +43,8 @@ Imports:
     loo (>= 2.4.1),
     pkgbuild (>= 1.2.0),
     QuickJSR,
-    ggplot2 (>= 3.3.5)
+    ggplot2 (>= 3.3.5),
+    posterior (>= 1.6.1)
 Depends:
     R (>= 3.4.0),
     StanHeaders (>= 2.36.0)
