@@ -166,8 +166,8 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
-    on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
+    on.exit(close(zz), add = TRUE)
   }
   fx <- pkgbuild::with_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes,
