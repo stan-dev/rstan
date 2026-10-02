@@ -12,8 +12,15 @@ test_that("cxxfunctionplus propagates compilation errors", {
 test_that("cxxfunctionplus cleans up after a successful compile", {
   # https://github.com/stan-dev/rstan/issues/1199
   skip_if(Sys.getenv("USE_CXX17") != "")
+  local_mocked_bindings(
+    cxxfunction = function(...) "fx",
+    dso_path = function(...) "fake.so",
+    get_CXX = function(...) "g++",
+    get_makefile_flags = function(...) "",
+    rstan_options = function(...) FALSE
+  )
   n_sinks <- sink.number()
-  stan_model(model_code = "parameters { real y; } model { y ~ std_normal(); }")
+  expect_s4_class(cxxfunctionplus(module_name = ""), "cxxdso")
   expect_equal(Sys.getenv("USE_CXX17"), "")
   expect_equal(sink.number(), n_sinks)
 })
