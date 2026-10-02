@@ -157,9 +157,16 @@ cxxfunctionplus <- function(sig = character(), body = character(),
   if (WINDOWS) {
     has_march = .warn_march_makevars()
     if (has_march) {
-      user_makevar = Sys.getenv("R_MAKEVARS_USER")
-      Sys.setenv(R_MAKEVARS_USER = NULL)
-      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+      # point R_MAKEVARS_USER at an empty file so the user's Makevars is skipped
+      user_makevar <- Sys.getenv("R_MAKEVARS_USER", unset = NA)
+      empty_makevars <- tempfile()
+      file.create(empty_makevars)
+      Sys.setenv(R_MAKEVARS_USER = empty_makevars)
+      on.exit({
+        if (is.na(user_makevar)) Sys.unsetenv("R_MAKEVARS_USER")
+        else Sys.setenv(R_MAKEVARS_USER = user_makevar)
+        unlink(empty_makevars)
+      }, add = TRUE)
     }
   }
   if (!isTRUE(verbose)) {
@@ -168,6 +175,7 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     sink(zz, type = "output")
     on.exit(sink(type = "output"), add = TRUE)
     on.exit(close(zz), add = TRUE)
+    on.exit(unlink(tf), add = TRUE)
   }
   fx <- pkgbuild::with_build_tools(
     cxxfunction(sig = sig, body = body, plugin = plugin, includes = includes,
@@ -176,12 +184,6 @@ cxxfunctionplus <- function(sig = character(), body = character(),
     # workaround for packages with src/install.libs.R
       !identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-  if (!isTRUE(verbose)) {
-    sink(type = "output")
-    close(zz)
-    try(file.remove(tf), silent = TRUE)
-    on.exit(NULL)
-  }
   dso_last_path <- dso_path(fx)
   if (grepl("^darwin", R.version$os) && grepl("clang", get_CXX(FALSE))) {
     CLANG_DIR = tail(n = 1, grep("clang[456789]", value = TRUE,

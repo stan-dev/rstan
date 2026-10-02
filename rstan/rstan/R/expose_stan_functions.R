@@ -81,9 +81,16 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
   if (WINDOWS) {
     has_march = .warn_march_makevars()
     if (has_march) {
-      user_makevar = Sys.getenv("R_MAKEVARS_USER")
-      Sys.setenv(R_MAKEVARS_USER = NULL)
-      on.exit(Sys.setenv(R_MAKEVARS_USER = user_makevar))
+      # point R_MAKEVARS_USER at an empty file so the user's Makevars is skipped
+      user_makevar <- Sys.getenv("R_MAKEVARS_USER", unset = NA)
+      empty_makevars <- tempfile()
+      file.create(empty_makevars)
+      Sys.setenv(R_MAKEVARS_USER = empty_makevars)
+      on.exit({
+        if (is.na(user_makevar)) Sys.unsetenv("R_MAKEVARS_USER")
+        else Sys.setenv(R_MAKEVARS_USER = user_makevar)
+        unlink(empty_makevars)
+      }, add = TRUE)
     }
   }
 
@@ -91,8 +98,9 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     tf <- tempfile(fileext = ".warn")
     zz <- file(tf, open = "wt")
     sink(zz, type = "output")
-    on.exit(close(zz), add = TRUE)
     on.exit(sink(type = "output"), add = TRUE)
+    on.exit(close(zz), add = TRUE)
+    on.exit(unlink(tf), add = TRUE)
   }
   Rcpp::registerPlugin("rstan", rstanplugin)
   compiled <- pkgbuild::with_build_tools(try(suppressWarnings(
@@ -101,12 +109,6 @@ expose_stan_functions <- function(stanmodel, includes = NULL,
     # workaround for packages with src/install.libs.R
       identical(Sys.getenv("WINDOWS"), "TRUE") &&
       !identical(Sys.getenv("R_PACKAGE_SOURCE"), "") )
-  if (!isTRUE(show_compiler_warnings)) {
-    sink(type = "output")
-    close(zz)
-    try(file.remove(tf), silent = TRUE)
-    on.exit(NULL)
-  }
   DOTS <- list(...)
   if (isTRUE(DOTS$dryRun)) return(code)
   if (inherits(compiled, "try-error")) stop("Compilation failed!")
