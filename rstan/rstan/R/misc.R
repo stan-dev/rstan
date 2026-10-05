@@ -1595,34 +1595,28 @@ get_time_from_csv <- function(tlines) {
 }
 
 parse_data <- function(cppcode) {
-  cppcode <- scan(what = character(), sep = "\n", quiet = TRUE,
-                  text = cppcode)
-  private <- grep("^private:$", cppcode) + 1L
-  public <- grep("^public:$", cppcode) - 1L
-  # pull out object names from the data block
-  objects <- gsub("^.* ([0-9A-Za-z_]+).*;.*$", "\\1",
-                  cppcode[private:public])
-  # Remove model internal name _data__ suffix for stanc3 v2.30+
-  objects <- gsub("_data__$", "", objects)
-  # Remove model internal name underscores in case of Eigen::Maps
-  objects <- gsub("__$", "\\1", objects)
-  # Remove any bad regex matches that found the end of an Eigen::Map.
-  objects <- gsub("^[[:digit:]]+", "\\1", objects)
-  # Remove empty characters and trim whitespaces
-  objects <- objects[nzchar(trimws(objects))]
+  # pull out object names from the data block (excluding transformed data),
+  # which are the variables the model constructor reads from the data
+  objects <- unlist(regmatches(cppcode, gregexpr(
+    'validate_dims\\(\\s*"data initialization",\\s*"[^"]+"', cppcode)))
+  objects <- sub('.*"([^"]+)"$', "\\1", objects)
+  # Remove tuple element suffixes (e.g., "tup.1" -> "tup")
+  objects <- unique(sub("\\..*$", "", objects))
 
-  # Get them from the calling environment
-  stuff <- list()
+  # Get them from the calling environment. dynGet() also searches this frame,
+  # so stuff__ is named to not clash with Stan identifiers, which can't end in __
+  stuff__ <- list()
   for (int in seq_along(objects)) {
-   stuff[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
+   stuff__[[objects[int]]] <- dynGet(objects[int], inherits = FALSE, ifnotfound = NULL)
   }
-  for (i in seq_along(stuff)) if (is.null(stuff[[i]])) {
-    if (exists(objects[i], envir = globalenv(), mode = "numeric"))
-      stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "numeric")
-    else if (exists(objects[i], envir = globalenv(), mode = "logical"))
-      stuff[[i]] <- get(objects[i], envir = globalenv(), mode = "logical")
+  # Fall back to the global environment for any not found
+  for (nm in setdiff(objects, names(stuff__))) {
+    if (exists(nm, envir = globalenv(), mode = "numeric"))
+      stuff__[[nm]] <- get(nm, envir = globalenv(), mode = "numeric")
+    else if (exists(nm, envir = globalenv(), mode = "logical"))
+      stuff__[[nm]] <- get(nm, envir = globalenv(), mode = "logical")
   }
-  return(stuff)
+  return(stuff__)
 }
 
 set_cppo <- function(...) {
