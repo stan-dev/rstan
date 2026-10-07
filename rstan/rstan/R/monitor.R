@@ -126,8 +126,7 @@ ess_mean <- function(sims) {
 #' Effective sample size
 #'
 #' Compute effective sample size estimate for standard deviation (s)
-#' estimate of one parameter. This is defined as minimum of effective
-#' sample size estimate for mean and mean of squared value.
+#' estimate of one parameter, as computed by \code{posterior::ess_sd()}.
 #'
 #' @param sims A 2D array _without_ warmup samples (# iter * # chains).
 #'
@@ -142,8 +141,6 @@ ess_mean <- function(sims) {
 #' 
 #' @export
 ess_sd <- function(sims) {
-  # TODO: are these two equivalent/ok to change to posterior's implementation?
-  # min(ess_rfun(split_chains(sims)), ess_rfun(split_chains(sims^2)))
   posterior::ess_sd(sims)
 }
 
@@ -200,8 +197,7 @@ mcse_mean <- function(sims) {
 #' Monte Carlo standard error for standard error
 #'
 #' Compute Monte Carlo standard error for standard deviation (sd) of a
-#' single parameter using Stirling's approximation and assuming
-#' approximate normality.
+#' single parameter, as computed by \code{posterior::mcse_sd()}.
 #'
 #' @param sims A 2D array _without_ warmup samples (# iter * # chains).
 #'
@@ -287,8 +283,7 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
   for (i in seq_along(out)) {
     sims_i <- sims[, , i]
     valid <- all(is.finite(sims_i))
-    quan <- unname(posterior::quantile2(sims_i, probs = probs))
-    #quan2 <- posterior::quantile2(sims_i, probs = c(0.05, 0.5, 0.95))
+    quan <- unname(posterior::quantile2(sims_i, probs = probs, na.rm = TRUE))
     mean <- mean(sims_i)
     sd <- sd(sims_i)
     mcse_quan <- sapply(probs, function(p) posterior::mcse_quantile(sims_i, probs = p))
@@ -297,21 +292,19 @@ monitor <- function(sims, warmup = floor(dim(sims)[1] / 2),
     rhat <- posterior::rhat(sims_i)
     ess_bulk <- round(posterior::ess_bulk(sims_i))
     ess_tail <- round(posterior::ess_tail(sims_i))
-    ess <- round(posterior::ess_bulk(sims_i))
+    ess <- round(posterior::ess_basic(sims_i, split = FALSE))
     out[[i]] <- c(
       mean, mcse_mean, sd, quan, ess, rhat,
-      valid, #quan2,
+      valid,
       mcse_quan, mcse_sd, ess_bulk, ess_tail
     )
   }
   
   out <- as.data.frame(do.call(rbind, out))
-  #probs_str <- names(quantile(sims_i, probs = probs, na.rm = TRUE))
   str_quan <- paste0("Q", probs * 100)
-  #str_quan2 <- paste0("Q", c(0.05, 0.5, 0.95) * 100)
   str_mcse_quan <- paste0("MCSE_", str_quan)
   colnames(out) <- c("mean", "se_mean", "sd", str_quan, "n_eff", "Rhat",
-                     "valid", #str_quan2,
+                     "valid",
                      str_mcse_quan, "MCSE_SD", "Bulk_ESS", "Tail_ESS")
   rownames(out) <- parnames
 
@@ -379,9 +372,4 @@ print.simsummary <- function(x, digits = 3, se = FALSE, ...) {
   if (drop) names(out) <- nms
   else rownames(out) <- nms
   return(out)
-}
-
-# should NA be returned by a convergence diagnostic?
-should_return_NA <- function(x) {
-  anyNA(x) || any(!is.finite(x)) || is_constant(x)
 }

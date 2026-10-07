@@ -78,7 +78,7 @@
         {
           "type": "double",
           "attributes": {},
-          "value": [4, 4, 4]
+          "value": [6, 6, 6]
         },
         {
           "type": "double",
@@ -198,7 +198,7 @@
         {
           "type": "double",
           "attributes": {},
-          "value": [4, 4, 4]
+          "value": [6, 6, 6]
         },
         {
           "type": "double",

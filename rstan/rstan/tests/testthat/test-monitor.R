@@ -28,3 +28,19 @@ test_that("rstan monitor snapshot is stable", {
     style = "json2"
   )
 })
+
+test_that("monitor keeps quantiles with non-finite draws and distinguishes n_eff from Bulk_ESS", {
+  set.seed(1)
+  x <- array(rnorm(400 * 4 * 2), dim = c(400, 4, 2))
+  x[1, 1, 1] <- NA
+
+  res <- monitor(x, warmup = 0, print = FALSE)
+  expect_false(anyNA(res[1, c("Q2.5", "Q50", "Q97.5")]))
+  expect_false(res[1, "valid"] == 1)
+
+  expect_equal(
+    unname(res[2, "n_eff"]),
+    round(posterior::ess_basic(x[, , 2], split = FALSE))
+  )
+  expect_false(res[2, "n_eff"] == res[2, "Bulk_ESS"])
+})
