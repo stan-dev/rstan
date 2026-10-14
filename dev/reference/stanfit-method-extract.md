@@ -166,8 +166,8 @@ fit <- stan(model_code = ex_model_code, chains = 4)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
 #> Chain 3:  Elapsed Time: 0.011 seconds (Warm-up)
-#> Chain 3:                0.012 seconds (Sampling)
-#> Chain 3:                0.023 seconds (Total)
+#> Chain 3:                0.011 seconds (Sampling)
+#> Chain 3:                0.022 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
