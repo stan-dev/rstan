@@ -434,6 +434,7 @@ SEXP effective_sample_size2(SEXP sims) {
   }
 
   vector<double> chain_var;
+  chain_var.reserve(m);
   for (size_t chain = 0; chain < m; chain++) {
     chain_var.push_back(acov[chain][0]*n_samples/(n_samples-1));
   }
