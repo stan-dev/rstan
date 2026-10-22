@@ -23,5 +23,6 @@ cp inst/include/overrides/lbfgs.hpp inst/include/src/stan/services/optimize/lbfg
 cp inst/include/overrides/newton.hpp inst/include/src/stan/services/optimize/newton.hpp || true
 cp inst/include/overrides/lkj_corr_cholesky_lpdf.hpp inst/include/stan/math/prim/prob/lkj_corr_cholesky_lpdf.hpp || true
 cp inst/include/overrides/eigen_plugins.h inst/include/stan/math/prim/eigen_plugins.h || true
+cp inst/include/overrides/Eigen_NumTraits.hpp inst/include/stan/math/rev/core/Eigen_NumTraits.hpp || true
 
 exit $?
