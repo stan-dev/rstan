@@ -201,8 +201,8 @@ fit1 <- sampling(mod, data=list(N=N, y=y, mu_fixed=-1))
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 2: Gradient evaluation took 1e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -251,8 +251,8 @@ fit1 <- sampling(mod, data=list(N=N, y=y, mu_fixed=-1))
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
 #> Chain 4: 
-#> Chain 4: Gradient evaluation took 2e-06 seconds
-#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 4: Gradient evaluation took 1e-06 seconds
+#> Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 4: Adjust your expectations accordingly!
 #> Chain 4: 
 #> Chain 4: 
@@ -302,8 +302,8 @@ fit2 <- sampling(mod, data=list(N=N, y=y, mu_fixed=0.5))
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 2: Gradient evaluation took 1e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -403,8 +403,8 @@ fit3 <- sampling(mod, data=list(N=N, y=y, mu_fixed=0.6))
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 2e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 2: Gradient evaluation took 1e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
