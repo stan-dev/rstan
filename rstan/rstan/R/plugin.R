@@ -113,6 +113,11 @@ rstanplugin <- function() {
   # cat("INFO: rcpp_pkg_libs = ", rcpp_pkg_libs, "\n")
 
   tbb_libs <- "-ltbb"
+  # Embed RcppParallel's lib directory as an rpath so the compiled module can
+  # find libtbb at load time. glibc resolves it against the libtbb already
+  # loaded by RcppParallel, but musl (e.g., Alpine Linux) does not.
+  if (Sys.info()[["sysname"]] == "Linux")
+    tbb_libs <- paste0("-Wl,-rpath,", shQuote(RcppParallel_pkg_libs), " ", tbb_libs)
 
   PL <- paste(rcpp_pkg_libs,
               shQuote(rstan_StanServices),
