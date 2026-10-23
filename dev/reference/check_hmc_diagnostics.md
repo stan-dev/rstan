@@ -102,8 +102,8 @@ schools <- stan_demo("eight_schools")
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 1e-05 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.1 seconds.
+#> Chain 1: Gradient evaluation took 8e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -120,9 +120,9 @@ schools <- stan_demo("eight_schools")
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.034 seconds (Warm-up)
+#> Chain 1:  Elapsed Time: 0.033 seconds (Warm-up)
 #> Chain 1:                0.033 seconds (Sampling)
-#> Chain 1:                0.067 seconds (Total)
+#> Chain 1:                0.066 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 2).
@@ -146,8 +146,8 @@ schools <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.034 seconds (Warm-up)
-#> Chain 2:                0.021 seconds (Sampling)
-#> Chain 2:                0.055 seconds (Total)
+#> Chain 2:                0.02 seconds (Sampling)
+#> Chain 2:                0.054 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
@@ -196,8 +196,8 @@ schools <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
 #> Chain 4:  Elapsed Time: 0.031 seconds (Warm-up)
-#> Chain 4:                0.021 seconds (Sampling)
-#> Chain 4:                0.052 seconds (Total)
+#> Chain 4:                0.02 seconds (Sampling)
+#> Chain 4:                0.051 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 55 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
