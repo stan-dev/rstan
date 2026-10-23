@@ -74,19 +74,19 @@ throw_sampler_warnings <- function(object) {
             call. = FALSE, noBreaks. = TRUE)
   
   sims <- as.array(object)
-  rhat <- apply(sims, MARGIN = 3, FUN = Rhat)
+  rhat <- apply(sims, MARGIN = 3, FUN = posterior::rhat)
   if (any(rhat > 1.05, na.rm = TRUE))
       warning("The largest R-hat is ", round(max(rhat), digits = 2),
             ", indicating chains have not mixed.\n",
             "Running the chains for more iterations may help. See\n",
             "https://mc-stan.org/misc/warnings.html#r-hat", call. = FALSE)
-  bulk_ess <- apply(sims, MARGIN = 3, FUN = ess_bulk)
+  bulk_ess <- apply(sims, MARGIN = 3, FUN = posterior::ess_bulk)
   if (any(bulk_ess < 100 * ncol(sims), na.rm = TRUE))
     warning("Bulk Effective Samples Size (ESS) is too low, ",
             "indicating posterior means and medians may be unreliable.\n",
             "Running the chains for more iterations may help. See\n",
             "https://mc-stan.org/misc/warnings.html#bulk-ess", call. = FALSE)
-  tail_ess <- apply(sims, MARGIN = 3, FUN = ess_tail)
+  tail_ess <- apply(sims, MARGIN = 3, FUN = posterior::ess_tail)
   if (any(tail_ess < 100 * ncol(sims), na.rm = TRUE))
     warning("Tail Effective Samples Size (ESS) is too low, indicating ",
             "posterior variances and tail quantiles may be unreliable.\n",
