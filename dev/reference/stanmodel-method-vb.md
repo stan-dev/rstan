@@ -165,7 +165,6 @@ The Stan Development Team *CmdStan Interface User's Guide*.
 ``` r
 # \dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
-#> recompiling to avoid crashing R session
 f <- vb(m)
 #> Chain 1: ------------------------------------------------------------
 #> Chain 1: EXPERIMENTAL ALGORITHM:

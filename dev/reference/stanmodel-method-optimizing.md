@@ -206,7 +206,6 @@ data, it returns `NULL`.
 ``` r
 # \dontrun{
 m <- stan_model(model_code = 'parameters {real y;} model {y ~ normal(0,1);}')
-#> recompiling to avoid crashing R session
 f <- optimizing(m, hessian = TRUE)
 # }
 ```
