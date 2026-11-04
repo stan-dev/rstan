@@ -22,12 +22,17 @@
     while (n > minframe) {
       n <- n - 1L
       env <- sys.frame(n)
-      if (exists(x, envir = env, inherits = inherits, mode = "numeric")) 
-        return(get(x, envir = env, inherits = inherits, mode = "numeric"))
-      else if (exists(x, envir = env, inherits = inherits, mode = "logical"))
-        return(get(x, envir = env, inherits = inherits, mode = "logical"))
-      else if (exists(x, envir = env, inherits = inherits, mode = "list"))
-        return(get(x, envir = env, inherits = inherits, mode = "list"))
+      # skip frames where the lookup errors, e.g. when x is a promise that is
+      # already under evaluation (such as withVisible(x) when using source())
+      val <- tryCatch({
+        if (exists(x, envir = env, inherits = inherits, mode = "numeric"))
+          get(x, envir = env, inherits = inherits, mode = "numeric")
+        else if (exists(x, envir = env, inherits = inherits, mode = "logical"))
+          get(x, envir = env, inherits = inherits, mode = "logical")
+        else if (exists(x, envir = env, inherits = inherits, mode = "list"))
+          get(x, envir = env, inherits = inherits, mode = "list")
+      }, error = function(e) NULL)
+      if (!is.null(val)) return(val)
     }
     return(ifnotfound)
   }
