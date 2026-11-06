@@ -251,6 +251,12 @@ fit1 <- stan(
 
     Trying to compile a simple C file
 
+    Warning: There were 2 divergent transitions after warmup. See
+    https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
+    to find out why this is a problem and how to eliminate them.
+
+    Warning: Examine the pairs() plot to diagnose sampling problems
+
 The `stan` function wraps the following three steps:
 
 - Translate a model in Stan code to C++ code
@@ -294,19 +300,19 @@ print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
     post-warmup draws per chain=1000, total post-warmup draws=4000.
 
                mean se_mean   sd    10%    50%    90% n_eff Rhat
-    theta[1]  11.32    0.16 8.28   2.22  10.28  21.91  2850    1
-    theta[2]   8.00    0.10 6.24   0.46   7.90  15.77  4201    1
-    theta[3]   6.30    0.12 7.54  -3.21   6.76  14.88  4257    1
-    theta[4]   7.77    0.09 6.38  -0.12   7.67  15.74  5581    1
-    theta[5]   5.25    0.09 6.33  -2.87   5.76  13.02  4798    1
-    theta[6]   6.34    0.10 6.82  -2.14   6.81  14.29  5032    1
-    theta[7]  10.61    0.11 6.85   2.41  10.10  19.30  3653    1
-    theta[8]   8.42    0.12 7.75  -0.67   8.29  17.61  3978    1
-    mu         8.10    0.11 5.06   1.85   7.90  14.36  2265    1
-    tau        6.29    0.15 5.37   0.91   5.09  13.12  1372    1
-    lp__     -39.67    0.07 2.68 -43.19 -39.43 -36.53  1352    1
+    theta[1]  11.62    0.18 8.56   2.26  10.41  22.95  2230    1
+    theta[2]   7.85    0.10 6.33   0.12   7.83  15.54  4190    1
+    theta[3]   6.10    0.13 7.86  -3.62   6.64  14.87  3407    1
+    theta[4]   7.52    0.18 6.86  -0.52   7.67  15.61  1536    1
+    theta[5]   5.05    0.14 6.34  -3.18   5.48  12.57  2129    1
+    theta[6]   6.01    0.12 6.84  -2.73   6.44  14.23  3353    1
+    theta[7]  10.77    0.11 6.78   2.75  10.31  19.36  3576    1
+    theta[8]   8.39    0.14 8.03  -1.00   8.17  18.05  3429    1
+    mu         8.07    0.11 5.10   1.92   7.86  14.45  2078    1
+    tau        6.66    0.18 5.68   0.96   5.33  13.75  1045    1
+    lp__     -39.58    0.08 2.66 -43.02 -39.30 -36.39  1227    1
 
-    Samples were drawn using NUTS(diag_e) at Fri Nov  6 06:46:17 2026.
+    Samples were drawn using NUTS(diag_e) at Fri Nov  6 20:24:26 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -448,10 +454,10 @@ print(fit1, pars = c("mu", "tau"))
     post-warmup draws per chain=1000, total post-warmup draws=4000.
 
         mean se_mean   sd  2.5%  25%  50%   75% 97.5% n_eff Rhat
-    mu  8.10    0.11 5.06 -1.43 4.92 7.90 11.30 18.38  2265    1
-    tau 6.29    0.15 5.37  0.20 2.36 5.09  8.85 19.14  1372    1
+    mu  8.07    0.11 5.10 -1.77 4.71 7.86 11.33 19.07  2078    1
+    tau 6.66    0.18 5.68  0.25 2.54 5.33  9.22 21.06  1045    1
 
-    Samples were drawn using NUTS(diag_e) at Fri Nov  6 06:46:17 2026.
+    Samples were drawn using NUTS(diag_e) at Fri Nov  6 20:24:26 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -482,18 +488,18 @@ summary(do.call(rbind, sampler_params), digits = 2)
 
      accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
      Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.0000  
-     1st Qu.:0.82   1st Qu.:0.270   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.0000  
-     Median :0.96   Median :0.370   Median :3.0   Median : 15   Median :0.0000  
-     Mean   :0.84   Mean   :0.387   Mean   :3.4   Mean   : 12   Mean   :0.0086  
-     3rd Qu.:0.99   3rd Qu.:0.415   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.0000  
-     Max.   :1.00   Max.   :6.431   Max.   :7.0   Max.   :127   Max.   :1.0000  
+     1st Qu.:0.79   1st Qu.:0.277   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.0000  
+     Median :0.95   Median :0.393   Median :3.0   Median :  7   Median :0.0000  
+     Mean   :0.83   Mean   :0.415   Mean   :3.3   Mean   : 11   Mean   :0.0084  
+     3rd Qu.:0.99   3rd Qu.:0.489   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.0000  
+     Max.   :1.00   Max.   :9.585   Max.   :7.0   Max.   :127   Max.   :1.0000  
         energy__ 
-     Min.   :35  
+     Min.   :34  
      1st Qu.:42  
      Median :44  
      Mean   :45  
      3rd Qu.:47  
-     Max.   :63  
+     Max.   :61  
 
 ``` r
 
@@ -502,68 +508,68 @@ lapply(sampler_params, summary, digits = 2)
 ```
 
     [[1]]
-     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
-     Min.   :0.00   Min.   :0.058   Min.   :0.0   Min.   : 1    Min.   :0.00  
-     1st Qu.:0.72   1st Qu.:0.408   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.00  
-     Median :0.93   Median :0.415   Median :3.0   Median : 7    Median :0.00  
-     Mean   :0.81   Mean   :0.435   Mean   :3.2   Mean   :11    Mean   :0.01  
-     3rd Qu.:0.98   3rd Qu.:0.415   3rd Qu.:3.0   3rd Qu.:15    3rd Qu.:0.00  
-     Max.   :1.00   Max.   :5.390   Max.   :6.0   Max.   :95    Max.   :1.00  
-        energy__ 
-     Min.   :35  
-     1st Qu.:42  
-     Median :44  
-     Mean   :44  
-     3rd Qu.:46  
-     Max.   :58  
-
-    [[2]]
-     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__    
-     Min.   :0.00   Min.   :0.042   Min.   :0.0   Min.   : 1    Min.   :0.0000  
-     1st Qu.:0.88   1st Qu.:0.251   1st Qu.:3.0   1st Qu.: 7    1st Qu.:0.0000  
-     Median :0.97   Median :0.251   Median :4.0   Median :15    Median :0.0000  
-     Mean   :0.87   Mean   :0.362   Mean   :3.5   Mean   :13    Mean   :0.0065  
-     3rd Qu.:0.99   3rd Qu.:0.434   3rd Qu.:4.0   3rd Qu.:15    3rd Qu.:0.0000  
-     Max.   :1.00   Max.   :6.431   Max.   :6.0   Max.   :63    Max.   :1.0000  
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+     Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.000  
+     1st Qu.:0.75   1st Qu.:0.393   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+     Median :0.94   Median :0.393   Median :3.0   Median :  7   Median :0.000  
+     Mean   :0.81   Mean   :0.438   Mean   :3.2   Mean   : 11   Mean   :0.011  
+     3rd Qu.:0.99   3rd Qu.:0.441   3rd Qu.:3.0   3rd Qu.: 15   3rd Qu.:0.000  
+     Max.   :1.00   Max.   :9.585   Max.   :7.0   Max.   :127   Max.   :1.000  
         energy__ 
      Min.   :36  
      1st Qu.:42  
-     Median :45  
-     Mean   :45  
+     Median :44  
+     Mean   :44  
      3rd Qu.:47  
-     Max.   :62  
+     Max.   :57  
 
-    [[3]]
-     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__  
-     Min.   :0.00   Min.   :0.032   Min.   :0.0   Min.   :  1   Min.   :0.00  
-     1st Qu.:0.86   1st Qu.:0.270   1st Qu.:3.0   1st Qu.: 15   1st Qu.:0.00  
-     Median :0.97   Median :0.270   Median :4.0   Median : 15   Median :0.00  
-     Mean   :0.86   Mean   :0.328   Mean   :3.7   Mean   : 15   Mean   :0.01  
-     3rd Qu.:0.99   3rd Qu.:0.330   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.00  
-     Max.   :1.00   Max.   :5.497   Max.   :7.0   Max.   :127   Max.   :1.00  
+    [[2]]
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+     Min.   :0.00   Min.   :0.048   Min.   :0.0   Min.   :  1   Min.   :0.000  
+     1st Qu.:0.87   1st Qu.:0.277   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+     Median :0.97   Median :0.277   Median :4.0   Median : 15   Median :0.000  
+     Mean   :0.87   Mean   :0.383   Mean   :3.5   Mean   : 13   Mean   :0.007  
+     3rd Qu.:0.99   3rd Qu.:0.447   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
+     Max.   :1.00   Max.   :6.431   Max.   :7.0   Max.   :127   Max.   :1.000  
         energy__ 
      Min.   :35  
      1st Qu.:42  
      Median :44  
      Mean   :45  
      3rd Qu.:47  
-     Max.   :63  
+     Max.   :61  
 
-    [[4]]
-     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
-     Min.   :0.00   Min.   :0.037   Min.   :0.0   Min.   :  1   Min.   :0.000  
-     1st Qu.:0.77   1st Qu.:0.370   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
-     Median :0.95   Median :0.370   Median :3.0   Median :  7   Median :0.000  
-     Mean   :0.83   Mean   :0.421   Mean   :3.3   Mean   : 12   Mean   :0.008  
-     3rd Qu.:0.99   3rd Qu.:0.429   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
-     Max.   :1.00   Max.   :4.710   Max.   :6.0   Max.   :127   Max.   :1.000  
+    [[3]]
+     accept_stat__    stepsize__     treedepth__  n_leapfrog__    divergent__    
+     Min.   :0.00   Min.   :0.038   Min.   :0    Min.   :  1.0   Min.   :0.0000  
+     1st Qu.:0.69   1st Qu.:0.429   1st Qu.:3    1st Qu.:  7.0   1st Qu.:0.0000  
+     Median :0.91   Median :0.489   Median :3    Median :  7.0   Median :0.0000  
+     Mean   :0.77   Mean   :0.482   Mean   :3    Mean   :  9.1   Mean   :0.0085  
+     3rd Qu.:0.98   3rd Qu.:0.489   3rd Qu.:3    3rd Qu.:  7.0   3rd Qu.:0.0000  
+     Max.   :1.00   Max.   :2.748   Max.   :6    Max.   :127.0   Max.   :1.0000  
         energy__ 
-     Min.   :37  
+     Min.   :36  
      1st Qu.:42  
      Median :44  
      Mean   :45  
      3rd Qu.:47  
-     Max.   :59  
+     Max.   :57  
+
+    [[4]]
+     accept_stat__    stepsize__     treedepth__   n_leapfrog__  divergent__   
+     Min.   :0.00   Min.   :0.038   Min.   :0.0   Min.   :  1   Min.   :0.000  
+     1st Qu.:0.86   1st Qu.:0.247   1st Qu.:3.0   1st Qu.:  7   1st Qu.:0.000  
+     Median :0.97   Median :0.247   Median :4.0   Median : 15   Median :0.000  
+     Mean   :0.86   Mean   :0.356   Mean   :3.6   Mean   : 13   Mean   :0.007  
+     3rd Qu.:0.99   3rd Qu.:0.402   3rd Qu.:4.0   3rd Qu.: 15   3rd Qu.:0.000  
+     Max.   :1.00   Max.   :9.485   Max.   :6.0   Max.   :127   Max.   :1.000  
+        energy__ 
+     Min.   :34  
+     1st Qu.:42  
+     Median :44  
+     Mean   :45  
+     3rd Qu.:47  
+     Max.   :60  
 
 Here we see that there are a small number of divergent transitions,
 which are identified by `divergent__` being \\1\\. Ideally, there should
@@ -650,8 +656,8 @@ expose_stan_functions(stanc(model_code = model_code))
     Trying to compile a simple C file
 
     Running /opt/R/4.6.2/lib/R/bin/R CMD SHLIB foo.c
-    using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0’
-    gcc -std=gnu2x -I"/opt/R/4.6.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/" -DRCPP_PARALLEL_USE_TBB=1 -DTBB_INTERFACE_NEW -I/home/runner/work/_temp/Library/RcppParallel/include -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DNEW_RSTAN -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
+    using C compiler: ‘gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0’
+    gcc -I"/opt/R/4.6.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/" -DRCPP_PARALLEL_USE_TBB=1 -DTBB_INTERFACE_NEW -I/home/runner/work/_temp/Library/RcppParallel/include -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DNEW_RSTAN -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1  -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o
     In file included from <command-line>:
     /home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:3:10: fatal error: stdexcept: No such file or directory
         3 | #include <stdexcept>

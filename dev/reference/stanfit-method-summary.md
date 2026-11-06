@@ -76,8 +76,8 @@ fit <- stan(model_code = ecode)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 8e-06 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.08 seconds.
+#> Chain 1: Gradient evaluation took 4e-06 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -94,9 +94,9 @@ fit <- stan(model_code = ecode)
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 1:                0.006 seconds (Sampling)
-#> Chain 1:                0.012 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.005 seconds (Warm-up)
+#> Chain 1:                0.005 seconds (Sampling)
+#> Chain 1:                0.01 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
@@ -120,8 +120,8 @@ fit <- stan(model_code = ecode)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 2:                0.006 seconds (Sampling)
-#> Chain 2:                0.012 seconds (Total)
+#> Chain 2:                0.005 seconds (Sampling)
+#> Chain 2:                0.011 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
@@ -175,42 +175,42 @@ fit <- stan(model_code = ecode)
 #> Chain 4: 
 s <- summary(fit, probs = c(0.1, 0.9))
 s$summary  # all chaines merged
-#>            mean    se_mean        sd         10%       90%     n_eff     Rhat
-#> y[1]  0.9993487 0.02079046 1.0159236  0.10042471  2.330060 2387.7791 1.000669
-#> y[2]  0.9685756 0.02036467 0.9653798  0.09135474  2.225154 2247.2001 1.000072
-#> lp__ -3.2001021 0.03787490 1.1664838 -4.74101666 -2.131617  948.5376 1.002617
+#>            mean    se_mean        sd        10%       90%     n_eff      Rhat
+#> y[1]  1.0147886 0.02021218 1.0144742  0.1057559  2.355153 2519.1611 1.0001895
+#> y[2]  0.9780169 0.01959189 0.9753713  0.1125876  2.239543 2478.4896 0.9994361
+#> lp__ -3.1545421 0.03678723 1.1550466 -4.6083260 -2.117495  985.8365 1.0005713
 s$c_summary  # individual chains
 #> , , chains = chain:1
 #> 
 #>          stats
-#> parameter       mean        sd        10%       90%
-#>      y[1]  1.0694339 1.0612259  0.0953882  2.499088
-#>      y[2]  0.9829245 0.9651658  0.0706803  2.308414
-#>      lp__ -3.2950690 1.2429727 -4.9694643 -2.150289
+#> parameter      mean        sd        10%       90%
+#>      y[1]  1.028724 0.9628692  0.1191143  2.380378
+#>      y[2]  0.947648 0.9555451  0.1080397  2.127725
+#>      lp__ -3.086648 0.9806253 -4.4762992 -2.109054
 #> 
 #> , , chains = chain:2
 #> 
 #>          stats
-#> parameter       mean        sd         10%       90%
-#>      y[1]  0.9308465 0.9684359  0.07974216  2.204396
-#>      y[2]  0.9072754 0.9450972  0.08752071  2.160447
-#>      lp__ -3.2605769 1.2392431 -4.83487860 -2.127506
+#> parameter       mean       sd        10%       90%
+#>      y[1]  0.9984413 1.003530  0.1066804  2.278915
+#>      y[2]  0.9747653 0.971302  0.1209582  2.263833
+#>      lp__ -3.1312997 1.207422 -4.6207371 -2.109312
 #> 
 #> , , chains = chain:3
 #> 
 #>          stats
-#> parameter       mean        sd        10%       90%
-#>      y[1]  0.9809423 1.0068234  0.1058002  2.310432
-#>      y[2]  0.9677877 0.9153224  0.1031050  2.126079
-#>      lp__ -3.1030783 1.0605475 -4.4806192 -2.114384
+#> parameter      mean       sd         10%       90%
+#>      y[1]  0.986253 1.054671  0.09536197  2.304043
+#>      y[2]  0.996872 0.938427  0.11428575  2.266265
+#>      lp__ -3.179568 1.166695 -4.68105504 -2.142655
 #> 
 #> , , chains = chain:4
 #> 
 #>          stats
-#> parameter      mean       sd        10%       90%
-#>      y[1]  1.016172 1.021521  0.1174006  2.347030
-#>      y[2]  1.016315 1.030443  0.1001645  2.259636
-#>      lp__ -3.141684 1.102647 -4.6362905 -2.128575
+#> parameter       mean       sd         10%       90%
+#>      y[1]  1.0457358 1.034874  0.09856248  2.424349
+#>      y[2]  0.9927822 1.034218  0.10953289  2.265077
+#>      lp__ -3.2206526 1.244873 -4.70781301 -2.128995
 #> 
 # }
 ```

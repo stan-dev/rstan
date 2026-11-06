@@ -330,8 +330,8 @@ fit2 <- stan(fit = fit)
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
 #> Chain 2: 
-#> Chain 2: Gradient evaluation took 1e-06 seconds
-#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+#> Chain 2: Gradient evaluation took 2e-06 seconds
+#> Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
 #> Chain 2: Adjust your expectations accordingly!
 #> Chain 2: 
 #> Chain 2: 
@@ -349,14 +349,14 @@ fit2 <- stan(fit = fit)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
 #> Chain 2:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 2:                0.006 seconds (Sampling)
-#> Chain 2:                0.012 seconds (Total)
+#> Chain 2:                0.005 seconds (Sampling)
+#> Chain 2:                0.011 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
 #> Chain 3: 
-#> Chain 3: Gradient evaluation took 2e-06 seconds
-#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.02 seconds.
+#> Chain 3: Gradient evaluation took 1e-06 seconds
+#> Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 #> Chain 3: Adjust your expectations accordingly!
 #> Chain 3: 
 #> Chain 3: 
@@ -374,8 +374,8 @@ fit2 <- stan(fit = fit)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
 #> Chain 3:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 3:                0.006 seconds (Sampling)
-#> Chain 3:                0.012 seconds (Total)
+#> Chain 3:                0.005 seconds (Sampling)
+#> Chain 3:                0.011 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
@@ -398,9 +398,9 @@ fit2 <- stan(fit = fit)
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.006 seconds (Warm-up)
-#> Chain 4:                0.006 seconds (Sampling)
-#> Chain 4:                0.012 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.005 seconds (Warm-up)
+#> Chain 4:                0.004 seconds (Sampling)
+#> Chain 4:                0.009 seconds (Total)
 #> Chain 4: 
 print(fit2)
 #> Inference for Stan model: anon_model.
@@ -408,11 +408,11 @@ print(fit2)
 #> post-warmup draws per chain=1000, total post-warmup draws=4000.
 #> 
 #>       mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
-#> y[1]  0.99    0.02 0.96  0.03  0.29  0.70  1.38  3.62  2355    1
-#> y[2]  1.03    0.02 1.03  0.02  0.28  0.71  1.45  3.73  2221    1
-#> lp__ -3.16    0.04 1.13 -6.24 -3.64 -2.81 -2.32 -2.03   931    1
+#> y[1]  1.00    0.02 1.04  0.03  0.29  0.68  1.35  3.67  2405    1
+#> y[2]  1.01    0.02 1.00  0.03  0.30  0.71  1.38  3.82  2966    1
+#> lp__ -3.13    0.03 1.11 -5.94 -3.58 -2.81 -2.34 -2.03  1079    1
 #> 
-#> Samples were drawn using NUTS(diag_e) at Fri Nov  6 06:35:39 2026.
+#> Samples were drawn using NUTS(diag_e) at Fri Nov  6 20:14:13 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
@@ -425,9 +425,9 @@ traceplot(fit2)
 ainfo <- get_adaptation_info(fit2)
 cat(ainfo[[1]])
 #> # Adaptation terminated
-#> # Step size = 0.690643
+#> # Step size = 0.609506
 #> # Diagonal elements of inverse mass matrix:
-#> # 1.34747, 1.50591
+#> # 1.68564, 1.39591
 seed <- get_seed(fit2)
 sp <- get_sampler_params(fit2)
 sp2 <- get_sampler_params(fit2, inc_warmup = FALSE)
@@ -517,7 +517,7 @@ print(exfit)
 #> alpha    0.53    0.03 0.53   0.01   0.18   0.39   0.69   2.07   426 0.99
 #> lp__   -17.47    0.20 2.26 -23.33 -18.68 -17.21 -15.76 -14.29   124 1.02
 #> 
-#> Samples were drawn using NUTS(diag_e) at Fri Nov 06 06:23:33 2026.
+#> Samples were drawn using NUTS(diag_e) at Fri Nov 06 20:02:15 2026.
 #> For each parameter, n_eff is a crude measure of effective sample size,
 #> and Rhat is the potential scale reduction factor on split chains (at 
 #> convergence, Rhat=1).
