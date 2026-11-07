@@ -312,7 +312,7 @@ print(fit1, pars=c("theta", "mu", "tau", "lp__"), probs=c(.1,.5,.9))
     tau        6.66    0.18 5.68   0.96   5.33  13.75  1045    1
     lp__     -39.58    0.08 2.66 -43.02 -39.30 -36.39  1227    1
 
-    Samples were drawn using NUTS(diag_e) at Fri Nov  6 20:24:26 2026.
+    Samples were drawn using NUTS(diag_e) at Sat Nov  7 01:23:39 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
@@ -457,7 +457,7 @@ print(fit1, pars = c("mu", "tau"))
     mu  8.07    0.11 5.10 -1.77 4.71 7.86 11.33 19.07  2078    1
     tau 6.66    0.18 5.68  0.25 2.54 5.33  9.22 21.06  1045    1
 
-    Samples were drawn using NUTS(diag_e) at Fri Nov  6 20:24:26 2026.
+    Samples were drawn using NUTS(diag_e) at Sat Nov  7 01:23:39 2026.
     For each parameter, n_eff is a crude measure of effective sample size,
     and Rhat is the potential scale reduction factor on split chains (at 
     convergence, Rhat=1).
