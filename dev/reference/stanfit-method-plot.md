@@ -90,9 +90,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.024 seconds (Warm-up)
-#> Chain 1:                0.03 seconds (Sampling)
-#> Chain 1:                0.054 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.036 seconds (Warm-up)
+#> Chain 1:                0.044 seconds (Sampling)
+#> Chain 1:                0.08 seconds (Total)
 #> Chain 1: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 2).
@@ -115,9 +115,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 2: 
-#> Chain 2:  Elapsed Time: 0.029 seconds (Warm-up)
-#> Chain 2:                0.015 seconds (Sampling)
-#> Chain 2:                0.044 seconds (Total)
+#> Chain 2:  Elapsed Time: 0.04 seconds (Warm-up)
+#> Chain 2:                0.023 seconds (Sampling)
+#> Chain 2:                0.063 seconds (Total)
 #> Chain 2: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 3).
@@ -140,9 +140,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 3: 
-#> Chain 3:  Elapsed Time: 0.023 seconds (Warm-up)
-#> Chain 3:                0.013 seconds (Sampling)
-#> Chain 3:                0.036 seconds (Total)
+#> Chain 3:  Elapsed Time: 0.034 seconds (Warm-up)
+#> Chain 3:                0.019 seconds (Sampling)
+#> Chain 3:                0.053 seconds (Total)
 #> Chain 3: 
 #> 
 #> SAMPLING FOR MODEL 'eight_schools' NOW (CHAIN 4).
@@ -165,9 +165,9 @@ fit <- stan_demo("eight_schools")
 #> Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
 #> Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
 #> Chain 4: 
-#> Chain 4:  Elapsed Time: 0.023 seconds (Warm-up)
-#> Chain 4:                0.02 seconds (Sampling)
-#> Chain 4:                0.043 seconds (Total)
+#> Chain 4:  Elapsed Time: 0.034 seconds (Warm-up)
+#> Chain 4:                0.03 seconds (Sampling)
+#> Chain 4:                0.064 seconds (Total)
 #> Chain 4: 
 #> Warning: There were 75 divergent transitions after warmup. See
 #> https://mc-stan.org/misc/warnings.html#divergent-transitions-after-warmup
